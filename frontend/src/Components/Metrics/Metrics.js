@@ -1,8 +1,6 @@
 import React from 'react'
 
-import { Link } from 'react-router-dom'
-
-const Navbar = (props) => {
+const Metrics = (props) => {
 
     return (
         <div>
@@ -11,4 +9,4 @@ const Navbar = (props) => {
     )
 }
 
-export default Navbar;
+export default Metrics;
