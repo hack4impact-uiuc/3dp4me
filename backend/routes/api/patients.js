@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../../pool.js");
+const { errorWrap } = require("../../utils");
 
 const { getAllPatients } = require("../../db/patients.js");
 
 // Get all patients
-router.get("/", async (req, res) => {
-    try {
+router.get(
+    '/',
+    errorWrap(async (req, res) => {
         const patients = await getAllPatients();
         res.status(200).json({
-            status: "success",
-            data: patients,
-        });
-    } catch(e) {
-        console.error("sad", e);
-    }
-});
+            code: 200,
+            success: true,
+            result: patients,
+        })
+    }),
+);
 
 module.exports = router;
