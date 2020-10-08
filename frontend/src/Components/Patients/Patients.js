@@ -1,12 +1,12 @@
 import React from 'react'
 
-const Dashboard = (props) => {
+const Patients = (props) => {
 
     return (
         <div>
-            dashboard
+            patients
         </div>
     )
 }
 
-export default Dashboard;
+export default Patients;

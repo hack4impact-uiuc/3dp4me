@@ -5,12 +5,15 @@ import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Dashboard from "./Components/Dashboard/Dashboard";
-import AccountManagement from './Components/Account Management/AccountManagment'
-import Metrics from './Components/Metrics/Metrics'
+import AccountManagement from './Components/Account Management/AccountManagment';
+import Metrics from './Components/Metrics/Metrics';
+import Patients from './Components/Patients/Patients';
+import Navbar from './Components/Navbar/Navbar'
 
 function App() {
   return (
     <Router>
+    <Navbar />
       <Switch>
         <Route exact path="/">
           <Dashboard />
@@ -20,6 +23,9 @@ function App() {
         </Route>
         <Route exact path="/metrics">
           <Metrics />
+        </Route>
+        <Route exact path="/patients">
+          <Patients />
         </Route>
       </Switch>
     </Router>

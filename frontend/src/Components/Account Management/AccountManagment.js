@@ -4,7 +4,7 @@ const AccountManagement = (props) => {
 
     return (
         <div>
-            
+            account
         </div>
     )
 }

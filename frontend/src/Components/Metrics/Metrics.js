@@ -4,7 +4,7 @@ const Metrics = (props) => {
 
     return (
         <div>
-            
+            metrics
         </div>
     )
 }

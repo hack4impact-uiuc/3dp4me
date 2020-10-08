@@ -1,0 +1,12 @@
+.navbar {
+    display: flex;
+}
+
+.nav-item {
+    text-decoration: none;
+    margin-left: 2%;
+}
+
+#nav-title{
+    flex-grow: 1;
+}
