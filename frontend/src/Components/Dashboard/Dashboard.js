@@ -21,8 +21,19 @@ const Dashboard = (props) => {
       </div>
       <div className="patient-list">
         <div className="header">
-          <h2 style={{ flexGrow: 1 }}>Patient Information</h2>
-          <Button name="Create New Patient" />
+          <div className="section">
+            <h2 style={{ flexGrow: 1 }}>Patient Information</h2>
+            <Button name="Create New Patient" />
+          </div>
+          <div className="section">
+            <input placeholder="Search..." />
+            <select defaultValue="newest">
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+              <option value="patient#">Patient #</option>
+              <option value="status">Status</option>
+            </select>
+          </div>
         </div>
         <table className="table">
           <tr className="head">

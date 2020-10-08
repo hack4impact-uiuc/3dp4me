@@ -3,9 +3,14 @@
 }
 
 .patient-list .header {
-    display: flex;
+    /* display: flex;
     position: relative;
     align-items: center;
+    */
+} 
+
+.patient-list .header .section {
+    display: flex;
 }
 
 .table {
@@ -19,3 +24,4 @@
 .table .row {
     
 }
+
