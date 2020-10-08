@@ -8,7 +8,6 @@ const Dashboard = (props) => {
 
   const [patients, setPatients] = useState([])
 
-
   return (
     <div>
       <div className="tabs">
@@ -17,7 +16,8 @@ const Dashboard = (props) => {
         <button>Ear scan upload</button>
         <button>CAD Modeling</button>
         <button>3D Printing</button>
-        <button>Delivery/Feedback</button>
+        <button>Delivery</button>
+        <button>Feedback</button>
       </div>
       <div className="patient-list">
         <div className="header">
