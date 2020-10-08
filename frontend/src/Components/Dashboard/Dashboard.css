@@ -1,0 +1,21 @@
+.tabs {
+    display: flex;
+}
+
+.patient-list .header {
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
+.table {
+    width: 100%;
+}
+
+.table .head {
+    text-align: left;
+}
+
+.table .row {
+    
+}
