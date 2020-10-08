@@ -1,13 +1,21 @@
 import React from 'react';
-import Login from "./Login.js"
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { Amplify } from 'aws-amplify';
 import './App.css';
+import awsconfig from './aws-exports.js';
 
-function App() {
+Amplify.configure(awsconfig)
+
+const App = function() {
   return (
-    <div className="App">
-      { Login() }
+    // <div className="App">
+    //   { Login() }
+    // </div>
+    <div>
+    <AmplifySignOut />
+    My App
     </div>
   );
 }
 
-export default App
+export default withAuthenticator(App);
