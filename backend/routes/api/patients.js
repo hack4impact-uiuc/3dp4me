@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { errorWrap } = require("../../utils");
 
-const { getAllPatients, getPatientsByStage } = require("../../db/patients.js");
+const { getAllPatients, getPatientsByStage, completeStage } = require("../../db/patients.js");
 
 // Get all patients
 router.get(
@@ -28,6 +28,20 @@ router.get(
             code: 200,
             success: true,
             result: patients,
+        });
+    }),
+);
+
+// Mark stage as complete for a patient
+router.post(
+    "/:id/:stage/complete",
+    errorWrap(async (req, res) => {
+        const { id, stage } = req.params;
+        
+        await completeStage(id, stage);
+        res.status(200).json({
+            code: 200,
+            success: true,
         });
     }),
 );
