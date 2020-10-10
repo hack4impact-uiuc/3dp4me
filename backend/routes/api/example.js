@@ -1,18 +1,19 @@
 const express = require("express");
 const router = express.Router();
+// will auto matically handle any errors if they appear.
 const { errorWrap } = require("../../utils");
-
-const { getAllPatients } = require("../../db/patients.js");
+// get db related function for usage
+const { getAll } = require("../../db/example.js");
 
 // Get all patients
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        const patients = await getAllPatients();
+        const values = await getAll();
         res.status(200).json({
             code: 200,
             success: true,
-            result: patients,
+            result: values,
         })
     }),
 );

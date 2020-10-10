@@ -29,3 +29,12 @@ DB_PORT="5432"
 ## Run
 
 In the backend directory, run `yarn && yarn start`. This should start a local server on localhost:5000
+
+## Structure
+
+API ENDPOINTS go into routes/api/*.js
+Related endpoints in a single file
+
+Any code that touches the database goes into a file in db/*
+Make sure that the filenames are the same between db and routes
+
