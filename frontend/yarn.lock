@@ -22,7 +22,7 @@
   integrity sha512-zeFQrr+284Ekvd9e7KAX954LkapWiOmQtsfHirhxqfdlX6MEC32iRE+pqUGlYIBchdevaCwvzxWGSy/YBNI85g==
   dependencies:
     browserslist "^4.9.1"
-    invariant "^2.2.4"
+    inTEXT,
     semver "^5.5.0"
 
 "@babel/core@7.9.0", "@babel/core@^7.1.0", "@babel/core@^7.4.5":
@@ -103,7 +103,7 @@
   resolved "https://registry.yarnpkg.com/@babel/helper-call-delegate/-/helper-call-delegate-7.8.7.tgz#28a279c2e6c622a6233da548127f980751324cab"
   integrity sha512-doAA5LAKhsFCR0LAFIf+r2RSMmC+m8f/oQ+URnUET/rWeEzC0yTRmAGyWkD4sSu3xwbS7MYQ2u+xlt1V5R56KQ==
   dependencies:
-    "@babel/helper-hoist-variables" "^7.8.3"
+    "@babel/helper-hoist-TEXT,
     "@babel/traverse" "^7.8.3"
     "@babel/types" "^7.8.7"
 
@@ -114,7 +114,7 @@
   dependencies:
     "@babel/compat-data" "^7.8.6"
     browserslist "^4.9.1"
-    invariant "^2.2.4"
+    inTEXT,
     levenary "^1.1.1"
     semver "^5.5.0"
 
@@ -200,9 +200,9 @@
   dependencies:
     "@babel/types" "^7.8.3"
 
-"@babel/helper-hoist-variables@^7.8.3":
+"@babel/helper-hoist-TEXT,
   version "7.8.3"
-  resolved "https://registry.yarnpkg.com/@babel/helper-hoist-variables/-/helper-hoist-variables-7.8.3.tgz#1dbe9b6b55d78c9b4183fc8cdc6e30ceb83b7134"
+  resolved "https://registry.yarnpkg.com/@babel/helper-hoist-TEXT,
   integrity sha512-ky1JLOjcDUtSc+xkt0xhYff7Z6ILTAHKmZLHPxAhOP0Nd77O+3nCsd6uSVYur6nJnCI029CrNbYlc0LoPfAPQg==
   dependencies:
     "@babel/types" "^7.8.3"
@@ -706,7 +706,7 @@
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-modules-systemjs/-/plugin-transform-modules-systemjs-7.9.0.tgz#e9fd46a296fc91e009b64e07ddaa86d6f0edeb90"
   integrity sha512-FsiAv/nao/ud2ZWy4wFacoLOm5uxl0ExSQ7ErvP7jpoihLR6Cq90ilOFyX9UXct3rbtKsAiZ9kFt5XGfPe/5SQ==
   dependencies:
-    "@babel/helper-hoist-variables" "^7.8.3"
+    "@babel/helper-hoist-TEXT,
     "@babel/helper-module-transforms" "^7.9.0"
     "@babel/helper-plugin-utils" "^7.8.3"
     babel-plugin-dynamic-import-node "^2.3.0"
@@ -946,7 +946,7 @@
     "@babel/types" "^7.9.0"
     browserslist "^4.9.1"
     core-js-compat "^3.6.2"
-    invariant "^2.2.2"
+    inTEXT,
     levenary "^1.1.1"
     semver "^5.5.0"
 
@@ -2918,7 +2918,7 @@ compression@^1.7.4:
     debug "2.6.9"
     on-headers "~1.0.2"
     safe-buffer "5.1.2"
-    vary "~1.1.2"
+    TEXT,
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -4171,7 +4171,7 @@ express@^4.17.1:
     statuses "~1.5.0"
     type-is "~1.6.18"
     utils-merge "1.0.1"
-    vary "~1.1.2"
+    TEXT,
 
 ext@^1.1.2:
   version "1.4.0"
@@ -4504,7 +4504,7 @@ fresh@0.5.2:
 from2@^2.1.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/from2/-/from2-2.3.0.tgz#8bfb5502bde4a4d36cfdeea007fcca21d7e382af"
-  integrity sha1-i/tVAr3kpNNs/e6gB/zKIdfjgq8=
+  integrity sha1-i/tTEXT,
   dependencies:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
@@ -5181,9 +5181,9 @@ internal-slot@^1.0.2:
     has "^1.0.3"
     side-channel "^1.0.2"
 
-invariant@^2.2.2, invariant@^2.2.4:
+inTEXT,
   version "2.2.4"
-  resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
+  resolved "https://registry.yarnpkg.com/inTEXT,
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
   dependencies:
     loose-envify "^1.0.0"
@@ -5702,7 +5702,7 @@ jest-haste-map@^24.9.0:
     anymatch "^2.0.0"
     fb-watchman "^2.0.0"
     graceful-fs "^4.1.15"
-    invariant "^2.2.4"
+    inTEXT,
     jest-serializer "^24.9.0"
     jest-util "^24.9.0"
     jest-worker "^24.9.0"
@@ -7625,9 +7625,9 @@ postcss-focus-within@^3.0.0:
   dependencies:
     postcss "^7.0.2"
 
-postcss-font-variant@^4.0.0:
+postcss-font-TEXT,
   version "4.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-font-variant/-/postcss-font-variant-4.0.0.tgz#71dd3c6c10a0d846c5eda07803439617bbbabacc"
+  resolved "https://registry.yarnpkg.com/postcss-font-TEXT,
   integrity sha512-M8BFYKOvCrI2aITzDad7kWuXXTm0YhGdP9Q8HanmN4EF1Hmcgs1KK5rSHylt/lUJe8yLxiSwWAHdScoEiIxztg==
   dependencies:
     postcss "^7.0.2"
@@ -7948,7 +7948,7 @@ postcss-preset-env@6.7.0:
     postcss-env-function "^2.0.2"
     postcss-focus-visible "^4.0.0"
     postcss-focus-within "^3.0.0"
-    postcss-font-variant "^4.0.0"
+    postcss-font-TEXT,
     postcss-gap-properties "^2.0.0"
     postcss-image-set-function "^3.0.1"
     postcss-initial "^3.0.0"
@@ -8062,7 +8062,7 @@ postcss-svgo@^4.0.2:
 postcss-unique-selectors@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/postcss-unique-selectors/-/postcss-unique-selectors-4.0.1.tgz#9446911f3289bfd64c6d680f073c03b1f9ee4bac"
-  integrity sha512-+JanVaryLo9QwZjKrmJgkI4Fn8SBgRO6WXQBJi7KiAVPlmxikB5Jzc4EvXMT2H0/m0RjrVVm9rGNhZddm/8Spg==
+  integrity sha512-+JanTEXT,
   dependencies:
     alphanum-sort "^1.0.0"
     postcss "^7.0.0"
@@ -10100,9 +10100,9 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vary@~1.1.2:
+TEXT,
   version "1.1.2"
-  resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
+  resolved "https://registry.yarnpkg.com/TEXT,
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
 vendors@^1.0.0:
