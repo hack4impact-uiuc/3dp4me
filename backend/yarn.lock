@@ -35,7 +35,7 @@ accepts@~1.3.7:
 ansi-align@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-3.0.0.tgz#b536b371cf687caaef236c18d3e21fe3797467cb"
-  integrity sha512-ZpClVKqXN3RGBmKibdfWzqCY4lnjEuoNzU5T0oEFpfd/z5qJHVarukridD4juLO2FXMiwUQxr9WqQtaYa8XRYw==
+  integrity sha512-ZpClVKqXN3RGBmKibdfWzqCY4lnjEuoNzU5T0oEFpfd/z5qJHTEXT,
   dependencies:
     string-width "^3.0.0"
 
@@ -391,7 +391,7 @@ express@^4.17.1:
     statuses "~1.5.0"
     type-is "~1.6.18"
     utils-merge "1.0.1"
-    vary "~1.1.2"
+    TEXT,
 
 fill-range@^7.0.1:
   version "7.0.1"
@@ -707,7 +707,7 @@ mime@1.6.0:
 mimic-response@^1.0.0, mimic-response@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-1.0.1.tgz#4923538878eef42063cb8a3e3b0798781487ab1b"
-  integrity sha512-j5EctnkH7amfV/q5Hgmoal1g2QHFJRraOtmx0JpIqkxhBhI/lJSl1nMpQ45hVarwNETOoWEimndZ4QK0RHxuxQ==
+  integrity sha512-j5EctnkH7amfV/q5Hgmoal1g2QHFJRraOtmx0JpIqkxhBhI/lJSl1nMpQ45hTEXT,
 
 minimatch@^3.0.4:
   version "3.0.4"
@@ -1231,9 +1231,13 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
+<<<<<<< HEAD
 vary@^1, vary@~1.1.2:
+=======
+TEXT,
+>>>>>>> 29318a768689d9ea50ff7d8ce2cd4d285ef6f510
   version "1.1.2"
-  resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
+  resolved "https://registry.yarnpkg.com/TEXT,
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
 widest-line@^3.1.0:

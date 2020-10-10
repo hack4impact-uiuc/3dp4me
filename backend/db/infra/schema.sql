@@ -1,23 +1,24 @@
 -- Create patients table
-CREATE TABLE IF NOT EXISTS patients (
-    id SERIAL,
-    patient_name TEXT,
-    patient_address TEXT,
-    folder TEXT,
-    reverted BOOLEAN,
-    info_completion TIMESTAMP,
+create table patients (
+    patient_id SERIAL,
+    patient_name TEXT NOT NULL,
+    patient_address TEXT NOT NULL,
+    folder TEXT NOT NULL,
+    reverted BOOLEAN NOT NULL,
+    stage TEXT NOT NULL,
+    info_completion TEXT,
     info_user_id INTEGER,
-    scan_completion TIMESTAMP,
+    scan_completion TEXT,
     scan_user_id INTEGER,
-    model_completion TIMESTAMP,
+    model_completion TEXT,
     model_user_id INTEGER,
-    printing_completion TIMESTAMP,
+    printing_completion TEXT,
     printing_user_id INTEGER,
-    delivery_completion TIMESTAMP,
+    delivery_completion TEXT,
     delivery_user_id INTEGER,
-    feedback_completion TIMESTAMP,
+    feedback_completion TEXT,
     feedback_user_id INTEGER,
-    last_touched TIMESTAMP,
+    last_touched TEXT,
     last_user_touching INTEGER
 );
 
