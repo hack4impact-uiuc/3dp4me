@@ -2,11 +2,24 @@ import React, { useState } from "react";
 
 import Button from "../Helpers/Button/Button";
 
+import { Link } from 'react-router-dom'
+
 import "./Dashboard.css";
 
 const Dashboard = (props) => {
 
   const [patients, setPatients] = useState([])
+
+  const patientsTest = [
+    { name: "Amit", id: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
+    { name: "Evan", id: '635058', createdDate: 'January 2, 2020', lastEdited: 'January 2, 2020', status: 'Unfinished' },
+    { name: "Anisha", id: '100231', createdDate: 'January 3, 2020', lastEdited: 'January 3, 2020', status: 'Unfinished' },
+    { name: "Lauren", id: '127332', createdDate: 'January 4, 2020', lastEdited: 'January 4, 2020', status: 'Unfinished' },
+    { name: "Navam", id: '269402', createdDate: 'January 5, 2020', lastEdited: 'January 5, 2020', status: 'Unfinished' },
+    { name: "Ashank", id: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
+    { name: "Andy", id: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
+    { name: "Gene", id: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
+  ]
 
   return (
     <div>
@@ -36,28 +49,30 @@ const Dashboard = (props) => {
           </div>
         </div>
         <table className="table">
-          <tr className="head">
-            <th>Name</th>
-            <th>Patient #</th>
-            <th>Date Added</th>
-            <th>Last edited by</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-          <tr className="row">
-            <td>Test Name</td>
-            <td>Test Number</td>
-            <td>Test Date</td>
-            <td>Test Date</td>
-            <td>Test Status</td>
-            <td style={{ display: 'flex' }}>
-              <Button name="View" />
-              <Button name="Edit" />
-            </td>
-          </tr>
-          {patients.map(patient => (
-            <tr></tr>
-          ))}
+          <thead>
+            <tr className="head">
+              <th>Name</th>
+              <th>Patient #</th>
+              <th>Date Added</th>
+              <th>Last edited by</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {patientsTest.map(patient => (
+              <tr key={patient.id} className="row">
+                <td>{patient.name}</td>
+                <td>{patient.id} </td>
+                <td>{patient.createdDate}</td>
+                <td>{patient.lastEdited}</td>
+                <td>{patient.status}</td>
+                <td style={{ display: 'flex' }}>
+                  <Link to={`/patient-info/${patient.id}`}><Button name="View" /></Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </div>

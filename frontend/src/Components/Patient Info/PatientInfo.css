@@ -1,0 +1,25 @@
+.patient-info {
+    display: flex;
+}
+
+.sidebar {
+    height: 100%;
+    width: 12%;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    background-color: lightgray;
+    overflow-x: hidden;
+    padding-top: 20px;
+    justify-content: center;
+}
+
+.sidebar-content {
+    text-align: center;
+}
+
+.patient-content {
+    margin-left: 12%;
+    font-size: 28px;
+    padding: 0px 10px;
+}

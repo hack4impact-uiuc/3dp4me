@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -9,6 +8,7 @@ import AccountManagement from "./Components/Account Management/AccountManagment"
 import Metrics from "./Components/Metrics/Metrics";
 import Patients from "./Components/Patients/Patients";
 import Navbar from "./Components/Navbar/Navbar";
+import PatientInfo from "./Components/Patient Info/PatientInfo"
 
 import './styles.css'
 
@@ -21,14 +21,17 @@ function App() {
           <Route exact path="/">
             <Dashboard />
           </Route>
-          <Route exact path="/account">
+          <Route path="/account">
             <AccountManagement />
           </Route>
-          <Route exact path="/metrics">
+          <Route path="/metrics">
             <Metrics />
           </Route>
-          <Route exact path="/patients">
+          <Route path="/patients">
             <Patients />
+          </Route>
+          <Route path="/patient-info/:id">
+            <PatientInfo />
           </Route>
         </div>
       </Switch>
