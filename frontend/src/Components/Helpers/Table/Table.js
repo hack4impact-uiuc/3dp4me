@@ -2,23 +2,22 @@ import React from 'react'
 
 import { Link } from 'react-router-dom'
 
-import Button from '../Helpers/Button/Button'
+import Button from '../Button/Button'
 
 import './Table.css'
 
 const Table = (props) => {
 
     const data = props.data;
+    const headers = props.headers;
     
     return (
         <table className="table">
           <thead>
             <tr className="head">
-              <th>Name</th>
-              <th>Patient #</th>
-              <th>Date Added</th>
-              <th>Last edited by</th>
-              <th>Status</th>
+              {headers.map(head => (
+                <th>{head}</th>
+              ))}
               <th></th>
             </tr>
           </thead>
@@ -26,7 +25,7 @@ const Table = (props) => {
             {data.map(patient => (
               <tr key={patient.id} className="row">
                 <td>{patient.name}</td>
-                <td>{patient.id} </td>
+                <td>{patient.serial} </td>
                 <td>{patient.createdDate}</td>
                 <td>{patient.lastEdited}</td>
                 <td>{patient.status}</td>

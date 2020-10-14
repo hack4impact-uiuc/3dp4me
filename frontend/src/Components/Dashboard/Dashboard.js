@@ -4,7 +4,7 @@ import Button from "../Helpers/Button/Button";
 
 import { Link } from 'react-router-dom'
 
-import Table from '../Table/Table'
+import Table from '../Helpers/Table/Table'
 
 import "./Dashboard.css";
 
@@ -13,14 +13,14 @@ const Dashboard = (props) => {
   const [patients, setPatients] = useState([])
 
   const patientsTest = [
-    { name: "Amit", id: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
-    { name: "Evan", id: '635058', createdDate: 'January 2, 2020', lastEdited: 'January 2, 2020', status: 'Unfinished' },
-    { name: "Anisha", id: '100231', createdDate: 'January 3, 2020', lastEdited: 'January 3, 2020', status: 'Unfinished' },
-    { name: "Lauren", id: '127332', createdDate: 'January 4, 2020', lastEdited: 'January 4, 2020', status: 'Unfinished' },
-    { name: "Navam", id: '269402', createdDate: 'January 5, 2020', lastEdited: 'January 5, 2020', status: 'Unfinished' },
-    { name: "Ashank", id: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
-    { name: "Andy", id: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
-    { name: "Gene", id: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
+    { name: "Amit", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
+    { name: "Evan", serial: '635058', createdDate: 'January 2, 2020', lastEdited: 'January 2, 2020', status: 'Unfinished' },
+    { name: "Anisha", serial: '100231', createdDate: 'January 3, 2020', lastEdited: 'January 3, 2020', status: 'Unfinished' },
+    { name: "Lauren", serial: '127332', createdDate: 'January 4, 2020', lastEdited: 'January 4, 2020', status: 'Unfinished' },
+    { name: "Navam", serial: '269402', createdDate: 'January 5, 2020', lastEdited: 'January 5, 2020', status: 'Unfinished' },
+    { name: "Ashank", serial: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
+    { name: "Andy", serial: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
+    { name: "Gene", serial: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
   ]
 
   return (
@@ -48,7 +48,7 @@ const Dashboard = (props) => {
             <Button name="Create New Patient" />
           </div>
         </div>
-        <Table data={patientsTest} />
+        <Table headers={["Name", "Serial", "Date Added", "Last Edit By", "Status"]} data={patientsTest} />
       </div>
     </div>
   );
