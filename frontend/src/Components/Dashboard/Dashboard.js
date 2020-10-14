@@ -4,6 +4,8 @@ import Button from "../Helpers/Button/Button";
 
 import { Link } from 'react-router-dom'
 
+import Table from '../Table/Table'
+
 import "./Dashboard.css";
 
 const Dashboard = (props) => {
@@ -36,9 +38,6 @@ const Dashboard = (props) => {
         <div className="header">
           <div className="section">
             <h2 style={{ flexGrow: 1 }}>Patient Information</h2>
-            <Button name="Create New Patient" />
-          </div>
-          <div className="section">
             <input placeholder="Search..." />
             <select defaultValue="newest">
               <option value="newest">Newest</option>
@@ -46,34 +45,10 @@ const Dashboard = (props) => {
               <option value="patient#">Patient #</option>
               <option value="status">Status</option>
             </select>
+            <Button name="Create New Patient" />
           </div>
         </div>
-        <table className="table">
-          <thead>
-            <tr className="head">
-              <th>Name</th>
-              <th>Patient #</th>
-              <th>Date Added</th>
-              <th>Last edited by</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {patientsTest.map(patient => (
-              <tr key={patient.id} className="row">
-                <td>{patient.name}</td>
-                <td>{patient.id} </td>
-                <td>{patient.createdDate}</td>
-                <td>{patient.lastEdited}</td>
-                <td>{patient.status}</td>
-                <td style={{ display: 'flex' }}>
-                  <Link to={`/patient-info/${patient.id}`}><Button name="View" /></Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <Table data={patientsTest} />
       </div>
     </div>
   );

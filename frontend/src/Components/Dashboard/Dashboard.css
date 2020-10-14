@@ -2,21 +2,12 @@
     display: flex;
 }
 
-.patient-list .header {
-    /* display: flex;
-    position: relative;
-    align-items: center;
-    */
-} 
-
 .patient-list .header .section {
     display: flex;
 }
 
-.table {
-    width: 100%;
-}
 
-.table .head {
-    text-align: left;
+.section {
+    display: flex;
+    align-items: center;
 }
