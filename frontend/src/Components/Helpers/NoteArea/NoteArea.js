@@ -4,7 +4,8 @@ const NoteArea = (props) => {
 
     return (
         <div>
-            
+            <h5>Notes</h5>
+            <textarea />
         </div>
     )
 }

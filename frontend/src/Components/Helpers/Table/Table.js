@@ -30,7 +30,7 @@ const Table = (props) => {
                 <td>{patient.lastEdited}</td>
                 <td>{patient.status}</td>
                 <td style={{ display: 'flex' }}>
-                  <Link to={`/patient-info/${patient.id}`}><Button name="View" /></Link>
+                  <Link to={`/patient-info/${patient.serial}`}><Button name="View" /></Link>
                 </td>
               </tr>
             ))}

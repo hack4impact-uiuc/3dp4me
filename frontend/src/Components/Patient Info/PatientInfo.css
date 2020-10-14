@@ -1,10 +1,12 @@
 .patient-info {
     display: flex;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .sidebar {
     height: 100%;
-    width: 12%;
+    width: 240px;
     position: fixed;
     z-index: 1;
     left: 0;
@@ -19,7 +21,17 @@
 }
 
 .patient-content {
-    margin-left: 12%;
-    font-size: 28px;
+    /* position: fixed; */
+    margin-left: 200px;
+    /* font-size: 28px; */
     padding: 0px 10px;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.patient-content::-webkit-scrollbar {
+    display: none;
 }

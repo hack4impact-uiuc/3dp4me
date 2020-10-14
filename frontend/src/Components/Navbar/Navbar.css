@@ -1,6 +1,10 @@
 .navbar {
     display: flex;
-    padding: 1%;
+    padding: 2%; /* this is saving some overlap with content divs */
+    position: fixed;
+    width: 96%;
+    top: 0;
+    background-color: white;
 }
 
 .nav-item {
