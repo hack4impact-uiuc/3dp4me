@@ -4,7 +4,7 @@ const { errorWrap } = require("../../utils");
 
 const { getAllPatients, getPatientsByStage, completeStage } = require("../../db/patients.js");
 
-// Get all patients
+// TODO: Get all patients
 router.get(
     '/',
     errorWrap(async (req, res) => {
@@ -37,8 +37,9 @@ router.post(
     "/:id/:stage/complete",
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        
-        await completeStage(id, stage);
+        const { userId } = req.body;
+
+        await completeStage(userId, id, stage);
         res.status(200).json({
             code: 200,
             success: true,

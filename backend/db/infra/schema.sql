@@ -13,6 +13,8 @@ create table patients (
     model_user_id INTEGER,
     printing_completion TEXT,
     printing_user_id INTEGER,
+    post_processing_completion TEXT,
+    post_processing_user_id INTEGER,
     delivery_completion TEXT,
     delivery_user_id INTEGER,
     feedback_completion TEXT,

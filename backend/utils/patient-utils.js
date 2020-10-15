@@ -5,6 +5,8 @@ const getNextStage = (stage) => {
         case "model":
             return "printing";
         case "printing":
+            return "post_processing";
+        case "post_processing":
             return "delivery";
         case "delivery":
             return "feedback";            

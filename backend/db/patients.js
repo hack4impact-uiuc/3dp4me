@@ -14,17 +14,19 @@ const getPatientsByStage = async (stage) => {
     return res.rows;
 }
 
-const completeStage = async(id, stage) => {
+const completeStage = async(userId, patientId, stage) => {
     var timestamp = new Date(); // TODO: change to how we need the timestamp to be formatted
-    const timstampCol = `${stage}_completion`;
+    const timestampCol = `${stage}_completion`;
+    const userIdCol = `${stage}_user_id`;
     const nextStage = getNextStage(stage);
 
     const sql = `UPDATE patients SET 
-                    ${timstampCol} = $1,
+                    ${timestampCol} = $1,
                     reverted = false,
-                    stage = $2
-                WHERE patient_id = $3`;
-    const params = [ timestamp, nextStage, id ];
+                    stage = $2,
+                    ${userIdCol} = $3
+                WHERE patient_id = $4`;
+    const params = [ timestamp, nextStage, userId, patientId ];
     await db.query(sql, params);
 }
 
