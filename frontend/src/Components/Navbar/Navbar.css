@@ -1,0 +1,17 @@
+.navbar {
+    display: flex;
+    padding: 2%; /* this is saving some overlap with content divs */
+    position: fixed;
+    width: 96%;
+    top: 0;
+    background-color: white;
+}
+
+.nav-item {
+    text-decoration: none;
+    margin-left: 2%;
+}
+
+#nav-title{
+    flex-grow: 1;
+}
