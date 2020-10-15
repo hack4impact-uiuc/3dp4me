@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { errorWrap } = require("../../utils");
 
-const { getAllPatients, getPatientsByStage, addPatient } = require("../../db/patients.js");
-
 // Get all patients
+const { getAllPatients, getPatientsByStage, completeStage, addPatient } = require("../../db/patients.js");
+
+// TODO: Get all patients
 router.get(
     '/',
     errorWrap(async (req, res) => {
@@ -47,6 +48,20 @@ router.post(
             success: true,
             result: last_patient_added,
         })
+    })
+);
+// Mark stage as complete for a patient
+router.post(
+    "/:id/:stage/complete",
+    errorWrap(async (req, res) => {
+        const { id, stage } = req.params;
+        const { userId } = req.body;
+
+        await completeStage(userId, id, stage);
+        res.status(200).json({
+            code: 200,
+            success: true,
+        });
     }),
 );
 
