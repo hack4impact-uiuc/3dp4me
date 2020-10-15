@@ -2,18 +2,17 @@ import React from 'react';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import './App.css';
-import awsconfig from './aws-exports.js';
+import awsconfig from './aws/aws-exports.js';
+import S3ImageUpload from './aws/aws-image-upload';
+import { isNormalUser } from './aws/aws-helper';
 
 Amplify.configure(awsconfig)
 
 const App = function() {
   return (
-    // <div className="App">
-    //   { Login() }
-    // </div>
     <div>
     <AmplifySignOut />
-    My App
+    <S3ImageUpload />
     </div>
   );
 }
