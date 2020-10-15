@@ -33,6 +33,10 @@ const Dashboard = (props) => {
         <button>3D Printing</button>
         <button>Delivery</button>
         <button>Feedback</button>
+        <button>Post Processing</button>
+        {/* 
+          * TODO: Dashboard Table and content on button press to toggle between patients in X stage 
+        */}
       </div>
       <div className="patient-list">
         <div className="header">
