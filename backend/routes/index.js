@@ -1,14 +1,6 @@
-const express = require('express')
+const express = require("express");
+const router = express.Router();
+// Dont touch this file
+router.use("/api", require("./api"));
 
-const app = express();
-
-app.get('/', (req,res) => {
-	//callback code goes here
-	res.send("<h1>Hello World!</h1>")
-})
-
-const PORT = process.env.PORT || 8000;
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
+module.exports = router;
