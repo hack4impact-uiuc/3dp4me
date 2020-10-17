@@ -7,7 +7,7 @@ import Dashboard from "./Steps/Dashboard/Dashboard";
 import AccountManagement from "./Pages/Account Management/AccountManagment";
 import Metrics from "./Pages/Metrics/Metrics";
 import Patients from "./Steps/Patients/Patients";
-import Navbar from "./Steps/Navbar/Navbar";
+import Navbar from "./Components/Navbar/Navbar";
 import PatientInfo from "./Steps/Patient Info/PatientInfo"
 
 import './styles.css'
