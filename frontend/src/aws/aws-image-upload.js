@@ -1,14 +1,29 @@
 import React from 'react';
-import { Storage } from 'aws-amplify'
+import { Storage } from 'aws-amplify';
+import { withAuthenticator } from '@aws-amplify/ui-react';
 
-function onChange(e) {
+function notifyUploadError(err){
+    console.log(err);
+    alert("An error occured while uploading.");
+}
+
+function notifyUploadSuccess(result){
+    console.log(result);
+    alert("File uploaded");
+}
+
+async function onChange(e) {
     const file = e.target.files[0];
-    console.log(file)
-    Storage.put('example.txt', file, {
+
+    // This is what the file is named on AWS. Not sure if we want to standardize names, add dates, etc.
+    const fileName = file;
+
+    Storage.put(fileName, file, {
         contentType: 'text'
     })
-    .then (result => console.log(result))
-    .catch(err => console.log(err));
+
+    .then(notifyUploadSuccess)
+    .catch(notifyUploadError);
 }
 
 const S3ImageUpload = function() {
@@ -20,4 +35,4 @@ const S3ImageUpload = function() {
     )
 }
 
-export default S3ImageUpload;
+export default withAuthenticator(S3ImageUpload);

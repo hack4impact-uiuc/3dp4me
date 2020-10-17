@@ -4,7 +4,7 @@ const awsconfig = {
       region: 'us-east-2',
       userPoolId: 'us-east-2_xE6iqHhIV',
       userPoolWebClientId: '25cnrbddteac1ak0dtm7coojvh',
-      mandatorySignIn: false,
+      mandatorySignIn: true,
     }, 
     Storage: {
       AWSS3: {
