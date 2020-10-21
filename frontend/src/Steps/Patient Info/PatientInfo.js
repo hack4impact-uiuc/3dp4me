@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Button from '../Helpers/Button/Button';
+import Button from '../../Components/Button/Button';
 
 import './PatientInfo.css'
 

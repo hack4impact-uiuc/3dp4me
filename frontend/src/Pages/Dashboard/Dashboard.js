@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import Button from "../Helpers/Button/Button";
+
+import { Button } from '@material-ui/core'
 
 import { Link } from 'react-router-dom'
 
-import Table from '../Helpers/Table/Table'
+import Table from '../../Components/Table/Table'
 
 import "./Dashboard.css";
 
@@ -60,7 +61,7 @@ const Dashboard = (props) => {
               <option value="patient#">Patient #</option>
               <option value="status">Status</option>
             </select>
-            <Button name="Create New Patient" />
+            <Button>Create new patient</Button>
           </div>
         </div>
         <Table headers={["Name", "Serial", "Date Added", "Last Edit By", "Status"]} data={patientsTest} />

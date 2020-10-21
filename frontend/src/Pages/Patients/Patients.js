@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
-import Button from '../Helpers/Button/Button';
-import Table from '../Helpers/Table/Table'
-
 import { Link } from 'react-router-dom'
+
+import { Button } from '@material-ui/core';
+
+import Table from '../../Components/Table/Table'
 
 import './Patients.css'
 
@@ -35,7 +36,7 @@ const Patients = (props) => {
             <div className="all-patients-header">
                 <h2 style={{flexGrow: 1}}>All Patients</h2>
                 <input placeholder="Search..." />
-                <Button name="Create New Patient" />
+                <Button>Create new patient</Button>
             </div>
             <Table headers={["Name", "Serial", "Date Added", "Last Edit By", "Stage"]} data={patientsTest} />
         </div>
