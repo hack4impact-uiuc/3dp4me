@@ -1,5 +1,5 @@
 const db = require("../pool.js");
-const { getNextStage } = require("../utils/patient-utils.js");
+const { getNextStage, getPrevStage } = require("../utils/patient-utils.js");
 
 const getAllPatients = async () => {
     const sql = "SELECT * FROM patients";
@@ -39,10 +39,41 @@ const completeStage = async(userId, patientId, stage) => {
                     ${timestampCol} = $1,
                     reverted = false,
                     stage = $2,
-                    ${userIdCol} = $3
-                WHERE patient_id = $4`;
-    const params = [ timestamp, nextStage, userId, patientId ];
+                    ${userIdCol} = $3,
+                    last_touched = $4, 
+                    last_user_touching = $5
+                WHERE patient_id = $6`;
+    const params = [ timestamp, nextStage, userId, timestamp, userId, patientId ];
     await db.query(sql, params);
+}
+
+const revertStage = async(userId, patientId, currStage, notes) => {
+    var timestamp = new Date(); // TODO: change to how we need the timestamp to be formatted
+    const currTimestampCol = `${currStage}_completion`;
+    const currUserIdCol = `${currStage}_user_id`;
+    const prevStage = getPrevStage(currStage);
+
+    
+    const folder = getPatientFolder(patientId);
+    // TODO: Update notes in s3 folder associated with patient for notes regarding why the revert happened
+
+    const sql = `UPDATE patients SET 
+                    ${currTimestampCol} = NULL,
+                    reverted = true,
+                    stage = $1,
+                    ${currUserIdCol} = NULL,
+                    last_touched = $2,
+                    last_user_touching = $3
+                WHERE patient_id = $4`;
+    const params = [ prevStage, timestamp ,userId, patientId];
+    await db.query(sql, params);
+}
+
+const getPatientFolder = (patientId) => {
+    const sql = 'SELECT folder from patients WHERE patient_id = $1'
+    const params = [patientId]
+    const res = db.query(sql, params);
+    return res[0];
 }
 
 module.exports = {
@@ -50,4 +81,5 @@ module.exports = {
     getPatientsByStage,
     addPatient,
     completeStage,
+    revertStage
 }

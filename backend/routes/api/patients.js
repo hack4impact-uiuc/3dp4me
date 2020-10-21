@@ -3,7 +3,7 @@ const router = express.Router();
 const { errorWrap } = require("../../utils");
 
 // Get all patients
-const { getAllPatients, getPatientsByStage, completeStage, addPatient } = require("../../db/patients.js");
+const { getAllPatients, getPatientsByStage, completeStage, addPatient, revertStage } = require("../../db/patients.js");
 
 // TODO: Get all patients
 router.get(
@@ -58,6 +58,18 @@ router.post(
         const { userId } = req.body;
 
         await completeStage(userId, id, stage);
+        res.status(200).json({
+            code: 200,
+            success: true,
+        });
+    }),
+);
+router.post(
+    "/:id/:stage/revert",
+    errorWrap(async (req, res) => {
+        const { id, currStage } = req.params;
+        const { userId, notes } = req.body;
+        await revertStage(userId, id, currStage, notes);
         res.status(200).json({
             code: 200,
             success: true,
