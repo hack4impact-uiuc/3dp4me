@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { Button, IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import './MainTable.css'
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -30,17 +31,20 @@ const useStyles = makeStyles({
     table: {
         minWidth: 700,
     },
-    rightBorder: {
-        borderRight: 'solid #255296 1px'
+    cell: {
+        borderRight: 'solid #255296 1px',
+        fontSize: 17,
     },
     header: {
         borderTop: 'solid #255296 1px',
         borderBottom: 'solid #255296 1px',
         borderRight: 'solid #255296 1px',
-        fontWeight: 'bolder'
+        fontWeight: 'bolder',
+        fontSize: 20
     },
     container: {
         // maxHeight: '80vh',
+        fontFamily: 'Ubuntu',
     },
 });
 
@@ -62,13 +66,13 @@ const MainTable = (props) => {
                 </TableHead>
                 <TableBody>
                     {props.patients.map((patient) => (
-                        <StyledTableRow key={patient.serial}>
-                            <StyledTableCell className={classes.rightBorder} align="center">{patient.name}</StyledTableCell>
-                            <StyledTableCell className={classes.rightBorder} align="center">{patient.serial}</StyledTableCell>
-                            <StyledTableCell className={classes.rightBorder} align="center">{patient.createdDate}</StyledTableCell>
-                            <StyledTableCell className={classes.rightBorder} align="center">{patient.lastEdited}</StyledTableCell>
-                            <StyledTableCell className={classes.rightBorder} align="center">{patient.status}</StyledTableCell>
-                            <StyledTableCell className={classes.rightBorder} align="center">
+                        <StyledTableRow  key={patient.serial}>
+                            <StyledTableCell className={classes.cell} align="center">{patient.name}</StyledTableCell>
+                            <StyledTableCell className={classes.cell} align="center">{patient.serial}</StyledTableCell>
+                            <StyledTableCell className={classes.cell} align="center">{patient.createdDate}</StyledTableCell>
+                            <StyledTableCell className={classes.cell} align="center">{patient.lastEdited}</StyledTableCell>
+                            <StyledTableCell className={classes.cell} align="center">{patient.status}</StyledTableCell>
+                            <StyledTableCell className={classes.cell} align="center">
                                 <Link to={`/patient-info/${patient.serial}`}>
                                     <IconButton>
                                         <VisibilityIcon />
