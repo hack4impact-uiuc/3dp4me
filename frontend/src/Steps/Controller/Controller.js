@@ -62,7 +62,7 @@ const Controller = (props) => {
                 </div>
             </Drawer>
 
-            <div className="content">
+            <div className="controller-content">
                 <PatientInfo />
             </div>
             

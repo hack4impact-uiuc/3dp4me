@@ -4,6 +4,7 @@
 
 .patient-list .header .section {
     display: flex;
+    margin-left: 5%;
 }
 
 .section {

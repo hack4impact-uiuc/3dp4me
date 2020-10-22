@@ -16,7 +16,7 @@ const Navbar = (props) => {
   const classes = useStyles();
   return (
     <div className="wrap-nav">
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar className={classes.appBar}>
         <Toolbar className="navbar">
           <Link id="nav-title" className="nav-item" to="/">
             Dashboard
