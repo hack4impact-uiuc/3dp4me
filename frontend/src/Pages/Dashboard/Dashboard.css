@@ -6,8 +6,21 @@
     display: flex;
 }
 
-
 .section {
     display: flex;
     align-items: center;
+}
+
+.button {
+    background: #e5f0ff;
+}
+
+.dashboard {
+    margin-top: 5%;
+}
+
+@media only screen and (max-width: 800px) {
+    .dashboard {
+        margin-top: 10%;
+    }
 }

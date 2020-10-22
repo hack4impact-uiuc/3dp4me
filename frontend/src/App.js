@@ -9,6 +9,7 @@ import Metrics from "./Pages/Metrics/Metrics";
 import Patients from "./Pages/Patients/Patients";
 import Navbar from "./Components/Navbar/Navbar";
 import PatientInfo from "./Steps/Patient Info/PatientInfo"
+import Controller from './Steps/Controller/Controller'
 
 import './styles.css'
 
@@ -36,7 +37,7 @@ function App() {
           </Route>
            {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
           <Route path="/patient-info/:serial">
-            <PatientInfo />
+            <Controller />
           </Route>
         </div>
       </Switch>

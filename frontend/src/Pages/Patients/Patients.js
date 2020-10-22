@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@material-ui/core';
 
-import Table from '../../Components/Table/Table'
+import MainTable from '../../Components/Table/MainTable'
 
 import './Patients.css'
 
@@ -38,7 +38,7 @@ const Patients = (props) => {
                 <input placeholder="Search..." />
                 <Button>Create new patient</Button>
             </div>
-            <Table headers={["Name", "Serial", "Date Added", "Last Edit By", "Stage"]} data={patientsTest} />
+            <MainTable patients={patientsTest} />
         </div>
     )
 }
