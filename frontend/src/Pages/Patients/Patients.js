@@ -1,20 +1,41 @@
 import React, { useEffect, useState } from 'react'
-
 import { Link } from 'react-router-dom'
-
-import { Button } from '@material-ui/core';
-
+import { Button, Snackbar, TextField } from '@material-ui/core';
 import MainTable from '../../Components/Table/MainTable'
-
 import './Patients.css'
+import MuiAlert from '@material-ui/lab/Alert';
 
 const Patients = (props) => {
 
-    const allpatients = useState([]);
+    const [allPatients, setAllPatients] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [filterPatients, setFilteredPatients] = useState([]);
+    const [noPatient, setNoPatient] = useState(false);
+
+    const handleSearch = (e) => {
+        console.log(e.target.value)
+        setSearchQuery(e.target.value);
+        let filtered = allPatients.filter(patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || patient.serial.search(e.target.value) !== -1);
+        setNoPatient(filtered.length === 0);
+        setFilteredPatients(filtered);
+    }
+
+    const handleNoPatientClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setNoPatient(false);
+    };
+
 
     const getData = (props) => {
         // TODO: api call to get all patients and assign it to all patients state variable
     }
+
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+      }
 
     const patientsTest = [
         { name: "Amit", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
@@ -25,20 +46,32 @@ const Patients = (props) => {
         { name: "Ashank", serial: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
         { name: "Andy", serial: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
         { name: "Gene", serial: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
-      ]
+    ]
 
     useEffect(() => {
         getData();
+        setAllPatients(patientsTest);
     }, []);
 
     return (
         <div>
             <div className="all-patients-header">
-                <h2 style={{flexGrow: 1}}>All Patients</h2>
-                <input placeholder="Search..." />
+                <Snackbar open={noPatient} autoHideDuration={3000} onClose={handleNoPatientClose}>
+                    <Alert onClose={handleNoPatientClose} severity="error">
+                        Sorry! No matching patients
+                    </Alert>
+                </Snackbar>
+                <h2 style={{ flexGrow: 1 }}>All Patients</h2>
+                <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder="Search..." />
                 <Button>Create new patient</Button>
             </div>
-            <MainTable patients={patientsTest} />
+            {
+              searchQuery.length === 0 ? (
+                <MainTable patients={allPatients} />
+              ) : (
+                  <MainTable patients={filterPatients} />
+                )
+            }
         </div>
     )
 }
