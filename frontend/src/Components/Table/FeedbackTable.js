@@ -11,7 +11,6 @@ import { Button, IconButton, SvgIcon } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Eyecon from '../../icons/view.svg';
-import './MainTable.css'
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -49,7 +48,7 @@ const useStyles = makeStyles({
     },
 });
 
-const MainTable = (props) => {
+const FeebackTable = (props) => {
     const classes = useStyles();
 
     return (
@@ -60,8 +59,8 @@ const MainTable = (props) => {
                         <StyledTableCell className={classes.header} align="center">Name</StyledTableCell>
                         <StyledTableCell className={classes.header} align="center">Serial</StyledTableCell>
                         <StyledTableCell className={classes.header} align="center">Date Added</StyledTableCell>
-                        <StyledTableCell className={classes.header} align="center">Last Edit By</StyledTableCell>
-                        <StyledTableCell className={classes.header} align="center">Status</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">Feedback cycle</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">Collection Status</StyledTableCell>
                         <StyledTableCell className={classes.header} align="center"></StyledTableCell>
                     </TableRow>
                 </TableHead>
@@ -71,7 +70,7 @@ const MainTable = (props) => {
                             <StyledTableCell className={classes.cell} align="center">{patient.name}</StyledTableCell>
                             <StyledTableCell className={classes.cell} align="center">{patient.serial}</StyledTableCell>
                             <StyledTableCell className={classes.cell} align="center">{patient.createdDate}</StyledTableCell>
-                            <StyledTableCell className={classes.cell} align="center">{patient.lastEdited}</StyledTableCell>
+                            <StyledTableCell className={classes.cell} align="center">{patient.cycle}</StyledTableCell>
                             <StyledTableCell className={classes.cell} align="center">{patient.status}</StyledTableCell>
                             <StyledTableCell className={classes.cell} align="center">
                                 <Link to={`/patient-info/${patient.serial}`}>
@@ -89,4 +88,4 @@ const MainTable = (props) => {
     );
 }
 
-export default MainTable;
+export default FeebackTable;

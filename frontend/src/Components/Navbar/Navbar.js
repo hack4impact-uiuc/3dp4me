@@ -1,8 +1,9 @@
 import React from "react";
 
-import { AppBar, Toolbar } from "@material-ui/core";
+import { AppBar, Avatar, Toolbar } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
+import Logo from '../../icons/3dp4me_logo.png';
 
 import "./Navbar.css";
 
@@ -18,6 +19,7 @@ const Navbar = (props) => {
     <div className="wrap-nav">
       <AppBar className={classes.appBar}>
         <Toolbar className="navbar">
+          <img width={60} src={Logo} />
           <Link id="nav-title" className="nav-item" to="/">
             Dashboard
       </Link>
@@ -33,6 +35,7 @@ const Navbar = (props) => {
           <Link className="nav-item" to="account">
             Account Management
        </Link>
+       <Avatar style={{backgroundColor: "#ff9900", marginLeft: 20, marginRight: 10}}>EE</Avatar>
         </Toolbar>
       </AppBar>
     </div>

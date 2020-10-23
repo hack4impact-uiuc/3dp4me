@@ -1,36 +1,61 @@
 import React, { useState, useEffect } from "react";
-import { Button, ButtonGroup, MenuItem, TextField, Toolbar, Select, Typography } from '@material-ui/core'
+import { Button, ButtonGroup, MenuItem, TextField, Toolbar, Select, Typography, IconButton } from '@material-ui/core'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import MainTable from '../../Components/Table/MainTable'
+import MainTable from '../../Components/Table/MainTable';
 import "./Dashboard.css";
+import FeebackTable from "../../Components/Table/FeedbackTable";
 
 
 const Dashboard = (props) => {
 
-  const [patients, setPatients] = useState([])
+  const [patients, setPatients] = useState([]);
   const [sort, setSort] = useState("new");
-  const [step, setStep] = React.useState('info');
+  const [step, setStep] = useState('info');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterPatients, setFilteredPatients] = useState([]);
+  const [stepTitle, setStepTitle] = useState("Patient");
+
 
   const handlesort = (e) => {
+    setSort(e.target.value);
+  }
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    let filtered = patients.filter(patient => patient.name.toLowerCase().search(e.target.value) !== -1 || patient.serial.search(e.target.value) !== -1);
+    setFilteredPatients(filtered);
   }
 
   useEffect(() => {
     setPatients(patientInfo)
-}, []);
+  }, []);
 
   const handleStep = (event, newStep) => {
+    setSearchQuery("");
     if (newStep !== null) {
       setStep(newStep);
       if (newStep === "info") {
+        setStepTitle("Patient");
         setPatients(patientInfo)
         console.log("here")
       } else if (newStep === "scan") {
+        setStepTitle("Ear Scan");
         setPatients(earScan)
-      } else if (newStep === "modeling") {
+      } else if (newStep === "cad") {
+        setStepTitle("CAD Modeling");
         setPatients(modeling)
-      } else {
+      } else if (newStep === "printing") {
+        setStepTitle("3D Printing");
+        setPatients(patientInfo)
+      } else if (newStep === "processing") {
+        setStepTitle("Post Processing");
+        setPatients(patientInfo)
+      } else if (newStep === "delivery") {
+        setStepTitle("Delivery");
+        setPatients(patientInfo)
+      } else if (newStep === "feedback") {
+        setStepTitle("Feedback");
         setPatients(patientInfo)
       }
     }
@@ -72,15 +97,15 @@ const Dashboard = (props) => {
     <div className="dashboard">
       <div className="tabs">
         {/* <Toolbar> */}
-          <ToggleButtonGroup style={{width: '100%'}} size="large" exclusive value={step} onChange={handleStep}>
-            <ToggleButton disableRipple style={{flexGrow: 1, color: 'black'}} value="info">Patient Info</ToggleButton>
-            <ToggleButton disableRipple style={{flexGrow: 1, color: 'black'}} value="scan">Ear scan upload</ToggleButton>
-            <ToggleButton disableRipple style={{flexGrow: 1, color: 'black'}} value="modeling">CAD Modeling</ToggleButton>
-            <ToggleButton disableRipple style={{flexGrow: 1, color: 'black'}} value="printing">3D Printing</ToggleButton>
-            <ToggleButton disableRipple style={{flexGrow: 1, color: 'black'}} value="processing">Post Processing</ToggleButton>
-            <ToggleButton disableRipple style={{flexGrow: 1, color: 'black'}} value="delivery">Delivery</ToggleButton>
-            <ToggleButton disableRipple style={{flexGrow: 1, color: 'black'}} value="feedback">Feedback</ToggleButton>
-          </ToggleButtonGroup>
+        <ToggleButtonGroup style={{ width: '100%' }} size="large" exclusive value={step} onChange={handleStep}>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="info">Patient Info</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="scan">Ear scan upload</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="cad">CAD Modleing</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="printing">3D Printing</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="processing">Post Processing</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="delivery">Delivery</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="feedback">Feedback</ToggleButton>
+        </ToggleButtonGroup>
         {/* </Toolbar> */}
         {/* 
           * TODO: Dashboard Table and content on button press to toggle between patients in X stage 
@@ -89,21 +114,46 @@ const Dashboard = (props) => {
       <div className="patient-list">
         <div className="header">
           <div className="section">
-            <h2 style={{ flexGrow: 1 }}>Patient</h2>
-            <TextField variant="outlined" style={{ margin: '10px' }} placeholder="Search..." />
+            <h2 style={{ flexGrow: 1 }}>{stepTitle}</h2>
+            <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder="Search..." />
             <Select variant="outlined"
               value={sort}
               onChange={handlesort}
             >
-              <MenuItem value={"new"}>Newest</MenuItem>
-              <MenuItem value={"old"}>Oldest</MenuItem>
-              <MenuItem value={"serial"}>Serial</MenuItem>
-              <MenuItem value={"status"}>Status</MenuItem>
+              <MenuItem value="new">Newest</MenuItem>
+              <MenuItem value="old">Oldest</MenuItem>
+              <MenuItem value="serial">Serial</MenuItem>
+              <MenuItem value="status">Status</MenuItem>
             </Select>
             <Button>Create new patient</Button>
           </div>
         </div>
-        <MainTable patients={patients} />
+        {stepTitle !== "Feedback" ? (
+          <>
+            {
+              searchQuery.length === 0 ? (
+                <MainTable patients={patients} />
+              ) : (
+                  <MainTable patients={filterPatients} />
+                )
+            }
+          </>
+        ) : (
+            <>
+              {
+                searchQuery.length === 0 ? (
+                  <FeebackTable patients={patients} />
+                ) : (
+                    <FeebackTable patients={filterPatients} />
+                  )
+              }
+            </>
+          )}
+        {/* {searchQuery.length === 0 ? (
+          <MainTable patients={patients} />
+        ) : (
+            <MainTable patients={filterPatients} />
+          )} */}
       </div>
     </div>
   );
