@@ -4,7 +4,7 @@ const EarScan = (props) => {
 
     return (
         <div>
-            
+            test
         </div>
     )
 }

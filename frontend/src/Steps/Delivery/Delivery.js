@@ -4,7 +4,7 @@ const Delivery = (props) => {
 
     return (
         <div>
-            
+            test
         </div>
     )
 }

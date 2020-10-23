@@ -1,4 +1,8 @@
 .controller-content {
     flex-grow: 1;
-    margin-left: 15px;
+    margin-top: 10px;
+}
+
+.steps {
+    padding-left: 15px;
 }

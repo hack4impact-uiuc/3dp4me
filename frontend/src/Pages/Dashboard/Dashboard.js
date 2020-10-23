@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Button, ButtonGroup, MenuItem, TextField, Toolbar, Select, Typography, IconButton } from '@material-ui/core'
+import { Button, MenuItem, TextField, Select, Snackbar } from '@material-ui/core'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import MuiAlert from '@material-ui/lab/Alert';
 import MainTable from '../../Components/Table/MainTable';
 import "./Dashboard.css";
 import FeebackTable from "../../Components/Table/FeedbackTable";
@@ -15,6 +16,7 @@ const Dashboard = (props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterPatients, setFilteredPatients] = useState([]);
   const [stepTitle, setStepTitle] = useState("Patient");
+  const [noPatient, setNoPatient] = useState(false);
 
 
   const handlesort = (e) => {
@@ -23,13 +25,20 @@ const Dashboard = (props) => {
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
-    let filtered = patients.filter(patient => patient.name.toLowerCase().search(e.target.value) !== -1 || patient.serial.search(e.target.value) !== -1);
+    let filtered = patients.filter(patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || patient.serial.search(e.target.value) !== -1);
+    setNoPatient(filtered.length === 0);
     setFilteredPatients(filtered);
   }
 
-  useEffect(() => {
-    setPatients(patientInfo)
-  }, []);
+  const handleNoPatientClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setNoPatient(false);
+  };
+
+
 
   const handleStep = (event, newStep) => {
     setSearchQuery("");
@@ -60,6 +69,14 @@ const Dashboard = (props) => {
       }
     }
   };
+
+  useEffect(() => {
+    setPatients(patientInfo)
+  }, []);
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
 
   const patientInfo = [
@@ -95,6 +112,11 @@ const Dashboard = (props) => {
 
   return (
     <div className="dashboard">
+      <Snackbar open={noPatient} autoHideDuration={3000} onClose={handleNoPatientClose}>
+        <Alert onClose={handleNoPatientClose} severity="error">
+          Sorry! No matching patients
+        </Alert>
+      </Snackbar>
       <div className="tabs">
         {/* <Toolbar> */}
         <ToggleButtonGroup style={{ width: '100%' }} size="large" exclusive value={step} onChange={handleStep}>
@@ -106,10 +128,6 @@ const Dashboard = (props) => {
           <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="delivery">Delivery</ToggleButton>
           <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="feedback">Feedback</ToggleButton>
         </ToggleButtonGroup>
-        {/* </Toolbar> */}
-        {/* 
-          * TODO: Dashboard Table and content on button press to toggle between patients in X stage 
-        */}
       </div>
       <div className="patient-list">
         <div className="header">

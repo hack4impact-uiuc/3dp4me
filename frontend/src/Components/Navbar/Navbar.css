@@ -25,3 +25,7 @@
         margin-top: 10%;
     }
 }
+
+.active {
+    font-weight: bolder;
+}

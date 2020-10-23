@@ -4,7 +4,7 @@ const CADModel = (props) => {
 
     return (
         <div>
-            
+            test
         </div>
     )
 }

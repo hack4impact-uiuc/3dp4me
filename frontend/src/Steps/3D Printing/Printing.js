@@ -4,7 +4,7 @@ const Printing = (props) => {
 
     return (
         <div>
-            
+            test
         </div>
     )
 }
