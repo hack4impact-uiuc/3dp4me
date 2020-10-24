@@ -7,11 +7,12 @@ const { models } = require("../../models");
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        // res.status(200).json({
-        //     code: 200,
-        //     success: true,
-        //     result: patients,
-        // });
+        console.log("Getting patients")
+        models.Patient.find().then(patients => res.status(200).json({
+            code: 200, 
+            success: true, 
+            result: patients
+        }));
     }),
 );
 
@@ -38,15 +39,6 @@ router.post(
     }),
 );
 
-//Get All Patients
-router.get(
-    '/getAllPatients',
-    errorWrap(async (req, res) => {
-        console.log("Getting patients")
-        Patient.find().then(patients => res.json(patients))
-    }),
-);
-
-
+router.post()
 
 module.exports = router;
