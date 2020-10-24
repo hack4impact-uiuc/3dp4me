@@ -9,7 +9,7 @@ const fileSchema = new mongoose.Schema({
 // TODO: add / remove stage fields as needed
 const patientSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    serial: { type: String, required: true },
+    serial: { type: String, required: true, unique: true },
     address: { type: String, required: true },
     folder: { type: String, required: true },
     medicalInformation: {
