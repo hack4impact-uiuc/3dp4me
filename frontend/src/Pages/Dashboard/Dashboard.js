@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 
 import { Button } from '@material-ui/core'
@@ -9,8 +9,9 @@ import Table from '../../Components/Table/Table'
 
 import "./Dashboard.css";
 
-const Dashboard = (props) => {
+import { getAllPatients } from "../../utils/api";
 
+const Dashboard = (props) => {
   const [patients, setPatients] = useState([])
 
   const patientsTest = [
@@ -23,6 +24,16 @@ const Dashboard = (props) => {
     { name: "Andy", serial: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
     { name: "Gene", serial: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
   ]
+
+  // TODO: hook up dashboard to display fetched patients
+  const getPatients = async() => {
+    const res = await getAllPatients();
+    console.log(res);
+  }
+
+  useEffect(() => {
+    getPatients();
+  }, [setPatients]);
 
   return (
     <div>

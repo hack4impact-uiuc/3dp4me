@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { errorWrap } = require("../../utils");
 
+<<<<<<< HEAD
 // Get all patients
 const { getAllPatients, getPatientsByStage, completeStage, addPatient, revertStage } = require("../../db/patients.js");
 
@@ -58,9 +59,16 @@ router.post(
         const { userId } = req.body;
 
         await completeStage(userId, id, stage);
+=======
+router.get(
+    '/',
+    errorWrap(async (req, res) => {
+        console.log("Hello World!");
+>>>>>>> origin/lh/new-backend
         res.status(200).json({
             code: 200,
             success: true,
+            result: "hi",
         });
     }),
 );
