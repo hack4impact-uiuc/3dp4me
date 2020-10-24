@@ -1,62 +1,94 @@
 const mongoose = require("mongoose");
 
+const fileSchema = new mongoose.Schema({
+    filename: { type: String, required: true },
+    uploadedBy: { type: String, required: true },
+    uploadDate: { type: Date, required: true }
+});
+
 // TODO: add / remove stage fields as needed
-const Patient = new mongoose.Schema({
-    name: { type: String },
-    serial: { type: String },
-    address: { type: String },
-    folder: { type: String },
-    patientInformation: {
-        status: { type: String },
-        lastEdit: { type: Date },
-        lastEditBy: { type: String },
-        notes: { type: String },
-        files: { type: Array }
+const patientSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    serial: { type: String, required: true, unique: true },
+    address: { type: String, required: true },
+    folder: { type: String, required: true },
+    medicalInformation: {
+        status: {
+            type: String,
+            enum: ['Not Touched', 'Partially Done', 'Complete'],
+            default: 'Not Touched'
+        },
+        lastEdit: { type: Date, default: Date.now() },
+        lastEditBy: { type: String, default: "" },
+        notes: { type: String, default: "" },
+        files: { type: [fileSchema], default: [] }
     },
     scan: {
-        status: { type: String },
-        lastEdit: { type: Date },
-        lastEditBy: { type: String },
-        notes: { type: String },
-        files: { type: Array }
+        status: {
+            type: String,
+            enum: ['Not Touched', 'Partially Done', 'Complete'],
+            default: 'Not Touched'
+        },
+        lastEdit: { type: Date, default: Date.now() },
+        lastEditBy: { type: String, default: "" },
+        notes: { type: String, default: "" },
+        files: { type: [fileSchema], default: [] }
     },
     cad: {
-        status: { type: String },
-        lastEdit: { type: Date },
-        lastEditBy: { type: String },
-        notes: { type: String },
-        files: { type: Array }
+        status: {
+            type: String,
+            enum: ['Not Touched', 'Partially Done', 'Complete'],
+            default: 'Not Touched'
+        },
+        lastEdit: { type: Date, default: Date.now() },
+        lastEditBy: { type: String, default: "" },
+        notes: { type: String, default: "" },
+        files: { type: [fileSchema], default: [] }
     },
     manufacture: {
-        status: { type: String },
-        lastEdit: { type: Date },
-        lastEditBy: { type: String },
-        notes: { type: String },
-        files: { type: Array }
+        status: {
+            type: String,
+            enum: ['Not Touched', 'Partially Done', 'Complete'],
+            default: 'Not Touched'
+        },
+        lastEdit: { type: Date, default: Date.now() },
+        lastEditBy: { type: String, default: "" },
+        notes: { type: String, default: "" },
+        files: { type: [fileSchema], default: [] }
     },
     postProcessing: {
-        status: { type: String },
-        lastEdit: { type: Date },
-        lastEditBy: { type: String },
-        notes: { type: String },
-        files: { type: Array }
+        status: {
+            type: String,
+            enum: ['Not Touched', 'Partially Done', 'Complete'],
+            default: 'Not Touched'
+        },
+        lastEdit: { type: Date, default: Date.now() },
+        lastEditBy: { type: String, default: "" },
+        notes: { type: String, default: "" },
+        files: { type: [fileSchema], default: [] }
     },
     delivery: {
-        status: { type: String },
-        lastEdit: { type: Date },
-        lastEditBy: { type: String },
-        notes: { type: String },
-        files: { type: Array }
+        status: {
+            type: String,
+            enum: ['Not Touched', 'Partially Done', 'Complete'],
+            default: 'Not Touched'
+        },
+        lastEdit: { type: Date, default: Date.now() },
+        lastEditBy: { type: String, default: "" },
+        notes: { type: String, default: "" },
+        files: { type: [fileSchema], default: [] }
     },
     feedback: {
-        status: { type: String },
-        lastEdit: { type: Date },
-        lastEditBy: { type: String },
-        notes: { type: String },
-        files: { type: Array }
+        status: {
+            type: String,
+            enum: ['Not Touched', 'Partially Done', 'Complete'],
+            default: 'Not Touched'
+        },
+        lastEdit: { type: Date, default: Date.now() },
+        lastEditBy: { type: String, default: "" },
+        notes: { type: String, default: "" },
+        files: { type: [fileSchema], default: [] }
     }
 });
 
-
-
-module.exports = mongoose.model("Patient", Patient);
+module.exports = mongoose.model("Patient", patientSchema);
