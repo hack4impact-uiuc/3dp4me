@@ -56,7 +56,7 @@ const revertStage = async(userId, patientId, currStage, notes) => {
     
     const folder = getPatientFolder(patientId);
     // TODO: Update notes in s3 folder associated with patient for notes regarding why the revert happened
-
+    
     const sql = `UPDATE patients SET 
                     ${currTimestampCol} = NULL,
                     reverted = true,
