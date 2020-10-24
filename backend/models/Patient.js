@@ -57,4 +57,6 @@ const Patient = new mongoose.Schema({
     }
 });
 
+
+
 module.exports = mongoose.model("Patient", Patient);
