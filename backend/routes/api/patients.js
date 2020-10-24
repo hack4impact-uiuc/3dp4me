@@ -1,40 +1,27 @@
 const express = require("express");
 const router = express.Router();
 const { errorWrap } = require("../../utils");
-const { models } = require("../../models");
+const { models, statusEnum } = require("../../models");
 
-// TODO: Get all patients
+// Get all patients (query parameter "stage")
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        // res.status(200).json({
-        //     code: 200,
-        //     success: true,
-        //     result: patients,
-        // });
-    }),
-);
-
-// TODO: Get all patients in a stage
-router.get(
-    "/:stage",
-    errorWrap(async (req, res) => {
-        // res.status(200).json({
-        //     code: 200,
-        //     success: true,
-        //     result: patients,
-        // });
-    }),
-);
-
-// TODO: Mark stage as complete for a patient
-router.post(
-    "/:id/:stage/complete",
-    errorWrap(async (req, res) => {
-        // res.status(200).json({
-        //     code: 200,
-        //     success: true,
-        // });
+        const { stage } = req.query;
+        let patients;
+        if (stage) {
+            // Query by the status of the specified stage
+            let query = {};
+            query[`${stage}.status`] = { $in: [ statusEnum.PARTIALLYDONE, statusEnum.COMPLETE ] };
+            patients = await models.Patient.find(query);
+        } else {
+            patients = await models.Patient.find();
+        }
+        res.status(200).json({
+            code: 200,
+            success: true,
+            result: patients,
+        });
     }),
 );
 

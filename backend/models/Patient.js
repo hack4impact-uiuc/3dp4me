@@ -97,5 +97,9 @@ const patientSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Patient", patientSchema);
-module.exports.statusEnum = statusEnum;
+const Patient = mongoose.model("Patient", patientSchema);
+
+module.exports = {
+    Patient,
+    statusEnum
+};
