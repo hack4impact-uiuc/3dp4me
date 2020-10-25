@@ -180,7 +180,7 @@ const Controller = (props) => {
 
             <div className="controller-content">
                 <ToggleButtonGroup style={{ width: '100%' }} size="large" exclusive value={step} onChange={handleStep}>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid green 4px' }} value="info">Patient Info</ToggleButton>
+                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid green 4px' }} value="info">Medical Information</ToggleButton>
                     <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid #F7B610 4px' }} value="scan">Ear scan upload</ToggleButton>
                     <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid red 4px' }} value="cad">CAD Modleing</ToggleButton>
                     <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid red 4px' }} value="printing">3D Printing</ToggleButton>
