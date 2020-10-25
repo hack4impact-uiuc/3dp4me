@@ -52,8 +52,6 @@ const useStyles = makeStyles((theme) => ({
     },
     labelRoot: {
         fontSize: 20,
-
-
     }
 }));
 
@@ -101,6 +99,7 @@ const Controller = (props) => {
                 <Toolbar />
                 <div className={classes.drawerContainer}>
                     <TextField
+                        disabled
                         label="Name"
                         variant="filled"
                         className={classes.drawerItem}
@@ -113,6 +112,7 @@ const Controller = (props) => {
                         }}
                     />
                     <TextField
+                        disabled
                         label="Order ID"
                         variant="filled"
                         className={classes.drawerItem}
@@ -125,6 +125,7 @@ const Controller = (props) => {
                         }}
                     />
                     <TextField
+                        disabled
                         label="DOB"
                         variant="filled"
                         className={classes.drawerItem}
