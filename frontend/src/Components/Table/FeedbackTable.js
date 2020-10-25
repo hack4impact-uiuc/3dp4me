@@ -33,13 +33,15 @@ const useStyles = makeStyles({
     cell: {
         borderRight: 'solid #255296 1px',
         fontSize: 17,
+        padding: 0,
     },
     header: {
         borderTop: 'solid #255296 1px',
         borderBottom: 'solid #255296 1px',
         borderRight: 'solid #255296 1px',
         fontWeight: 'bolder',
-        fontSize: 20
+        fontSize: 20,
+        padding: 5,
     },
     container: {
         // maxHeight: '80vh',
@@ -75,7 +77,7 @@ const FeebackTable = (props) => {
                                 <Link to={`/patient-info/${patient.serial}`}>
                                     <IconButton>
                                         {/* <VisibilityIcon /> */}
-                                        <img width={40} src={Eyecon} />
+                                        <img width={20} src={Eyecon} />
                                     </IconButton>
                                 </Link>
                             </StyledTableCell>

@@ -1,4 +1,7 @@
-.content {
-    flex-grow: 1;
-    margin-left: 10px;
+.patient-info {
+    margin-bottom: 20px;
+}
+
+.submit-group {
+    margin-top: 10px;
 }

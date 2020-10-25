@@ -24,16 +24,36 @@ const useStyles = makeStyles((theme) => ({
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
+
     },
     drawerPaper: {
         width: drawerWidth,
+        backgroundColor: '#9ebdeb',
+        // background: '#9ebdeb',
     },
     drawerContainer: {
         overflow: 'auto',
         padding: 15,
     },
     drawerItem: {
-        marginTop: 40,
+        marginTop: 20,
+        backgroundColor: 'white',
+        // padding: 10,
+    },
+    inputRoot: {
+        fontSize: 20,
+        backgroundColor: 'white',
+        "&$labelFocused": {
+            backgroundColor: 'white',
+        },
+        '&:hover': {
+            backgroundColor: 'white',
+        }
+    },
+    labelRoot: {
+        fontSize: 20,
+
+
     }
 }));
 
@@ -82,20 +102,41 @@ const Controller = (props) => {
                 <div className={classes.drawerContainer}>
                     <TextField
                         label="Name"
-                        variant="outlined"
-                        defaultValue="Test Name"
+                        variant="filled"
                         className={classes.drawerItem}
+                        InputProps={{ classes: { root: classes.inputRoot } }}
+                        InputLabelProps={{
+                            classes: {
+                                root: classes.labelRoot,
+                                focused: classes.labelFocused
+                            }
+                        }}
                     />
                     <TextField
                         label="Order ID"
-                        defaultValue={`# Test Order ID`}
+                        variant="filled"
                         className={classes.drawerItem}
+                        InputProps={{ classes: { root: classes.inputRoot } }}
+                        InputLabelProps={{
+                            classes: {
+                                root: classes.labelRoot,
+                                focused: classes.labelFocused
+                            }
+                        }}
                     />
                     <TextField
                         label="DOB"
+                        variant="filled"
                         className={classes.drawerItem}
+                        InputProps={{ classes: { root: classes.inputRoot } }}
+                        InputLabelProps={{
+                            classes: {
+                                root: classes.labelRoot,
+                                focused: classes.labelFocused
+                            }
+                        }}
                     />
-                    <div className={classes.drawerItem}>
+                    <div style={{backgroundColor: '#9ebdeb'}} className={classes.drawerItem}>
                         <Accordion expanded={expanded === 'info'} onChange={handleNotePanel('info')}>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>Patient Info</AccordionSummary>
                             <AccordionDetails>
@@ -139,50 +180,50 @@ const Controller = (props) => {
 
             <div className="controller-content">
                 <ToggleButtonGroup style={{ width: '100%' }} size="large" exclusive value={step} onChange={handleStep}>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="info">Patient Info</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="scan">Ear scan upload</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="cad">CAD Modleing</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="printing">3D Printing</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="processing">Post Processing</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="delivery">Delivery</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="feedback">Feedback</ToggleButton>
+                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid green 4px' }} value="info">Patient Info</ToggleButton>
+                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid #F7B610 4px' }} value="scan">Ear scan upload</ToggleButton>
+                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid red 4px' }} value="cad">CAD Modleing</ToggleButton>
+                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid red 4px' }} value="printing">3D Printing</ToggleButton>
+                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid green 4px' }} value="processing">Post Processing</ToggleButton>
+                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid green 4px' }} value="delivery">Delivery</ToggleButton>
+                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid #F7B610 4px' }} value="feedback">Feedback</ToggleButton>
                 </ToggleButtonGroup>
                 <div className="steps">
                     {step === "info" ? (
                         <PatientInfo />
                     ) : (
-                        <></>
-                    )}
+                            <></>
+                        )}
                     {step === "scan" ? (
                         <EarScan />
                     ) : (
-                        <></>
-                    )}
+                            <></>
+                        )}
                     {step === "cad" ? (
                         <CADModel />
                     ) : (
-                        <></>
-                    )}
+                            <></>
+                        )}
                     {step === "printing" ? (
                         <Printing />
                     ) : (
-                        <></>
-                    )}
+                            <></>
+                        )}
                     {step === "processing" ? (
                         <PostProcessing />
                     ) : (
-                        <></>
-                    )}
+                            <></>
+                        )}
                     {step === "delivery" ? (
                         <Delivery />
                     ) : (
-                        <></>
-                    )}
+                            <></>
+                        )}
                     {step === "feedback" ? (
                         <Feedback />
                     ) : (
-                        <></>
-                    )}
+                            <></>
+                        )}
                 </div>
             </div>
 
