@@ -120,7 +120,7 @@ const Dashboard = (props) => {
       <div className="tabs">
         {/* <Toolbar> */}
         <ToggleButtonGroup style={{ width: '100%' }} size="large" exclusive value={step} onChange={handleStep}>
-          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="info">Medical Info</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="info">Patient Info</ToggleButton>
           <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="scan">Ear scan upload</ToggleButton>
           <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="cad">CAD Modleing</ToggleButton>
           <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="printing">3D Printing</ToggleButton>

@@ -56,25 +56,10 @@ const EarScan = (props) => {
 
     const [notes, setNotes] = useState("");
     const [download, setDownload] = useState();
-    const [confirmNoChange, setConfirmNoChange] = useState(false);
-    const [changed, setChanged] = useState(false);
     const [edit, setEdit] = useState(false);
 
     const handleDownload = (e) => {
 
-    }
-
-    const handleSave = (e) => {
-        if (changed) {
-            setEdit(!edit);
-            postData();
-            setConfirmNoChange(false);
-        } else if (e === "override") {
-            setConfirmNoChange(false);
-            setEdit(!edit);
-        } else {
-            setConfirmNoChange(true);
-        }
     }
 
     const postData = (e) => {
@@ -85,31 +70,17 @@ const EarScan = (props) => {
         <div>
             <div style={{ display: 'flex' }}>
                 <h1 style={{ flexGrow: 1 }}>Ear Scan</h1>
-                {!edit ? (
-                    <Button onClick={() => setEdit(!edit)} className={classes.patientBtns}>Edit Step</Button>
-                ) : (
-                        <Button onClick={() => { setEdit(!edit); setConfirmNoChange(false) }} className={classes.patientBtns}>View Mode</Button>
-                    )
-                }
             </div>
             <h3>Clinic XYZ on 10/05/2020 9:58PM</h3>
             <Download title="Ear Scan File" fileName="file_name.SCAN" state={handleDownload} />
-            <Notes changed={setChanged} disabled={!edit} value={notes} state={setNotes} title="Notes" />
+            <Notes disabled={!edit} value={notes} state={setNotes} title="Notes" />
 
             <div className={classes.approveBtn}>
                 <Fab className={classes.FAB} variant="extended">
                     Approve for next step
                 </Fab>
             </div>
-            {edit ? (
-                <div className={classes.saveBtn}>
-                    <Fab onClick={handleSave} className={classes.FAB} style={{ marginRight: 15 }} variant="extended">
-                        Save
-                    </Fab>
-
-                </div>
-            ) : (<></>)}
-            <NoChangeDialog open={confirmNoChange} save={handleSave} setEdit={setEdit} noChange={setConfirmNoChange} />
+            
         </div>
     )
 }

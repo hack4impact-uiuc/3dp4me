@@ -65,40 +65,41 @@ const PatientInfo = (props) => {
     const [emRelationship, setEmRelationship] = useState("");
     const [emPhone, setEmPhone] = useState("");
     const [delivery, setDelivery] = useState('delivery');
-    const [patientInfoNotes, setPatientInfoNotes] = useState();
-    const [changed, setChanged] = useState(false);
-    const [confirmNoChange, setConfirmNoChange] = useState(false);
+    const [notes, setNotes] = useState("");
 
-    const handleSave = (e) => {
-        if (changed) {
-            setEdit(!edit);
-            postData();
-            setConfirmNoChange(false);
-        } else if (e === "override") {
-            setConfirmNoChange(false);
-            setEdit(!edit);
-        } else {
-            setConfirmNoChange(true);
-        }
+    const handleDelivery = (event) => {
+      setDelivery(event.target.value);
+    };
+    const handleName = (e) => {
+        setName(e.target.value);
     }
-
-    const postData = (e) => {
-        console.log("Data posted!")
-        setChanged(false);
+    const handleDOB = (e) => {
+        setDOB(e.target.value);
     }
+    const handleSSN = (e) => {
+        setSSN(e.target.value);
+    }
+    const handleAddress = (e) => {
+        setSSN(e.target.value);
+    } 
+    const handlePhone = (e) => {
+        setPhone(e.target.value);
+    } 
+    const handleEmName = (e) => {
+        setEmName(e.target.value);
+    } 
+    const handleEmRelationship = (e) => {
+        setEmRelationship(e.target.value);
+    } 
+    const handleEmPhone = (e) => {
+        setEmPhone(e.target.value);
+    } 
+    
 
     return (
 
         <form className="patient-info">
-            <div style={{ display: 'flex' }}>
-                <h1 style={{ flexGrow: 1 }}>Medical Information</h1>
-                {!edit ? (
-                    <Button onClick={() => setEdit(!edit)} className={classes.patientBtns}>Edit Step</Button>
-                ) : (
-                        <Button onClick={() => { setEdit(!edit); setConfirmNoChange(false) }} className={classes.patientBtns}>View Mode</Button>
-                    )
-                }
-            </div>
+            <h1>Patient Information</h1>
             <p>Created by Evan Eckels on 10/05/2020 9:58PM</p>
             <p>Last edited by Anisha Rao on 10/08/2020 11:58PM</p>
             <div style={{ display: 'flex' }}>
@@ -106,89 +107,22 @@ const PatientInfo = (props) => {
                 <Divider className={classes.patientDivider} />
             </div>
             <h3>Name</h3>
-            <TextField
-                disabled={!edit}
-                className={edit ? classes.activeInput : classes.inputField}
-                variant="outlined"
-                onChange={(e) => {
-                    setName(e.target.value)
-                    setChanged(true);
-                }}
-                value={name} />
+            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleName} value={name} />
             <h3>DOB</h3>
-            <TextField
-                disabled={!edit}
-                className={edit ? classes.activeInput : classes.inputField}
-                variant="outlined"
-                onChange={(e) => {
-                    setDOB(e.target.value)
-                    setChanged(true);
-                }}
-                value={dob} />
+            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleDOB} value={dob} />
             <h3>Jordan SSN</h3>
-            <TextField
-                disabled={!edit}
-                className={edit ? classes.activeInput : classes.inputField}
-                variant="outlined"
-                onChange={(e) => {
-                    setSSN(e.target.value)
-                    setChanged(true);
-                }}
-                value={ssn} />
+            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleSSN} value={ssn} />
             <h3>Address</h3>
-            <TextField
-                disabled={!edit}
-                className={edit ? classes.activeInput : classes.inputField}
-                variant="outlined"
-                onChange={(e) => {
-                    setAddress(e.target.value)
-                    setChanged(true);
-                }}
-                value={address} />
+            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleAddress} value={address} />
             <h3>Phone</h3>
-            <TextField
-                disabled={!edit} className={edit ? classes.activeInput : classes.inputField}
-                variant="outlined"
-                onChange={(e) => {
-                    setPhone(e.target.value)
-                    setChanged(true);
-                }}
-                value={phone} />
-            <div style={{ display: 'flex' }}>
-                <h2>Emergency Contact</h2>
-                <Divider className={classes.patientDivider} />
-            </div>
+            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handlePhone} value={phone} />
+            <h2>Emergency Contact</h2>
             <h3>Name</h3>
-            <TextField
-                disabled={!edit}
-                className={edit ? classes.activeInput : classes.inputField}
-                variant="outlined"
-                onChange={(e) => {
-                    setEmName(e.target.value)
-                    setChanged(true);
-                }}
-                value={emName}
-            />
+            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleEmName} value={emName} />
             <h3>Relationship</h3>
-            <TextField
-                disabled={!edit}
-                className={edit ? classes.activeInput : classes.inputField}
-                variant="outlined"
-                onChange={(e) => {
-                    setEmRelationship(e.target.value)
-                    setChanged(true);
-                }}
-                value={emRelationship} />
+            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleEmRelationship} value={emRelationship} />
             <h3>Phone</h3>
-            <TextField
-                disabled={!edit}
-                className={edit ? classes.activeInput : classes.inputField}
-                variant="outlined"
-                onChange={(e) => {
-                    setEmPhone(e.target.value)
-                    setChanged(true);
-                }}
-                value={emPhone} />
+            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleEmPhone} value={emPhone} />
             <div style={{ marginTop: 15 }}>
                 <Button disabled={!edit} variant="contained">
                     Upload File
@@ -197,36 +131,23 @@ const PatientInfo = (props) => {
             </div>
             <div style={{ display: 'flex' }}>
                 <h2>Information</h2>
-                <Divider variant="fullWidth" className={classes.patientDivider} />
+                <Divider className={classes.patientDivider} />
             </div>
             <h3>Delivery Method</h3>
             <RadioGroup
                 style={{ maxWidth: 'fit-content' }}
                 value={delivery}
-                onChange={(e) => {
-                    setDelivery(e.target.value);
-                    setChanged(true);
-                }}>
+                onChange={handleDelivery}
+            >
                 <FormControlLabel disabled={!edit} value="delivery" control={<Radio />} label="Hand Delivery" />
                 <FormControlLabel disabled={!edit} value="pickup" control={<Radio />} label="Pick up" />
             </RadioGroup>
-            <Files disabled={!edit} title="Files" files={['file_name1.SCAN', 'file_name2.SCAN', 'file_name3.SCAN']} />
-            <Notes disabled={!edit} changed={setChanged} state={setPatientInfoNotes} title="Notes" value={patientInfoNotes} />
-            <div className={classes.approveBtn}>
-                <Fab className={classes.FAB} variant="extended">
-                    Approve for next step
-                </Fab>
+            <h3>Notes</h3>
+            <Notes disabled={!edit} state={setNotes} title="Notes" value={notes} />
+            <div className="submit-group">
+                <Button onClick={() => setEdit(false)}>Save</Button>
+                <Button>Approve for next step</Button>
             </div>
-            {edit ? (
-                <div className={classes.saveBtn}>
-                    <Fab onClick={handleSave} className={classes.FAB} style={{ marginRight: 15 }} variant="extended">
-                        Save
-                    </Fab>
-
-                </div>
-            ) : (<></>)}
-
-            <NoChangeDialog open={confirmNoChange} save={handleSave} setEdit={setEdit} noChange={setConfirmNoChange} />
         </form>
     );
 }

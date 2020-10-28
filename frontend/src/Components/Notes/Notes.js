@@ -47,7 +47,6 @@ const Notes = (props) => {
                     disabled={props.disabled}
                     onChange={(e) => {
                         props.state(e.target.value)
-                        props.changed(true);
                     }}
                     value={props.value}
                     className={props.disabled ? classes.noteBody : classes.activeBody}
