@@ -10,9 +10,9 @@ router.get(
         const { stage } = req.query;
         let patients;
         if (stage) {
-            // Query by the status of the specified stage
+            // Query by status of the specified stage
             let query = {};
-            query[`${stage}.status`] = { $in: [ statusEnum.PARTIALLYDONE, statusEnum.COMPLETE ] };
+            query[`${stage}.status`] = { $in: [ statusEnum.PARTIALLYDONE, statusEnum.NOTTOUCHED ] };
             patients = await models.Patient.find(query);
         } else {
             patients = await models.Patient.find();
