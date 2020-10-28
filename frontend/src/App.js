@@ -1,5 +1,5 @@
 import React from 'react';
-import { withAuthenticator } from '@aws-amplify/ui-react';
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import './App.css';
 import awsconfig from './aws/aws-exports.js';
@@ -23,6 +23,7 @@ const App = function() {
       <Switch>
         <div className="content">
           {/* Path = BASE_URL */}
+        <AmplifySignOut />
           <Route exact path="/">
             <Dashboard />
           </Route>
