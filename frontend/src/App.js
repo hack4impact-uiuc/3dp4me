@@ -1,6 +1,8 @@
-import React from "react";
-import "./App.css";
-
+import React from 'react';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import { Amplify } from 'aws-amplify';
+import './App.css';
+import awsconfig from './aws/aws-exports.js';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Dashboard from "./Pages/Dashboard/Dashboard";
@@ -12,7 +14,9 @@ import PatientInfo from "./Steps/Patient Info/PatientInfo"
 
 import './styles.css'
 
-function App() {
+Amplify.configure(awsconfig)
+
+const App = function() {
   return (
     <Router>
       <Navbar />
@@ -44,4 +48,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App);
