@@ -44,7 +44,7 @@ router.post(
     }),
 );
 
-// Returns everything associated with patient stage
+// GET: Returns everything associated with patient stage
 router.get(
     '/:serial/:stage',
     errorWrap(async (req, res) => {
@@ -57,6 +57,7 @@ router.get(
     }),
 );
 
+// POST: Uploads files for certain stage and updates info
 router.post(
     '/:serial/:stage',
     errorWrap(async (req, res) => {
@@ -68,8 +69,10 @@ router.post(
         patientStage.lastEditBy = userId;
         patientStage.files.push({filename: filename,
             uploadedBy: userId,
-            uploadDate: currDate}); //TODO: Format date might be needed?
+            uploadDate: currDate});
         await patientStage.save();
+
+        
     }),
 );
 
