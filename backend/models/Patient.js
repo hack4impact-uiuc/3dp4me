@@ -24,7 +24,7 @@ const patientSchema = new mongoose.Schema({
             enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
             default: statusEnum.NOTTOUCHED
         },
-        lastEdit: { type: Date, default: Date.now() },
+        lastEdit: { type: Date, default: new Date().toUTCString() },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
@@ -35,7 +35,7 @@ const patientSchema = new mongoose.Schema({
             enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
             default: statusEnum.NOTTOUCHED
         },
-        lastEdit: { type: Date, default: Date.now() },
+        lastEdit: { type: Date, default: new Date().toUTCString() },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
@@ -46,7 +46,7 @@ const patientSchema = new mongoose.Schema({
             enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
             default: statusEnum.NOTTOUCHED
         },
-        lastEdit: { type: Date, default: Date.now() },
+        lastEdit: { type: Date, default: new Date().toUTCString() },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
@@ -57,7 +57,7 @@ const patientSchema = new mongoose.Schema({
             enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
             default: statusEnum.NOTTOUCHED
         },
-        lastEdit: { type: Date, default: Date.now() },
+        lastEdit: { type: Date, default: new Date().toUTCString() },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
@@ -68,7 +68,7 @@ const patientSchema = new mongoose.Schema({
             enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
             default: statusEnum.NOTTOUCHED
         },
-        lastEdit: { type: Date, default: Date.now() },
+        lastEdit: { type: Date, default: new Date().toUTCString() },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
@@ -79,7 +79,7 @@ const patientSchema = new mongoose.Schema({
             enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
             default: statusEnum.NOTTOUCHED
         },
-        lastEdit: { type: Date, default: Date.now() },
+        lastEdit: { type: Date, default: new Date().toUTCString() },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
@@ -90,7 +90,7 @@ const patientSchema = new mongoose.Schema({
             enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
             default: statusEnum.NOTTOUCHED
         },
-        lastEdit: { type: Date, default: Date.now() },
+        lastEdit: { type: Date, default: new Date().toUTCString() },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
