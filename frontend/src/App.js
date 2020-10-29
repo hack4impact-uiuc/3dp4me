@@ -26,7 +26,7 @@ function App() {
 
   useEffect(() => {
     // TODO: get user session langauge
-    setKey("AR");
+    setKey("EN");
   }, []);
 
   return (
