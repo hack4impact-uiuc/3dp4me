@@ -15,8 +15,10 @@ const Dashboard = (props) => {
   const [step, setStep] = useState('info');
   const [searchQuery, setSearchQuery] = useState("");
   const [filterPatients, setFilteredPatients] = useState([]);
-  const [stepTitle, setStepTitle] = useState("Patient");
+  const [stepTitle, setStepTitle] = useState("patientInfoTitle");
   const [noPatient, setNoPatient] = useState(false);
+  const lang = props.lang.data;
+  const key = props.lang.key;
 
 
   const handlesort = (e) => {
@@ -45,26 +47,26 @@ const Dashboard = (props) => {
     if (newStep !== null) {
       setStep(newStep);
       if (newStep === "info") {
-        setStepTitle("Patient");
+        setStepTitle("patientInfoTitle");
         setPatients(patientInfo)
         console.log("here")
       } else if (newStep === "scan") {
-        setStepTitle("Ear Scan");
+        setStepTitle("earScanTitle");
         setPatients(earScan)
       } else if (newStep === "cad") {
-        setStepTitle("CAD Modeling");
+        setStepTitle("CADModelingTitle");
         setPatients(modeling)
       } else if (newStep === "printing") {
-        setStepTitle("3D Printing");
+        setStepTitle("printingTitle");
         setPatients(patientInfo)
       } else if (newStep === "processing") {
-        setStepTitle("Post Processing");
+        setStepTitle("postProcessingTitle");
         setPatients(patientInfo)
       } else if (newStep === "delivery") {
-        setStepTitle("Delivery");
+        setStepTitle("deliveryTitle");
         setPatients(patientInfo)
       } else if (newStep === "feedback") {
-        setStepTitle("Feedback");
+        setStepTitle("feedbackTitle");
         setPatients(patientInfo)
       }
     }
@@ -120,39 +122,39 @@ const Dashboard = (props) => {
       <div className="tabs">
         {/* <Toolbar> */}
         <ToggleButtonGroup style={{ width: '100%' }} size="large" exclusive value={step} onChange={handleStep}>
-          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="info">Patient Info</ToggleButton>
-          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="scan">Ear scan upload</ToggleButton>
-          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="cad">CAD Modleing</ToggleButton>
-          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="printing">3D Printing</ToggleButton>
-          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="processing">Post Processing</ToggleButton>
-          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="delivery">Delivery</ToggleButton>
-          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="feedback">Feedback</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="info">{lang[key].components.stepTabs.patientInfo}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="scan">{lang[key].components.stepTabs.earScan}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="cad">{lang[key].components.stepTabs.CADModeling}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="printing">{lang[key].components.stepTabs.print}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="processing">{lang[key].components.stepTabs.processing}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="delivery">{lang[key].components.stepTabs.delivery}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="feedback">{lang[key].components.stepTabs.feedback}</ToggleButton>
         </ToggleButtonGroup>
       </div>
       <div className="patient-list">
         <div className="header">
           <div className="section">
-            <h2 style={{ flexGrow: 1 }}>{stepTitle}</h2>
-            <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder="Search..." />
+            <h2 style={{ flexGrow: 1 }}>{lang[key].pages[stepTitle]}</h2>
+            <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder={lang[key].components.search.placeholder} />
             <Select variant="outlined"
               value={sort}
               onChange={handlesort}
             >
-              <MenuItem value="new">Newest</MenuItem>
-              <MenuItem value="old">Oldest</MenuItem>
-              <MenuItem value="serial">Serial</MenuItem>
-              <MenuItem value="status">Status</MenuItem>
+              <MenuItem value="new">{lang[key].components.dropdown.newest}</MenuItem>
+              <MenuItem value="old">{lang[key].components.dropdown.oldest}</MenuItem>
+              <MenuItem value="serial">{lang[key].components.dropdown.serial}</MenuItem>
+              <MenuItem value="status">{lang[key].components.dropdown.status}</MenuItem>
             </Select>
-            <Button>Create new patient</Button>
+            <Button>{lang[key].components.button.createPatient}</Button>
           </div>
         </div>
-        {stepTitle !== "Feedback" ? (
+        {stepTitle !== "feedbackTitle" ? (
           <>
             {
               searchQuery.length === 0 ? (
-                <MainTable patients={patients} />
+                <MainTable lang={props.lang} patients={patients} />
               ) : (
-                  <MainTable patients={filterPatients} />
+                  <MainTable lang={props.lang} patients={filterPatients} />
                 )
             }
           </>
@@ -160,9 +162,9 @@ const Dashboard = (props) => {
             <>
               {
                 searchQuery.length === 0 ? (
-                  <FeebackTable patients={patients} />
+                  <FeebackTable lang={props.lang} patients={patients} />
                 ) : (
-                    <FeebackTable patients={filterPatients} />
+                    <FeebackTable lang={props.lang} patients={filterPatients} />
                   )
               }
             </>

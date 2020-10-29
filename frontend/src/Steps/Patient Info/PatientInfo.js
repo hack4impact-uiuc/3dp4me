@@ -66,9 +66,11 @@ const PatientInfo = (props) => {
     const [emPhone, setEmPhone] = useState("");
     const [delivery, setDelivery] = useState('delivery');
     const [notes, setNotes] = useState("");
+    const lang = props.lang.data;
+    const key = props.lang.key;
 
     const handleDelivery = (event) => {
-      setDelivery(event.target.value);
+        setDelivery(event.target.value);
     };
     const handleName = (e) => {
         setName(e.target.value);
@@ -81,72 +83,70 @@ const PatientInfo = (props) => {
     }
     const handleAddress = (e) => {
         setSSN(e.target.value);
-    } 
+    }
     const handlePhone = (e) => {
         setPhone(e.target.value);
-    } 
+    }
     const handleEmName = (e) => {
         setEmName(e.target.value);
-    } 
+    }
     const handleEmRelationship = (e) => {
         setEmRelationship(e.target.value);
-    } 
+    }
     const handleEmPhone = (e) => {
         setEmPhone(e.target.value);
-    } 
-    
+    }
+
 
     return (
 
         <form className="patient-info">
-            <h1>Patient Information</h1>
+            <h1>{lang[key].patientView.patientInfo.title}</h1>
             <p>Created by Evan Eckels on 10/05/2020 9:58PM</p>
             <p>Last edited by Anisha Rao on 10/08/2020 11:58PM</p>
             <div style={{ display: 'flex' }}>
-                <h2>Patient</h2>
+                <h2>{lang[key].patientView.patientInfo.patientSection}</h2>
                 <Divider className={classes.patientDivider} />
             </div>
-            <h3>Name</h3>
+            <h3>{lang[key].patientView.patientInfo.name}</h3>
             <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleName} value={name} />
-            <h3>DOB</h3>
+            <h3>{lang[key].patientView.patientInfo.dob}</h3>
             <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleDOB} value={dob} />
-            <h3>Jordan SSN</h3>
+            <h3>{lang[key].patientView.patientInfo.ssn}</h3>
             <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleSSN} value={ssn} />
-            <h3>Address</h3>
+            <h3>{lang[key].patientView.patientInfo.address}</h3>
             <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleAddress} value={address} />
-            <h3>Phone</h3>
+            <h3>{lang[key].patientView.patientInfo.phone}</h3>
             <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handlePhone} value={phone} />
-            <h2>Emergency Contact</h2>
-            <h3>Name</h3>
+            <h2>{lang[key].patientView.patientInfo.emergencySection}</h2>
+            <h3>{lang[key].patientView.patientInfo.name}</h3>
             <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleEmName} value={emName} />
-            <h3>Relationship</h3>
+            <h3>{lang[key].patientView.patientInfo.relationship}</h3>
             <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleEmRelationship} value={emRelationship} />
-            <h3>Phone</h3>
+            <h3>{lang[key].patientView.patientInfo.phone}</h3>
             <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleEmPhone} value={emPhone} />
             <div style={{ marginTop: 15 }}>
                 <Button disabled={!edit} variant="contained">
-                    Upload File
+                    {lang[key].components.button.upload}
                     <input type="file" style={{ display: "none" }} />
                 </Button>
             </div>
             <div style={{ display: 'flex' }}>
-                <h2>Information</h2>
+                <h2>{lang[key].patientView.patientInfo.informationSection}</h2>
                 <Divider className={classes.patientDivider} />
             </div>
-            <h3>Delivery Method</h3>
+            <h3>{lang[key].patientView.patientInfo.deliverySection}</h3>
             <RadioGroup
                 style={{ maxWidth: 'fit-content' }}
                 value={delivery}
                 onChange={handleDelivery}
             >
-                <FormControlLabel disabled={!edit} value="delivery" control={<Radio />} label="Hand Delivery" />
-                <FormControlLabel disabled={!edit} value="pickup" control={<Radio />} label="Pick up" />
+                <FormControlLabel disabled={!edit} value={lang[key].patientView.patientInfo.handDelivery} control={<Radio />} label="Hand Delivery" />
+                <FormControlLabel disabled={!edit} value={lang[key].patientView.patientInfo.pickup} control={<Radio />} label="Pick up" />
             </RadioGroup>
-            <h3>Notes</h3>
-            <Notes disabled={!edit} state={setNotes} title="Notes" value={notes} />
+            <Notes disabled={!edit} state={setNotes} title={lang[key].components.notes.title} value={notes} />
             <div className="submit-group">
-                <Button onClick={() => setEdit(false)}>Save</Button>
-                <Button>Approve for next step</Button>
+                <Button onClick={() => setEdit(false)}>{lang[key].components.button.save}</Button>
             </div>
         </form>
     );

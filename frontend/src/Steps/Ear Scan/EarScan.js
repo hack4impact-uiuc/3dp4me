@@ -57,6 +57,8 @@ const EarScan = (props) => {
     const [notes, setNotes] = useState("");
     const [download, setDownload] = useState();
     const [edit, setEdit] = useState(false);
+    const lang = props.lang.data;
+    const key = props.lang.key;
 
     const handleDownload = (e) => {
 
@@ -69,16 +71,14 @@ const EarScan = (props) => {
     return (
         <div>
             <div style={{ display: 'flex' }}>
-                <h1 style={{ flexGrow: 1 }}>Ear Scan</h1>
+                <h1 style={{ flexGrow: 1 }}>{lang[key].patientView.earScan.title}</h1>
             </div>
             <h3>Clinic XYZ on 10/05/2020 9:58PM</h3>
-            <Download title="Ear Scan File" fileName="file_name.SCAN" state={handleDownload} />
-            <Notes disabled={!edit} value={notes} state={setNotes} title="Notes" />
+            <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeader} fileName="file_name.SCAN" state={handleDownload} />
+            <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
 
             <div className={classes.approveBtn}>
-                <Fab className={classes.FAB} variant="extended">
-                    Approve for next step
-                </Fab>
+                
             </div>
             
         </div>

@@ -52,17 +52,19 @@ const useStyles = makeStyles({
 
 const MainTable = (props) => {
     const classes = useStyles();
+    const lang = props.lang.data;
+    const key = props.lang.key;
 
     return (
         <TableContainer className={classes.container} component={Paper}>
             <Table stickyHeader className={classes.table}>
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell className={classes.header} align="center">Name</StyledTableCell>
-                        <StyledTableCell className={classes.header} align="center">Serial</StyledTableCell>
-                        <StyledTableCell className={classes.header} align="center">Date Added</StyledTableCell>
-                        <StyledTableCell className={classes.header} align="center">Last Edit By</StyledTableCell>
-                        <StyledTableCell className={classes.header} align="center">Status</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">{lang[key].components.table.mainHeaders.name}</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">{lang[key].components.table.mainHeaders.serial}</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">{lang[key].components.table.mainHeaders.added}</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">{lang[key].components.table.mainHeaders.lastEdit}</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">{lang[key].components.table.mainHeaders.status}</StyledTableCell>
                         <StyledTableCell className={classes.header} align="center"></StyledTableCell>
                     </TableRow>
                 </TableHead>

@@ -14,6 +14,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Download = (props) => {
     const classes = useStyles();
+    const lang = props.lang.data;
+    const key = props.lang.key;
 
     return (
         <div className="download-section">
@@ -24,7 +26,7 @@ const Download = (props) => {
                 <Button className={classes.downloadBtn} onClick={props.state}>
                     <ArrowDownwardIcon />
                     <Typography align="left">
-                        <b>Download</b>{` ${props.fileName}`}
+                        <b>{lang[key].components.file.download}</b>{` ${props.fileName}`}
                     </Typography>
                 </Button>
             </div>

@@ -52,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
     },
     labelRoot: {
         fontSize: 20,
+    },
+    toggleButton: {
+
     }
 }));
 
@@ -60,6 +63,8 @@ const Controller = (props) => {
     const [expanded, setExpanded] = useState(false);
     const [patient, setPatient] = useState([]);
     const [step, setStep] = useState("info");
+    const lang = props.lang.data;
+    const key = props.lang.key;
 
     const handleNotePanel = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -137,39 +142,39 @@ const Controller = (props) => {
                             }
                         }}
                     />
-                    <div style={{backgroundColor: '#9ebdeb'}} className={classes.drawerItem}>
+                    <div style={{ backgroundColor: '#9ebdeb' }} className={classes.drawerItem}>
                         <Accordion expanded={expanded === 'info'} onChange={handleNotePanel('info')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>Patient Info</AccordionSummary>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.patientInfo}</AccordionSummary>
                             <AccordionDetails>
                                 This is where the notes will go
                         </AccordionDetails>
                         </Accordion>
                         <Accordion expanded={expanded === 'scan'} onChange={handleNotePanel('scan')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>Ear Scan</AccordionSummary>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.earScan}</AccordionSummary>
                             <AccordionDetails>
                                 This is where the notes will go
                         </AccordionDetails>
                         </Accordion>
                         <Accordion expanded={expanded === 'cad'} onChange={handleNotePanel('cad')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>CAD Model</AccordionSummary>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.CADModeling}</AccordionSummary>
                             <AccordionDetails>
                                 This is where the notes will go
                         </AccordionDetails>
                         </Accordion>
                         <Accordion expanded={expanded === 'processing'} onChange={handleNotePanel('processing')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>3D Printing</AccordionSummary>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.print}</AccordionSummary>
                             <AccordionDetails>
                                 This is where the notes will go
                         </AccordionDetails>
                         </Accordion>
                         <Accordion expanded={expanded === 'delivery'} onChange={handleNotePanel('delivery')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>Delivery</AccordionSummary>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.delivery}</AccordionSummary>
                             <AccordionDetails>
                                 This is where the notes will go
                         </AccordionDetails>
                         </Accordion>
                         <Accordion expanded={expanded === 'feedback'} onChange={handleNotePanel('feedback')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>Feedback</AccordionSummary>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.feedback}</AccordionSummary>
                             <AccordionDetails>
                                 This is where the notes will go
                         </AccordionDetails>
@@ -179,52 +184,80 @@ const Controller = (props) => {
                 </div>
             </Drawer>
 
-            <div className="controller-content">
-                <ToggleButtonGroup style={{ width: '100%' }} size="large" exclusive value={step} onChange={handleStep}>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid green 4px' }} value="info">Patient Info</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid #F7B610 4px' }} value="scan">Ear scan upload</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid red 4px' }} value="cad">CAD Modleing</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid red 4px' }} value="printing">3D Printing</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid green 4px' }} value="processing">Post Processing</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid green 4px' }} value="delivery">Delivery</ToggleButton>
-                    <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black', borderTop: 'solid #F7B610 4px' }} value="feedback">Feedback</ToggleButton>
+            <div className={`controller-content ${key == "AR" ? "flip" : ""}`} style={{marginRight: 15}}>
+                <ToggleButtonGroup style={{ width: '100%', background: "#e1edff", padding: "8px 0px 15px" }} size="large" exclusive value={step} onChange={handleStep}>
+                    <ToggleButton
+                        disableRipple
+                        style={{ marginLeft: '5px', flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        value="info"
+                    >
+                        {lang[key].components.stepTabs.patientInfo}
+                    </ToggleButton>
+                    <ToggleButton
+                        disableRipple
+                        style={{ flexGrow: 1, borderTop: 'solid #F7B610 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        value="scan"
+                    >
+                        {lang[key].components.stepTabs.earScan}
+                    </ToggleButton>
+                    <ToggleButton
+                        disableRipple
+                        style={{ flexGrow: 1, borderTop: 'solid red 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        value="cad"
+                    >
+                        {lang[key].components.stepTabs.CADModeling}
+                    </ToggleButton>
+                    <ToggleButton
+                        disableRipple
+                        style={{ flexGrow: 1, borderTop: 'solid red 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        value="printing"
+                    >
+                        {lang[key].components.stepTabs.print}
+                    </ToggleButton>
+                    <ToggleButton
+                        disableRipple
+                        style={{ flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        value="processing"
+                    >
+                        {lang[key].components.stepTabs.processing}
+                    </ToggleButton>
+                    <ToggleButton
+                        disableRipple
+                        style={{ flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        value="delivery"
+                    >
+                        {lang[key].components.stepTabs.delivery}
+                    </ToggleButton>
+                    <ToggleButton
+                        disableRipple
+                        style={{ flexGrow: 1, borderTop: 'solid #F7B610 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        value="feedback"
+                    >
+                        {lang[key].components.stepTabs.feedback}
+                    </ToggleButton>
                 </ToggleButtonGroup>
                 <div className="steps">
                     {step === "info" ? (
-                        <PatientInfo />
-                    ) : (
-                            <></>
-                        )}
+                        <PatientInfo lang={props.lang} />
+                    ) : (<></>)}
                     {step === "scan" ? (
-                        <EarScan />
-                    ) : (
-                            <></>
-                        )}
+                        <EarScan lang={props.lang} />
+                    ) : (<></>)}
                     {step === "cad" ? (
-                        <CADModel />
-                    ) : (
-                            <></>
-                        )}
+                        <CADModel lang={props.lang} />
+                    ) : (<></>)}
                     {step === "printing" ? (
-                        <Printing />
-                    ) : (
-                            <></>
-                        )}
+                        <Printing lang={props.lang} />
+                    ) : (<></>)}
                     {step === "processing" ? (
-                        <PostProcessing />
-                    ) : (
-                            <></>
-                        )}
+                        <PostProcessing lang={props.lang} />
+                    ) : (<></>)}
                     {step === "delivery" ? (
-                        <Delivery />
-                    ) : (
-                            <></>
-                        )}
+                        <Delivery lang={props.lang} />
+                    ) : (<></>)}
                     {step === "feedback" ? (
-                        <Feedback />
-                    ) : (
-                            <></>
-                        )}
+                        <Feedback lang={props.lang} />
+                    ) : (<></>)}
                 </div>
             </div>
 

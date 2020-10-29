@@ -12,6 +12,9 @@ const Patients = (props) => {
     const [filterPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
 
+    const lang = props.lang.data;
+    const key = props.lang.key;
+
     const handleSearch = (e) => {
         console.log(e.target.value)
         setSearchQuery(e.target.value);
@@ -61,15 +64,15 @@ const Patients = (props) => {
                         Sorry! No matching patients
                     </Alert>
                 </Snackbar>
-                <h2 style={{ flexGrow: 1 }}>All Patients</h2>
+                <h2 style={{ flexGrow: 1 }}>{lang[key].components.navbar.patients.pageTitle}</h2>
                 <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder="Search..." />
-                <Button>Create new patient</Button>
+                <Button>{lang[key].components.button.createPatient}</Button>
             </div>
             {
               searchQuery.length === 0 ? (
-                <MainTable patients={allPatients} />
+                <MainTable lang={props.lang} patients={allPatients} />
               ) : (
-                  <MainTable patients={filterPatients} />
+                  <MainTable lang={props.lang} patients={filterPatients} />
                 )
             }
         </div>

@@ -51,17 +51,19 @@ const useStyles = makeStyles({
 
 const FeebackTable = (props) => {
     const classes = useStyles();
+    const lang = props.lang.data;
+    const key = props.lang.key
 
     return (
         <TableContainer className={classes.container} component={Paper}>
             <Table stickyHeader className={classes.table}>
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell className={classes.header} align="center">Name</StyledTableCell>
-                        <StyledTableCell className={classes.header} align="center">Serial</StyledTableCell>
-                        <StyledTableCell className={classes.header} align="center">Date Added</StyledTableCell>
-                        <StyledTableCell className={classes.header} align="center">Feedback cycle</StyledTableCell>
-                        <StyledTableCell className={classes.header} align="center">Collection Status</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">{lang[key].components.table.feedbackHeaders.name}</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">{lang[key].components.table.feedbackHeaders.serial}</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">{lang[key].components.table.feedbackHeaders.added}</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">{lang[key].components.table.feedbackHeaders.feedbackCycle}</StyledTableCell>
+                        <StyledTableCell className={classes.header} align="center">{lang[key].components.table.feedbackHeaders.status}</StyledTableCell>
                         <StyledTableCell className={classes.header} align="center"></StyledTableCell>
                     </TableRow>
                 </TableHead>
