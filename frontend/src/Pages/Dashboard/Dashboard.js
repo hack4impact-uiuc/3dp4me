@@ -17,9 +17,10 @@ const Dashboard = (props) => {
   const [filterPatients, setFilteredPatients] = useState([]);
   const [stepTitle, setStepTitle] = useState("patientInfoTitle");
   const [noPatient, setNoPatient] = useState(false);
+  const [sortedField, setSortedField] = React.useState(null);
+
   const lang = props.lang.data;
   const key = props.lang.key;
-
 
   const handlesort = (e) => {
     setSort(e.target.value);
@@ -39,8 +40,6 @@ const Dashboard = (props) => {
 
     setNoPatient(false);
   };
-
-
 
   const handleStep = (event, newStep) => {
     setSearchQuery("");
@@ -79,7 +78,6 @@ const Dashboard = (props) => {
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
-
 
   const patientInfo = [
     { name: "Amit Sawhney", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
@@ -152,9 +150,41 @@ const Dashboard = (props) => {
           <>
             {
               searchQuery.length === 0 ? (
-                <MainTable lang={props.lang} patients={patients} />
+                <MainTable
+                  headers={[
+                    { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
+                    { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
+                    { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
+                    { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdit" },
+                    { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },
+                  ]}
+                  rowIds={[
+                    "name",
+                    "serial",
+                    "createdDate",
+                    "lastEdited",
+                    "status"
+                  ]}
+                  lang={props.lang}
+                  patients={patients} />
               ) : (
-                  <MainTable lang={props.lang} patients={filterPatients} />
+                  <MainTable
+                    headers={[
+                      { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
+                      { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
+                      { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
+                      { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdit" },
+                      { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },
+                    ]}
+                    rowIds={[
+                      "name",
+                      "serial",
+                      "createdDate",
+                      "lastEdited",
+                      "status"
+                    ]}
+                    lang={props.lang}
+                    patients={filterPatients} />
                 )
             }
           </>
@@ -162,9 +192,41 @@ const Dashboard = (props) => {
             <>
               {
                 searchQuery.length === 0 ? (
-                  <FeebackTable lang={props.lang} patients={patients} />
+                  <MainTable
+                    headers={[
+                      { title: lang[key].components.table.feedbackHeaders.name, sortKey: "name" },
+                      { title: lang[key].components.table.feedbackHeaders.serial, sortKey: "serial" },
+                      { title: lang[key].components.table.feedbackHeaders.added, sortKey: "createdDate" },
+                      { title: lang[key].components.table.feedbackHeaders.feedbackCycle, sortKey: "cycle" },
+                      { title: lang[key].components.table.feedbackHeaders.status, sortKey: "status" },
+                    ]}
+                    rowIds={[
+                      "name",
+                      "serial",
+                      "createdDate",
+                      "cycle",
+                      "status"
+                    ]}
+                    lang={props.lang}
+                    patients={patients} />
                 ) : (
-                    <FeebackTable lang={props.lang} patients={filterPatients} />
+                    <MainTable
+                      headers={[
+                        { title: lang[key].components.table.feedbackHeaders.name, sortKey: "name" },
+                        { title: lang[key].components.table.feedbackHeaders.serial, sortKey: "serial" },
+                        { title: lang[key].components.table.feedbackHeaders.added, sortKey: "createdDate" },
+                        { title: lang[key].components.table.feedbackHeaders.feedbackCycle, sortKey: "cycle" },
+                        { title: lang[key].components.table.feedbackHeaders.status, sortKey: "status" },
+                      ]}
+                      rowIds={[
+                        "name",
+                        "serial",
+                        "createdDate",
+                        "cycle",
+                        "status"
+                      ]}
+                      lang={props.lang}
+                      patients={filterPatients} />
                   )
               }
             </>

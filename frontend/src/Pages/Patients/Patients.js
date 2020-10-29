@@ -38,7 +38,7 @@ const Patients = (props) => {
 
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
-      }
+    }
 
     const patientsTest = [
         { name: "Amit", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
@@ -69,11 +69,44 @@ const Patients = (props) => {
                 <Button>{lang[key].components.button.createPatient}</Button>
             </div>
             {
-              searchQuery.length === 0 ? (
-                <MainTable lang={props.lang} patients={allPatients} />
-              ) : (
-                  <MainTable lang={props.lang} patients={filterPatients} />
-                )
+                searchQuery.length === 0 ? (
+                    <MainTable
+                        headers={[
+                            { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
+                            { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
+                            { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
+                            { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdit" },
+                            { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },
+                        ]}
+                        rowIds={[
+                            "name",
+                            "serial",
+                            "createdDate",
+                            "lastEdited",
+                            "status"
+                        ]}
+                        lang={props.lang}
+                        patients={allPatients}
+                    />
+                ) : (
+                        <MainTable
+                            headers={[
+                                { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
+                                { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
+                                { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
+                                { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdit" },
+                                { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },
+                            ]}
+                            rowIds={[
+                                "name",
+                                "serial",
+                                "createdDate",
+                                "lastEdited",
+                                "status"
+                            ]}  
+                            lang={props.lang}
+                            patients={filterPatients} />
+                    )
             }
         </div>
     )
