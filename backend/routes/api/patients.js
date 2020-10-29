@@ -20,6 +20,11 @@ router.get(
 router.get(
     "/:stage",
     errorWrap(async (req, res) => {
+        models.Patient.find().where('').then(patients => res.status(200).json({
+            code: 200, 
+            success: true, 
+            result: patients
+        }));
         // res.status(200).json({
         //     code: 200,
         //     success: true,
@@ -30,7 +35,7 @@ router.get(
 
 // TODO: Mark stage as complete for a patient
 router.post(
-    "/:id/:stage/complete",
+    "/:serial/:stage/complete",
     errorWrap(async (req, res) => {
         // res.status(200).json({
         //     code: 200,
@@ -39,6 +44,34 @@ router.post(
     }),
 );
 
-router.post()
+// Returns everything associated with patient stage
+router.get(
+    '/:serial/:stage',
+    errorWrap(async (req, res) => {
+        const { serial, stage } = req.params;
+        models.Patient.findById(serial, stage).then(stageInfo => res.status(200).json({
+            code: 200, 
+            success: true, 
+            result: stageInfo
+        }));
+    }),
+);
+
+router.post(
+    '/:serial/:stage',
+    errorWrap(async (req, res) => {
+        const { serial, stage } = req.params;
+        const { filename, userId, } = req.body
+        const patientStage = models.Patient.findById(serial, stage);
+        const currDate = new Date();
+        patientStage.lastEdit = currDate;
+        patientStage.lastEditBy = userId;
+        patientStage.files.push({filename: filename,
+            uploadedBy: userId,
+            uploadDate: currDate}); //TODO: Format date might be needed?
+        await patientStage.save();
+    }),
+);
+
 
 module.exports = router;
