@@ -4,6 +4,7 @@ import { Button, Snackbar, TextField } from '@material-ui/core';
 import MainTable from '../../Components/Table/MainTable'
 import './Patients.css'
 import MuiAlert from '@material-ui/lab/Alert';
+import allpatients from '../../Test Data/all-patients.json';
 
 const Patients = (props) => {
 
@@ -18,7 +19,7 @@ const Patients = (props) => {
     const handleSearch = (e) => {
         console.log(e.target.value)
         setSearchQuery(e.target.value);
-        let filtered = allPatients.filter(patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || patient.serial.search(e.target.value) !== -1);
+        let filtered = allPatients.filter(patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || (patient.serial + "").search(e.target.value) !== -1);
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);
     }
@@ -53,7 +54,7 @@ const Patients = (props) => {
 
     useEffect(() => {
         getData();
-        setAllPatients(patientsTest);
+        setAllPatients(allpatients);
     }, []);
 
     return (

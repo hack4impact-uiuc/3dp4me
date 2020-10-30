@@ -32,30 +32,32 @@ function App() {
   return (
     <Router>
       <Navbar lang={langInfo} />
-      <Switch>
-        <div className="content">
-          {/* Path = BASE_URL */}
-          <Route exact path="/">
-            <Dashboard lang={langInfo} />
-          </Route>
-          {/* Path = BASE_URL/account */}
-          <Route path="/account">
-            <AccountManagement lang = {langInfo} />
-          </Route>
-          {/* Path = BASE_URL/metrics */}
-          <Route path="/metrics">
-            <Metrics lang = {langInfo} />
-          </Route>
-          {/* Path = BASE_URL/patients */}
-          <Route path="/patients">
-            <Patients lang = {langInfo} />
-          </Route>
-          {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
-          <Route path="/patient-info/:serial">
-            <Controller lang = {langInfo} />
-          </Route>
-        </div>
-      </Switch>
+      <div className={`${key == "AR" ? "flip" : ""}`}>
+        <Switch>
+          <div className="content">
+            {/* Path = BASE_URL */}
+            <Route exact path="/">
+              <Dashboard lang={langInfo} />
+            </Route>
+            {/* Path = BASE_URL/account */}
+            <Route path="/account">
+              <AccountManagement lang={langInfo} />
+            </Route>
+            {/* Path = BASE_URL/metrics */}
+            <Route path="/metrics">
+              <Metrics lang={langInfo} />
+            </Route>
+            {/* Path = BASE_URL/patients */}
+            <Route path="/patients">
+              <Patients lang={langInfo} />
+            </Route>
+            {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
+            <Route path="/patient-info/:serial">
+              <Controller lang={langInfo} />
+            </Route>
+          </div>
+        </Switch>
+      </div>
     </Router>
   );
 }

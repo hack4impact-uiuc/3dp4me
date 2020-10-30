@@ -7,7 +7,7 @@
     padding-left: 15px;
 }
 
-.flip {
+/* .flip {
     margin: 0 auto;
     width: 300px;
     -moz-transform: scaleX(-1);
@@ -16,4 +16,4 @@
     transform: scaleX(-1);
     filter: FlipH;
     -ms-filter: "FlipH";
-}
+} */

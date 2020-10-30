@@ -7,6 +7,15 @@ import MainTable from '../../Components/Table/MainTable';
 import "./Dashboard.css";
 import FeebackTable from "../../Components/Table/FeedbackTable";
 
+import patientInfo from '../../Test Data/patient-info.json'
+import earScan from '../../Test Data/earScan.json';
+import modeling from '../../Test Data/CADModel.json';
+import printing from '../../Test Data/printing.json';
+import processing from '../../Test Data/processing.json';
+import delivery from '../../Test Data/delivery.json';
+import feedback from '../../Test Data/feedback.json';
+
+
 
 const Dashboard = (props) => {
 
@@ -28,7 +37,9 @@ const Dashboard = (props) => {
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
-    let filtered = patients.filter(patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || patient.serial.search(e.target.value) !== -1);
+    let filtered = patients.filter(patient => 
+      patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || (patient.serial + "").search(e.target.value) !== -1
+    );
     setNoPatient(filtered.length === 0);
     setFilteredPatients(filtered);
   }
@@ -57,16 +68,16 @@ const Dashboard = (props) => {
         setPatients(modeling)
       } else if (newStep === "printing") {
         setStepTitle("printingTitle");
-        setPatients(patientInfo)
+        setPatients(printing)
       } else if (newStep === "processing") {
         setStepTitle("postProcessingTitle");
-        setPatients(patientInfo)
+        setPatients(processing)
       } else if (newStep === "delivery") {
         setStepTitle("deliveryTitle");
-        setPatients(patientInfo)
+        setPatients(delivery)
       } else if (newStep === "feedback") {
         setStepTitle("feedbackTitle");
-        setPatients(patientInfo)
+        setPatients(feedback)
       }
     }
   };
@@ -79,36 +90,36 @@ const Dashboard = (props) => {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
 
-  const patientInfo = [
-    { name: "Amit Sawhney", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
-    { name: "Evan", serial: '635058', createdDate: 'January 2, 2020', lastEdited: 'January 2, 2020', status: 'Unfinished' },
-    { name: "Anisha", serial: '100231', createdDate: 'January 3, 2020', lastEdited: 'January 3, 2020', status: 'Unfinished' },
-    { name: "Lauren", serial: '127332', createdDate: 'January 4, 2020', lastEdited: 'January 4, 2020', status: 'Unfinished' },
-    { name: "Navam", serial: '269402', createdDate: 'January 5, 2020', lastEdited: 'January 5, 2020', status: 'Unfinished' },
-    { name: "Ashank", serial: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
-    { name: "Andy", serial: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
-    { name: "Gene", serial: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
-  ]
-  const earScan = [
-    { name: "Alice", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
-    { name: "Arpan", serial: '635058', createdDate: 'January 2, 2020', lastEdited: 'January 2, 2020', status: 'Unfinished' },
-    { name: "Andy", serial: '100231', createdDate: 'January 3, 2020', lastEdited: 'January 3, 2020', status: 'Unfinished' },
-    { name: "Arman", serial: '127332', createdDate: 'January 4, 2020', lastEdited: 'January 4, 2020', status: 'Unfinished' },
-    { name: "Anooj", serial: '269402', createdDate: 'January 5, 2020', lastEdited: 'January 5, 2020', status: 'Unfinished' },
-    { name: "Neeraj", serial: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
-    { name: "Ashwin", serial: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
-    { name: "Ayan", serial: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
-  ]
-  const modeling = [
-    { name: "Daniel", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
-    { name: "Chloe", serial: '635058', createdDate: 'January 2, 2020', lastEdited: 'January 2, 2020', status: 'Unfinished' },
-    { name: "David", serial: '100231', createdDate: 'January 3, 2020', lastEdited: 'January 3, 2020', status: 'Unfinished' },
-    { name: "Faith", serial: '127332', createdDate: 'January 4, 2020', lastEdited: 'January 4, 2020', status: 'Unfinished' },
-    { name: "Jackie", serial: '269402', createdDate: 'January 5, 2020', lastEdited: 'January 5, 2020', status: 'Unfinished' },
-    { name: "Neeraj", serial: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
-    { name: "Jeffery", serial: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
-    { name: "Kelley", serial: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
-  ]
+  // const patientInfo = [
+  //   { name: "Amit Sawhney", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
+  //   { name: "Evan", serial: '635058', createdDate: 'January 2, 2020', lastEdited: 'January 2, 2020', status: 'Unfinished' },
+  //   { name: "Anisha", serial: '100231', createdDate: 'January 3, 2020', lastEdited: 'January 3, 2020', status: 'Unfinished' },
+  //   { name: "Lauren", serial: '127332', createdDate: 'January 4, 2020', lastEdited: 'January 4, 2020', status: 'Unfinished' },
+  //   { name: "Navam", serial: '269402', createdDate: 'January 5, 2020', lastEdited: 'January 5, 2020', status: 'Unfinished' },
+  //   { name: "Ashank", serial: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
+  //   { name: "Andy", serial: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
+  //   { name: "Gene", serial: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
+  // ]
+  // const earScan = [
+  //   { name: "Alice", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
+  //   { name: "Arpan", serial: '635058', createdDate: 'January 2, 2020', lastEdited: 'January 2, 2020', status: 'Unfinished' },
+  //   { name: "Andy", serial: '100231', createdDate: 'January 3, 2020', lastEdited: 'January 3, 2020', status: 'Unfinished' },
+  //   { name: "Arman", serial: '127332', createdDate: 'January 4, 2020', lastEdited: 'January 4, 2020', status: 'Unfinished' },
+  //   { name: "Anooj", serial: '269402', createdDate: 'January 5, 2020', lastEdited: 'January 5, 2020', status: 'Unfinished' },
+  //   { name: "Neeraj", serial: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
+  //   { name: "Ashwin", serial: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
+  //   { name: "Ayan", serial: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
+  // ]
+  // const modeling = [
+  //   { name: "Daniel", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
+  //   { name: "Chloe", serial: '635058', createdDate: 'January 2, 2020', lastEdited: 'January 2, 2020', status: 'Unfinished' },
+  //   { name: "David", serial: '100231', createdDate: 'January 3, 2020', lastEdited: 'January 3, 2020', status: 'Unfinished' },
+  //   { name: "Faith", serial: '127332', createdDate: 'January 4, 2020', lastEdited: 'January 4, 2020', status: 'Unfinished' },
+  //   { name: "Jackie", serial: '269402', createdDate: 'January 5, 2020', lastEdited: 'January 5, 2020', status: 'Unfinished' },
+  //   { name: "Neeraj", serial: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
+  //   { name: "Jeffery", serial: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
+  //   { name: "Kelley", serial: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
+  // ]
 
   return (
     <div className="dashboard">
@@ -155,7 +166,7 @@ const Dashboard = (props) => {
                     { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
                     { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
                     { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
-                    { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdit" },
+                    { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdited" },
                     { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },
                   ]}
                   rowIds={[
@@ -173,7 +184,7 @@ const Dashboard = (props) => {
                       { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
                       { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
                       { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
-                      { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdit" },
+                      { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdited" },
                       { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },
                     ]}
                     rowIds={[
@@ -197,14 +208,14 @@ const Dashboard = (props) => {
                       { title: lang[key].components.table.feedbackHeaders.name, sortKey: "name" },
                       { title: lang[key].components.table.feedbackHeaders.serial, sortKey: "serial" },
                       { title: lang[key].components.table.feedbackHeaders.added, sortKey: "createdDate" },
-                      { title: lang[key].components.table.feedbackHeaders.feedbackCycle, sortKey: "cycle" },
+                      { title: lang[key].components.table.feedbackHeaders.feedbackCycle, sortKey: "feedbackCycle" },
                       { title: lang[key].components.table.feedbackHeaders.status, sortKey: "status" },
                     ]}
                     rowIds={[
                       "name",
                       "serial",
                       "createdDate",
-                      "cycle",
+                      "feedbackCycle",
                       "status"
                     ]}
                     lang={props.lang}
@@ -215,14 +226,14 @@ const Dashboard = (props) => {
                         { title: lang[key].components.table.feedbackHeaders.name, sortKey: "name" },
                         { title: lang[key].components.table.feedbackHeaders.serial, sortKey: "serial" },
                         { title: lang[key].components.table.feedbackHeaders.added, sortKey: "createdDate" },
-                        { title: lang[key].components.table.feedbackHeaders.feedbackCycle, sortKey: "cycle" },
+                        { title: lang[key].components.table.feedbackHeaders.feedbackCycle, sortKey: "feedbackCycle" },
                         { title: lang[key].components.table.feedbackHeaders.status, sortKey: "status" },
                       ]}
                       rowIds={[
                         "name",
                         "serial",
                         "createdDate",
-                        "cycle",
+                        "feedbackCycle",
                         "status"
                       ]}
                       lang={props.lang}

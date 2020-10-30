@@ -184,7 +184,7 @@ const Controller = (props) => {
                 </div>
             </Drawer>
 
-            <div className={`controller-content ${key == "AR" ? "flip" : ""}`} style={{marginRight: 15}}>
+            <div className={`controller-content`} style={{marginRight: 15}}>
                 <ToggleButtonGroup style={{ width: '100%', background: "#e1edff", padding: "8px 0px 15px" }} size="large" exclusive value={step} onChange={handleStep}>
                     <ToggleButton
                         disableRipple
