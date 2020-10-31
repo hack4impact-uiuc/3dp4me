@@ -16,7 +16,7 @@ const CADModel = (props) => {
         <div>
             <h1>{lang[key].patientView.CADModeling.title}</h1>
             <h3>Last edited by Evan Eckels on 10/05/2020 9:58PM</h3>
-            <Download lang={props.lang} title={lang[key].patientView.CADModeling.fileHeader} fileName="file_name.SCAN" state={setDownloadCAD} />
+            <Download lang={props.lang} title={lang[key].components.file.title} fileName="file_name.SCAN" state={setDownloadCAD} />
             <Notes title={lang[key].components.notes.title} value={CADNotes} state={setCADNotes} />
         </div>
     )

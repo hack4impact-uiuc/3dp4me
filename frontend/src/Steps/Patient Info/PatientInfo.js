@@ -141,8 +141,8 @@ const PatientInfo = (props) => {
                 value={delivery}
                 onChange={handleDelivery}
             >
-                <FormControlLabel disabled={!edit} value={lang[key].patientView.patientInfo.handDelivery} control={<Radio />} label="Hand Delivery" />
-                <FormControlLabel disabled={!edit} value={lang[key].patientView.patientInfo.pickup} control={<Radio />} label="Pick up" />
+                <FormControlLabel disabled={!edit} value={lang[key].patientView.patientInfo.handDelivery} control={<Radio />} label={lang[key].patientView.patientInfo.handDelivery} />
+                <FormControlLabel disabled={!edit} value={lang[key].patientView.patientInfo.pickup} control={<Radio />} label={lang[key].patientView.patientInfo.pickup} />
             </RadioGroup>
             <Notes disabled={!edit} state={setNotes} title={lang[key].components.notes.title} value={notes} />
             <div className="submit-group">

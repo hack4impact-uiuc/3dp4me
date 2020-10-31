@@ -14,8 +14,14 @@ import Feedback from '../Feedback/Feedback';
 import { Accordion, AccordionDetails, AccordionSummary, TextField } from '@material-ui/core';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
 
 const drawerWidth = 240;
+
+const theme = createMuiTheme({
+    direction: 'rtl', // Both here and <body dir="rtl">
+});
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -96,97 +102,101 @@ const Controller = (props) => {
 
     return (
         <div className={classes.root}>
-            <Drawer
-                className={key == "EN" ? classes.drawer : classes.drawerRtl}
-                variant="permanent"
-                classes={{
-                    paper: classes.drawerPaper,
-                }}
-            >
-                <Toolbar />
-                <div className={classes.drawerContainer}>
-                    <TextField
-                        disabled
-                        label="Name"
-                        variant="filled"
-                        className={classes.drawerItem}
-                        InputProps={{ classes: { root: classes.inputRoot } }}
-                        InputLabelProps={{
-                            classes: {
-                                root: classes.labelRoot,
-                                focused: classes.labelFocused
-                            }
+            <div dir="">
+                <ThemeProvider theme={key === "AR" ? theme : null}>
+                    <Drawer
+                        className={key == "EN" ? classes.drawer : classes.drawerRtl}
+                        variant="permanent"
+                        classes={{
+                            paper: classes.drawerPaper,
                         }}
-                    />
-                    <TextField
-                        disabled
-                        label="Order ID"
-                        variant="filled"
-                        className={classes.drawerItem}
-                        InputProps={{ classes: { root: classes.inputRoot } }}
-                        InputLabelProps={{
-                            classes: {
-                                root: classes.labelRoot,
-                                focused: classes.labelFocused
-                            }
-                        }}
-                    />
-                    <TextField
-                        disabled
-                        label="DOB"
-                        variant="filled"
-                        className={classes.drawerItem}
-                        InputProps={{ classes: { root: classes.inputRoot } }}
-                        InputLabelProps={{
-                            classes: {
-                                root: classes.labelRoot,
-                                focused: classes.labelFocused
-                            }
-                        }}
-                    />
-                    <div style={{ backgroundColor: '#9ebdeb' }} className={classes.drawerItem}>
-                        <Accordion expanded={expanded === 'info'} onChange={handleNotePanel('info')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.patientInfo}</AccordionSummary>
-                            <AccordionDetails>
-                                This is where the notes will go
+                    >
+                        <Toolbar />
+                        <div className={classes.drawerContainer}>
+                            <TextField
+                                disabled
+                                label="Name"
+                                variant="filled"
+                                className={classes.drawerItem}
+                                InputProps={{ classes: { root: classes.inputRoot } }}
+                                InputLabelProps={{
+                                    classes: {
+                                        root: classes.labelRoot,
+                                        focused: classes.labelFocused
+                                    }
+                                }}
+                            />
+                            <TextField
+                                disabled
+                                label="Order ID"
+                                variant="filled"
+                                className={classes.drawerItem}
+                                InputProps={{ classes: { root: classes.inputRoot } }}
+                                InputLabelProps={{
+                                    classes: {
+                                        root: classes.labelRoot,
+                                        focused: classes.labelFocused
+                                    }
+                                }}
+                            />
+                            <TextField
+                                disabled
+                                label="DOB"
+                                variant="filled"
+                                className={classes.drawerItem}
+                                InputProps={{ classes: { root: classes.inputRoot } }}
+                                InputLabelProps={{
+                                    classes: {
+                                        root: classes.labelRoot,
+                                        focused: classes.labelFocused
+                                    }
+                                }}
+                            />
+                            <div style={{ backgroundColor: '#9ebdeb' }} className={classes.drawerItem}>
+                                <Accordion expanded={expanded === 'info'} onChange={handleNotePanel('info')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.patientInfo}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
                         </AccordionDetails>
-                        </Accordion>
-                        <Accordion expanded={expanded === 'scan'} onChange={handleNotePanel('scan')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.earScan}</AccordionSummary>
-                            <AccordionDetails>
-                                This is where the notes will go
+                                </Accordion>
+                                <Accordion expanded={expanded === 'scan'} onChange={handleNotePanel('scan')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.earScan}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
                         </AccordionDetails>
-                        </Accordion>
-                        <Accordion expanded={expanded === 'cad'} onChange={handleNotePanel('cad')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.CADModeling}</AccordionSummary>
-                            <AccordionDetails>
-                                This is where the notes will go
+                                </Accordion>
+                                <Accordion expanded={expanded === 'cad'} onChange={handleNotePanel('cad')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.CADModeling}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
                         </AccordionDetails>
-                        </Accordion>
-                        <Accordion expanded={expanded === 'processing'} onChange={handleNotePanel('processing')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.print}</AccordionSummary>
-                            <AccordionDetails>
-                                This is where the notes will go
+                                </Accordion>
+                                <Accordion expanded={expanded === 'processing'} onChange={handleNotePanel('processing')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.print}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
                         </AccordionDetails>
-                        </Accordion>
-                        <Accordion expanded={expanded === 'delivery'} onChange={handleNotePanel('delivery')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.delivery}</AccordionSummary>
-                            <AccordionDetails>
-                                This is where the notes will go
+                                </Accordion>
+                                <Accordion expanded={expanded === 'delivery'} onChange={handleNotePanel('delivery')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.delivery}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
                         </AccordionDetails>
-                        </Accordion>
-                        <Accordion expanded={expanded === 'feedback'} onChange={handleNotePanel('feedback')}>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.feedback}</AccordionSummary>
-                            <AccordionDetails>
-                                This is where the notes will go
+                                </Accordion>
+                                <Accordion expanded={expanded === 'feedback'} onChange={handleNotePanel('feedback')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.feedback}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
                         </AccordionDetails>
-                        </Accordion>
-                    </div>
+                                </Accordion>
+                            </div>
 
-                </div>
-            </Drawer>
+                        </div>
+                    </Drawer>
+                </ThemeProvider>
+            </div>
 
-            <div className={`controller-content`} style={key === "AR" ? { marginLeft: drawerWidth } : {}}>
+            <div className={`controller-content`} style={key === "AR" ? { marginRight: drawerWidth } : {}}>
                 <ToggleButtonGroup style={{ width: '100%', background: "#e1edff", padding: "8px 0px 15px" }} size="large" exclusive value={step} onChange={handleStep}>
                     <ToggleButton
                         disableRipple
@@ -232,36 +242,36 @@ const Controller = (props) => {
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={{marginLeft: '5px', flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px',  color: "white", background: '#5657a6'}}
+                        style={{ flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
                         value="feedback"
                     >
                         {lang[key].components.stepTabs.feedback}
                     </ToggleButton>
                 </ToggleButtonGroup>
-            <div className="steps" style={key === "AR" ? { marginRight: '10px' } : {}}>
-                {step === "info" ? (
-                    <PatientInfo lang={props.lang} />
-                ) : (<></>)}
-                {step === "scan" ? (
-                    <EarScan lang={props.lang} />
-                ) : (<></>)}
-                {step === "cad" ? (
-                    <CADModel lang={props.lang} />
-                ) : (<></>)}
-                {step === "printing" ? (
-                    <Printing lang={props.lang} />
-                ) : (<></>)}
-                {step === "processing" ? (
-                    <PostProcessing lang={props.lang} />
-                ) : (<></>)}
-                {step === "delivery" ? (
-                    <Delivery lang={props.lang} />
-                ) : (<></>)}
-                {step === "feedback" ? (
-                    <Feedback lang={props.lang} />
-                ) : (<></>)}
+                <div className="steps" style={key === "AR" ? { marginRight: '10px' } : {}}>
+                    {step === "info" ? (
+                        <PatientInfo lang={props.lang} />
+                    ) : (<></>)}
+                    {step === "scan" ? (
+                        <EarScan lang={props.lang} />
+                    ) : (<></>)}
+                    {step === "cad" ? (
+                        <CADModel lang={props.lang} />
+                    ) : (<></>)}
+                    {step === "printing" ? (
+                        <Printing lang={props.lang} />
+                    ) : (<></>)}
+                    {step === "processing" ? (
+                        <PostProcessing lang={props.lang} />
+                    ) : (<></>)}
+                    {step === "delivery" ? (
+                        <Delivery lang={props.lang} />
+                    ) : (<></>)}
+                    {step === "feedback" ? (
+                        <Feedback lang={props.lang} />
+                    ) : (<></>)}
+                </div>
             </div>
-        </div>
 
         </div >
     );

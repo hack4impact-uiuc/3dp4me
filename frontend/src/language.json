@@ -19,7 +19,7 @@
                 }
             },
             "stepTabs": {
-                "patientInfo": "Patient Info",
+                "patientInfo": "Medical Info",
                 "earScan": "Ear Scan",
                 "CADModeling": "CAD Modeling",
                 "print": "3D Print",
@@ -61,11 +61,12 @@
                 "title": "Notes"
             },
             "file": {
-                "download": "Download"
+                "download": "Download",
+                "title": "Files"
             }
         },
         "pages": {
-            "patientInfoTitle": "Patients",
+            "patientInfoTitle": "Medical Information",
             "earScanTitle": "Ear Scan",
             "CADModelingTitle": "CAD Modeling",
             "printingTitle": "3D Printing",
@@ -75,12 +76,12 @@
         },
         "patientView": {
             "patientInfo": {
-                "title": "Patient Information",
+                "title": "Medical Information",
                 "patientSection": "Patient",
                 "name": "Name",
                 "dob": "DOB",
                 "ssn": "Jordan SSN",
-                "address": "address",
+                "address": "Address",
                 "phone": "Phone",
                 "emergencySection": "Emergency Contact",
                 "relationship": "Relationship",
@@ -103,11 +104,27 @@
                 "fileHeader": "3D Printing File"
             },
             "postProcessing": {
-                "title": "",
+                "title": "Post Processing",
                 "fileHeader": ""
             },
-            "delivery": {},
-            "feedback": {}
+            "delivery": {
+                "title": "Delivery",
+                "address": "Address",
+                "addressLabel": "To be Hand Delivered",
+                "ready": "Ready to be delivered",
+                "out": "Out for delivery",
+                "handDelivered": "Hand Delivered",
+                "pickup": "Pick up",
+                "status": "Status"
+            },
+            "feedback": {
+                "title": "Feedback",
+                "initial": "Initial Feedback",
+                "sixMonth": "6 Month Feedback",
+                "oneYear": "1 Year Feedback",
+                "twoYear": "2 Year Feedback",
+                "collected": "Collected on: "
+            }
         }
     },
     "AR": {
@@ -130,7 +147,7 @@
                 }
             },
             "stepTabs": {
-                "patientInfo": "معلومات المريض",
+                "patientInfo": "معلومات طبية",
                 "earScan": "مسح الأذن",
                 "CADModeling": "نمذجة دجأ",
                 "print": "طباعة ثلاثية الأبعاد",
@@ -172,11 +189,12 @@
                 "title": "ملاحظات"
             },
             "file": {
-                "download": "تحميل"
+                "download": "تحميل",
+                "title": "الملفات"
             }
         },
         "pages": {
-            "patientInfoTitle": "المرضى",
+            "patientInfoTitle": "معلومات طبية",
             "earScanTitle": "مسح الأذن",
             "CADModelingTitle": "نمذجة دجأ",
             "printingTitle": "طباعة ثلاثية الأبعاد",
@@ -186,7 +204,7 @@
         },
         "patientView": {
             "patientInfo": {
-                "title": "معلومات المريض",
+                "title": "معلومات طبية",
                 "patientSection": "صبور",
                 "name": "اسم",
                 "dob": "تاريخ الولادة",
@@ -214,11 +232,27 @@
                 "fileHeader": "ملف الطباعة ثلاثية الأبعاد"
             },
             "postProcessing": {
-                "title": "",
+                "title": "المعالجة البعدية",
                 "fileHeader": ""
             },
-            "delivery": {},
-            "feedback": {}
+            "delivery": {
+                "title": "توصيل",
+                "address": "عنوان",
+                "addressLabel": "ليتم تسليمها باليد",
+                "ready": "جاهز للتسليم",
+                "out": "خارج للتوصيل",
+                "handDelivered": "تسلم باليد",
+                "pickup": "امسك",
+                "status": "الحالة"
+            },
+            "feedback": {
+                "title": "ردود الفعل",
+                "initial": "الملاحظات الأولية",
+                "sixMonth": "ستة أشهر من الملاحظات",
+                "oneYear": "ملاحظات سنة واحدة",
+                "twoYear": "عامين من ردود الفعل",
+                "collected": "تم جمعها في: "
+            }
         }
     }
 }
