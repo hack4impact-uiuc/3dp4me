@@ -27,7 +27,7 @@
                 "status": "Status",
                 "unfinished": "Unfinished",
                 "partial": "Partially Complete",
-                "finished": "Finsihed"
+                "finished": "Finished"
             },
             "stepTabs": {
                 "patientInfo": "Medical Info",

@@ -46,7 +46,7 @@ const BottomBar = (props) => {
                             <span style={key !== "AR" ?
                                 { background: statusColor[props.status.value], padding: '5px 40px 5px 20px', border: 'solid black 1px', marginRight: '10px' }
                                 :
-                                { background: statusColor[props.status.value], padding: '5px 40px 5px 20px', border: 'solid black 1px', marginLeft: '10px' }}>{lang[key].components.bottombar.status}</span>
+                                { background: statusColor[props.status.value], padding: '5px 40px 5px 20px', border: 'solid black 1px', marginLeft: '10px' }}>{lang[key].components.bottombar[props.status.value]}</span>
                             <Button onClick={() => props.setEdit(true)} style={{ backgroundColor: colors.button, color: 'white', padding: '10px 30px 10px 30px' }}>
                                 {lang[key].components.button.edit}
                             </Button>
