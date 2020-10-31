@@ -37,8 +37,10 @@ const Dashboard = (props) => {
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
-    let filtered = patients.filter(patient => 
-      patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || (patient.serial + "").search(e.target.value) !== -1
+    let filtered = patients.filter
+      (patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || 
+      (patient.serial + "").search(e.target.value) !== -1 ||
+      patient._id.search(e.target.value) !== -1
     );
     setNoPatient(filtered.length === 0);
     setFilteredPatients(filtered);
@@ -143,7 +145,7 @@ const Dashboard = (props) => {
       <div className="patient-list">
         <div className="header">
           <div className="section">
-            <h2 style={{ flexGrow: 1 }}>{lang[key].pages[stepTitle]}</h2>
+            <h2 style={ key === "AR" ? { flexGrow: 1, marginRight: '10px' } : {flexGrow: 1}}>{lang[key].pages[stepTitle]}</h2>
             <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder={lang[key].components.search.placeholder} />
             <Select variant="outlined"
               value={sort}

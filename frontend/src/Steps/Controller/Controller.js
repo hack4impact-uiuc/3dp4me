@@ -24,7 +24,9 @@ const useStyles = makeStyles((theme) => ({
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
-
+    },
+    drawerRtl: {
+        flexShrink: 0,
     },
     drawerPaper: {
         width: drawerWidth,
@@ -95,7 +97,7 @@ const Controller = (props) => {
     return (
         <div className={classes.root}>
             <Drawer
-                className={classes.drawer}
+                className={key == "EN" ? classes.drawer : classes.drawerRtl}
                 variant="permanent"
                 classes={{
                     paper: classes.drawerPaper,
@@ -184,11 +186,11 @@ const Controller = (props) => {
                 </div>
             </Drawer>
 
-            <div className={`controller-content`} style={{marginRight: 15}}>
+            <div className={`controller-content`} style={key === "AR" ? { marginLeft: drawerWidth } : {}}>
                 <ToggleButtonGroup style={{ width: '100%', background: "#e1edff", padding: "8px 0px 15px" }} size="large" exclusive value={step} onChange={handleStep}>
                     <ToggleButton
                         disableRipple
-                        style={{ marginLeft: '5px', flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        style={{ flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
                         value="info"
                     >
                         {lang[key].components.stepTabs.patientInfo}
@@ -230,38 +232,38 @@ const Controller = (props) => {
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={{ flexGrow: 1, borderTop: 'solid #F7B610 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        style={{marginLeft: '5px', flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px',  color: "white", background: '#5657a6'}}
                         value="feedback"
                     >
                         {lang[key].components.stepTabs.feedback}
                     </ToggleButton>
                 </ToggleButtonGroup>
-                <div className="steps">
-                    {step === "info" ? (
-                        <PatientInfo lang={props.lang} />
-                    ) : (<></>)}
-                    {step === "scan" ? (
-                        <EarScan lang={props.lang} />
-                    ) : (<></>)}
-                    {step === "cad" ? (
-                        <CADModel lang={props.lang} />
-                    ) : (<></>)}
-                    {step === "printing" ? (
-                        <Printing lang={props.lang} />
-                    ) : (<></>)}
-                    {step === "processing" ? (
-                        <PostProcessing lang={props.lang} />
-                    ) : (<></>)}
-                    {step === "delivery" ? (
-                        <Delivery lang={props.lang} />
-                    ) : (<></>)}
-                    {step === "feedback" ? (
-                        <Feedback lang={props.lang} />
-                    ) : (<></>)}
-                </div>
+            <div className="steps" style={key === "AR" ? { marginRight: '10px' } : {}}>
+                {step === "info" ? (
+                    <PatientInfo lang={props.lang} />
+                ) : (<></>)}
+                {step === "scan" ? (
+                    <EarScan lang={props.lang} />
+                ) : (<></>)}
+                {step === "cad" ? (
+                    <CADModel lang={props.lang} />
+                ) : (<></>)}
+                {step === "printing" ? (
+                    <Printing lang={props.lang} />
+                ) : (<></>)}
+                {step === "processing" ? (
+                    <PostProcessing lang={props.lang} />
+                ) : (<></>)}
+                {step === "delivery" ? (
+                    <Delivery lang={props.lang} />
+                ) : (<></>)}
+                {step === "feedback" ? (
+                    <Feedback lang={props.lang} />
+                ) : (<></>)}
             </div>
-
         </div>
+
+        </div >
     );
 }
 

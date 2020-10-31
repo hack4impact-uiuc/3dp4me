@@ -65,8 +65,8 @@ const Patients = (props) => {
                         Sorry! No matching patients
                     </Alert>
                 </Snackbar>
-                <h2 style={{ flexGrow: 1 }}>{lang[key].components.navbar.patients.pageTitle}</h2>
-                <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder="Search..." />
+                <h2 style={key === "AR" ? { flexGrow: 1, marginRight: '10px' } : { flexGrow: 1 }}>{lang[key].components.navbar.patients.pageTitle}</h2>
+                <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder={lang[key].components.search.placeholder} />
                 <Button>{lang[key].components.button.createPatient}</Button>
             </div>
             {
@@ -104,7 +104,7 @@ const Patients = (props) => {
                                 "createdDate",
                                 "lastEdited",
                                 "status"
-                            ]}  
+                            ]}
                             lang={props.lang}
                             patients={filterPatients} />
                     )
