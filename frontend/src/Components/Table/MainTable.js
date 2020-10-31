@@ -40,6 +40,12 @@ const useStyles = makeStyles({
         padding: 0,
         paddingLeft: '20px'
     },
+    cellRtl: {
+        borderRight: 'solid #255296 1px',
+        fontSize: 17,
+        padding: 0,
+        paddingRight: '30px'
+    },
     header: {
         borderTop: 'solid #255296 1px',
         borderBottom: 'solid #255296 1px',
@@ -64,6 +70,12 @@ const useStyles = makeStyles({
         display: 'flex',
         justifyContent: 'left',
         marginLeft: '5px'
+    },
+    alignRtl: {
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'right',
+        marginRight: '5px'
     }
 });
 
@@ -80,8 +92,8 @@ const MainTable = (props) => {
                 <TableHead>
                     <TableRow>
                         {props.headers.map(header => (
-                            <StyledTableCell onClick={() => requestSort(header.sortKey)} className={classes.header} align="left">
-                                <div className={classes.align}>
+                            <StyledTableCell onClick={() => requestSort(header.sortKey)} className={classes.header} align={key === "AR" ? "right" : "left"}>
+                                <div className={key === "AR" ? classes.alignRtl : classes.align}>
                                     {header.title}
                                     {sortConfig !== null && sortConfig.key === header.sortKey && sortConfig.direction === "ascending" ? (
                                         <ArrowDropUpIcon className={classes.arrowSize} />
@@ -99,7 +111,7 @@ const MainTable = (props) => {
                     {items.map((patient) => (
                         <StyledTableRow key={patient.serial}>
                             {props.rowIds.map(id => (
-                                <StyledTableCell className={classes.cell} align="left">{patient[id]}</StyledTableCell>
+                                <StyledTableCell className={key === "AR" ? classes.cellRtl : classes.cell} align={key === "AR" ? "right" : "left"}>{patient[id]}</StyledTableCell>
                             ))}
                             <StyledTableCell className={classes.cell} align="center">
                                 <Link to={`/patient-info/${patient.serial}`}>
