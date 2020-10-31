@@ -21,9 +21,20 @@ export async function isNormalUser(){
     return roles.indexOf(KEY_BASIC_USER) > 0;
 }
 
-export async function getAccessToken(){
-    const user = await Auth.currentSession()
-    return user.getAccessToken()
+async function getCredentials(){
+    let credentials = await Auth.currentCredentials();
+    let creds = Auth.essentialCredentials(credentials);
+    return creds
+}
+
+export async function getAccessKey() {
+    let creds = await getCredentials();
+    return creds.accessKeyId
+}
+
+export async function getSecretAccessKey() {
+    let creds = await getCredentials();
+    return creds.secretAccessKey
 }
 
 /**
