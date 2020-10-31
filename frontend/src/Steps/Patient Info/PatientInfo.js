@@ -161,7 +161,7 @@ const PatientInfo = (props) => {
                 />
             </RadioGroup>
             <Notes disabled={!edit} state={setNotes} title={lang[key].components.notes.title} value={notes} />
-            <BottomBar edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </form>
     );
 }

@@ -55,7 +55,7 @@ const Feedback = (props) => {
                 <h3>{lang[key].patientView.feedback.collected}</h3>
                 <TextField className={edit ? classes.activeInput : classes.inputField} disabled={!edit} variant="outlined" value={twoYearFeedbackDate} onChange={(e) => setTwoYearFeedbackDate(e.target.value)} />
             </div>
-            <BottomBar edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

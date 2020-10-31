@@ -54,7 +54,7 @@ const Delivery = (props) => {
                     <FormControlLabel value="pickup" control={<Radio />} label={lang[key].patientView.delivery.pickup} />
                 </RadioGroup>
             </FormControl>
-            <BottomBar edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

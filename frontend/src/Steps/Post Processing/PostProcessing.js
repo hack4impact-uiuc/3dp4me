@@ -22,7 +22,7 @@ const PostProcessing = (props) => {
             <p>Last edited by Im Tired on 10/05/2020 9:58PM</p>
             <Download lang={props.lang} title={lang[key].components.file.title} fileName="file_name.SCAN" state={setDownloadProcessing} />
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={processingNotes} state={setProcessingNotes} />
-            <BottomBar edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

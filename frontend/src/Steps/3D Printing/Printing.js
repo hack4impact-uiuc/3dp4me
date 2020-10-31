@@ -21,7 +21,7 @@ const Printing = (props) => {
             <p>Last edited by Evan Eckels on 10/05/2020 9:58PM</p>
             <Download lang={props.lang} title={lang[key].components.file.title} fileName="file_name.SCAN" state={setDownloadPrint} />
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={printNotes} state={setPrintNotes} />
-            <BottomBar edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

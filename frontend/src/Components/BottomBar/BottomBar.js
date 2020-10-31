@@ -7,6 +7,12 @@ const BottomBar = (props) => {
     const lang = props.lang.data;
     const key = props.lang.key;
 
+    const statusColor = {
+        unfinished: "#ffe1e1",
+        partial: '#f2e9c7',
+        finished: '#05ca4f'
+    }
+
     return (
         <AppBar color="white" style={{top: 'auto', bottom: '0'}}>
             <Toolbar>
@@ -15,8 +21,8 @@ const BottomBar = (props) => {
                     <div>
                         {key !== "AR" ? (
                             <div>
-                                <Select style={{ marginRight: '10px', padding: '10px 30px 10px 30px' }} defaultValue="Unfinished">
-                                    <MenuItem value="Unfinished">{lang[key].components.bottombar.unfinished}</MenuItem>
+                                <Select MenuProps={{ disableScrollLock: true }} onClick={(e) => props.status.setStatus(e.target.value)} style={{ marginRight: '10px', padding: '10px 30px 10px 30px' }} defaultValue={props.status.value}>
+                                    <MenuItem value="unfinished">{lang[key].components.bottombar.unfinished}</MenuItem>
                                     <MenuItem value="partial">{lang[key].components.bottombar.partial}</MenuItem>
                                     <MenuItem value="finished">{lang[key].components.bottombar.finished}</MenuItem>
                                 </Select>
@@ -25,8 +31,8 @@ const BottomBar = (props) => {
                             </div>
                         ) : (
                                 <div>
-                                    <Select style={{ marginLeft: '15px', padding: '10px 30px 10px 30px' }} defaultValue="Unfinished">
-                                        <MenuItem value="Unfinished">{lang[key].components.bottombar.unfinished}</MenuItem>
+                                    <Select MenuProps={{ disableScrollLock: true }} onClick={(e) => props.status.setStatus(e.target.value)} style={{ marginLeft: '15px', padding: '10px 30px 10px 30px' }} defaultValue={props.status.value}>
+                                        <MenuItem value="unfinished">{lang[key].components.bottombar.unfinished}</MenuItem>
                                         <MenuItem value="partial">{lang[key].components.bottombar.partial}</MenuItem>
                                         <MenuItem value="finished">{lang[key].components.bottombar.finished}</MenuItem>
                                     </Select>
@@ -38,9 +44,9 @@ const BottomBar = (props) => {
                 ) : (
                         <div>
                             <span style={key !== "AR" ?
-                                { background: '#05ca4f', padding: '5px 40px 5px 20px', border: 'solid black 1px', marginRight: '10px' }
+                                { background: statusColor[props.status.value], padding: '5px 40px 5px 20px', border: 'solid black 1px', marginRight: '10px' }
                                 :
-                                { background: '#05ca4f', padding: '5px 40px 5px 20px', border: 'solid black 1px', marginLeft: '10px' }}>{lang[key].components.bottombar.status}</span>
+                                { background: statusColor[props.status.value], padding: '5px 40px 5px 20px', border: 'solid black 1px', marginLeft: '10px' }}>{lang[key].components.bottombar.status}</span>
                             <Button onClick={() => props.setEdit(true)} style={{ backgroundColor: colors.button, color: 'white', padding: '10px 30px 10px 30px' }}>
                                 {lang[key].components.button.edit}
                             </Button>

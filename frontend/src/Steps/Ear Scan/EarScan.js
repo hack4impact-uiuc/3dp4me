@@ -75,7 +75,7 @@ const EarScan = (props) => {
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeader} fileName="file_name.SCAN" state={handleDownload} />
             <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
-            <BottomBar edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
 
         </div>
     )
