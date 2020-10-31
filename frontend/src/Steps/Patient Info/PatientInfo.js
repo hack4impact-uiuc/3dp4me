@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Fab, FormControlLabel, Input, Radio, RadioGroup, TextareaAutosize, TextField } from '@material-ui/core';
+import { AppBar, BottomNavigation, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Fab, FormControlLabel, Input, MenuItem, Radio, RadioGroup, Select, TextareaAutosize, TextField, Toolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import './PatientInfo.css'
 import Notes from '../../Components/Notes/Notes';
 import Files from '../../Components/Files/Files';
 import WarningIcon from '@material-ui/icons/Warning';
-import NoChangeDialog from '../../Components/No Change Dialog/NoChangeDialog'
+import NoChangeDialog from '../../Components/No Change Dialog/NoChangeDialog';
+import colors from '../../colors.json'
+import BottomBar from '../../Components/BottomBar/BottomBar';
 
 const useStyles = makeStyles((theme) => ({
     patientDivider: {
@@ -15,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
         margin: 'auto',
     },
     inputField: {
-        background: '#e5f0ff',
+        background: colors.secondary,
     },
     activeInput: {
         background: 'white'
@@ -49,6 +51,15 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             background: '#6295e0'
         }
+    },
+    radio: {
+        '&:checked': {
+            color: colors.secondary
+        }
+    },
+    bottomBar: {
+        top: 'auto',
+        bottom: '0',
     }
 }));
 
@@ -126,9 +137,9 @@ const PatientInfo = (props) => {
             <h3>{lang[key].patientView.patientInfo.phone}</h3>
             <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleEmPhone} value={emPhone} />
             <div style={{ marginTop: 15 }}>
-                <Button disabled={!edit} variant="contained">
-                    {lang[key].components.button.upload}
+                <Button style={edit ? { backgroundColor: colors.button, color: 'white' } : {}} disabled={!edit} variant="contained">
                     <input type="file" style={{ display: "none" }} />
+                    {lang[key].components.button.upload}
                 </Button>
             </div>
             <div style={{ display: 'flex' }}>
@@ -141,13 +152,16 @@ const PatientInfo = (props) => {
                 value={delivery}
                 onChange={handleDelivery}
             >
-                <FormControlLabel disabled={!edit} value={lang[key].patientView.patientInfo.handDelivery} control={<Radio />} label={lang[key].patientView.patientInfo.handDelivery} />
-                <FormControlLabel disabled={!edit} value={lang[key].patientView.patientInfo.pickup} control={<Radio />} label={lang[key].patientView.patientInfo.pickup} />
+                <FormControlLabel disabled={!edit} value={lang[key].patientView.patientInfo.handDelivery}
+                    control={<Radio color="primary" />}
+                    label={lang[key].patientView.patientInfo.handDelivery} />
+                <FormControlLabel disabled={!edit} value={lang[key].patientView.patientInfo.pickup}
+                    control={<Radio color="primary" />}
+                    label={lang[key].patientView.patientInfo.pickup}
+                />
             </RadioGroup>
             <Notes disabled={!edit} state={setNotes} title={lang[key].components.notes.title} value={notes} />
-            <div className="submit-group">
-                <Button onClick={() => setEdit(false)}>{lang[key].components.button.save}</Button>
-            </div>
+            <BottomBar edit={edit} setEdit={setEdit} lang={props.lang} />
         </form>
     );
 }

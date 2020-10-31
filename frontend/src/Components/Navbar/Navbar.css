@@ -1,15 +1,11 @@
 .navbar {
-    background-color: #255296;
-}
-
-.appbar {
-    color: white;
+    background-color: white;
 }
 
 .nav-item {
     text-decoration: none;
     margin-left: 2%;
-    color: white;
+    color: black;
 }
 
 #nav-title {

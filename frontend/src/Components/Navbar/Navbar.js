@@ -4,7 +4,7 @@ import { AppBar, Avatar, Toolbar } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import Logo from '../../icons/3dp4me_logo.png';
-// import lang from '../../language.json';
+import colors from '../../colors.json'
 
 import "./Navbar.css";
 
@@ -26,7 +26,7 @@ const Navbar = (props) => {
     <div className={`wrap-nav`}>
       <AppBar className={classes.appBar}>
         <Toolbar className="navbar">
-          <img style={key === "AR" ? {marginLeft: '15px'}: {}} width={60} src={Logo} />
+          <img style={key === "AR" ? {marginLeft: '15px'}: {}} width={40} src={Logo} />
 
           <Link onClick={() => setActive("dashboard")} id="nav-title" className="nav-item" to="/">
             {lang[key].components.navbar.dashboard.navTitle}

@@ -18,6 +18,17 @@
                     "pageTitle": ""
                 }
             },
+            "sidebar": {
+                "name": "Name",
+                "orderID": "Order ID",
+                "dob": "DOB"
+            },
+            "bottombar": {
+                "status": "Status",
+                "unfinished": "Unfinished",
+                "partial": "Partially Complete",
+                "finished": "Finsihed"
+            },
             "stepTabs": {
                 "patientInfo": "Medical Info",
                 "earScan": "Ear Scan",
@@ -52,7 +63,9 @@
             "button": {
                 "createPatient": "Create New Patient",
                 "upload": "Upload File",
-                "save": "Save"
+                "save": "Save",
+                "edit": "Edit Step",
+                "discard": "Discard"
             },
             "search": {
                 "placeholder": "Search..."
@@ -146,6 +159,17 @@
                     "pageTitle": ""
                 }
             },
+            "sidebar": {
+                "name": "اسم",
+                "orderID": "رقم التعريف الخاص بالطلب",
+                "dob": "ب."
+            },
+            "bottombar": {
+                "status": "الحالة",
+                "unfinished": "غير مكتمل",
+                "partial": "مكتمل جزئيًا",
+                "finished": "تم الانتهاء من"
+            },
             "stepTabs": {
                 "patientInfo": "معلومات طبية",
                 "earScan": "مسح الأذن",
@@ -180,7 +204,9 @@
             "button": {
                 "createPatient": "إنشاء مريض جديد",
                 "upload": "رفع ملف",
-                "save": "حفظ"
+                "save": "حفظ",
+                "edit": "تحرير الخطوة",
+                "discard": "تجاهل"
             },
             "search": {
                 "placeholder": "بحث..."

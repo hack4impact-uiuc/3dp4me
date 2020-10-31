@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
+import BottomBar from '../../Components/BottomBar/BottomBar';
+import colors from '../../colors.json'
 
 const useStyles = makeStyles((theme) => ({
     inputRoot: {
         fontSize: 14    ,
         backgroundColor: 'white',
-        border: 'solid black 1px',
         "&$labelFocused": {
             backgroundColor: 'white'
         },
@@ -16,12 +17,18 @@ const useStyles = makeStyles((theme) => ({
     },
     labelRoot: {
         fontSize: 20,
-    }
+    },
+    inputField: {
+        background: colors.secondary,
+    },
+    activeInput: {
+        background: 'white'
+    },
 }));
 
 const Delivery = (props) => {
     const classes = useStyles();
-
+    const [edit, setEdit] = useState(false);
     const [deliveryStatus, setDeliveryStatus] = useState("ready")
 
     const lang = props.lang.data;
@@ -30,21 +37,16 @@ const Delivery = (props) => {
     return (
         <div>
             <h1>{lang[key].patientView.delivery.title}</h1>
-            <h3>Clinic XYZ on 10/05/2020 9:58PM</h3>
+            <p>Clinic XYZ on 10/05/2020 9:58PM</p>
+            <h3>{lang[key].patientView.delivery.address}</h3>
             <TextField
-                label={lang[key].patientView.delivery.address}
-                variant="filled"
-                InputProps={{ classes: { root: classes.inputRoot } }}
-                InputLabelProps={{
-                    classes: {
-                        root: classes.labelRoot,
-                        focused: classes.labelFocused
-                    }
-                }}
-                helperText={lang[key].patientView.delivery.addressLabel}
+                disabled={!edit}
+                className={edit ? classes.activeInput : classes.inputField}
+                variant="outlined"
             />
+            <div style={{padding: 0}}>{lang[key].patientView.delivery.addressLabel}</div>
             <h3>{lang[key].patientView.delivery.status}</h3>
-            <FormControl component="fieldset">
+            <FormControl disabled={!edit} component="fieldset">
                 <RadioGroup name="status" value={deliveryStatus} onChange={(e) => setDeliveryStatus(e.target.value)}>
                     <FormControlLabel value="ready" control={<Radio />} label={lang[key].patientView.delivery.ready} />
                     <FormControlLabel value="out" control={<Radio />} label={lang[key].patientView.delivery.out} />
@@ -52,6 +54,7 @@ const Delivery = (props) => {
                     <FormControlLabel value="pickup" control={<Radio />} label={lang[key].patientView.delivery.pickup} />
                 </RadioGroup>
             </FormControl>
+            <BottomBar edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

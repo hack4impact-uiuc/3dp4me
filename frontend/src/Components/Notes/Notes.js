@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import './Notes.css'
+import colors from '../../colors.json'
 
 const useStyles = makeStyles((theme) => ({
     noteSection: {
@@ -9,8 +9,8 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: '25px'
     },
     noteHeader: {
-        backgroundColor: '#6295e0',
-        color: 'white',
+        backgroundColor: colors.secondary,
+        color: 'black',
         padding: '2px',
         paddingLeft: '10px',
     },
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
         maxHeight: '300px',
         minHeight: '100px',
         fontSize: '16px',
-        background: '#e5f0ff'
+        background: '#eeeffc'
     },
     activeBody: {
         minWidth: '98%',

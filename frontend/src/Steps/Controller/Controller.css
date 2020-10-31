@@ -4,18 +4,3 @@
     min-height: 100vh;
     height: fit-content;
 }
-
-.steps {
-    padding-left: 15px;
-}
-
-/* .flip {
-    margin: 0 auto;
-    width: 300px;
-    -moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-    filter: FlipH;
-    -ms-filter: "FlipH";
-} */

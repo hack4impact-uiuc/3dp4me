@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Notes from '../../Components/Notes/Notes';
 import Download from '../../Components/File Download/Download';
 import NoChangeDialog from '../../Components/No Change Dialog/NoChangeDialog';
+import BottomBar from '../../Components/BottomBar/BottomBar';
 
 const useStyles = makeStyles((theme) => ({
     patientDivider: {
@@ -70,17 +71,12 @@ const EarScan = (props) => {
 
     return (
         <div>
-            <div style={{ display: 'flex' }}>
-                <h1 style={{ flexGrow: 1 }}>{lang[key].patientView.earScan.title}</h1>
-            </div>
-            <h3>Clinic XYZ on 10/05/2020 9:58PM</h3>
+            <h1>{lang[key].patientView.earScan.title}</h1>
+            <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeader} fileName="file_name.SCAN" state={handleDownload} />
             <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
+            <BottomBar edit={edit} setEdit={setEdit} lang={props.lang} />
 
-            <div className={classes.approveBtn}>
-                
-            </div>
-            
         </div>
     )
 }

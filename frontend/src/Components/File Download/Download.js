@@ -3,13 +3,27 @@ import './Download.css'
 import { Button, Typography } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import { makeStyles } from '@material-ui/core/styles'
+import colors from '../../colors.json';
 
 const useStyles = makeStyles((theme) => ({
     downloadBtn: {
         '&:hover': {
-            backgroundColor: '#e5f0ff'
+            backgroundColor: 'white'
         }
-    }
+    },
+    downloadSection: {
+        width: '300px',
+        border: 'solid black 1px'
+    } ,
+    downloadHeader: {
+        backgroundColor: colors.secondary,
+        color: 'black',
+        padding: 1,
+        paddingLeft: '10px',
+    } ,
+    downloadButton: {
+        backgroundColor: 'white'
+    },
 }));
 
 const Download = (props) => {
@@ -18,11 +32,11 @@ const Download = (props) => {
     const key = props.lang.key;
 
     return (
-        <div className="download-section">
-            <div className="download-header">
+        <div className={classes.downloadSection}>
+            <div className={classes.downloadHeader}>
                 <h3 style={{ fontWeight: 100 }}>{props.title}</h3>
             </div>
-            <div className="download-button">
+            <div className={classes.downloadButton}>
                 <Button className={classes.downloadBtn} onClick={props.state}>
                     <ArrowDownwardIcon />
                     <Typography align="left">

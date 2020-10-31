@@ -15,12 +15,16 @@ import { Accordion, AccordionDetails, AccordionSummary, TextField } from '@mater
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import colors from '../../colors.json';
+import CheckIcon from '@material-ui/icons/Check';
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
 
 const drawerWidth = 240;
 
 const theme = createMuiTheme({
-    direction: 'rtl', // Both here and <body dir="rtl">
+    direction: 'rtl', 
 });
 
 const useStyles = makeStyles((theme) => ({
@@ -36,33 +40,26 @@ const useStyles = makeStyles((theme) => ({
     },
     drawerPaper: {
         width: drawerWidth,
-        backgroundColor: '#9ebdeb',
-        // background: '#9ebdeb',
+        backgroundColor: '#323366',
+        color: 'white'
     },
     drawerContainer: {
         overflow: 'auto',
-        padding: 15,
+        padding: 20,
     },
-    drawerItem: {
-        marginTop: 20,
-        backgroundColor: 'white',
-        // padding: 10,
+    drawerText: {
+        fontSize: 16
     },
-    inputRoot: {
-        fontSize: 20,
-        backgroundColor: 'white',
-        "&$labelFocused": {
-            backgroundColor: 'white',
-        },
-        '&:hover': {
-            backgroundColor: 'white',
-        }
+    drawerTextLabel: {
+        fontSize: 14,
+        color: '#babcfe',
     },
-    labelRoot: {
-        fontSize: 20,
+    drawerTextSection: {
+        marginBottom: 30
     },
-    toggleButton: {
-
+    steps: {
+        paddingLeft: '50px',
+        paddingBottom: '50px'
     }
 }));
 
@@ -102,7 +99,6 @@ const Controller = (props) => {
 
     return (
         <div className={classes.root}>
-            <div dir="">
                 <ThemeProvider theme={key === "AR" ? theme : null}>
                     <Drawer
                         className={key == "EN" ? classes.drawer : classes.drawerRtl}
@@ -113,142 +109,115 @@ const Controller = (props) => {
                     >
                         <Toolbar />
                         <div className={classes.drawerContainer}>
-                            <TextField
-                                disabled
-                                label="Name"
-                                variant="filled"
-                                className={classes.drawerItem}
-                                InputProps={{ classes: { root: classes.inputRoot } }}
-                                InputLabelProps={{
-                                    classes: {
-                                        root: classes.labelRoot,
-                                        focused: classes.labelFocused
-                                    }
-                                }}
-                            />
-                            <TextField
-                                disabled
-                                label="Order ID"
-                                variant="filled"
-                                className={classes.drawerItem}
-                                InputProps={{ classes: { root: classes.inputRoot } }}
-                                InputLabelProps={{
-                                    classes: {
-                                        root: classes.labelRoot,
-                                        focused: classes.labelFocused
-                                    }
-                                }}
-                            />
-                            <TextField
-                                disabled
-                                label="DOB"
-                                variant="filled"
-                                className={classes.drawerItem}
-                                InputProps={{ classes: { root: classes.inputRoot } }}
-                                InputLabelProps={{
-                                    classes: {
-                                        root: classes.labelRoot,
-                                        focused: classes.labelFocused
-                                    }
-                                }}
-                            />
-                            <div style={{ backgroundColor: '#9ebdeb' }} className={classes.drawerItem}>
+                            <div className={classes.drawerTextSection}>
+                                <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.name}</span> <br />
+                                <span className={classes.drawerText}>First Last</span>
+                            </div>
+                            <div className={classes.drawerTextSection}>
+                                <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.orderID}</span> <br />
+                                <span className={classes.drawerText}>#1271837</span>
+                            </div>
+                            <div className={classes.drawerTextSection}>
+                                <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.dob}</span> <br />
+                                <span className={classes.drawerText}>10/24/2004</span>
+                            </div>
+                            <span className={classes.drawerTextLabel}>{lang[key].components.notes.title}</span>
+                            <div style={{ backgroundColor: '#323366', marginTop: 3 }} className={classes.drawerItem}>
                                 <Accordion expanded={expanded === 'info'} onChange={handleNotePanel('info')}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.patientInfo}</AccordionSummary>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon style={{color: colors.button}} />}>{lang[key].components.stepTabs.patientInfo}</AccordionSummary>
                                     <AccordionDetails>
                                         This is where the notes will go
-                        </AccordionDetails>
+                                    </AccordionDetails>
                                 </Accordion>
                                 <Accordion expanded={expanded === 'scan'} onChange={handleNotePanel('scan')}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.earScan}</AccordionSummary>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon style={{color: colors.button}} />}>{lang[key].components.stepTabs.earScan}</AccordionSummary>
                                     <AccordionDetails>
                                         This is where the notes will go
-                        </AccordionDetails>
+                                    </AccordionDetails>
                                 </Accordion>
                                 <Accordion expanded={expanded === 'cad'} onChange={handleNotePanel('cad')}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.CADModeling}</AccordionSummary>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon style={{color: colors.button}} />}>{lang[key].components.stepTabs.CADModeling}</AccordionSummary>
                                     <AccordionDetails>
                                         This is where the notes will go
-                        </AccordionDetails>
+                                    </AccordionDetails>
                                 </Accordion>
                                 <Accordion expanded={expanded === 'processing'} onChange={handleNotePanel('processing')}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.print}</AccordionSummary>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon style={{color: colors.button}} />}>{lang[key].components.stepTabs.print}</AccordionSummary>
                                     <AccordionDetails>
                                         This is where the notes will go
-                        </AccordionDetails>
+                                    </AccordionDetails>
                                 </Accordion>
                                 <Accordion expanded={expanded === 'delivery'} onChange={handleNotePanel('delivery')}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.delivery}</AccordionSummary>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon style={{color: colors.button}} />}>{lang[key].components.stepTabs.delivery}</AccordionSummary>
                                     <AccordionDetails>
                                         This is where the notes will go
-                        </AccordionDetails>
+                                    </AccordionDetails>
                                 </Accordion>
                                 <Accordion expanded={expanded === 'feedback'} onChange={handleNotePanel('feedback')}>
-                                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>{lang[key].components.stepTabs.feedback}</AccordionSummary>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon style={{color: colors.button}} />}>{lang[key].components.stepTabs.feedback}</AccordionSummary>
                                     <AccordionDetails>
                                         This is where the notes will go
-                        </AccordionDetails>
+                                    </AccordionDetails>
                                 </Accordion>
                             </div>
 
                         </div>
                     </Drawer>
                 </ThemeProvider>
-            </div>
 
             <div className={`controller-content`} style={key === "AR" ? { marginRight: drawerWidth } : {}}>
-                <ToggleButtonGroup style={{ width: '100%', background: "#e1edff", padding: "8px 0px 15px" }} size="large" exclusive value={step} onChange={handleStep}>
+                <ToggleButtonGroup style={{ width: '100%', background: "#e1edff", padding: "50px 0px 0px" }} size="large" exclusive value={step} onChange={handleStep}>
                     <ToggleButton
                         disableRipple
-                        style={{ flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        style={{ marginRight: '15px', background: 'white', color: 'black', borderRadius: '10px 10px 0px 0px'  }}
                         value="info"
                     >
-                        {lang[key].components.stepTabs.patientInfo}
+                        <CheckIcon /> <b>{lang[key].components.stepTabs.patientInfo}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={{ flexGrow: 1, borderTop: 'solid #F7B610 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        style={{ marginRight: '15px', background: '#ffe1e1', color: 'red', borderRadius: '10px 10px 0px 0px' }}
                         value="scan"
                     >
-                        {lang[key].components.stepTabs.earScan}
+                        <PriorityHighIcon style={{color: 'red'}} /> <b>{lang[key].components.stepTabs.earScan}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={{ flexGrow: 1, borderTop: 'solid red 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        style={{ marginRight: '15px', background: 'white', color: 'black', borderRadius: '10px 10px 0px 0px'}}
                         value="cad"
                     >
-                        {lang[key].components.stepTabs.CADModeling}
+                        <CheckIcon /> <b>{lang[key].components.stepTabs.CADModeling}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={{ flexGrow: 1, borderTop: 'solid red 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        style={{ marginRight: '15px', background: 'white', color: 'black', borderRadius: '10px 10px 0px 0px' }}
                         value="printing"
                     >
-                        {lang[key].components.stepTabs.print}
+                         <CheckIcon /> <b>{lang[key].components.stepTabs.print}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={{ flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        style={{ marginRight: '15px', background: 'white', color: '#ddc66a', borderRadius: '10px 10px 0px 0px'}}
                         value="processing"
                     >
-                        {lang[key].components.stepTabs.processing}
+                        <RadioButtonUncheckedIcon style={{color: "#ddc66a", fontSize: 22, marginRight: '5px' }} /> <b>{lang[key].components.stepTabs.processing}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={{ flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        style={{ marginRight: '15px', background: 'white', color: 'black', borderRadius: '10px 10px 0px 0px' }}
                         value="delivery"
                     >
-                        {lang[key].components.stepTabs.delivery}
+                        <CheckIcon /> <b>{lang[key].components.stepTabs.delivery}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={{ flexGrow: 1, borderTop: 'solid green 8px', marginRight: '5px', color: "white", background: '#5657a6' }}
+                        style={{ marginRight: '15px', background: 'white', color: 'black', borderRadius: '10px 10px 0px 0px'}}
                         value="feedback"
                     >
-                        {lang[key].components.stepTabs.feedback}
+                        <CheckIcon /> <b>{lang[key].components.stepTabs.feedback}</b>
                     </ToggleButton>
                 </ToggleButtonGroup>
-                <div className="steps" style={key === "AR" ? { marginRight: '10px' } : {}}>
+                <div className={classes.steps} style={key === "AR" ? { marginRight: '50px', background: 'white' } : {}}>
                     {step === "info" ? (
                         <PatientInfo lang={props.lang} />
                     ) : (<></>)}
