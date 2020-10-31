@@ -2,6 +2,8 @@
     margin-left: 0;
     font-family: 'Ubuntu';
 }
+
+html { overflow-y: scroll; }
 /* 
 .flip {
     margin-top: 0;

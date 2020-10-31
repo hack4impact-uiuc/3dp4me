@@ -19,7 +19,10 @@ const Patients = (props) => {
     const handleSearch = (e) => {
         console.log(e.target.value)
         setSearchQuery(e.target.value);
-        let filtered = allPatients.filter(patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || (patient.serial + "").search(e.target.value) !== -1);
+        let filtered = allPatients.filter(patient => 
+            patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || 
+            (patient.serial + "").search(e.target.value) !== -1 ||
+            (patient._id).search(e.target.value) !== -1);
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);
     }
@@ -40,17 +43,6 @@ const Patients = (props) => {
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
-
-    const patientsTest = [
-        { name: "Amit", serial: '309310', createdDate: 'January 1, 2020', lastEdited: 'January 1, 2020', status: 'Unfinished' },
-        { name: "Evan", serial: '635058', createdDate: 'January 2, 2020', lastEdited: 'January 2, 2020', status: 'Unfinished' },
-        { name: "Anisha", serial: '100231', createdDate: 'January 3, 2020', lastEdited: 'January 3, 2020', status: 'Unfinished' },
-        { name: "Lauren", serial: '127332', createdDate: 'January 4, 2020', lastEdited: 'January 4, 2020', status: 'Unfinished' },
-        { name: "Navam", serial: '269402', createdDate: 'January 5, 2020', lastEdited: 'January 5, 2020', status: 'Unfinished' },
-        { name: "Ashank", serial: '164650', createdDate: 'January 6, 2020', lastEdited: 'January 6, 2020', status: 'Unfinished' },
-        { name: "Andy", serial: '259048', createdDate: 'January 7, 2020', lastEdited: 'January 7, 2020', status: 'Unfinished' },
-        { name: "Gene", serial: '909285', createdDate: 'January 8, 2020', lastEdited: 'January 8, 2020', status: 'Unfinished' },
-    ]
 
     useEffect(() => {
         getData();

@@ -38,6 +38,7 @@ const useStyles = makeStyles({
         borderRight: 'solid #255296 1px',
         fontSize: 17,
         padding: 0,
+        paddingLeft: '20px'
     },
     header: {
         borderTop: 'solid #255296 1px',
@@ -45,6 +46,8 @@ const useStyles = makeStyles({
         borderRight: 'solid #255296 1px',
         fontWeight: 'bolder',
         fontSize: 20,
+        maxWidth: '100px',
+        minWidth: '100px',
         '&:hover': {
             cursor: 'pointer'
         }
@@ -54,12 +57,13 @@ const useStyles = makeStyles({
         fontFamily: 'Ubuntu',
     },
     arrowSize: {
-        fontSize: 30,
+        fontSize: 25,
     },
     align: {
         alignItems: 'center',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'left',
+        marginLeft: '5px'
     }
 });
 
@@ -76,7 +80,7 @@ const MainTable = (props) => {
                 <TableHead>
                     <TableRow>
                         {props.headers.map(header => (
-                            <StyledTableCell onClick={() => requestSort(header.sortKey)} className={classes.header} align="center">
+                            <StyledTableCell onClick={() => requestSort(header.sortKey)} className={classes.header} align="left">
                                 <div className={classes.align}>
                                     {header.title}
                                     {sortConfig !== null && sortConfig.key === header.sortKey && sortConfig.direction === "ascending" ? (
@@ -95,7 +99,7 @@ const MainTable = (props) => {
                     {items.map((patient) => (
                         <StyledTableRow key={patient.serial}>
                             {props.rowIds.map(id => (
-                                <StyledTableCell className={classes.cell} align="center">{patient[id]}</StyledTableCell>
+                                <StyledTableCell className={classes.cell} align="left">{patient[id]}</StyledTableCell>
                             ))}
                             <StyledTableCell className={classes.cell} align="center">
                                 <Link to={`/patient-info/${patient.serial}`}>
