@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -19,6 +19,7 @@ import colors from '../../colors.json';
 import CheckIcon from '@material-ui/icons/Check';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import patientFile from '../../Test Data/patient.json'
 
 
 const drawerWidth = 240;
@@ -59,14 +60,14 @@ const useStyles = makeStyles((theme) => ({
     },
     steps: {
         paddingLeft: '50px',
-        paddingBottom: '50px'
+        paddingBottom: '100px'
     }
 }));
 
 const Controller = (props) => {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
-    const [patient, setPatient] = useState([]);
+    const [patient, setPatient] = useState();
     const [step, setStep] = useState("info");
     const [medStatus, setMedStatus] = useState("unfinished");
     const [earScanStatus, setEarScanStatus] = useState("unfinished");
@@ -105,6 +106,28 @@ const Controller = (props) => {
         }
     };
 
+    const handleMedStatus = (e) => {
+       if (e.target.value === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setMedStatus(e.target.value);
+    }
+    const handleEarScanStatus = (e) => {
+       if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setEarScanStatus(e.target.value);
+    }
+    const handleModelStatus = (e) => {
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setModelStatus(e.target.value);
+    }
+    const handlePrintStatus = (e) => {
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setPrintStatus(e.target.value);
+    }
+    const handleProcessingStatus = (e) => {
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setProcessingStatus(e.target.value);
+    }
+    const handleDeliveryStatus = (e) => {
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setDeliveryStatus(e.target.value);
+    }
+    const handleFeedbackStatus = (e) => {
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setFeedbackStatus(e.target.value);
+    }
+
     const styles = {
         unfinished: {
             default: { marginRight: '15px', background: '#ffe1e1', color: 'red', borderRadius: '10px 10px 0px 0px' },
@@ -137,15 +160,15 @@ const Controller = (props) => {
                     <div className={classes.drawerContainer}>
                         <div className={classes.drawerTextSection}>
                             <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.name}</span> <br />
-                            <span className={classes.drawerText}>First Last</span>
+                            <span className={classes.drawerText}>{patientFile.patientInfo.name}</span>
                         </div>
                         <div className={classes.drawerTextSection}>
                             <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.orderID}</span> <br />
-                            <span className={classes.drawerText}>#1271837</span>
+                            <span className={classes.drawerText}>{patientFile.patientInfo.orderId}</span>
                         </div>
                         <div className={classes.drawerTextSection}>
                             <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.dob}</span> <br />
-                            <span className={classes.drawerText}>10/24/2004</span>
+                            <span className={classes.drawerText}>{patientFile.patientInfo.dob}</span>
                         </div>
                         <span className={classes.drawerTextLabel}>{lang[key].components.notes.title}</span>
                         <div style={{ backgroundColor: '#323366', marginTop: 3 }} className={classes.drawerItem}>
@@ -196,11 +219,13 @@ const Controller = (props) => {
                     <ToggleButton
                         disableRipple
                         style={
-                            step === "info" && medStatus !== undefined ? (
-                                styles[medStatus].active
-                            ) : (
-                                styles[medStatus].default
-                            )
+                            medStatus !== undefined ? (
+                                step === "info" ? (
+                                    styles[medStatus].active
+                                ) : (
+                                    styles[medStatus].default
+                                )
+                            ) : (null)
                         }
                         value="info"
                     >
@@ -209,11 +234,13 @@ const Controller = (props) => {
                     <ToggleButton
                         disableRipple
                         style={
-                            step === "scan" && earScanStatus !== undefined ? (
-                                styles[earScanStatus].active
-                            ) : (
-                                styles[earScanStatus].default
-                            )
+                            earScanStatus !== undefined ? (
+                                step === "scan" ? (
+                                    styles[earScanStatus].active
+                                ) : (
+                                    styles[earScanStatus].default
+                                )
+                            ) : (null)
                         }
                         value="scan"
                     >
@@ -222,11 +249,13 @@ const Controller = (props) => {
                     <ToggleButton
                         disableRipple
                         style={
-                            step === "cad" && modelStatus !== undefined ? (
-                                styles[modelStatus].active
-                            ) : (
-                                styles[modelStatus].default
-                            )
+                            modelStatus !== undefined ? (
+                                step === "cad" ? (
+                                    styles[modelStatus].active
+                                ) : (
+                                    styles[modelStatus].default
+                                )
+                            ) : (null)
                         }
                         value="cad"
                     >
@@ -235,11 +264,13 @@ const Controller = (props) => {
                     <ToggleButton
                         disableRipple
                         style={
-                            step === "printing" && printStatus !== undefined ? (
-                                styles[printStatus].active
-                            ) : (
-                                styles[printStatus].default
-                            )
+                            printStatus !== undefined ? (
+                                step === "printing" && printStatus !== undefined ? (
+                                    styles[printStatus].active
+                                ) : (
+                                    styles[printStatus].default
+                                )
+                            ) : (null)
                         }
                         value="printing"
                     >
@@ -248,11 +279,13 @@ const Controller = (props) => {
                     <ToggleButton
                         disableRipple
                         style={
-                            step === "processing" && processingStatus !== undefined ? (
-                                styles[processingStatus].active
-                            ) : (
-                                styles[processingStatus].default
-                            )
+                            processingStatus !== undefined ? (
+                                step === "processing" ? (
+                                    styles[processingStatus].active
+                                ) : (
+                                    styles[processingStatus].default
+                                )
+                            ) : (null)
                         }
                         value="processing"
                     >
@@ -261,11 +294,13 @@ const Controller = (props) => {
                     <ToggleButton
                         disableRipple
                         style={
-                            step === "delivery" && deliveryStatus !== undefined ? (
-                                styles[deliveryStatus].active
-                            ) : (
-                                styles[deliveryStatus].default
-                            )
+                            deliveryStatus !== undefined ? (
+                                step === "delivery" ? (
+                                    styles[deliveryStatus].active
+                                ) : (
+                                    styles[deliveryStatus].default
+                                )
+                            ) : (null)
                         }
                         value="delivery"
                     >
@@ -274,11 +309,13 @@ const Controller = (props) => {
                     <ToggleButton
                         disableRipple
                         style={
-                            step === "feedback" && feedbackStatus !== undefined ? (
-                                styles[feedbackStatus].active
-                            ) : (
-                                styles[feedbackStatus].default
-                            )
+                            feedbackStatus !== undefined ? (
+                                step === "feedback" ? (
+                                    styles[feedbackStatus].active
+                                ) : (
+                                    styles[feedbackStatus].default
+                                )
+                            ) : (null)
                         }
                         value="feedback"
                     >
@@ -287,25 +324,25 @@ const Controller = (props) => {
                 </ToggleButtonGroup>
                 <div className={classes.steps} style={key === "AR" ? { marginRight: '50px', background: 'white' } : {}}>
                     {step === "info" ? (
-                        <PatientInfo status={{value: medStatus, setStatus: setMedStatus}} lang={props.lang} />
+                        <PatientInfo info={patientFile.patientInfo} status={{value: medStatus, setStatus: handleMedStatus}} lang={props.lang} />
                     ) : (<></>)}
                     {step === "scan" ? (
-                        <EarScan status={{value: earScanStatus, setStatus: setEarScanStatus}}  lang={props.lang} />
+                        <EarScan info={patientFile.earScanInfo} status={{value: earScanStatus, setStatus: handleEarScanStatus}}  lang={props.lang} />
                     ) : (<></>)}
                     {step === "cad" ? (
-                        <CADModel status={{value: modelStatus, setStatus: setModelStatus}} lang={props.lang} />
+                        <CADModel info={patientFile.modelInfo} status={{value: modelStatus, setStatus: handleModelStatus}} lang={props.lang} />
                     ) : (<></>)}
                     {step === "printing" ? (
-                        <Printing status={{value: printStatus, setStatus: setPrintStatus}} lang={props.lang} />
+                        <Printing info={patientFile.printingInfo} status={{value: printStatus, setStatus: handlePrintStatus}} lang={props.lang} />
                     ) : (<></>)}
                     {step === "processing" ? (
-                        <PostProcessing status={{value: processingStatus, setStatus: setProcessingStatus}} lang={props.lang} />
+                        <PostProcessing info={patientFile.processingInfo} status={{value: processingStatus, setStatus: handleProcessingStatus}} lang={props.lang} />
                     ) : (<></>)}
                     {step === "delivery" ? (
-                        <Delivery status={{value: deliveryStatus, setStatus: setDeliveryStatus}} lang={props.lang} />
+                        <Delivery info={patientFile.deliveryInfo} status={{value: deliveryStatus, setStatus: handleDeliveryStatus}} lang={props.lang} />
                     ) : (<></>)}
                     {step === "feedback" ? (
-                        <Feedback status={{value: feedbackStatus, setStatus: setFeedbackStatus}} lang={props.lang} />
+                        <Feedback info={patientFile.feedbackInfo} status={{value: feedbackStatus, setStatus: handleFeedbackStatus}} lang={props.lang} />
                     ) : (<></>)}
                 </div>
             </div>

@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import BottomBar from '../../Components/BottomBar/BottomBar';
 import colors from '../../colors.json'
+import swal from 'sweetalert';
 
 const useStyles = makeStyles((theme) => ({
     inputRoot: {
@@ -28,11 +29,51 @@ const useStyles = makeStyles((theme) => ({
 
 const Delivery = (props) => {
     const classes = useStyles();
+
+    const info = props.info
+    const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
-    const [deliveryStatus, setDeliveryStatus] = useState("ready")
+    const [address, setAddress] = useState("");
+    const [deliveryStatus, setDeliveryStatus] = useState("");
+    const formFields = {
+        address: address,
+        status: deliveryStatus
+    }
 
     const lang = props.lang.data;
     const key = props.lang.key;
+
+    useEffect(() => {
+        setAddress(info.address);
+        setDeliveryStatus(info.status)
+    }, [trigger]);
+
+    const saveData = (e) => {
+        setEdit(false);
+        swal(lang[key].components.bottombar.savedMessage.delivery, "", "success");
+    }
+
+    const discardData = (e) => {
+        swal({
+            title: lang[key].components.button.discard.question,
+            text: lang[key].components.button.discard.warningMessage,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: [lang[key].components.button.discard.cancelButton, lang[key].components.button.discard.confirmButton]
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              swal({
+                title: lang[key].components.button.discard.success,
+                icon: "success",
+                buttons: lang[key].components.button.discard.confirmButton
+            });
+            reset(!trigger);
+            setEdit(false)
+            } 
+          });
+    }
 
     return (
         <div>
@@ -43,6 +84,8 @@ const Delivery = (props) => {
                 disabled={!edit}
                 className={edit ? classes.activeInput : classes.inputField}
                 variant="outlined"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
             />
             <div style={{padding: 0}}>{lang[key].patientView.delivery.addressLabel}</div>
             <h3>{lang[key].patientView.delivery.status}</h3>
@@ -54,7 +97,7 @@ const Delivery = (props) => {
                     <FormControlLabel value="pickup" control={<Radio />} label={lang[key].patientView.delivery.pickup} />
                 </RadioGroup>
             </FormControl>
-            <BottomBar status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

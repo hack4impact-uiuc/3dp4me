@@ -27,7 +27,17 @@
                 "status": "Status",
                 "unfinished": "Unfinished",
                 "partial": "Partially Complete",
-                "finished": "Finished"
+                "finished": "Finished",
+                "default": "Update Status",
+                "savedMessage": {
+                    "patientInfo": "Patient Info Saved",
+                    "earScan": "Ear Scan Saved",
+                    "model": "CAD Model Saved",
+                    "print": "3D Printing Saved",
+                    "processing": "Post Processing Saved",
+                    "delivery": "Delivery Saved",
+                    "feedback": "Feedback Saved"
+                }
             },
             "stepTabs": {
                 "patientInfo": "Medical Info",
@@ -52,7 +62,8 @@
                     "added": "Date Added",
                     "feedbackCycle": "Feedback Cycle",
                     "status": "Status"
-                }
+                },
+                "noPatientsFound": "Sorry! No matching patients"
             },
             "dropdown": {
                 "newest": "Newest",
@@ -65,7 +76,14 @@
                 "upload": "Upload File",
                 "save": "Save",
                 "edit": "Edit Step",
-                "discard": "Discard"
+                "discard": {
+                    "title": "Discard",
+                    "question": "Are you sure?",
+                    "warningMessage": "You are about to discard your current form changes! This is unchangeable!",
+                    "success": "Discarded changes!",
+                    "confirmButton": "Ok",
+                    "cancelButton": "Cancel"
+                }
             },
             "search": {
                 "placeholder": "Search..."
@@ -168,7 +186,17 @@
                 "status": "الحالة",
                 "unfinished": "غير مكتمل",
                 "partial": "مكتمل جزئيًا",
-                "finished": "تم الانتهاء من"
+                "finished": "تم الانتهاء من",
+                "default": "تحديث الحالة",
+                "savedMessage": {
+                    "patientInfo": "تم حفظ معلومات المريض",
+                    "earScan": "تم حفظ مسح الأذن",
+                    "model": "نذل - وغد. تم حفظ النموذج",
+                    "print": "تم حفظ الطباعة ثلاثية الأبعاد",
+                    "processing": "تم حفظ المعالجة اللاحقة",
+                    "delivery": "تم حفظ التسليم",
+                    "feedback": "تم حفظ التعليقات"
+                }
             },
             "stepTabs": {
                 "patientInfo": "معلومات طبية",
@@ -193,7 +221,8 @@
                     "added": "تم إضافة التاريخ",
                     "feedbackCycle": "دورة الملاحظات",
                     "status": "الحالة"
-                }
+                },
+                "noPatientsFound": "آسف! لا يوجد مرضى مطابقين"
             },
             "dropdown": {
                 "newest": "الأحدث",
@@ -206,7 +235,14 @@
                 "upload": "رفع ملف",
                 "save": "حفظ",
                 "edit": "تحرير الخطوة",
-                "discard": "تجاهل"
+                "discard": {
+                    "title": "تجاهل",
+                    "question": "هل أنت واثق؟",
+                    "warningMessage": "أنت على وشك تجاهل تغييرات النموذج الحالية! هذا غير قابل للتغيير!",
+                    "success": "التغييرات المهملة!",
+                    "confirmButton": "حسنا",
+                    "cancelButton": "إلغاء"
+                }
             },
             "search": {
                 "placeholder": "بحث..."

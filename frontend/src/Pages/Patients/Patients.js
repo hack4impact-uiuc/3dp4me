@@ -19,8 +19,8 @@ const Patients = (props) => {
     const handleSearch = (e) => {
         console.log(e.target.value)
         setSearchQuery(e.target.value);
-        let filtered = allPatients.filter(patient => 
-            patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || 
+        let filtered = allPatients.filter(patient =>
+            patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 ||
             (patient.serial + "").search(e.target.value) !== -1 ||
             (patient._id).search(e.target.value) !== -1);
         setNoPatient(filtered.length === 0);
@@ -54,7 +54,7 @@ const Patients = (props) => {
             <div className="all-patients-header">
                 <Snackbar open={noPatient} autoHideDuration={3000} onClose={handleNoPatientClose}>
                     <Alert onClose={handleNoPatientClose} severity="error">
-                        Sorry! No matching patients
+                        {lang[key].components.table.noPatientsFound}
                     </Alert>
                 </Snackbar>
                 <h2 style={key === "AR" ? { flexGrow: 1, marginRight: '10px' } : { flexGrow: 1 }}>{lang[key].components.navbar.patients.pageTitle}</h2>

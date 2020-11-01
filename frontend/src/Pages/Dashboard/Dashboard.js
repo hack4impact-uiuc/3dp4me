@@ -96,7 +96,7 @@ const Dashboard = (props) => {
     <div className="dashboard">
       <Snackbar open={noPatient} autoHideDuration={3000} onClose={handleNoPatientClose}>
         <Alert onClose={handleNoPatientClose} severity="error">
-          Sorry! No matching patients
+          {lang[key].components.table.noPatientsFound}
         </Alert>
       </Snackbar>
       <div className="tabs">

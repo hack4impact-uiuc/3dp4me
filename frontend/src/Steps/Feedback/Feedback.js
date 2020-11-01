@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Notes from '../../Components/Notes/Notes'
 import { TextField } from '@material-ui/core';
 import BottomBar from '../../Components/BottomBar/BottomBar';
 import colors from '../../colors.json'
+import swal from 'sweetalert';
 
 const useStyles = makeStyles(theme => ({
     inputField: {
@@ -18,6 +19,9 @@ const useStyles = makeStyles(theme => ({
 
 const Feedback = (props) => {
     const classes = useStyles();
+
+    const info = props.info
+    const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
     const [intialFeedback, setInitialFeedback] = useState("");
     const [initialFeedbackDate, setInitialFeedbackDate] = useState("")
@@ -30,6 +34,45 @@ const Feedback = (props) => {
 
     const lang = props.lang.data;
     const key = props.lang.key;
+
+    useEffect(() => {
+        setInitialFeedback(info.initial.notes);
+        setInitialFeedbackDate(info.initial.date);
+        setSixMonthFeedback(info.sixMonth.notes);
+        setSixMonthFeedbackDate(info.sixMonth.date);
+        setOneYearFeedback(info.oneYear.notes);
+        setOneYearFeedbackDate(info.oneYear.date);
+        setTwoYearFeedback(info.twoYear.notes);
+        setTwoYearFeedbackDate(info.twoYear.date);
+    }, [trigger]);
+
+    const saveData = (e) => {
+        setEdit(false);
+        swal(lang[key].components.bottombar.savedMessage.feedback, "", "success");
+    }
+
+    const discardData = (e) => {
+        swal({
+            title: lang[key].components.button.discard.question,
+            text: lang[key].components.button.discard.warningMessage,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: [lang[key].components.button.discard.cancelButton, lang[key].components.button.discard.confirmButton]
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              swal({
+                title: lang[key].components.button.discard.success,
+                icon: "success",
+                buttons: lang[key].components.button.discard.confirmButton
+            });
+            reset(!trigger);
+            setEdit(false)
+            } 
+          });
+    }
+
 
     return (
         <div>
@@ -55,7 +98,7 @@ const Feedback = (props) => {
                 <h3>{lang[key].patientView.feedback.collected}</h3>
                 <TextField className={edit ? classes.activeInput : classes.inputField} disabled={!edit} variant="outlined" value={twoYearFeedbackDate} onChange={(e) => setTwoYearFeedbackDate(e.target.value)} />
             </div>
-            <BottomBar status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }
