@@ -26,26 +26,26 @@ router.get(
 );
 
 // Edit a patient's status
-// TODO: Upload new files to AWS and update files field in model
 router.put(
     '/:serial/:stage/status',
     errorWrap(async (req, res) => {
         const { status, userID, notes } = req.body;
         const { serial, stage } = req.params;
-        const { file } = req.files;
-        const updatedPatient = await models.Patient.findOneAndUpdate(
-            {
-                "serial": serial
-            },
-            {
-                [stage]: {
-                    "status": status,
-                    "lastEdit": Date.now(),
-                    "lastEditBy": userID,
-                    "notes": notes
-                }
+
+        const query = { "serial": serial };
+        let update = {
+            [stage]: {
+                "status": status,
+                "lastEdit": Date.now(),
+                "lastEditBy": userID,
+                "notes": notes
             }
-        );
+        }
+        if (req.files) {
+            // TODO: Upload new files to AWS and update files field in model
+        }
+
+        const updatedPatient = await models.Patient.findOneAndUpdate(query, update, { new: true });
         res.status(200).json({
             code: 200,
             success: true,
