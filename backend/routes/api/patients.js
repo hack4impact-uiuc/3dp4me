@@ -32,6 +32,7 @@ router.put(
     errorWrap(async (req, res) => {
         const { status, userID, notes } = req.body;
         const { serial, stage } = req.params;
+        const { file } = req.files;
         const updatedPatient = await models.Patient.findOneAndUpdate(
             {
                 "serial": serial
