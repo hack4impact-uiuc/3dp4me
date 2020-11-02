@@ -39,7 +39,7 @@ router.put(
             {
                 [stage]: {
                     "status": status,
-                    "lastEdit": new Date().toUTCString(),
+                    "lastEdit": Date.now(),
                     "lastEditBy": userID,
                     "notes": notes
                 }
