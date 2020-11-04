@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import './Controller.css';
+import './Controller.scss';
 import PatientInfo from '../Patient Info/PatientInfo';
 import EarScan from '../Ear Scan/EarScan';
 import CADModel from '../CAD Model/CADModel';
@@ -21,51 +20,11 @@ import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import patientFile from '../../Test Data/patient.json'
 
-
-const drawerWidth = 240;
-
 const theme = createMuiTheme({
     direction: 'rtl',
 });
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-    },
-    drawerRtl: {
-        flexShrink: 0,
-    },
-    drawerPaper: {
-        width: drawerWidth,
-        backgroundColor: '#323366',
-        color: 'white'
-    },
-    drawerContainer: {
-        overflow: 'auto',
-        padding: 20,
-    },
-    drawerText: {
-        fontSize: 16
-    },
-    drawerTextLabel: {
-        fontSize: 14,
-        color: '#babcfe',
-    },
-    drawerTextSection: {
-        marginBottom: 30
-    },
-    steps: {
-        paddingLeft: '50px',
-        paddingBottom: '100px'
-    }
-}));
-
 const Controller = (props) => {
-    const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [patient, setPatient] = useState();
     const [step, setStep] = useState("info");
@@ -147,31 +106,31 @@ const Controller = (props) => {
     }
 
     return (
-        <div className={classes.root}>
+        <div className="root">
             <ThemeProvider theme={key === "AR" ? theme : null}>
                 <Drawer
-                    className={key == "EN" ? classes.drawer : classes.drawerRtl}
+                    className={key == "EN" ? "drawer" : "drawer-rtl"}
                     variant="permanent"
                     classes={{
-                        paper: classes.drawerPaper,
+                        paper: "drawer-paper",
                     }}
                 >
                     <Toolbar />
-                    <div className={classes.drawerContainer}>
-                        <div className={classes.drawerTextSection}>
-                            <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.name}</span> <br />
-                            <span className={classes.drawerText}>{patientFile.patientInfo.name}</span>
+                    <div className="drawer-container">
+                        <div className="drawer-text-section">
+                            <span className="drawer-text-label">{lang[key].components.sidebar.name}</span> <br />
+                            <span className="drawer-text">{patientFile.patientInfo.name}</span>
                         </div>
-                        <div className={classes.drawerTextSection}>
-                            <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.orderID}</span> <br />
-                            <span className={classes.drawerText}>{patientFile.patientInfo.orderId}</span>
+                        <div className="drawer-text-section">
+                            <span className="drawer-text-label">{lang[key].components.sidebar.orderID}</span> <br />
+                            <span className="drawer-text">{patientFile.patientInfo.orderId}</span>
                         </div>
-                        <div className={classes.drawerTextSection}>
-                            <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.dob}</span> <br />
-                            <span className={classes.drawerText}>{patientFile.patientInfo.dob}</span>
+                        <div className="drawer-text-section">
+                            <span className="drawer-text-label">{lang[key].components.sidebar.dob}</span> <br />
+                            <span className="drawer-text">{patientFile.patientInfo.dob}</span>
                         </div>
-                        <span className={classes.drawerTextLabel}>{lang[key].components.notes.title}</span>
-                        <div style={{ backgroundColor: '#323366', marginTop: 3 }} className={classes.drawerItem}>
+                        <span className="drawer-text-label">{lang[key].components.notes.title}</span>
+                        <div style={{ backgroundColor: '#323366', marginTop: 3 }}>
                             <Accordion expanded={expanded === 'info'} onChange={handleNotePanel('info')}>
                                 <AccordionSummary expandIcon={<ExpandMoreIcon style={{ color: colors.button }} />}>{lang[key].components.stepTabs.patientInfo}</AccordionSummary>
                                 <AccordionDetails>
@@ -214,8 +173,8 @@ const Controller = (props) => {
                 </Drawer>
             </ThemeProvider>
 
-            <div className={`controller-content`} style={key === "AR" ? { marginRight: drawerWidth } : {}}>
-                <ToggleButtonGroup style={{ width: '100%', background: "#e1edff", padding: "50px 0px 0px" }} size="large" exclusive value={step} onChange={handleStep}>
+            <div className={`controller-content ${key === "AR" ? "controller-content-ar" : ""}`}>
+                <ToggleButtonGroup className="controller-content-header" size="large" exclusive value={step} onChange={handleStep}>
                     <ToggleButton
                         disableRipple
                         style={
@@ -322,7 +281,7 @@ const Controller = (props) => {
                         {feedbackStatus !== undefined ? styles[feedbackStatus].icon : null} <b>{lang[key].components.stepTabs.feedback}</b>
                     </ToggleButton>
                 </ToggleButtonGroup>
-                <div className={classes.steps} style={key === "AR" ? { marginRight: '50px', background: 'white' } : {}}>
+                <div className="steps" style={key === "AR" ? { marginRight: '50px', background: 'white' } : {}}>
                     {step === "info" ? (
                         <PatientInfo info={patientFile.patientInfo} status={{value: medStatus, setStatus: handleMedStatus}} lang={props.lang} />
                     ) : (<></>)}

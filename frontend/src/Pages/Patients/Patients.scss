@@ -1,0 +1,18 @@
+.all-patients-header {
+    display: flex;
+    align-items: center;
+    margin-left: 5%;
+
+    .all-patients-header-text {
+        flex-grow: 1;
+    }
+
+    .all-patients-header-text-ar {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+
+    .all-patients-search-field {
+        margin: 10px;
+    }
+}

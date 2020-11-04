@@ -1,0 +1,51 @@
+@import '../../Styles/colors.scss';
+
+.table {
+    font-family: 'Ubuntu';
+    min-width: 700;
+
+    .header {
+        border-top: solid $navbar 1px;
+        border-bottom: solid $navbar 1px;
+        border-right: solid $navbar 1px;
+        font-weight: bolder;
+        font-size: 20px;
+        max-width: 100px;
+        min-width: 100px;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .dropdown-arrow {
+        font-size: 25px;
+    }
+
+    .cell {
+        border-right: solid $navbar 1px;
+        font-size: 17px;
+        padding: 0px;
+        padding-left: 20px;
+    }
+
+    .cell-rtl {
+        border-right: solid $navbar 1px;
+        font-size: 17px;
+        padding: 0px;
+        padding-right: 30px;
+    }
+
+    .cell-align {
+        align-items: center;
+        display: flex;
+        justify-content: left;
+        margin-left: 5px;
+    }
+
+    .cell-align-rtl {
+        align-items: center;
+        display: flex;
+        justify-content: right;
+        margin-left: 5px;
+    }
+}
