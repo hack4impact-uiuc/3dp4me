@@ -46,10 +46,10 @@ router.post(
 
 // GET: Returns everything associated with patient stage
 router.get(
-    '/:serial/:stage',
+    '/:id/:stage',
     errorWrap(async (req, res) => {
-        const { serial, stage } = req.params;
-        models.Patient.findById(serial, stage).then(stageInfo => res.status(200).json({
+        const { id, stage } = req.params;
+        models.Patient.findById(id, stage).then(stageInfo => res.status(200).json({
             code: 200, 
             success: true, 
             result: stageInfo
@@ -59,19 +59,19 @@ router.get(
 
 // POST: Uploads files for certain stage and updates info
 router.post(
-    '/:serial/:stage',
+    '/:id/:stage',
     errorWrap(async (req, res) => {
-        const { serial, stage } = req.params;
-        const { filename, userId, } = req.body
-        const patientStage = models.Patient.findById(serial, stage);
+        const { id, stage } = req.params;
+        const { filename, userId, userName } = req.body
+        const patientStage = models.Patient.findById(id, stage);
         const currDate = new Date();
         patientStage.lastEdit = currDate;
-        patientStage.lastEditBy = userId;
+        patientStage.lastEditBy = userName;
         patientStage.files.push({filename: filename,
-            uploadedBy: userId,
+            uploadedBy: userName,
             uploadDate: currDate});
         await patientStage.save();
-
+        
         
     }),
 );
