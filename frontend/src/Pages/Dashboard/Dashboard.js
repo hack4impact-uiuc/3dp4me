@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-import React, { useEffect, useState } from "react";
-=======
 import React, { useState, useEffect } from "react";
 import { Button, MenuItem, TextField, Select, Snackbar } from '@material-ui/core'
 import ToggleButton from '@material-ui/lab/ToggleButton';
@@ -9,7 +6,6 @@ import MuiAlert from '@material-ui/lab/Alert';
 import MainTable from '../../Components/Table/MainTable';
 import "./Dashboard.scss";
 import FeebackTable from "../../Components/Table/FeedbackTable";
->>>>>>> origin/lh/css
 
 import patientInfo from '../../Test Data/patient-info.json'
 import earScan from '../../Test Data/earScan.json';
@@ -32,12 +28,6 @@ const Dashboard = (props) => {
   const [noPatient, setNoPatient] = useState(false);
   const [sortedField, setSortedField] = React.useState(null);
 
-<<<<<<< HEAD
-import { getAllPatients } from "../../utils/api";
-
-const Dashboard = (props) => {
-  const [patients, setPatients] = useState([])
-=======
   const lang = props.lang.data;
   const key = props.lang.key;
 
@@ -97,7 +87,6 @@ const Dashboard = (props) => {
   useEffect(() => {
     setPatients(patientInfo)
   }, []);
->>>>>>> origin/lh/css
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
