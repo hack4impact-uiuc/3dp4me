@@ -2,12 +2,12 @@ const S3_INFO = require('./aws-exports.js');
 var AWS = require('aws-sdk');
 
 /**
-* 
+* Uploads a file to the S3 bucket
 * @param content File contents in a binary string
 * @param remoteFileName The full directory of the s3 remote path to upload to
 * @param credentials The temporary credentials of the end user. Frontend should provide this.
 */
-const uploadFile = (content, remoteFileName, credentials) => {
+const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
     var params = {
         Body: content, 
         Bucket: S3_INFO.S3_BUCKET_NAME, 
@@ -15,10 +15,24 @@ const uploadFile = (content, remoteFileName, credentials) => {
     };
 
     let s3 = getS3(credentials)
-    s3.putObject(params, function(err, data) {
-            if (err) console.log(err, err.stack); // an error occurred
-            else     console.log(data);           // successful response
-    });
+    s3.putObject(params, onUploaded);
+}
+
+/**
+ * Downloads file from the S3 bucket
+ * @param objectKey The key as defined in S3 console. Usually is just the full path of the file.
+ * @param credentials The temporary credentials of the end user. Frontend should provide this.
+ */
+const downloadFile = (objectKey, credentials, onDownloaded) => {
+    var params = {
+        Bucket: S3_INFO.S3_BUCKET_NAME, 
+        Key: objectKey
+    };
+
+    let s3 = getS3(credentials)
+    let object = s3.getObject(params, onDownloaded)
+
+    return object
 }
 
 function getS3(credentials) {
@@ -33,3 +47,4 @@ function getS3(credentials) {
 }
 
 exports.uploadFile = uploadFile
+exports.downloadFile = downloadFile

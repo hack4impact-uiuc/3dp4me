@@ -15,7 +15,7 @@ export async function isNormalUser(){
  * This object contains all keys/tokens needed to perform authenticated actions.
  * Send this to the backend whenever doing authenticated operations.
  */
-async function getCredentials(){
+export async function getCredentials(){
     let credentials = await Auth.currentCredentials();
     let creds = Auth.essentialCredentials(credentials);
     return creds

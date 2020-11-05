@@ -1,5 +1,6 @@
 import React from 'react';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { getCredentials } from './aws/aws-helper'
 import { Amplify } from 'aws-amplify';
 import './App.css';
 import awsconfig from './aws/aws-exports.js';
@@ -13,6 +14,7 @@ import PatientInfo from "./Steps/Patient Info/PatientInfo"
 import './styles.css'
 
 Amplify.configure(awsconfig);
+getCredentials()
 
 const App = function() {
   return (
