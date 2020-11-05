@@ -6,6 +6,7 @@ var AWS = require('aws-sdk');
 * @param content File contents in a binary string
 * @param remoteFileName The full directory of the s3 remote path to upload to
 * @param credentials The temporary credentials of the end user. Frontend should provide this.
+* @param onUploaded Callback after finished uploading. Params are (err, data).
 */
 const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
     var params = {
@@ -22,6 +23,7 @@ const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
  * Downloads file from the S3 bucket
  * @param objectKey The key as defined in S3 console. Usually is just the full path of the file.
  * @param credentials The temporary credentials of the end user. Frontend should provide this.
+ * @param onDownloaded Callback after finished downloading. Params are (err, data).
  */
 const downloadFile = (objectKey, credentials, onDownloaded) => {
     var params = {
