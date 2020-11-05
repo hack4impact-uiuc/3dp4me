@@ -1,7 +1,11 @@
+import React from 'react';
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { Amplify } from 'aws-amplify';
+import awsconfig from './aws/aws-exports.js';
+
 import React, { useEffect, useState } from "react";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import AccountManagement from "./Pages/Account Management/AccountManagment";
 import Metrics from "./Pages/Metrics/Metrics";
@@ -10,6 +14,9 @@ import Navbar from "./Components/Navbar/Navbar";
 import PatientInfo from "./Steps/Patient Info/PatientInfo"
 import Controller from './Steps/Controller/Controller'
 import language from './language.json';
+import './styles.css'
+
+Amplify.configure(awsconfig)
 
 function App() {
 
@@ -61,4 +68,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App);

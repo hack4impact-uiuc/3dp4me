@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { errorWrap } = require("../../utils");
-const { models } = require("../../models");
+// const { models } = require("../../models");
 
 // TODO: Get all patients
 router.get(
