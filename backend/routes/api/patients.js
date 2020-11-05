@@ -70,7 +70,6 @@ router.post(
             let file = req.files.uploadedFile;  //TODO: use name of input field possibly?
 
             const patient = await models.Patient.findById(id);
-            patient[stage].notes = "132";
             patient[stage].lastEdit = Date.now();
             patient[stage].lastEditBy = userID;
             patient[stage].files.push({filename: file.name, uploadedBy: userName, uploadDate: new Date()});
