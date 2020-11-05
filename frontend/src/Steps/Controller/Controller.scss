@@ -4,6 +4,16 @@
 .root {
     display: flex;
 
+    .unfinished-icon {
+        color: red;
+    }
+    
+    .partial-icon {
+        color: #ddc66a;
+        font-size: 22px;
+        margin-right: 5px;
+    }
+
     .drawer {
         width: $drawerWidth;
         flex-shrink: 0;
@@ -36,6 +46,14 @@
     .drawer-text-section {
         margin-bottom: 30px;
     }
+
+    .drawer-notes-wrapper {
+        margin-top: 3px;
+
+        .expand-icon {
+            color: $button;
+        }
+    }
 }
 
 .controller-content {
@@ -57,5 +75,38 @@
     .steps {
         padding-left: 50px;
         padding-bottom: 100px;
+
+        &.steps-ar {
+            margin-right: 50px;
+        }
+    }
+
+    .controller-button {
+        &.default-button {
+            margin-right: 15px;
+            border-radius: 10px 10px 0px 0px;
+        }
+
+        &.unfinished {
+            background: #ffe1e1;
+            color: red;
+            &:hover { background: #ffe1e1; }
+        }
+
+        &.partial {
+            background: white;
+            color: #ddc66a;
+            &:hover { background: white; }
+        }
+
+        &.finished {
+            background: white;
+            color: black;
+            &:hover { background: white; }
+        }
+
+        &.active {
+            border-top: solid $sidebar 5px;
+        }
     }
 }

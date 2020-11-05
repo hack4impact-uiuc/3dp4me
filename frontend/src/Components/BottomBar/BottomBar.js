@@ -1,6 +1,5 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
-import colors from '../../colors.json';
 import './BottomBar.scss';
 
 const BottomBar = (props) => {
