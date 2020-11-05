@@ -36,7 +36,7 @@ router.put(
             // TODO: Upload new files to AWS and update files field in model
         }
 
-        const updatedPatient = await models.Patient.findById(id, update, { new: true });
+        const updatedPatient = await models.Patient.findByIdAndUpdate(id, update, { new: true });
         res.status(200).json({
             code: 200,
             success: true,
@@ -70,39 +70,30 @@ router.post(
         } else {
             const { id, stage } = req.params;
             const { userId, userName } = req.body
-            const currDate = new Date();
             let file = req.files.uploadedFile;  //TODO: use name of input field possibly?
             
-            /*await models.Patient.findById(id, stage).update(
-                { $push: {files: {filename: file.name, uploadedBy: userName, uploadDate: currDate}}}, 
-                { $set: {lastEdit: currDate, lastEditBy: userName}}, 
-                () => {
-                    res.json({
-                        message: 'File is uploaded',
-                        data: {
-                            name: file.name,
-                            mimetype: file.mimetype,
-                            size: file.size
-                        }
-                    });
-                });*/
-            let update = {
+            /*let update = {
                 [stage]: {
-                    "lastEdit": currDate.now,
-                    "lastEditBy": userName
+                    "$set": {"notes": "132",
+                    "lastEdit": currDate.now, 
+                    "lastEditBy": userName}
                 }
-            }
-            models.Patient.findById(id, update, {new: true});
-            res.json({
-                message: 'File is uploaded',
-                data: {
-                    name: file.name,
-                    mimetype: file.mimetype,
-                    size: file.size
-                }
+            }*/
+            const patient = await models.Patient.findById(id, stage);
+            patient[stage].notes = "132";
+            patient[stage].lastEdit = Date.now();
+            patient[stage].lastEditBy = userName;
+            patient[stage].files.push({filename: file.name, uploadedBy: userName, uploadDate: new Date()});
+            await patient.save(function(){
+                res.json({
+                    message: 'File is uploaded',
+                    data: {
+                        name: file.name,
+                        mimetype: file.mimetype,
+                        size: file.size
+                    }
+                });
             });
-            
-            
         }
     }),
 );
