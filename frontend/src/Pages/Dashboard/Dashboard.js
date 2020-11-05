@@ -92,8 +92,8 @@ const Dashboard = (props) => {
 
   // TODO: hook up dashboard to display fetched patients
   const getPatients = async() => {
-    const res = await getAllPatients();
-    console.log(res);
+    // const res = await getAllPatients();
+    // console.log(res);
   }
 
   useEffect(() => {

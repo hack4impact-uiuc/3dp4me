@@ -14,13 +14,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-}));
-
-
 const Navbar = (props) => {
   const classes = useStyles();
   const [active, setActive] = useState("dashboard");
