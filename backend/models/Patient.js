@@ -6,6 +6,12 @@ const fileSchema = new mongoose.Schema({
     uploadDate: { type: Date, required: true }
 });
 
+const statusEnum = {
+    NOTTOUCHED: "NOT TOUCHED",
+    PARTIALLYDONE: "PARTIALLY DONE",
+    COMPLETE: "COMPLETE"
+};
+
 // TODO: add / remove stage fields as needed
 const patientSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -15,8 +21,8 @@ const patientSchema = new mongoose.Schema({
     medicalInformation: {
         status: {
             type: String,
-            enum: ['Not Touched', 'Partially Done', 'Complete'],
-            default: 'Not Touched'
+            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
+            default: statusEnum.NOTTOUCHED
         },
         lastEdit: { type: Date, default: Date.now },
         lastEditBy: { type: String, default: "" },
@@ -26,8 +32,8 @@ const patientSchema = new mongoose.Schema({
     scan: {
         status: {
             type: String,
-            enum: ['Not Touched', 'Partially Done', 'Complete'],
-            default: 'Not Touched'
+            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
+            default: statusEnum.NOTTOUCHED
         },
         lastEdit: { type: Date, default: Date.now },
         lastEditBy: { type: String, default: "" },
