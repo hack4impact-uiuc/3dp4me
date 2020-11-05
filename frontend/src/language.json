@@ -1,0 +1,320 @@
+{
+    "EN": {
+        "components": {
+            "navbar": {
+                "dashboard": {
+                    "navTitle": "Dashboard"
+                },
+                "patients": {
+                    "navTitle": "Patients",
+                    "pageTitle": "All Patients"
+                },
+                "metrics": {
+                    "navTitle": "Metrics",
+                    "pageTitle": ""
+                },
+                "accountManagement": {
+                    "navTitle": "Account Management",
+                    "pageTitle": ""
+                }
+            },
+            "sidebar": {
+                "name": "Name",
+                "orderID": "Order ID",
+                "dob": "DOB"
+            },
+            "bottombar": {
+                "status": "Status",
+                "unfinished": "Unfinished",
+                "partial": "Partially Complete",
+                "finished": "Finished",
+                "default": "Update Status",
+                "savedMessage": {
+                    "patientInfo": "Patient Info Saved",
+                    "earScan": "Ear Scan Saved",
+                    "model": "CAD Model Saved",
+                    "print": "3D Printing Saved",
+                    "processing": "Post Processing Saved",
+                    "delivery": "Delivery Saved",
+                    "feedback": "Feedback Saved"
+                }
+            },
+            "stepTabs": {
+                "patientInfo": "Medical Info",
+                "earScan": "Ear Scan",
+                "CADModeling": "CAD Modeling",
+                "print": "3D Print",
+                "processing": "Processing",
+                "delivery": "Delivery",
+                "feedback": "Feedback"
+            },
+            "table": {
+                "mainHeaders": {
+                    "name": "Name",
+                    "serial": "Serial",
+                    "added": "Date Added",
+                    "lastEdit": "Last Edit By",
+                    "status": "Status"
+                },
+                "feedbackHeaders": {
+                    "name": "Name",
+                    "serial": "Serial",
+                    "added": "Date Added",
+                    "feedbackCycle": "Feedback Cycle",
+                    "status": "Status"
+                },
+                "noPatientsFound": "Sorry! No matching patients"
+            },
+            "dropdown": {
+                "newest": "Newest",
+                "oldest": "Oldest",
+                "serial": "Serial",
+                "status": "Status"
+            },
+            "button": {
+                "createPatient": "Create New Patient",
+                "upload": "Upload File",
+                "save": "Save",
+                "edit": "Edit Step",
+                "discard": {
+                    "title": "Discard",
+                    "question": "Are you sure?",
+                    "warningMessage": "You are about to discard your current form changes! This is unchangeable!",
+                    "success": "Discarded changes!",
+                    "confirmButton": "Ok",
+                    "cancelButton": "Cancel"
+                }
+            },
+            "search": {
+                "placeholder": "Search..."
+            },
+            "notes": {
+                "title": "Notes"
+            },
+            "file": {
+                "download": "Download",
+                "title": "Files"
+            }
+        },
+        "pages": {
+            "patientInfoTitle": "Medical Information",
+            "earScanTitle": "Ear Scan",
+            "CADModelingTitle": "CAD Modeling",
+            "printingTitle": "3D Printing",
+            "postProcessingTitle": "Post Processing",
+            "deliveryTitle": "Delivery",
+            "feedbackTitle": "Feedback"
+        },
+        "patientView": {
+            "patientInfo": {
+                "title": "Medical Information",
+                "patientSection": "Patient",
+                "name": "Name",
+                "dob": "DOB",
+                "ssn": "Jordan SSN",
+                "address": "Address",
+                "phone": "Phone",
+                "emergencySection": "Emergency Contact",
+                "relationship": "Relationship",
+                "informationSection": "Information",
+                "deliverySection": "Delivery Method",
+                "delivery": "Delivery",
+                "handDelivery": "Hand Delivery",
+                "pickup": "Pick up"
+            },
+            "earScan": {
+                "title": "Ear Scan",
+                "fileHeader": "Ear Scan Download"
+            },
+            "CADModeling": {
+                "title": "CAD Model",
+                "fileHeader": "CAD File"
+            },
+            "printing": {
+                "title": "3D Printing",
+                "fileHeader": "3D Printing File"
+            },
+            "postProcessing": {
+                "title": "Post Processing",
+                "fileHeader": ""
+            },
+            "delivery": {
+                "title": "Delivery",
+                "address": "Address",
+                "addressLabel": "To be Hand Delivered",
+                "ready": "Ready to be delivered",
+                "out": "Out for delivery",
+                "handDelivered": "Hand Delivered",
+                "pickup": "Pick up",
+                "status": "Status"
+            },
+            "feedback": {
+                "title": "Feedback",
+                "initial": "Initial Feedback",
+                "sixMonth": "6 Month Feedback",
+                "oneYear": "1 Year Feedback",
+                "twoYear": "2 Year Feedback",
+                "collected": "Collected on: "
+            }
+        }
+    },
+    "AR": {
+        "components": {
+            "navbar": {
+                "dashboard": {
+                    "navTitle": "لوحة القيادة"
+                },
+                "patients": {
+                    "navTitle": "المرضى",
+                    "pageTitle": "كل المرضى"
+                },
+                "metrics": {
+                    "navTitle": "المقاييس",
+                    "pageTitle": ""
+                },
+                "accountManagement": {
+                    "navTitle": "ادارة الحساب",
+                    "pageTitle": ""
+                }
+            },
+            "sidebar": {
+                "name": "اسم",
+                "orderID": "رقم التعريف الخاص بالطلب",
+                "dob": "ب."
+            },
+            "bottombar": {
+                "status": "الحالة",
+                "unfinished": "غير مكتمل",
+                "partial": "مكتمل جزئيًا",
+                "finished": "تم الانتهاء من",
+                "default": "تحديث الحالة",
+                "savedMessage": {
+                    "patientInfo": "تم حفظ معلومات المريض",
+                    "earScan": "تم حفظ مسح الأذن",
+                    "model": "نذل - وغد. تم حفظ النموذج",
+                    "print": "تم حفظ الطباعة ثلاثية الأبعاد",
+                    "processing": "تم حفظ المعالجة اللاحقة",
+                    "delivery": "تم حفظ التسليم",
+                    "feedback": "تم حفظ التعليقات"
+                }
+            },
+            "stepTabs": {
+                "patientInfo": "معلومات طبية",
+                "earScan": "مسح الأذن",
+                "CADModeling": "نمذجة دجأ",
+                "print": "طباعة ثلاثية الأبعاد",
+                "processing": "معالجة",
+                "delivery": "توصيل",
+                "feedback": "ردود الفعل"
+            },
+            "table": {
+                "mainHeaders": {
+                    "name": "اسم",
+                    "serial": "مسلسل",
+                    "added": "تم إضافة التاريخ",
+                    "lastEdit": "آخر تحرير بواسطة",
+                    "status": "الحالة"
+                },
+                "feedbackHeaders": {
+                    "name": "اسم",
+                    "serial": "مسلسل",
+                    "added": "تم إضافة التاريخ",
+                    "feedbackCycle": "دورة الملاحظات",
+                    "status": "الحالة"
+                },
+                "noPatientsFound": "آسف! لا يوجد مرضى مطابقين"
+            },
+            "dropdown": {
+                "newest": "الأحدث",
+                "oldest": "الأقدم",
+                "serial": "مسلسل",
+                "status": "الحالة"
+            },
+            "button": {
+                "createPatient": "إنشاء مريض جديد",
+                "upload": "رفع ملف",
+                "save": "حفظ",
+                "edit": "تحرير الخطوة",
+                "discard": {
+                    "title": "تجاهل",
+                    "question": "هل أنت واثق؟",
+                    "warningMessage": "أنت على وشك تجاهل تغييرات النموذج الحالية! هذا غير قابل للتغيير!",
+                    "success": "التغييرات المهملة!",
+                    "confirmButton": "حسنا",
+                    "cancelButton": "إلغاء"
+                }
+            },
+            "search": {
+                "placeholder": "بحث..."
+            },
+            "notes": {
+                "title": "ملاحظات"
+            },
+            "file": {
+                "download": "تحميل",
+                "title": "الملفات"
+            }
+        },
+        "pages": {
+            "patientInfoTitle": "معلومات طبية",
+            "earScanTitle": "مسح الأذن",
+            "CADModelingTitle": "نمذجة دجأ",
+            "printingTitle": "طباعة ثلاثية الأبعاد",
+            "postProcessingTitle": "معالجة",
+            "deliveryTitle": "توصيل",
+            "feedbackTitle": "ردود الفعل"
+        },
+        "patientView": {
+            "patientInfo": {
+                "title": "معلومات طبية",
+                "patientSection": "صبور",
+                "name": "اسم",
+                "dob": "تاريخ الولادة",
+                "ssn": "رقم الضمان الاجتماعي الأردني",
+                "address": "عنوان",
+                "phone": "هاتف",
+                "emergencySection": "الاتصال بالطوارىء",
+                "relationship": "صلة",
+                "informationSection": "معلومات",
+                "deliverySection": "طريقة التوصيل",
+                "delivery": "توصيل",
+                "handDelivery": "التسليم باليد",
+                "pickup": "امسك"
+            },
+            "earScan": {
+                "title": "مسح الأذن",
+                "fileHeader": "تنزيل مسح الأذن"
+            },
+            "CADModeling": {
+                "title": "نموذج",
+                "fileHeader": "ملف"
+            },
+            "printing": {
+                "title": "طباعة ثلاثية الأبعاد",
+                "fileHeader": "ملف الطباعة ثلاثية الأبعاد"
+            },
+            "postProcessing": {
+                "title": "المعالجة البعدية",
+                "fileHeader": ""
+            },
+            "delivery": {
+                "title": "توصيل",
+                "address": "عنوان",
+                "addressLabel": "ليتم تسليمها باليد",
+                "ready": "جاهز للتسليم",
+                "out": "خارج للتوصيل",
+                "handDelivered": "تسلم باليد",
+                "pickup": "امسك",
+                "status": "الحالة"
+            },
+            "feedback": {
+                "title": "ردود الفعل",
+                "initial": "الملاحظات الأولية",
+                "sixMonth": "ستة أشهر من الملاحظات",
+                "oneYear": "ملاحظات سنة واحدة",
+                "twoYear": "عامين من ردود الفعل",
+                "collected": "تم جمعها في: "
+            }
+        }
+    }
+}

@@ -1,0 +1,90 @@
+[
+    {
+        "_id": "5f9b5550538db4ede8f1c19b",
+        "name": "Bowman Pratt",
+        "serial": 210607,
+        "createdDate": "February 15, 2020",
+        "lastEdited": "June 25, 2020",
+        "status": "Partially Complete"
+    },
+    {
+        "_id": "5f9b55504306b56d70a98652",
+        "name": "Mcknight Jordan",
+        "serial": 395186,
+        "createdDate": "June 10, 2020",
+        "lastEdited": "February 14, 2020",
+        "status": "Finished"
+    },
+    {
+        "_id": "5f9b5550bd7e9f5fca272a92",
+        "name": "Kelley Cook",
+        "serial": 388400,
+        "createdDate": "February 15, 2020",
+        "lastEdited": "June 30, 2020",
+        "status": "Partially Complete"
+    },
+    {
+        "_id": "5f9b55506bc2dcfda0708062",
+        "name": "Terry Vance",
+        "serial": 613693,
+        "createdDate": "October 16, 2020",
+        "lastEdited": "April 4, 2020",
+        "status": "Unfinished"
+    },
+    {
+        "_id": "5f9b5550b4f8a18ed5602fb9",
+        "name": "Candice Weaver",
+        "serial": 851418,
+        "createdDate": "August 4, 2020",
+        "lastEdited": "August 26, 2020",
+        "status": "Unfinished"
+    },
+    {
+        "_id": "5f9b55509ff854ac0c4f6eec",
+        "name": "Garrett Quinn",
+        "serial": 639201,
+        "createdDate": "May 22, 2020",
+        "lastEdited": "July 13, 2020",
+        "status": "Partially Complete"
+    },
+    {
+        "_id": "5f9b55500c4f80677d8ea1bf",
+        "name": "Gibbs Gallegos",
+        "serial": 578536,
+        "createdDate": "July 28, 2020",
+        "lastEdited": "April 4, 2020",
+        "status": "Finished"
+    },
+    {
+        "_id": "5f9b55509ea8be6418f5609d",
+        "name": "Annette Rivers",
+        "serial": 478409,
+        "createdDate": "February 21, 2020",
+        "lastEdited": "March 23, 2020",
+        "status": "Finished"
+    },
+    {
+        "_id": "5f9b555003614e82926fa800",
+        "name": "Walters Sexton",
+        "serial": 396452,
+        "createdDate": "June 15, 2020",
+        "lastEdited": "February 17, 2020",
+        "status": "Finished"
+    },
+    {
+        "_id": "5f9b555005644af0e5721257",
+        "name": "Suzette Craig",
+        "serial": 388519,
+        "createdDate": "February 14, 2020",
+        "lastEdited": "October 13, 2020",
+        "status": "Unfinished"
+    },
+    {
+        "_id": "5f9b555018d04b2a569dc020",
+        "name": "Abbott Abbott",
+        "serial": 497406,
+        "createdDate": "August 10, 2020",
+        "lastEdited": "February 9, 2020",
+        "status": "Partially Complete"
+    }
+]

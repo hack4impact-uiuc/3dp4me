@@ -11,3 +11,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.content {
+  margin-left: 0;
+  font-family: 'Ubuntu';
+}
+
+html { overflow-y: scroll; }
+/* 
+.flip {
+  margin-top: 0;
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1); 
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+} */
