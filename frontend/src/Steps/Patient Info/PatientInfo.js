@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgress, Divider, Button, FormControlLabel, Radio, RadioGroup, TextField, Backdrop } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
-import './PatientInfo.css'
+import './PatientInfo.scss'
 import Notes from '../../Components/Notes/Notes';
 import Files from '../../Components/Files/Files';
 import WarningIcon from '@material-ui/icons/Warning';
@@ -12,60 +12,6 @@ import swal from 'sweetalert';
 import patientFile from '../../Test Data/patient.json';
 
 const useStyles = makeStyles((theme) => ({
-    patientDivider: {
-        padding: 1,
-        background: 'black',
-        width: '80%',
-        margin: 'auto',
-    },
-    inputField: {
-        background: colors.secondary,
-    },
-    activeInput: {
-        background: 'white'
-    },
-    patientBtns: {
-        background: '#6295e0',
-        color: 'white',
-        margin: 'auto',
-        marginRight: '35px',
-        '&:hover': {
-            background: '#6295e0'
-        }
-    },
-    approveBtn: {
-        position: 'fixed',
-        bottom: 15,
-        right: 15,
-        marginRight: 15,
-        padding: 15,
-    },
-    saveBtn: {
-        position: 'fixed',
-        bottom: 15,
-        right: 240,
-        marginRight: 15,
-        padding: 15,
-    },
-    FAB: {
-        background: '#6295e0',
-        color: 'white',
-        '&:hover': {
-            background: '#6295e0'
-        }
-    },
-    radio: {
-        '&:checked': {
-            color: colors.secondary
-        }
-    },
-    bottomBar: {
-        top: 'auto',
-        bottom: '0',
-    },
-    loadingModal: {
-        width: '100%',
-    },
     backdrop: {
         zIndex: theme.zIndex.drawer + 1,
         color: '#fff',
@@ -197,25 +143,25 @@ const PatientInfo = (props) => {
             <p>Last edited by Anisha Rao on 10/08/2020 11:58PM</p>
             <div style={{ display: 'flex' }}>
                 <h2>{lang[key].patientView.patientInfo.patientSection}</h2>
-                <Divider className={classes.patientDivider} />
+                <Divider className="patient-divider" />
             </div>
             <h3>{lang[key].patientView.patientInfo.name}</h3>
-            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleName} value={name} />
+            <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleName} value={name} />
             <h3>{lang[key].patientView.patientInfo.dob}</h3>
-            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleDOB} value={dob} />
+            <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleDOB} value={dob} />
             <h3>{lang[key].patientView.patientInfo.ssn}</h3>
-            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleSSN} value={ssn} />
+            <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleSSN} value={ssn} />
             <h3>{lang[key].patientView.patientInfo.address}</h3>
-            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleAddress} value={address} />
+            <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleAddress} value={address} />
             <h3>{lang[key].patientView.patientInfo.phone}</h3>
-            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handlePhone} value={phone} />
+            <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handlePhone} value={phone} />
             <h2>{lang[key].patientView.patientInfo.emergencySection}</h2>
             <h3>{lang[key].patientView.patientInfo.name}</h3>
-            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleEmName} value={emName} />
+            <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleEmName} value={emName} />
             <h3>{lang[key].patientView.patientInfo.relationship}</h3>
-            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleEmRelationship} value={emRelationship} />
+            <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleEmRelationship} value={emRelationship} />
             <h3>{lang[key].patientView.patientInfo.phone}</h3>
-            <TextField disabled={!edit} className={edit ? classes.activeInput : classes.inputField} variant="outlined" onChange={handleEmPhone} value={emPhone} />
+            <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleEmPhone} value={emPhone} />
             <div style={{ marginTop: 15 }}>
                 <Button style={edit ? { backgroundColor: colors.button, color: 'white' } : {}} disabled={!edit} variant="contained">
                     <input type="file" style={{ display: "none" }} />
@@ -224,7 +170,7 @@ const PatientInfo = (props) => {
             </div>
             <div style={{ display: 'flex' }}>
                 <h2>{lang[key].patientView.patientInfo.informationSection}</h2>
-                <Divider className={classes.patientDivider} />
+                <Divider className="patient-divider" />
             </div>
             <h3>{lang[key].patientView.patientInfo.deliverySection}</h3>
             <RadioGroup

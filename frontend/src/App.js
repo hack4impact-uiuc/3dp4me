@@ -4,7 +4,6 @@ import { Amplify } from 'aws-amplify';
 import awsconfig from './aws/aws-exports.js';
 
 import React, { useEffect, useState } from "react";
-import "./App.css";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard/Dashboard";
@@ -15,7 +14,6 @@ import Navbar from "./Components/Navbar/Navbar";
 import PatientInfo from "./Steps/Patient Info/PatientInfo"
 import Controller from './Steps/Controller/Controller'
 import language from './language.json';
-
 import './styles.css'
 
 Amplify.configure(awsconfig)

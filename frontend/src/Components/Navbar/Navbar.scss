@@ -1,5 +1,9 @@
 .navbar {
     background-color: white;
+
+    .logo-ar {
+        margin-left: 15px;
+    }
 }
 
 .nav-item {
@@ -23,4 +27,9 @@
 
 .active {
     font-weight: bolder;
+}
+
+.user-avatar {
+    margin-left: 20px;
+    margin-right: 10px;
 }
