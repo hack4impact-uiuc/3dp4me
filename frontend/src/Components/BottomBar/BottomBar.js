@@ -7,12 +7,6 @@ const BottomBar = (props) => {
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const statusColor = {
-        unfinished: "#ffe1e1",
-        partial: '#f2e9c7',
-        finished: '#05ca4f'
-    }
-
     return (
         <AppBar className="bottom-bar-wrapper" color="white" style={{ top: 'auto', bottom: '0' }}>
             <Toolbar>
@@ -45,7 +39,7 @@ const BottomBar = (props) => {
                     </div>
                 ) : (
                     <div>
-                        <span className="status" style={key !== "AR" ? { background: statusColor[props.status.value] } : { background: statusColor[props.status.value] }}>
+                        <span className={`status ${props.status.value}`}>
                             {lang[key].components.bottombar[props.status.value]}
                         </span>
                         <Button className="edit-button" onClick={() => props.setEdit(true)}>

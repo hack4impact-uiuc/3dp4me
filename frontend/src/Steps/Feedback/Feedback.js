@@ -66,22 +66,22 @@ const Feedback = (props) => {
             <h1>{lang[key].patientView.feedback.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <Notes disabled={!edit} title={lang[key].patientView.feedback.initial} value={intialFeedback} state={setInitialFeedback} />
-            <div style={{ display: 'flex' }}>
+            <div className="collected-wrapper">
                 <h3>{lang[key].patientView.feedback.collected} </h3>
                 <TextField className={edit ? "active-input" : "input-field"} disabled={!edit} variant="outlined" value={initialFeedbackDate} onChange={(e) => setInitialFeedbackDate(e.target.value)} />
             </div>
             <Notes disabled={!edit} title={lang[key].patientView.feedback.sixMonth} value={sixMonthFeedback} state={setSixMonthFeedback} />
-            <div style={{ display: 'flex' }}>
+            <div className="collected-wrapper">
                 <h3>{lang[key].patientView.feedback.collected} </h3>
                 <TextField className={edit ? "active-input" : "input-field"} disabled={!edit} variant="outlined" value={sixMonthFeedbackDate} onChange={(e) => setSixMonthFeedbackDate(e.target.value)} />
             </div>
             <Notes disabled={!edit} title={lang[key].patientView.feedback.oneYear} value={oneYearFeedback} state={setOneYearFeedback} />
-            <div style={{ display: 'flex' }}>
+            <div className="collected-wrapper">
                 <h3>{lang[key].patientView.feedback.collected} </h3>
                 <TextField className={edit ? "active-input" : "input-field"} disabled={!edit} variant="outlined" value={oneYearFeedbackDate} onChange={(e) => setOneYearFeedbackDate(e.target.value)} />
             </div>
             <Notes disabled={!edit} title={lang[key].patientView.feedback.twoYear} value={twoYearFeedback} state={setTwoYearFeedback} />
-            <div style={{ display: 'flex' }}>
+            <div className="collected-wrapper">
                 <h3>{lang[key].patientView.feedback.collected}</h3>
                 <TextField className={edit ? "active-input" : "input-field"} disabled={!edit} variant="outlined" value={twoYearFeedbackDate} onChange={(e) => setTwoYearFeedbackDate(e.target.value)} />
             </div>

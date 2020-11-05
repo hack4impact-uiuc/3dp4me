@@ -124,14 +124,14 @@ const MedicalInfo = (props) => {
 
     return (
 
-        <form className="patient-info">
+        <form className="medical-info">
             <Backdrop className="backdrop" open={loading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
             <h1>{lang[key].patientView.patientInfo.title}</h1>
             <p>Created by Evan Eckels on 10/05/2020 9:58PM</p>
             <p>Last edited by Anisha Rao on 10/08/2020 11:58PM</p>
-            <div style={{ display: 'flex' }}>
+            <div className="patient-divider-wrapper">
                 <h2>{lang[key].patientView.patientInfo.patientSection}</h2>
                 <Divider className="patient-divider" />
             </div>
@@ -158,7 +158,7 @@ const MedicalInfo = (props) => {
                     {lang[key].components.button.upload}
                 </Button>
             </div>
-            <div style={{ display: 'flex' }}>
+            <div className="patient-divider-wrapper">
                 <h2>{lang[key].patientView.patientInfo.informationSection}</h2>
                 <Divider className="patient-divider" />
             </div>

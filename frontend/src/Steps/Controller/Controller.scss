@@ -9,7 +9,7 @@
     }
     
     .partial-icon {
-        color: #ddc66a;
+        color: $controllerPartial;
         font-size: 22px;
         margin-right: 5px;
     }
@@ -88,14 +88,14 @@
         }
 
         &.unfinished {
-            background: #ffe1e1;
+            background: $statusUnfinished;
             color: red;
-            &:hover { background: #ffe1e1; }
+            &:hover { background: $statusUnfinished; }
         }
 
         &.partial {
             background: white;
-            color: #ddc66a;
+            color: $controllerPartial;
             &:hover { background: white; }
         }
 

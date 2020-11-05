@@ -1,6 +1,6 @@
 @import '../../styles/colors.scss';
 
-.patient-info {
+.medical-info {
     margin-bottom: 20px;
 
     .backdrop {
@@ -8,11 +8,15 @@
         color: white;
     }
 
-    .patient-divider {
-        padding: 1px;
-        background: black;
-        width: 80%;
-        margin: auto;
+    .patient-divider-wrapper {
+        display: flex;
+
+        .patient-divider {
+            padding: 1px;
+            background: black;
+            width: 80%;
+            margin: auto;
+        }
     }
 
     .input-field {
