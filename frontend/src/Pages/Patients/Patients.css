@@ -1,4 +1,5 @@
 .all-patients-header {
     display: flex;
     align-items: center;
+    margin-left: 5%;
 }

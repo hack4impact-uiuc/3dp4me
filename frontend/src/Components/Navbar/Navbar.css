@@ -1,17 +1,26 @@
 .navbar {
-    display: flex;
-    padding: 2%; /* this is saving some overlap with content divs */
-    position: fixed;
-    width: 96%;
-    top: 0;
     background-color: white;
 }
 
 .nav-item {
     text-decoration: none;
     margin-left: 2%;
+    color: black;
+}
+#nav-title {
+    flex-grow: 1;
 }
 
-#nav-title{
-    flex-grow: 1;
+.wrap-nav {   
+    margin-top: 4%;
+}
+
+@media only screen and (max-width: 800px) {
+    .wrap-nav {
+        margin-top: 10%;
+    }
+}
+
+.active {
+    font-weight: bolder;
 }

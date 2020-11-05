@@ -1,0 +1,19 @@
+.files-section {
+    width: 300px;
+}
+
+.files-header {
+    background-color: #6295e0;
+    color: white;
+    padding: 2px;
+    padding-left: 10px;
+}
+
+.files-button {
+    background-color: #e5f0ff;
+}
+
+.files-btn-text {
+    display: flex;
+    cursor: pointer;
+}
