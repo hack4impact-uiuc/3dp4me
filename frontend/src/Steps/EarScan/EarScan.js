@@ -1,35 +1,39 @@
-import React, {useEffect, useState} from 'react'
-import BottomBar from '../../Components/BottomBar/BottomBar';
-import Download from '../../Components/File Download/Download';
-import Notes from '../../Components/Notes/Notes';
-import swal from 'sweetalert'
+import React, { useEffect, useState } from 'react'
+import { Button, Fab, IconButton } from '@material-ui/core';
+import Notes from '../../components/Notes/Notes';
+import Download from '../../components/FileDownload/Download';
+import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
+import BottomBar from '../../components/BottomBar/BottomBar';
+import swal from 'sweetalert';
 
-const Printing = (props) => {
-
+const EarScan = (props) => {
     const info = props.info
     const [trigger, reset] = useState(true);
+    const [notes, setNotes] = useState("");
+    const [download, setDownload] = useState();
     const [edit, setEdit] = useState(false);
-    const [downloadPrint, setDownloadPrint] = useState();
-    const [printNotes, setPrintNotes] = useState("");
     const formFields = {
-        download: downloadPrint,
-        notes: printNotes,
+        download: download,
+        notes: notes,
+    }
+    const lang = props.lang.data;
+    const key = props.lang.key;
+
+    const handleDownload = (e) => {
+
     }
 
-    const lang = props.lang.data;
-    const key = props.lang.key; 
-
-    const handleDownloadPrint = (e) => {
+    const postData = (e) => {
 
     }
 
     useEffect(() => {
-        setPrintNotes(info.notes);
+        setNotes(info.notes);
     }, [trigger]);
 
     const saveData = (e) => {
         setEdit(false);
-        swal(lang[key].components.bottombar.savedMessage.print, "", "success");
+        swal(lang[key].components.bottombar.savedMessage.earScan, "", "success");
     }
 
     const discardData = (e) => {
@@ -56,13 +60,14 @@ const Printing = (props) => {
 
     return (
         <div>
-            <h1>{lang[key].patientView.printing.title}</h1>
-            <p>Last edited by Evan Eckels on 10/05/2020 9:58PM</p>
-            <Download lang={props.lang} title={lang[key].components.file.title} fileName="file_name.SCAN" state={setDownloadPrint} />
-            <Notes disabled={!edit} title={lang[key].components.notes.title} value={printNotes} state={setPrintNotes} />
+            <h1>{lang[key].patientView.earScan.title}</h1>
+            <p>Clinic XYZ on 10/05/2020 9:58PM</p>
+            <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeader} fileName="file_name.SCAN" state={handleDownload} />
+            <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
             <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+
         </div>
     )
 }
 
-export default Printing;
+export default EarScan;

@@ -1,39 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import { Button, Fab, IconButton } from '@material-ui/core';
-import Notes from '../../Components/Notes/Notes';
-import Download from '../../Components/File Download/Download';
-import NoChangeDialog from '../../Components/No Change Dialog/NoChangeDialog';
-import BottomBar from '../../Components/BottomBar/BottomBar';
-import swal from 'sweetalert';
+import React, {useEffect, useState} from 'react'
+import BottomBar from '../../components/BottomBar/BottomBar';
+import Download from '../../components/FileDownload/Download'
+import Notes from '../../components/Notes/Notes';
+import swal from 'sweetalert'
 
-const EarScan = (props) => {
-    const info = props.info
+const CADModel = (props) => {
+
+    const info = props.info;
     const [trigger, reset] = useState(true);
-    const [notes, setNotes] = useState("");
-    const [download, setDownload] = useState();
     const [edit, setEdit] = useState(false);
+    const [downloadCAD, setDownloadCAD] = useState();
+    const [CADNotes, setCADNotes] = useState("");
     const formFields = {
-        download: download,
-        notes: notes,
+        download: downloadCAD,
+        notes: CADNotes,
     }
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const handleDownload = (e) => {
-
-    }
-
-    const postData = (e) => {
+    const handleDownloadCAD = (e) => {
 
     }
 
     useEffect(() => {
-        setNotes(info.notes);
+        setCADNotes(info.notes);
     }, [trigger]);
 
     const saveData = (e) => {
         setEdit(false);
-        swal(lang[key].components.bottombar.savedMessage.earScan, "", "success");
+        swal(lang[key].components.bottombar.savedMessage.model, "", "success");
     }
 
     const discardData = (e) => {
@@ -60,14 +55,13 @@ const EarScan = (props) => {
 
     return (
         <div>
-            <h1>{lang[key].patientView.earScan.title}</h1>
-            <p>Clinic XYZ on 10/05/2020 9:58PM</p>
-            <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeader} fileName="file_name.SCAN" state={handleDownload} />
-            <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
+            <h1>{lang[key].patientView.CADModeling.title}</h1>
+            <p>Last edited by Evan Eckels on 10/05/2020 9:58PM</p>
+            <Download lang={props.lang} title={lang[key].components.file.title} fileName="file_name.SCAN" state={setDownloadCAD} />
+            <Notes disabled={!edit} title={lang[key].components.notes.title} value={CADNotes} state={setCADNotes} />
             <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
-
         </div>
     )
 }
 
-export default EarScan;
+export default CADModel;

@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Button, IconButton, SvgIcon } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import Eyecon from '../../Assets/view.svg';
+import Eyecon from '../../assets/view.svg';
 import './MainTable.scss';
 
 const StyledTableCell = withStyles((theme) => ({

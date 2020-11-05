@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Snackbar, TextField } from '@material-ui/core';
-import MainTable from '../../Components/Table/MainTable'
+import MainTable from '../../components/Table/MainTable'
 import './Patients.scss'
 import MuiAlert from '@material-ui/lab/Alert';
 import allpatients from '../../Test Data/all-patients.json';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup, TextField } from '@material-ui/core';
-import BottomBar from '../../Components/BottomBar/BottomBar';
+import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 import './Delivery.scss';
 
