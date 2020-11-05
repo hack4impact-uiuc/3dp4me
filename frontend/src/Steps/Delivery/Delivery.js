@@ -5,6 +5,52 @@ import swal from 'sweetalert';
 import './Delivery.scss';
 
 const Delivery = (props) => {
+    const classes = useStyles();
+
+    const info = props.info
+    const [trigger, reset] = useState(true);
+    const [edit, setEdit] = useState(false);
+    const [address, setAddress] = useState("");
+    const [deliveryStatus, setDeliveryStatus] = useState("");
+    const formFields = {
+        address: address,
+        status: deliveryStatus
+    }
+
+    const lang = props.lang.data;
+    const key = props.lang.key;
+
+    useEffect(() => {
+        setAddress(info.address);
+        setDeliveryStatus(info.status)
+    }, [trigger]);
+
+    const saveData = (e) => {
+        setEdit(false);
+        swal(lang[key].components.bottombar.savedMessage.delivery, "", "success");
+    }
+
+    const discardData = (e) => {
+        swal({
+            title: lang[key].components.button.discard.question,
+            text: lang[key].components.button.discard.warningMessage,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: [lang[key].components.button.discard.cancelButton, lang[key].components.button.discard.confirmButton]
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              swal({
+                title: lang[key].components.button.discard.success,
+                icon: "success",
+                buttons: lang[key].components.button.discard.confirmButton
+            });
+            reset(!trigger);
+            setEdit(false)
+            } 
+          });
+    }
 
     const info = props.info
     const [trigger, reset] = useState(true);

@@ -6,6 +6,61 @@ import swal from 'sweetalert';
 import './Feedback.scss';
 
 const Feedback = (props) => {
+    const classes = useStyles();
+
+    const info = props.info
+    const [trigger, reset] = useState(true);
+    const [edit, setEdit] = useState(false);
+    const [intialFeedback, setInitialFeedback] = useState("");
+    const [initialFeedbackDate, setInitialFeedbackDate] = useState("")
+    const [sixMonthFeedback, setSixMonthFeedback] = useState("");
+    const [sixMonthFeedbackDate, setSixMonthFeedbackDate] = useState("")
+    const [oneYearFeedback, setOneYearFeedback] = useState("");
+    const [oneYearFeedbackDate, setOneYearFeedbackDate] = useState("")
+    const [twoYearFeedback, setTwoYearFeedback] = useState("");
+    const [twoYearFeedbackDate, setTwoYearFeedbackDate] = useState("")
+
+    const lang = props.lang.data;
+    const key = props.lang.key;
+
+    useEffect(() => {
+        setInitialFeedback(info.initial.notes);
+        setInitialFeedbackDate(info.initial.date);
+        setSixMonthFeedback(info.sixMonth.notes);
+        setSixMonthFeedbackDate(info.sixMonth.date);
+        setOneYearFeedback(info.oneYear.notes);
+        setOneYearFeedbackDate(info.oneYear.date);
+        setTwoYearFeedback(info.twoYear.notes);
+        setTwoYearFeedbackDate(info.twoYear.date);
+    }, [trigger]);
+
+    const saveData = (e) => {
+        setEdit(false);
+        swal(lang[key].components.bottombar.savedMessage.feedback, "", "success");
+    }
+
+    const discardData = (e) => {
+        swal({
+            title: lang[key].components.button.discard.question,
+            text: lang[key].components.button.discard.warningMessage,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: [lang[key].components.button.discard.cancelButton, lang[key].components.button.discard.confirmButton]
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              swal({
+                title: lang[key].components.button.discard.success,
+                icon: "success",
+                buttons: lang[key].components.button.discard.confirmButton
+            });
+            reset(!trigger);
+            setEdit(false)
+            } 
+          });
+    }
+
 
     const info = props.info
     const [trigger, reset] = useState(true);

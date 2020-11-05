@@ -15,8 +15,6 @@ import processing from '../../Test Data/processing.json';
 import delivery from '../../Test Data/delivery.json';
 import feedback from '../../Test Data/feedback.json';
 
-
-
 const Dashboard = (props) => {
 
   const [patients, setPatients] = useState([]);
@@ -91,6 +89,16 @@ const Dashboard = (props) => {
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
+
+  // TODO: hook up dashboard to display fetched patients
+  const getPatients = async() => {
+    const res = await getAllPatients();
+    console.log(res);
+  }
+
+  useEffect(() => {
+    getPatients();
+  }, [setPatients]);
 
   return (
     <div className="dashboard">
