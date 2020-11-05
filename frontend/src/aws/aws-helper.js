@@ -37,6 +37,11 @@ export async function getSecretAccessKey() {
     return creds.secretAccessKey
 }
 
+export async function getSessionToken() {
+    let creds = await getCredentials();
+    return creds.sessionToken
+}
+
 /**
  * Returns a list of auth role names belong to current user. Roles are written as strings.
  */
