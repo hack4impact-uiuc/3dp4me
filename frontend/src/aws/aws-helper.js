@@ -4,16 +4,6 @@ const KEY_GROUPS = "cognito:groups";
 const KEY_BASIC_USER = "3DP_4ME_USER";
 
 /**
- * Downloads an item from the S3 bucket. Automatically defaults to getting item from
- * the public space.
- * @param fileName The fully qualified resource name. Filepaths are relative to the /public folder
- *                 in the S3 bucket. If the file is /public/imgs/img.png, then fileName should be imgs/img.png. 
- */
-export function getFileFromS3(fileName){
-    return Storage.get(fileName);
-}
-
-/**
  * Returns true if the user has normal authentication level
  */
 export async function isNormalUser(){
@@ -21,25 +11,14 @@ export async function isNormalUser(){
     return roles.indexOf(KEY_BASIC_USER) > 0;
 }
 
+/**
+ * This object contains all keys/tokens needed to perform authenticated actions.
+ * Send this to the backend whenever doing authenticated operations.
+ */
 async function getCredentials(){
     let credentials = await Auth.currentCredentials();
     let creds = Auth.essentialCredentials(credentials);
     return creds
-}
-
-export async function getAccessKey() {
-    let creds = await getCredentials();
-    return creds.accessKeyId
-}
-
-export async function getSecretAccessKey() {
-    let creds = await getCredentials();
-    return creds.secretAccessKey
-}
-
-export async function getSessionToken() {
-    let creds = await getCredentials();
-    return creds.sessionToken
 }
 
 /**
