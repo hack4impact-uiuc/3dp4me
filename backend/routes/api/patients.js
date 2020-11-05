@@ -23,25 +23,22 @@ router.put(
     errorWrap(async (req, res) => {
         const { status, userID, notes } = req.body;
         const { id, stage } = req.params;
-
-        let update = {
-            [stage]: {
-                "status": status,
-                "lastEdit": Date.now(),
-                "lastEditBy": userID,
-                "notes": notes
-            }
-        }
         if (req.files) {
             // TODO: Upload new files to AWS and update files field in model
         }
 
-        const updatedPatient = await models.Patient.findByIdAndUpdate(id, update, { new: true });
-        res.status(200).json({
-            code: 200,
-            success: true,
-            result: updatedPatient,
-        });
+        const patient = await models.Patient.findById(id);
+        patient[stage].status = status;
+        patient[stage].lastEdit = Date.now();
+        patient[stage].lastEditBy = userID;
+        patient[stage].notes = notes;
+        await patient.save(function() {
+            res.status(200).json({
+                code: 200,
+                success: true,
+                result: patient,
+            });
+        })
     }),
 );
 
@@ -53,7 +50,7 @@ router.get(
         models.Patient.findById(id, stage).then(stageInfo => res.status(200).json({
             code: 200, 
             success: true, 
-            result: stageInfo
+            result: stageInfo[stage]
         }));
     }),
 );
@@ -69,21 +66,15 @@ router.post(
             });
         } else {
             const { id, stage } = req.params;
-            const { userId, userName } = req.body
+            const { userID } = req.body
             let file = req.files.uploadedFile;  //TODO: use name of input field possibly?
-            
-            /*let update = {
-                [stage]: {
-                    "$set": {"notes": "132",
-                    "lastEdit": currDate.now, 
-                    "lastEditBy": userName}
-                }
-            }*/
-            const patient = await models.Patient.findById(id, stage);
+
+            const patient = await models.Patient.findById(id);
             patient[stage].notes = "132";
             patient[stage].lastEdit = Date.now();
-            patient[stage].lastEditBy = userName;
+            patient[stage].lastEditBy = userID;
             patient[stage].files.push({filename: file.name, uploadedBy: userName, uploadDate: new Date()});
+
             await patient.save(function(){
                 res.json({
                     message: 'File is uploaded',

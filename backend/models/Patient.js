@@ -4,8 +4,6 @@ const fileSchema = new mongoose.Schema({
     filename: { type: String, required: true },
     uploadedBy: { type: String, required: true },
     uploadDate: { type: Date, required: true }
-}, {
-    _id: false
 });
 
 const statusEnum = {
@@ -29,7 +27,7 @@ const patientSchema = new mongoose.Schema({
         lastEdit: { type: Date, default: Date.now },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
-        files: [fileSchema]
+        files: { type: [fileSchema], default: [] }
     },
     scan: {
         status: {
@@ -40,7 +38,7 @@ const patientSchema = new mongoose.Schema({
         lastEdit: { type: Date, default: Date.now },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
-        files: [{type: fileSchema}]
+        files: { type: [fileSchema], default: [] }
     },
     cad: {
         status: {
@@ -51,7 +49,7 @@ const patientSchema = new mongoose.Schema({
         lastEdit: { type: Date, default: Date.now },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
-        files: [fileSchema]
+        files: { type: [fileSchema], default: [] }
     },
     manufacture: {
         status: {
@@ -62,7 +60,7 @@ const patientSchema = new mongoose.Schema({
         lastEdit: { type: Date, default: Date.now },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
-        files: [{type: fileSchema}]
+        files: { type: [fileSchema], default: [] }
     },
     postProcessing: {
         status: {
@@ -73,7 +71,7 @@ const patientSchema = new mongoose.Schema({
         lastEdit: { type: Date, default: Date.now },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
-        files: [{type: fileSchema}]
+        files: { type: [fileSchema], default: [] }
     },
     delivery: {
         status: {
@@ -84,7 +82,7 @@ const patientSchema = new mongoose.Schema({
         lastEdit: { type: Date, default: Date.now },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
-        files: [{type: fileSchema}]
+        files: { type: [fileSchema], default: [] }
     },
     feedback: {
         status: {
@@ -95,7 +93,7 @@ const patientSchema = new mongoose.Schema({
         lastEdit: { type: Date, default: Date.now },
         lastEditBy: { type: String, default: "" },
         notes: { type: String, default: "" },
-        files: [{type: fileSchema}]
+        files: { type: [fileSchema], default: [] }
     }
 });
 
