@@ -4,19 +4,30 @@
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.23",
+    "@material-ui/core": "^4.11.0",
     "aws-amplify": "^3.3.3",
-    "compose": "^0.1.2",
     "axios": "^0.20.0",
+<<<<<<< HEAD
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "cra-template": "1.0.3",
+=======
+    "compose": "^0.1.2",
+    "cra-template": "1.0.3",
+    "material-ui": "^0.20.2",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+>>>>>>> origin/aws-backend-auth
     "jss-rtl": "^0.3.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+<<<<<<< HEAD
     "sass": "^1.28.0",
+=======
+>>>>>>> origin/aws-backend-auth
     "sweetalert": "^2.1.2"
   },
   "scripts": {

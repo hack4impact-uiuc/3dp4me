@@ -6,6 +6,15 @@ const fileSchema = new mongoose.Schema({
     uploadDate: { type: Date, required: true }
 });
 
+<<<<<<< HEAD
+=======
+const statusEnum = {
+    NOTTOUCHED: "NOT TOUCHED",
+    PARTIALLYDONE: "PARTIALLY DONE",
+    COMPLETE: "COMPLETE"
+};
+
+>>>>>>> origin/aws-backend-auth
 // TODO: add / remove stage fields as needed
 const patientSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -15,8 +24,13 @@ const patientSchema = new mongoose.Schema({
     medicalInformation: {
         status: {
             type: String,
+<<<<<<< HEAD
             enum: ['Not Touched', 'Partially Done', 'Complete'],
             default: 'Not Touched'
+=======
+            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
+            default: statusEnum.NOTTOUCHED
+>>>>>>> origin/aws-backend-auth
         },
         lastEdit: { type: Date, default: Date.now() },
         lastEditBy: { type: String, default: "" },
@@ -26,8 +40,13 @@ const patientSchema = new mongoose.Schema({
     scan: {
         status: {
             type: String,
+<<<<<<< HEAD
             enum: ['Not Touched', 'Partially Done', 'Complete'],
             default: 'Not Touched'
+=======
+            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
+            default: statusEnum.NOTTOUCHED
+>>>>>>> origin/aws-backend-auth
         },
         lastEdit: { type: Date, default: Date.now() },
         lastEditBy: { type: String, default: "" },
@@ -37,8 +56,13 @@ const patientSchema = new mongoose.Schema({
     cad: {
         status: {
             type: String,
+<<<<<<< HEAD
             enum: ['Not Touched', 'Partially Done', 'Complete'],
             default: 'Not Touched'
+=======
+            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
+            default: statusEnum.NOTTOUCHED
+>>>>>>> origin/aws-backend-auth
         },
         lastEdit: { type: Date, default: Date.now() },
         lastEditBy: { type: String, default: "" },
@@ -48,8 +72,13 @@ const patientSchema = new mongoose.Schema({
     manufacture: {
         status: {
             type: String,
+<<<<<<< HEAD
             enum: ['Not Touched', 'Partially Done', 'Complete'],
             default: 'Not Touched'
+=======
+            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
+            default: statusEnum.NOTTOUCHED
+>>>>>>> origin/aws-backend-auth
         },
         lastEdit: { type: Date, default: Date.now() },
         lastEditBy: { type: String, default: "" },
@@ -59,8 +88,13 @@ const patientSchema = new mongoose.Schema({
     postProcessing: {
         status: {
             type: String,
+<<<<<<< HEAD
             enum: ['Not Touched', 'Partially Done', 'Complete'],
             default: 'Not Touched'
+=======
+            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
+            default: statusEnum.NOTTOUCHED
+>>>>>>> origin/aws-backend-auth
         },
         lastEdit: { type: Date, default: Date.now() },
         lastEditBy: { type: String, default: "" },
@@ -70,8 +104,13 @@ const patientSchema = new mongoose.Schema({
     delivery: {
         status: {
             type: String,
+<<<<<<< HEAD
             enum: ['Not Touched', 'Partially Done', 'Complete'],
             default: 'Not Touched'
+=======
+            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
+            default: statusEnum.NOTTOUCHED
+>>>>>>> origin/aws-backend-auth
         },
         lastEdit: { type: Date, default: Date.now() },
         lastEditBy: { type: String, default: "" },
@@ -81,8 +120,13 @@ const patientSchema = new mongoose.Schema({
     feedback: {
         status: {
             type: String,
+<<<<<<< HEAD
             enum: ['Not Touched', 'Partially Done', 'Complete'],
             default: 'Not Touched'
+=======
+            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
+            default: statusEnum.NOTTOUCHED
+>>>>>>> origin/aws-backend-auth
         },
         lastEdit: { type: Date, default: Date.now() },
         lastEditBy: { type: String, default: "" },
@@ -92,3 +136,7 @@ const patientSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Patient", patientSchema);
+<<<<<<< HEAD
+=======
+module.exports.statusEnum = statusEnum;
+>>>>>>> origin/aws-backend-auth

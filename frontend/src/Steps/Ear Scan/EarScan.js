@@ -1,12 +1,70 @@
 import React, { useEffect, useState } from 'react'
+<<<<<<< HEAD
 import { Button, Fab, IconButton } from '@material-ui/core';
+=======
+import './EarScan.css'
+import { Button, Fab, IconButton } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles'
+>>>>>>> origin/aws-backend-auth
 import Notes from '../../Components/Notes/Notes';
 import Download from '../../Components/File Download/Download';
 import NoChangeDialog from '../../Components/No Change Dialog/NoChangeDialog';
 import BottomBar from '../../Components/BottomBar/BottomBar';
 import swal from 'sweetalert';
+<<<<<<< HEAD
 
 const EarScan = (props) => {
+=======
+
+const useStyles = makeStyles((theme) => ({
+    patientDivider: {
+        padding: 1,
+        background: 'black',
+        width: '80%',
+        margin: 'auto',
+    },
+    inputField: {
+        background: '#e5f0ff',
+    },
+    activeInput: {
+        background: 'white'
+    },
+    patientBtns: {
+        background: '#6295e0',
+        color: 'white',
+        margin: 'auto',
+        marginRight: '35px',
+        '&:hover': {
+            background: '#6295e0'
+        }
+    },
+    approveBtn: {
+        position: 'fixed',
+        bottom: 15,
+        right: 15,
+        marginRight: 15,
+        padding: 15,
+    },
+    saveBtn: {
+        position: 'fixed',
+        bottom: 15,
+        right: 240,
+        marginRight: 15,
+        padding: 15,
+    },
+    FAB: {
+        background: '#6295e0',
+        color: 'white',
+        '&:hover': {
+            background: '#6295e0'
+        }
+    }
+}));
+
+const EarScan = (props) => {
+    const classes = useStyles();
+
+>>>>>>> origin/aws-backend-auth
     const info = props.info
     const [trigger, reset] = useState(true);
     const [notes, setNotes] = useState("");

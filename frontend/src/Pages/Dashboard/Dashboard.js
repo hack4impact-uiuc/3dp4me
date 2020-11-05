@@ -4,7 +4,11 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import MuiAlert from '@material-ui/lab/Alert';
 import MainTable from '../../Components/Table/MainTable';
+<<<<<<< HEAD
 import "./Dashboard.scss";
+=======
+import "./Dashboard.css";
+>>>>>>> origin/aws-backend-auth
 import FeebackTable from "../../Components/Table/FeedbackTable";
 
 import patientInfo from '../../Test Data/patient-info.json'
@@ -15,6 +19,7 @@ import processing from '../../Test Data/processing.json';
 import delivery from '../../Test Data/delivery.json';
 import feedback from '../../Test Data/feedback.json';
 
+<<<<<<< HEAD
 
 
 const Dashboard = (props) => {
@@ -46,6 +51,37 @@ const Dashboard = (props) => {
     setFilteredPatients(filtered);
   }
 
+=======
+const Dashboard = (props) => {
+
+  const [patients, setPatients] = useState([]);
+  const [sort, setSort] = useState("new");
+  const [step, setStep] = useState('info');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterPatients, setFilteredPatients] = useState([]);
+  const [stepTitle, setStepTitle] = useState("patientInfoTitle");
+  const [noPatient, setNoPatient] = useState(false);
+  const [sortedField, setSortedField] = React.useState(null);
+
+  const lang = props.lang.data;
+  const key = props.lang.key;
+
+  const handlesort = (e) => {
+    setSort(e.target.value);
+  }
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    let filtered = patients.filter
+      (patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || 
+      (patient.serial + "").search(e.target.value) !== -1 ||
+      patient._id.search(e.target.value) !== -1
+    );
+    setNoPatient(filtered.length === 0);
+    setFilteredPatients(filtered);
+  }
+
+>>>>>>> origin/aws-backend-auth
   const handleNoPatientClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -111,6 +147,7 @@ const Dashboard = (props) => {
       </Snackbar>
       <div className="tabs">
         {/* <Toolbar> */}
+<<<<<<< HEAD
         <ToggleButtonGroup className="dashboard-button-group" size="large" exclusive value={step} onChange={handleStep}>
           <ToggleButton disableRipple className="dashboard-button" value="info">{lang[key].components.stepTabs.patientInfo}</ToggleButton>
           <ToggleButton disableRipple className="dashboard-button" value="scan">{lang[key].components.stepTabs.earScan}</ToggleButton>
@@ -119,13 +156,28 @@ const Dashboard = (props) => {
           <ToggleButton disableRipple className="dashboard-button" value="processing">{lang[key].components.stepTabs.processing}</ToggleButton>
           <ToggleButton disableRipple className="dashboard-button" value="delivery">{lang[key].components.stepTabs.delivery}</ToggleButton>
           <ToggleButton disableRipple className="dashboard-button" value="feedback">{lang[key].components.stepTabs.feedback}</ToggleButton>
+=======
+        <ToggleButtonGroup style={{ width: '100%' }} size="large" exclusive value={step} onChange={handleStep}>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="info">{lang[key].components.stepTabs.patientInfo}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="scan">{lang[key].components.stepTabs.earScan}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="cad">{lang[key].components.stepTabs.CADModeling}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="printing">{lang[key].components.stepTabs.print}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="processing">{lang[key].components.stepTabs.processing}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="delivery">{lang[key].components.stepTabs.delivery}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="feedback">{lang[key].components.stepTabs.feedback}</ToggleButton>
+>>>>>>> origin/aws-backend-auth
         </ToggleButtonGroup>
       </div>
       <div className="patient-list">
         <div className="header">
           <div className="section">
+<<<<<<< HEAD
             <h2 className={ key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
             <TextField className="patient-list-search-field" onChange={handleSearch} value={searchQuery} variant="outlined" placeholder={lang[key].components.search.placeholder} />
+=======
+            <h2 style={ key === "AR" ? { flexGrow: 1, marginRight: '10px' } : {flexGrow: 1}}>{lang[key].pages[stepTitle]}</h2>
+            <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder={lang[key].components.search.placeholder} />
+>>>>>>> origin/aws-backend-auth
             <Select variant="outlined"
               value={sort}
               onChange={handlesort}

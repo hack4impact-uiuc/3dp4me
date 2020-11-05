@@ -1,15 +1,21 @@
 <<<<<<< HEAD
 import React from 'react';
-import { withAuthenticator } from '@aws-amplify/ui-react';
+import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
-import './App.css';
 import awsconfig from './aws/aws-exports.js';
+<<<<<<< HEAD
 =======
 import React, { useEffect, useState } from "react";
 
 >>>>>>> origin/lh/css
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+=======
+>>>>>>> origin/aws-backend-auth
 
+import React, { useEffect, useState } from "react";
+import "./App.css";
+
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import AccountManagement from "./Pages/Account Management/AccountManagment";
 import Metrics from "./Pages/Metrics/Metrics";
@@ -22,8 +28,11 @@ import language from './language.json';
 <<<<<<< HEAD
 Amplify.configure(awsconfig)
 
+<<<<<<< HEAD
 const App = function() {
 =======
+=======
+>>>>>>> origin/aws-backend-auth
 function App() {
 
   const [key, setKey] = useState("EN");
@@ -39,7 +48,10 @@ function App() {
     setKey("EN");
   }, []);
 
+<<<<<<< HEAD
 >>>>>>> origin/lh/css
+=======
+>>>>>>> origin/aws-backend-auth
   return (
     <body dir={key == "AR" ? "rtl": "ltr"}>
       <Router>

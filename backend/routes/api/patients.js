@@ -1,19 +1,31 @@
 const express = require("express");
 const router = express.Router();
 const { errorWrap } = require("../../utils");
+<<<<<<< HEAD
 const { models } = require("../../models");
 const { uploadFile } = require("../../utils/aws/aws-s3-helpers");
+=======
+// const { models } = require("../../models");
+>>>>>>> origin/aws-backend-auth
 
 // TODO: Get all patients
 router.get(
     '/',
     errorWrap(async (req, res) => {
+<<<<<<< HEAD
         console.log("Getting patients")
         models.Patient.find().then(patients => res.status(200).json({
             code: 200, 
             success: true, 
             result: patients
         }));
+=======
+        // res.status(200).json({
+        //     code: 200,
+        //     success: true,
+        //     result: patients,
+        // });
+>>>>>>> origin/aws-backend-auth
     }),
 );
 
@@ -21,11 +33,14 @@ router.get(
 router.get(
     "/:stage",
     errorWrap(async (req, res) => {
+<<<<<<< HEAD
         models.Patient.find().where('').then(patients => res.status(200).json({
             code: 200, 
             success: true, 
             result: patients
         }));
+=======
+>>>>>>> origin/aws-backend-auth
         // res.status(200).json({
         //     code: 200,
         //     success: true,
@@ -42,6 +57,7 @@ router.post(
         //     code: 200,
         //     success: true,
         // });
+<<<<<<< HEAD
     }),
 );
 
@@ -91,6 +107,8 @@ router.post(
                 }
             });
         }
+=======
+>>>>>>> origin/aws-backend-auth
     }),
 );
 

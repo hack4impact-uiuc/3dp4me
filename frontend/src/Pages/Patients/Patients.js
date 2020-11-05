@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Snackbar, TextField } from '@material-ui/core';
 import MainTable from '../../Components/Table/MainTable'
+<<<<<<< HEAD
 import './Patients.scss'
+=======
+import './Patients.css'
+>>>>>>> origin/aws-backend-auth
 import MuiAlert from '@material-ui/lab/Alert';
 import allpatients from '../../Test Data/all-patients.json';
 
@@ -57,8 +61,13 @@ const Patients = (props) => {
                         {lang[key].components.table.noPatientsFound}
                     </Alert>
                 </Snackbar>
+<<<<<<< HEAD
                 <h2 className={key === "AR" ? "all-patients-header-text-ar" : "all-patients-header-text"}>{lang[key].components.navbar.patients.pageTitle}</h2>
                 <TextField className="all-patients-search-field" onChange={handleSearch} value={searchQuery} variant="outlined" placeholder={lang[key].components.search.placeholder} />
+=======
+                <h2 style={key === "AR" ? { flexGrow: 1, marginRight: '10px' } : { flexGrow: 1 }}>{lang[key].components.navbar.patients.pageTitle}</h2>
+                <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder={lang[key].components.search.placeholder} />
+>>>>>>> origin/aws-backend-auth
                 <Button>{lang[key].components.button.createPatient}</Button>
             </div>
             {
