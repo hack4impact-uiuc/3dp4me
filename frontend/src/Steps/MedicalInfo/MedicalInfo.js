@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgress, Divider, Button, FormControlLabel, Radio, RadioGroup, TextField, Backdrop } from '@material-ui/core';
-import './PatientInfo.scss'
-import Notes from '../../Components/Notes/Notes';
-import Files from '../../Components/Files/Files';
+import './MedicalInfo.scss'
+import Notes from '../../components/Notes/Notes';
+import Files from '../../components/Files/Files';
 import WarningIcon from '@material-ui/icons/Warning';
-import NoChangeDialog from '../../Components/No Change Dialog/NoChangeDialog';
-import BottomBar from '../../Components/BottomBar/BottomBar';
+import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
+import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 import patientFile from '../../Test Data/patient.json';
 
-const PatientInfo = (props) => {
+const MedicalInfo = (props) => {
 
     const intialInfo = {
         name: "",
@@ -182,4 +182,4 @@ const PatientInfo = (props) => {
     );
 }
 
-export default PatientInfo;
+export default MedicalInfo;

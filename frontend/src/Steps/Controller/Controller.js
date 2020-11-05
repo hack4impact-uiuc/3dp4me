@@ -3,11 +3,11 @@ import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import './Controller.scss';
-import PatientInfo from '../Patient Info/PatientInfo';
-import EarScan from '../Ear Scan/EarScan';
-import CADModel from '../CAD Model/CADModel';
-import Printing from '../3D Printing/Printing';
-import PostProcessing from '../Post Processing/PostProcessing'
+import MedicalInfo from '../MedicalInfo/MedicalInfo';
+import EarScan from '../EarScan/EarScan';
+import CADModel from '../CADModel/CADModel';
+import Printing from '../3DPrinting/Printing';
+import PostProcessing from '../PostProcessing/PostProcessing'
 import Delivery from '../Delivery/Delivery';
 import Feedback from '../Feedback/Feedback';
 import { Accordion, AccordionDetails, AccordionSummary, TextField } from '@material-ui/core';
@@ -235,7 +235,7 @@ const Controller = (props) => {
                 </ToggleButtonGroup>
                 <div className={`steps ${key === "AR" ? "steps-ar" : ""}`}>
                     {step === "info" ? (
-                        <PatientInfo info={patientFile.patientInfo} status={{value: medStatus, setStatus: handleMedStatus}} lang={props.lang} />
+                        <MedicalInfo info={patientFile.patientInfo} status={{value: medStatus, setStatus: handleMedStatus}} lang={props.lang} />
                     ) : (<></>)}
                     {step === "scan" ? (
                         <EarScan info={patientFile.earScanInfo} status={{value: earScanStatus, setStatus: handleEarScanStatus}}  lang={props.lang} />

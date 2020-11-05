@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import Notes from '../../Components/Notes/Notes'
+import Notes from '../../components/Notes/Notes'
 import { TextField } from '@material-ui/core';
-import BottomBar from '../../Components/BottomBar/BottomBar';
+import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 import './Feedback.scss';
 
