@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
 import WarningIcon from '@material-ui/icons/Warning';
+import './NoChangeDialog.scss';
 
 const NoChangeDialog = (props) => {
 
@@ -8,43 +9,34 @@ const NoChangeDialog = (props) => {
         <Dialog
             open={props.open}
             onClose={() => props.noChange(false)}
+            className="no-change-dialog-wrapper"
         >
-            <DialogTitle style={{ textAlign: 'center' }}><WarningIcon style={{ color: 'red', fontSize: "80px" }} /></DialogTitle>
+            <DialogTitle className="dialog-title">
+                <WarningIcon className="warning-icon" />
+            </DialogTitle>
             <DialogContent>
-                <DialogContentText style={{ fontWeight: 'bolder', color: 'red', textAlign: 'center', fontFamily: 'Ubuntu' }}>
+                <DialogContentText className="dialog-text">
                     Woah there! It looks like you didn't change anything, are you sure you would like to proceed?
-          </DialogContentText>
+                </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button
+                    className="dialog-button"
                     onClick={() => {
                         props.noChange(false);
                     }}
                     autoFocus
                     variant="outlined"
-                    style={{
-                        background: '#6295e0',
-                        color: 'white',
-                        '&:hover': {
-                            background: '#6295e0'
-                        }
-                    }}
                 >
                     Cancel
                     </Button>
                 <Button
+                    className="dialog-button"
                     onClick={() => {
                         props.save("override");
                     }}
                     autoFocus
                     variant="outlined"
-                    style={{
-                        background: '#6295e0',
-                        color: 'white',
-                        '&:hover': {
-                            background: '#6295e0'
-                        }
-                    }}
                 >
                     Save
                     </Button>

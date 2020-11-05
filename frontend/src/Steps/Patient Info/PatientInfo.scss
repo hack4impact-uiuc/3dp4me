@@ -1,0 +1,24 @@
+@import '../../Styles/colors.scss';
+
+.patient-info {
+    margin-bottom: 20px;
+
+    .patient-divider {
+        padding: 1px;
+        background: black;
+        width: 80%;
+        margin: auto;
+    }
+
+    .input-field {
+        background: $secondary;
+    }
+
+    .active-input {
+        background: white;
+    }
+}
+
+.submit-group {
+    margin-top: 10px;
+}

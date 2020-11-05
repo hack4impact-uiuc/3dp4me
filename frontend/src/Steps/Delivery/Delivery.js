@@ -1,34 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles'
 import BottomBar from '../../Components/BottomBar/BottomBar';
-import colors from '../../colors.json'
 import swal from 'sweetalert';
-
-const useStyles = makeStyles((theme) => ({
-    inputRoot: {
-        fontSize: 14    ,
-        backgroundColor: 'white',
-        "&$labelFocused": {
-            backgroundColor: 'white'
-        },
-        '&:hover': {
-            backgroundColor: 'white',
-        }
-    },
-    labelRoot: {
-        fontSize: 20,
-    },
-    inputField: {
-        background: colors.secondary,
-    },
-    activeInput: {
-        background: 'white'
-    },
-}));
+import './Delivery.scss';
 
 const Delivery = (props) => {
-    const classes = useStyles();
 
     const info = props.info
     const [trigger, reset] = useState(true);
@@ -76,18 +52,18 @@ const Delivery = (props) => {
     }
 
     return (
-        <div>
+        <div className="delivery-wrapper">
             <h1>{lang[key].patientView.delivery.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <h3>{lang[key].patientView.delivery.address}</h3>
             <TextField
                 disabled={!edit}
-                className={edit ? classes.activeInput : classes.inputField}
+                className={edit ? "active-input" : "input-field"}
                 variant="outlined"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
             />
-            <div style={{padding: 0}}>{lang[key].patientView.delivery.addressLabel}</div>
+            <div className="delivery-address-label">{lang[key].patientView.delivery.addressLabel}</div>
             <h3>{lang[key].patientView.delivery.status}</h3>
             <FormControl disabled={!edit} component="fieldset">
                 <RadioGroup name="status" value={deliveryStatus} onChange={(e) => setDeliveryStatus(e.target.value)}>

@@ -1,0 +1,27 @@
+@import '../../Styles/colors.scss';
+
+.no-change-dialog-wrapper {
+    .warning-icon {
+        color: red;
+        font-size: 80px;
+    }
+
+    .dialog-title {
+        text-align: center;
+    }
+
+    .dialog-text {
+        font-weight: bolder;
+        color: red;
+        text-align: center;
+        font-family: "Ubuntu";
+    }
+
+    .dialog-button {
+        background: $button;
+        color: white;
+        &:hover {
+            background: $button;
+        }
+    }
+}
