@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { errorWrap } = require("../../utils");
 const { models } = require("../../models");
+const { uploadFile } = require("../../utils/aws/aws-s3-helpers");
 
 // TODO: Get all patients
 router.get(
@@ -61,18 +62,35 @@ router.get(
 router.post(
     '/:id/:stage',
     errorWrap(async (req, res) => {
-        const { id, stage } = req.params;
-        const { filename, userId, userName } = req.body
-        const patientStage = models.Patient.findById(id, stage);
-        const currDate = new Date();
-        patientStage.lastEdit = currDate;
-        patientStage.lastEditBy = userName;
-        patientStage.files.push({filename: filename,
-            uploadedBy: userName,
-            uploadDate: currDate});
-        await patientStage.save();
-        
-        
+        if(!req.files) {
+            res.send({
+                status: false,
+                message: 'No file uploaded'
+            });
+        } else {
+            const { id, stage } = req.params;
+            const { userId, userName } = req.body
+            const patientStage = models.Patient.findById(id, stage);
+            const currDate = new Date();
+            let file = req.files.uploadedFile;  //TODO: use name of input field possibly?
+
+            patientStage.lastEdit = currDate;
+            patientStage.lastEditBy = userName;
+            patientStage.files.push({filename: file.name,
+                uploadedBy: userName,
+                uploadDate: currDate});
+            await patientStage.save();
+            
+            res.send({
+                status: true,
+                message: 'File is uploaded',
+                data: {
+                    name: file.name,
+                    mimetype: file.mimetype,
+                    size: file.size
+                }
+            });
+        }
     }),
 );
 
