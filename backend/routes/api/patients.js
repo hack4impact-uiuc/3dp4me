@@ -4,7 +4,7 @@ const { errorWrap } = require("../../utils");
 const { models } = require("../../models");
 const { uploadFile } = require("../../utils/aws/aws-s3-helpers");
 
-// TODO: Get all patients
+// Get all patients (query parameter "stage")
 router.get(
     '/',
     errorWrap(async (req, res) => {
@@ -17,31 +17,31 @@ router.get(
     }),
 );
 
-// TODO: Get all patients in a stage
-router.get(
-    "/:stage",
+// Edit a patient's status
+router.put(
+    '/:id/:stage/status',
     errorWrap(async (req, res) => {
-        models.Patient.find().where('').then(patients => res.status(200).json({
-            code: 200, 
-            success: true, 
-            result: patients
-        }));
-        // res.status(200).json({
-        //     code: 200,
-        //     success: true,
-        //     result: patients,
-        // });
-    }),
-);
+        const { status, userID, notes } = req.body;
+        const { id, stage } = req.params;
 
-// TODO: Mark stage as complete for a patient
-router.post(
-    "/:id/:stage/complete",
-    errorWrap(async (req, res) => {
-        // res.status(200).json({
-        //     code: 200,
-        //     success: true,
-        // });
+        let update = {
+            [stage]: {
+                "status": status,
+                "lastEdit": Date.now(),
+                "lastEditBy": userID,
+                "notes": notes
+            }
+        }
+        if (req.files) {
+            // TODO: Upload new files to AWS and update files field in model
+        }
+
+        const updatedPatient = await models.Patient.findById(id, update, { new: true });
+        res.status(200).json({
+            code: 200,
+            success: true,
+            result: updatedPatient,
+        });
     }),
 );
 

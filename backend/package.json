@@ -9,9 +9,13 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "express-fileupload": "^1.2.0",
 =======
 >>>>>>> origin/aws-backend-auth
+=======
+    "express-fileupload": "^1.2.0",
+>>>>>>> origin/lh/get-patients
     "mongoose": "^5.10.10"
   },
   "devDependencies": {
