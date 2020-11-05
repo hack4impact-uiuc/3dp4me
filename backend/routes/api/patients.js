@@ -70,19 +70,30 @@ router.post(
         } else {
             const { id, stage } = req.params;
             const { userId, userName } = req.body
-            const patientStage = models.Patient.findById(id, stage);
             const currDate = new Date();
             let file = req.files.uploadedFile;  //TODO: use name of input field possibly?
-
-            patientStage.lastEdit = currDate;
-            patientStage.lastEditBy = userName;
-            patientStage.files.push({filename: file.name,
-                uploadedBy: userName,
-                uploadDate: currDate});
-            await patientStage.save();
             
-            res.send({
-                status: true,
+            /*await models.Patient.findById(id, stage).update(
+                { $push: {files: {filename: file.name, uploadedBy: userName, uploadDate: currDate}}}, 
+                { $set: {lastEdit: currDate, lastEditBy: userName}}, 
+                () => {
+                    res.json({
+                        message: 'File is uploaded',
+                        data: {
+                            name: file.name,
+                            mimetype: file.mimetype,
+                            size: file.size
+                        }
+                    });
+                });*/
+            let update = {
+                [stage]: {
+                    "lastEdit": currDate.now,
+                    "lastEditBy": userName
+                }
+            }
+            models.Patient.findById(id, update, {new: true});
+            res.json({
                 message: 'File is uploaded',
                 data: {
                     name: file.name,
@@ -90,6 +101,8 @@ router.post(
                     size: file.size
                 }
             });
+            
+            
         }
     }),
 );
