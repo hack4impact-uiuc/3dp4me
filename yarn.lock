@@ -2077,6 +2077,11 @@ to-fast-properties@^1.0.3:
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-1.0.3.tgz#b83571fa4d8c25b82e231b06e3a3055de4ca1a47"
   integrity sha1-uDVx+k2MJbguIxsG46MFXeTKGkc=
 
+"true@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/true/-/true-0.0.4.tgz#921ebfbd58122d3a66cfff6dc054daf269eb9f21"
+  integrity sha1-kh6/vVgSLTpmz/9twFTa8mnrnyE=
+
 tslib@^1.8.0, tslib@^1.9.3:
   version "1.13.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
