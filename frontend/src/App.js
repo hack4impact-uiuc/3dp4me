@@ -1,38 +1,19 @@
-<<<<<<< HEAD
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import awsconfig from './aws/aws-exports.js';
-<<<<<<< HEAD
-=======
-import React, { useEffect, useState } from "react";
-
->>>>>>> origin/lh/css
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-=======
->>>>>>> origin/aws-backend-auth
-
-import React, { useEffect, useState } from "react";
-import "./App.css";
-
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Dashboard from "./Pages/Dashboard/Dashboard";
-import AccountManagement from "./Pages/Account Management/AccountManagment";
-import Metrics from "./Pages/Metrics/Metrics";
-import Patients from "./Pages/Patients/Patients";
-import Navbar from "./Components/Navbar/Navbar";
-import PatientInfo from "./Steps/Patient Info/PatientInfo"
-import Controller from './Steps/Controller/Controller'
+import Dashboard from "./pages/Dashboard/Dashboard";
+import AccountManagement from "./pages/AccountManagement/AccountManagment";
+import Metrics from "./pages/Metrics/Metrics";
+import Patients from "./pages/Patients/Patients";
+import Navbar from "./components/Navbar/Navbar";
+import MedicalInfo from "./steps/MedicalInfo/MedicalInfo"
+import Controller from './steps/Controller/Controller'
 import language from './language.json';
 
-<<<<<<< HEAD
 Amplify.configure(awsconfig)
 
-<<<<<<< HEAD
-const App = function() {
-=======
-=======
->>>>>>> origin/aws-backend-auth
 function App() {
 
   const [key, setKey] = useState("EN");
@@ -48,10 +29,6 @@ function App() {
     setKey("EN");
   }, []);
 
-<<<<<<< HEAD
->>>>>>> origin/lh/css
-=======
->>>>>>> origin/aws-backend-auth
   return (
     <body dir={key == "AR" ? "rtl": "ltr"}>
       <Router>

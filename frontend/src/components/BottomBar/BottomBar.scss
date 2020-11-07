@@ -1,0 +1,67 @@
+@import '../../styles/colors.scss';
+
+.bottom-bar-wrapper {
+    .status-selector {
+        margin-right: 10px;
+        padding: 10px 30px 10px 30px;
+    }
+
+    .status-selector-ar {
+        margin-left: 15px;
+        padding: 10px 30px 10px 30px;
+    }
+
+    .save-button {
+        background-color: $button;
+        color: white;
+        padding: 10px 30px 10px 30px;
+        &:hover {
+            background-color: $button;
+        }
+    }
+
+    .save-button-ar {
+        background-color: $button;
+        color: white;
+        padding: 10px 50px 10px 50px;
+        &:hover {
+            background-color: $button;
+        }
+    }
+
+    .discard-button {
+        background-color: white;
+        color: black;
+        padding: 10px 30px 10px 30px;
+        &:hover {
+            background-color: white;
+        }
+    }
+
+    .status {
+        padding: 5px 40px 5px 20px;
+        border: solid black 1px;
+        margin-right: 10px;
+
+        &.unfinished {
+            background: $statusUnfinished;
+        }
+
+        &.partial {
+            background: $statusPartial;
+        }
+
+        &.finished {
+            background: $statusFinished;
+        }
+    }
+
+    .edit-button {
+        background-color: $button;
+        color: white;
+        padding: 10px 30px 10px 30px;
+        &:hover {
+            background-color: $button;
+        }
+    }
+}

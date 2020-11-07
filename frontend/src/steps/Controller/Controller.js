@@ -1,71 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import './Controller.css';
-import PatientInfo from '../Patient Info/PatientInfo';
-import EarScan from '../Ear Scan/EarScan';
-import CADModel from '../CAD Model/CADModel';
-import Printing from '../3D Printing/Printing';
-import PostProcessing from '../Post Processing/PostProcessing'
+import './Controller.scss';
+import MedicalInfo from '../MedicalInfo/MedicalInfo';
+import EarScan from '../EarScan/EarScan';
+import CADModel from '../CADModel/CADModel';
+import Printing from '../3DPrinting/Printing';
+import PostProcessing from '../PostProcessing/PostProcessing'
 import Delivery from '../Delivery/Delivery';
 import Feedback from '../Feedback/Feedback';
 import { Accordion, AccordionDetails, AccordionSummary, TextField } from '@material-ui/core';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import colors from '../../colors.json';
 import CheckIcon from '@material-ui/icons/Check';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import patientFile from '../../Test Data/patient.json'
 
-
-const drawerWidth = 240;
-
 const theme = createMuiTheme({
     direction: 'rtl',
 });
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-    },
-    drawerRtl: {
-        flexShrink: 0,
-    },
-    drawerPaper: {
-        width: drawerWidth,
-        backgroundColor: '#323366',
-        color: 'white'
-    },
-    drawerContainer: {
-        overflow: 'auto',
-        padding: 20,
-    },
-    drawerText: {
-        fontSize: 16
-    },
-    drawerTextLabel: {
-        fontSize: 14,
-        color: '#babcfe',
-    },
-    drawerTextSection: {
-        marginBottom: 30
-    },
-    steps: {
-        paddingLeft: '50px',
-        paddingBottom: '100px'
-    }
-}));
-
 const Controller = (props) => {
-    const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [patient, setPatient] = useState();
     const [step, setStep] = useState("info");
@@ -128,82 +86,70 @@ const Controller = (props) => {
         if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setFeedbackStatus(e.target.value);
     }
 
-    const styles = {
-        unfinished: {
-            default: { marginRight: '15px', background: '#ffe1e1', color: 'red', borderRadius: '10px 10px 0px 0px' },
-            active: { marginRight: '15px', background: '#ffe1e1', color: 'red', borderRadius: '10px 10px 0px 0px', borderTop: `solid ${colors.sidebar} 5px` },
-            icon: <PriorityHighIcon style={{ color: 'red' }} />
-        },
-        partial: {
-            default: { marginRight: '15px', background: 'white', color: '#ddc66a', borderRadius: '10px 10px 0px 0px' },
-            active: { marginRight: '15px', background: 'white', color: '#ddc66a', borderRadius: '10px 10px 0px 0px', borderTop: `solid ${colors.sidebar} 5px` },
-            icon: <RadioButtonUncheckedIcon style={{ color: "#ddc66a", fontSize: 22, marginRight: '5px' }} />
-        },
-        finished: {
-            default: { marginRight: '15px', background: 'white', color: 'black', borderRadius: '10px 10px 0px 0px' },
-            active: { marginRight: '15px', background: 'white', color: 'black', borderRadius: '10px 10px 0px 0px', borderTop: `solid ${colors.sidebar} 5px` },
-            icon: <CheckIcon />
-        }
+    const statusIcons = {
+        unfinished: <PriorityHighIcon className="unfinished-icon" />,
+        partial: <RadioButtonUncheckedIcon className="partial-icon" />,
+        finished: <CheckIcon />
     }
 
     return (
-        <div className={classes.root}>
+        <div className="root">
             <ThemeProvider theme={key === "AR" ? theme : null}>
                 <Drawer
-                    className={key == "EN" ? classes.drawer : classes.drawerRtl}
+                    className={key == "EN" ? "drawer" : "drawer-rtl"}
                     variant="permanent"
                     classes={{
-                        paper: classes.drawerPaper,
+                        paper: "drawer-paper",
                     }}
                 >
                     <Toolbar />
-                    <div className={classes.drawerContainer}>
-                        <div className={classes.drawerTextSection}>
-                            <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.name}</span> <br />
-                            <span className={classes.drawerText}>{patientFile.patientInfo.name}</span>
+                    <div className="drawer-container">
+                        <div className="drawer-text-section">
+                            <span className="drawer-text-label">{lang[key].components.sidebar.name}</span> <br />
+                            <span className="drawer-text">{patientFile.patientInfo.name}</span>
                         </div>
-                        <div className={classes.drawerTextSection}>
-                            <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.orderID}</span> <br />
-                            <span className={classes.drawerText}>{patientFile.patientInfo.orderId}</span>
+                        <div className="drawer-text-section">
+                            <span className="drawer-text-label">{lang[key].components.sidebar.orderID}</span> <br />
+                            <span className="drawer-text">{patientFile.patientInfo.orderId}</span>
                         </div>
-                        <div className={classes.drawerTextSection}>
-                            <span className={classes.drawerTextLabel}>{lang[key].components.sidebar.dob}</span> <br />
-                            <span className={classes.drawerText}>{patientFile.patientInfo.dob}</span>
+                        <div className="drawer-text-section">
+                            <span className="drawer-text-label">{lang[key].components.sidebar.dob}</span> <br />
+                            <span className="drawer-text">{patientFile.patientInfo.dob}</span>
                         </div>
-                        <span className={classes.drawerTextLabel}>{lang[key].components.notes.title}</span>
-                        <div style={{ backgroundColor: '#323366', marginTop: 3 }} className={classes.drawerItem}>
+                        <span className="drawer-text-label">{lang[key].components.notes.title}</span>
+                        <div className="drawer-notes-wrapper">
                             <Accordion expanded={expanded === 'info'} onChange={handleNotePanel('info')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon style={{ color: colors.button }} />}>{lang[key].components.stepTabs.patientInfo}</AccordionSummary>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.patientInfo}</AccordionSummary>
                                 <AccordionDetails>
                                     This is where the notes will go
-                                    </AccordionDetails>
+                                </AccordionDetails>
                             </Accordion>
                             <Accordion expanded={expanded === 'scan'} onChange={handleNotePanel('scan')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon style={{ color: colors.button }} />}>{lang[key].components.stepTabs.earScan}</AccordionSummary>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.earScan}</AccordionSummary>
                                 <AccordionDetails>
                                     This is where the notes will go
                                     </AccordionDetails>
                             </Accordion>
                             <Accordion expanded={expanded === 'cad'} onChange={handleNotePanel('cad')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon style={{ color: colors.button }} />}>{lang[key].components.stepTabs.CADModeling}</AccordionSummary>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.CADModeling}</AccordionSummary>
                                 <AccordionDetails>
                                     This is where the notes will go
                                     </AccordionDetails>
                             </Accordion>
                             <Accordion expanded={expanded === 'processing'} onChange={handleNotePanel('processing')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon style={{ color: colors.button }} />}>{lang[key].components.stepTabs.print}</AccordionSummary>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.print}</AccordionSummary>
                                 <AccordionDetails>
                                     This is where the notes will go
                                     </AccordionDetails>
                             </Accordion>
                             <Accordion expanded={expanded === 'delivery'} onChange={handleNotePanel('delivery')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon style={{ color: colors.button }} />}>{lang[key].components.stepTabs.delivery}</AccordionSummary>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.delivery}</AccordionSummary>
                                 <AccordionDetails>
                                     This is where the notes will go
                                     </AccordionDetails>
                             </Accordion>
                             <Accordion expanded={expanded === 'feedback'} onChange={handleNotePanel('feedback')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon style={{ color: colors.button }} />}>{lang[key].components.stepTabs.feedback}</AccordionSummary>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.feedback}</AccordionSummary>
                                 <AccordionDetails>
                                     This is where the notes will go
                                     </AccordionDetails>
@@ -214,117 +160,82 @@ const Controller = (props) => {
                 </Drawer>
             </ThemeProvider>
 
-            <div className={`controller-content`} style={key === "AR" ? { marginRight: drawerWidth } : {}}>
-                <ToggleButtonGroup style={{ width: '100%', background: "#e1edff", padding: "50px 0px 0px" }} size="large" exclusive value={step} onChange={handleStep}>
+            <div className={`controller-content ${key === "AR" ? "controller-content-ar" : ""}`}>
+                <ToggleButtonGroup className="controller-content-header" size="large" exclusive value={step} onChange={handleStep}>
                     <ToggleButton
                         disableRipple
-                        style={
-                            medStatus !== undefined ? (
-                                step === "info" ? (
-                                    styles[medStatus].active
-                                ) : (
-                                    styles[medStatus].default
-                                )
-                            ) : (null)
+                        className={`controller-button default-button
+                            ${medStatus !== undefined ? `${medStatus}` : ""}
+                            ${step === "info" ? "active" : ""}`
                         }
                         value="info"
                     >
-                        {medStatus !== undefined ? styles[medStatus].icon : null} <b>{lang[key].components.stepTabs.patientInfo}</b>
+                        {medStatus !== undefined ? statusIcons[medStatus] : null} <b>{lang[key].components.stepTabs.patientInfo}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={
-                            earScanStatus !== undefined ? (
-                                step === "scan" ? (
-                                    styles[earScanStatus].active
-                                ) : (
-                                    styles[earScanStatus].default
-                                )
-                            ) : (null)
+                        className={`controller-button default-button
+                            ${earScanStatus !== undefined ? `${earScanStatus}` : ""}
+                            ${step === "scan" ? "active" : ""}`
                         }
                         value="scan"
                     >
-                        {earScanStatus !== undefined ? styles[earScanStatus].icon : null} <b>{lang[key].components.stepTabs.earScan}</b>
+                        {earScanStatus !== undefined ? statusIcons[earScanStatus] : null} <b>{lang[key].components.stepTabs.earScan}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={
-                            modelStatus !== undefined ? (
-                                step === "cad" ? (
-                                    styles[modelStatus].active
-                                ) : (
-                                    styles[modelStatus].default
-                                )
-                            ) : (null)
+                        className={`controller-button default-button
+                            ${modelStatus !== undefined ? `${modelStatus}` : ""}
+                            ${step === "cad" ? "active" : ""}`
                         }
                         value="cad"
                     >
-                        {modelStatus !== undefined ? styles[modelStatus].icon : null} <b>{lang[key].components.stepTabs.CADModeling}</b>
+                        {modelStatus !== undefined ? statusIcons[modelStatus] : null} <b>{lang[key].components.stepTabs.CADModeling}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={
-                            printStatus !== undefined ? (
-                                step === "printing" && printStatus !== undefined ? (
-                                    styles[printStatus].active
-                                ) : (
-                                    styles[printStatus].default
-                                )
-                            ) : (null)
+                        className={`controller-button default-button
+                            ${printStatus !== undefined ? `${printStatus}` : ""}
+                            ${step === "printing" ? "active" : ""}`
                         }
                         value="printing"
                     >
-                        {printStatus !== undefined ? styles[printStatus].icon: null} <b>{lang[key].components.stepTabs.print}</b>
+                        {printStatus !== undefined ? statusIcons[printStatus] : null} <b>{lang[key].components.stepTabs.print}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={
-                            processingStatus !== undefined ? (
-                                step === "processing" ? (
-                                    styles[processingStatus].active
-                                ) : (
-                                    styles[processingStatus].default
-                                )
-                            ) : (null)
+                        className={`controller-button default-button
+                            ${processingStatus !== undefined ? `${processingStatus}` : ""}
+                            ${step === "processing" ? "active" : ""}`
                         }
                         value="processing"
                     >
-                        {processingStatus !== undefined ? styles[processingStatus].icon : null} <b>{lang[key].components.stepTabs.processing}</b>
+                        {processingStatus !== undefined ? statusIcons[processingStatus] : null} <b>{lang[key].components.stepTabs.processing}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={
-                            deliveryStatus !== undefined ? (
-                                step === "delivery" ? (
-                                    styles[deliveryStatus].active
-                                ) : (
-                                    styles[deliveryStatus].default
-                                )
-                            ) : (null)
+                        className={`controller-button default-button
+                            ${deliveryStatus !== undefined ? `${deliveryStatus}` : ""}
+                            ${step === "delivery" ? "active" : ""}`
                         }
                         value="delivery"
                     >
-                        {deliveryStatus !== undefined && styles[deliveryStatus].icon} <b>{lang[key].components.stepTabs.delivery}</b>
+                        {deliveryStatus !== undefined ? statusIcons[deliveryStatus] : null} <b>{lang[key].components.stepTabs.delivery}</b>
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        style={
-                            feedbackStatus !== undefined ? (
-                                step === "feedback" ? (
-                                    styles[feedbackStatus].active
-                                ) : (
-                                    styles[feedbackStatus].default
-                                )
-                            ) : (null)
+                        className={`controller-button default-button
+                            ${feedbackStatus !== undefined ? `${feedbackStatus}` : ""}
+                            ${step === "feedback" ? "active" : ""}`
                         }
                         value="feedback"
                     >
-                        {feedbackStatus !== undefined ? styles[feedbackStatus].icon : null} <b>{lang[key].components.stepTabs.feedback}</b>
+                        {feedbackStatus !== undefined ? statusIcons[feedbackStatus] : null} <b>{lang[key].components.stepTabs.feedback}</b>
                     </ToggleButton>
                 </ToggleButtonGroup>
-                <div className={classes.steps} style={key === "AR" ? { marginRight: '50px', background: 'white' } : {}}>
+                <div className={`steps ${key === "AR" ? "steps-ar" : ""}`}>
                     {step === "info" ? (
-                        <PatientInfo info={patientFile.patientInfo} status={{value: medStatus, setStatus: handleMedStatus}} lang={props.lang} />
+                        <MedicalInfo info={patientFile.patientInfo} status={{value: medStatus, setStatus: handleMedStatus}} lang={props.lang} />
                     ) : (<></>)}
                     {step === "scan" ? (
                         <EarScan info={patientFile.earScanInfo} status={{value: earScanStatus, setStatus: handleEarScanStatus}}  lang={props.lang} />

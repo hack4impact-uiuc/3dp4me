@@ -162,20 +162,6 @@
         "components": {
             "navbar": {
                 "dashboard": {
-<<<<<<< HEAD
-                    "navTitle": "لوحة القيادة"
-                },
-                "patients": {
-                    "navTitle": "المرضى",
-                    "pageTitle": "كل المرضى"
-                },
-                "metrics": {
-                    "navTitle": "المقاييس",
-                    "pageTitle": ""
-                },
-                "accountManagement": {
-                    "navTitle": "ادارة الحساب",
-=======
                     "navTitle": "\u0644\u0648\u062d\u0629 \u0627\u0644\u0642\u064a\u0627\u062f\u0629"
                 },
                 "patients": {
@@ -188,149 +174,10 @@
                 },
                 "accountManagement": {
                     "navTitle": "\u0627\u062f\u0627\u0631\u0629 \u0627\u0644\u062d\u0633\u0627\u0628",
->>>>>>> origin/aws-backend-auth
                     "pageTitle": ""
                 }
             },
             "sidebar": {
-<<<<<<< HEAD
-                "name": "اسم",
-                "orderID": "رقم التعريف الخاص بالطلب",
-                "dob": "ب."
-            },
-            "bottombar": {
-                "status": "الحالة",
-                "unfinished": "غير مكتمل",
-                "partial": "مكتمل جزئيًا",
-                "finished": "تم الانتهاء من",
-                "default": "تحديث الحالة",
-                "savedMessage": {
-                    "patientInfo": "تم حفظ معلومات المريض",
-                    "earScan": "تم حفظ مسح الأذن",
-                    "model": "نذل - وغد. تم حفظ النموذج",
-                    "print": "تم حفظ الطباعة ثلاثية الأبعاد",
-                    "processing": "تم حفظ المعالجة اللاحقة",
-                    "delivery": "تم حفظ التسليم",
-                    "feedback": "تم حفظ التعليقات"
-                }
-            },
-            "stepTabs": {
-                "patientInfo": "معلومات طبية",
-                "earScan": "مسح الأذن",
-                "CADModeling": "نمذجة دجأ",
-                "print": "طباعة ثلاثية الأبعاد",
-                "processing": "معالجة",
-                "delivery": "توصيل",
-                "feedback": "ردود الفعل"
-            },
-            "table": {
-                "mainHeaders": {
-                    "name": "اسم",
-                    "serial": "مسلسل",
-                    "added": "تم إضافة التاريخ",
-                    "lastEdit": "آخر تحرير بواسطة",
-                    "status": "الحالة"
-                },
-                "feedbackHeaders": {
-                    "name": "اسم",
-                    "serial": "مسلسل",
-                    "added": "تم إضافة التاريخ",
-                    "feedbackCycle": "دورة الملاحظات",
-                    "status": "الحالة"
-                },
-                "noPatientsFound": "آسف! لا يوجد مرضى مطابقين"
-            },
-            "dropdown": {
-                "newest": "الأحدث",
-                "oldest": "الأقدم",
-                "serial": "مسلسل",
-                "status": "الحالة"
-            },
-            "button": {
-                "createPatient": "إنشاء مريض جديد",
-                "upload": "رفع ملف",
-                "save": "حفظ",
-                "edit": "تحرير الخطوة",
-                "discard": {
-                    "title": "تجاهل",
-                    "question": "هل أنت واثق؟",
-                    "warningMessage": "أنت على وشك تجاهل تغييرات النموذج الحالية! هذا غير قابل للتغيير!",
-                    "success": "التغييرات المهملة!",
-                    "confirmButton": "حسنا",
-                    "cancelButton": "إلغاء"
-                }
-            },
-            "search": {
-                "placeholder": "بحث..."
-            },
-            "notes": {
-                "title": "ملاحظات"
-            },
-            "file": {
-                "download": "تحميل",
-                "title": "الملفات"
-            }
-        },
-        "pages": {
-            "patientInfoTitle": "معلومات طبية",
-            "earScanTitle": "مسح الأذن",
-            "CADModelingTitle": "نمذجة دجأ",
-            "printingTitle": "طباعة ثلاثية الأبعاد",
-            "postProcessingTitle": "معالجة",
-            "deliveryTitle": "توصيل",
-            "feedbackTitle": "ردود الفعل"
-        },
-        "patientView": {
-            "patientInfo": {
-                "title": "معلومات طبية",
-                "patientSection": "صبور",
-                "name": "اسم",
-                "dob": "تاريخ الولادة",
-                "ssn": "رقم الضمان الاجتماعي الأردني",
-                "address": "عنوان",
-                "phone": "هاتف",
-                "emergencySection": "الاتصال بالطوارىء",
-                "relationship": "صلة",
-                "informationSection": "معلومات",
-                "deliverySection": "طريقة التوصيل",
-                "delivery": "توصيل",
-                "handDelivery": "التسليم باليد",
-                "pickup": "امسك"
-            },
-            "earScan": {
-                "title": "مسح الأذن",
-                "fileHeader": "تنزيل مسح الأذن"
-            },
-            "CADModeling": {
-                "title": "نموذج",
-                "fileHeader": "ملف"
-            },
-            "printing": {
-                "title": "طباعة ثلاثية الأبعاد",
-                "fileHeader": "ملف الطباعة ثلاثية الأبعاد"
-            },
-            "postProcessing": {
-                "title": "المعالجة البعدية",
-                "fileHeader": ""
-            },
-            "delivery": {
-                "title": "توصيل",
-                "address": "عنوان",
-                "addressLabel": "ليتم تسليمها باليد",
-                "ready": "جاهز للتسليم",
-                "out": "خارج للتوصيل",
-                "handDelivered": "تسلم باليد",
-                "pickup": "امسك",
-                "status": "الحالة"
-            },
-            "feedback": {
-                "title": "ردود الفعل",
-                "initial": "الملاحظات الأولية",
-                "sixMonth": "ستة أشهر من الملاحظات",
-                "oneYear": "ملاحظات سنة واحدة",
-                "twoYear": "عامين من ردود الفعل",
-                "collected": "تم جمعها في: "
-=======
                 "name": "\u0627\u0633\u0645",
                 "orderID": "\u0631\u0642\u0645 \u0627\u0644\u062a\u0639\u0631\u064a\u0641 \u0627\u0644\u062e\u0627\u0635 \u0628\u0627\u0644\u0637\u0644\u0628",
                 "dob": "\u0628."
@@ -467,7 +314,6 @@
                 "oneYear": "1 \u0633\u0646\u0629 \u0645\u0644\u0627\u062d\u0638\u0627\u062a",
                 "twoYear": "2 \u0633\u0646\u0629 \u0645\u0644\u0627\u062d\u0638\u0627\u062a",
                 "collected": "\u062a\u0645 \u062c\u0645\u0639\u0647\u0627 \u0641\u064a:"
->>>>>>> origin/aws-backend-auth
             }
         }
     }
