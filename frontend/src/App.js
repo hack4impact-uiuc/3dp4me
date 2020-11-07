@@ -1,10 +1,7 @@
-import React from 'react';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import awsconfig from './aws/aws-exports.js';
-
 import React, { useEffect, useState } from "react";
-
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import AccountManagement from "./Pages/Account Management/AccountManagment";
@@ -14,7 +11,7 @@ import Navbar from "./Components/Navbar/Navbar";
 import PatientInfo from "./Steps/Patient Info/PatientInfo"
 import Controller from './Steps/Controller/Controller'
 import language from './language.json';
-import './styles.css'
+import { getCredentials } from "./aws/aws-helper.js"
 
 Amplify.configure(awsconfig)
 
@@ -31,6 +28,11 @@ function App() {
   useEffect(() => {
     // TODO: get user session langauge
     setKey("EN");
+    async function printCreds() {
+	   let c = await getCredentials();
+	   console.log(c);
+    }
+    printCreds();
   }, []);
 
   return (
