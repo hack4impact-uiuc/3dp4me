@@ -1,3 +1,5 @@
+@import '../../styles/colors.scss';
+
 .tabs {
     display: flex;
 }
@@ -26,7 +28,7 @@
 }
 
 .button {
-    background: #e5f0ff;
+    background: $downloadButton;
 }
 
 .dashboard {

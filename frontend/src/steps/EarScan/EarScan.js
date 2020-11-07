@@ -1,36 +1,12 @@
 import React, { useEffect, useState } from 'react'
-<<<<<<< HEAD:frontend/src/Steps/Ear Scan/EarScan.js
-<<<<<<< HEAD
-import { Button, Fab, IconButton } from '@material-ui/core';
-=======
-import './EarScan.css'
-import { Button, Fab, IconButton } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles'
->>>>>>> origin/aws-backend-auth
-import Notes from '../../Components/Notes/Notes';
-import Download from '../../Components/File Download/Download';
-import NoChangeDialog from '../../Components/No Change Dialog/NoChangeDialog';
-import BottomBar from '../../Components/BottomBar/BottomBar';
-=======
 import { Button, Fab, IconButton } from '@material-ui/core';
 import Notes from '../../components/Notes/Notes';
 import Download from '../../components/FileDownload/Download';
 import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
 import BottomBar from '../../components/BottomBar/BottomBar';
->>>>>>> origin/master:frontend/src/Steps/EarScan/EarScan.js
 import swal from 'sweetalert';
-<<<<<<< HEAD
 
 const EarScan = (props) => {
-=======
-
-const EarScan = (props) => {
-<<<<<<< HEAD:frontend/src/Steps/Ear Scan/EarScan.js
-    const classes = useStyles();
-
->>>>>>> origin/aws-backend-auth
-=======
->>>>>>> origin/master:frontend/src/Steps/EarScan/EarScan.js
     const info = props.info
     const [trigger, reset] = useState(true);
     const [notes, setNotes] = useState("");

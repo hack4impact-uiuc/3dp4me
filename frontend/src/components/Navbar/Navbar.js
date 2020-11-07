@@ -3,21 +3,9 @@ import React, { useState, useEffect } from "react";
 import { AppBar, Avatar, Toolbar } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
-import Logo from '../../Assets/3dp4me_logo.png';
+import Logo from '../../assets/3dp4me_logo.png';
 
 import "./Navbar.scss";
-
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-}));
-=======
-import Logo from '../../icons/3dp4me_logo.png';
-import colors from '../../colors.json'
->>>>>>> origin/aws-backend-auth
-
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -34,14 +22,10 @@ const Navbar = (props) => {
 
 
   return (
-    <div className={`wrap-nav`}>
+    <div className="wrap-nav">
       <AppBar className={classes.appBar}>
         <Toolbar className="navbar">
-<<<<<<< HEAD
           <img className={key === "AR" ? "logo-ar" : ""} width={40} src={Logo} />
-=======
-          <img style={key === "AR" ? {marginLeft: '15px'}: {}} width={40} src={Logo} />
->>>>>>> origin/aws-backend-auth
 
           <Link onClick={() => setActive("dashboard")} id="nav-title" className="nav-item" to="/">
             {lang[key].components.navbar.dashboard.navTitle}
@@ -85,11 +69,7 @@ const Navbar = (props) => {
                 {lang[key].components.navbar.accountManagement.navTitle}
               </Link>
             )}
-<<<<<<< HEAD
           <Avatar className="user-avatar">EE</Avatar>
-=======
-          <Avatar style={{ backgroundColor: "#ff9900", marginLeft: 20, marginRight: 10 }}>EE</Avatar>
->>>>>>> origin/aws-backend-auth
         </Toolbar>
       </AppBar>
     </div>
