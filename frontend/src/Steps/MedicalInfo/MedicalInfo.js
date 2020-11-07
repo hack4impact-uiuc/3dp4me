@@ -1,25 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgress, Divider, Button, FormControlLabel, Radio, RadioGroup, TextField, Backdrop } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles'
-import './PatientInfo.scss'
-import Notes from '../../Components/Notes/Notes';
-import Files from '../../Components/Files/Files';
+import './MedicalInfo.scss'
+import Notes from '../../components/Notes/Notes';
+import Files from '../../components/Files/Files';
 import WarningIcon from '@material-ui/icons/Warning';
-import NoChangeDialog from '../../Components/No Change Dialog/NoChangeDialog';
-import colors from '../../colors.json'
-import BottomBar from '../../Components/BottomBar/BottomBar';
+import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
+import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 import patientFile from '../../Test Data/patient.json';
 
-const useStyles = makeStyles((theme) => ({
-    backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
-    },
-}));
-
-const PatientInfo = (props) => {
-    const classes = useStyles();
+const MedicalInfo = (props) => {
 
     const intialInfo = {
         name: "",
@@ -134,14 +124,14 @@ const PatientInfo = (props) => {
 
     return (
 
-        <form className="patient-info">
-            <Backdrop className={classes.backdrop} open={loading}>
+        <form className="medical-info">
+            <Backdrop className="backdrop" open={loading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
             <h1>{lang[key].patientView.patientInfo.title}</h1>
             <p>Created by Evan Eckels on 10/05/2020 9:58PM</p>
             <p>Last edited by Anisha Rao on 10/08/2020 11:58PM</p>
-            <div style={{ display: 'flex' }}>
+            <div className="patient-divider-wrapper">
                 <h2>{lang[key].patientView.patientInfo.patientSection}</h2>
                 <Divider className="patient-divider" />
             </div>
@@ -162,13 +152,13 @@ const PatientInfo = (props) => {
             <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleEmRelationship} value={emRelationship} />
             <h3>{lang[key].patientView.patientInfo.phone}</h3>
             <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleEmPhone} value={emPhone} />
-            <div style={{ marginTop: 15 }}>
-                <Button style={edit ? { backgroundColor: colors.button, color: 'white' } : {}} disabled={!edit} variant="contained">
+            <div className="upload-button-wrapper">
+                <Button className={edit ? "button-edit" : ""} disabled={!edit} variant="contained">
                     <input type="file" style={{ display: "none" }} />
                     {lang[key].components.button.upload}
                 </Button>
             </div>
-            <div style={{ display: 'flex' }}>
+            <div className="patient-divider-wrapper">
                 <h2>{lang[key].patientView.patientInfo.informationSection}</h2>
                 <Divider className="patient-divider" />
             </div>
@@ -192,4 +182,4 @@ const PatientInfo = (props) => {
     );
 }
 
-export default PatientInfo;
+export default MedicalInfo;

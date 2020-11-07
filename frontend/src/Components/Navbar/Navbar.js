@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { AppBar, Avatar, Toolbar } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
-import Logo from '../../Assets/3dp4me_logo.png';
+import Logo from '../../assets/3dp4me_logo.png';
 
 import "./Navbar.scss";
 
@@ -22,7 +22,7 @@ const Navbar = (props) => {
 
 
   return (
-    <div className={`wrap-nav`}>
+    <div className="wrap-nav">
       <AppBar className={classes.appBar}>
         <Toolbar className="navbar">
           <img className={key === "AR" ? "logo-ar" : ""} width={40} src={Logo} />

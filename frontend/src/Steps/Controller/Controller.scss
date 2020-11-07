@@ -1,8 +1,18 @@
-@import '../../Styles/variables.scss';
-@import '../../Styles/colors.scss';
+@import '../../styles/variables.scss';
+@import '../../styles/colors.scss';
 
 .root {
     display: flex;
+
+    .unfinished-icon {
+        color: red;
+    }
+    
+    .partial-icon {
+        color: $controllerPartial;
+        font-size: 22px;
+        margin-right: 5px;
+    }
 
     .drawer {
         width: $drawerWidth;
@@ -36,6 +46,14 @@
     .drawer-text-section {
         margin-bottom: 30px;
     }
+
+    .drawer-notes-wrapper {
+        margin-top: 3px;
+
+        .expand-icon {
+            color: $button;
+        }
+    }
 }
 
 .controller-content {
@@ -57,5 +75,38 @@
     .steps {
         padding-left: 50px;
         padding-bottom: 100px;
+
+        &.steps-ar {
+            margin-right: 50px;
+        }
+    }
+
+    .controller-button {
+        &.default-button {
+            margin-right: 15px;
+            border-radius: 10px 10px 0px 0px;
+        }
+
+        &.unfinished {
+            background: $statusUnfinished;
+            color: red;
+            &:hover { background: $statusUnfinished; }
+        }
+
+        &.partial {
+            background: white;
+            color: $controllerPartial;
+            &:hover { background: white; }
+        }
+
+        &.finished {
+            background: white;
+            color: black;
+            &:hover { background: white; }
+        }
+
+        &.active {
+            border-top: solid $sidebar 5px;
+        }
     }
 }

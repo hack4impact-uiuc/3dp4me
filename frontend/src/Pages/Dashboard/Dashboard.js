@@ -3,9 +3,9 @@ import { Button, MenuItem, TextField, Select, Snackbar } from '@material-ui/core
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import MuiAlert from '@material-ui/lab/Alert';
-import MainTable from '../../Components/Table/MainTable';
+import MainTable from '../../components/Table/MainTable';
 import "./Dashboard.scss";
-import FeebackTable from "../../Components/Table/FeedbackTable";
+import FeebackTable from "../../components/Table/FeedbackTable";
 
 import patientInfo from '../../Test Data/patient-info.json'
 import earScan from '../../Test Data/earScan.json';

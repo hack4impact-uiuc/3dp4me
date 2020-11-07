@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import BottomBar from '../../Components/BottomBar/BottomBar';
-import Download from '../../Components/File Download/Download';
-import Notes from '../../Components/Notes/Notes';
+import BottomBar from '../../components/BottomBar/BottomBar';
+import Download from '../../components/FileDownload/Download';
+import Notes from '../../components/Notes/Notes';
 import swal from 'sweetalert';
 
 const PostProcessing = (props) => {
