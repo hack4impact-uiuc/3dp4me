@@ -7,12 +7,6 @@ const BottomBar = (props) => {
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const statusColor = {
-        unfinished: "#ffe1e1",
-        partial: '#f2e9c7',
-        finished: '#05ca4f'
-    }
-
     return (
         <AppBar color="white" style={{ top: 'auto', bottom: '0' }}>
             <Toolbar>
