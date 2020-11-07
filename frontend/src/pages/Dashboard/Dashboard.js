@@ -3,9 +3,9 @@ import { Button, MenuItem, TextField, Select, Snackbar } from '@material-ui/core
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import MuiAlert from '@material-ui/lab/Alert';
-import MainTable from '../../components/Table/MainTable';
-import "./Dashboard.scss";
-import FeebackTable from "../../components/Table/FeedbackTable";
+import MainTable from '../../Components/Table/MainTable';
+import "./Dashboard.css";
+import FeebackTable from "../../Components/Table/FeedbackTable";
 
 import patientInfo from '../../Test Data/patient-info.json'
 import earScan from '../../Test Data/earScan.json';
@@ -92,8 +92,8 @@ const Dashboard = (props) => {
 
   // TODO: hook up dashboard to display fetched patients
   const getPatients = async() => {
-    // const res = await getAllPatients();
-    // console.log(res);
+    const res = await getAllPatients();
+    console.log(res);
   }
 
   useEffect(() => {
@@ -109,21 +109,21 @@ const Dashboard = (props) => {
       </Snackbar>
       <div className="tabs">
         {/* <Toolbar> */}
-        <ToggleButtonGroup className="dashboard-button-group" size="large" exclusive value={step} onChange={handleStep}>
-          <ToggleButton disableRipple className="dashboard-button" value="info">{lang[key].components.stepTabs.patientInfo}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="scan">{lang[key].components.stepTabs.earScan}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="cad">{lang[key].components.stepTabs.CADModeling}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="printing">{lang[key].components.stepTabs.print}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="processing">{lang[key].components.stepTabs.processing}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="delivery">{lang[key].components.stepTabs.delivery}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="feedback">{lang[key].components.stepTabs.feedback}</ToggleButton>
+        <ToggleButtonGroup style={{ width: '100%' }} size="large" exclusive value={step} onChange={handleStep}>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="info">{lang[key].components.stepTabs.patientInfo}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="scan">{lang[key].components.stepTabs.earScan}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="cad">{lang[key].components.stepTabs.CADModeling}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="printing">{lang[key].components.stepTabs.print}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="processing">{lang[key].components.stepTabs.processing}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="delivery">{lang[key].components.stepTabs.delivery}</ToggleButton>
+          <ToggleButton disableRipple style={{ flexGrow: 1, color: 'black' }} value="feedback">{lang[key].components.stepTabs.feedback}</ToggleButton>
         </ToggleButtonGroup>
       </div>
       <div className="patient-list">
         <div className="header">
           <div className="section">
-            <h2 className={ key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
-            <TextField className="patient-list-search-field" onChange={handleSearch} value={searchQuery} variant="outlined" placeholder={lang[key].components.search.placeholder} />
+            <h2 style={ key === "AR" ? { flexGrow: 1, marginRight: '10px' } : {flexGrow: 1}}>{lang[key].pages[stepTitle]}</h2>
+            <TextField onChange={handleSearch} value={searchQuery} variant="outlined" style={{ margin: '10px' }} placeholder={lang[key].components.search.placeholder} />
             <Select variant="outlined"
               value={sort}
               onChange={handlesort}

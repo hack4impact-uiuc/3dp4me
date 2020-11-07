@@ -1,4 +1,4 @@
-@import '../../styles/colors.scss';
+@import '../../Styles/colors.scss';
 
 .feedback-wrapper {
     .input-field {
@@ -9,9 +9,5 @@
     .active-input {
         background: white;
         margin-left: 13px;
-    }
-
-    .collected-wrapper {
-        display: flex;
     }
 }

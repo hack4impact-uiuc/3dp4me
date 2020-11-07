@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
-import { Button, Typography } from '@material-ui/core';
+import { Button, makeStyles, Typography } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
-import './Files.scss'
+import './Files.css'
+
+const useStyles = makeStyles((theme) => ({
+    downloadBtn: {
+        '&:hover': {
+            backgroundColor: '#e5f0ff'
+        }
+    }
+}));
 
 const Files = (props) => {
+    const classes = useStyles();
+
     return (
         <div className="files-section">
             <div className="files-header">
-                <h3>{props.title}</h3>
+                <h3 style={{ fontWeight: 100 }}>{props.title}</h3>
             </div>
             <div className="files-button">
                 {props.files.map(file => (
-                    <Button className="download-button">
+                    <Button className={classes.downloadBtn}>
                         <ArrowDownwardIcon />
                         <Typography align="left">
                             <b>Download</b>{` ${file}`}

@@ -1,4 +1,4 @@
-@import '../../styles/colors.scss';
+@import '../../Styles/colors.scss';
 
 .notes-wrapper {
     width: 350px;
@@ -21,7 +21,7 @@
         max-height: 300px;
         min-height: 100px;
         font-size: 16px;
-        background: $notesBackground;
+        background: #eeeffc;
     }
 
     .active-body {
