@@ -66,14 +66,17 @@ router.post(
             });
         } else {
             const { id, stage } = req.params;
-            const { userID } = req.body
+            const { userID, credentials } = req.body
             let file = req.files.uploadedFile;  //TODO: use name of input field possibly?
-
             const patient = await models.Patient.findById(id);
             patient[stage].lastEdit = Date.now();
             patient[stage].lastEditBy = userID;
             patient[stage].files.push({filename: file.name, uploadedBy: userName, uploadDate: new Date()});
-
+            await uploadFile(file, `${patient.serial}/${file.name}`, credentials, function(err, data) {
+                if(!err) {
+                    console.log(`upload ${file.name} to S3 complete`);
+                }
+            })
             await patient.save(function(){
                 res.json({
                     message: 'File is uploaded',
