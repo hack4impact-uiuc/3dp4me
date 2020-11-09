@@ -11,7 +11,6 @@ import Navbar from "./components/Navbar/Navbar";
 import MedicalInfo from "./steps/MedicalInfo/MedicalInfo"
 import Controller from './steps/Controller/Controller'
 import language from './language.json';
-import { getCredentials } from "./aws/aws-helper.js"
 
 Amplify.configure(awsconfig)
 

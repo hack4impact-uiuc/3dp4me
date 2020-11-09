@@ -33,7 +33,7 @@ async function getAuthRoleNames(){
 /**
  * Returns some info about the current signed in user
  */
-export async function getUserName(){
+export async function getCurrentUserInfo(){
 	let userInfo = await Auth.currentUserInfo();
 	return {
 		email: userInfo.attributes.email,
