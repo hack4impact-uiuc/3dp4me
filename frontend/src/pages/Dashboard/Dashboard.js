@@ -5,7 +5,6 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import MuiAlert from '@material-ui/lab/Alert';
 import MainTable from '../../components/Table/MainTable';
 import "./Dashboard.scss";
-import colors from '../../colors.json';
 
 import patientInfo from '../../Test Data/patient-info.json'
 import earScan from '../../Test Data/earScan.json';
@@ -169,7 +168,7 @@ const Dashboard = (props) => {
           <div className="section">
             <h2 className={key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
             <TextField className="patient-list-search-field" onChange={handleSearch} value={searchQuery} variant="outlined" placeholder={lang[key].components.search.placeholder} />
-            <Button style={{color: 'white', background: colors.button}} onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
+            <Button className="create-patient-button" onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
           </div>
         </div>
         {stepTitle !== "feedbackTitle" ? (
