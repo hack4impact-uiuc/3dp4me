@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button, MenuItem, TextField, Select, Snackbar } from '@material-ui/core'
+import { Button, MenuItem, TextField, Select, Snackbar, Grid } from '@material-ui/core'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import MuiAlert from '@material-ui/lab/Alert';
 import MainTable from '../../Components/Table/MainTable';
 import "./Dashboard.scss";
-import FeebackTable from "../../Components/Table/FeedbackTable";
+import colors from '../../colors.json';
 
 import patientInfo from '../../Test Data/patient-info.json'
 import earScan from '../../Test Data/earScan.json';
@@ -14,6 +14,9 @@ import printing from '../../Test Data/printing.json';
 import processing from '../../Test Data/processing.json';
 import delivery from '../../Test Data/delivery.json';
 import feedback from '../../Test Data/feedback.json';
+import reactSwal from '@sweetalert/with-react';
+import swal from 'sweetalert';
+import { Link } from "react-router-dom";
 
 const Dashboard = (props) => {
 
@@ -33,13 +36,55 @@ const Dashboard = (props) => {
     setSort(e.target.value);
   }
 
+  const createPatient = (e) => {
+    let auto_id = Math.random().toString(36).substr(2, 24);
+    reactSwal({
+      title: lang[key].components.swal.createPatient.title,
+      buttons: {
+        create: lang[key].components.swal.createPatient.buttons.noEdit,
+        edit: lang[key].components.swal.createPatient.buttons.edit
+      },
+      content: (
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', fontSize: '18px' }}>
+            <p>{lang[key].components.swal.createPatient.name}</p>
+            <TextField id = "createName" fullWidth style={{ padding: 10 }} variant="outlined" />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', fontSize: '18px' }}>
+            <p>{lang[key].components.swal.createPatient.dob} </p>
+            <TextField id = "createDOB" fullWidth style={{ padding: 10 }} variant="outlined" />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', fontSize: '18px' }}>
+            <p>{lang[key].components.swal.createPatient.id} </p>
+            <TextField id = "createId" fullWidth style={{ padding: 10 }} defaultValue={auto_id} variant="outlined" />
+          </div>
+        </div>
+      ),
+
+    }).then((value) => {
+      switch (value) {
+
+        case "edit":
+          window.location.href += `patient-info/${auto_id}`
+          break;
+
+        case "create":
+          let name = document.getElementById("createName").value;
+          let dob = document.getElementById("createDOB").value;
+          let id = document.getElementById("createId").value;
+          swal("Created Patient!", `Name: ${name}\nDOB: ${dob}\nID: ${id}`, "success");
+          break;
+      }
+    })
+  }
+
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     let filtered = patients.filter
-      (patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || 
-      (patient.serial + "").search(e.target.value) !== -1 ||
-      patient._id.search(e.target.value) !== -1
-    );
+      (patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 ||
+        (patient.serial + "").search(e.target.value) !== -1 ||
+        patient._id.search(e.target.value) !== -1
+      );
     setNoPatient(filtered.length === 0);
     setFilteredPatients(filtered);
   }
@@ -91,7 +136,7 @@ const Dashboard = (props) => {
   }
 
   // TODO: hook up dashboard to display fetched patients
-  const getPatients = async() => {
+  const getPatients = async () => {
     // const res = await getAllPatients();
     // console.log(res);
   }
@@ -122,18 +167,9 @@ const Dashboard = (props) => {
       <div className="patient-list">
         <div className="header">
           <div className="section">
-            <h2 className={ key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
+            <h2 className={key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
             <TextField className="patient-list-search-field" onChange={handleSearch} value={searchQuery} variant="outlined" placeholder={lang[key].components.search.placeholder} />
-            <Select variant="outlined"
-              value={sort}
-              onChange={handlesort}
-            >
-              <MenuItem value="new">{lang[key].components.dropdown.newest}</MenuItem>
-              <MenuItem value="old">{lang[key].components.dropdown.oldest}</MenuItem>
-              <MenuItem value="serial">{lang[key].components.dropdown.serial}</MenuItem>
-              <MenuItem value="status">{lang[key].components.dropdown.status}</MenuItem>
-            </Select>
-            <Button>{lang[key].components.button.createPatient}</Button>
+            <Button style={{color: 'white', background: colors.button}} onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
           </div>
         </div>
         {stepTitle !== "feedbackTitle" ? (

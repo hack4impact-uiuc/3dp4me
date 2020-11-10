@@ -1,9 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import awsconfig from './aws/aws-exports.js';
-
-import React, { useEffect, useState } from "react";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard/Dashboard";
@@ -14,7 +12,6 @@ import Navbar from "./Components/Navbar/Navbar";
 import PatientInfo from "./Steps/Patient Info/PatientInfo"
 import Controller from './Steps/Controller/Controller'
 import language from './language.json';
-import './styles.css'
 
 Amplify.configure(awsconfig)
 
@@ -30,7 +27,7 @@ function App() {
 
   useEffect(() => {
     // TODO: get user session langauge
-    setKey("EN");
+    setKey("AR");
   }, []);
 
   return (
