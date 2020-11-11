@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Fab, IconButton } from '@material-ui/core';
 import Notes from '../../components/Notes/Notes';
-import Download from '../../components/FileDownload/Download';
+import Download from '../../components/Files/Files';
 import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
+
+import './EarScan.scss';
 
 const EarScan = (props) => {
     const info = props.info
@@ -59,10 +61,13 @@ const EarScan = (props) => {
     }
 
     return (
-        <div>
+        <div className="ear-scan-wrapper">
             <h1>{lang[key].patientView.earScan.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
-            <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeader} fileName="file_name.SCAN" state={handleDownload} />
+            <div className="ear-scan-files">
+                <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeaderLeft} fileNames={["file_name.SCAN"]} state={handleDownload} />
+                <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeaderRight} fileNames={["file_name.SCAN"]} state={handleDownload} />
+            </div>
             <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
             <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
 

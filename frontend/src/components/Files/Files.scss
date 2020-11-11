@@ -1,24 +1,31 @@
 @import '../../styles/colors.scss';
 
-.files-section {
-    width: 300px;
+.files-wrapper {
+    width: 380px;
+    border: solid black 1px;
 
     .files-header {
         background-color: $secondary;
-        color: white;
-        padding: 2px;
+        color: black;
+        padding: 1px;
         padding-left: 10px;
-
+    
         h3 { font-weight: 100; }
     }
 
-    .files-button {
-        background-color: $downloadButton;
-    }
+    .files-table {
+        display: flex;
+        flex-direction: column;
+        white-space: nowrap;
+        overflow: auto;
 
-    .download-button {
-        &:hover {
-            background-color: white;
+        .file-button {
+            width: 100%;
+            justify-content: flex-start;
+        }
+
+        #upload-file-input {
+            display: none;
         }
     }
 }

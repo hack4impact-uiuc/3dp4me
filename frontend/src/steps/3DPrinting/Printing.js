@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import BottomBar from '../../components/BottomBar/BottomBar';
-import Download from '../../components/FileDownload/Download';
+import Download from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
 import swal from 'sweetalert'
 
@@ -58,7 +58,7 @@ const Printing = (props) => {
         <div>
             <h1>{lang[key].patientView.printing.title}</h1>
             <p>Last edited by Evan Eckels on 10/05/2020 9:58PM</p>
-            <Download lang={props.lang} title={lang[key].components.file.title} fileName="file_name.SCAN" state={setDownloadPrint} />
+            <Download lang={props.lang} title={lang[key].components.file.title} fileNames={["file_name.SCAN"]} state={setDownloadPrint} />
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={printNotes} state={setPrintNotes} />
             <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
