@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import BottomBar from '../../components/BottomBar/BottomBar';
-import Download from '../../components/Files/Files'
+import Files from '../../components/Files/Files'
 import Notes from '../../components/Notes/Notes';
 import swal from 'sweetalert'
 
@@ -13,6 +13,8 @@ const CADModel = (props) => {
     const [edit, setEdit] = useState(false);
     const [downloadCAD, setDownloadCAD] = useState();
     const [CADNotes, setCADNotes] = useState("");
+    const [leftCADFiles, setLeftCADFiles] = useState([]);
+    const [rightCADFiles, setRightCADFiles] = useState([]);
     const formFields = {
         download: downloadCAD,
         notes: CADNotes,
@@ -22,6 +24,22 @@ const CADModel = (props) => {
 
     const handleDownloadCAD = (e) => {
 
+    }
+
+    const handleLeftUpload = (e) => {
+        const fileToUpload = e.target.files[0];
+        let formData = new FormData();
+        setLeftCADFiles(files => files.concat(fileToUpload.name));
+        formData.append("file", fileToUpload);
+        // TODO: Call file upload endpoint
+    }
+
+    const handleRightUpload = (e) => {
+        const fileToUpload = e.target.files[0];
+        let formData = new FormData();
+        setRightCADFiles(files => files.concat(fileToUpload.name));
+        formData.append("file", fileToUpload);
+        // TODO: Call file upload endpoint
     }
 
     useEffect(() => {
@@ -60,8 +78,8 @@ const CADModel = (props) => {
             <h1>{lang[key].patientView.CADModeling.title}</h1>
             <p>Last edited by Evan Eckels on 10/05/2020 9:58PM</p>
             <div className="cad-files">
-                <Download lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderLeft} fileNames={["file_name_1.SCAN", "file_name_2.SCAN"]} state={setDownloadCAD} />
-                <Download lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderRight} fileNames={["file_name.SCAN"]} state={setDownloadCAD} />
+                <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderLeft} fileNames={leftCADFiles} handleDownload={setDownloadCAD} handleUpload={handleLeftUpload} />
+                <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderRight} fileNames={rightCADFiles} handleDownload={setDownloadCAD} handleUpload={handleRightUpload} />
             </div>
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={CADNotes} state={setCADNotes} />
             <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />

@@ -4,7 +4,7 @@ import { Button, Typography } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
 
-const Download = (props) => {
+const Files = (props) => {
     const lang = props.lang.data;
     const key = props.lang.key;
 
@@ -15,7 +15,7 @@ const Download = (props) => {
             </div>
             <div className="files-table">
                 {props.fileNames.map(fileName => (
-                    <Button className="file-button" onClick={props.state}>
+                    <Button className="file-button" onClick={props.handleDownload} key={fileName}>
                         <ArrowDownwardIcon />
                         <Typography align="left">
                             <b>{lang[key].components.file.download}</b>{` ${fileName}`}
@@ -23,10 +23,12 @@ const Download = (props) => {
                     </Button>
                 ))}
 
-                <label htmlFor="upload-file-input">
+                <label htmlFor={`upload-file-input-${props.title}`}>
                     <input
-                        id="upload-file-input"
+                        id={`upload-file-input-${props.title}`}
+                        className="upload-file-input"
                         type="file"
+                        onChange={props.handleUpload}
                     />
                     <Button className="file-button" component="span">
                         <AddIcon />
@@ -40,4 +42,4 @@ const Download = (props) => {
     );
 }
 
-export default Download;
+export default Files;

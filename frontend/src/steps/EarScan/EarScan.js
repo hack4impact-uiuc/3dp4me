@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Fab, IconButton } from '@material-ui/core';
 import Notes from '../../components/Notes/Notes';
-import Download from '../../components/Files/Files';
+import Files from '../../components/Files/Files';
 import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
@@ -14,6 +14,8 @@ const EarScan = (props) => {
     const [notes, setNotes] = useState("");
     const [download, setDownload] = useState();
     const [edit, setEdit] = useState(false);
+    const [leftEarFiles, setLeftEarFiles] = useState([]);
+    const [rightEarFiles, setRightEarFiles] = useState([]);
     const formFields = {
         download: download,
         notes: notes,
@@ -22,7 +24,23 @@ const EarScan = (props) => {
     const key = props.lang.key;
 
     const handleDownload = (e) => {
+        
+    }
 
+    const handleLeftUpload = (e) => {
+        const fileToUpload = e.target.files[0];
+        let formData = new FormData();
+        setLeftEarFiles(files => files.concat(fileToUpload.name));
+        formData.append("file", fileToUpload);
+        // TODO: Call file upload endpoint
+    }
+
+    const handleRightUpload = (e) => {
+        const fileToUpload = e.target.files[0];
+        let formData = new FormData();
+        setRightEarFiles(files => files.concat(fileToUpload.name));
+        formData.append("file", fileToUpload);
+        // TODO: Call file upload endpoint
     }
 
     const postData = (e) => {
@@ -65,12 +83,11 @@ const EarScan = (props) => {
             <h1>{lang[key].patientView.earScan.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <div className="ear-scan-files">
-                <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeaderLeft} fileNames={["file_name.SCAN"]} state={handleDownload} />
-                <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeaderRight} fileNames={["file_name.SCAN"]} state={handleDownload} />
+                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderLeft} fileNames={leftEarFiles} handleDownload={handleDownload} handleUpload={handleLeftUpload} />
+                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderRight} fileNames={rightEarFiles} handleDownload={handleDownload} handleUpload={handleRightUpload} />
             </div>
             <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
             <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
-
         </div>
     )
 }
