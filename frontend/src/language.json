@@ -25,9 +25,9 @@
             },
             "bottombar": {
                 "status": "Status",
-                "unfinished": "Unfinished",
+                "unfinished": "Not Complete",
                 "partial": "Partially Complete",
-                "finished": "Finished",
+                "finished": "Complete",
                 "default": "Update Status",
                 "savedMessage": {
                     "patientInfo": "Patient Info Saved",

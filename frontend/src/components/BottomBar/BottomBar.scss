@@ -39,20 +39,19 @@
     }
 
     .status {
-        padding: 5px 40px 5px 20px;
-        border: solid black 1px;
-        margin-right: 10px;
+        margin-right: 20px;
+        
 
         &.unfinished {
-            background: $statusUnfinished;
+            color: red;
         }
 
         &.partial {
-            background: $statusPartial;
+            color: $controllerPartial;
         }
 
         &.finished {
-            background: $statusFinished;
+            color: black;
         }
     }
 
@@ -63,5 +62,9 @@
         &:hover {
             background-color: $button;
         }
+    }
+
+    .status-icon {
+        width: 16px;
     }
 }
