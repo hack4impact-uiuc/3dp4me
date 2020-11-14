@@ -28,6 +28,7 @@ const EarScan = (props) => {
     }
 
     const handleLeftUpload = (e) => {
+        e.preventDefault();
         const fileToUpload = e.target.files[0];
         let formData = new FormData();
         setLeftEarFiles(files => files.concat(fileToUpload.name));
@@ -36,11 +37,22 @@ const EarScan = (props) => {
     }
 
     const handleRightUpload = (e) => {
+        e.preventDefault();
         const fileToUpload = e.target.files[0];
         let formData = new FormData();
         setRightEarFiles(files => files.concat(fileToUpload.name));
         formData.append("file", fileToUpload);
         // TODO: Call file upload endpoint
+    }
+
+    const handleDelete = (fileName) => {
+        let index = leftEarFiles.indexOf(fileName);
+        if (index > -1) {
+            setLeftEarFiles(leftEarFiles.filter(file => file !== fileName));
+        } else {
+            setRightEarFiles(rightEarFiles.filter(file => file !== fileName));
+        }
+        // TODO: Call file delete endpoint
     }
 
     const postData = (e) => {
@@ -83,8 +95,8 @@ const EarScan = (props) => {
             <h1>{lang[key].patientView.earScan.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <div className="ear-scan-files">
-                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderLeft} fileNames={leftEarFiles} handleDownload={handleDownload} handleUpload={handleLeftUpload} />
-                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderRight} fileNames={rightEarFiles} handleDownload={handleDownload} handleUpload={handleRightUpload} />
+                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderLeft} fileNames={leftEarFiles} handleDownload={handleDownload} handleUpload={handleLeftUpload} handleDelete={handleDelete} />
+                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderRight} fileNames={rightEarFiles} handleDownload={handleDownload} handleUpload={handleRightUpload} handleDelete={handleDelete} />
             </div>
             <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
             <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />

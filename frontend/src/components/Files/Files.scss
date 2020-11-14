@@ -1,13 +1,17 @@
 @import '../../styles/colors.scss';
 
 .files-wrapper {
+    height: 100%;
     width: 380px;
     border: solid black 1px;
+    margin-right: 15px;
 
     .files-header {
+        display: flex;
+        height: 38px;
+        align-items: center;
         background-color: $secondary;
         color: black;
-        padding: 1px;
         padding-left: 10px;
     
         h3 { font-weight: 100; }
@@ -19,9 +23,28 @@
         white-space: nowrap;
         overflow: auto;
 
-        .file-button {
+        .file-row-wrapper {
+            display: inherit;
+            justify-content: space-between;
             width: 100%;
+        }
+
+        .file-button {
             justify-content: flex-start;
+            width: 100%;
+        }
+
+        .file-info-wrapper {
+            display: flex;
+            flex-direction: row;
+            #file-upload-timestamp { line-height: 0; color: grey; }
+        }
+
+        .file-close-button {
+            background-color: white;
+            border: none;
+            height: 100%;
+            &:hover { cursor: pointer; }
         }
 
         .upload-file-input {
