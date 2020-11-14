@@ -164,8 +164,7 @@ const Controller = (props) => {
                 <ToggleButtonGroup className="controller-content-header" size="large" exclusive value={step} onChange={handleStep}>
                     <ToggleButton
                         disableRipple
-                        className={`controller-button default-button
-                            ${medStatus !== undefined ? `${medStatus}` : ""}
+                        className={`controller-button
                             ${step === "info" ? "active" : ""}`
                         }
                         value="info"
@@ -174,8 +173,7 @@ const Controller = (props) => {
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        className={`controller-button default-button
-                            ${earScanStatus !== undefined ? `${earScanStatus}` : ""}
+                        className={`controller-button
                             ${step === "scan" ? "active" : ""}`
                         }
                         value="scan"
@@ -184,8 +182,7 @@ const Controller = (props) => {
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        className={`controller-button default-button
-                            ${modelStatus !== undefined ? `${modelStatus}` : ""}
+                        className={`controller-button
                             ${step === "cad" ? "active" : ""}`
                         }
                         value="cad"
@@ -194,8 +191,7 @@ const Controller = (props) => {
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        className={`controller-button default-button
-                            ${printStatus !== undefined ? `${printStatus}` : ""}
+                        className={`controller-button
                             ${step === "printing" ? "active" : ""}`
                         }
                         value="printing"
@@ -204,8 +200,7 @@ const Controller = (props) => {
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        className={`controller-button default-button
-                            ${processingStatus !== undefined ? `${processingStatus}` : ""}
+                        className={`controller-button
                             ${step === "processing" ? "active" : ""}`
                         }
                         value="processing"
@@ -214,8 +209,7 @@ const Controller = (props) => {
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        className={`controller-button default-button
-                            ${deliveryStatus !== undefined ? `${deliveryStatus}` : ""}
+                        className={`controller-button
                             ${step === "delivery" ? "active" : ""}`
                         }
                         value="delivery"
@@ -224,8 +218,7 @@ const Controller = (props) => {
                     </ToggleButton>
                     <ToggleButton
                         disableRipple
-                        className={`controller-button default-button
-                            ${feedbackStatus !== undefined ? `${feedbackStatus}` : ""}
+                        className={`controller-button
                             ${step === "feedback" ? "active" : ""}`
                         }
                         value="feedback"

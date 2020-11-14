@@ -1,4 +1,5 @@
 @import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .tabs {
     display: flex;
@@ -6,7 +7,7 @@
 
 .patient-list .header .section {
     display: flex;
-    margin-left: 5%;
+    margin-left: 2%;
 
     .patient-list-title {
         flex-grow: 1;
@@ -32,20 +33,25 @@
 }
 
 .dashboard {
-    margin-top: 5%;
+    margin-top: $navHeight;
 
     .dashboard-button-group {
+        flex-grow: 1;
         width: 100%;
+        height: $buttonGroupHeight;
+        background-color: $controllerGrey;
 
         .dashboard-button {
-            flex-grow: 1;
+            padding: 18px 38px;
             color: black;
-        }
-    }
-}
+            border-color: $controllerBorder;
+            border-bottom: 0;
+            border-top: 0;
+            background-color: $controllerGrey;
 
-@media only screen and (max-width: 800px) {
-    .dashboard {
-        margin-top: 10%;
+            &.active {
+                background: white;
+            }
+        }
     }
 }
