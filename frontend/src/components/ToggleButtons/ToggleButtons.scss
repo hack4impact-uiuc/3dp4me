@@ -1,0 +1,25 @@
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
+
+.toggle-buttons-wrapper {
+    .toggle-button-group {
+        width: 100%;
+        height: $buttonGroupHeight;
+        background-color: $controllerGrey;
+
+        .toggle-button {
+            width: $controllerButtonWidth;
+            color: black;
+            border-color: $controllerBorder;
+            border-bottom: 0;
+            border-top: 0;
+            background-color: $controllerGrey;
+            white-space: nowrap;
+
+            &.active {
+                background: white;
+                &:hover { background: white; }
+            }
+        }
+    }
+}
