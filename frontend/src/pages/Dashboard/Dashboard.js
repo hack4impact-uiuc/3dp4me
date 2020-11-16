@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, MenuItem, TextField, Select, Snackbar, Grid } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -17,7 +18,30 @@ import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Link } from "react-router-dom";
 
+const useStyles = makeStyles((theme) => ({
+  swalEditButton: {
+    backgroundColor: "#5395F8",
+    color: 'white',
+    padding: "10px 20px 10px 20px",
+    marginRight: '10px',
+    " &:hover": {
+      backgroundColor: "#5395F8",
+    },
+  },
+  swalCloseButton: {
+    backgroundColor: "white",
+    color: 'black',
+    padding: "10px 20px 10px 20px",
+    marginRight: '10px',
+    " &:hover": {
+      backgroundColor: "white",
+      color: 'white'
+    }
+  },
+}));
+
 const Dashboard = (props) => {
+  const classes = useStyles();
 
   const [patients, setPatients] = useState([]);
   const [sort, setSort] = useState("new");
@@ -35,45 +59,50 @@ const Dashboard = (props) => {
     setSort(e.target.value);
   }
 
+  const createPatientHelper = (edit, id) => {
+    if (edit) {
+      window.location.href += `patient-info/${id}`
+    } else {
+      let name = document.getElementById("createFirstName").value;
+      let dob = document.getElementById("createDOB").value;
+      let id = document.getElementById("createId").value;
+      swal(lang[key].components.swal.createPatient.successMsg, `${lang[key].components.swal.createPatient.firstName}: ${name}\n${lang[key].components.swal.createPatient.dob}: ${dob}\n${lang[key].components.swal.createPatient.id}: ${id}`, "success");
+    }
+  }
+
   const createPatient = (e) => {
     let auto_id = Math.random().toString(36).substr(2, 24);
     reactSwal({
-      title: lang[key].components.swal.createPatient.title,
-      buttons: {
-        create: lang[key].components.swal.createPatient.buttons.noEdit,
-        edit: lang[key].components.swal.createPatient.buttons.edit
-      },
+      buttons: {},
       content: (
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', fontSize: '18px' }}>
-            <p>{lang[key].components.swal.createPatient.name}</p>
-            <TextField id = "createName" fullWidth style={{ padding: 10 }} variant="outlined" />
+        <div style={{ marginRight: '10px', fontFamily: 'Ubuntu', margin: '0px !important', textAlign: "left" }}>
+          <h2 style={{ fontWeight: 'bolder' }}>{lang[key].components.swal.createPatient.title}</h2>
+          <div style={{ fontSize: '17px', textAlign: 'left' }}>
+            <span>{lang[key].components.swal.createPatient.firstName}</span>
+            <TextField size="small" id="createFirstName" fullWidth style={{ padding: 10 }} variant="outlined" />
+            <span>{lang[key].components.swal.createPatient.middleName}</span>
+            <div style={{ display: 'flex' }}>
+              <TextField size="small" id="createMiddleName1" fullWidth style={{ padding: 10 }} variant="outlined" />
+              <TextField size="small" id="createMiddleName2" fullWidth style={{ padding: 10 }} variant="outlined" />
+            </div>
+            <span>{lang[key].components.swal.createPatient.lastName}</span>
+            <TextField size="small" id="createLastName" fullWidth style={{ padding: 10 }} variant="outlined" />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', fontSize: '18px' }}>
-            <p>{lang[key].components.swal.createPatient.dob} </p>
-            <TextField id = "createDOB" fullWidth style={{ padding: 10 }} variant="outlined" />
+          <div style={{ fontSize: '17px', textAlign: 'left' }}>
+            <span>{lang[key].components.swal.createPatient.dob} </span>
+            <TextField size="small" id="createDOB" fullWidth style={{ padding: 10 }} variant="outlined" />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', fontSize: '18px' }}>
-            <p>{lang[key].components.swal.createPatient.id} </p>
-            <TextField id = "createId" fullWidth style={{ padding: 10 }} defaultValue={auto_id} variant="outlined" />
+          <div style={{ fontSize: '17px', textAlign: 'left' }}>
+            <span>{lang[key].components.swal.createPatient.id} </span>
+            <TextField size="small" id="createId" fullWidth style={{ padding: 10 }} defaultValue={auto_id} variant="outlined" />
+          </div>
+          <div style={{ display: 'flex', float: 'right', paddingBottom: '10px' }}>
+            <Button className={classes.swalEditButton} onClick={(e) => createPatientHelper(true, auto_id)}>{lang[key].components.swal.createPatient.buttons.edit}</Button>
+            <Button onClick={(e) => createPatientHelper(false, auto_id)}>{lang[key].components.swal.createPatient.buttons.noEdit}</Button>
           </div>
         </div>
       ),
 
-    }).then((value) => {
-      switch (value) {
-
-        case "edit":
-          window.location.href += `patient-info/${auto_id}`
-          break;
-
-        case "create":
-          let name = document.getElementById("createName").value;
-          let dob = document.getElementById("createDOB").value;
-          let id = document.getElementById("createId").value;
-          swal("Created Patient!", `Name: ${name}\nDOB: ${dob}\nID: ${id}`, "success");
-          break;
-      }
     })
   }
 

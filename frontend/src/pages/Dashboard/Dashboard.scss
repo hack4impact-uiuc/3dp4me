@@ -4,6 +4,16 @@
     display: flex;
 }
 
+.swal {
+    background-color: $button;
+    color: white;
+    padding: 10px 30px 10px 30px;
+    margin-right: 10px;
+    &:hover {
+        background-color: $button;
+    }
+}
+
 .patient-list .header .section {
     display: flex;
     margin-left: 5%;
