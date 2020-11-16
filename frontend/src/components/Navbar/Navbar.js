@@ -20,7 +20,6 @@ const Navbar = (props) => {
   const lang = props.lang.data;
   const key = props.lang.key;
 
-
   return (
     <div className="wrap-nav">
       <AppBar className={classes.appBar}>
@@ -30,45 +29,18 @@ const Navbar = (props) => {
           <Link onClick={() => setActive("dashboard")} id="nav-title" className="nav-item" to="/">
             {lang[key].components.navbar.dashboard.navTitle}
           </Link>
-          {active === "dashboard" ? (
-            <Link className="nav-item active" to="/">
-              {lang[key].components.navbar.dashboard.navTitle}
-            </Link>
-          ) : (
-              <Link onClick={() => setActive("dashboard")} className="nav-item" to="/">
-                {lang[key].components.navbar.dashboard.navTitle}
-              </Link>
-            )}
-          {active === "patients" ? (
-
-            <Link className="nav-item active" to="/patients">
-              {lang[key].components.navbar.patients.navTitle}
-            </Link>
-          ) : (
-              <Link onClick={() => setActive("patients")} className="nav-item" to="/patients">
-                {lang[key].components.navbar.patients.navTitle}
-              </Link>
-            )}
-          {active === "metrics" ? (
-            <Link className="nav-item active" to="/metrics">
-              {lang[key].components.navbar.metrics.navTitle}
-            </Link>
-
-          ) : (
-              <Link onClick={() => setActive("metrics")} className="nav-item" to="/metrics">
-                {lang[key].components.navbar.metrics.navTitle}
-              </Link>
-            )}
-          {active === "account" ? (
-            <Link className="nav-item active" to="/account">
-              {lang[key].components.navbar.accountManagement.navTitle}
-            </Link>
-
-          ) : (
-              <Link onClick={() => setActive("account")} className="nav-item" to="/account">
-                {lang[key].components.navbar.accountManagement.navTitle}
-              </Link>
-            )}
+          <Link className={`nav-item ${active === "dashboard" ? "active" : ""}`} onClick={() => setActive("dashboard")} to="/">
+            {lang[key].components.navbar.dashboard.navTitle}
+          </Link>
+          <Link className={`nav-item ${active === "patients" ? "active" : ""}`} onClick={() => setActive("patients")} to="/patients">
+            {lang[key].components.navbar.patients.navTitle}
+          </Link>
+          <Link className={`nav-item ${active === "metrics" ? "active" : ""}`} onClick={() => setActive("metrics")} to="/metrics">
+            {lang[key].components.navbar.metrics.navTitle}
+          </Link>
+          <Link className={`nav-item ${active === "account" ? "active" : ""}`} onClick={() => setActive("account")} to="/account">
+            {lang[key].components.navbar.accountManagement.navTitle}
+          </Link>
           <Avatar className="user-avatar">EE</Avatar>
         </Toolbar>
       </AppBar>

@@ -181,15 +181,28 @@ const Dashboard = (props) => {
         </Alert>
       </Snackbar>
       <div className="tabs">
-        {/* <Toolbar> */}
         <ToggleButtonGroup className="dashboard-button-group" size="large" exclusive value={step} onChange={handleStep}>
-          <ToggleButton disableRipple className="dashboard-button" value="info">{lang[key].components.stepTabs.patientInfo}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="scan">{lang[key].components.stepTabs.earScan}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="cad">{lang[key].components.stepTabs.CADModeling}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="printing">{lang[key].components.stepTabs.print}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="processing">{lang[key].components.stepTabs.processing}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="delivery">{lang[key].components.stepTabs.delivery}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="feedback">{lang[key].components.stepTabs.feedback}</ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "info" ? "active" : ""}`} value="info">
+            <b>{lang[key].components.stepTabs.patientInfo}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "scan" ? "active" : ""}`} value="scan">
+            <b>{lang[key].components.stepTabs.earScan}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "cad" ? "active" : ""}`} value="cad">
+            <b>{lang[key].components.stepTabs.CADModeling}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "printing" ? "active" : ""}`}  value="printing">
+            <b>{lang[key].components.stepTabs.print}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "processing" ? "active" : ""}`} value="processing">
+            <b>{lang[key].components.stepTabs.processing}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "delivery" ? "active" : ""}`} value="delivery">
+            <b>{lang[key].components.stepTabs.delivery}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "feedback" ? "active" : ""}`} value="feedback">
+            <b>{lang[key].components.stepTabs.feedback}</b>
+          </ToggleButton>
         </ToggleButtonGroup>
       </div>
       <div className="patient-list">
