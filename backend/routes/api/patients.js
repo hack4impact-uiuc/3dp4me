@@ -4,6 +4,7 @@ const { errorWrap } = require("../../utils");
 const { models } = require("../../models");
 const { uploadFile } = require("../../utils/aws/aws-s3-helpers");
 
+
 // Get all patients (query parameter "stage")
 router.get(
     '/',
@@ -66,26 +67,32 @@ router.post(
             });
         } else {
             const { id, stage } = req.params;
-            const { userID, credentials } = req.body
+            const { userID, accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body
             let file = req.files.uploadedFile;  //TODO: use name of input field possibly?
             const patient = await models.Patient.findById(id);
             patient[stage].lastEdit = Date.now();
             patient[stage].lastEditBy = userID;
-            patient[stage].files.push({filename: file.name, uploadedBy: userName, uploadDate: new Date()});
-            await uploadFile(file, `${patient.serial}/${file.name}`, credentials, function(err, data) {
+            patient[stage].files.push({filename: file.name, uploadedBy: userID, uploadDate: new Date()});
+            await uploadFile(file.data, `${patient.name}/${file.name}`, {accessKeyId: accessKeyId, authenticated: authenticated, identityId: identityId, secretAccessKey: secretAccessKey, sessionToken: sessionToken}, function(err, data) {
                 if(!err) {
-                    console.log(`upload ${file.name} to S3 complete`);
+                    res.json(`upload ${file.name} to S3 complete`);
+                } else {
+                    res.json(err)
                 }
             })
-            await patient.save(function(){
-                res.json({
-                    message: 'File is uploaded',
-                    data: {
-                        name: file.name,
-                        mimetype: file.mimetype,
-                        size: file.size
-                    }
-                });
+            await patient.save(function(err){
+                if(err){
+                    res.json(err)
+                } else {
+                    res.json({
+                        message: 'File is uploaded',
+                        data: {
+                            name: file.name,
+                            mimetype: file.mimetype,
+                            size: file.size
+                        }
+                    });
+                }
             });
         }
     }),
