@@ -4,16 +4,6 @@
 .root {
     display: flex;
 
-    .unfinished-icon {
-        color: red;
-    }
-    
-    .partial-icon {
-        color: $controllerPartial;
-        font-size: 22px;
-        margin-right: 5px;
-    }
-
     .drawer {
         width: $drawerWidth;
         flex-shrink: 0;

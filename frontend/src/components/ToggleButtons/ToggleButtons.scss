@@ -2,11 +2,13 @@
 @import '../../styles/variables.scss';
 
 .toggle-buttons-wrapper {
-    .toggle-button-group {
-        width: 100%;
-        height: $buttonGroupHeight;
-        background-color: $controllerGrey;
+    display: flex;
+    width: 100%;
+    height: $buttonGroupHeight;
+    background-color: $controllerGrey;
+    text-transform: uppercase;
 
+    .toggle-button-group {
         .toggle-button {
             width: $controllerButtonWidth;
             color: black;
@@ -21,5 +23,49 @@
                 &:hover { background: white; }
             }
         }
+	}
+
+	.toggle-button-selector {
+		display: none;
     }
+    	
+	@media (max-width: $resizeButtonGroupMaxWidth) {
+		.toggle-button-group {
+			display: none;
+		}
+
+		.toggle-button-selector {
+            display: inherit;
+            width: 100%;
+            justify-content: space-between;
+            margin: 0 50px;
+            align-items: center;
+
+            .current-step-label {
+                display: inherit;
+                align-items: center;
+            }
+        }
+	}
+}
+
+.stage-selector-menu {
+    display: none;
+}
+
+@media (max-width: $resizeButtonGroupMaxWidth) {
+    .stage-selector-menu {
+        display: inherit;
+        text-transform: uppercase;
+    }
+}
+
+.unfinished-icon {
+    color: red;
+}
+
+.partial-icon {
+    color: $controllerPartial;
+    font-size: 22px;
+    margin-right: 5px;
 }
