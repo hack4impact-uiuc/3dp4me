@@ -1,12 +1,23 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 import './BottomBar.scss';
+import check from '../../assets/check.svg';
+import exclamation from '../../assets/exclamation.svg';
+import halfCircle from '../../assets/half-circle.svg';
+
 
 const BottomBar = (props) => {
 
     const lang = props.lang.data;
     const key = props.lang.key;
 
+    const statusIcons = {
+        finished: <img src={check} className="status-icon" />,
+        unfinished: <img src={exclamation} className="status-icon" />,
+        partial: <img src={halfCircle} className="status-icon" />
+    }
+
+    console.log(props.status)
     return (
         <AppBar className="bottom-bar-wrapper" color="white" style={{ top: 'auto', bottom: '0' }}>
             <Toolbar>
@@ -40,7 +51,7 @@ const BottomBar = (props) => {
                 ) : (
                     <div>
                         <span className={`status ${props.status.value}`}>
-                            {lang[key].components.bottombar[props.status.value]}
+                            {statusIcons[props.status.value]} {lang[key].components.bottombar[props.status.value]}
                         </span>
                         <Button className="edit-button" onClick={() => props.setEdit(true)}>
                             {lang[key].components.button.edit}
