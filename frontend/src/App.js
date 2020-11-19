@@ -11,13 +11,15 @@ import Navbar from "./components/Navbar/Navbar";
 import MedicalInfo from "./steps/MedicalInfo/MedicalInfo"
 import Controller from './steps/Controller/Controller'
 import language from './language.json';
+import { getCredentials } from './aws/aws-helper.js';
 
 Amplify.configure(awsconfig)
 
 function App() {
 
   const [key, setKey] = useState("EN");
-
+  
+  cred();
 
   const langInfo = {
     data: language,
@@ -65,6 +67,11 @@ function App() {
       </Router>
     </body>
   );
+}
+
+async function cred() {
+  console.log('credentials hit')
+  console.log(await getCredentials());
 }
 
 export default withAuthenticator(App);

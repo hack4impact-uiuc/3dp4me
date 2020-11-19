@@ -4,32 +4,23 @@
     .logo-ar {
         margin-left: 15px;
     }
-}
 
-.nav-item {
-    text-decoration: none;
-    margin-left: 2%;
-    color: black;
-}
-#nav-title {
-    flex-grow: 1;
-}
-
-.wrap-nav {   
-    margin-top: 4%;
-}
-
-@media only screen and (max-width: 800px) {
-    .wrap-nav {
-        margin-top: 10%;
+    .nav-item {
+        text-decoration: none;
+        margin-left: 2%;
+        color: black;
     }
-}
 
-.active {
-    font-weight: bolder;
-}
-
-.user-avatar {
-    margin-left: 20px;
-    margin-right: 10px;
+    #nav-title {
+        flex-grow: 1;
+    }
+    
+    .active {
+        font-weight: bolder;
+    }
+    
+    .user-avatar {
+        margin-left: 20px;
+        margin-right: 10px;
+    }
 }
