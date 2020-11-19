@@ -59,6 +59,9 @@ function App() {
             </div>
           </Switch>
         </div>
+        <div>
+          <AmplifySignOut/>
+        </div>
       </Router>
     </body>
   );
