@@ -19,9 +19,9 @@ const ToggleButtons = (props) => {
     const key = props.lang.key;
 
     const statusIcons = {
-        unfinished: <img src={ExclamationIcon} className="status-icon" />,
-        partial: <img src={HalfCircleIcon} className="status-icon" />,
-        finished: <img src={CheckIcon} className="status-icon" />
+        unfinished: <img src={ExclamationIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />,
+        partial: <img src={HalfCircleIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />,
+        finished: <img src={CheckIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />
     }
 
     const handleClickSelector = (e) => {

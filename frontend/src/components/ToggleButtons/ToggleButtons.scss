@@ -8,9 +8,16 @@
     background-color: $controllerGrey;
     text-transform: uppercase;
 
-    .status-icon {
+    .status-icon, .status-icon-ar {
         width: 15px;
-        margin: 6px;
+    }
+
+    .status-icon {
+        margin-right: 6px;
+    }
+    
+    .status-icon-ar {
+        margin-left: 6px;
     }
 
     .toggle-button-group {
@@ -57,9 +64,12 @@
 .stage-selector-menu {
     display: none;
 
-    .status-icon {
+    .status-icon, .status-icon-ar {
         width: 15px;
-        margin: 5px;
+    }
+
+    .status-icon {
+        margin-right: 6px;
     }
 }
 
