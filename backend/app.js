@@ -5,8 +5,6 @@ const fileUpload = require("express-fileupload");
 var cors = require("cors");
 const bodyParser = require("body-parser");
 const { errorHandler } = require("./utils");
-const aws = require("./utils/aws/aws-s3-helpers");
-
 
 const app = express();
 app.use(cors());
@@ -26,7 +24,6 @@ mongoose.connection
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 app.use(require("./routes"));
 
 app.listen(process.env.PORT, () =>

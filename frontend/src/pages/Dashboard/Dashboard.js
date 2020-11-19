@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button, MenuItem, TextField, Select, Snackbar } from '@material-ui/core'
+import { Button, MenuItem, TextField, Select, Snackbar, Grid } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import MuiAlert from '@material-ui/lab/Alert';
 import MainTable from '../../components/Table/MainTable';
 import "./Dashboard.scss";
-import FeebackTable from "../../components/Table/FeedbackTable";
 
 import patientInfo from '../../Test Data/patient-info.json'
 import earScan from '../../Test Data/earScan.json';
@@ -14,8 +14,34 @@ import printing from '../../Test Data/printing.json';
 import processing from '../../Test Data/processing.json';
 import delivery from '../../Test Data/delivery.json';
 import feedback from '../../Test Data/feedback.json';
+import reactSwal from '@sweetalert/with-react';
+import swal from 'sweetalert';
+import { Link } from "react-router-dom";
+
+const useStyles = makeStyles((theme) => ({
+  swalEditButton: {
+    backgroundColor: "#5395F8",
+    color: 'white',
+    padding: "10px 20px 10px 20px",
+    marginRight: '10px',
+    " &:hover": {
+      backgroundColor: "#5395F8",
+    },
+  },
+  swalCloseButton: {
+    backgroundColor: "white",
+    color: 'black',
+    padding: "10px 20px 10px 20px",
+    marginRight: '10px',
+    " &:hover": {
+      backgroundColor: "white",
+      color: 'white'
+    }
+  },
+}));
 
 const Dashboard = (props) => {
+  const classes = useStyles();
 
   const [patients, setPatients] = useState([]);
   const [sort, setSort] = useState("new");
@@ -33,13 +59,60 @@ const Dashboard = (props) => {
     setSort(e.target.value);
   }
 
+  const createPatientHelper = (edit, id) => {
+    if (edit) {
+      window.location.href += `patient-info/${id}`
+    } else {
+      let name = document.getElementById("createFirstName").value;
+      let dob = document.getElementById("createDOB").value;
+      let id = document.getElementById("createId").value;
+      swal(lang[key].components.swal.createPatient.successMsg, `${lang[key].components.swal.createPatient.firstName}: ${name}\n${lang[key].components.swal.createPatient.dob}: ${dob}\n${lang[key].components.swal.createPatient.id}: ${id}`, "success");
+    }
+  }
+
+  const createPatient = (e) => {
+    let auto_id = Math.random().toString(36).substr(2, 24);
+    reactSwal({
+      buttons: {},
+      content: (
+        <div style={{ marginRight: '10px', fontFamily: 'Ubuntu', margin: '0px !important', textAlign: "left" }}>
+          <h2 style={{ fontWeight: 'bolder' }}>{lang[key].components.swal.createPatient.title}</h2>
+          <div style={{ fontSize: '17px', textAlign: 'left' }}>
+            <span>{lang[key].components.swal.createPatient.firstName}</span>
+            <TextField size="small" id="createFirstName" fullWidth style={{ padding: 10 }} variant="outlined" />
+            <span>{lang[key].components.swal.createPatient.middleName}</span>
+            <div style={{ display: 'flex' }}>
+              <TextField size="small" id="createMiddleName1" fullWidth style={{ padding: 10 }} variant="outlined" />
+              <TextField size="small" id="createMiddleName2" fullWidth style={{ padding: 10 }} variant="outlined" />
+            </div>
+            <span>{lang[key].components.swal.createPatient.lastName}</span>
+            <TextField size="small" id="createLastName" fullWidth style={{ padding: 10 }} variant="outlined" />
+          </div>
+          <div style={{ fontSize: '17px', textAlign: 'left' }}>
+            <span>{lang[key].components.swal.createPatient.dob} </span>
+            <TextField size="small" id="createDOB" fullWidth style={{ padding: 10 }} variant="outlined" />
+          </div>
+          <div style={{ fontSize: '17px', textAlign: 'left' }}>
+            <span>{lang[key].components.swal.createPatient.id} </span>
+            <TextField size="small" id="createId" fullWidth style={{ padding: 10 }} defaultValue={auto_id} variant="outlined" />
+          </div>
+          <div style={{ display: 'flex', float: 'right', paddingBottom: '10px' }}>
+            <Button className={classes.swalEditButton} onClick={(e) => createPatientHelper(true, auto_id)}>{lang[key].components.swal.createPatient.buttons.edit}</Button>
+            <Button onClick={(e) => createPatientHelper(false, auto_id)}>{lang[key].components.swal.createPatient.buttons.noEdit}</Button>
+          </div>
+        </div>
+      ),
+
+    })
+  }
+
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     let filtered = patients.filter
-      (patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 || 
-      (patient.serial + "").search(e.target.value) !== -1 ||
-      patient._id.search(e.target.value) !== -1
-    );
+      (patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 ||
+        (patient.serial + "").search(e.target.value) !== -1 ||
+        patient._id.search(e.target.value) !== -1
+      );
     setNoPatient(filtered.length === 0);
     setFilteredPatients(filtered);
   }
@@ -91,7 +164,7 @@ const Dashboard = (props) => {
   }
 
   // TODO: hook up dashboard to display fetched patients
-  const getPatients = async() => {
+  const getPatients = async () => {
     // const res = await getAllPatients();
     // console.log(res);
   }
@@ -108,32 +181,36 @@ const Dashboard = (props) => {
         </Alert>
       </Snackbar>
       <div className="tabs">
-        {/* <Toolbar> */}
         <ToggleButtonGroup className="dashboard-button-group" size="large" exclusive value={step} onChange={handleStep}>
-          <ToggleButton disableRipple className="dashboard-button" value="info">{lang[key].components.stepTabs.patientInfo}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="scan">{lang[key].components.stepTabs.earScan}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="cad">{lang[key].components.stepTabs.CADModeling}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="printing">{lang[key].components.stepTabs.print}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="processing">{lang[key].components.stepTabs.processing}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="delivery">{lang[key].components.stepTabs.delivery}</ToggleButton>
-          <ToggleButton disableRipple className="dashboard-button" value="feedback">{lang[key].components.stepTabs.feedback}</ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "info" ? "active" : ""}`} value="info">
+            <b>{lang[key].components.stepTabs.patientInfo}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "scan" ? "active" : ""}`} value="scan">
+            <b>{lang[key].components.stepTabs.earScan}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "cad" ? "active" : ""}`} value="cad">
+            <b>{lang[key].components.stepTabs.CADModeling}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "printing" ? "active" : ""}`}  value="printing">
+            <b>{lang[key].components.stepTabs.print}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "processing" ? "active" : ""}`} value="processing">
+            <b>{lang[key].components.stepTabs.processing}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "delivery" ? "active" : ""}`} value="delivery">
+            <b>{lang[key].components.stepTabs.delivery}</b>
+          </ToggleButton>
+          <ToggleButton disableRipple className={`dashboard-button ${step === "feedback" ? "active" : ""}`} value="feedback">
+            <b>{lang[key].components.stepTabs.feedback}</b>
+          </ToggleButton>
         </ToggleButtonGroup>
       </div>
       <div className="patient-list">
         <div className="header">
           <div className="section">
-            <h2 className={ key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
+            <h2 className={key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
             <TextField className="patient-list-search-field" onChange={handleSearch} value={searchQuery} variant="outlined" placeholder={lang[key].components.search.placeholder} />
-            <Select variant="outlined"
-              value={sort}
-              onChange={handlesort}
-            >
-              <MenuItem value="new">{lang[key].components.dropdown.newest}</MenuItem>
-              <MenuItem value="old">{lang[key].components.dropdown.oldest}</MenuItem>
-              <MenuItem value="serial">{lang[key].components.dropdown.serial}</MenuItem>
-              <MenuItem value="status">{lang[key].components.dropdown.status}</MenuItem>
-            </Select>
-            <Button>{lang[key].components.button.createPatient}</Button>
+            <Button className="create-patient-button" onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
           </div>
         </div>
         {stepTitle !== "feedbackTitle" ? (

@@ -29,3 +29,15 @@ async function getAuthRoleNames(){
     const groups = user.signInUserSession.accessToken.payload[KEY_GROUPS]
     return groups;
 }
+
+/**
+ * Returns some info about the current signed in user
+ */
+export async function getCurrentUserInfo(){
+	let userInfo = await Auth.currentUserInfo();
+	return {
+		email: userInfo.attributes.email,
+		id: userInfo.attributes.sub,
+		username: userInfo.username,
+	}
+}
