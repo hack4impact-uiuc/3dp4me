@@ -5,10 +5,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import CheckIcon from '@material-ui/icons/Check';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import CheckIcon from '../../assets/check.svg';
+import ExclamationIcon from '../../assets/exclamation.svg';
+import HalfCircleIcon from '../../assets/half-circle.svg';
 
 import './ToggleButtons.scss';
 
@@ -19,9 +19,9 @@ const ToggleButtons = (props) => {
     const key = props.lang.key;
 
     const statusIcons = {
-        unfinished: <PriorityHighIcon className="unfinished-icon" />,
-        partial: <RadioButtonUncheckedIcon className="partial-icon" />,
-        finished: <CheckIcon />
+        unfinished: <img src={ExclamationIcon} className="status-icon" />,
+        partial: <img src={HalfCircleIcon} className="status-icon" />,
+        finished: <img src={CheckIcon} className="status-icon" />
     }
 
     const handleClickSelector = (e) => {

@@ -3,6 +3,7 @@ import { Button, MenuItem, TextField, Select, Snackbar, Grid } from '@material-u
 import { makeStyles } from '@material-ui/core/styles'
 import MuiAlert from '@material-ui/lab/Alert';
 import MainTable from '../../components/Table/MainTable';
+import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import "./Dashboard.scss";
 
 import patientInfo from '../../Test Data/patient-info.json'

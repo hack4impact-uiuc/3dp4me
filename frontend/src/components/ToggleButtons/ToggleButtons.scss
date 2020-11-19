@@ -8,6 +8,11 @@
     background-color: $controllerGrey;
     text-transform: uppercase;
 
+    .status-icon {
+        width: 15px;
+        margin: 6px;
+    }
+
     .toggle-button-group {
         .toggle-button {
             width: $controllerButtonWidth;
@@ -51,6 +56,11 @@
 
 .stage-selector-menu {
     display: none;
+
+    .status-icon {
+        width: 15px;
+        margin: 5px;
+    }
 }
 
 @media (max-width: $resizeButtonGroupMaxWidth) {
@@ -58,14 +68,4 @@
         display: inherit;
         text-transform: uppercase;
     }
-}
-
-.unfinished-icon {
-    color: red;
-}
-
-.partial-icon {
-    color: $controllerPartial;
-    font-size: 22px;
-    margin-right: 5px;
 }
