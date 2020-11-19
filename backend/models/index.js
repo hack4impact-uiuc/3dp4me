@@ -1,7 +1,7 @@
-const Patient = require("./patient");
+const { Patient, statusEnum } = require("./Patient");
 
-const models = { 
+const models = {
     Patient,
 };
 
-module.exports = { models };
+module.exports = { models, statusEnum };
