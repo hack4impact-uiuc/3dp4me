@@ -87,7 +87,7 @@ const MainTable = (props) => {
                                     <Link className="table-view-link" to={`/patient-info/${patient.serial}`}>
                                         <IconButton>
                                             <img width="18px" src={Eyecon} />
-                                        </IconButton> VIEW
+                                        </IconButton> {lang[key].components.table.view}
                                     </Link>
                                 </StyledTableCell>
                             </StyledTableRow>
