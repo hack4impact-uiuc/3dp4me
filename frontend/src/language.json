@@ -72,7 +72,7 @@
                 "status": "Status"
             },
             "button": {
-                "createPatient": "Create New Patient",
+                "createPatient": "Create Patient",
                 "upload": "Upload File",
                 "save": "Save",
                 "edit": "Edit Step",
