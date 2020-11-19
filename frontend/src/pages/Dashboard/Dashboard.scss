@@ -1,6 +1,20 @@
 @import '../../styles/colors.scss';
 @import '../../styles/variables.scss';
 
+.tabs {
+    display: flex;
+}
+
+.swal {
+    background-color: $button;
+    color: white;
+    padding: 10px 30px 10px 30px;
+    margin-right: 10px;
+    &:hover {
+        background-color: $button;
+    }
+}
+
 .patient-list .header .section {
     display: flex;
     margin-left: 2%;
@@ -16,6 +30,16 @@
 
     .patient-list-search-field {
         margin-right: 10px;
+    }
+
+    .create-patient-button {
+        background-color: $button;
+        color: white;
+        padding: 10px 30px 10px 30px;
+        margin-right: 10px;
+        &:hover {
+            background-color: $button;
+        }
     }
 }
 
