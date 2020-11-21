@@ -54,24 +54,4 @@
 
 .dashboard {
     margin-top: $navHeight;
-
-    .dashboard-button-group {
-        flex-grow: 1;
-        width: 100%;
-        height: $buttonGroupHeight;
-        background-color: $controllerGrey;
-
-        .dashboard-button {
-            padding: 18px 38px;
-            color: black;
-            border-color: $controllerBorder;
-            border-bottom: 0;
-            border-top: 0;
-            background-color: $controllerGrey;
-
-            &.active {
-                background: white;
-            }
-        }
-    }
 }

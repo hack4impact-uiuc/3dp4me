@@ -1,0 +1,81 @@
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
+
+.toggle-buttons-wrapper {
+    display: flex;
+    width: 100%;
+    height: $buttonGroupHeight;
+    background-color: $controllerGrey;
+    text-transform: uppercase;
+
+    .status-icon, .status-icon-ar {
+        width: 15px;
+    }
+
+    .status-icon {
+        margin-right: 6px;
+    }
+    
+    .status-icon-ar {
+        margin-left: 6px;
+    }
+
+    .toggle-button-group {
+        .toggle-button {
+            width: $controllerButtonWidth;
+            color: black;
+            border-color: $controllerBorder;
+            border-bottom: 0;
+            border-top: 0;
+            background-color: $controllerGrey;
+            white-space: nowrap;
+
+            &.active {
+                background: white;
+                &:hover { background: white; }
+            }
+        }
+	}
+
+	.toggle-button-selector {
+		display: none;
+    }
+    	
+	@media (max-width: $resizeButtonGroupMaxWidth) {
+		.toggle-button-group {
+			display: none;
+		}
+
+		.toggle-button-selector {
+            display: inherit;
+            width: 100%;
+            justify-content: space-between;
+            margin: 0 50px;
+            align-items: center;
+
+            .current-step-label {
+                display: inherit;
+                align-items: center;
+            }
+        }
+	}
+}
+
+.stage-selector-menu {
+    display: none;
+
+    .status-icon, .status-icon-ar {
+        width: 15px;
+    }
+
+    .status-icon {
+        margin-right: 6px;
+    }
+}
+
+@media (max-width: $resizeButtonGroupMaxWidth) {
+    .stage-selector-menu {
+        display: inherit;
+        text-transform: uppercase;
+    }
+}
