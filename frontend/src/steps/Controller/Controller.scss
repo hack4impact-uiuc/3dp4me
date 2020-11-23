@@ -4,16 +4,6 @@
 .root {
     display: flex;
 
-    .unfinished-icon {
-        color: red;
-    }
-    
-    .partial-icon {
-        color: $controllerPartial;
-        font-size: 22px;
-        margin-right: 5px;
-    }
-
     .drawer {
         width: $drawerWidth;
         flex-shrink: 0;
@@ -63,27 +53,6 @@
 
     &.controller-content-ar {
         margin-right: $drawerWidth;
-    }
-
-    .controller-content-header {
-        width: 100%;
-        height: $buttonGroupHeight;
-        background-color: $controllerGrey;
-
-        .controller-button {
-            padding: 0px 30px;
-            color: black;
-            border-color: $controllerBorder;
-            border-bottom: 0;
-            border-top: 0;
-            background-color: $controllerGrey;
-            white-space: nowrap;
-
-            &.active {
-                background: white;
-                &:hover { background: white; }
-            }
-        }
     }
 
     .steps {
