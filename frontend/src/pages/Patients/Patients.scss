@@ -1,7 +1,11 @@
-.all-patients-header {
+@import '../../styles/variables.scss';
+@import '../../styles/colors.scss';
+
+.all-patients-header .header .section {
     display: flex;
-    align-items: center;
-    margin-left: 5%;
+    margin-left: 2%;
+    width: 90%;
+    margin: auto;
 
     .all-patients-header-text {
         flex-grow: 1;
@@ -13,6 +17,23 @@
     }
 
     .all-patients-search-field {
-        margin: 10px;
+        margin-right: 10px;
+        width: 25%;
+        background-color: #eeeeee;
     }
+
+    .create-patient-button {
+        background-color: $button;
+        color: white;
+        padding: 10px 30px 10px 30px;
+        margin-right: 10px;
+        width: 12%;
+        &:hover {
+            background-color: $button;
+        }
+    }
+}
+
+.all-patients {
+    margin-top: $navHeight + 20;
 }
