@@ -11,13 +11,9 @@ import PostProcessing from '../PostProcessing/PostProcessing'
 import Delivery from '../Delivery/Delivery';
 import Feedback from '../Feedback/Feedback';
 import { Accordion, AccordionDetails, AccordionSummary, TextField } from '@material-ui/core';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import ToggleButton from '@material-ui/lab/ToggleButton';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import CheckIcon from '@material-ui/icons/Check';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import patientFile from '../../Test Data/patient.json'
+import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 
 const theme = createMuiTheme({
     direction: 'rtl',
@@ -84,12 +80,6 @@ const Controller = (props) => {
     }
     const handleFeedbackStatus = (e) => {
         if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setFeedbackStatus(e.target.value);
-    }
-
-    const statusIcons = {
-        unfinished: <PriorityHighIcon className="unfinished-icon" />,
-        partial: <RadioButtonUncheckedIcon className="partial-icon" />,
-        finished: <CheckIcon />
     }
 
     return (
@@ -161,71 +151,17 @@ const Controller = (props) => {
             </ThemeProvider>
 
             <div className={`controller-content ${key === "AR" ? "controller-content-ar" : ""}`}>
-                <ToggleButtonGroup className="controller-content-header" size="large" exclusive value={step} onChange={handleStep}>
-                    <ToggleButton
-                        disableRipple
-                        className={`controller-button
-                            ${step === "info" ? "active" : ""}`
-                        }
-                        value="info"
-                    >
-                        {medStatus !== undefined ? statusIcons[medStatus] : null} <b>{lang[key].components.stepTabs.patientInfo}</b>
-                    </ToggleButton>
-                    <ToggleButton
-                        disableRipple
-                        className={`controller-button
-                            ${step === "scan" ? "active" : ""}`
-                        }
-                        value="scan"
-                    >
-                        {earScanStatus !== undefined ? statusIcons[earScanStatus] : null} <b>{lang[key].components.stepTabs.earScan}</b>
-                    </ToggleButton>
-                    <ToggleButton
-                        disableRipple
-                        className={`controller-button
-                            ${step === "cad" ? "active" : ""}`
-                        }
-                        value="cad"
-                    >
-                        {modelStatus !== undefined ? statusIcons[modelStatus] : null} <b>{lang[key].components.stepTabs.CADModeling}</b>
-                    </ToggleButton>
-                    <ToggleButton
-                        disableRipple
-                        className={`controller-button
-                            ${step === "printing" ? "active" : ""}`
-                        }
-                        value="printing"
-                    >
-                        {printStatus !== undefined ? statusIcons[printStatus] : null} <b>{lang[key].components.stepTabs.print}</b>
-                    </ToggleButton>
-                    <ToggleButton
-                        disableRipple
-                        className={`controller-button
-                            ${step === "processing" ? "active" : ""}`
-                        }
-                        value="processing"
-                    >
-                        {processingStatus !== undefined ? statusIcons[processingStatus] : null} <b>{lang[key].components.stepTabs.processing}</b>
-                    </ToggleButton>
-                    <ToggleButton
-                        disableRipple
-                        className={`controller-button
-                            ${step === "delivery" ? "active" : ""}`
-                        }
-                        value="delivery"
-                    >
-                        {deliveryStatus !== undefined ? statusIcons[deliveryStatus] : null} <b>{lang[key].components.stepTabs.delivery}</b>
-                    </ToggleButton>
-                    <ToggleButton
-                        disableRipple
-                        className={`controller-button
-                            ${step === "feedback" ? "active" : ""}`
-                        }
-                        value="feedback"
-                    >
-                        {feedbackStatus !== undefined ? statusIcons[feedbackStatus] : null} <b>{lang[key].components.stepTabs.feedback}</b>
-                    </ToggleButton>
-                </ToggleButtonGroup>
+                <ToggleButtons lang={props.lang}
+                    step={step}
+                    handleStep={handleStep}
+                    medStatus={medStatus}
+                    earScanStatus={earScanStatus}
+                    modelStatus={modelStatus}
+                    printStatus={printStatus}
+                    processingStatus={processingStatus}
+                    deliveryStatus={deliveryStatus}
+                    feedbackStatus={feedbackStatus}
+                />
                 <div className={`steps ${key === "AR" ? "steps-ar" : ""}`}>
                     {step === "info" ? (
                         <MedicalInfo info={patientFile.patientInfo} status={{value: medStatus, setStatus: handleMedStatus}} lang={props.lang} />
