@@ -22,6 +22,10 @@
     .drawer-container {
         overflow: 'auto';
         padding: 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     .drawer-text {
@@ -44,6 +48,17 @@
             color: $button;
         }
     }
+
+    .manage-patient-button {
+        width: 100%;
+        background-color: $button;
+        color: white;
+        margin-top: 20px;
+        padding: 10px 30px 10px 30px;
+        &:hover {
+            background-color: $button;
+        }
+    }
 }
 
 .controller-content {
@@ -61,6 +76,63 @@
 
         &.steps-ar {
             margin-right: 50px;
+        }
+    }
+}
+
+.controller-manage-patient-swal {
+    width: 580px;
+}
+
+.controller-manage-patient-wrapper {
+    text-align: left;
+
+    .manage-patient-header {
+        height: 30px;
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .profile-information-wrapper {
+        margin-bottom: 30px;
+    }
+
+    .profile-management-wrapper {
+        margin-bottom: 30px;
+        .profile-management-radio-button-group {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    .manage-patient-delete {
+        width: fit-content;
+        margin-bottom: 30px;
+        padding: 12px;
+        color: red;
+        border: solid;
+        border-radius: 4px;
+        p { margin: 0; }
+
+        .manage-patient-delete-button {
+            background-color: red;
+            color: white;
+            padding: 10px 30px;
+            margin-top: 8px;
+        }
+    }
+
+    .manage-patient-footer {
+        display: flex;
+        justify-content: flex-end;
+        .manage-patient-save-button {
+            background-color: $button;
+            color: white;
+            padding: 10px 40px;
+            &:hover { background-color: $button; }
         }
     }
 }
