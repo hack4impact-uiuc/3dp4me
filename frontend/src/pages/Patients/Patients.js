@@ -1,13 +1,41 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Snackbar, TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import MainTable from '../../components/Table/MainTable'
 import './Patients.scss'
 import MuiAlert from '@material-ui/lab/Alert';
 import allpatients from '../../Test Data/all-patients.json';
+import search from '../../assets/search.svg';
+import swal from 'sweetalert';
+import reactSwal from '@sweetalert/with-react';
+
+const useStyles = makeStyles((theme) => ({
+    swalEditButton: {
+        backgroundColor: "#5395F8",
+        color: 'white',
+        padding: "10px 20px 10px 20px",
+        marginRight: '10px',
+        " &:hover": {
+            backgroundColor: "#5395F8",
+        },
+    },
+    swalCloseButton: {
+        backgroundColor: "white",
+        color: 'black',
+        padding: "10px 20px 10px 20px",
+        marginRight: '10px',
+        " &:hover": {
+            backgroundColor: "white",
+            color: 'white'
+        }
+    },
+}));
+
+
 
 const Patients = (props) => {
-
+    const classes = useStyles();
     const [allPatients, setAllPatients] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterPatients, setFilteredPatients] = useState([]);
@@ -35,6 +63,53 @@ const Patients = (props) => {
         setNoPatient(false);
     };
 
+    const createPatientHelper = (edit, id) => {
+        if (edit) {
+            window.location.href = window.location.href.substring(0, window.location.href.indexOf("patients")) + `patient-info/${id}`
+        } else {
+            let name = document.getElementById("createFirstName").value;
+            let dob = document.getElementById("createDOB").value;
+            let id = document.getElementById("createId").value;
+            swal(lang[key].components.swal.createPatient.successMsg, `${lang[key].components.swal.createPatient.firstName}: ${name}\n${lang[key].components.swal.createPatient.dob}: ${dob}\n${lang[key].components.swal.createPatient.id}: ${id}`, "success");
+        }
+    }
+
+    const createPatient = (e) => {
+        let auto_id = Math.random().toString(36).substr(2, 24);
+        reactSwal({
+            buttons: {},
+            content: (
+                <div style={{ marginRight: '10px', fontFamily: 'Ubuntu', margin: '0px !important', textAlign: "left" }}>
+                    <h2 style={{ fontWeight: 'bolder' }}>{lang[key].components.swal.createPatient.title}</h2>
+                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                        <span>{lang[key].components.swal.createPatient.firstName}</span>
+                        <TextField size="small" id="createFirstName" fullWidth style={{ padding: 10 }} variant="outlined" />
+                        <span>{lang[key].components.swal.createPatient.middleName}</span>
+                        <div style={{ display: 'flex' }}>
+                            <TextField size="small" id="createMiddleName1" fullWidth style={{ padding: 10 }} variant="outlined" />
+                            <TextField size="small" id="createMiddleName2" fullWidth style={{ padding: 10 }} variant="outlined" />
+                        </div>
+                        <span>{lang[key].components.swal.createPatient.lastName}</span>
+                        <TextField size="small" id="createLastName" fullWidth style={{ padding: 10 }} variant="outlined" />
+                    </div>
+                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                        <span>{lang[key].components.swal.createPatient.dob} </span>
+                        <TextField size="small" id="createDOB" fullWidth style={{ padding: 10 }} variant="outlined" />
+                    </div>
+                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                        <span>{lang[key].components.swal.createPatient.id} </span>
+                        <TextField size="small" id="createId" fullWidth style={{ padding: 10 }} defaultValue={auto_id} variant="outlined" />
+                    </div>
+                    <div style={{ display: 'flex', float: 'right', paddingBottom: '10px' }}>
+                        <Button className={classes.swalEditButton} onClick={(e) => createPatientHelper(true, auto_id)}>{lang[key].components.swal.createPatient.buttons.edit}</Button>
+                        <Button onClick={(e) => createPatientHelper(false, auto_id)}>{lang[key].components.swal.createPatient.buttons.noEdit}</Button>
+                    </div>
+                </div>
+            ),
+
+        })
+    }
+
 
     const getData = (props) => {
         // TODO: api call to get all patients and assign it to all patients state variable
@@ -50,16 +125,26 @@ const Patients = (props) => {
     }, []);
 
     return (
-        <div>
+        <div className="all-patients">
             <div className="all-patients-header">
                 <Snackbar open={noPatient} autoHideDuration={3000} onClose={handleNoPatientClose}>
                     <Alert onClose={handleNoPatientClose} severity="error">
                         {lang[key].components.table.noPatientsFound}
                     </Alert>
                 </Snackbar>
-                <h2 className={key === "AR" ? "all-patients-header-text-ar" : "all-patients-header-text"}>{lang[key].components.navbar.patients.pageTitle}</h2>
-                <TextField className="all-patients-search-field" onChange={handleSearch} value={searchQuery} variant="outlined" placeholder={lang[key].components.search.placeholder} />
-                <Button>{lang[key].components.button.createPatient}</Button>
+                <div className="header">
+                    <div className="section">
+                        <h2 className={key === "AR" ? "all-patients-header-text-ar" : "all-patients-header-text"}>{lang[key].components.navbar.patients.pageTitle}</h2>
+                        <TextField InputProps={{
+                            startAdornment: (
+                                <img style={{ marginRight: "10px" }} src={search} width="16px" />
+                            ),
+                        }} className="all-patients-search-field" onChange={handleSearch} value={searchQuery} size="small" variant="outlined" placeholder={lang[key].components.search.placeholder} />
+                     
+                            <Button className="create-patient-button" onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
+                 
+                    </div>
+                </div>
             </div>
             {
                 searchQuery.length === 0 ? (

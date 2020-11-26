@@ -18,6 +18,9 @@
 .patient-list .header .section {
     display: flex;
     margin-left: 2%;
+    width: 90%;
+    margin: auto;
+    margin-top: 10px;
 
     .patient-list-title {
         flex-grow: 1;
@@ -30,6 +33,8 @@
 
     .patient-list-search-field {
         margin-right: 10px;
+        width: 25%;
+        background-color: #eeeeee;
     }
 
     .create-patient-button {
@@ -37,6 +42,7 @@
         color: white;
         padding: 10px 30px 10px 30px;
         margin-right: 10px;
+        width: 12%;
         &:hover {
             background-color: $button;
         }
@@ -46,6 +52,7 @@
 .section {
     display: flex;
     align-items: center;
+    margin-top: 15px;
 }
 
 .button {

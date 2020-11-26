@@ -13,7 +13,10 @@ import Eyecon from '../../assets/view.svg';
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import useSortableData from '../../hooks/useSortableData'
+import useSortableData from '../../hooks/useSortableData';
+import finishedIcon from '../../assets/check.svg';
+import partiallyIcon from '../../assets/half-circle.svg';
+import unfinishedIcon from '../../assets/exclamation.svg';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -24,9 +27,12 @@ const StyledTableCell = withStyles((theme) => ({
 
 const StyledTableRow = withStyles((theme) => ({
     root: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: '#e5f0ff'
-        },
+        // '&:nth-of-type(odd)': {
+        //     backgroundColor: '#e5f0ff'
+        // },
+        '&:hover': {
+            backgroundColor: '#f0f0f0',
+        }
     },
 }))(TableRow);
 
@@ -36,45 +42,60 @@ const MainTable = (props) => {
 
     const { items, requestSort, sortConfig } = useSortableData(props.patients);
 
+    const statusStyle = {
+        "Finished": <div><img style={{marginRight: '10px'}} width="16px" src={finishedIcon} />{lang[key].components.bottombar.finished}</div>,
+        "Partially Complete": <div style={{color: '#ffc700'}}><img style={{marginRight: '10px'}} width="16px" src={partiallyIcon} /> {lang[key].components.bottombar.partial}</div>,
+        "Unfinished": <div style={{color: 'red'}}><img style={{marginRight: '10px'}} width="16px" src={unfinishedIcon} /> {lang[key].components.bottombar.unfinished}</div>
+    }
+
     return (
-        <TableContainer component={Paper}>
-            <Table stickyHeader className="table">
-                <TableHead>
-                    <TableRow>
-                        {props.headers.map(header => (
-                            <StyledTableCell onClick={() => requestSort(header.sortKey)} className="header" align={key === "AR" ? "right" : "left"}>
-                                <div className={key === "AR" ? "cell-align-rtl" : "cell-align"}>
-                                    {header.title}
-                                    {sortConfig !== null && sortConfig.key === header.sortKey && sortConfig.direction === "ascending" ? (
-                                        <ArrowDropUpIcon className="dropdown-arrow" />
-                                    ) : (<></>)}
-                                    {sortConfig !== null && sortConfig.key === header.sortKey && sortConfig.direction === "descending" ? (
-                                        <ArrowDropDownIcon className="dropdown-arrow" />
-                                    ) : (<></>)}
-                                </div>
-                            </StyledTableCell>
-                        ))}
-                        <StyledTableCell className="header" align="center"></StyledTableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {items.map((patient) => (
-                        <StyledTableRow key={patient.serial}>
-                            {props.rowIds.map(id => (
-                                <StyledTableCell className={key === "AR" ? "cell-rtl" : "cell"} align={key === "AR" ? "right" : "left"}>{patient[id]}</StyledTableCell>
+        <div className="table-container">
+            <TableContainer className="table-container" component={Paper}>
+                <Table stickyHeader className="table">
+                    <TableHead>
+                        <TableRow>
+                            {props.headers.map(header => (
+                                <StyledTableCell onClick={() => requestSort(header.sortKey)} className="header" align={key === "AR" ? "right" : "left"}>
+                                    <div className={key === "AR" ? "cell-align-rtl" : "cell-align"}>
+                                        {header.title}
+                                        {sortConfig !== null && sortConfig.key === header.sortKey && sortConfig.direction === "ascending" ? (
+                                            <ArrowDropUpIcon className="dropdown-arrow" />
+                                        ) : (<></>)}
+                                        {sortConfig !== null && sortConfig.key === header.sortKey && sortConfig.direction === "descending" ? (
+                                            <ArrowDropDownIcon className="dropdown-arrow" />
+                                        ) : (<></>)}
+                                    </div>
+                                </StyledTableCell>
                             ))}
-                            <StyledTableCell className="cell" align="center">
-                                <Link to={`/patient-info/${patient.serial}`}>
-                                    <IconButton>
-                                        <img width={20} src={Eyecon} />
-                                    </IconButton>
-                                </Link>
-                            </StyledTableCell>
-                        </StyledTableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                            <StyledTableCell className="header" align="center"></StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody className="table-body">
+                        {items.map((patient) => (
+                            <StyledTableRow key={patient.serial}>
+                                {props.rowIds.map(id => (
+                                    <StyledTableCell className={key === "AR" ? "cell-rtl" : "cell"} align={key === "AR" ? "right" : "left"}>
+                                        {id === "status" ? (
+                                            statusStyle[patient[id]]
+                                        ) : (
+                                            patient[id]
+                                        )}
+                                    </StyledTableCell>
+
+                                ))}
+                                <StyledTableCell className="cell" align="center">
+                                    <Link className="table-view-link" to={`/patient-info/${patient.serial}`}>
+                                        <IconButton>
+                                            <img width="18px" src={Eyecon} />
+                                        </IconButton> {lang[key].components.table.view}
+                                    </Link>
+                                </StyledTableCell>
+                            </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div >
     );
 }
 

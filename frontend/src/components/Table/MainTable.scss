@@ -1,15 +1,24 @@
 @import '../../styles/colors.scss';
 
+
+.table-container {
+    height: 70vh;
+    width: 90%;
+    margin: auto;
+    margin-top: 20px;
+}
+
 .table {
     font-family: 'Ubuntu';
-    min-width: 700;
+    // min-width: 700;
 
     .header {
         border-top: solid $navbar 1px;
         border-bottom: solid $navbar 1px;
-        border-right: solid $navbar 1px;
-        font-weight: bolder;
-        font-size: 20px;
+        background-color: $sidebar;
+        color: white;
+        font-weight: bold;
+        font-size: 15px;
         max-width: 100px;
         min-width: 100px;
         &:hover {
@@ -17,20 +26,33 @@
         }
     }
 
+   .table-view-link {
+       text-decoration: none;
+       display: flex;
+       float: right;
+       margin-right: 20%;
+       align-items: center;
+       color: $button;
+       font-size: 13px;
+        font-weight: bolder;
+       .view-icon {
+           color: $button;
+           fill: $button;
+       }
+   }
+
     .dropdown-arrow {
         font-size: 25px;
     }
 
     .cell {
-        border-right: solid $navbar 1px;
-        font-size: 17px;
+        font-size: 13px;
         padding: 0px;
         padding-left: 20px;
     }
 
     .cell-rtl {
-        border-right: solid $navbar 1px;
-        font-size: 17px;
+        font-size: 13px;
         padding: 0px;
         padding-right: 30px;
     }

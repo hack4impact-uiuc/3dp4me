@@ -16,6 +16,7 @@ import feedback from '../../Test Data/feedback.json';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Link } from "react-router-dom";
+import search from '../../assets/search.svg'
 
 const useStyles = makeStyles((theme) => ({
   swalEditButton: {
@@ -189,8 +190,14 @@ const Dashboard = (props) => {
         <div className="header">
           <div className="section">
             <h2 className={key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
-            <TextField className="patient-list-search-field" onChange={handleSearch} value={searchQuery} variant="outlined" placeholder={lang[key].components.search.placeholder} />
-            <Button className="create-patient-button" onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
+            <TextField InputProps={{
+              startAdornment: (
+                <img style={{marginRight: "10px"}} src={search} width="16px" />
+              ),
+            }} className="patient-list-search-field" onChange={handleSearch} value={searchQuery} size="small" variant="outlined" placeholder={lang[key].components.search.placeholder} />
+            {stepTitle === "patientInfoTitle" ? (
+              <Button className="create-patient-button" onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
+            ) : (<></>)}
           </div>
         </div>
         {stepTitle !== "feedbackTitle" ? (
@@ -200,14 +207,12 @@ const Dashboard = (props) => {
                 <MainTable
                   headers={[
                     { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
-                    { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
                     { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
                     { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdited" },
                     { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },
                   ]}
                   rowIds={[
                     "name",
-                    "serial",
                     "createdDate",
                     "lastEdited",
                     "status"
@@ -218,14 +223,12 @@ const Dashboard = (props) => {
                   <MainTable
                     headers={[
                       { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
-                      { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
                       { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
                       { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdited" },
                       { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },
                     ]}
                     rowIds={[
                       "name",
-                      "serial",
                       "createdDate",
                       "lastEdited",
                       "status"
