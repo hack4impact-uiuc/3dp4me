@@ -9,8 +9,10 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-fileupload": "^1.2.0",
-    "mongoose": "^5.10.10"
+    "mongoose": "^5.10.10",
+    "aws-amplify": "^3.3.3",
+    "aws-amplify-react-native": "^4.2.7",
+    "express-fileupload": "^1.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
