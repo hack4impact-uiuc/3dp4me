@@ -38,28 +38,27 @@ const Controller = (props) => {
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const setArchived = () => {
+    const handleArchivePatient = e => {
         // TODO: Archive patient handling
     }
 
     const handleManagePatientSave = () => {
         let name = document.getElementById("manage-patient-name").value;
         let dob = document.getElementById("manage-patient-dob").value;
-
-        swal("Updated Patient", "", "success");
+        // TODO: call edit patient endpoint with new name / dob / archive selection
+        swal(lang[key].components.swal.managePatient.successMsg, "", "success");
     }
 
     const handleDeletePatient = () => {
         swal({
-            title: "Confirm Delete Patient",
-            text: "Deleting the patient will remove them from the platform forever!",
+            title: lang[key].components.swal.managePatient.confirmDeleteMsg,
             icon: "warning",
             buttons: true,
             dangerMode: true
         }).then(willDelete => {
             if (willDelete) {
                 swal({
-                    title: "Patient Deleted",
+                    title: lang[key].components.swal.managePatient.deleteSuccessMsg,
                     icon: "success"
                 }).then(() => {
                     // TODO: call delete patient endpoint
@@ -74,32 +73,44 @@ const Controller = (props) => {
             className: 'controller-manage-patient-swal',
             buttons: {},
             content: (
-                <div className="controller-manage-patient-wrapper">
-                    <div className="manage-patient-header">
-                        <h2>{lang[key].components.button.managePatient}</h2>
-                        <Button><CloseIcon /></Button>
-                    </div>
+                <div className={`controller-manage-patient-wrapper ${key == "AR" ? "controller-manage-patient-wrapper-ar" : ""}`}>
+                    {key == "AR" ? 
+                        <div className="manage-patient-header">
+                            <Button><CloseIcon /></Button>
+                            <h2>{lang[key].components.swal.managePatient.title}</h2>
+                        </div> :
+                        <div className="manage-patient-header">
+                            <h2>{lang[key].components.swal.managePatient.title}</h2>
+                            <Button><CloseIcon /></Button>
+                        </div>
+                    }
                     <div className="profile-information-wrapper">
-                        <h3>Profile Information</h3>
-                        <p>{lang[key].patientView.patientInfo.name}</p>
+                        <h3>{lang[key].components.swal.managePatient.profileInformation}</h3>
+                        <p>{lang[key].components.swal.managePatient.name}</p>
                         <TextField id="manage-patient-name" defaultValue={patientFile.patientInfo.name} />
-                        <p>{lang[key].patientView.patientInfo.dob}</p>
+                        <p>{lang[key].components.swal.managePatient.dob}</p>
                         <TextField id="manage-patient-dob" defaultValue={patientFile.patientInfo.dob} />
                     </div>
                     <div className="profile-management-wrapper">
-                        <h3>Profile Management</h3>
-                        <p>Archiving a patient will take them off of the dashboard view</p>
-                        <div className="profile-management-radio-button-group" onChange={setArchived}>
-                            <div><input type="radio" value="active" name="archived" defaultChecked /> Active</div>
-                            <div><input type="radio" value="archived" name="archived" /> Archived</div>
-                        </div>
+                        <h3>{lang[key].components.swal.managePatient.profileManagement}</h3>
+                        <p>{lang[key].components.swal.managePatient.archiveInformation}</p>
+                        {key == "AR" ? 
+                            <div className="profile-management-radio-button-group" onChange={handleArchivePatient}>
+                                <div>{lang[key].components.swal.managePatient.active} <input type="radio" value="active" name="archived" defaultChecked /></div>
+                                <div>{lang[key].components.swal.managePatient.archive} <input type="radio" value="archived" name="archived" /></div>
+                            </div> :
+                            <div className="profile-management-radio-button-group" onChange={handleArchivePatient}>
+                                <div><input type="radio" value="active" name="archived" defaultChecked /> {lang[key].components.swal.managePatient.active}</div>
+                                <div><input type="radio" value="archived" name="archived" /> {lang[key].components.swal.managePatient.archive}</div>
+                            </div>
+                        }
                     </div>
-                    <div className="manage-patient-delete">
-                        <p>Deleting a patient will remove them from the platform forever!</p>
-                        <Button className="manage-patient-delete-button" onClick={handleDeletePatient}>Delete Patient</Button>
+                    <div className={`manage-patient-delete ${key == "AR" ? "manage-patient-delete-ar" : ""}`}>
+                        <p>{lang[key].components.swal.managePatient.deleteInformation}</p>
+                        <Button className="manage-patient-delete-button" onClick={handleDeletePatient}>{lang[key].components.swal.managePatient.buttons.delete}</Button>
                     </div>
                     <div className="manage-patient-footer">
-                        <Button className="manage-patient-save-button" onClick={handleManagePatientSave}>Save</Button>
+                        <Button className="manage-patient-save-button" onClick={handleManagePatientSave}>{lang[key].components.swal.managePatient.buttons.save}</Button>
                     </div>
                 </div>
             )

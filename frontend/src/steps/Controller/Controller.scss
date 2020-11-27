@@ -87,6 +87,10 @@
 .controller-manage-patient-wrapper {
     text-align: left;
 
+    &.controller-manage-patient-wrapper-ar {
+        text-align: right;
+    }
+
     .manage-patient-header {
         height: 30px;
         margin-bottom: 30px;
@@ -116,6 +120,10 @@
         border: solid;
         border-radius: 4px;
         p { margin: 0; }
+
+        &.manage-patient-delete-ar {
+            margin-left: auto;
+        }
 
         .manage-patient-delete-button {
             background-color: red;
