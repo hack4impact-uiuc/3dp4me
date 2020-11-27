@@ -146,31 +146,31 @@ const ToggleButtons = (props) => {
                 <Menu className="stage-selector-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={e => handleCloseSelector(e, "close")}>
                     <MenuItem onClick={e => handleCloseSelector(e, "info")}>
                         {props.medStatus !== undefined ? statusIcons[props.medStatus] : null}
-                        <b>{lang[key].components.stepTabs.patientInfo}</b>
+                        <b className="selector-text">{lang[key].components.stepTabs.patientInfo}</b>
                     </MenuItem>
                     <MenuItem onClick={e => handleCloseSelector(e, "scan")}>
                         {props.earScanStatus !== undefined ? statusIcons[props.earScanStatus] : null}
-                        <b>{lang[key].components.stepTabs.earScan}</b>
+                        <b className="selector-text">{lang[key].components.stepTabs.earScan}</b>
                     </MenuItem>
                     <MenuItem onClick={e => handleCloseSelector(e, "cad")}>
                         {props.modelStatus !== undefined ? statusIcons[props.modelStatus] : null}
-                        <b>{lang[key].components.stepTabs.CADModeling}</b>
+                        <b className="selector-text">{lang[key].components.stepTabs.CADModeling}</b>
                     </MenuItem>
                     <MenuItem onClick={e => handleCloseSelector(e, "printing")}>
                         {props.printStatus !== undefined ? statusIcons[props.printStatus] : null}
-                        <b>{lang[key].components.stepTabs.print}</b>
+                        <b className="selector-text">{lang[key].components.stepTabs.print}</b>
                     </MenuItem>
                     <MenuItem onClick={e => handleCloseSelector(e, "processing")}>
                         {props.processingStatus !== undefined ? statusIcons[props.processingStatus] : null}
-                        <b>{lang[key].components.stepTabs.processing}</b>
+                        <b className="selector-text">{lang[key].components.stepTabs.processing}</b>
                     </MenuItem>
                     <MenuItem onClick={e => handleCloseSelector(e, "delivery")}>
                         {props.deliveryStatus !== undefined ? statusIcons[props.deliveryStatus] : null}
-                        <b>{lang[key].components.stepTabs.delivery}</b>
+                        <b className="selector-text">{lang[key].components.stepTabs.delivery}</b>
                     </MenuItem>
                     <MenuItem onClick={e => handleCloseSelector(e, "feedback")}>
                         {props.feedbackStatus !== undefined ? statusIcons[props.feedbackStatus] : null}
-                        <b>{lang[key].components.stepTabs.feedback}</b>
+                        <b className="selector-text">{lang[key].components.stepTabs.feedback}</b>
                     </MenuItem>
                 </Menu>
             </div>
