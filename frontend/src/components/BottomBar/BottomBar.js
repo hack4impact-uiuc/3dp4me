@@ -19,8 +19,8 @@ const BottomBar = (props) => {
 
     console.log(props.status)
     return (
-        <AppBar className="bottom-bar-wrapper" color="white" style={{ top: 'auto', bottom: '0' }}>
-            <Toolbar>
+        <AppBar className="bottom-bar-wrapper" color="white" style={{ top: 'auto', bottom: '0', boxShadow: "0 0px 4px 2px rgba(0, 0, 0, 0.15)" }}>
+            <Toolbar className="bottom-toolbar">
                 <div style={{ flexGrow: 1 }} />
                 {props.edit ? (
                     <div>
@@ -49,10 +49,10 @@ const BottomBar = (props) => {
                         )}
                     </div>
                 ) : (
-                    <div>
-                        <span className={`status ${props.status.value}`}>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <div className={`status ${props.status.value}`} style={{display: 'flex', alignItems: 'center'}}>
                             {statusIcons[props.status.value]} {lang[key].components.bottombar[props.status.value]}
-                        </span>
+                        </div>
                         <Button className="edit-button" onClick={() => props.setEdit(true)}>
                             {lang[key].components.button.edit}
                         </Button>
