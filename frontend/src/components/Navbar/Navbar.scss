@@ -1,5 +1,6 @@
 .navbar {
     background-color: white;
+    font-family: 'Roboto', sans-serif;
 
     .logo-ar {
         margin-left: 15px;
@@ -7,20 +8,32 @@
 
     .nav-item {
         text-decoration: none;
-        margin-left: 2%;
-        color: black;
+        margin: 0 16px 0 16px;
+        color: #5f5f5f;
+        font-size: 14px;
     }
 
     #nav-title {
         flex-grow: 1;
+        margin: 0 10px 0 10px;
+        font-size: 18px;
+        color: black;
     }
     
     .active {
         font-weight: bolder;
+        color: black;
     }
-    
-    .user-avatar {
-        margin-left: 20px;
-        margin-right: 10px;
+
+    .accountCircle {
+        fill: black;
+        font-size: 30px;
+        margin: 0 8px;
+        opacity: 0.4;
+        transition: all 0.2s;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.8;
+        }
     }
 }

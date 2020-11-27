@@ -13,23 +13,32 @@
 
     .all-patients-header-text-ar {
         flex-grow: 1;
-        margin-right: 10px;
+        margin-right: 12px;
     }
 
     .all-patients-search-field {
-        margin-right: 10px;
-        width: 25%;
+        margin-right: 12px;
+        width: 300px;
         background-color: #eeeeee;
+        border-radius: 2px;
+        .MuiOutlinedInput-root {
+            border-radius: 2px;
+        }
     }
 
     .create-patient-button {
         background-color: $button;
         color: white;
-        padding: 10px 30px 10px 30px;
-        margin-right: 10px;
-        width: 12%;
+        padding: 0 24px 0 24px;
+        height: 38px;
+        width: auto;
+        font-size: 12px;
+        font-weight: bold;
+        transition: all 0.2s;
+        border-radius: 2px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
         &:hover {
-            background-color: $button;
+            background-color: $buttonHighlight;
         }
     }
 }

@@ -5,7 +5,7 @@
     height: 70vh;
     width: 90%;
     margin: auto;
-    margin-top: 20px;
+    margin-top: 6px;
 }
 
 .table {
@@ -18,7 +18,8 @@
         background-color: $sidebar;
         color: white;
         font-weight: bold;
-        font-size: 15px;
+        font-size: 12px;
+        text-transform: uppercase;
         max-width: 100px;
         min-width: 100px;
         &:hover {
@@ -26,14 +27,19 @@
         }
     }
 
+    .MuiTableCell-head {
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
    .table-view-link {
-       text-decoration: none;
-       display: flex;
-       float: right;
-       margin-right: 20%;
-       align-items: center;
-       color: $button;
-       font-size: 13px;
+        text-decoration: none;
+        display: flex;
+        float: right;
+        margin-right: 20%;
+        align-items: center;
+        color: $button;
+        font-size: 13px;
         font-weight: bolder;
        .view-icon {
            color: $button;
@@ -42,13 +48,17 @@
    }
 
     .dropdown-arrow {
-        font-size: 25px;
+        font-size: 24px;
     }
 
     .cell {
         font-size: 13px;
         padding: 0px;
         padding-left: 20px;
+        div {
+            display: flex;
+            align-items: center;
+        }
     }
 
     .cell-rtl {

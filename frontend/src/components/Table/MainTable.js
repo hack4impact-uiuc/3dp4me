@@ -43,9 +43,9 @@ const MainTable = (props) => {
     const { items, requestSort, sortConfig } = useSortableData(props.patients);
 
     const statusStyle = {
-        "Finished": <div><img style={{marginRight: '10px'}} width="16px" src={finishedIcon} />{lang[key].components.bottombar.finished}</div>,
-        "Partially Complete": <div style={{color: '#ffc700'}}><img style={{marginRight: '10px'}} width="16px" src={partiallyIcon} /> {lang[key].components.bottombar.partial}</div>,
-        "Unfinished": <div style={{color: 'red'}}><img style={{marginRight: '10px'}} width="16px" src={unfinishedIcon} /> {lang[key].components.bottombar.unfinished}</div>
+        "Finished": <div><img style={{marginRight: '6px'}} width="16px" src={finishedIcon} />{lang[key].components.bottombar.finished}</div>,
+        "Partially Complete": <div style={{color: '#ff9d00'}}><img style={{marginRight: '6px'}} width="16px" src={partiallyIcon} /> {lang[key].components.bottombar.partial}</div>,
+        "Unfinished": <div style={{color: 'red'}}><img style={{marginRight: '6px'}} width="16px" src={unfinishedIcon} /> {lang[key].components.bottombar.unfinished}</div>
     }
 
     return (
