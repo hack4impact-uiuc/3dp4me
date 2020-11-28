@@ -49,7 +49,6 @@ const Patients = (props) => {
         setSearchQuery(e.target.value);
         let filtered = allPatients.filter(patient =>
             patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 ||
-            (patient.serial + "").search(e.target.value) !== -1 ||
             (patient._id).search(e.target.value) !== -1);
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);
@@ -151,14 +150,12 @@ const Patients = (props) => {
                     <MainTable
                         headers={[
                             { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
-                            { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
                             { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
                             { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdit" },
                             { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },
                         ]}
                         rowIds={[
                             "name",
-                            "serial",
                             "createdDate",
                             "lastEdited",
                             "status"
@@ -177,7 +174,6 @@ const Patients = (props) => {
                             ]}
                             rowIds={[
                                 "name",
-                                "serial",
                                 "createdDate",
                                 "lastEdited",
                                 "status"

@@ -116,7 +116,6 @@ const Dashboard = (props) => {
     setSearchQuery(e.target.value);
     let filtered = patients.filter
       (patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 ||
-        (patient.serial + "").search(e.target.value) !== -1 ||
         patient._id.search(e.target.value) !== -1
       );
     setNoPatient(filtered.length === 0);
@@ -251,14 +250,12 @@ const Dashboard = (props) => {
                   <MainTable
                     headers={[
                       { title: lang[key].components.table.feedbackHeaders.name, sortKey: "name" },
-                      { title: lang[key].components.table.feedbackHeaders.serial, sortKey: "serial" },
                       { title: lang[key].components.table.feedbackHeaders.added, sortKey: "createdDate" },
                       { title: lang[key].components.table.feedbackHeaders.feedbackCycle, sortKey: "feedbackCycle" },
                       { title: lang[key].components.table.feedbackHeaders.status, sortKey: "status" },
                     ]}
                     rowIds={[
                       "name",
-                      "serial",
                       "createdDate",
                       "feedbackCycle",
                       "status"
@@ -269,14 +266,12 @@ const Dashboard = (props) => {
                     <MainTable
                       headers={[
                         { title: lang[key].components.table.feedbackHeaders.name, sortKey: "name" },
-                        { title: lang[key].components.table.feedbackHeaders.serial, sortKey: "serial" },
                         { title: lang[key].components.table.feedbackHeaders.added, sortKey: "createdDate" },
                         { title: lang[key].components.table.feedbackHeaders.feedbackCycle, sortKey: "feedbackCycle" },
                         { title: lang[key].components.table.feedbackHeaders.status, sortKey: "status" },
                       ]}
                       rowIds={[
                         "name",
-                        "serial",
                         "createdDate",
                         "feedbackCycle",
                         "status"
