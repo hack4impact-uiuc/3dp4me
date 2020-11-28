@@ -40,7 +40,9 @@ const MainTable = (props) => {
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const { items, requestSort, sortConfig } = useSortableData(props.patients);
+    const UNSORTED_DATA = props.patients;
+    const { items, requestSort, sortConfig } = useSortableData(props.patients, UNSORTED_DATA);
+
 
     const statusStyle = {
         "Finished": <div><img style={{marginRight: '6px'}} width="16px" src={finishedIcon} />{lang[key].components.bottombar.finished}</div>,
@@ -72,7 +74,7 @@ const MainTable = (props) => {
                     </TableHead>
                     <TableBody className="table-body">
                         {items.map((patient) => (
-                            <StyledTableRow key={patient.serial}>
+                            <StyledTableRow key={patient._id}>
                                 {props.rowIds.map(id => (
                                     <StyledTableCell className={key === "AR" ? "cell-rtl" : "cell"} align={key === "AR" ? "right" : "left"}>
                                         {id === "status" ? (
@@ -84,7 +86,7 @@ const MainTable = (props) => {
 
                                 ))}
                                 <StyledTableCell className="cell" align="center">
-                                    <Link className="table-view-link" to={`/patient-info/${patient.serial}`}>
+                                    <Link className="table-view-link" to={`/patient-info/${patient._id}`}>
                                         <IconButton>
                                             <img width="18px" src={Eyecon} />
                                         </IconButton> {lang[key].components.table.view}

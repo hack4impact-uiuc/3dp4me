@@ -54,8 +54,8 @@ function App() {
               <Route exact path="/patients">
                 <Patients lang={langInfo} />
               </Route>
-              {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
-              <Route exact path="/patient-info/:serial">
+              {/* Path = BASE_URL/patient-info/PATIENT_ID */}
+              <Route exact path="/patient-info/:id">
                 <Controller lang={langInfo} />
               </Route>
             </div>

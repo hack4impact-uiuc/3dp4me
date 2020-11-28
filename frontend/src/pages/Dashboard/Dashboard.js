@@ -22,20 +22,29 @@ const useStyles = makeStyles((theme) => ({
   swalEditButton: {
     backgroundColor: "#5395F8",
     color: 'white',
-    padding: "10px 20px 10px 20px",
-    marginRight: '10px',
-    " &:hover": {
-      backgroundColor: "#5395F8",
-    },
+    padding: '0 24px 0 24px',
+    height: '38px',
+    width: 'auto',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    transition: 'all 0.2s',
+    borderRadius: '2px',
+    boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.15)',
+    "&:hover": {
+      backgroundColor: '#84b3fa'
+    }
   },
   swalCloseButton: {
     backgroundColor: "white",
     color: 'black',
-    padding: "10px 20px 10px 20px",
-    marginRight: '10px',
-    " &:hover": {
-      backgroundColor: "white",
-      color: 'white'
+    padding: '0 24px 0 24px',
+    height: '38px',
+    width: 'auto',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    marginLeft: '10px',
+    "&:hover": {
+      backgroundColor: '#D3D3D3'
     }
   },
 }));
@@ -98,7 +107,7 @@ const Dashboard = (props) => {
           </div>
           <div style={{ display: 'flex', float: 'right', paddingBottom: '10px' }}>
             <Button className={classes.swalEditButton} onClick={(e) => createPatientHelper(true, auto_id)}>{lang[key].components.swal.createPatient.buttons.edit}</Button>
-            <Button onClick={(e) => createPatientHelper(false, auto_id)}>{lang[key].components.swal.createPatient.buttons.noEdit}</Button>
+            <Button className={classes.swalCloseButton} onClick={(e) => createPatientHelper(false, auto_id)}>{lang[key].components.swal.createPatient.buttons.noEdit}</Button>
           </div>
         </div>
       ),
@@ -110,7 +119,6 @@ const Dashboard = (props) => {
     setSearchQuery(e.target.value);
     let filtered = patients.filter
       (patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 ||
-        (patient.serial + "").search(e.target.value) !== -1 ||
         patient._id.search(e.target.value) !== -1
       );
     setNoPatient(filtered.length === 0);
@@ -182,8 +190,8 @@ const Dashboard = (props) => {
       </Snackbar>
       <div className="tabs">
         <ToggleButtons lang={props.lang}
-            step={step}
-            handleStep={handleStep}
+          step={step}
+          handleStep={handleStep}
         />
       </div>
       <div className="patient-list">
@@ -192,7 +200,7 @@ const Dashboard = (props) => {
             <h2 className={key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
             <TextField InputProps={{
               startAdornment: (
-                <img style={{marginRight: "10px"}} src={search} width="16px" />
+                <img style={{ marginRight: "10px" }} src={search} width="16px" />
               ),
             }} className="patient-list-search-field" onChange={handleSearch} value={searchQuery} size="small" variant="outlined" placeholder={lang[key].components.search.placeholder} />
             {stepTitle === "patientInfoTitle" ? (
@@ -245,14 +253,12 @@ const Dashboard = (props) => {
                   <MainTable
                     headers={[
                       { title: lang[key].components.table.feedbackHeaders.name, sortKey: "name" },
-                      { title: lang[key].components.table.feedbackHeaders.serial, sortKey: "serial" },
                       { title: lang[key].components.table.feedbackHeaders.added, sortKey: "createdDate" },
                       { title: lang[key].components.table.feedbackHeaders.feedbackCycle, sortKey: "feedbackCycle" },
                       { title: lang[key].components.table.feedbackHeaders.status, sortKey: "status" },
                     ]}
                     rowIds={[
                       "name",
-                      "serial",
                       "createdDate",
                       "feedbackCycle",
                       "status"
@@ -263,14 +269,12 @@ const Dashboard = (props) => {
                     <MainTable
                       headers={[
                         { title: lang[key].components.table.feedbackHeaders.name, sortKey: "name" },
-                        { title: lang[key].components.table.feedbackHeaders.serial, sortKey: "serial" },
                         { title: lang[key].components.table.feedbackHeaders.added, sortKey: "createdDate" },
                         { title: lang[key].components.table.feedbackHeaders.feedbackCycle, sortKey: "feedbackCycle" },
                         { title: lang[key].components.table.feedbackHeaders.status, sortKey: "status" },
                       ]}
                       rowIds={[
                         "name",
-                        "serial",
                         "createdDate",
                         "feedbackCycle",
                         "status"

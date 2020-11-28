@@ -152,7 +152,7 @@ const MedicalInfo = (props) => {
             <h3>{lang[key].patientView.patientInfo.phone}</h3>
             <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleEmPhone} value={emPhone} />
             <div className="upload-button-wrapper">
-                <Button className={edit ? "button-edit" : ""} disabled={!edit} variant="contained">
+                <Button className={edit ? "button-edit" : "button-no-edit"} disabled={!edit} variant="contained">
                     <input type="file" style={{ display: "none" }} />
                     {lang[key].components.button.upload}
                 </Button>
