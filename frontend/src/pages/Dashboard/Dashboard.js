@@ -22,11 +22,17 @@ const useStyles = makeStyles((theme) => ({
   swalEditButton: {
     backgroundColor: "#5395F8",
     color: 'white',
-    padding: "10px 20px 10px 20px",
-    marginRight: '10px',
-    " &:hover": {
-      backgroundColor: "#5395F8",
-    },
+    padding: '0 24px 0 24px',
+    height: '38px',
+    width: 'auto',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    transition: 'all 0.2s',
+    borderRadius: '2px',
+    boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.15)',
+    "&:hover": {
+      backgroundColor: '#84b3fa'
+    }
   },
   swalCloseButton: {
     backgroundColor: "white",
@@ -182,8 +188,8 @@ const Dashboard = (props) => {
       </Snackbar>
       <div className="tabs">
         <ToggleButtons lang={props.lang}
-            step={step}
-            handleStep={handleStep}
+          step={step}
+          handleStep={handleStep}
         />
       </div>
       <div className="patient-list">
@@ -192,7 +198,7 @@ const Dashboard = (props) => {
             <h2 className={key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
             <TextField InputProps={{
               startAdornment: (
-                <img style={{marginRight: "10px"}} src={search} width="16px" />
+                <img style={{ marginRight: "10px" }} src={search} width="16px" />
               ),
             }} className="patient-list-search-field" onChange={handleSearch} value={searchQuery} size="small" variant="outlined" placeholder={lang[key].components.search.placeholder} />
             {stepTitle === "patientInfoTitle" ? (
