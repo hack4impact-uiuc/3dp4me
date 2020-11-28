@@ -86,7 +86,7 @@ const MainTable = (props) => {
 
                                 ))}
                                 <StyledTableCell className="cell" align="center">
-                                    <Link className="table-view-link" to={`/patient-info/${patient.serial}`}>
+                                    <Link className="table-view-link" to={`/patient-info/${patient._id}`}>
                                         <IconButton>
                                             <img width="18px" src={Eyecon} />
                                         </IconButton> {lang[key].components.table.view}
