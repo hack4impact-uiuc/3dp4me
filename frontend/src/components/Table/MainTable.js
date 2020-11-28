@@ -74,7 +74,7 @@ const MainTable = (props) => {
                     </TableHead>
                     <TableBody className="table-body">
                         {items.map((patient) => (
-                            <StyledTableRow key={patient.serial}>
+                            <StyledTableRow key={patient._id}>
                                 {props.rowIds.map(id => (
                                     <StyledTableCell className={key === "AR" ? "cell-rtl" : "cell"} align={key === "AR" ? "right" : "left"}>
                                         {id === "status" ? (

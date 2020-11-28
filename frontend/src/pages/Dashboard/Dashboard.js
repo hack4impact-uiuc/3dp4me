@@ -37,11 +37,14 @@ const useStyles = makeStyles((theme) => ({
   swalCloseButton: {
     backgroundColor: "white",
     color: 'black',
-    padding: "10px 20px 10px 20px",
-    marginRight: '10px',
-    " &:hover": {
-      backgroundColor: "white",
-      color: 'white'
+    padding: '0 24px 0 24px',
+    height: '38px',
+    width: 'auto',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    marginLeft: '10px',
+    "&:hover": {
+      backgroundColor: '#D3D3D3'
     }
   },
 }));
@@ -104,7 +107,7 @@ const Dashboard = (props) => {
           </div>
           <div style={{ display: 'flex', float: 'right', paddingBottom: '10px' }}>
             <Button className={classes.swalEditButton} onClick={(e) => createPatientHelper(true, auto_id)}>{lang[key].components.swal.createPatient.buttons.edit}</Button>
-            <Button onClick={(e) => createPatientHelper(false, auto_id)}>{lang[key].components.swal.createPatient.buttons.noEdit}</Button>
+            <Button className={classes.swalCloseButton} onClick={(e) => createPatientHelper(false, auto_id)}>{lang[key].components.swal.createPatient.buttons.noEdit}</Button>
           </div>
         </div>
       ),
