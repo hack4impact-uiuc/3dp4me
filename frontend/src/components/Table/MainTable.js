@@ -40,7 +40,9 @@ const MainTable = (props) => {
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const { items, requestSort, sortConfig } = useSortableData(props.patients);
+    const UNSORTED_DATA = props.patients;
+    const { items, requestSort, sortConfig } = useSortableData(props.patients, UNSORTED_DATA);
+
 
     const statusStyle = {
         "Finished": <div><img style={{marginRight: '6px'}} width="16px" src={finishedIcon} />{lang[key].components.bottombar.finished}</div>,
