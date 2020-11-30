@@ -2,6 +2,7 @@ import { Auth } from "aws-amplify";
 
 const KEY_GROUPS = "cognito:groups";
 const KEY_BASIC_USER = "3DP_4ME_USER";
+export var credentials = null;
 
 /**
  * Returns true if the user has normal authentication level

@@ -11,13 +11,20 @@ import Navbar from "./components/Navbar/Navbar";
 import MedicalInfo from "./steps/MedicalInfo/MedicalInfo"
 import Controller from './steps/Controller/Controller'
 import language from './language.json';
+import { Auth } from "aws-amplify";
+import Login from "./components/Login/Login"
+import { getCredentials } from './aws/aws-helper.js';
 
 Amplify.configure(awsconfig)
 
+function checkUser() {
+  Auth.currentAuthenticatedUser()
+    .then(user => console.log({ user }))
+    .catch(err => console.log(err))
+}
+
 function App() {
-
   const [key, setKey] = useState("EN");
-
 
   const langInfo = {
     data: language,
@@ -34,6 +41,8 @@ function App() {
       <Router>
         <Navbar lang={langInfo} />
         <div className={`${key == "AR" ? "flip" : ""}`}>
+<button onClick={() => Auth.federatedSignIn()}>Sign In</button>
+<button onClick={checkUser}>Check User</button>
           <Switch>
             <div className="content">
               {/* Path = BASE_URL */}
@@ -56,6 +65,9 @@ function App() {
               <Route exact path="/patient-info/:serial">
                 <Controller lang={langInfo} />
               </Route>
+              {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
+              <Route exact path="/login" component={Login}>
+              </Route>
             </div>
           </Switch>
         </div>
@@ -64,4 +76,4 @@ function App() {
   );
 }
 
-export default withAuthenticator(App);
+export default App;
