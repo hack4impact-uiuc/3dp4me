@@ -65,8 +65,6 @@ function App() {
                 <Controller lang={langInfo} />
               </Route>
               {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
-              <Route exact path="/login" component={Login}>
-              </Route>
             </div>
           </Switch> : <Login />}
         </div>
