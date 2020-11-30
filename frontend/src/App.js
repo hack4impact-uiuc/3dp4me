@@ -16,33 +16,32 @@ import Login from "./components/Login/Login"
 import { getCredentials } from './aws/aws-helper.js';
 
 Amplify.configure(awsconfig)
-
+const AUTHENTICATED = "AUTH"
+const UNAUTHENTICATED = "UNAUTH"
+const UNDEFINED_AUTH = "UNDEFINED"
 
 function App() {
   const [key, setKey] = useState("EN");
-  const [isAuth, setIsAuth] = useState(false)
+  const [authLevel, setAuthLevel] = useState(UNAUTHENTICATED)
   const langInfo = {
     data: language,
     key: key
   }
 
   useEffect(() => {
-    async function checkAuth() {
-      let user = await Auth.currentAuthenticatedUser()
-      setIsAuth(user != null)
-    }
     // TODO: get user session langauge
     setKey("EN");
-    checkAuth()
+    Auth.currentAuthenticatedUser()
+      .then(() => {setAuthLevel(AUTHENTICATED)})
+      .catch(() => {setAuthLevel(UNAUTHENTICATED)})
   }, []);
-
 
   return (
     <body dir={key == "AR" ? "rtl": "ltr"}>
-      <Router>
+      {authLevel == AUTHENTICATED ? <Router>
         <Navbar lang={langInfo} />
         <div className={`${key == "AR" ? "flip" : ""}`}>
-          {isAuth? <Switch>
+          <Switch>
             <div className="content">
               {/* Path = BASE_URL */}
               <Route exact path="/">
@@ -66,9 +65,11 @@ function App() {
               </Route>
               {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
             </div>
-          </Switch> : <Login />}
+          </Switch>
         </div>
-      </Router>
+      </Router> : authLevel == UNAUTHENTICATED ? 
+      <Login /> : 
+      <p>Checking login status</p> }
     </body>
   );
 }
