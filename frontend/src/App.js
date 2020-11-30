@@ -17,33 +17,32 @@ import { getCredentials } from './aws/aws-helper.js';
 
 Amplify.configure(awsconfig)
 
-function checkUser() {
-  Auth.currentAuthenticatedUser()
-    .then(user => console.log({ user }))
-    .catch(err => console.log(err))
-}
 
 function App() {
   const [key, setKey] = useState("EN");
-
+  const [isAuth, setIsAuth] = useState(false)
   const langInfo = {
     data: language,
     key: key
   }
 
   useEffect(() => {
+    async function checkAuth() {
+      let user = await Auth.currentAuthenticatedUser()
+      setIsAuth(user != null)
+    }
     // TODO: get user session langauge
     setKey("EN");
+    checkAuth()
   }, []);
+
 
   return (
     <body dir={key == "AR" ? "rtl": "ltr"}>
       <Router>
         <Navbar lang={langInfo} />
         <div className={`${key == "AR" ? "flip" : ""}`}>
-<button onClick={() => Auth.federatedSignIn()}>Sign In</button>
-<button onClick={checkUser}>Check User</button>
-          <Switch>
+          {isAuth? <Switch>
             <div className="content">
               {/* Path = BASE_URL */}
               <Route exact path="/">
@@ -69,7 +68,7 @@ function App() {
               <Route exact path="/login" component={Login}>
               </Route>
             </div>
-          </Switch>
+          </Switch> : <Login />}
         </div>
       </Router>
     </body>
