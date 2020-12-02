@@ -10,10 +10,14 @@ import Printing from '../3DPrinting/Printing';
 import PostProcessing from '../PostProcessing/PostProcessing'
 import Delivery from '../Delivery/Delivery';
 import Feedback from '../Feedback/Feedback';
-import { Accordion, AccordionDetails, AccordionSummary, TextField } from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary, Button, TextField } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import patientFile from '../../Test Data/patient.json'
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
+import reactSwal from '@sweetalert/with-react';
+import swal from 'sweetalert';
+
+import CloseIcon from '@material-ui/icons/Close';
 
 const theme = createMuiTheme({
     direction: 'rtl',
@@ -33,6 +37,85 @@ const Controller = (props) => {
 
     const lang = props.lang.data;
     const key = props.lang.key;
+
+    const handleArchivePatient = e => {
+        // TODO: Archive patient handling
+    }
+
+    const handleManagePatientSave = () => {
+        let name = document.getElementById("manage-patient-name").value;
+        let dob = document.getElementById("manage-patient-dob").value;
+        // TODO: call edit patient endpoint with new name / dob / archive selection
+        swal(lang[key].components.swal.managePatient.successMsg, "", "success");
+    }
+
+    const handleDeletePatient = () => {
+        swal({
+            title: lang[key].components.swal.managePatient.confirmDeleteMsg,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true
+        }).then(willDelete => {
+            if (willDelete) {
+                swal({
+                    title: lang[key].components.swal.managePatient.deleteSuccessMsg,
+                    icon: "success"
+                }).then(() => {
+                    // TODO: call delete patient endpoint
+                    window.location.href = "/";
+                });
+            }
+        });
+    }
+
+    const managePatient = () => {
+        reactSwal({
+            className: 'controller-manage-patient-swal',
+            buttons: {},
+            content: (
+                <div className={`controller-manage-patient-wrapper ${key == "AR" ? "controller-manage-patient-wrapper-ar" : ""}`}>
+                    {key == "AR" ? 
+                        <div className="manage-patient-header">
+                            <Button><CloseIcon /></Button>
+                            <h2>{lang[key].components.swal.managePatient.title}</h2>
+                        </div> :
+                        <div className="manage-patient-header">
+                            <h2>{lang[key].components.swal.managePatient.title}</h2>
+                            <Button><CloseIcon /></Button>
+                        </div>
+                    }
+                    <div className="profile-information-wrapper">
+                        <h3>{lang[key].components.swal.managePatient.profileInformation}</h3>
+                        <p>{lang[key].components.swal.managePatient.name}</p>
+                        <TextField id="manage-patient-name" defaultValue={patientFile.patientInfo.name} />
+                        <p>{lang[key].components.swal.managePatient.dob}</p>
+                        <TextField id="manage-patient-dob" defaultValue={patientFile.patientInfo.dob} />
+                    </div>
+                    <div className="profile-management-wrapper">
+                        <h3>{lang[key].components.swal.managePatient.profileManagement}</h3>
+                        <p>{lang[key].components.swal.managePatient.archiveInformation}</p>
+                        {key == "AR" ? 
+                            <div className="profile-management-radio-button-group" onChange={handleArchivePatient}>
+                                <div>{lang[key].components.swal.managePatient.active} <input type="radio" value="active" name="archived" defaultChecked /></div>
+                                <div>{lang[key].components.swal.managePatient.archive} <input type="radio" value="archived" name="archived" /></div>
+                            </div> :
+                            <div className="profile-management-radio-button-group" onChange={handleArchivePatient}>
+                                <div><input type="radio" value="active" name="archived" defaultChecked /> {lang[key].components.swal.managePatient.active}</div>
+                                <div><input type="radio" value="archived" name="archived" /> {lang[key].components.swal.managePatient.archive}</div>
+                            </div>
+                        }
+                    </div>
+                    <div className={`manage-patient-delete ${key == "AR" ? "manage-patient-delete-ar" : ""}`}>
+                        <p>{lang[key].components.swal.managePatient.deleteInformation}</p>
+                        <Button className="manage-patient-delete-button" onClick={handleDeletePatient}>{lang[key].components.swal.managePatient.buttons.delete}</Button>
+                    </div>
+                    <div className="manage-patient-footer">
+                        <Button className="manage-patient-save-button" onClick={handleManagePatientSave}>{lang[key].components.swal.managePatient.buttons.save}</Button>
+                    </div>
+                </div>
+            )
+        });
+    }
 
     const handleNotePanel = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -94,58 +177,62 @@ const Controller = (props) => {
                 >
                     <Toolbar />
                     <div className="drawer-container">
-                        <div className="drawer-text-section">
-                            <span className="drawer-text-label">{lang[key].components.sidebar.name}</span> <br />
-                            <span className="drawer-text">{patientFile.patientInfo.name}</span>
+                        <div>
+                            <div className="drawer-text-section">
+                                <span className="drawer-text-label">{lang[key].components.sidebar.name}</span> <br />
+                                <span className="drawer-text">{patientFile.patientInfo.name}</span>
+                            </div>
+                            <div className="drawer-text-section">
+                                <span className="drawer-text-label">{lang[key].components.sidebar.orderID}</span> <br />
+                                <span className="drawer-text">{patientFile.patientInfo.orderId}</span>
+                            </div>
+                            <div className="drawer-text-section">
+                                <span className="drawer-text-label">{lang[key].components.sidebar.dob}</span> <br />
+                                <span className="drawer-text">{patientFile.patientInfo.dob}</span>
+                            </div>
+                            <span className="drawer-text-label">{lang[key].components.notes.title}</span>
+                            <div className="drawer-notes-wrapper">
+                                <Accordion expanded={expanded === 'info'} onChange={handleNotePanel('info')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.patientInfo}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
+                                    </AccordionDetails>
+                                </Accordion>
+                                <Accordion expanded={expanded === 'scan'} onChange={handleNotePanel('scan')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.earScan}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
+                                        </AccordionDetails>
+                                </Accordion>
+                                <Accordion expanded={expanded === 'cad'} onChange={handleNotePanel('cad')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.CADModeling}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
+                                        </AccordionDetails>
+                                </Accordion>
+                                <Accordion expanded={expanded === 'processing'} onChange={handleNotePanel('processing')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.print}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
+                                        </AccordionDetails>
+                                </Accordion>
+                                <Accordion expanded={expanded === 'delivery'} onChange={handleNotePanel('delivery')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.delivery}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
+                                        </AccordionDetails>
+                                </Accordion>
+                                <Accordion expanded={expanded === 'feedback'} onChange={handleNotePanel('feedback')}>
+                                    <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.feedback}</AccordionSummary>
+                                    <AccordionDetails>
+                                        This is where the notes will go
+                                        </AccordionDetails>
+                                </Accordion>
+                            </div>
                         </div>
-                        <div className="drawer-text-section">
-                            <span className="drawer-text-label">{lang[key].components.sidebar.orderID}</span> <br />
-                            <span className="drawer-text">{patientFile.patientInfo.orderId}</span>
+                        <div>
+                            <Button onClick={managePatient} className="manage-patient-button">{lang[key].components.button.managePatient}</Button>
                         </div>
-                        <div className="drawer-text-section">
-                            <span className="drawer-text-label">{lang[key].components.sidebar.dob}</span> <br />
-                            <span className="drawer-text">{patientFile.patientInfo.dob}</span>
-                        </div>
-                        <span className="drawer-text-label">{lang[key].components.notes.title}</span>
-                        <div className="drawer-notes-wrapper">
-                            <Accordion expanded={expanded === 'info'} onChange={handleNotePanel('info')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.patientInfo}</AccordionSummary>
-                                <AccordionDetails>
-                                    This is where the notes will go
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion expanded={expanded === 'scan'} onChange={handleNotePanel('scan')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.earScan}</AccordionSummary>
-                                <AccordionDetails>
-                                    This is where the notes will go
-                                    </AccordionDetails>
-                            </Accordion>
-                            <Accordion expanded={expanded === 'cad'} onChange={handleNotePanel('cad')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.CADModeling}</AccordionSummary>
-                                <AccordionDetails>
-                                    This is where the notes will go
-                                    </AccordionDetails>
-                            </Accordion>
-                            <Accordion expanded={expanded === 'processing'} onChange={handleNotePanel('processing')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.print}</AccordionSummary>
-                                <AccordionDetails>
-                                    This is where the notes will go
-                                    </AccordionDetails>
-                            </Accordion>
-                            <Accordion expanded={expanded === 'delivery'} onChange={handleNotePanel('delivery')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.delivery}</AccordionSummary>
-                                <AccordionDetails>
-                                    This is where the notes will go
-                                    </AccordionDetails>
-                            </Accordion>
-                            <Accordion expanded={expanded === 'feedback'} onChange={handleNotePanel('feedback')}>
-                                <AccordionSummary expandIcon={<ExpandMoreIcon className="expand-icon" />}>{lang[key].components.stepTabs.feedback}</AccordionSummary>
-                                <AccordionDetails>
-                                    This is where the notes will go
-                                    </AccordionDetails>
-                            </Accordion>
-                        </div>
-
                     </div>
                 </Drawer>
             </ThemeProvider>

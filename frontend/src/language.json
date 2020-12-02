@@ -84,7 +84,8 @@
                     "success": "Discarded changes!",
                     "confirmButton": "Ok",
                     "cancelButton": "Cancel"
-                }
+                },
+                "managePatient": "Manage Patient"
             },
             "search": {
                 "placeholder": "Search..."
@@ -109,6 +110,24 @@
                     "buttons": {
                         "noEdit": "Save and Close",
                         "edit": "Save and Continue Editing"
+                    }
+                },
+                "managePatient": {
+                    "title": "Manage Patient",
+                    "profileInformation": "Profile Information",
+                    "name": "Name",
+                    "dob": "DOB",
+                    "profileManagement": "Profile Management",
+                    "archiveInformation": "Archiving a patient will take them off of the dashboard view",
+                    "active": "Active",
+                    "archive": "Archive",
+                    "deleteInformation": "Deleting a patient will remove them from the platform forever!",
+                    "successMsg": "Updated Patient",
+                    "confirmDeleteMsg": "Confirm Delete Patient",
+                    "deleteSuccessMsg": "Patient Deleted",
+                    "buttons": {
+                        "delete": "Delete Patient",
+                        "save": "Save"
                     }
                 }
             }
@@ -262,7 +281,8 @@
                     "success": "\u0627\u0644\u062a\u063a\u064a\u064a\u0631\u0627\u062a \u0627\u0644\u0645\u0647\u0645\u0644\u0629!",
                     "confirmButton": "\u062d\u0633\u0646\u0627",
                     "cancelButton": "\u0625\u0644\u063a\u0627\u0621"
-                }
+                },
+                "managePatient": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0631\u064a\u0636"
             },
             "search": {
                 "placeholder": "\u0628\u062d\u062b..."
@@ -287,6 +307,24 @@
                     "buttons": {
                         "noEdit": "\u0627\u062d\u0641\u0638 \u0648\u0623\u063a\u0644\u0642",
                         "edit": "\u0627\u062d\u0641\u0638 \u0648\u062a\u0627\u0628\u0639 \u0627\u0644\u062a\u062d\u0631\u064a\u0631"
+                    }
+                },
+                "managePatient": {
+                    "title": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0631\u064a\u0636",
+                    "profileInformation": "\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a",
+                    "name": "\u0627\u0633\u0645",
+                    "dob": "DOB",
+                    "profileManagement": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a",
+                    "archiveInformation": "\u0633\u062a\u0624\u062f\u064a \u0623\u0631\u0634\u0641\u0629 \u0627\u0644\u0645\u0631\u064a\u0636 \u0625\u0644\u0649 \u0625\u0632\u0627\u0644\u062a\u0647 \u0645\u0646 \u0639\u0631\u0636 \u0644\u0648\u062d\u0629 \u0627\u0644\u0642\u064a\u0627\u062f\u0629",
+                    "active": "\u0646\u0634\u064a\u0637",
+                    "archive": "\u0623\u0631\u0634\u064a\u0641",
+                    "deleteInformation": "\u0633\u064a\u0624\u062f\u064a \u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636 \u0625\u0644\u0649 \u0625\u0632\u0627\u0644\u062a\u0647 \u0645\u0646 \u0627\u0644\u0645\u0646\u0635\u0629 \u0625\u0644\u0649 \u0627\u0644\u0623\u0628\u062f\u0021",
+                    "successMsg": "\u0627\u0644\u0645\u0631\u064a\u0636 \u0627\u0644\u0645\u062d\u062f\u062b",
+                    "confirmDeleteMsg": "\u062a\u0623\u0643\u064a\u062f \u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636",
+                    "deleteSuccessMsg": "\u062a\u0645 \u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636",
+                    "buttons": {
+                        "delete": "\u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636",
+                        "save": "\u062d\u0641\u0638"
                     }
                 }
             }
