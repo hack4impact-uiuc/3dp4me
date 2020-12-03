@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Snackbar, TextField } from '@material-ui/core';
+import { Button, IconButton, Snackbar, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MainTable from '../../components/Table/MainTable'
 import './Patients.scss'
@@ -9,6 +8,7 @@ import allpatients from '../../Test Data/all-patients.json';
 import search from '../../assets/search.svg';
 import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
+import archive from '../../assets/archive.svg';
 
 const useStyles = makeStyles((theme) => ({
     swalEditButton: {
@@ -31,8 +31,6 @@ const useStyles = makeStyles((theme) => ({
         }
     },
 }));
-
-
 
 const Patients = (props) => {
     const classes = useStyles();
@@ -134,14 +132,17 @@ const Patients = (props) => {
                 <div className="header">
                     <div className="section">
                         <h2 className={key === "AR" ? "all-patients-header-text-ar" : "all-patients-header-text"}>{lang[key].components.navbar.patients.pageTitle}</h2>
+                        <div style={{ backgroundColor: '#eeeeee', padding: "3px", marginRight: "15px" }}>
+                            <img className="archive-button" src={archive} />
+                        </div>
                         <TextField InputProps={{
                             startAdornment: (
                                 <img style={{ marginRight: "10px" }} src={search} width="16px" />
                             ),
                         }} className="all-patients-search-field" onChange={handleSearch} value={searchQuery} size="small" variant="outlined" placeholder={lang[key].components.search.placeholder} />
-                     
-                            <Button className="create-patient-button" onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
-                 
+
+                        <Button className="create-patient-button" onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
+
                     </div>
                 </div>
             </div>

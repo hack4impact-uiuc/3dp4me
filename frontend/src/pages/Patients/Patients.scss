@@ -16,6 +16,13 @@
         margin-right: 12px;
     }
 
+    .archive-button {
+       width: 32px;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
     .all-patients-search-field {
         margin-right: 12px;
         width: 300px;
