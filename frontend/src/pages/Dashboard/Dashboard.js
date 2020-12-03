@@ -16,7 +16,8 @@ import feedback from '../../Test Data/feedback.json';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Link } from "react-router-dom";
-import search from '../../assets/search.svg'
+import search from '../../assets/search.svg';
+import archive from '../../assets/archive.svg';
 
 const useStyles = makeStyles((theme) => ({
   swalEditButton: {
@@ -198,6 +199,9 @@ const Dashboard = (props) => {
         <div className="header">
           <div className="section">
             <h2 className={key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
+            <div style={{ backgroundColor: '#eeeeee', padding: "3px", marginRight: "15px" }}>
+              <img className="archive-button" src={archive} />
+            </div>
             <TextField InputProps={{
               startAdornment: (
                 <img style={{ marginRight: "10px" }} src={search} width="16px" />

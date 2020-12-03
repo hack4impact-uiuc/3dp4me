@@ -31,6 +31,13 @@
         margin-right: 12px;
     }
 
+    .archive-button {
+        width: 32px;
+         &:hover {
+             cursor: pointer;
+         }
+     }
+
     .patient-list-search-field {
         margin-right: 12px;
         width: 300px;
