@@ -167,7 +167,6 @@ const Patients = (props) => {
                         <MainTable
                             headers={[
                                 { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
-                                { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
                                 { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
                                 { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdit" },
                                 { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },
