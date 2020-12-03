@@ -68,6 +68,10 @@ const Controller = (props) => {
         });
     }
 
+    const handleManagePatientClose = () => {
+        // close the modal here
+    }
+
     const managePatient = () => {
         reactSwal({
             className: 'controller-manage-patient-swal',
@@ -76,7 +80,7 @@ const Controller = (props) => {
                 <div className={`controller-manage-patient-wrapper ${key == "AR" ? "controller-manage-patient-wrapper-ar" : ""}`}>
                     {key == "AR" ? 
                         <div className="manage-patient-header">
-                            <Button><CloseIcon /></Button>
+                            <Button onClick={handleManagePatientClose}><CloseIcon /></Button>
                             <h2>{lang[key].components.swal.managePatient.title}</h2>
                         </div> :
                         <div className="manage-patient-header">
@@ -230,7 +234,7 @@ const Controller = (props) => {
                                 </Accordion>
                             </div>
                         </div>
-                        <div>
+                        <div style={{display: 'flex', justifyContent: 'center'}}>
                             <Button onClick={managePatient} className="manage-patient-button">{lang[key].components.button.managePatient}</Button>
                         </div>
                     </div>
