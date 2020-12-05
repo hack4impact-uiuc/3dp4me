@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { withAuthenticator } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import awsconfig from './aws/aws-exports.js';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -34,7 +34,7 @@ function App() {
   return (
     <body dir={key == "AR" ? "rtl": "ltr"}>
       <Router>
-        <Navbar lang={langInfo} />
+        <Navbar lang={langInfo} setLang={setKey} />
         <div className={`${key == "AR" ? "flip" : ""}`}>
           <Switch>
             <div className="content">
@@ -60,9 +60,6 @@ function App() {
               </Route>
             </div>
           </Switch>
-        </div>
-        <div style={{width: '50px'}}>
-          <AmplifySignOut/>
         </div>
       </Router>
     </body>

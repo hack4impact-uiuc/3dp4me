@@ -5,6 +5,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import Logo from '../../assets/3dp4me_logo.png';
+import AccountDropdown from '../AccountDropdown/AccountDropdown';
 
 import "./Navbar.scss";
 
@@ -25,8 +26,17 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = (props) => {
   const classes = useStyles();
   const [active, setActive] = useState("dashboard");
+  const [anchorEl, setAnchorEl] = useState(null);
   const lang = props.lang.data;
   const key = props.lang.key;
+
+  const handleAccountClick = e => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleAccountClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div className="wrap-nav">
@@ -49,7 +59,18 @@ const Navbar = (props) => {
           <Link className={`nav-item ${active === "account" ? "active" : ""}`} onClick={() => setActive("account")} to="/account">
             {lang[key].components.navbar.accountManagement.navTitle}
           </Link>
-          <AccountCircleIcon className="accountCircle"></AccountCircleIcon>
+          <AccountCircleIcon
+            className="accountCircle"
+            aria-controls="account-dropdown-menu"
+            aria-haspopup="true"
+            onClick={handleAccountClick}
+          />
+          <AccountDropdown
+            anchorEl={anchorEl}
+            handleClose={handleAccountClose}
+            lang={props.lang}
+            setLang={props.setLang}
+          />
         </Toolbar>
       </AppBar>
     </div>
