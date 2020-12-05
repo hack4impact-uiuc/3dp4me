@@ -43,11 +43,16 @@ const MainTable = (props) => {
     const UNSORTED_DATA = props.patients;
     const { items, requestSort, sortConfig } = useSortableData(props.patients, UNSORTED_DATA);
 
+    console.log(items);
+
 
     const statusStyle = {
         "Finished": <div><img style={{marginRight: '6px'}} width="16px" src={finishedIcon} />{lang[key].components.bottombar.finished}</div>,
         "Partially Complete": <div style={{color: '#ff9d00'}}><img style={{marginRight: '6px'}} width="16px" src={partiallyIcon} /> {lang[key].components.bottombar.partial}</div>,
-        "Unfinished": <div style={{color: 'red'}}><img style={{marginRight: '6px'}} width="16px" src={unfinishedIcon} /> {lang[key].components.bottombar.unfinished}</div>
+        "Unfinished": <div style={{color: 'red'}}><img style={{marginRight: '6px'}} width="16px" src={unfinishedIcon} /> {lang[key].components.bottombar.unfinished}</div>,
+        "Active": <div style={{color: '#65d991'}}>{lang[key].components.bottombar.active}</div>,
+        "Archived": <div style={{color: 'black'}}><b>{lang[key].components.bottombar.archived}</b></div>,
+        "Feedback": <div style={{color: '#5395f8'}}>{lang[key].components.bottombar.feedback}</div>,
     }
 
     return (
