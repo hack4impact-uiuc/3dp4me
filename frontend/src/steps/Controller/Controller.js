@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -77,8 +77,8 @@ const Controller = (props) => {
             className: 'controller-manage-patient-swal',
             buttons: {},
             content: (
-                <div className={`controller-manage-patient-wrapper ${key == "AR" ? "controller-manage-patient-wrapper-ar" : ""}`}>
-                    {key == "AR" ? 
+                <div className={`controller-manage-patient-wrapper ${key === "AR" ? "controller-manage-patient-wrapper-ar" : ""}`}>
+                    {key === "AR" ? 
                         <div className="manage-patient-header">
                             <Button onClick={handleManagePatientClose}><CloseIcon /></Button>
                             <h2>{lang[key].components.swal.managePatient.title}</h2>
@@ -98,7 +98,7 @@ const Controller = (props) => {
                     <div className="profile-management-wrapper">
                         <h3>{lang[key].components.swal.managePatient.profileManagement}</h3>
                         <p>{lang[key].components.swal.managePatient.archiveInformation}</p>
-                        {key == "AR" ? 
+                        {key === "AR" ? 
                             <div className="profile-management-radio-button-group" onChange={handleArchivePatient}>
                                 <div>{lang[key].components.swal.managePatient.active} <input type="radio" value="active" name="archived" defaultChecked /></div>
                                 <div>{lang[key].components.swal.managePatient.archive} <input type="radio" value="archived" name="archived" /></div>
@@ -109,7 +109,7 @@ const Controller = (props) => {
                             </div>
                         }
                     </div>
-                    <div className={`manage-patient-delete ${key == "AR" ? "manage-patient-delete-ar" : ""}`}>
+                    <div className={`manage-patient-delete ${key === "AR" ? "manage-patient-delete-ar" : ""}`}>
                         <p>{lang[key].components.swal.managePatient.deleteInformation}</p>
                         <Button className="manage-patient-delete-button" onClick={handleDeletePatient}>{lang[key].components.swal.managePatient.buttons.delete}</Button>
                     </div>
@@ -130,7 +130,6 @@ const Controller = (props) => {
             setStep(newStep);
             if (newStep === "info") {
                 setPatient([])
-                console.log("here")
             } else if (newStep === "scan") {
                 setPatient([])
             } else if (newStep === "cad") {
@@ -154,26 +153,26 @@ const Controller = (props) => {
        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setEarScanStatus(e.target.value);
     }
     const handleModelStatus = (e) => {
-        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setModelStatus(e.target.value);
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setModelStatus(e.target.value);
     }
     const handlePrintStatus = (e) => {
-        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setPrintStatus(e.target.value);
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setPrintStatus(e.target.value);
     }
     const handleProcessingStatus = (e) => {
-        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setProcessingStatus(e.target.value);
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setProcessingStatus(e.target.value);
     }
     const handleDeliveryStatus = (e) => {
-        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setDeliveryStatus(e.target.value);
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setDeliveryStatus(e.target.value);
     }
     const handleFeedbackStatus = (e) => {
-        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  == "finished") setFeedbackStatus(e.target.value);
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setFeedbackStatus(e.target.value);
     }
 
     return (
         <div className="root">
             <ThemeProvider theme={key === "AR" ? theme : null}>
                 <Drawer
-                    className={key == "EN" ? "drawer" : "drawer-rtl"}
+                    className={key === "EN" ? "drawer" : "drawer-rtl"}
                     variant="permanent"
                     classes={{
                         paper: "drawer-paper",

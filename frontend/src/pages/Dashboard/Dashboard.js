@@ -141,7 +141,6 @@ const Dashboard = (props) => {
       if (newStep === "info") {
         setStepTitle("patientInfoTitle");
         setPatients(patientInfo)
-        console.log("here")
       } else if (newStep === "scan") {
         setStepTitle("earScanTitle");
         setPatients(earScan)
@@ -175,7 +174,6 @@ const Dashboard = (props) => {
   // TODO: hook up dashboard to display fetched patients
   const getPatients = async () => {
     // const res = await getAllPatients();
-    // console.log(res);
   }
 
   useEffect(() => {

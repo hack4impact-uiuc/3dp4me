@@ -43,7 +43,6 @@ const Patients = (props) => {
     const key = props.lang.key;
 
     const handleSearch = (e) => {
-        console.log(e.target.value)
         setSearchQuery(e.target.value);
         let filtered = allPatients.filter(patient =>
             patient.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
