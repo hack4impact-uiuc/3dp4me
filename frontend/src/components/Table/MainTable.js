@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Button, IconButton, SvgIcon } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import Eyecon from '../../assets/view.svg';
 import './MainTable.scss';
@@ -43,11 +43,13 @@ const MainTable = (props) => {
     const UNSORTED_DATA = props.patients;
     const { items, requestSort, sortConfig } = useSortableData(props.patients, UNSORTED_DATA);
 
-
     const statusStyle = {
-        "Finished": <div><img style={{marginRight: '6px'}} width="16px" src={finishedIcon} />{lang[key].components.bottombar.finished}</div>,
-        "Partially Complete": <div style={{color: '#ff9d00'}}><img style={{marginRight: '6px'}} width="16px" src={partiallyIcon} /> {lang[key].components.bottombar.partial}</div>,
-        "Unfinished": <div style={{color: 'red'}}><img style={{marginRight: '6px'}} width="16px" src={unfinishedIcon} /> {lang[key].components.bottombar.unfinished}</div>
+        "Finished": <div><img alt="complete" style={{marginRight: '6px'}} width="16px" src={finishedIcon} />{lang[key].components.bottombar.finished}</div>,
+        "Partially Complete": <div style={{color: '#ff9d00'}}><img alt="partial" style={{marginRight: '6px'}} width="16px" src={partiallyIcon} /> {lang[key].components.bottombar.partial}</div>,
+        "Unfinished": <div style={{color: 'red'}}><img alt="incomplete" style={{marginRight: '6px'}} width="16px" src={unfinishedIcon} /> {lang[key].components.bottombar.unfinished}</div>,
+        "Active": <div style={{color: '#65d991'}}>{lang[key].components.bottombar.active}</div>,
+        "Archived": <div style={{color: 'black'}}><b>{lang[key].components.bottombar.archived}</b></div>,
+        "Feedback": <div style={{color: '#5395f8'}}>{lang[key].components.bottombar.feedback}</div>,
     }
 
     return (
@@ -88,7 +90,7 @@ const MainTable = (props) => {
                                 <StyledTableCell className="cell" align="center">
                                     <Link className="table-view-link" to={`/patient-info/${patient._id}`}>
                                         <IconButton>
-                                            <img width="18px" src={Eyecon} />
+                                            <img alt="status icon" width="18px" src={Eyecon} />
                                         </IconButton> {lang[key].components.table.view}
                                     </Link>
                                 </StyledTableCell>

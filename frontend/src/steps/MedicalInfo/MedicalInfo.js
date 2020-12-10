@@ -55,7 +55,7 @@ const MedicalInfo = (props) => {
     useEffect(() => {
         setName(info.name);
         setDOB(info.dob);
-        setSSN(info.snn);
+        setSSN(info.ssn);
         setAddress(info.address);
         setPhone(info.phone);
         setEmName(info.emName);

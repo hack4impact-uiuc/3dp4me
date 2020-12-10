@@ -16,7 +16,8 @@ import feedback from '../../Test Data/feedback.json';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Link } from "react-router-dom";
-import search from '../../assets/search.svg'
+import search from '../../assets/search.svg';
+import archive from '../../assets/archive.svg';
 
 const useStyles = makeStyles((theme) => ({
   swalEditButton: {
@@ -118,8 +119,8 @@ const Dashboard = (props) => {
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     let filtered = patients.filter
-      (patient => patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 ||
-        patient._id.search(e.target.value) !== -1
+      (patient => patient.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
+        patient._id.indexOf(e.target.value) !== -1
       );
     setNoPatient(filtered.length === 0);
     setFilteredPatients(filtered);
@@ -140,7 +141,6 @@ const Dashboard = (props) => {
       if (newStep === "info") {
         setStepTitle("patientInfoTitle");
         setPatients(patientInfo)
-        console.log("here")
       } else if (newStep === "scan") {
         setStepTitle("earScanTitle");
         setPatients(earScan)
@@ -174,7 +174,6 @@ const Dashboard = (props) => {
   // TODO: hook up dashboard to display fetched patients
   const getPatients = async () => {
     // const res = await getAllPatients();
-    // console.log(res);
   }
 
   useEffect(() => {
@@ -198,6 +197,9 @@ const Dashboard = (props) => {
         <div className="header">
           <div className="section">
             <h2 className={key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
+            <div style={{ backgroundColor: '#eeeeee', padding: "3px", marginRight: "15px" }}>
+              <img className="archive-button" src={archive} />
+            </div>
             <TextField InputProps={{
               startAdornment: (
                 <img style={{ marginRight: "10px" }} src={search} width="16px" />

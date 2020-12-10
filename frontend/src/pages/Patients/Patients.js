@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Snackbar, TextField } from '@material-ui/core';
+import { Button, IconButton, Snackbar, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MainTable from '../../components/Table/MainTable'
 import './Patients.scss'
@@ -9,6 +8,7 @@ import allpatients from '../../Test Data/all-patients.json';
 import search from '../../assets/search.svg';
 import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
+import archive from '../../assets/archive.svg';
 
 const useStyles = makeStyles((theme) => ({
     swalEditButton: {
@@ -32,8 +32,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
-
 const Patients = (props) => {
     const classes = useStyles();
     const [allPatients, setAllPatients] = useState([]);
@@ -45,11 +43,10 @@ const Patients = (props) => {
     const key = props.lang.key;
 
     const handleSearch = (e) => {
-        console.log(e.target.value)
         setSearchQuery(e.target.value);
         let filtered = allPatients.filter(patient =>
-            patient.name.toLowerCase().search(e.target.value.toLowerCase()) !== -1 ||
-            (patient._id).search(e.target.value) !== -1);
+            patient.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
+            (patient._id).indexOf(e.target.value) !== -1);
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);
     }
@@ -134,14 +131,17 @@ const Patients = (props) => {
                 <div className="header">
                     <div className="section">
                         <h2 className={key === "AR" ? "all-patients-header-text-ar" : "all-patients-header-text"}>{lang[key].components.navbar.patients.pageTitle}</h2>
+                        <div style={{ backgroundColor: '#eeeeee', padding: "3px", marginRight: "15px" }}>
+                            <img className="archive-button" src={archive} />
+                        </div>
                         <TextField InputProps={{
                             startAdornment: (
                                 <img style={{ marginRight: "10px" }} src={search} width="16px" />
                             ),
                         }} className="all-patients-search-field" onChange={handleSearch} value={searchQuery} size="small" variant="outlined" placeholder={lang[key].components.search.placeholder} />
-                     
-                            <Button className="create-patient-button" onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
-                 
+
+                        <Button className="create-patient-button" onClick={createPatient}>{lang[key].components.button.createPatient}</Button>
+
                     </div>
                 </div>
             </div>
@@ -167,7 +167,6 @@ const Patients = (props) => {
                         <MainTable
                             headers={[
                                 { title: lang[key].components.table.mainHeaders.name, sortKey: "name" },
-                                { title: lang[key].components.table.mainHeaders.serial, sortKey: "serial" },
                                 { title: lang[key].components.table.mainHeaders.added, sortKey: "createdDate" },
                                 { title: lang[key].components.table.mainHeaders.lastEdit, sortKey: "lastEdit" },
                                 { title: lang[key].components.table.mainHeaders.status, sortKey: "status" },

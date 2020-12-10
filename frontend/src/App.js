@@ -32,7 +32,7 @@ function App() {
   }, []);
 
   return (
-    <body dir={key == "AR" ? "rtl": "ltr"}>
+    <body dir={key === "AR" ? "rtl": "ltr"}>
       <Router>
         <Navbar lang={langInfo} setLang={setKey} />
         <div className={`${key == "AR" ? "flip" : ""}`}>
