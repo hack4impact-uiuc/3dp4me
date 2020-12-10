@@ -37,7 +37,6 @@ const Printing = (props) => {
             title: lang[key].components.button.discard.question,
             text: lang[key].components.button.discard.warningMessage,
             icon: "warning",
-            buttons: true,
             dangerMode: true,
             buttons: [lang[key].components.button.discard.cancelButton, lang[key].components.button.discard.confirmButton]
           })

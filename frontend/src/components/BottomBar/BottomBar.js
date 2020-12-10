@@ -12,12 +12,10 @@ const BottomBar = (props) => {
     const key = props.lang.key;
 
     const statusIcons = {
-        finished: <img src={check} className="status-icon" />,
-        unfinished: <img src={exclamation} className="status-icon" />,
-        partial: <img src={halfCircle} className="status-icon" />
+        finished: <img alt="complete" src={check} className="status-icon" />,
+        unfinished: <img alt="incomplete" src={exclamation} className="status-icon" />,
+        partial: <img alt="partial" src={halfCircle} className="status-icon" />
     }
-
-    console.log(props.status)
     return (
         <AppBar className="bottom-bar-wrapper" color="white" style={{ top: 'auto', bottom: '0', boxShadow: "0 0px 4px 2px rgba(0, 0, 0, 0.15)" }}>
             <Toolbar className="bottom-toolbar">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,9 +19,9 @@ const ToggleButtons = (props) => {
     const key = props.lang.key;
 
     const statusIcons = {
-        unfinished: <img src={ExclamationIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />,
-        partial: <img src={HalfCircleIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />,
-        finished: <img src={CheckIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />
+        unfinished: <img alt="incomplete" src={ExclamationIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />,
+        partial: <img alt="partial" src={HalfCircleIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />,
+        finished: <img alt="complete" src={CheckIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />
     }
 
     const handleClickSelector = (e) => {

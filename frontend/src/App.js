@@ -32,10 +32,10 @@ function App() {
   }, []);
 
   return (
-    <body dir={key == "AR" ? "rtl": "ltr"}>
+    <body dir={key === "AR" ? "rtl": "ltr"}>
       <Router>
         <Navbar lang={langInfo} />
-        <div className={`${key == "AR" ? "flip" : ""}`}>
+        <div className={`${key === "AR" ? "flip" : ""}`}>
           <Switch>
             <div className="content">
               {/* Path = BASE_URL */}
