@@ -69,7 +69,7 @@ const Controller = (props) => {
     }
 
     const handleManagePatientClose = () => {
-        // close the modal here
+        swal.close();
     }
 
     const managePatient = () => {
@@ -85,7 +85,7 @@ const Controller = (props) => {
                         </div> :
                         <div className="manage-patient-header">
                             <h2>{lang[key].components.swal.managePatient.title}</h2>
-                            <Button><CloseIcon /></Button>
+                            <Button onClick={handleManagePatientClose}><CloseIcon /></Button>
                         </div>
                     }
                     <div className="profile-information-wrapper">
