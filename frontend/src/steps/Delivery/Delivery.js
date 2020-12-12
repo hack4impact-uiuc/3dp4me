@@ -73,7 +73,7 @@ const Delivery = (props) => {
                     <FormControlLabel value="pickup" control={<Radio />} label={lang[key].patientView.delivery.pickup} />
                 </RadioGroup>
             </FormControl>
-            <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar editName={info.editName} editDate={info.editDate} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

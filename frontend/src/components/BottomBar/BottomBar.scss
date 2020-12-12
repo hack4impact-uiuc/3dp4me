@@ -1,8 +1,14 @@
 @import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .bottom-bar-wrapper {
     .bottom-toolbar {
         min-height: 56px;
+    }
+
+    .editor-section {
+        flex-grow: 1;
+        margin-left: $drawerWidth;
     }
 
     .status-selector {
