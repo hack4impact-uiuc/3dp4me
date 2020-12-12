@@ -44,12 +44,12 @@ const MainTable = (props) => {
     const { items, requestSort, sortConfig } = useSortableData(props.patients, UNSORTED_DATA);
 
     const statusStyle = {
-        "Finished": <div><img alt="complete" style={{marginRight: '6px'}} width="16px" src={finishedIcon} />{lang[key].components.bottombar.finished}</div>,
-        "Partially Complete": <div style={{color: '#ff9d00'}}><img alt="partial" style={{marginRight: '6px'}} width="16px" src={partiallyIcon} /> {lang[key].components.bottombar.partial}</div>,
-        "Unfinished": <div style={{color: 'red'}}><img alt="incomplete" style={{marginRight: '6px'}} width="16px" src={unfinishedIcon} /> {lang[key].components.bottombar.unfinished}</div>,
-        "Active": <div style={{color: '#65d991'}}>{lang[key].components.bottombar.active}</div>,
-        "Archived": <div style={{color: 'black'}}><b>{lang[key].components.bottombar.archived}</b></div>,
-        "Feedback": <div style={{color: '#5395f8'}}>{lang[key].components.bottombar.feedback}</div>,
+        "Finished": <div><img alt="complete" style={{ marginRight: '6px' }} width="16px" src={finishedIcon} />{lang[key].components.bottombar.finished}</div>,
+        "Partially Complete": <div style={{ color: '#ff9d00' }}><img alt="partial" style={{ marginRight: '6px' }} width="16px" src={partiallyIcon} /> {lang[key].components.bottombar.partial}</div>,
+        "Unfinished": <div style={{ color: 'red' }}><img alt="incomplete" style={{ marginRight: '6px' }} width="16px" src={unfinishedIcon} /> {lang[key].components.bottombar.unfinished}</div>,
+        "Active": <div style={{ color: '#65d991' }}>{lang[key].components.bottombar.active}</div>,
+        "Archived": <div style={{ color: 'black' }}><b>{lang[key].components.bottombar.archived}</b></div>,
+        "Feedback": <div style={{ color: '#5395f8' }}>{lang[key].components.bottombar.feedback}</div>,
     }
 
     return (
@@ -80,10 +80,18 @@ const MainTable = (props) => {
                                 {props.rowIds.map(id => (
                                     <StyledTableCell className={key === "AR" ? "cell-rtl" : "cell"} align={key === "AR" ? "right" : "left"}>
                                         {id === "status" ? (
-                                            statusStyle[patient[id]]
+                                            <>
+                                                {patient[id] === "Feedback" ||
+                                                    patient[id] === "Archived" ||
+                                                    patient[id] === "Active" ? (
+                                                        <b>{statusStyle[patient[id]]}</b>
+                                                    ) : (
+                                                        statusStyle[patient[id]]
+                                                    )}
+                                            </>
                                         ) : (
-                                            patient[id]
-                                        )}
+                                                patient[id]
+                                            )}
                                     </StyledTableCell>
 
                                 ))}
