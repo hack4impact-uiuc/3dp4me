@@ -2,6 +2,7 @@
     "patientInfo": {
         "name": "John Doe",
         "dob": "10/31/2020",
+        "status": "Active",
         "orderId": "#9876543210",
         "ssn": "192923919",
         "address": "Test Address",
