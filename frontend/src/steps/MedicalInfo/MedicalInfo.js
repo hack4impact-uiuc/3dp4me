@@ -176,7 +176,7 @@ const MedicalInfo = (props) => {
                 />
             </RadioGroup>
             <Notes name="notes" disabled={!edit} state={setNotes} title={lang[key].components.notes.title} value={notes} />
-            <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar editName={info.editName} editDate={info.editDate} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </form>
     );
 }

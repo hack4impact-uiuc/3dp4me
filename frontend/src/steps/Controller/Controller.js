@@ -193,6 +193,10 @@ const Controller = (props) => {
                                 <span className="drawer-text-label">{lang[key].components.sidebar.dob}</span> <br />
                                 <span className="drawer-text">{patientFile.patientInfo.dob}</span>
                             </div>
+                            <div className="drawer-text-section">
+                                <span className="drawer-text-label">{lang[key].components.sidebar.status}</span> <br />
+                                <span className="drawer-text">{patientFile.patientInfo.status}</span>
+                            </div>
                             <span className="drawer-text-label">{lang[key].components.notes.title}</span>
                             <div className="drawer-notes-wrapper">
                                 <Accordion expanded={expanded === 'info'} onChange={handleNotePanel('info')}>

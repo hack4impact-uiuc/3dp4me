@@ -197,9 +197,6 @@ const Dashboard = (props) => {
         <div className="header">
           <div className="section">
             <h2 className={key === "AR" ? "patient-list-title-ar" : "patient-list-title"}>{lang[key].pages[stepTitle]}</h2>
-            <div style={{ backgroundColor: '#eeeeee', padding: "3px", marginRight: "15px" }}>
-              <img className="archive-button" src={archive} />
-            </div>
             <TextField InputProps={{
               startAdornment: (
                 <img style={{ marginRight: "10px" }} src={search} width="16px" />
