@@ -70,6 +70,8 @@ const Navbar = (props) => {
             handleClose={handleAccountClose}
             lang={props.lang}
             setLang={props.setLang}
+            username={props.username}
+            userEmail={props.userEmail}
           />
         </Toolbar>
       </AppBar>

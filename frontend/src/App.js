@@ -11,12 +11,13 @@ import Navbar from "./components/Navbar/Navbar";
 import MedicalInfo from "./steps/MedicalInfo/MedicalInfo";
 import Controller from './steps/Controller/Controller';
 import language from './language.json';
-import { getCredentials } from './aws/aws-helper.js';
+import { getCredentials, getCurrentUserInfo } from './aws/aws-helper.js';
 
 Amplify.configure(awsconfig)
 
 function App() {
-
+  const [username, setUsername] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [key, setKey] = useState("EN");
   
   cred();
@@ -27,14 +28,20 @@ function App() {
   }
 
   useEffect(() => {
+    const getUserInfo = async () => {
+      const userInfo = await getCurrentUserInfo();
+      setUsername(userInfo.username);
+      setUserEmail(userInfo.email);
+    }
     // TODO: get user session langauge
     setKey("EN");
+    getUserInfo();
   }, []);
 
   return (
     <body dir={key === "AR" ? "rtl": "ltr"}>
       <Router>
-        <Navbar lang={langInfo} setLang={setKey} />
+        <Navbar lang={langInfo} setLang={setKey} username={username} userEmail={userEmail} />
         <div className={`${key == "AR" ? "flip" : ""}`}>
           <Switch>
             <div className="content">

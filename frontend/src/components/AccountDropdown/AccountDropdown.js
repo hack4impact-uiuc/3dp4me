@@ -1,18 +1,31 @@
 import React from "react";
 import { AmplifySignOut } from '@aws-amplify/ui-react';
 import Menu from '@material-ui/core/Menu';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { makeStyles } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const useStyles = makeStyles({
-  languageSelector: {
+  menuWrapper: {
+    margin: "10px",
+    width: "fit-content",
+  },
+  accountEmail: {
+    color: "grey",
+    lineHeight: "0px",
+  },
+  languageSelectorWrapper: {
     display: "flex",
-    justifyContent: "center",
-    height: "42px",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  languageSelector: {
+    height: "35px",
+    marginLeft: "5px",
   },
   signOutButton: {
-    padding: "8px 18px 0px 18px",
+    padding: "8px 0px 0px 0px",
   }
 });
 
@@ -20,8 +33,8 @@ const AccountDropdown = (props) => {
   const styles = useStyles();
   const key = props.lang.key;
 
-  const handleLanguageSelect = (e, selectedLang) => {
-    props.setLang(selectedLang);
+  const handleLanguageSelect = e => {
+    props.setLang(e.target.value);
   }
 
   return (
@@ -35,21 +48,20 @@ const AccountDropdown = (props) => {
         open={Boolean(props.anchorEl)}
         onClose={props.handleClose}
       >
-        <div className={styles.languageSelector}>
-          <ToggleButtonGroup
-            value={key}
-            exclusive
-            onChange={handleLanguageSelect}
-          >
-            <ToggleButton value="EN">
-              English
-            </ToggleButton>
-            <ToggleButton value="AR">
-              Arabic
-            </ToggleButton>
-          </ToggleButtonGroup>
+        <div className={styles.menuWrapper}>
+          <p>{props.username}</p>
+          <p className={styles.accountEmail}>{props.userEmail}</p>
+          <div className={styles.languageSelectorWrapper}>
+            <p>Language</p>
+            <FormControl variant="outlined" className={styles.languageSelector}>
+              <Select value={key} onChange={handleLanguageSelect}>
+                <MenuItem value="EN">EN</MenuItem>
+                <MenuItem value="AR">AR</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className={styles.signOutButton}><AmplifySignOut/></div>
         </div>
-        <div className={styles.signOutButton}><AmplifySignOut/></div>
       </Menu>
     </div>
   );
