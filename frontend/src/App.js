@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import awsconfig from './aws/aws-exports.js';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -13,7 +12,6 @@ import Controller from './steps/Controller/Controller'
 import language from './language.json';
 import { Auth } from "aws-amplify";
 import Login from "./components/Login/Login"
-import { getCredentials } from './aws/aws-helper.js';
 
 Amplify.configure(awsconfig)
 const AUTHENTICATED = "AUTH"
@@ -22,7 +20,7 @@ const UNDEFINED_AUTH = "UNDEFINED"
 
 function App() {
   const [key, setKey] = useState("EN");
-  const [authLevel, setAuthLevel] = useState(UNAUTHENTICATED)
+  const [authLevel, setAuthLevel] = useState(UNDEFINED_AUTH)
   const langInfo = {
     data: language,
     key: key
@@ -43,7 +41,6 @@ function App() {
         <div className={`${key == "AR" ? "flip" : ""}`}>
           <Switch>
             <div className="content">
-              {/* Path = BASE_URL */}
               <Route exact path="/">
                 <Dashboard lang={langInfo} />
               </Route>
