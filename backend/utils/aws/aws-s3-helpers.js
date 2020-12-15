@@ -9,7 +9,7 @@ var AWS = require('aws-sdk');
 * @param onUploaded Callback after finished uploading. Params are (err, data).
 */
 const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
-    var params = {
+    let params = {
         Body: content, 
         Bucket: S3_INFO.S3_BUCKET_NAME, 
         Key: remoteFileName,
@@ -26,13 +26,13 @@ const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
  * @param onDownloaded Callback after finished downloading. Params are (err, data).
  */
 const downloadFile = (objectKey, credentials, onDownloaded) => {
-    var params = {
+    let params = {
         Bucket: S3_INFO.S3_BUCKET_NAME, 
         Key: objectKey
     };
 
     let s3 = getS3(credentials)
-    let object = s3.getObject(params, onDownloaded)
+    let object = s3.getObject(params, onDownloaded);
 
     return object
 }
