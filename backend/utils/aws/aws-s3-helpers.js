@@ -25,14 +25,14 @@ const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
  * @param credentials The temporary credentials of the end user. Frontend should provide this.
  * @param onDownloaded Callback after finished downloading. Params are (err, data).
  */
-const downloadFile = (objectKey, credentials, onDownloaded) => {
+const downloadFile = (objectKey, credentials) => {
     let params = {
         Bucket: S3_INFO.S3_BUCKET_NAME, 
         Key: objectKey
     };
 
     let s3 = getS3(credentials)
-    let object = s3.getObject(params, onDownloaded);
+    var object = s3.getObject(params);
 
     return object
 }
