@@ -58,7 +58,6 @@ router.get(
         var s3Stream = downloadFile(`${patient.name}/${stage}/${filename}`, credentials).createReadStream();
         // Listen for errors returned by the service
         s3Stream.on('error', function(err) {
-            // capture any errors that occur when writing data to the file
             res.json('S3 Error:' + err);
         }).on('close', function() {
             res.end();
