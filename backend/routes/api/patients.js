@@ -53,18 +53,10 @@ router.get(
             next(error);
         });
          //TODO: Replace these credential fields with one central credential object passed in
-        const credentials = { 
-            accessKeyId: "ASIA2CPQRHMYGCPK53R2", 
-            authenticated: true, 
-            identityId: "us-east-2:6046ac5f-5c14-4de3-b6d8-d984e4052c90", 
-            secretAccessKey: "Z6ZIfhFhtP0c0ZdF7IyXCSBhfC9umf3FUeO0q1Vv", 
-            sessionToken: "IQoJb3JpZ2luX2VjEGIaCXVzLWVhc3QtMiJHMEUCIHpaHVgzvF8M7DGSw6Hxvl6BUbDZaz6QWOwCc6UP0jOJAiEAqI6WcySaYqZtdscbEVHj+xESnJdbAAS+uCDVSr3O6WQqzQQI+///////////ARAAGgw2OTI1MzEwNTEzMTIiDA1NceCR95tTnQKhWyqhBPXoSWUMPAjpCEF++r5/KxjFPpABLZfGFWBPxjx5rWXu6pow4KxFYknBSCAwpvh1TeM+vL0Jd3kqDwLX8sRD0VcfYai9gJEqPFKTOvj8L8/uLMF61/Ku7HO97ouP0Jl6Rik70n5RXg3IaPWakyCi+bAWafWBZ3UfQR8IKOy3E+U5K1mNIaEFptnU9h/YCYuMOmSf2IRNAeATvnvjUGO662jMCoBo0Rz/4sr3pALRH5m7yP/VWSfRfrH+vM+bSrXZNqESg+NnP9x18P51cypjUUZUK6gxd2wXi33XbZshiawVKNHGE9HuC/7DlPJP9fyG17UMBLXvKZM1WHO25V4GJL2IcGCOPMKWXiem+dbTSHq4fBNreQNFtoAqXZB6uFrQ8YGLnz0xp+IEN//DZvhylCSauNYyz3vTmZgAnIMH/0BsFDOI8xg4rz3A6lH6EXrBBRFbFd+zPkGS18s2BqCaTElAF5FouQ5CER6dn0zXA+jOVmWzvzky7Y4uhS3EcxgHyWNsm/pTrbUt6RKQIVSMf/SZAIfu46ffbt+W3v/jLgQVORJLQRSioAlW7jFAU8VttHit2bmjqnfMdDy4imcjJjmZmrWCSA1HnK4Px4uypZRnpNauUlTuw9kDfVL9O0r3iCvJIWCmlrhO/ALiAeJOwACMOnobVrW0HMnkBn8Hsc2JZHw9TDxgay+JzEtJrNFbmtGXMDDQyR4R+MQq1TGIYoVNMNvN5f4FOoUCZ05nVHm+JZNMn0K9Io4OBYtFOpyBqEHb/RqJwbtdWK0q5+xYm5vTmOBGVQP/mgCqXvAX9RN0oU6z9/IU/42Pn1YTYYnOvRsTPWOHLfm1UPthytbuIpHa8NONpBH6Ds1XR6mP/UmEedAUFR8K4j/du5nMiHEr7SVcqzxju5otFF33tX4DBg8zVmvww3IKaVg/xBSFGfKzYBjd+VuhRlYdQAQzEj3FlrDuLqchJJnpR04v2r27YbHmCpnMvWlTJ4U29Xp1+o1kA2HQRcXz2GfmS6oluexuYhizbXKUIV7/PoYptPJzAh/oG75Mrx3PDTa8xWXIa5CXGpLbak6WzpRGcMQw1fA6"
-        }
-        //const {accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
-        //const credentials = {accessKeyId: accessKeyId, authenticated: authenticated, identityId: identityId, secretAccessKey: secretAccessKey, sessionToken: sessionToken};
+        const {accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
+        const credentials = {accessKeyId: accessKeyId, authenticated: authenticated, identityId: identityId, secretAccessKey: secretAccessKey, sessionToken: sessionToken};
         var s3Stream = downloadFile(`${patient.name}/${stage}/${filename}`, credentials).createReadStream();
         // Listen for errors returned by the service
-        //res.attachment(filename);
         s3Stream.on('error', function(err) {
             // capture any errors that occur when writing data to the file
             res.json('S3 Error:' + err);
