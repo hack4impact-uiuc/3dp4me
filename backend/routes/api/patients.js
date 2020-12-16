@@ -3,7 +3,6 @@ const router = express.Router();
 const { errorWrap } = require("../../utils");
 const { models } = require("../../models");
 const { uploadFile, downloadFile } = require("../../utils/aws/aws-s3-helpers");
-const fs = require('fs');
 
 // Get all patients (query parameter "stage")
 router.get(
