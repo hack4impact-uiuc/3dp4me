@@ -9,7 +9,7 @@ var AWS = require('aws-sdk');
 * @param onUploaded Callback after finished uploading. Params are (err, data).
 */
 const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
-    var params = {
+    let params = {
         Body: content, 
         Bucket: S3_INFO.S3_BUCKET_NAME, 
         Key: remoteFileName,
@@ -25,25 +25,26 @@ const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
  * @param credentials The temporary credentials of the end user. Frontend should provide this.
  * @param onDownloaded Callback after finished downloading. Params are (err, data).
  */
-const downloadFile = (objectKey, credentials, onDownloaded) => {
-    var params = {
+const downloadFile = (objectKey, credentials) => {
+    let params = {
         Bucket: S3_INFO.S3_BUCKET_NAME, 
         Key: objectKey
     };
 
     let s3 = getS3(credentials)
-    let object = s3.getObject(params, onDownloaded)
+    var object = s3.getObject(params);
 
     return object
 }
 
 function getS3(credentials) {
-  let s3 = new AWS.S3({
-      accessKeyId: credentials.accessKeyId,
-      secretAccessKey: credentials.secretAccessKey,
-      sessionToken: credentials.sessionToken,
-      region: S3_INFO.S3_REGION,
-  })
+    // AWS.config.update(credentials);
+    let s3 = new AWS.S3({
+        accessKeyId: credentials.accessKeyId,
+        secretAccessKey: credentials.secretAccessKey,
+        sessionToken: credentials.sessionToken,
+        region: S3_INFO.S3_REGION,
+    })
 
   return s3
 }
