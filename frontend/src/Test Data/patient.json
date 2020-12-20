@@ -1,10 +1,14 @@
 {
+    "_id": "5fdfcb796bdda9d83cc26b08",
+    "createdDate": "February 26, 2020",
+    "lastEdited": "September 2, 2020",
+    "status": "Active",
     "patientInfo": {
         "name": "John Doe",
         "dob": "10/31/2020",
         "status": "Active",
-        "editName": "Evan Eckels",
-        "editDate": "10/1/2020 9:58 P.M.",
+        "lastEditedBy": "Evan Eckels",
+        "lastEdited": "10/1/2020 9:58 P.M.",
         "orderId": "#9876543210",
         "ssn": "192923919",
         "address": "Test Address",
@@ -16,34 +20,35 @@
         "notes": "This is a test section with a lot of random text just to get an idea for how it will look when we actually have to pull a reasonable amount of text for the individual patient."
     },
     "earScanInfo": {
-        "editName": "Evan Eckels",
-        "editDate": "10/1/2020 9:58 P.M.",
+        "lastEditedBy": "Evan Eckels",
+        "lastEdited": "10/1/2020 9:58 P.M.",
         "notes": "This is a test section with a lot of random text just to get an idea for how it will look when we actually have to pull a reasonable amount of text for the individual patient."
     },
     "modelInfo": {
-        "editName": "Evan Eckels",
-        "editDate": "10/1/2020 9:58 P.M.",
+        "lastEditedBy": "Evan Eckels",
+        "lastEdited": "10/1/2020 9:58 P.M.",
         "notes": "This is a test section with a lot of random text just to get an idea for how it will look when we actually have to pull a reasonable amount of text for the individual patient."
     },
     "printingInfo": {
-        "editName": "Evan Eckels",
-        "editDate": "10/1/2020 9:58 P.M.",
+        "lastEditedBy": "Evan Eckels",
+        "lastEdited": "10/1/2020 9:58 P.M.",
         "notes": "This is a test section with a lot of random text just to get an idea for how it will look when we actually have to pull a reasonable amount of text for the individual patient."
     },
     "processingInfo": {
-        "editName": "Evan Eckels",
-        "editDate": "10/1/2020 9:58 P.M.",
+        "lastEditedBy": "Evan Eckels",
+        "lastEdited": "10/1/2020 9:58 P.M.",
         "notes": "This is a test section with a lot of random text just to get an idea for how it will look when we actually have to pull a reasonable amount of text for the individual patient."
     },
     "deliveryInfo": {
-        "editName": "Evan Eckels",
-        "editDate": "10/1/2020 9:58 P.M.",
+        "lastEditedBy": "Evan Eckels",
+        "lastEdited": "10/1/2020 9:58 P.M.",
         "address": "Test Address",
         "status": "ready"
     },
     "feedbackInfo": {
-        "editName": "Evan Eckels",
-        "editDate": "10/1/2020 9:58 P.M.",
+        "lastEditedBy": "Evan Eckels",
+        "lastEdited": "10/1/2020 9:58 P.M.",
+        "feedbackCycle": "2 year",
         "initial": {
             "notes": "This is a test section with a lot of random text just to get an idea for how it will look when we actually have to pull a reasonable amount of text for the individual patient.",
             "date": "11/1/2020"
