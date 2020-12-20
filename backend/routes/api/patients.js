@@ -23,7 +23,6 @@ router.get(
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
         models.Patient.findById(id, stage).then(stageInfo => {
-            
             res.status(200).json({
                 code: 200, 
                 success: true, 
