@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import getCurrentUserInfo from ('../aws/aws-helper');
+import getCurrentUserInfo from '../aws/aws-helper';
 const FileDownload = require('js-file-download');
 
 const instance = axios.create({
