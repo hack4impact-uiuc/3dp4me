@@ -6,6 +6,9 @@ import swal from 'sweetalert'
 
 import './CADModel.scss';
 
+import '../../utils/api';
+import { downloadFile } from '../../utils/api';
+
 const CADModel = (props) => {
 
     const info = props.info;
@@ -23,6 +26,8 @@ const CADModel = (props) => {
     const key = props.lang.key;
 
     const handleDownloadCAD = (e) => {
+        // TODO: Call file download endpoint
+        downloadFile(null, null, e.fileName);
 
     }
 

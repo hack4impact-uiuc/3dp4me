@@ -77,12 +77,14 @@ router.post(
         const patient = await models.Patient.findById(id);
         if(req.files) {
             let file = req.files.uploadedFile;
-            patient[stage].files.push({filename: file.name, uploadedBy: userID, uploadDate: new Date()});
             uploadFile(file.data, `${patient.name}/${stage}/${file.name}`, {accessKeyId: accessKeyId, authenticated: authenticated, identityId: identityId, secretAccessKey: secretAccessKey, sessionToken: sessionToken}, function(err, data) {
                 if(err) {
                     res.json(err)
+                } else {
+                    // update database only if upload was successful
+                    patient[stage].files.push({filename: file.name, uploadedBy: userID, uploadDate: new Date()});
                 }
-            })
+            });
         } 
         //TODO: use name of input field possibly?
         patient[stage].lastEdit = Date.now();

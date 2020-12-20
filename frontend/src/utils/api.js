@@ -1,5 +1,8 @@
 import axios from "axios";
 
+import getCurrentUserInfo from ('../aws/aws-helper');
+const FileDownload = require('js-file-download');
+
 const instance = axios.create({
     baseURL: "http://localhost:5000/api",
 });
@@ -38,3 +41,18 @@ export const completeStage = (patientId, stage) => {
             },
         );
 };
+
+export const downloadFile = (patientId, stage, filename) => {
+    const requestString = `/patients/${patientId}/${stage}/${filename}`;
+    let credentials = await getCurrentUserInfo();
+    let userID = credentials.id;
+    return instance
+        .get(requestString, { userId: userID, responseType: 'blob' }) // TODO: use AWS userId
+        .then(
+            res => FileDownload(res.data, filename),
+            err => {
+                console.error(err);
+                return null;
+            },
+        );
+}
