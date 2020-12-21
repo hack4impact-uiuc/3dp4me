@@ -66,7 +66,8 @@ router.post(
                 res.json(err)
             } else {
                 // update database only if upload was successful
-                patient[stage].files.push({filename: file.name, uploadedBy: userID, uploadDate: new Date()});
+                patient[stage].files.push({filename: file.name, uploadedBy: userID, uploadDate: Date.now()});
+                patient.save();
                 res.status(201).json({
                     success: true,
                     message: 'Patient status updated with new file',

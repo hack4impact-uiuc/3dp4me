@@ -13,9 +13,9 @@ const overallStatusEnum = {
 };
 
 const stageStatusEnum = {
-    NOTTOUCHED: "NOT TOUCHED",
-    PARTIALLYDONE: "PARTIALLY DONE",
-    COMPLETE: "COMPLETE"
+    UNFINISHED: "Unfinished",
+    PARTIAL: "Partially Complete",
+    FINISHED: "Finished"
 };
 
 const deliveryEnum = {
@@ -41,7 +41,6 @@ const patientSchema = new mongoose.Schema({
     lastEdited: { type: Date, required: true, default: Date.now },
     patientInfo: {
         name: { type: String, required: true },
-        serial: { type: String, required: true, unique: true },
         ssn: { type: String, required: true, unique: true },
         orderId: { type: String, required: true, unique: true },
         dob: {type: Date, required: true},
@@ -57,8 +56,8 @@ const patientSchema = new mongoose.Schema({
         },
         status: {
             type: String,
-            enum: [stageStatusEnum.NOTTOUCHED, stageStatusEnum.PARTIALLYDONE, stageStatusEnum.COMPLETE],
-            default: stageStatusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
         lastEditedBy: { type: String, default: "" },
@@ -68,8 +67,8 @@ const patientSchema = new mongoose.Schema({
     earScanInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.NOTTOUCHED, stageStatusEnum.PARTIALLYDONE, stageStatusEnum.COMPLETE],
-            default: stageStatusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
         lastEditedBy: { type: String, default: "" },
@@ -79,8 +78,8 @@ const patientSchema = new mongoose.Schema({
     modelInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.NOTTOUCHED, stageStatusEnum.PARTIALLYDONE, stageStatusEnum.COMPLETE],
-            default: stageStatusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
         lastEditedBy: { type: String, default: "" },
@@ -90,8 +89,8 @@ const patientSchema = new mongoose.Schema({
     printingInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.NOTTOUCHED, stageStatusEnum.PARTIALLYDONE, stageStatusEnum.COMPLETE],
-            default: stageStatusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
         lastEditedBy: { type: String, default: "" },
@@ -101,8 +100,8 @@ const patientSchema = new mongoose.Schema({
     processingInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.NOTTOUCHED, stageStatusEnum.PARTIALLYDONE, stageStatusEnum.COMPLETE],
-            default: stageStatusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
         lastEditedBy: { type: String, default: "" },
@@ -112,8 +111,8 @@ const patientSchema = new mongoose.Schema({
     deliveryInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.NOTTOUCHED, stageStatusEnum.PARTIALLYDONE, stageStatusEnum.COMPLETE],
-            default: stageStatusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
         lastEditedBy: { type: String, default: "" },
@@ -123,8 +122,8 @@ const patientSchema = new mongoose.Schema({
     feedbackInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.NOTTOUCHED, stageStatusEnum.PARTIALLYDONE, stageStatusEnum.COMPLETE],
-            default: stageStatusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
         feedbackCycle: {
             type: String,
