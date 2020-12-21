@@ -38,6 +38,7 @@ router.get(
         const { id, stage, filename } = req.params;
         //TODO: Replace these credential fields with one central credential object passed in
         const {accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
+        console.log(req);
         const credentials = {accessKeyId: accessKeyId, authenticated: authenticated, identityId: identityId, secretAccessKey: secretAccessKey, sessionToken: sessionToken};
         var s3Stream = downloadFile(`${id}/${stage}/${filename}`, credentials).createReadStream();
         // Listen for errors returned by the service
