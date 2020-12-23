@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Amplify } from 'aws-amplify';
+import { Amplify, Auth, Hub } from 'aws-amplify';
 import awsconfig from './aws/aws-exports.js';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -10,13 +10,10 @@ import Navbar from "./components/Navbar/Navbar";
 import MedicalInfo from "./steps/MedicalInfo/MedicalInfo"
 import Controller from './steps/Controller/Controller'
 import language from './language.json';
-import { Auth } from "aws-amplify";
 import Login from "./components/Login/Login"
+import { UNDEFINED_AUTH, AUTHENTICATED, UNAUTHENTICATED, setAuthListener } from './aws/aws-auth.js';
 
 Amplify.configure(awsconfig)
-const AUTHENTICATED = "AUTH"
-const UNAUTHENTICATED = "UNAUTH"
-const UNDEFINED_AUTH = "UNDEFINED"
 
 function App() {
   const [key, setKey] = useState("EN");
@@ -34,41 +31,48 @@ function App() {
       .catch(() => {setAuthLevel(UNAUTHENTICATED)})
   }, []);
 
-  return (
-    <body dir={key == "AR" ? "rtl": "ltr"}>
-      {authLevel == AUTHENTICATED ? <Router>
-        <Navbar lang={langInfo} />
-        <div className={`${key == "AR" ? "flip" : ""}`}>
-          <Switch>
-            <div className="content">
-              <Route exact path="/">
-                <Dashboard lang={langInfo} />
-              </Route>
-              {/* Path = BASE_URL/account */}
-              <Route exact path="/account">
-                <AccountManagement lang={langInfo} />
-              </Route>
-              {/* Path = BASE_URL/metrics */}
-              <Route exact path="/metrics">
-                <Metrics lang={langInfo} />
-              </Route>
-              {/* Path = BASE_URL/patients */}
-              <Route exact path="/patients">
-                <Patients lang={langInfo} />
-              </Route>
-              {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
-              <Route exact path="/patient-info/:serial">
-                <Controller lang={langInfo} />
-              </Route>
-              {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
-            </div>
-          </Switch>
-        </div>
-      </Router> : authLevel == UNAUTHENTICATED ? 
-      <Login /> : 
-      <p>Checking login status</p> }
-    </body>
-  );
+  setAuthListener((newAuthLevel) => setAuthLevel(newAuthLevel));
+
+  if (authLevel == UNDEFINED_AUTH)
+    return ( <p>Authenticating user</p> );
+
+  if (authLevel == UNAUTHENTICATED)
+    return ( <Login /> );
+
+  if (authLevel == AUTHENTICATED)
+    return (
+      <body dir={key == "AR" ? "rtl": "ltr"}>
+        <Router>
+          <Navbar lang={langInfo} />
+          <div className={`${key == "AR" ? "flip" : ""}`}>
+            <Switch>
+              <div className="content">
+                <Route exact path="/">
+                  <Dashboard lang={langInfo} />
+                </Route>
+                {/* Path = BASE_URL/account */}
+                <Route exact path="/account">
+                  <AccountManagement lang={langInfo} />
+                </Route>
+                {/* Path = BASE_URL/metrics */}
+                <Route exact path="/metrics">
+                  <Metrics lang={langInfo} />
+                </Route>
+                {/* Path = BASE_URL/patients */}
+                <Route exact path="/patients">
+                  <Patients lang={langInfo} />
+                </Route>
+                {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
+                <Route exact path="/patient-info/:serial">
+                  <Controller lang={langInfo} />
+                </Route>
+                {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
+              </div>
+            </Switch>
+          </div>
+        </Router>
+      </body>
+    );
 }
 
 export default App;
