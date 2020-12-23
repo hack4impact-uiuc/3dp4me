@@ -91,7 +91,7 @@ function App() {
 
 async function cred() {
   console.log('credentials hit')
-  console.log(await getCredentials());
+  // console.log(await getCredentials());
 }
 
 export default App;
