@@ -1,12 +1,5 @@
 import { Auth } from "aws-amplify";
 
-const DEFAULT_USER_INFO = {
-    attributes: {
-        email: "User not signed in",
-        id: "0",
-        username: "Guest",
-    }
-}
 const KEY_GROUPS = "cognito:groups";
 const KEY_BASIC_USER = "3DP_4ME_USER";
 export var credentials = null;
@@ -42,10 +35,7 @@ async function getAuthRoleNames(){
  * Returns some info about the current signed in user
  */
 export async function getCurrentUserInfo(){
-    let userInfo = await Auth.currentUserInfo();
-    if (userInfo == null)
-        userInfo = DEFAULT_USER_INFO
-
+	let userInfo = await Auth.currentUserInfo();
 	return {
 		email: userInfo.attributes.email,
 		id: userInfo.attributes.sub,
