@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import BottomBar from '../../components/BottomBar/BottomBar';
-import Download from '../../components/FileDownload/Download';
+import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
 import swal from 'sweetalert';
 
@@ -37,7 +37,6 @@ const PostProcessing = (props) => {
             title: lang[key].components.button.discard.question,
             text: lang[key].components.button.discard.warningMessage,
             icon: "warning",
-            buttons: true,
             dangerMode: true,
             buttons: [lang[key].components.button.discard.cancelButton, lang[key].components.button.discard.confirmButton]
           })
@@ -58,9 +57,9 @@ const PostProcessing = (props) => {
         <div>
             <h1>{lang[key].patientView.postProcessing.title}</h1>
             <p>Last edited by Im Tired on 10/05/2020 9:58PM</p>
-            <Download lang={props.lang} title={lang[key].components.file.title} fileName="file_name.SCAN" state={setDownloadProcessing} />
+            <Files lang={props.lang} title={lang[key].components.file.title} fileNames={["file_name.SCAN"]} handleDownload={setDownloadProcessing} />
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={processingNotes} state={setProcessingNotes} />
-            <BottomBar discard={{state: trigger, setState: discardData}} save = {saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar editName={info.editName} editDate={info.editDate} discard={{state: trigger, setState: discardData}} save = {saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

@@ -1,16 +1,27 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 import './BottomBar.scss';
+import check from '../../assets/check.svg';
+import exclamation from '../../assets/exclamation.svg';
+import halfCircle from '../../assets/half-circle.svg';
+
 
 const BottomBar = (props) => {
 
     const lang = props.lang.data;
     const key = props.lang.key;
 
+    const statusIcons = {
+        finished: <img alt="complete" src={check} className="status-icon" />,
+        unfinished: <img alt="incomplete" src={exclamation} className="status-icon" />,
+        partial: <img alt="partial" src={halfCircle} className="status-icon" />
+    }
     return (
-        <AppBar className="bottom-bar-wrapper" color="white" style={{ top: 'auto', bottom: '0' }}>
-            <Toolbar>
-                <div style={{ flexGrow: 1 }} />
+        <AppBar className="bottom-bar-wrapper" color="white" style={{ top: 'auto', bottom: '0', boxShadow: "0 0px 4px 2px rgba(0, 0, 0, 0.15)" }}>
+            <Toolbar className="bottom-toolbar">
+                <div className="editor-section" style={{ flexGrow: 1, color: 'black' }}>
+                    {`${lang[key].components.bottombar.lastEdit.split("...")[0]} ${props.editName} ${lang[key].components.bottombar.lastEdit.split("...")[1]} ${props.editDate}`}
+                </div>
                 {props.edit ? (
                     <div>
                         {key !== "AR" ? (
@@ -38,10 +49,10 @@ const BottomBar = (props) => {
                         )}
                     </div>
                 ) : (
-                    <div>
-                        <span className={`status ${props.status.value}`}>
-                            {lang[key].components.bottombar[props.status.value]}
-                        </span>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <div className={`status ${props.status.value}`} style={{display: 'flex', alignItems: 'center'}}>
+                            {statusIcons[props.status.value]} {lang[key].components.bottombar[props.status.value]}
+                        </div>
                         <Button className="edit-button" onClick={() => props.setEdit(true)}>
                             {lang[key].components.button.edit}
                         </Button>

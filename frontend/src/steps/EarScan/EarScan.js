@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Fab, IconButton } from '@material-ui/core';
 import Notes from '../../components/Notes/Notes';
-import Download from '../../components/FileDownload/Download';
+import Files from '../../components/Files/Files';
 import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
+
+import './EarScan.scss';
 
 const EarScan = (props) => {
     const info = props.info
@@ -12,6 +14,8 @@ const EarScan = (props) => {
     const [notes, setNotes] = useState("");
     const [download, setDownload] = useState();
     const [edit, setEdit] = useState(false);
+    const [leftEarFiles, setLeftEarFiles] = useState([]);
+    const [rightEarFiles, setRightEarFiles] = useState([]);
     const formFields = {
         download: download,
         notes: notes,
@@ -20,7 +24,35 @@ const EarScan = (props) => {
     const key = props.lang.key;
 
     const handleDownload = (e) => {
+        
+    }
 
+    const handleLeftUpload = (e) => {
+        e.preventDefault();
+        const fileToUpload = e.target.files[0];
+        let formData = new FormData();
+        setLeftEarFiles(files => files.concat(fileToUpload.name));
+        formData.append("file", fileToUpload);
+        // TODO: Call file upload endpoint
+    }
+
+    const handleRightUpload = (e) => {
+        e.preventDefault();
+        const fileToUpload = e.target.files[0];
+        let formData = new FormData();
+        setRightEarFiles(files => files.concat(fileToUpload.name));
+        formData.append("file", fileToUpload);
+        // TODO: Call file upload endpoint
+    }
+
+    const handleDelete = (fileName) => {
+        let index = leftEarFiles.indexOf(fileName);
+        if (index > -1) {
+            setLeftEarFiles(leftEarFiles.filter(file => file !== fileName));
+        } else {
+            setRightEarFiles(rightEarFiles.filter(file => file !== fileName));
+        }
+        // TODO: Call file delete endpoint
     }
 
     const postData = (e) => {
@@ -59,13 +91,15 @@ const EarScan = (props) => {
     }
 
     return (
-        <div>
+        <div className="ear-scan-wrapper">
             <h1>{lang[key].patientView.earScan.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
-            <Download lang={props.lang} title={lang[key].patientView.earScan.fileHeader} fileName="file_name.SCAN" state={handleDownload} />
+            <div className="ear-scan-files">
+                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderLeft} fileNames={leftEarFiles} handleDownload={handleDownload} handleUpload={handleLeftUpload} handleDelete={handleDelete} />
+                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderRight} fileNames={rightEarFiles} handleDownload={handleDownload} handleUpload={handleRightUpload} handleDelete={handleDelete} />
+            </div>
             <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
-            <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
-
+            <BottomBar editName={info.editName} editDate={info.editDate} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

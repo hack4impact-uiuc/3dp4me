@@ -7,28 +7,42 @@ import AccountManagement from "./pages/AccountManagement/AccountManagment";
 import Metrics from "./pages/Metrics/Metrics";
 import Patients from "./pages/Patients/Patients";
 import Navbar from "./components/Navbar/Navbar";
-import MedicalInfo from "./steps/MedicalInfo/MedicalInfo"
-import Controller from './steps/Controller/Controller'
+import MedicalInfo from "./steps/MedicalInfo/MedicalInfo";
+import Controller from './steps/Controller/Controller';
 import language from './language.json';
 import Login from "./components/Login/Login"
 import { UNDEFINED_AUTH, AUTHENTICATED, UNAUTHENTICATED, setAuthListener } from './aws/aws-auth.js';
+import { getCredentials, getCurrentUserInfo } from './aws/aws-helper.js';
 
 Amplify.configure(awsconfig)
 
 function App() {
   const [key, setKey] = useState("EN");
   const [authLevel, setAuthLevel] = useState(UNDEFINED_AUTH)
+  const [username, setUsername] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  
+  cred();
+
   const langInfo = {
     data: language,
     key: key
   }
 
   useEffect(() => {
-    // TODO: get user session langauge
-    setKey("EN");
+    const getUserInfo = async () => {
+      const userInfo = await getCurrentUserInfo();
+      setUsername(userInfo.username);
+      setUserEmail(userInfo.email);
+    }
+
     Auth.currentAuthenticatedUser()
       .then(() => {setAuthLevel(AUTHENTICATED)})
       .catch(() => {setAuthLevel(UNAUTHENTICATED)})
+
+    // TODO: get user session langauge
+    setKey("EN");
+    getUserInfo();
   }, []);
 
   setAuthListener((newAuthLevel) => setAuthLevel(newAuthLevel));
@@ -41,12 +55,13 @@ function App() {
 
   if (authLevel == AUTHENTICATED)
     return (
-      <body dir={key == "AR" ? "rtl": "ltr"}>
+      <body dir={key === "AR" ? "rtl": "ltr"}>
         <Router>
-          <Navbar lang={langInfo} />
+          <Navbar lang={langInfo} setLang={setKey} username={username} userEmail={userEmail} />
           <div className={`${key == "AR" ? "flip" : ""}`}>
             <Switch>
               <div className="content">
+                {/* Path = BASE_URL */}
                 <Route exact path="/">
                   <Dashboard lang={langInfo} />
                 </Route>
@@ -62,17 +77,21 @@ function App() {
                 <Route exact path="/patients">
                   <Patients lang={langInfo} />
                 </Route>
-                {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
-                <Route exact path="/patient-info/:serial">
+                {/* Path = BASE_URL/patient-info/PATIENT_ID */}
+                <Route exact path="/patient-info/:id">
                   <Controller lang={langInfo} />
                 </Route>
-                {/* Path = BASE_URL/patient-info/PATIENT_SERIAL */}
               </div>
             </Switch>
           </div>
         </Router>
       </body>
     );
+}
+
+async function cred() {
+  console.log('credentials hit')
+  console.log(await getCredentials());
 }
 
 export default App;

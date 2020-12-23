@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { CircularProgress, Divider, Button, FormControlLabel, Radio, RadioGroup, TextField, Backdrop } from '@material-ui/core';
 import './MedicalInfo.scss'
 import Notes from '../../components/Notes/Notes';
-import Files from '../../components/Files/Files';
 import WarningIcon from '@material-ui/icons/Warning';
 import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
 import BottomBar from '../../components/BottomBar/BottomBar';
@@ -56,7 +55,7 @@ const MedicalInfo = (props) => {
     useEffect(() => {
         setName(info.name);
         setDOB(info.dob);
-        setSSN(info.snn);
+        setSSN(info.ssn);
         setAddress(info.address);
         setPhone(info.phone);
         setEmName(info.emName);
@@ -153,7 +152,7 @@ const MedicalInfo = (props) => {
             <h3>{lang[key].patientView.patientInfo.phone}</h3>
             <TextField disabled={!edit} className={edit ? "active-input" : "input-field"} variant="outlined" onChange={handleEmPhone} value={emPhone} />
             <div className="upload-button-wrapper">
-                <Button className={edit ? "button-edit" : ""} disabled={!edit} variant="contained">
+                <Button className={edit ? "button-edit" : "button-no-edit"} disabled={!edit} variant="contained">
                     <input type="file" style={{ display: "none" }} />
                     {lang[key].components.button.upload}
                 </Button>
@@ -177,7 +176,7 @@ const MedicalInfo = (props) => {
                 />
             </RadioGroup>
             <Notes name="notes" disabled={!edit} state={setNotes} title={lang[key].components.notes.title} value={notes} />
-            <BottomBar discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar editName={info.editName} editDate={info.editDate} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </form>
     );
 }

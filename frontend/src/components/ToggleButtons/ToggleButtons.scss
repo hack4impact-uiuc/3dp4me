@@ -1,0 +1,97 @@
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
+
+.toggle-buttons-wrapper {
+    display: flex;
+    width: 100%;
+    height: $buttonGroupHeight;
+    background-color: $controllerGrey;
+    text-transform: uppercase;
+
+    .status-icon, .status-icon-ar {
+        width: 16px;
+    }
+
+    .status-icon {
+        margin-right: 6px;
+    }
+    
+    .status-icon-ar {
+        margin-left: 6px;
+    }
+
+    .toggle-button-group {
+        border-radius: 0;
+        .toggle-button {
+            border-radius: 0;
+            width: $controllerButtonWidth;
+            color: #5f5f5f;
+            font-size: 12px;
+            border-color: $controllerBorder;
+            border-bottom: 0;
+            border-top: 0;
+            background-color: $controllerGrey;
+            white-space: nowrap;
+
+            &.active {
+                background: white;
+                color: black;
+                &:hover { background: white; }
+            }
+        }
+	}
+
+	.toggle-button-selector {
+		display: none;
+    }
+    	
+	@media (max-width: $resizeButtonGroupMaxWidth) {
+		.toggle-button-group {
+			display: none;
+		}
+
+		.toggle-button-selector {
+            display: inherit;
+            width: 100%;
+            justify-content: space-between;
+            margin: 0 36px;
+            align-items: center;
+
+            .current-step-label {
+                display: inherit;
+                align-items: center;
+                b {
+                    font-family: 'Roboto', sans-serif;
+                    font-size: 14px;
+                }
+            }
+        }
+	}
+}
+
+.stage-selector-menu {
+    display: none;
+
+    .selector-text {
+        font-weight: normal;
+        text-transform: none;
+    }
+
+    .status-icon, .status-icon-ar {
+        width: 16px;
+    }
+
+    .status-icon {
+        margin-right: 6px;
+    }
+
+    .status-icon-ar {
+        margin-left: 6px;
+    }
+}
+
+@media (max-width: $resizeButtonGroupMaxWidth) {
+    .stage-selector-menu {
+        display: inherit;
+    }
+}
