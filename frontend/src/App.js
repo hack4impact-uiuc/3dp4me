@@ -48,7 +48,7 @@ function App() {
   setAuthListener((newAuthLevel) => setAuthLevel(newAuthLevel));
 
   if (authLevel == UNDEFINED_AUTH)
-    return ( <p>Authenticating user</p> );
+    return ( <p> {language[key].components.login.authLoading}</p> );
 
   if (authLevel == UNAUTHENTICATED)
     return ( <Login /> );
