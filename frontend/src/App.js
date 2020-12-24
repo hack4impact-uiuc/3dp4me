@@ -78,5 +78,4 @@ async function cred() {
   console.log(await getCredentials());
 }
 
-// export default withAuthenticator(App);
-export default App;
+export default withAuthenticator(App);
