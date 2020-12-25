@@ -86,7 +86,7 @@ const CADModel = (props) => {
                 <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderRight} fileNames={rightCADFiles} handleDownload={setDownloadCAD} handleUpload={handleRightUpload} />
             </div>
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={CADNotes} state={setCADNotes} />
-            <BottomBar editName={info.editName} editDate={info.editDate} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

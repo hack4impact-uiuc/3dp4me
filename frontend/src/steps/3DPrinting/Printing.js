@@ -58,7 +58,7 @@ const Printing = (props) => {
             <h1>{lang[key].patientView.printing.title}</h1>
             <Files lang={props.lang} title={lang[key].components.file.title} fileNames={["file_name.SCAN"]} handleDownload={setDownloadPrint} />
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={printNotes} state={setPrintNotes} />
-            <BottomBar editName={info.editName} editDate={info.editDate} discard={{ state: trigger, setState: discardData }} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{ state: trigger, setState: discardData }} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
     )
 }

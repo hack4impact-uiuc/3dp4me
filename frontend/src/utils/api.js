@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import {getCurrentUserInfo} from '../aws/aws-helper';
+import {getCurrentUserInfo, getCredentials} from '../aws/aws-helper';
 const FileDownload = require('js-file-download');
 
 const instance = axios.create({
@@ -45,14 +45,16 @@ export const completeStage = async (patientId, stage) => {
 export const downloadFile = async (patientId, stage, filename) => {
     const requestString = `/patients/${patientId}/${stage}/${filename}`;
     let credentials = await getCurrentUserInfo();
-    let userID = credentials.id;
-    return instance
-        .get(requestString, { userId: userID, responseType: 'blob' }) // TODO: use AWS userId
-        .then(
-            res => FileDownload(res.data, filename),
-            err => {
-                console.error(err);
-                return null;
-            },
-        );
+    let a = await getCredentials();
+    console.log(a);
+    // let userID = credentials.id;
+    // return instance
+    //     .get(requestString, { userId: userID, responseType: 'blob' }) // TODO: use AWS userId
+    //     .then(
+    //         res => FileDownload(res.data, filename),
+    //         err => {
+    //             console.error(err);
+    //             return null;
+    //         },
+    //     );
 }

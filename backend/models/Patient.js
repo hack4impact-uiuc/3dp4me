@@ -6,10 +6,16 @@ const fileSchema = new mongoose.Schema({
     uploadDate: { type: Date, required: true }
 });
 
-const statusEnum = {
-    NOTTOUCHED: "NOT TOUCHED",
-    PARTIALLYDONE: "PARTIALLY DONE",
-    COMPLETE: "COMPLETE"
+const overallStatusEnum = {
+    ACTIVE: "Active",
+    ARCHIVED: "Archived",
+    FEEDBACK: "Feedback"
+};
+
+const stageStatusEnum = {
+    UNFINISHED: "Unfinished",
+    PARTIAL: "Partially Complete",
+    FINISHED: "Finished"
 };
 
 const deliveryEnum = {
@@ -17,11 +23,24 @@ const deliveryEnum = {
     PICKUP: "pickup"
 };
 
+const feedbackEnum = {
+    INITIAL: "Initial",
+    SIXMONTH: "6 month",
+    ONEYEAR: "1 year",
+    TWOYEAR: "2 year"
+};
+
 // TODO: add / remove stage fields as needed
 const patientSchema = new mongoose.Schema({
-    medicalInformation: {
+    status: {
+        type: String,
+        enum: [overallStatusEnum.ACTIVE, overallStatusEnum.ARCHIVED, overallStatusEnum.FEEDBACK],
+        default: overallStatusEnum.ACTIVE
+    },
+    createdDate: {type: Date, required: true, default: Date.now},
+    lastEdited: { type: Date, required: true, default: Date.now },
+    patientInfo: {
         name: { type: String, required: true },
-        serial: { type: String, required: true, unique: true },
         ssn: { type: String, required: true, unique: true },
         orderId: { type: String, required: true, unique: true },
         dob: {type: Date, required: true},
@@ -33,78 +52,83 @@ const patientSchema = new mongoose.Schema({
         delivery: {
             type: String,
             enum: [deliveryEnum.DELIVERY, deliveryEnum.PICKUP],
-            default: statusEnum.DELIVERY
+            default: stageStatusEnum.DELIVERY
         },
         status: {
             type: String,
-            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
-            default: statusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
-        editDate: { type: Date, default: Date.now },
-        editName: { type: String, default: "" },
+        lastEdited: { type: Date, required: true, default: Date.now },
+        lastEditedBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
     },
-    scan: {
+    earScanInfo: {
         status: {
             type: String,
-            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
-            default: statusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
-        editDate: { type: Date, default: Date.now },
-        editName: { type: String, default: "" },
+        lastEdited: { type: Date, required: true, default: Date.now },
+        lastEditedBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
     },
-    cad: {
+    modelInfo: {
         status: {
             type: String,
-            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
-            default: statusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
-        editDate: { type: Date, default: Date.now },
-        editName: { type: String, default: "" },
+        lastEdited: { type: Date, required: true, default: Date.now },
+        lastEditedBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
     },
-    manufacture: {
+    printingInfo: {
         status: {
             type: String,
-            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
-            default: statusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
-        editDate: { type: Date, default: Date.now },
-        editName: { type: String, default: "" },
+        lastEdited: { type: Date, required: true, default: Date.now },
+        lastEditedBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
     },
-    postProcessing: {
+    processingInfo: {
         status: {
             type: String,
-            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
-            default: statusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
-        editDate: { type: Date, default: Date.now },
-        editName: { type: String, default: "" },
+        lastEdited: { type: Date, required: true, default: Date.now },
+        lastEditedBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
     },
-    delivery: {
+    deliveryInfo: {
         status: {
             type: String,
-            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
-            default: statusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
-        editDate: { type: Date, default: Date.now },
-        editName: { type: String, default: "" },
+        lastEdited: { type: Date, required: true, default: Date.now },
+        lastEditedBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
     },
-    feedback: {
+    feedbackInfo: {
         status: {
             type: String,
-            enum: [statusEnum.NOTTOUCHED, statusEnum.PARTIALLYDONE, statusEnum.COMPLETE],
-            default: statusEnum.NOTTOUCHED
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
+        },
+        feedbackCycle: {
+            type: String,
+            enum: [feedbackEnum.INITIAL, feedbackEnum.SIXMONTH, feedbackEnum.ONEYEAR, feedbackEnum.TWOYEAR],
+            default: feedbackEnum.INITIAL
         },
         initial: {
             notes: { type: String, default: "" },
@@ -122,8 +146,8 @@ const patientSchema = new mongoose.Schema({
             notes: { type: String, default: "" },
             date: { type: Date },
         },
-        editDate: { type: Date, default: Date.now },
-        editName: { type: String, default: "" },
+        lastEdited: { type: Date, required: true, default: Date.now },
+        lastEditedBy: { type: String, default: "" },
         notes: { type: String, default: "" },
         files: { type: [fileSchema], default: [] }
     }
@@ -133,5 +157,5 @@ const Patient = mongoose.model("Patient", patientSchema);
 
 module.exports = {
     Patient,
-    statusEnum
+    stageStatusEnum
 };

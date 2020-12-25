@@ -20,7 +20,7 @@ const BottomBar = (props) => {
         <AppBar className="bottom-bar-wrapper" color="white" style={{ top: 'auto', bottom: '0', boxShadow: "0 0px 4px 2px rgba(0, 0, 0, 0.15)" }}>
             <Toolbar className="bottom-toolbar">
                 <div className="editor-section" style={{ flexGrow: 1, color: 'black' }}>
-                    {`${lang[key].components.bottombar.lastEdit.split("...")[0]} ${props.editName} ${lang[key].components.bottombar.lastEdit.split("...")[1]} ${props.editDate}`}
+                    {`${lang[key].components.bottombar.lastEdit.split("...")[0]} ${props.lastEditedBy} ${lang[key].components.bottombar.lastEdit.split("...")[1]} ${props.lastEdited}`}
                 </div>
                 {props.edit ? (
                     <div>
