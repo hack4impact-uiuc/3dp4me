@@ -45,7 +45,7 @@ const Patients = (props) => {
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
         let filtered = allPatients.filter(patient =>
-            patient.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
+            patient.patientInfo.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
             (patient._id).indexOf(e.target.value) !== -1);
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);

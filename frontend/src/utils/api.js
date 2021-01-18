@@ -4,12 +4,12 @@ import {getCurrentUserInfo, getCredentials} from '../aws/aws-helper';
 const FileDownload = require('js-file-download');
 
 const instance = axios.create({
-    baseURL: "http://localhost:5000/api",
+    baseURL: "http://localhost:8080/api",
 });
 
 export const getAllPatients = async () => {
-    const requestString = "/patients";
-    return instance.get(requestString).then(
+    const requestString = "/patients/";
+    return instance.get(requestString).then( 
         res => res.data,
         err => {
             console.error(err);

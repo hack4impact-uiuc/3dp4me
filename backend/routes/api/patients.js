@@ -4,6 +4,19 @@ const { errorWrap } = require("../../utils");
 const { models } = require("../../models");
 const { uploadFile, downloadFile } = require("../../utils/aws/aws-s3-helpers");
 
+// GET: Returns all patients
+router.get(
+    '/',
+    errorWrap(async (req, res) => {
+        
+        models.Patient.find().then(patientInfo => res.status(200).json({
+            code: 200, 
+            success: true, 
+            result: patientInfo
+        }));
+    }),
+);
+
 // GET: Returns everything associated with patient
 router.get(
     '/:id',
@@ -32,6 +45,7 @@ router.get(
     }),
 );
 
+
 router.get(
     '/:id/:stage/:filename',
     errorWrap(async (req, res) => {
@@ -51,6 +65,26 @@ router.get(
         s3Stream.pipe(res);
     })
 );
+
+// POST: new patient
+router.post(
+    '/',
+    validate({ body: models.Patient }),
+    errorWrap(async (req, res) => {
+        //const { userID, accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
+        const patient = req.body;
+        try {
+            const resp = await models.Patient.insert(patient);
+            res.status(SUCCESS).send({
+              code: SUCCESS,
+              success: true,
+              message: "User successfully created.",
+              data: resp
+            });
+          } catch (err) {
+            return err;
+          }
+}));
 
 // POST: upload individual files
 router.post(
