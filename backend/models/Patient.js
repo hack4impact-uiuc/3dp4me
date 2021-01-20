@@ -44,7 +44,7 @@ const patientSchema = new mongoose.Schema({
         ssn: { type: String, required: true, unique: true },
         orderId: { type: String, required: true, unique: true },
         dob: {type: Date, required: true},
-        phone: { type: String, required: true, unique: true },
+        phone: { type: String, required: true},
         address: { type: String, required: true},
         emName: { type: String, required: true},
         relationship: { type: String, required: true},
@@ -157,5 +157,9 @@ const Patient = mongoose.model("Patient", patientSchema);
 
 module.exports = {
     Patient,
-    stageStatusEnum
+    stageStatusEnum,
+    deliveryEnum,
+    feedbackEnum,
+    fileSchema,
+    overallStatusEnum
 };

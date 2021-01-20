@@ -4,11 +4,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import MainTable from '../../components/Table/MainTable'
 import './Patients.scss'
 import MuiAlert from '@material-ui/lab/Alert';
-import allpatients from '../../Test Data/all-patients.json';
+// import allpatients from '../../Test Data/all-patients.json';
 import search from '../../assets/search.svg';
 import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
 import archive from '../../assets/archive.svg';
+import {getAllPatients} from '../../utils/api';
 
 const useStyles = makeStyles((theme) => ({
     swalEditButton: {
@@ -45,7 +46,7 @@ const Patients = (props) => {
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
         let filtered = allPatients.filter(patient =>
-            patient.patientInfo.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
+            patient.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
             (patient._id).indexOf(e.target.value) !== -1);
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);
@@ -107,8 +108,10 @@ const Patients = (props) => {
     }
 
 
-    const getData = (props) => {
+    const getData = async () => {
         // TODO: api call to get all patients and assign it to all patients state variable
+        const res = await getAllPatients();
+        setAllPatients(res.result );
     }
 
     function Alert(props) {
@@ -117,8 +120,7 @@ const Patients = (props) => {
 
     useEffect(() => {
         getData();
-        setAllPatients(allpatients);
-    }, []);
+    }, [setAllPatients]);
 
     return (
         <div className="all-patients">

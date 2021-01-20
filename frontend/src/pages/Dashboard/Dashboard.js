@@ -11,7 +11,7 @@ import swal from 'sweetalert';
 import { Link } from "react-router-dom";
 import search from '../../assets/search.svg';
 import archive from '../../assets/archive.svg';
-import {getAllPatients} from '../../utils/api';
+import {getPatientsByStage} from '../../utils/api';
 
 const useStyles = makeStyles((theme) => ({
   swalEditButton: {
@@ -113,7 +113,7 @@ const Dashboard = (props) => {
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
     let filtered = patients.filter
-      (patient => patient.patientInfo.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
+      (patient => patient.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1 ||
         patient._id.indexOf(e.target.value) !== -1
       );
     setNoPatient(filtered.length === 0);
@@ -132,84 +132,32 @@ const Dashboard = (props) => {
     setSearchQuery("");
     if (newStep !== null) {
       setStep(newStep);
+      let res = {};
       if (newStep === "info") {
         setStepTitle("patientInfoTitle");
-        let res = await getAllPatients();
-        let all_patients = res.result;
-        setPatients(all_patients)
+        res = await getPatientsByStage("patientInfo");
       } else if (newStep === "scan") {
         setStepTitle("earScanTitle");
-        let res = await getAllPatients();
-        let all_patients = res.result;
-        let stepPatients = [];
-        for (let i = 0; i < all_patients.length; i++) {
-          let patient = all_patients[i]
-          if (patient.earScanInfo.status == "Unfinished") {
-            stepPatients.push(patient);
-          }
-        }
-        setPatients(stepPatients);
+        res = await getPatientsByStage("earScanInfo");
       } else if (newStep === "cad") {
         setStepTitle("CADModelingTitle");
-        let res = await getAllPatients();
-        let all_patients = res.result;
-        let stepPatients = []
-        for (let i = 0; i < all_patients.length; i++) {
-          let patient = all_patients[i]
-          if (patient.earScanInfo.status == "Finished" && patient.modelInfo.status == "Unfinished") {
-            stepPatients.push(patient);
-          }
-        }
-        setPatients(stepPatients);
+        res = await getPatientsByStage("modelInfo");
       } else if (newStep === "printing") {
         setStepTitle("printingTitle");
-        let res = await getAllPatients();
-        let all_patients = res.result;
-        let stepPatients = []
-        for (let i = 0; i < all_patients.length; i++) {
-          let patient = all_patients[i]
-          if (patient.earScanInfo.status == "Finished" && patient.modelInfo.status == "Finished" &&  patient.printingInfo.status == "Unfinished") {
-            stepPatients.push(patient);
-          }
-        }
-        setPatients(stepPatients);
+        res = await getPatientsByStage("printingInfo");
       } else if (newStep === "processing") {
         setStepTitle("postProcessingTitle");
-        let res = await getAllPatients();
-        let all_patients = res.result;
-        let stepPatients = []
-        for (let i = 0; i < all_patients.length; i++) {
-          let patient = all_patients[i]
-          if (patient.earScanInfo.status == "Finished" && patient.modelInfo.status == "Finished" &&  patient.printingInfo.status == "Finished" && patient.processingInfo.status == "Unfinished") {
-            stepPatients.push(patient);
-          }
-        }
-        setPatients(stepPatients);
+        res = await getPatientsByStage("processingInfo");
       } else if (newStep === "delivery") {
         setStepTitle("deliveryTitle");
-        let res = await getAllPatients();
-        let all_patients = res.result;
-        let stepPatients = []
-        for (let i = 0; i < all_patients.length; i++) {
-          let patient = all_patients[i]
-          if (patient.earScanInfo.status == "Finished" && patient.modelInfo.status == "Finished" &&  patient.printingInfo.status == "Finished" && patient.processingInfo.status == "Finished" && patient.deliveryInfo.status == "Unfinished") {
-            stepPatients.push(patient);
-          }
-        }
-        setPatients(stepPatients);
+        res = await getPatientsByStage("deliveryInfo");
       } else if (newStep === "feedback") {
         setStepTitle("feedbackTitle");
-        let res = await getAllPatients();
-        let all_patients = res.result;
-        let stepPatients = []
-        for (let i = 0; i < all_patients.length; i++) {
-          let patient = all_patients[i]
-          if (patient.earScanInfo.status == "Finished" && patient.modelInfo.status == "Finished" &&  patient.printingInfo.status == "Finished" && patient.processingInfo.status == "Finished" && patient.deliveryInfo.status == "Finished" && patient.feedbackInfo.status == "Unfinished") {
-            stepPatients.push(patient);
-          }
-        }
-        setPatients(stepPatients);
+        res = await getPatientsByStage("feedbackInfo");
       }
+      // What are you doing, step-patients?
+      let stepPatients = res.result;
+      setPatients(stepPatients);
     }
   };
 
@@ -223,7 +171,7 @@ const Dashboard = (props) => {
 
   // TODO: hook up dashboard to display fetched patients
   const getPatients = async () => {
-    const res = await getAllPatients();
+    const res = await getPatientsByStage("patientInfo");
     setPatients(res.result);
   }
   

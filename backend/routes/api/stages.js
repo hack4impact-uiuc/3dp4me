@@ -7,7 +7,6 @@ const { models } = require("../../models");
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        console.log("Getting patients")
         models.Patient.find({}, "_id patientInfo.name createdDate lastEdited status").then(patients => {
             fin = patients.map(info => {
                 return {
@@ -18,10 +17,11 @@ router.get(
                     "status": info.status,
                 }
             })
+
             res.status(200).json({
                 code: 200, 
                 success: true, 
-                result: patients
+                result: fin
             })
         });
     }),

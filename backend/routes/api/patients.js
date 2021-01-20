@@ -45,7 +45,34 @@ router.get(
     }),
 );
 
+// POST: new patient
+router.post(
+    '/',
+    // validate({ body: models.Patient }),
+    errorWrap(async (req, res) => {
+        //const { userID, accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
+        const patient = req.body;
+        try {
+            console.log("here");
+            let new_patient = new models.Patient(patient);
+            new_patient.save(function (err, patient) {
+                if (err) return console.error(err);
+                console.log(patient);
+            })
+            // const resp = await models.Patient.insert(patient, () => {mongoose.connection.close()});
+            console.log("inserted");
+            res.status(SUCCESS).send({
+              code: SUCCESS,
+              success: true,
+              message: "User successfully created.",
+              data: resp
+            });
+          } catch (err) {
+            return err;
+          }
+}));
 
+// GET: Download a file
 router.get(
     '/:id/:stage/:filename',
     errorWrap(async (req, res) => {
@@ -66,25 +93,6 @@ router.get(
     })
 );
 
-// POST: new patient
-router.post(
-    '/',
-    validate({ body: models.Patient }),
-    errorWrap(async (req, res) => {
-        //const { userID, accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
-        const patient = req.body;
-        try {
-            const resp = await models.Patient.insert(patient);
-            res.status(SUCCESS).send({
-              code: SUCCESS,
-              success: true,
-              message: "User successfully created.",
-              data: resp
-            });
-          } catch (err) {
-            return err;
-          }
-}));
 
 // POST: upload individual files
 router.post(
@@ -116,7 +124,7 @@ router.post(
     })
 );
 
-// POST: Uploads files for certain stage and updates info
+// POST: Updates info for patient at stage
 router.post(
     '/:id/:stage',
     errorWrap(async (req, res) => {
