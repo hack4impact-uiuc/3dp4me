@@ -3,24 +3,30 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
 import swal from 'sweetalert'
+import { downloadFile, uploadFile } from '../../utils/api';
+
 
 const Printing = (props) => {
 
     const info = props.info
+    const stageName = "printingInfo";
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
-    const [downloadPrint, setDownloadPrint] = useState();
+    const [printFiles, setPrintFiles] = useState(info.files.map((file_info) => {return file_info.filename}));
     const [printNotes, setPrintNotes] = useState("");
-    const formFields = {
-        download: downloadPrint,
-        notes: printNotes,
-    }
 
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const handlePrint = (e) => {
+    const handleDownload = (fileName) => {
+        downloadFile(props.id, stageName, fileName);
+    }
 
+    const handleUpload = (e) => {
+        e.preventDefault();
+        const fileToUpload = e.target.files[0];
+        setPrintFiles(files => files.concat(fileToUpload.name.toUpperCase()));
+        uploadFile(props.id, stageName, fileToUpload, fileToUpload.name.toUpperCase());
     }
 
     useEffect(() => {
@@ -56,7 +62,7 @@ const Printing = (props) => {
     return (
         <div>
             <h1>{lang[key].patientView.printing.title}</h1>
-            <Files lang={props.lang} title={lang[key].components.file.title} fileNames={["file_name.SCAN"]} handleDownload={setDownloadPrint} />
+            <Files lang={props.lang} title={lang[key].components.file.title} fileNames={printFiles} handleDownload={handleDownload}  handleUpload={handleUpload}/>
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={printNotes} state={setPrintNotes} />
             <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{ state: trigger, setState: discardData }} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
