@@ -18,6 +18,9 @@ const CADModel = (props) => {
     const [CADNotes, setCADNotes] = useState("");
     const [leftCADFiles, setLeftCADFiles] = useState(info.files.map((file_info) => {return file_info.filename}).filter((filename) => {return filename.startsWith("LEFT_")}));
     const [rightCADFiles, setRightCADFiles] = useState(info.files.map((file_info) => {return file_info.filename}).filter((filename) => {return filename.startsWith("RIGHT_")}));
+    const formFields = {
+        notes: CADNotes,
+    }
 
     const lang = props.lang.data;
     const key = props.lang.key;

@@ -13,7 +13,9 @@ const PostProcessing = (props) => {
     const [edit, setEdit] = useState(false);
     const [processingNotes, setProcessingNotes] = useState("");
     const [processingFiles, setProcessingFiles] = useState(info.files.map((file_info) => {return file_info.filename}));
-
+    const formFields = {
+        notes: processingNotes,
+    }
 
     const lang = props.lang.data;
     const key = props.lang.key; 

@@ -17,8 +17,13 @@ const EarScan = (props) => {
     const [edit, setEdit] = useState(false);
     const [leftEarFiles, setLeftEarFiles] = useState(info.files.map((file_info) => {return file_info.filename}).filter((filename) => {return filename.startsWith("LEFT_")}));
     const [rightEarFiles, setRightEarFiles] = useState(info.files.map((file_info) => {return file_info.filename}).filter((filename) => {return filename.startsWith("RIGHT_")}));
+    const formFields = {
+        notes: notes,
+    }
+    
     const lang = props.lang.data;
     const key = props.lang.key;
+    
 
     const handleDownload = (fileName) => {
         downloadFile(props.id, stageName, fileName);

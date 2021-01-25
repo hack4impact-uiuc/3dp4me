@@ -14,6 +14,9 @@ const Printing = (props) => {
     const [edit, setEdit] = useState(false);
     const [printFiles, setPrintFiles] = useState(info.files.map((file_info) => {return file_info.filename}));
     const [printNotes, setPrintNotes] = useState("");
+    const formFields = {
+        notes: printNotes,
+    }
 
     const lang = props.lang.data;
     const key = props.lang.key;
