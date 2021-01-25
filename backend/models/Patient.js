@@ -13,9 +13,9 @@ const overallStatusEnum = {
 };
 
 const stageStatusEnum = {
-    UNFINISHED: "Unfinished",
-    PARTIAL: "Partially Complete",
-    FINISHED: "Finished"
+    UNFINISHED: "unfinished",
+    PARTIAL: "partial",
+    FINISHED: "finished"
 };
 
 const deliveryEnum = {
@@ -117,10 +117,15 @@ const patientSchema = new mongoose.Schema({
         files: { type: [fileSchema], default: [] }
     },
     deliveryInfo: {
-        status: {
+        deliveryStatus: {
             type: String,
             enum: [deliveryStatusEnum.NOTREADY, deliveryStatusEnum.READY, deliveryStatusEnum.OUT, deliveryStatusEnum.HANDDELIVERED, deliveryStatusEnum.PICKUP],
             default: deliveryStatusEnum.NOTREADY
+        },
+        status: {
+            type: String,
+            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
         lastEditedBy: { type: String, default: "" },

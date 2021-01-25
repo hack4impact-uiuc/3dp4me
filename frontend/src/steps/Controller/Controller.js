@@ -17,7 +17,7 @@ import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
-import {getPatientById} from '../../utils/api';
+import {getPatientById, updateStage} from '../../utils/api';
 import { useParams } from 'react-router-dom';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper'
 
@@ -81,32 +81,74 @@ const Controller = (props) => {
     };
 
     const handleMedStatus = (e) => {
-       if (e.target.value === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setMedStatus(e.target.value);
+       if (e.target.value === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") {
+            setMedStatus(e.target.value);
+            let patientFileCopy = patientFile;
+            patientFileCopy.patientInfo.status = e.target.value;
+            updateStage(id, "patientInfo", patientFileCopy.patientInfo);
+            setPatientFile(patientFileCopy);
+        }
     }
     const handleEarScanStatus = (e) => {
-       if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setEarScanStatus(e.target.value);
+       if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") {
+            setEarScanStatus(e.target.value);
+            let patientFileCopy = patientFile;
+            patientFileCopy.earScanInfo.status = e.target.value;
+            updateStage(id, "earScanInfo", patientFileCopy.earScanInfo);
+            setPatientFile(patientFileCopy);
+        }
     }
     const handleModelStatus = (e) => {
-        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setModelStatus(e.target.value);
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") {
+            setModelStatus(e.target.value);
+            let patientFileCopy = patientFile;
+            patientFileCopy.modelInfo.status = e.target.value;
+            updateStage(id, "modelInfo", patientFileCopy.modelInfo);
+            setPatientFile(patientFileCopy);
+        }
     }
     const handlePrintStatus = (e) => {
-        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setPrintStatus(e.target.value);
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") {
+            setPrintStatus(e.target.value);
+            let patientFileCopy = patientFile;
+            patientFileCopy.printingInfo.status = e.target.value;
+            updateStage(id, "printingInfo", patientFileCopy.printingInfo);
+            setPatientFile(patientFileCopy);
+        }
     }
     const handleProcessingStatus = (e) => {
-        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setProcessingStatus(e.target.value);
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") {
+            setProcessingStatus(e.target.value);
+            let patientFileCopy = patientFile;
+            patientFileCopy.processingInfo.status = e.target.value;
+            updateStage(id, "processingInfo", patientFileCopy.processingInfo);
+            setPatientFile(patientFileCopy);
+        }
     }
     const handleDeliveryStatus = (e) => {
-        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setDeliveryStatus(e.target.value);
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") {
+            setDeliveryStatus(e.target.value);
+            let patientFileCopy = patientFile;
+            patientFileCopy.deliveryInfo.status = e.target.value;
+            updateStage(id, "deliveryInfo", patientFileCopy.deliveryInfo);
+            setPatientFile(patientFileCopy);
+        }
     }
     const handleFeedbackStatus = (e) => {
-        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") setFeedbackStatus(e.target.value);
+        if (e.target.value  === "unfinished" || e.target.value  === "partial" || e.target.value  === "finished") {
+            setFeedbackStatus(e.target.value);
+            let patientFileCopy = patientFile;
+            patientFileCopy.feedbackInfo.status = e.target.value;
+            updateStage(id, "feedbackInfo", patientFileCopy.feedbackInfo);
+            setPatientFile(patientFileCopy);
+        }
     }
 
     const getData = async () => {
         // TODO: api call to get all info about a patient
         const res = await getPatientById(id);
         console.log(res);
-        setPatientFile(res.result );
+        setPatientFile(res.result);
         setLoading(false);
     }
 

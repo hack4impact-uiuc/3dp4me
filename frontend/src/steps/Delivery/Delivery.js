@@ -16,7 +16,7 @@ const Delivery = (props) => {
     const [deliveryStatus, setDeliveryStatus] = useState("");
     const formFields = {
         // address: address,
-        status: deliveryStatus
+        deliveryStatus: deliveryStatus
     }
 
     const lang = props.lang.data;
@@ -24,12 +24,12 @@ const Delivery = (props) => {
 
     useEffect(() => {
         // setAddress(info.address);
-        setDeliveryStatus(info.status)
+        setDeliveryStatus(info.deliveryStatus)
     }, [trigger]);
 
     const saveData = (e) => {
         let info_copy = info;
-        info_copy.status = deliveryStatus;
+        info_copy.deliveryStatus = deliveryStatus;
         setInfo(info_copy);
         updateStage(props.id, stageName, info_copy);
         props.updatePatientFile(stageName, info_copy);
