@@ -3,24 +3,30 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
 import swal from 'sweetalert';
+import { downloadFile, uploadFile } from '../../utils/api';
 
 const PostProcessing = (props) => {
 
-    const info = props.info
+    const info = props.info;
+    const stageName = "processingInfo";
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
-    const [downloadProcessing, setDownloadProcessing] = useState();
     const [processingNotes, setProcessingNotes] = useState("");
-    const formFields = {
-        download: downloadProcessing,
-        notes: processingNotes,
-    }
+    const [processingFiles, setProcessingFiles] = useState(info.files.map((file_info) => {return file_info.filename}));
+
 
     const lang = props.lang.data;
     const key = props.lang.key; 
 
-    const handleDownloadProcessing = (e) => {
+    const handleDownload = (fileName) => {
+        downloadFile(props.id, stageName, fileName);
+    }
 
+    const handleUpload = (e) => {
+        e.preventDefault();
+        const fileToUpload = e.target.files[0];
+        setProcessingFiles(files => files.concat(fileToUpload.name.toUpperCase()));
+        uploadFile(props.id, stageName, fileToUpload, fileToUpload.name.toUpperCase());
     }
 
     useEffect(() => {
@@ -57,7 +63,7 @@ const PostProcessing = (props) => {
         <div>
             <h1>{lang[key].patientView.postProcessing.title}</h1>
             <p>Last edited by Im Tired on 10/05/2020 9:58PM</p>
-            <Files lang={props.lang} title={lang[key].components.file.title} fileNames={["file_name.SCAN"]} handleDownload={setDownloadProcessing} />
+            <Files lang={props.lang} title={lang[key].components.file.title} fileNames={processingFiles} handleDownload={handleDownload} handleUpload={handleUpload}/>
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={processingNotes} state={setProcessingNotes} />
             <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{state: trigger, setState: discardData}} save = {saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>
