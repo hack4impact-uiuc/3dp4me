@@ -52,7 +52,6 @@ router.post(
     errorWrap(async (req, res) => {
         const patient = req.body;
         try {
-            console.log("here");
             let new_patient = new models.Patient(patient);
             new_patient.save(function (err, patient) {
                 if (err) return console.error(err);
@@ -73,9 +72,8 @@ router.get(
     '/:id/:stage/:filename',
     errorWrap(async (req, res) => {
         const { id, stage, filename } = req.params;
-        const { accessKeyId, secretAccessKey,sessionToken} = req.body;
         //TODO: change it so that you can pass user aws credentials to function instead of relying on admin credentials
-        var s3Stream = downloadFile(`${id}/${stage}/${filename}`, {accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, sessionToken: sessionToken}).createReadStream();
+        var s3Stream = downloadFile(`${id}/${stage}/${filename}`, {accessKeyId: req.headers.accesskeyid, secretAccessKey: req.headers.secretaccesskey, sessionToken: req.headers.sessiontoken}).createReadStream();
         // Listen for errors returned by the service
         s3Stream.on('error', function(err) {
             res.json('S3 Error:' + err);

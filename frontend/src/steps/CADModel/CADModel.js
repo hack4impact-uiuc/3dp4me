@@ -22,9 +22,9 @@ const CADModel = (props) => {
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const handleDownloadCAD = (e) => {
+    const handleDownloadCAD = (fileName) => {
         // TODO: Call file download endpoint
-        downloadFile(props.id, stageName, e.fileName);
+        downloadFile(props.id, stageName, fileName);
 
     }
 

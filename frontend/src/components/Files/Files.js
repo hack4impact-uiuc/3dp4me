@@ -17,7 +17,7 @@ const Files = (props) => {
             <div className="files-table">
                 {props.fileNames.map(fileName => (
                     <div className="file-row-wrapper" key={fileName}>
-                        <Button className="file-button" onClick={props.handleDownload}>
+                        <Button className="file-button" onClick={() => {props.handleDownload(fileName)}}>
                             <div className="file-info-wrapper">
                                 <ArrowDownwardIcon />
                                 <div>

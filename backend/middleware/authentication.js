@@ -18,7 +18,6 @@ const authentication = async (req, res, next) => {
         )
 
         req.user = data;
-        console.log(data)
         next();
     } catch (error) {
         return res.status(401).json({
