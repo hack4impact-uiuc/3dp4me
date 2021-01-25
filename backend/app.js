@@ -5,6 +5,7 @@ const fileUpload = require("express-fileupload");
 var cors = require("cors");
 const bodyParser = require("body-parser");
 const { errorHandler } = require("./utils");
+const authentication = require('./middleware/authentication')
 
 const app = express();
 app.use(cors());
@@ -26,6 +27,7 @@ mongoose.connection
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(authentication);
 app.use(require("./routes"));
 
 module.exports = app;

@@ -50,17 +50,13 @@ router.post(
     '/',
     // validate({ body: models.Patient }),
     errorWrap(async (req, res) => {
-        //const { userID, accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
         const patient = req.body;
         try {
             console.log("here");
             let new_patient = new models.Patient(patient);
             new_patient.save(function (err, patient) {
                 if (err) return console.error(err);
-                console.log(patient);
             })
-            // const resp = await models.Patient.insert(patient, () => {mongoose.connection.close()});
-            console.log("inserted");
             res.status(SUCCESS).send({
               code: SUCCESS,
               success: true,
@@ -77,11 +73,9 @@ router.get(
     '/:id/:stage/:filename',
     errorWrap(async (req, res) => {
         const { id, stage, filename } = req.params;
-        //TODO: Replace these credential fields with one central credential object passed in
-        const {accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
-        console.log(req);
-        const credentials = {accessKeyId: accessKeyId, authenticated: authenticated, identityId: identityId, secretAccessKey: secretAccessKey, sessionToken: sessionToken};
-        var s3Stream = downloadFile(`${id}/${stage}/${filename}`, credentials).createReadStream();
+        const { accessKeyId, secretAccessKey,sessionToken} = req.body;
+        //TODO: change it so that you can pass user aws credentials to function instead of relying on admin credentials
+        var s3Stream = downloadFile(`${id}/${stage}/${filename}`, {accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, sessionToken: sessionToken}).createReadStream();
         // Listen for errors returned by the service
         s3Stream.on('error', function(err) {
             res.json('S3 Error:' + err);
@@ -99,16 +93,18 @@ router.post(
     '/:id/:stage/file',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        //TODO: Replace these credential fields with one central credential object passed in
-        const { userID, accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
+        //TODO: change it so that you can pass user aws credentials to function instead of relying on admin credentials
+        const { uploadedFileName, accessKeyId, secretAccessKey,sessionToken} = req.body;
         const patient = await models.Patient.findById(id);
         let file = req.files.uploadedFile;
-        uploadFile(file.data, `${id}/${stage}/${file.name}`, {accessKeyId: accessKeyId, authenticated: authenticated, identityId: identityId, secretAccessKey: secretAccessKey, sessionToken: sessionToken}, function(err, data) {
+        console.log(req.user.Username);
+        uploadFile(file.data, `${id}/${stage}/${uploadedFileName}`, {accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, sessionToken: sessionToken}, function(err, data) {
             if(err) {
                 res.json(err)
             } else {
                 // update database only if upload was successful
-                patient[stage].files.push({filename: file.name, uploadedBy: userID, uploadDate: Date.now()});
+                patient[stage].files.push({filename: uploadedFileName, uploadedBy: req.user.Username, uploadDate: Date.now()});
+                patient.lastEdited = Date.now();
                 patient.save();
                 res.status(201).json({
                     success: true,

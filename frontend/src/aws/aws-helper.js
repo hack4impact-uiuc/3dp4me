@@ -41,3 +41,7 @@ export async function getCurrentUserInfo(){
 		username: userInfo.username,
 	}
 }
+
+export async function getCurrentSession(){
+	return await Auth.currentSession();
+}
