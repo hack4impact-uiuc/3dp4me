@@ -114,7 +114,6 @@ router.post(
         const { uploadedFileName, accessKeyId, secretAccessKey,sessionToken} = req.body;
         const patient = await models.Patient.findById(id);
         let file = req.files.uploadedFile;
-        console.log(req.user.Username);
         uploadFile(file.data, `${id}/${stage}/${uploadedFileName}`, {accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, sessionToken: sessionToken}, function(err, data) {
             if(err) {
                 res.json(err)
@@ -145,14 +144,14 @@ router.post(
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
         //TODO: Add auth check for permissions
-        const { userID, updatedStage} = req.body;
+        const updatedStage = req.body;
         const patient = await models.Patient.findById(id);
 
         //TODO: use name of input field possibly?
         patient.lastEdited = Date.now();
         patient[stage] = updatedStage;
         patient[stage].lastEdited = Date.now();
-        patient[stage].lastEditedBy = userID;
+        patient[stage].lastEditedBy = req.user.Username;
         await patient.save(function(err){
             if(err){
                 res.json(err) //TODO: bug here, need to take a look

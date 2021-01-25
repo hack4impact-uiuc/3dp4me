@@ -7,11 +7,11 @@ import swal from 'sweetalert'
 import './CADModel.scss';
 
 import '../../utils/api';
-import { downloadFile, uploadFile, deleteFile} from '../../utils/api';
+import { downloadFile, uploadFile, deleteFile, updateStage} from '../../utils/api';
 
 const CADModel = (props) => {
 
-    const info = props.info;
+    const [info, setInfo] = useState(props.info);
     const stageName = "modelInfo";
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
@@ -34,6 +34,7 @@ const CADModel = (props) => {
         setLeftCADFiles(leftCADFiles.filter(file => file !== fileName));
         let info_copy = info;
         info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        setInfo(info_copy);
         props.updatePatientFile(stageName, info_copy);
     }
 
@@ -42,6 +43,7 @@ const CADModel = (props) => {
         setRightCADFiles(rightCADFiles.filter(file => file !== fileName));
         let info_copy = info;
         info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        setInfo(info_copy);
         props.updatePatientFile(stageName, info_copy);
     }
 
@@ -51,6 +53,7 @@ const CADModel = (props) => {
         let res = await uploadFile(props.id, stageName, fileToUpload, "LEFT_" + fileToUpload.name.toUpperCase());
         let info_copy = info;
         info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        setInfo(info_copy);
         props.updatePatientFile(stageName, info_copy);
     }
 
@@ -60,6 +63,7 @@ const CADModel = (props) => {
         let res = await uploadFile(props.id, stageName, fileToUpload, "RIGHT_" + fileToUpload.name.toUpperCase());
         let info_copy = info;
         info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        setInfo(info_copy);
         props.updatePatientFile(stageName, info_copy);
     }
 
@@ -68,6 +72,11 @@ const CADModel = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
+        let info_copy = info;
+        info_copy.notes = CADNotes;
+        setInfo(info_copy);
+        updateStage(props.id, stageName, info_copy);
+        props.updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang[key].components.bottombar.savedMessage.model, "", "success");
     }

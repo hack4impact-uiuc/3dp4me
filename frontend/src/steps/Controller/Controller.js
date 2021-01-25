@@ -224,7 +224,7 @@ const Controller = (props) => {
                             <PostProcessing info={patientFile?.processingInfo} status={{value: processingStatus, setStatus: handleProcessingStatus}} lang={props.lang} id={id} updatePatientFile={updatePatientFile}/>
                         ) : (<></>)}
                         {step === "delivery" ? (
-                            <Delivery info={patientFile?.deliveryInfo} status={{value: deliveryStatus, setStatus: handleDeliveryStatus}} lang={props.lang} id={id} updatePatientFile={updatePatientFile}/>
+                            <Delivery info={patientFile?.deliveryInfo} status={{value: deliveryStatus, setStatus: handleDeliveryStatus}} lang={props.lang} id={id} updatePatientFile={updatePatientFile} address={patientFile?.patientInfo.address} deliveryType={patientFile?.patientInfo.delivery}/>
                         ) : (<></>)}
                         {step === "feedback" ? (
                             <Feedback info={patientFile?.feedbackInfo} status={{value: feedbackStatus, setStatus: handleFeedbackStatus}} lang={props.lang} id={id} updatePatientFile={updatePatientFile}/>

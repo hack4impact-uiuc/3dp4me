@@ -3,12 +3,12 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
 import swal from 'sweetalert'
-import { deleteFile, downloadFile, uploadFile } from '../../utils/api';
+import { deleteFile, downloadFile, uploadFile, updateStage } from '../../utils/api';
 
 
 const Printing = (props) => {
 
-    const info = props.info
+    const [info, setInfo] = useState(props.info);
     const stageName = "printingInfo";
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
@@ -30,6 +30,7 @@ const Printing = (props) => {
         setPrintFiles(printFiles.filter(file => file !== fileName));
         let info_copy = info;
         info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        setInfo(info_copy);
         props.updatePatientFile(stageName, info_copy);
     }
 
@@ -40,6 +41,7 @@ const Printing = (props) => {
         let res = await uploadFile(props.id, stageName, fileToUpload, fileToUpload.name.toUpperCase());
         let info_copy = info;
         info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        setInfo(info_copy);
         props.updatePatientFile(stageName, info_copy)
     }
 
@@ -48,6 +50,11 @@ const Printing = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
+        let info_copy = info;
+        info_copy.notes = printNotes;
+        setInfo(info_copy);
+        updateStage(props.id, stageName, info_copy);
+        props.updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang[key].components.bottombar.savedMessage.print, "", "success");
     }

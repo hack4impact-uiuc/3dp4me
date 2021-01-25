@@ -7,10 +7,10 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 
 import './EarScan.scss';
-import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
+import { downloadFile, uploadFile, deleteFile, updateStage } from '../../utils/api';
 
 const EarScan = (props) => {
-    const info = props.info
+    const [info, setInfo] = useState(props.info);
     const stageName = "earScanInfo";
     const [trigger, reset] = useState(true);
     const [notes, setNotes] = useState("");
@@ -20,7 +20,7 @@ const EarScan = (props) => {
     const formFields = {
         notes: notes,
     }
-    
+
     const lang = props.lang.data;
     const key = props.lang.key;
     
@@ -34,6 +34,7 @@ const EarScan = (props) => {
         setLeftEarFiles(leftEarFiles.filter(file => file !== fileName));
         let info_copy = info;
         info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        setInfo(info_copy);
         props.updatePatientFile(stageName, info_copy);
     }
 
@@ -42,6 +43,7 @@ const EarScan = (props) => {
         setRightEarFiles(rightEarFiles.filter(file => file !== fileName));
         let info_copy = info;
         info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        setInfo(info_copy);
         props.updatePatientFile(stageName, info_copy);
     }
 
@@ -52,6 +54,7 @@ const EarScan = (props) => {
         let res = await uploadFile(props.id, stageName, fileToUpload, "LEFT_" + fileToUpload.name.toUpperCase());
         let info_copy = info;
         info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        setInfo(info_copy);
         props.updatePatientFile(stageName, info_copy);
     }
 
@@ -62,11 +65,8 @@ const EarScan = (props) => {
         let res = await uploadFile(props.id, stageName, fileToUpload, "RIGHT_" + fileToUpload.name.toUpperCase());
         let info_copy = info;
         info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        setInfo(info_copy);
         props.updatePatientFile(stageName, info_copy);
-    }
-
-    const postData = (e) => {
-
     }
 
     useEffect(() => {
@@ -74,6 +74,11 @@ const EarScan = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
+        let info_copy = info;
+        info_copy.notes = notes;
+        setInfo(info_copy);
+        updateStage(props.id, stageName, info_copy);
+        props.updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang[key].components.bottombar.savedMessage.earScan, "", "success");
     }

@@ -23,6 +23,14 @@ const deliveryEnum = {
     PICKUP: "pickup"
 };
 
+const deliveryStatusEnum = {
+    NOTREADY: "notReady",
+    READY: "ready",
+    OUT: "out",
+    HANDDELIVERED: "handDelivered",
+    PICKUP: "pickup"
+};
+
 const feedbackEnum = {
     INITIAL: "Initial",
     SIXMONTH: "6 month",
@@ -111,8 +119,8 @@ const patientSchema = new mongoose.Schema({
     deliveryInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
-            default: stageStatusEnum.UNFINISHED
+            enum: [deliveryStatusEnum.NOTREADY, deliveryStatusEnum.READY, deliveryStatusEnum.OUT, deliveryStatusEnum.HANDDELIVERED, deliveryStatusEnum.PICKUP],
+            default: deliveryStatusEnum.NOTREADY
         },
         lastEdited: { type: Date, required: true, default: Date.now },
         lastEditedBy: { type: String, default: "" },
