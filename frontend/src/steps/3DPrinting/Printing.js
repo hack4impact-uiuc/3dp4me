@@ -3,7 +3,7 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
 import swal from 'sweetalert'
-import { downloadFile, uploadFile } from '../../utils/api';
+import { deleteFile, downloadFile, uploadFile } from '../../utils/api';
 
 
 const Printing = (props) => {
@@ -18,15 +18,26 @@ const Printing = (props) => {
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const handleDownload = (fileName) => {
+    const handleDownload = async (fileName) => {
         downloadFile(props.id, stageName, fileName);
     }
 
-    const handleUpload = (e) => {
+    const handleDelete = async (fileName) => {
+        deleteFile(props.id, stageName, fileName);
+        setPrintFiles(printFiles.filter(file => file !== fileName));
+        let info_copy = info;
+        info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        props.updatePatientFile(stageName, info_copy);
+    }
+
+    const handleUpload = async (e) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
         setPrintFiles(files => files.concat(fileToUpload.name.toUpperCase()));
-        uploadFile(props.id, stageName, fileToUpload, fileToUpload.name.toUpperCase());
+        let res = await uploadFile(props.id, stageName, fileToUpload, fileToUpload.name.toUpperCase());
+        let info_copy = info;
+        info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        props.updatePatientFile(stageName, info_copy)
     }
 
     useEffect(() => {
@@ -62,7 +73,7 @@ const Printing = (props) => {
     return (
         <div>
             <h1>{lang[key].patientView.printing.title}</h1>
-            <Files lang={props.lang} title={lang[key].components.file.title} fileNames={printFiles} handleDownload={handleDownload}  handleUpload={handleUpload}/>
+            <Files lang={props.lang} title={lang[key].components.file.title} fileNames={printFiles} handleDownload={handleDownload}  handleUpload={handleUpload} handleDelete={handleDelete}/>
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={printNotes} state={setPrintNotes} />
             <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{ state: trigger, setState: discardData }} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>

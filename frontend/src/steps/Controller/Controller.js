@@ -114,6 +114,10 @@ const Controller = (props) => {
         getData();
     }, [setPatientFile, setLoading]);
 
+    const updatePatientFile = (stageName, updated) => {
+        setPatientFile({...patientFile, stageName: updated});    
+    }
+
     return (
         <LoadWrapper loading={loading}>
             <div className="root">
@@ -205,25 +209,25 @@ const Controller = (props) => {
                     />
                     <div className={`steps ${key === "AR" ? "steps-ar" : ""}`}>
                         {step === "info" ? (
-                            <MedicalInfo info={patientFile?.patientInfo} status={{value: medStatus, setStatus: handleMedStatus}} lang={props.lang} id={id}/>
+                            <MedicalInfo info={patientFile?.patientInfo} status={{value: medStatus, setStatus: handleMedStatus}} lang={props.lang} id={id} updatePatientFile={updatePatientFile}/>
                         ) : (<></>)}
                         {step === "scan" ? (
-                            <EarScan info={patientFile?.earScanInfo} status={{value: earScanStatus, setStatus: handleEarScanStatus}}  lang={props.lang} id={id}/>
+                            <EarScan info={patientFile?.earScanInfo} status={{value: earScanStatus, setStatus: handleEarScanStatus}}  lang={props.lang} id={id} updatePatientFile={updatePatientFile}/>
                         ) : (<></>)}
                         {step === "cad" ? (
-                            <CADModel info={patientFile?.modelInfo} status={{value: modelStatus, setStatus: handleModelStatus}} lang={props.lang} id={id}/>
+                            <CADModel info={patientFile?.modelInfo} status={{value: modelStatus, setStatus: handleModelStatus}} lang={props.lang} id={id} updatePatientFile={updatePatientFile}/>
                         ) : (<></>)}
                         {step === "printing" ? (
-                            <Printing info={patientFile?.printingInfo} status={{value: printStatus, setStatus: handlePrintStatus}} lang={props.lang} id={id}/>
+                            <Printing info={patientFile?.printingInfo} status={{value: printStatus, setStatus: handlePrintStatus}} lang={props.lang} id={id} updatePatientFile={updatePatientFile}/>
                         ) : (<></>)}
                         {step === "processing" ? (
-                            <PostProcessing info={patientFile?.processingInfo} status={{value: processingStatus, setStatus: handleProcessingStatus}} lang={props.lang} id={id}/>
+                            <PostProcessing info={patientFile?.processingInfo} status={{value: processingStatus, setStatus: handleProcessingStatus}} lang={props.lang} id={id} updatePatientFile={updatePatientFile}/>
                         ) : (<></>)}
                         {step === "delivery" ? (
-                            <Delivery info={patientFile?.deliveryInfo} status={{value: deliveryStatus, setStatus: handleDeliveryStatus}} lang={props.lang} id={id}/>
+                            <Delivery info={patientFile?.deliveryInfo} status={{value: deliveryStatus, setStatus: handleDeliveryStatus}} lang={props.lang} id={id} updatePatientFile={updatePatientFile}/>
                         ) : (<></>)}
                         {step === "feedback" ? (
-                            <Feedback info={patientFile?.feedbackInfo} status={{value: feedbackStatus, setStatus: handleFeedbackStatus}} lang={props.lang} id={id}/>
+                            <Feedback info={patientFile?.feedbackInfo} status={{value: feedbackStatus, setStatus: handleFeedbackStatus}} lang={props.lang} id={id} updatePatientFile={updatePatientFile}/>
                         ) : (<></>)}
                     </div>
                 </div>

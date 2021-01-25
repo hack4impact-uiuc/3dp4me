@@ -72,7 +72,7 @@ router.get(
     '/:id/:stage/:filename',
     errorWrap(async (req, res) => {
         const { id, stage, filename } = req.params;
-        //TODO: change it so that you can pass user aws credentials to function instead of relying on admin credentials
+        //TODO: change it so that you can pass user aws credentials in a more secure manner
         var s3Stream = downloadFile(`${id}/${stage}/${filename}`, {accessKeyId: req.headers.accesskeyid, secretAccessKey: req.headers.secretaccesskey, sessionToken: req.headers.sessiontoken}).createReadStream();
         // Listen for errors returned by the service
         s3Stream.on('error', function(err) {
@@ -85,13 +85,32 @@ router.get(
     })
 );
 
+// Delete: Delete a file
+router.delete(
+    '/:id/:stage/:filename',
+    errorWrap(async (req, res) => {
+        const { id, stage, filename } = req.params;
+        const patient = await models.Patient.findById(id);
+        let index = patient[stage].files.findIndex(x => x.filename==filename); 
+        if (index > -1) {
+            patient[stage].files.splice(index, 1);
+        }
+        patient.lastEdited = Date.now();
+        patient.save();
+        res.status(201).json({
+            success: true,
+            message: 'Patient status updated with file removed'
+        });
+    })
+);
+
 
 // POST: upload individual files
 router.post(
     '/:id/:stage/file',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        //TODO: change it so that you can pass user aws credentials to function instead of relying on admin credentials
+        //TODO: change it so that you can pass user aws credentials in a more secure manner
         const { uploadedFileName, accessKeyId, secretAccessKey,sessionToken} = req.body;
         const patient = await models.Patient.findById(id);
         let file = req.files.uploadedFile;
@@ -108,7 +127,9 @@ router.post(
                     success: true,
                     message: 'Patient status updated with new file',
                     data: {
-                        name: file.name,
+                        name: uploadedFileName,
+                        uploadedBy: req.user.Username,
+                        uploadDate: Date.now(),
                         mimetype: file.mimetype,
                         size: file.size
                     }

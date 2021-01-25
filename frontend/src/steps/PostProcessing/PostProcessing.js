@@ -3,7 +3,7 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
 import swal from 'sweetalert';
-import { downloadFile, uploadFile } from '../../utils/api';
+import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
 
 const PostProcessing = (props) => {
 
@@ -22,11 +22,22 @@ const PostProcessing = (props) => {
         downloadFile(props.id, stageName, fileName);
     }
 
-    const handleUpload = (e) => {
+    const handleDelete = async (fileName) => {
+        deleteFile(props.id, stageName, fileName);
+        setProcessingFiles(processingFiles.filter(file => file !== fileName));
+        let info_copy = info;
+        info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        props.updatePatientFile(stageName, info_copy);
+    }
+
+    const handleUpload = async (e) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
         setProcessingFiles(files => files.concat(fileToUpload.name.toUpperCase()));
-        uploadFile(props.id, stageName, fileToUpload, fileToUpload.name.toUpperCase());
+        let res = await uploadFile(props.id, stageName, fileToUpload, fileToUpload.name.toUpperCase());
+        let info_copy = info;
+        info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        props.updatePatientFile(stageName, info_copy)
     }
 
     useEffect(() => {
@@ -63,7 +74,7 @@ const PostProcessing = (props) => {
         <div>
             <h1>{lang[key].patientView.postProcessing.title}</h1>
             <p>Last edited by Im Tired on 10/05/2020 9:58PM</p>
-            <Files lang={props.lang} title={lang[key].components.file.title} fileNames={processingFiles} handleDownload={handleDownload} handleUpload={handleUpload}/>
+            <Files lang={props.lang} title={lang[key].components.file.title} fileNames={processingFiles} handleDownload={handleDownload} handleUpload={handleUpload} handleDelete={handleDelete}/>
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={processingNotes} state={setProcessingNotes} />
             <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{state: trigger, setState: discardData}} save = {saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
         </div>

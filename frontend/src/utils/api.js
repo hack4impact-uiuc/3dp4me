@@ -110,3 +110,9 @@ export const uploadFile = async (patientId, stage, filedata, filename=null) => {
             }
         });
 }
+
+export const deleteFile = async (patientId, stage, filename) => {
+    const requestString = `/patients/${patientId}/${stage}/${filename}`;
+    return instance
+        .delete(requestString);
+}
