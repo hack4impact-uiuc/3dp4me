@@ -20,8 +20,6 @@ function App() {
   const [userEmail, setUserEmail] = useState("");
   const [key, setKey] = useState("EN");
   
-  cred();
-
   const langInfo = {
     data: language,
     key: key
@@ -71,11 +69,6 @@ function App() {
       </Router>
     </body>
   );
-}
-
-async function cred() {
-  console.log('credentials hit')
-  console.log(await getCredentials());
 }
 
 export default withAuthenticator(App);

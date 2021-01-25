@@ -82,7 +82,6 @@ export const updateStage = async (patientId, stage, updated_stage) => {
 export const downloadFile = async (patientId, stage, filename) => {
     const requestString = `/patients/${patientId}/${stage}/${filename}`;
     const { accessKeyId, secretAccessKey,sessionToken} = await getCredentials();
-    console.log(accessKeyId)
     return instance
         .get(requestString,{ headers: {"accessKeyId": accessKeyId, "secretAccessKey": secretAccessKey, "sessionToken": sessionToken}, responseType: 'blob' }) // TODO: use AWS userId
         .then(

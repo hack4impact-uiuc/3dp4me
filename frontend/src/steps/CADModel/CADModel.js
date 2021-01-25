@@ -22,23 +22,19 @@ const CADModel = (props) => {
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const handleDownloadCAD = (fileName) => {
-        // TODO: Call file download endpoint
+    const handleDownload = (fileName) => {
         downloadFile(props.id, stageName, fileName);
-
     }
 
     const handleLeftUpload = (e) => {
         const fileToUpload = e.target.files[0];
         setLeftCADFiles(files => files.concat("LEFT_" + fileToUpload.name.toUpperCase()));
-        // TODO: Call file upload endpoint
-        uploadFile(props.id, stageName, fileToUpload, "LEFT_" + fileToUpload.name.toUpperCase())
+        uploadFile(props.id, stageName, fileToUpload, "LEFT_" + fileToUpload.name.toUpperCase());
     }
 
     const handleRightUpload = (e) => {
         const fileToUpload = e.target.files[0];
         setRightCADFiles(files => files.concat("RIGHT_" + fileToUpload.name.toUpperCase()));
-        // TODO: Call file upload endpoint
         uploadFile(props.id, stageName, fileToUpload, "RIGHT_" + fileToUpload.name.toUpperCase())
     }
 
@@ -77,8 +73,8 @@ const CADModel = (props) => {
             <h1>{lang[key].patientView.CADModeling.title}</h1>
             <p>Last edited by Evan Eckels on 10/05/2020 9:58PM</p>
             <div className="cad-files">
-                <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderLeft} fileNames={leftCADFiles} handleDownload={handleDownloadCAD} handleUpload={handleLeftUpload} />
-                <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderRight} fileNames={rightCADFiles} handleDownload={handleDownloadCAD} handleUpload={handleRightUpload} />
+                <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderLeft} fileNames={leftCADFiles} handleDownload={handleDownload} handleUpload={handleLeftUpload} />
+                <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderRight} fileNames={rightCADFiles} handleDownload={handleDownload} handleUpload={handleRightUpload} />
             </div>
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={CADNotes} state={setCADNotes} />
             <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />

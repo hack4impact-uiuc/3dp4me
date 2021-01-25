@@ -7,42 +7,35 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 
 import './EarScan.scss';
+import { downloadFile, uploadFile } from '../../utils/api';
 
 const EarScan = (props) => {
     const info = props.info
+    const stageName = "earScanInfo";
     const [trigger, reset] = useState(true);
     const [notes, setNotes] = useState("");
-    const [download, setDownload] = useState();
     const [edit, setEdit] = useState(false);
     const [leftEarFiles, setLeftEarFiles] = useState(info.files.map((file_info) => {return file_info.filename}).filter((filename) => {return filename.startsWith("LEFT_")}));
     const [rightEarFiles, setRightEarFiles] = useState(info.files.map((file_info) => {return file_info.filename}).filter((filename) => {return filename.startsWith("RIGHT_")}));
-    const formFields = {
-        download: download,
-        notes: notes,
-    }
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const handleDownload = (e) => {
-        
+    const handleDownload = (fileName) => {
+        downloadFile(props.id, stageName, fileName);
     }
 
     const handleLeftUpload = (e) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
-        let formData = new FormData();
         setLeftEarFiles(files => files.concat("LEFT_" + fileToUpload.name.toUpperCase()));
-        formData.append("file", fileToUpload);
-        // TODO: Call file upload endpoint
+        uploadFile(props.id, stageName, fileToUpload, "LEFT_" + fileToUpload.name.toUpperCase());
     }
 
     const handleRightUpload = (e) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
-        let formData = new FormData();
         setRightEarFiles(files => files.concat("RIGHT_" + fileToUpload.name.toUpperCase()));
-        formData.append("file", fileToUpload);
-        // TODO: Call file upload endpoint
+        uploadFile(props.id, stageName, fileToUpload, "RIGHT_" + fileToUpload.name.toUpperCase())
     }
 
     const handleDelete = (fileName) => {
