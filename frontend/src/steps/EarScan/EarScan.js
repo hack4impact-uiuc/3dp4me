@@ -7,7 +7,7 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 
 import './EarScan.scss';
-import { downloadFile, uploadFile } from '../../utils/api';
+import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
 
 const EarScan = (props) => {
     const info = props.info
@@ -24,28 +24,40 @@ const EarScan = (props) => {
         downloadFile(props.id, stageName, fileName);
     }
 
-    const handleLeftUpload = (e) => {
+    const handleLeftDelete = async (fileName) => {
+        deleteFile(props.id, stageName, fileName);
+        setLeftEarFiles(leftEarFiles.filter(file => file !== fileName));
+        let info_copy = info;
+        info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        props.updatePatientFile(stageName, info_copy);
+    }
+
+    const handleRightDelete = async (fileName) => {
+        deleteFile(props.id, stageName, fileName);
+        setRightEarFiles(rightEarFiles.filter(file => file !== fileName));
+        let info_copy = info;
+        info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        props.updatePatientFile(stageName, info_copy);
+    }
+
+    const handleLeftUpload = async (e) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
         setLeftEarFiles(files => files.concat("LEFT_" + fileToUpload.name.toUpperCase()));
-        uploadFile(props.id, stageName, fileToUpload, "LEFT_" + fileToUpload.name.toUpperCase());
+        let res = await uploadFile(props.id, stageName, fileToUpload, "LEFT_" + fileToUpload.name.toUpperCase());
+        let info_copy = info;
+        info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        props.updatePatientFile(stageName, info_copy);
     }
 
-    const handleRightUpload = (e) => {
+    const handleRightUpload = async (e) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
         setRightEarFiles(files => files.concat("RIGHT_" + fileToUpload.name.toUpperCase()));
-        uploadFile(props.id, stageName, fileToUpload, "RIGHT_" + fileToUpload.name.toUpperCase())
-    }
-
-    const handleDelete = (fileName) => {
-        let index = leftEarFiles.indexOf(fileName);
-        if (index > -1) {
-            setLeftEarFiles(leftEarFiles.filter(file => file !== fileName));
-        } else {
-            setRightEarFiles(rightEarFiles.filter(file => file !== fileName));
-        }
-        // TODO: Call file delete endpoint
+        let res = await uploadFile(props.id, stageName, fileToUpload, "RIGHT_" + fileToUpload.name.toUpperCase());
+        let info_copy = info;
+        info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        props.updatePatientFile(stageName, info_copy);
     }
 
     const postData = (e) => {
@@ -88,8 +100,8 @@ const EarScan = (props) => {
             <h1>{lang[key].patientView.earScan.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <div className="ear-scan-files">
-                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderLeft} fileNames={leftEarFiles} handleDownload={handleDownload} handleUpload={handleLeftUpload} handleDelete={handleDelete} />
-                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderRight} fileNames={rightEarFiles} handleDownload={handleDownload} handleUpload={handleRightUpload} handleDelete={handleDelete} />
+                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderLeft} fileNames={leftEarFiles} handleDownload={handleDownload} handleUpload={handleLeftUpload} handleDelete={handleLeftDelete} />
+                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderRight} fileNames={rightEarFiles} handleDownload={handleDownload} handleUpload={handleRightUpload} handleDelete={handleRightDelete} />
             </div>
             <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
             <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
