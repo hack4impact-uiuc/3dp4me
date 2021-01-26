@@ -59,12 +59,12 @@ const patientSchema = new mongoose.Schema({
         emPhone: { type: String, required: true},
         delivery: {
             type: String,
-            enum: [deliveryEnum.DELIVERY, deliveryEnum.PICKUP],
+            enum: Object.values(deliveryEnum),
             default: stageStatusEnum.DELIVERY
         },
         status: {
             type: String,
-            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            enum: Object.values(stageStatusEnum),
             default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
@@ -75,7 +75,7 @@ const patientSchema = new mongoose.Schema({
     earScanInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            enum: Object.values(stageStatusEnum),
             default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
@@ -86,7 +86,7 @@ const patientSchema = new mongoose.Schema({
     modelInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            enum: Object.values(stageStatusEnum),
             default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
@@ -97,7 +97,7 @@ const patientSchema = new mongoose.Schema({
     printingInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            enum: Object.values(stageStatusEnum),
             default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
@@ -108,7 +108,7 @@ const patientSchema = new mongoose.Schema({
     processingInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            enum: Object.values(stageStatusEnum),
             default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
@@ -119,12 +119,12 @@ const patientSchema = new mongoose.Schema({
     deliveryInfo: {
         deliveryStatus: {
             type: String,
-            enum: [deliveryStatusEnum.NOTREADY, deliveryStatusEnum.READY, deliveryStatusEnum.OUT, deliveryStatusEnum.HANDDELIVERED, deliveryStatusEnum.PICKUP],
+            enum: Object.values(deliveryStatusEnum),
             default: deliveryStatusEnum.NOTREADY
         },
         status: {
             type: String,
-            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            enum: Object.values(stageStatusEnum),
             default: stageStatusEnum.UNFINISHED
         },
         lastEdited: { type: Date, required: true, default: Date.now },
@@ -135,12 +135,12 @@ const patientSchema = new mongoose.Schema({
     feedbackInfo: {
         status: {
             type: String,
-            enum: [stageStatusEnum.UNFINISHED, stageStatusEnum.PARTIAL, stageStatusEnum.FINISHED],
+            enum: Object.values(stageStatusEnum),
             default: stageStatusEnum.UNFINISHED
         },
         feedbackCycle: {
             type: String,
-            enum: [feedbackEnum.INITIAL, feedbackEnum.SIXMONTH, feedbackEnum.ONEYEAR, feedbackEnum.TWOYEAR],
+            enum: Object.values(feedbackEnum),
             default: feedbackEnum.INITIAL
         },
         initial: {
