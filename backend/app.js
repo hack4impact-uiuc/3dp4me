@@ -5,7 +5,7 @@ const fileUpload = require("express-fileupload");
 var cors = require("cors");
 const bodyParser = require("body-parser");
 const { errorHandler } = require("./utils");
-const authentication = require('./middleware/authentication')
+const requireAuthentication = require('./middleware/authentication')
 
 const app = express();
 app.use(cors());
@@ -19,15 +19,15 @@ mongoose.connect(process.env.DB_URI, {
     useUnifiedTopology: true,
 });
 
-
-
 mongoose.connection
     .once("open", () => console.log("Connected to the database!"))
     .on("error", error => console.log("Error connecting to the database: ", error));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(authentication);
+
+// TODO: Move this to use Role-based
+app.use(requireAuthentication);
 app.use(require("./routes"));
 
 module.exports = app;
