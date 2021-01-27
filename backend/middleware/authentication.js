@@ -1,7 +1,5 @@
-const AWS_VARS = require('../utils/aws/aws-exports');
 var AWS = require('aws-sdk');
 
-AWS.config.update({region: AWS_VARS.S3_REGION});
 const requireAuthentication = async (req, res, next) => {
     try {
         // TODO: Get more reliable way of accessing token

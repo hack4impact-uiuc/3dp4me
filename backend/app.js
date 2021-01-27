@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("./utils/aws/aws-setup");
 const mongoose = require("mongoose");
 const express = require("express");
 const fileUpload = require("express-fileupload");
