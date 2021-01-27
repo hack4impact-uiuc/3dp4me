@@ -33,7 +33,6 @@ function App() {
       const userInfo = await getCurrentUserInfo();
       setUsername(userInfo.username);
       setUserEmail(userInfo.email);
-      console.log(await (await getCurrentSession()).getAccessToken());
     }
 
     Auth.currentAuthenticatedUser()
