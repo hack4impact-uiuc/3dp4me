@@ -7,7 +7,6 @@ import AccountManagement from "./pages/AccountManagement/AccountManagment";
 import Metrics from "./pages/Metrics/Metrics";
 import Patients from "./pages/Patients/Patients";
 import Navbar from "./components/Navbar/Navbar";
-import MedicalInfo from "./steps/MedicalInfo/MedicalInfo";
 import Controller from './steps/Controller/Controller';
 import language from './language.json';
 import Login from "./components/Login/Login";
