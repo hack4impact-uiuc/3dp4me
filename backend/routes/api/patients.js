@@ -48,23 +48,24 @@ router.get(
 // POST: new patient
 router.post(
     '/',
-    // validate({ body: models.Patient }),
     errorWrap(async (req, res) => {
         const patient = req.body;
         try {
-            let new_patient = new models.Patient(patient);
-            new_patient.save(function (err, patient) {
-                if (err) return console.error(err);
-            })
-            res.status(SUCCESS).send({
-              code: SUCCESS,
-              success: true,
-              message: "User successfully created.",
-              data: resp
+            const new_patient = new models.Patient(patient);
+            const saved_patient = await _patient.save();
+        } catch (err) {
+            // TODO: Validate patient and send back good error message
+            res.status(500).send({
+
             });
-          } catch (err) {
-            return err;
-          }
+        }
+
+        res.status(SUCCESS).send({
+            code: SUCCESS,
+            success: true,
+            message: "User successfully created.",
+            data: resp
+        });
 }));
 
 // GET: Download a file
@@ -95,6 +96,7 @@ router.delete(
         if (index > -1) {
             patient[stage].files.splice(index, 1);
         }
+        // TODO: Remove this file from AWS as well
         patient.lastEdited = Date.now();
         patient.save();
         res.status(201).json({
@@ -147,6 +149,7 @@ router.post(
         const updatedStage = req.body;
         const patient = await models.Patient.findById(id);
 
+        // TODO: Check that patient returned exists
         //TODO: use name of input field possibly?
         patient.lastEdited = Date.now();
         patient[stage] = updatedStage;
