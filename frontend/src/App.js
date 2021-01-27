@@ -12,9 +12,10 @@ import Controller from './steps/Controller/Controller';
 import language from './language.json';
 import Login from "./components/Login/Login";
 import { UNDEFINED_AUTH, AUTHENTICATED, UNAUTHENTICATED, setAuthListener } from './aws/aws-auth.js';
-import { getCredentials, getCurrentUserInfo } from './aws/aws-helper.js';
+import { getCredentials, getCurrentSession, getCurrentUserInfo } from './aws/aws-helper.js';
 
 Amplify.configure(awsconfig)
+
 
 function App() {
   const [key, setKey] = useState("EN");
@@ -32,6 +33,7 @@ function App() {
       const userInfo = await getCurrentUserInfo();
       setUsername(userInfo.username);
       setUserEmail(userInfo.email);
+      console.log(await (await getCurrentSession()).getAccessToken());
     }
 
     Auth.currentAuthenticatedUser()
