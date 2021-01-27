@@ -8,7 +8,6 @@ const { uploadFile, downloadFile } = require("../../utils/aws/aws-s3-helpers");
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        
         models.Patient.find().then(patientInfo => res.status(200).json({
             code: 200, 
             success: true, 
@@ -22,11 +21,18 @@ router.get(
     '/:id',
     errorWrap(async (req, res) => {
         const { id } = req.params;
-        models.Patient.findById(id).then(patientInfo => res.status(200).json({
-            code: 200, 
-            success: true, 
-            result: patientInfo
-        }));
+        const patientData = await models.Patient.findById(id); 
+        if (!patientData)
+            res.status(404).json({
+                code: 404,
+                success: false,
+            });
+        else
+            res.status(200).json({
+                code: 200, 
+                success: true, 
+                result: patientData,
+            });
     }),
 );
 
@@ -35,17 +41,19 @@ router.get(
     '/:id/:stage',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        models.Patient.findById(id, stage).then(stageInfo => {
-            res.status(200).json({
-                code: 200, 
-                success: true, 
-                result: stageInfo[stage]
-            });
+        // TODO: Just query for the stage data only
+        const patientData = await models.Patient.findById(id, stage);
+        const stageData = patientData[stage];
+        res.status(200).json({
+            code: 200, 
+            success: true, 
+            result: stageData,
         });
     }),
 );
 
 // POST: new patient
+// TODO: Implement and test
 router.post(
     '/',
     errorWrap(async (req, res) => {
