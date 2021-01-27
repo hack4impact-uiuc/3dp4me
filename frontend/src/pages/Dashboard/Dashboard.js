@@ -172,6 +172,7 @@ const Dashboard = (props) => {
   // TODO: hook up dashboard to display fetched patients
   const getPatients = async () => {
     const res = await getPatientsByStage("patientInfo");
+    // TODO: Error handling
     setPatients(res.result);
   }
   
