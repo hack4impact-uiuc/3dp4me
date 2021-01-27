@@ -11,7 +11,7 @@ import Controller from './steps/Controller/Controller';
 import language from './language.json';
 import Login from "./components/Login/Login";
 import { UNDEFINED_AUTH, AUTHENTICATED, UNAUTHENTICATED, setAuthListener } from './aws/aws-auth.js';
-import { getCredentials, getCurrentSession, getCurrentUserInfo } from './aws/aws-helper.js';
+import { getCurrentUserInfo } from './aws/aws-helper.js';
 
 Amplify.configure(awsconfig)
 
