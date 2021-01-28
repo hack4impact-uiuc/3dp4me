@@ -21,11 +21,11 @@ jobs:
           key: ${{ runner.os }}-cache
 
       - name: Install dependencies
-        working-directory: ./client
+        working-directory: ./frontend
         run: yarn
 
       - name: Check formatting
-        working-directory: ./client
+        working-directory: ./frontend
         run: yarn format:check
 
   lint:
@@ -46,11 +46,11 @@ jobs:
           key: ${{ runner.os }}-cache
 
       - name: Install dependencies
-        working-directory: ./client
+        working-directory: ./frontend
         run: yarn
 
       - name: Run linter
-        working-directory: ./client
+        working-directory: ./frontend
         run: yarn lint
 
   build:
@@ -71,11 +71,11 @@ jobs:
           key: ${{ runner.os }}-cache
 
       - name: Install dependencies
-        working-directory: ./client
+        working-directory: ./frontend
         run: yarn
 
       - name: Build application
-        working-directory: ./client
+        working-directory: ./frontend
         run: yarn build
 
   test:
@@ -89,7 +89,7 @@ jobs:
         with:
           # record: true
           # parallel: true
-          working-directory: client
+          working-directory: frontend
           start: yarn start
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
