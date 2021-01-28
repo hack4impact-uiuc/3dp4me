@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const useSortableData = (items, UNSORTED_DATA, config = null) => {
     const [sortConfig, setSortConfig] = React.useState(config);

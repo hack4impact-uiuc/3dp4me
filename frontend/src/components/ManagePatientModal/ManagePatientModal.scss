@@ -31,7 +31,9 @@
         color: red;
         border: solid;
         border-radius: 4px;
-        p { margin: 0; }
+        p {
+            margin: 0;
+        }
 
         &.manage-patient-delete-ar {
             margin-left: auto;

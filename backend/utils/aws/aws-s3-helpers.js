@@ -2,22 +2,22 @@ const S3_INFO = require('./aws-exports.js');
 var AWS = require('aws-sdk');
 
 /**
-* Uploads a file to the S3 bucket
-* @param content File contents in a binary string
-* @param remoteFileName The full directory of the s3 remote path to upload to
-* @param credentials The temporary credentials of the end user. Frontend should provide this.
-* @param onUploaded Callback after finished uploading. Params are (err, data).
-*/
+ * Uploads a file to the S3 bucket
+ * @param content File contents in a binary string
+ * @param remoteFileName The full directory of the s3 remote path to upload to
+ * @param credentials The temporary credentials of the end user. Frontend should provide this.
+ * @param onUploaded Callback after finished uploading. Params are (err, data).
+ */
 const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
     let params = {
-        Body: content, 
-        Bucket: S3_INFO.S3_BUCKET_NAME, 
+        Body: content,
+        Bucket: S3_INFO.S3_BUCKET_NAME,
         Key: remoteFileName,
     };
 
-    let s3 = getS3(credentials)
+    let s3 = getS3(credentials);
     s3.putObject(params, onUploaded);
-}
+};
 
 /**
  * Downloads file from the S3 bucket
@@ -27,15 +27,15 @@ const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
  */
 const downloadFile = (objectKey, credentials) => {
     let params = {
-        Bucket: S3_INFO.S3_BUCKET_NAME, 
-        Key: objectKey
+        Bucket: S3_INFO.S3_BUCKET_NAME,
+        Key: objectKey,
     };
 
-    let s3 = getS3(credentials)
+    let s3 = getS3(credentials);
     var object = s3.getObject(params);
 
-    return object
-}
+    return object;
+};
 
 function getS3(credentials) {
     let s3 = new AWS.S3({
@@ -43,10 +43,10 @@ function getS3(credentials) {
         secretAccessKey: credentials.secretAccessKey,
         sessionToken: credentials.sessionToken,
         region: S3_INFO.S3_REGION,
-    })
+    });
 
-  return s3
+    return s3;
 }
 
-exports.uploadFile = uploadFile
-exports.downloadFile = downloadFile
+exports.uploadFile = uploadFile;
+exports.downloadFile = downloadFile;

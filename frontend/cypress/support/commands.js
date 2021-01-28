@@ -25,18 +25,17 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from '../../src/aws/aws-exports'
+import awsconfig from '../../src/aws/aws-exports';
 Amplify.configure(awsconfig);
 
-Cypress.Commands.add("login", (email, password) => {
-  return Auth.signIn(email, password)
-      .then(user => {
-        console.log('===> user', user);
+Cypress.Commands.add('login', (email, password) => {
+    return Auth.signIn(email, password)
+        .then((user) => {
+            console.log('===> user', user);
 
-        let session = Auth.currentSession();
+            let session = Auth.currentSession();
 
-        console.log('===> session', session);
-      })
-      .catch(err => console.log('===> err', err));
-})
-
+            console.log('===> session', session);
+        })
+        .catch((err) => console.log('===> err', err));
+});

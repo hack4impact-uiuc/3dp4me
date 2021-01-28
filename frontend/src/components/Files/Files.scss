@@ -13,8 +13,10 @@
         background-color: $secondary;
         color: black;
         padding-left: 10px;
-    
-        h3 { font-weight: 100; }
+
+        h3 {
+            font-weight: 100;
+        }
     }
 
     .files-table {
@@ -37,14 +39,19 @@
         .file-info-wrapper {
             display: flex;
             flex-direction: row;
-            #file-upload-timestamp { line-height: 0; color: grey; }
+            #file-upload-timestamp {
+                line-height: 0;
+                color: grey;
+            }
         }
 
         .file-close-button {
             background-color: white;
             border: none;
             height: 100%;
-            &:hover { cursor: pointer; }
+            &:hover {
+                cursor: pointer;
+            }
         }
 
         .upload-file-input {

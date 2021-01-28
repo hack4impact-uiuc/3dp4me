@@ -1,29 +1,29 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "dependencies": {
-    "aws-amplify": "^3.3.3",
-    "aws-amplify-react-native": "^4.2.7",
-    "aws-sdk": "^2.785.0",
-    "axios": "^0.21.1",
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "express-fileupload": "^1.2.0",
-    "mongoose": "^5.10.10",
-    "prettier": "^2.2.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.4"
-  },
-  "scripts": {
-    "dev": "nodemon ./bin/www",
-    "start": "node ./bin/www",
-    "lint": "eslint --fix \"./**/*.{js,jsx}\" -c .eslintrc.json",
-    "format": "prettier --write \"./**/*.{js,jsx,json,md}\"",
-    "format:check": "prettier --check \"./**/*.{js,jsx,json,md}\""
-  }
+    "name": "backend",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "dependencies": {
+        "aws-amplify": "^3.3.3",
+        "aws-amplify-react-native": "^4.2.7",
+        "aws-sdk": "^2.785.0",
+        "axios": "^0.21.1",
+        "body-parser": "^1.19.0",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "express-fileupload": "^1.2.0",
+        "mongoose": "^5.10.10",
+        "prettier": "^2.2.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.4"
+    },
+    "scripts": {
+        "dev": "nodemon ./bin/www",
+        "start": "node ./bin/www",
+        "lint": "eslint --fix \"./**/*.{js,jsx}\" -c .eslintrc.json",
+        "format": "prettier --write \"./**/*.{js,jsx,json,md}\"",
+        "format:check": "prettier --check \"./**/*.{js,jsx,json,md}\""
+    }
 }

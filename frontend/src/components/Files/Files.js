@@ -1,5 +1,5 @@
-import React from 'react'
-import './Files.scss'
+import React from 'react';
+import './Files.scss';
 import { Button, Typography } from '@material-ui/core';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
@@ -15,20 +15,31 @@ const Files = (props) => {
                 <h3>{props.title}</h3>
             </div>
             <div className="files-table">
-                {props.fileNames.map(fileName => (
+                {props.fileNames.map((fileName) => (
                     <div className="file-row-wrapper" key={fileName}>
-                        <Button className="file-button" onClick={() => {props.handleDownload(fileName)}}>
+                        <Button
+                            className="file-button"
+                            onClick={() => {
+                                props.handleDownload(fileName);
+                            }}
+                        >
                             <div className="file-info-wrapper">
                                 <ArrowDownwardIcon />
                                 <div>
                                     <Typography align="left">
                                         {`${fileName}`}
                                     </Typography>
-                                    <p id="file-upload-timestamp">10/14/2020 at 12:34PM</p>
+                                    <p id="file-upload-timestamp">
+                                        10/14/2020 at 12:34PM
+                                    </p>
                                 </div>
                             </div>
                         </Button>
-                        <button className="file-close-button" type="button" onClick={() => props.handleDelete(fileName)}>
+                        <button
+                            className="file-close-button"
+                            type="button"
+                            onClick={() => props.handleDelete(fileName)}
+                        >
                             <CloseIcon />
                         </button>
                     </div>
@@ -51,6 +62,6 @@ const Files = (props) => {
             </div>
         </div>
     );
-}
+};
 
 export default Files;

@@ -1,10 +1,16 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    Button,
+} from '@material-ui/core';
 import WarningIcon from '@material-ui/icons/Warning';
 import './NoChangeDialog.scss';
 
 const NoChangeDialog = (props) => {
-
     return (
         <Dialog
             open={props.open}
@@ -16,7 +22,8 @@ const NoChangeDialog = (props) => {
             </DialogTitle>
             <DialogContent>
                 <DialogContentText className="dialog-text">
-                    Woah there! It looks like you didn't change anything, are you sure you would like to proceed?
+                    Woah there! It looks like you didn't change anything, are
+                    you sure you would like to proceed?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -29,20 +36,20 @@ const NoChangeDialog = (props) => {
                     variant="outlined"
                 >
                     Cancel
-                    </Button>
+                </Button>
                 <Button
                     className="dialog-button"
                     onClick={() => {
-                        props.save("override");
+                        props.save('override');
                     }}
                     autoFocus
                     variant="outlined"
                 >
                     Save
-                    </Button>
+                </Button>
             </DialogActions>
         </Dialog>
     );
-}
+};
 
 export default NoChangeDialog;

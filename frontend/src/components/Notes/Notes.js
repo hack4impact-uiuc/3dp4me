@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import './Notes.scss';
 
 const Notes = (props) => {
@@ -11,14 +11,14 @@ const Notes = (props) => {
                 <textarea
                     disabled={props.disabled}
                     onChange={(e) => {
-                        props.state(e.target.value)
+                        props.state(e.target.value);
                     }}
                     value={props.value}
-                    className={props.disabled ? "notes-body" : "active-body"}
+                    className={props.disabled ? 'notes-body' : 'active-body'}
                 />
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Notes;

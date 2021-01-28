@@ -5,6 +5,7 @@
 ### Create `.env` file
 
 Create a file named `.env` in the backend directory with the values below.
+
 ```
 DB_URI=""
 ```
@@ -15,5 +16,5 @@ In the backend directory, run `yarn && yarn start`. This should start a local se
 
 ## Structure
 
-API ENDPOINTS go into routes/api/*.js
+API ENDPOINTS go into routes/api/\*.js
 Related endpoints in a single file

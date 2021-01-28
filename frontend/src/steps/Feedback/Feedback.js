@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import Notes from '../../components/Notes/Notes'
+import React, { useEffect, useState } from 'react';
+import Notes from '../../components/Notes/Notes';
 import { TextField } from '@material-ui/core';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
@@ -7,19 +7,18 @@ import './Feedback.scss';
 import { updateStage } from '../../utils/api';
 
 const Feedback = (props) => {
-
-    const stageName = "feedbackInfo"
+    const stageName = 'feedbackInfo';
     const [info, setInfo] = useState(props.info);
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
-    const [intialFeedback, setInitialFeedback] = useState("");
-    const [initialFeedbackDate, setInitialFeedbackDate] = useState("")
-    const [sixMonthFeedback, setSixMonthFeedback] = useState("");
-    const [sixMonthFeedbackDate, setSixMonthFeedbackDate] = useState("")
-    const [oneYearFeedback, setOneYearFeedback] = useState("");
-    const [oneYearFeedbackDate, setOneYearFeedbackDate] = useState("")
-    const [twoYearFeedback, setTwoYearFeedback] = useState("");
-    const [twoYearFeedbackDate, setTwoYearFeedbackDate] = useState("")
+    const [intialFeedback, setInitialFeedback] = useState('');
+    const [initialFeedbackDate, setInitialFeedbackDate] = useState('');
+    const [sixMonthFeedback, setSixMonthFeedback] = useState('');
+    const [sixMonthFeedbackDate, setSixMonthFeedbackDate] = useState('');
+    const [oneYearFeedback, setOneYearFeedback] = useState('');
+    const [oneYearFeedbackDate, setOneYearFeedbackDate] = useState('');
+    const [twoYearFeedback, setTwoYearFeedback] = useState('');
+    const [twoYearFeedbackDate, setTwoYearFeedbackDate] = useState('');
 
     const lang = props.lang.data;
     const key = props.lang.key;
@@ -49,59 +48,117 @@ const Feedback = (props) => {
         updateStage(props.id, stageName, info_copy);
         props.updatePatientFile(stageName, info_copy);
         setEdit(false);
-        swal(lang[key].components.bottombar.savedMessage.feedback, "", "success");
-    }
+        swal(
+            lang[key].components.bottombar.savedMessage.feedback,
+            '',
+            'success',
+        );
+    };
 
     const discardData = (e) => {
         swal({
             title: lang[key].components.button.discard.question,
             text: lang[key].components.button.discard.warningMessage,
-            icon: "warning",
+            icon: 'warning',
             buttons: true,
             dangerMode: true,
-            buttons: [lang[key].components.button.discard.cancelButton, lang[key].components.button.discard.confirmButton]
-          })
-          .then((willDelete) => {
+            buttons: [
+                lang[key].components.button.discard.cancelButton,
+                lang[key].components.button.discard.confirmButton,
+            ],
+        }).then((willDelete) => {
             if (willDelete) {
-              swal({
-                title: lang[key].components.button.discard.success,
-                icon: "success",
-                buttons: lang[key].components.button.discard.confirmButton
-            });
-            reset(!trigger);
-            setEdit(false)
-            } 
-          });
-    }
-
+                swal({
+                    title: lang[key].components.button.discard.success,
+                    icon: 'success',
+                    buttons: lang[key].components.button.discard.confirmButton,
+                });
+                reset(!trigger);
+                setEdit(false);
+            }
+        });
+    };
 
     return (
         <div className="feedback-wrapper">
             <h1>{lang[key].patientView.feedback.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
-            <Notes disabled={!edit} title={lang[key].patientView.feedback.initial} value={intialFeedback} state={setInitialFeedback} />
+            <Notes
+                disabled={!edit}
+                title={lang[key].patientView.feedback.initial}
+                value={intialFeedback}
+                state={setInitialFeedback}
+            />
             <div className="collected-wrapper">
                 <h3>{lang[key].patientView.feedback.collected} </h3>
-                <TextField className={edit ? "active-input" : "input-field"} disabled={!edit} variant="outlined" value={initialFeedbackDate} onChange={(e) => setInitialFeedbackDate(e.target.value)} />
+                <TextField
+                    className={edit ? 'active-input' : 'input-field'}
+                    disabled={!edit}
+                    variant="outlined"
+                    value={initialFeedbackDate}
+                    onChange={(e) => setInitialFeedbackDate(e.target.value)}
+                />
             </div>
-            <Notes disabled={!edit} title={lang[key].patientView.feedback.sixMonth} value={sixMonthFeedback} state={setSixMonthFeedback} />
+            <Notes
+                disabled={!edit}
+                title={lang[key].patientView.feedback.sixMonth}
+                value={sixMonthFeedback}
+                state={setSixMonthFeedback}
+            />
             <div className="collected-wrapper">
                 <h3>{lang[key].patientView.feedback.collected} </h3>
-                <TextField className={edit ? "active-input" : "input-field"} disabled={!edit} variant="outlined" value={sixMonthFeedbackDate} onChange={(e) => setSixMonthFeedbackDate(e.target.value)} />
+                <TextField
+                    className={edit ? 'active-input' : 'input-field'}
+                    disabled={!edit}
+                    variant="outlined"
+                    value={sixMonthFeedbackDate}
+                    onChange={(e) => setSixMonthFeedbackDate(e.target.value)}
+                />
             </div>
-            <Notes disabled={!edit} title={lang[key].patientView.feedback.oneYear} value={oneYearFeedback} state={setOneYearFeedback} />
+            <Notes
+                disabled={!edit}
+                title={lang[key].patientView.feedback.oneYear}
+                value={oneYearFeedback}
+                state={setOneYearFeedback}
+            />
             <div className="collected-wrapper">
                 <h3>{lang[key].patientView.feedback.collected} </h3>
-                <TextField className={edit ? "active-input" : "input-field"} disabled={!edit} variant="outlined" value={oneYearFeedbackDate} onChange={(e) => setOneYearFeedbackDate(e.target.value)} />
+                <TextField
+                    className={edit ? 'active-input' : 'input-field'}
+                    disabled={!edit}
+                    variant="outlined"
+                    value={oneYearFeedbackDate}
+                    onChange={(e) => setOneYearFeedbackDate(e.target.value)}
+                />
             </div>
-            <Notes disabled={!edit} title={lang[key].patientView.feedback.twoYear} value={twoYearFeedback} state={setTwoYearFeedback} />
+            <Notes
+                disabled={!edit}
+                title={lang[key].patientView.feedback.twoYear}
+                value={twoYearFeedback}
+                state={setTwoYearFeedback}
+            />
             <div className="collected-wrapper">
                 <h3>{lang[key].patientView.feedback.collected}</h3>
-                <TextField className={edit ? "active-input" : "input-field"} disabled={!edit} variant="outlined" value={twoYearFeedbackDate} onChange={(e) => setTwoYearFeedbackDate(e.target.value)} />
+                <TextField
+                    className={edit ? 'active-input' : 'input-field'}
+                    disabled={!edit}
+                    variant="outlined"
+                    value={twoYearFeedbackDate}
+                    onChange={(e) => setTwoYearFeedbackDate(e.target.value)}
+                />
             </div>
-            <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar
+                lastEditedBy={info.lastEditedBy}
+                lastEdited={info.lastEdited}
+                discard={{ state: trigger, setState: discardData }}
+                save={saveData}
+                status={props.status}
+                edit={edit}
+                setEdit={setEdit}
+                lang={props.lang}
+            />
         </div>
-    )
-}
+    );
+};
 
 export default Feedback;
