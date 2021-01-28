@@ -7,56 +7,66 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 
 import './EarScan.scss';
+import { downloadFile, uploadFile, deleteFile, updateStage } from '../../utils/api';
 
 const EarScan = (props) => {
-    const info = props.info
+    const [info, setInfo] = useState(props.info);
+    const stageName = "earScanInfo";
     const [trigger, reset] = useState(true);
     const [notes, setNotes] = useState("");
-    const [download, setDownload] = useState();
     const [edit, setEdit] = useState(false);
-    const [leftEarFiles, setLeftEarFiles] = useState([]);
-    const [rightEarFiles, setRightEarFiles] = useState([]);
+    const [leftEarFiles, setLeftEarFiles] = useState(info.files.map((file_info) => {return file_info.filename}).filter((filename) => {return filename.startsWith("LEFT_")}));
+    const [rightEarFiles, setRightEarFiles] = useState(info.files.map((file_info) => {return file_info.filename}).filter((filename) => {return filename.startsWith("RIGHT_")}));
     const formFields = {
-        download: download,
         notes: notes,
     }
+
     const lang = props.lang.data;
     const key = props.lang.key;
+    
 
-    const handleDownload = (e) => {
-        
+    const handleDownload = (fileName) => {
+        downloadFile(props.id, stageName, fileName);
     }
 
-    const handleLeftUpload = (e) => {
+    const handleLeftDelete = async (fileName) => {
+        deleteFile(props.id, stageName, fileName);
+        setLeftEarFiles(leftEarFiles.filter(file => file !== fileName));
+        let info_copy = info;
+        info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        setInfo(info_copy);
+        props.updatePatientFile(stageName, info_copy);
+    }
+
+    const handleRightDelete = async (fileName) => {
+        deleteFile(props.id, stageName, fileName);
+        setRightEarFiles(rightEarFiles.filter(file => file !== fileName));
+        let info_copy = info;
+        info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        setInfo(info_copy);
+        props.updatePatientFile(stageName, info_copy);
+    }
+
+    const handleLeftUpload = async (e) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
-        let formData = new FormData();
-        setLeftEarFiles(files => files.concat(fileToUpload.name));
-        formData.append("file", fileToUpload);
-        // TODO: Call file upload endpoint
+        setLeftEarFiles(files => files.concat("LEFT_" + fileToUpload.name.toUpperCase()));
+        let res = await uploadFile(props.id, stageName, fileToUpload, "LEFT_" + fileToUpload.name.toUpperCase());
+        let info_copy = info;
+        info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        setInfo(info_copy);
+        props.updatePatientFile(stageName, info_copy);
     }
 
-    const handleRightUpload = (e) => {
+    const handleRightUpload = async (e) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
-        let formData = new FormData();
-        setRightEarFiles(files => files.concat(fileToUpload.name));
-        formData.append("file", fileToUpload);
-        // TODO: Call file upload endpoint
-    }
-
-    const handleDelete = (fileName) => {
-        let index = leftEarFiles.indexOf(fileName);
-        if (index > -1) {
-            setLeftEarFiles(leftEarFiles.filter(file => file !== fileName));
-        } else {
-            setRightEarFiles(rightEarFiles.filter(file => file !== fileName));
-        }
-        // TODO: Call file delete endpoint
-    }
-
-    const postData = (e) => {
-
+        setRightEarFiles(files => files.concat("RIGHT_" + fileToUpload.name.toUpperCase()));
+        let res = await uploadFile(props.id, stageName, fileToUpload, "RIGHT_" + fileToUpload.name.toUpperCase());
+        let info_copy = info;
+        info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        setInfo(info_copy);
+        props.updatePatientFile(stageName, info_copy);
     }
 
     useEffect(() => {
@@ -64,6 +74,11 @@ const EarScan = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
+        let info_copy = info;
+        info_copy.notes = notes;
+        setInfo(info_copy);
+        updateStage(props.id, stageName, info_copy);
+        props.updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang[key].components.bottombar.savedMessage.earScan, "", "success");
     }
@@ -95,8 +110,8 @@ const EarScan = (props) => {
             <h1>{lang[key].patientView.earScan.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <div className="ear-scan-files">
-                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderLeft} fileNames={leftEarFiles} handleDownload={handleDownload} handleUpload={handleLeftUpload} handleDelete={handleDelete} />
-                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderRight} fileNames={rightEarFiles} handleDownload={handleDownload} handleUpload={handleRightUpload} handleDelete={handleDelete} />
+                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderLeft} fileNames={leftEarFiles} handleDownload={handleDownload} handleUpload={handleLeftUpload} handleDelete={handleLeftDelete} />
+                <Files lang={props.lang} title={lang[key].patientView.earScan.fileHeaderRight} fileNames={rightEarFiles} handleDownload={handleDownload} handleUpload={handleRightUpload} handleDelete={handleRightDelete} />
             </div>
             <Notes disabled={!edit} value={notes} state={setNotes} title={lang[key].components.notes.title} />
             <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />

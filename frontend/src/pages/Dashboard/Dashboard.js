@@ -6,18 +6,12 @@ import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import "./Dashboard.scss";
 
-import patientInfo from '../../Test Data/patient-info.json'
-import earScan from '../../Test Data/earScan.json';
-import modeling from '../../Test Data/CADModel.json';
-import printing from '../../Test Data/printing.json';
-import processing from '../../Test Data/processing.json';
-import delivery from '../../Test Data/delivery.json';
-import feedback from '../../Test Data/feedback.json';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Link } from "react-router-dom";
 import search from '../../assets/search.svg';
 import archive from '../../assets/archive.svg';
+import {getPatientsByStage} from '../../utils/api';
 
 const useStyles = makeStyles((theme) => ({
   swalEditButton: {
@@ -134,38 +128,42 @@ const Dashboard = (props) => {
     setNoPatient(false);
   };
 
-  const handleStep = (event, newStep) => {
+  const handleStep = async (event, newStep) => {
     setSearchQuery("");
     if (newStep !== null) {
       setStep(newStep);
+      let res = {};
       if (newStep === "info") {
         setStepTitle("patientInfoTitle");
-        setPatients(patientInfo)
+        res = await getPatientsByStage("patientInfo");
       } else if (newStep === "scan") {
         setStepTitle("earScanTitle");
-        setPatients(earScan)
+        res = await getPatientsByStage("earScanInfo");
       } else if (newStep === "cad") {
         setStepTitle("CADModelingTitle");
-        setPatients(modeling)
+        res = await getPatientsByStage("modelInfo");
       } else if (newStep === "printing") {
         setStepTitle("printingTitle");
-        setPatients(printing)
+        res = await getPatientsByStage("printingInfo");
       } else if (newStep === "processing") {
         setStepTitle("postProcessingTitle");
-        setPatients(processing)
+        res = await getPatientsByStage("processingInfo");
       } else if (newStep === "delivery") {
         setStepTitle("deliveryTitle");
-        setPatients(delivery)
+        res = await getPatientsByStage("deliveryInfo");
       } else if (newStep === "feedback") {
         setStepTitle("feedbackTitle");
-        setPatients(feedback)
+        res = await getPatientsByStage("feedbackInfo");
       }
+      // What are you doing, step-patients?
+      let stepPatients = res.result;
+      setPatients(stepPatients);
     }
   };
 
-  useEffect(() => {
-    setPatients(patientInfo)
-  }, []);
+  // useEffect(() => {
+  //   setPatients(patientInfo)
+  // }, []);
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -173,12 +171,15 @@ const Dashboard = (props) => {
 
   // TODO: hook up dashboard to display fetched patients
   const getPatients = async () => {
-    // const res = await getAllPatients();
+    const res = await getPatientsByStage("patientInfo");
+    // TODO: Error handling
+    setPatients(res.result);
   }
-
+  
   useEffect(() => {
     getPatients();
   }, [setPatients]);
+
 
   return (
     <div className="dashboard">

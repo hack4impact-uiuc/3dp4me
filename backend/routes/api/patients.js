@@ -4,16 +4,35 @@ const { errorWrap } = require("../../utils");
 const { models } = require("../../models");
 const { uploadFile, downloadFile } = require("../../utils/aws/aws-s3-helpers");
 
+// GET: Returns all patients
+router.get(
+    '/',
+    errorWrap(async (req, res) => {
+        models.Patient.find().then(patientInfo => res.status(200).json({
+            code: 200, 
+            success: true, 
+            result: patientInfo
+        }));
+    }),
+);
+
 // GET: Returns everything associated with patient
 router.get(
     '/:id',
     errorWrap(async (req, res) => {
         const { id } = req.params;
-        models.Patient.findById(id).then(patientInfo => res.status(200).json({
-            code: 200, 
-            success: true, 
-            result: patientInfo
-        }));
+        const patientData = await models.Patient.findById(id); 
+        if (!patientData)
+            res.status(404).json({
+                code: 404,
+                success: false,
+            });
+        else
+            res.status(200).json({
+                code: 200, 
+                success: true, 
+                result: patientData,
+            });
     }),
 );
 
@@ -22,25 +41,48 @@ router.get(
     '/:id/:stage',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        models.Patient.findById(id, stage).then(stageInfo => {
-            res.status(200).json({
-                code: 200, 
-                success: true, 
-                result: stageInfo[stage]
-            });
+        // TODO: Just query for the stage data only
+        const patientData = await models.Patient.findById(id, stage);
+        const stageData = patientData[stage];
+        res.status(200).json({
+            code: 200, 
+            success: true, 
+            result: stageData,
         });
     }),
 );
 
+// POST: new patient
+// TODO: Implement and test
+router.post(
+    '/',
+    errorWrap(async (req, res) => {
+        const patient = req.body;
+        try {
+            const new_patient = new models.Patient(patient);
+            const saved_patient = await _patient.save();
+        } catch (err) {
+            // TODO: Validate patient and send back good error message
+            res.status(500).send({
+
+            });
+        }
+
+        res.status(SUCCESS).send({
+            code: SUCCESS,
+            success: true,
+            message: "User successfully created.",
+            data: resp
+        });
+}));
+
+// GET: Download a file
 router.get(
     '/:id/:stage/:filename',
     errorWrap(async (req, res) => {
         const { id, stage, filename } = req.params;
-        //TODO: Replace these credential fields with one central credential object passed in
-        const {accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
-        console.log(req);
-        const credentials = {accessKeyId: accessKeyId, authenticated: authenticated, identityId: identityId, secretAccessKey: secretAccessKey, sessionToken: sessionToken};
-        var s3Stream = downloadFile(`${id}/${stage}/${filename}`, credentials).createReadStream();
+        //TODO: change it so that you can pass user aws credentials in a more secure manner
+        var s3Stream = downloadFile(`${id}/${stage}/${filename}`, {accessKeyId: req.headers.accesskeyid, secretAccessKey: req.headers.secretaccesskey, sessionToken: req.headers.sessiontoken}).createReadStream();
         // Listen for errors returned by the service
         s3Stream.on('error', function(err) {
             res.json('S3 Error:' + err);
@@ -52,27 +94,51 @@ router.get(
     })
 );
 
+// Delete: Delete a file
+router.delete(
+    '/:id/:stage/:filename',
+    errorWrap(async (req, res) => {
+        const { id, stage, filename } = req.params;
+        const patient = await models.Patient.findById(id);
+        let index = patient[stage].files.findIndex(x => x.filename==filename); 
+        if (index > -1) {
+            patient[stage].files.splice(index, 1);
+        }
+        // TODO: Remove this file from AWS as well
+        patient.lastEdited = Date.now();
+        patient.save();
+        res.status(201).json({
+            success: true,
+            message: 'Patient status updated with file removed'
+        });
+    })
+);
+
+
 // POST: upload individual files
 router.post(
     '/:id/:stage/file',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        //TODO: Replace these credential fields with one central credential object passed in
-        const { userID, accessKeyId, authenticated, identityId, secretAccessKey, sessionToken} = req.body;
+        //TODO: change it so that you can pass user aws credentials in a more secure manner
+        const { uploadedFileName, accessKeyId, secretAccessKey,sessionToken} = req.body;
         const patient = await models.Patient.findById(id);
         let file = req.files.uploadedFile;
-        uploadFile(file.data, `${id}/${stage}/${file.name}`, {accessKeyId: accessKeyId, authenticated: authenticated, identityId: identityId, secretAccessKey: secretAccessKey, sessionToken: sessionToken}, function(err, data) {
+        uploadFile(file.data, `${id}/${stage}/${uploadedFileName}`, {accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, sessionToken: sessionToken}, function(err, data) {
             if(err) {
                 res.json(err)
             } else {
                 // update database only if upload was successful
-                patient[stage].files.push({filename: file.name, uploadedBy: userID, uploadDate: Date.now()});
+                patient[stage].files.push({filename: uploadedFileName, uploadedBy: req.user.Username, uploadDate: Date.now()});
+                patient.lastEdited = Date.now();
                 patient.save();
                 res.status(201).json({
                     success: true,
                     message: 'Patient status updated with new file',
                     data: {
-                        name: file.name,
+                        name: uploadedFileName,
+                        uploadedBy: req.user.Username,
+                        uploadDate: Date.now(),
                         mimetype: file.mimetype,
                         size: file.size
                     }
@@ -82,20 +148,21 @@ router.post(
     })
 );
 
-// POST: Uploads files for certain stage and updates info
+// POST: Updates info for patient at stage
 router.post(
     '/:id/:stage',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
         //TODO: Add auth check for permissions
-        const { userID, updatedStage} = req.body;
+        const updatedStage = req.body;
         const patient = await models.Patient.findById(id);
 
+        // TODO: Check that patient returned exists
         //TODO: use name of input field possibly?
         patient.lastEdited = Date.now();
         patient[stage] = updatedStage;
         patient[stage].lastEdited = Date.now();
-        patient[stage].lastEditedBy = userID;
+        patient[stage].lastEditedBy = req.user.Username;
         await patient.save(function(err){
             if(err){
                 res.json(err) //TODO: bug here, need to take a look

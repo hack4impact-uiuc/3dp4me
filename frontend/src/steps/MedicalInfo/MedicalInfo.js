@@ -7,6 +7,7 @@ import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 import patientFile from '../../Test Data/patient.json';
+import { updateStage } from '../../utils/api';
 
 const MedicalInfo = (props) => {
 
@@ -22,6 +23,7 @@ const MedicalInfo = (props) => {
         delivery: "",
         notes: "",
     }
+    const stageName = "patientInfo"
 
     const [trigger, reset] = useState(true);
     const [info, setInfo] = useState(props.info);
@@ -95,6 +97,20 @@ const MedicalInfo = (props) => {
     }
 
     const saveData = (e) => {
+        let info_copy = info;
+        info.name = name;
+        info.dob = dob;
+        info.ssn = ssn;
+        info.address = address;
+        info.phone = phone;
+        info.emName = emName;
+        info.relationship = emRelationship;
+        info.emPhone = emPhone;
+        info.delivery = delivery;
+        info.notes = notes;
+        setInfo(info_copy);
+        updateStage(props.id, stageName, info_copy);
+        props.updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang[key].components.bottombar.savedMessage.patientInfo, "", "success");
     }

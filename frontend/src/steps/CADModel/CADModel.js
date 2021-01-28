@@ -7,44 +7,64 @@ import swal from 'sweetalert'
 import './CADModel.scss';
 
 import '../../utils/api';
-import { downloadFile } from '../../utils/api';
+import { downloadFile, uploadFile, deleteFile, updateStage} from '../../utils/api';
 
 const CADModel = (props) => {
 
-    const info = props.info;
+    const [info, setInfo] = useState(props.info);
+    const stageName = "modelInfo";
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
-    const [downloadCAD, setDownloadCAD] = useState();
     const [CADNotes, setCADNotes] = useState("");
-    const [leftCADFiles, setLeftCADFiles] = useState([]);
-    const [rightCADFiles, setRightCADFiles] = useState([]);
+    const [leftCADFiles, setLeftCADFiles] = useState(info.files.map((file_info) => {return file_info.filename}).filter((filename) => {return filename.startsWith("LEFT_")}));
+    const [rightCADFiles, setRightCADFiles] = useState(info.files.map((file_info) => {return file_info.filename}).filter((filename) => {return filename.startsWith("RIGHT_")}));
     const formFields = {
-        download: downloadCAD,
         notes: CADNotes,
     }
+
     const lang = props.lang.data;
     const key = props.lang.key;
 
-    const handleDownloadCAD = (e) => {
-        // TODO: Call file download endpoint
-        downloadFile(null, null, e.fileName);
-
+    const handleDownload = (fileName) => {
+        downloadFile(props.id, stageName, fileName);
     }
 
-    const handleLeftUpload = (e) => {
-        const fileToUpload = e.target.files[0];
-        let formData = new FormData();
-        setLeftCADFiles(files => files.concat(fileToUpload.name));
-        formData.append("file", fileToUpload);
-        // TODO: Call file upload endpoint
+    const handleLeftDelete = async (fileName) => {
+        deleteFile(props.id, stageName, fileName);
+        setLeftCADFiles(leftCADFiles.filter(file => file !== fileName));
+        let info_copy = info;
+        info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        setInfo(info_copy);
+        props.updatePatientFile(stageName, info_copy);
     }
 
-    const handleRightUpload = (e) => {
+    const handleRightDelete = async (fileName) => {
+        deleteFile(props.id, stageName, fileName);
+        setRightCADFiles(rightCADFiles.filter(file => file !== fileName));
+        let info_copy = info;
+        info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
+        setInfo(info_copy);
+        props.updatePatientFile(stageName, info_copy);
+    }
+
+    const handleLeftUpload = async (e) => {
         const fileToUpload = e.target.files[0];
-        let formData = new FormData();
-        setRightCADFiles(files => files.concat(fileToUpload.name));
-        formData.append("file", fileToUpload);
-        // TODO: Call file upload endpoint
+        setLeftCADFiles(files => files.concat("LEFT_" + fileToUpload.name.toUpperCase()));
+        let res = await uploadFile(props.id, stageName, fileToUpload, "LEFT_" + fileToUpload.name.toUpperCase());
+        let info_copy = info;
+        info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        setInfo(info_copy);
+        props.updatePatientFile(stageName, info_copy);
+    }
+
+    const handleRightUpload = async (e) => {
+        const fileToUpload = e.target.files[0];
+        setRightCADFiles(files => files.concat("RIGHT_" + fileToUpload.name.toUpperCase()));
+        let res = await uploadFile(props.id, stageName, fileToUpload, "RIGHT_" + fileToUpload.name.toUpperCase());
+        let info_copy = info;
+        info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
+        setInfo(info_copy);
+        props.updatePatientFile(stageName, info_copy);
     }
 
     useEffect(() => {
@@ -52,6 +72,11 @@ const CADModel = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
+        let info_copy = info;
+        info_copy.notes = CADNotes;
+        setInfo(info_copy);
+        updateStage(props.id, stageName, info_copy);
+        props.updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang[key].components.bottombar.savedMessage.model, "", "success");
     }
@@ -82,8 +107,8 @@ const CADModel = (props) => {
             <h1>{lang[key].patientView.CADModeling.title}</h1>
             <p>Last edited by Evan Eckels on 10/05/2020 9:58PM</p>
             <div className="cad-files">
-                <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderLeft} fileNames={leftCADFiles} handleDownload={setDownloadCAD} handleUpload={handleLeftUpload} />
-                <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderRight} fileNames={rightCADFiles} handleDownload={setDownloadCAD} handleUpload={handleRightUpload} />
+                <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderLeft} fileNames={leftCADFiles} handleDownload={handleDownload} handleUpload={handleLeftUpload} handleDelete={handleLeftDelete}/>
+                <Files lang={props.lang} title={lang[key].patientView.CADModeling.fileHeaderRight} fileNames={rightCADFiles} handleDownload={handleDownload} handleUpload={handleRightUpload} handleDelete={handleRightDelete}/>
             </div>
             <Notes disabled={!edit} title={lang[key].components.notes.title} value={CADNotes} state={setCADNotes} />
             <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />

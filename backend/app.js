@@ -1,10 +1,12 @@
 require("dotenv").config();
+require("./utils/aws/aws-setup");
 const mongoose = require("mongoose");
 const express = require("express");
 const fileUpload = require("express-fileupload");
 var cors = require("cors");
 const bodyParser = require("body-parser");
 const { errorHandler } = require("./utils");
+const requireAuthentication = require('./middleware/authentication')
 
 const app = express();
 app.use(cors());
@@ -24,6 +26,9 @@ mongoose.connection
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+// TODO: Move this to use Role-based
+app.use(requireAuthentication);
 app.use(require("./routes"));
 
 module.exports = app;

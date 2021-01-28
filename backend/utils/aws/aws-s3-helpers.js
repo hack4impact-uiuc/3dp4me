@@ -38,7 +38,6 @@ const downloadFile = (objectKey, credentials) => {
 }
 
 function getS3(credentials) {
-    // AWS.config.update(credentials);
     let s3 = new AWS.S3({
         accessKeyId: credentials.accessKeyId,
         secretAccessKey: credentials.secretAccessKey,

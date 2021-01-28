@@ -3,28 +3,36 @@ import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, R
 import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 import './Delivery.scss';
+import { updateStage } from '../../utils/api';
+
 
 const Delivery = (props) => {
 
-    const info = props.info
+    const [info, setInfo] = useState(props.info);
+    const stageName = "deliveryInfo";
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
-    const [address, setAddress] = useState("");
+    // const [address, setAddress] = useState("");
     const [deliveryStatus, setDeliveryStatus] = useState("");
     const formFields = {
-        address: address,
-        status: deliveryStatus
+        // address: address,
+        deliveryStatus: deliveryStatus
     }
 
     const lang = props.lang.data;
     const key = props.lang.key;
 
     useEffect(() => {
-        setAddress(info.address);
-        setDeliveryStatus(info.status)
+        // setAddress(info.address);
+        setDeliveryStatus(info.deliveryStatus)
     }, [trigger]);
 
     const saveData = (e) => {
+        let info_copy = info;
+        info_copy.deliveryStatus = deliveryStatus;
+        setInfo(info_copy);
+        updateStage(props.id, stageName, info_copy);
+        props.updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang[key].components.bottombar.savedMessage.delivery, "", "success");
     }
@@ -56,17 +64,19 @@ const Delivery = (props) => {
             <h1>{lang[key].patientView.delivery.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <h3>{lang[key].patientView.delivery.address}</h3>
-            <TextField
+            {/* <TextField
                 disabled={!edit}
                 className={edit ? "active-input" : "input-field"}
                 variant="outlined"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-            />
-            <div className="delivery-address-label">{lang[key].patientView.delivery.addressLabel}</div>
+            /> */}
+            <p>{props.address}</p>
+            <div className="delivery-address-label">{lang[key].patientView.delivery.addressLabel + props.deliveryType}</div>
             <h3>{lang[key].patientView.delivery.status}</h3>
             <FormControl disabled={!edit} component="fieldset">
                 <RadioGroup name="status" value={deliveryStatus} onChange={(e) => setDeliveryStatus(e.target.value)}>
+                    <FormControlLabel value="notReady" control={<Radio />} label={lang[key].patientView.delivery.notReady} />
                     <FormControlLabel value="ready" control={<Radio />} label={lang[key].patientView.delivery.ready} />
                     <FormControlLabel value="out" control={<Radio />} label={lang[key].patientView.delivery.out} />
                     <FormControlLabel value="handDelivered" control={<Radio />} label={lang[key].patientView.delivery.handDelivered} />

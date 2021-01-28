@@ -7,7 +7,6 @@ const { models } = require("../../models");
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        console.log("Getting patients")
         models.Patient.find({}, "_id patientInfo.name createdDate lastEdited status").then(patients => {
             fin = patients.map(info => {
                 return {
@@ -18,10 +17,11 @@ router.get(
                     "status": info.status,
                 }
             })
+
             res.status(200).json({
                 code: 200, 
                 success: true, 
-                result: patients
+                result: fin
             })
         });
     }),
@@ -32,23 +32,22 @@ router.get(
     '/:stage',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        models.Patient.find({}, "_id patientInfo.name createdDate " + stage).then(stageInfo => {
-            fin = stageInfo.map(info => {
-                stageData = info[stage];
-                return {
-                    "_id": info._id, 
-                    "name": info.patientInfo.name, 
-                    "createdDate": info.createdDate,
-                    "feedbackCycle": stageData.feedbackCycle,
-                    "lastEdited": stageData.lastEdited,
-                    "status": stageData.status,
-                }
-            });
-            res.status(200).json({
-                code: 200, 
-                success: true, 
-                result: fin
-            });
+        const patientsData = await models.Patient.find({}, "_id patientInfo.name createdDate " + stage);
+        const remappedPatients = patientsData.map(info => {
+            const stageData = info[stage];
+            return {
+                "_id": info._id, 
+                "name": info.patientInfo.name, 
+                "createdDate": info.createdDate,
+                "feedbackCycle": stageData.feedbackCycle,
+                "lastEdited": stageData.lastEdited,
+                "status": stageData.status,
+            }
+        });
+        res.status(200).json({
+            code: 200, 
+            success: true, 
+            result: remappedPatients,
         });
     }),
 );

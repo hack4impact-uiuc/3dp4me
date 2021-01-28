@@ -4,10 +4,12 @@ import { TextField } from '@material-ui/core';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
 import './Feedback.scss';
+import { updateStage } from '../../utils/api';
 
 const Feedback = (props) => {
 
-    const info = props.info
+    const stageName = "feedbackInfo"
+    const [info, setInfo] = useState(props.info);
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
     const [intialFeedback, setInitialFeedback] = useState("");
@@ -34,6 +36,18 @@ const Feedback = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
+        let info_copy = info;
+        info.initial.notes = intialFeedback;
+        info.initial.date = initialFeedbackDate;
+        info.sixMonth.notes = sixMonthFeedback;
+        info.sixMonth.date = sixMonthFeedbackDate;
+        info.oneYear.notes = oneYearFeedback;
+        info.oneYear.date = oneYearFeedbackDate;
+        info.twoYear.notes = twoYearFeedback;
+        info.twoYear.date = twoYearFeedbackDate;
+        setInfo(info_copy);
+        updateStage(props.id, stageName, info_copy);
+        props.updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang[key].components.bottombar.savedMessage.feedback, "", "success");
     }

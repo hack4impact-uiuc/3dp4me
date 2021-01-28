@@ -1,15 +1,27 @@
 import axios from "axios";
 
-import {getCurrentUserInfo, getCredentials} from '../aws/aws-helper';
+import {getCurrentUserInfo, getCredentials, getCurrentSession} from '../aws/aws-helper';
 const FileDownload = require('js-file-download');
 
 const instance = axios.create({
-    baseURL: "http://localhost:5000/api",
-});
+    baseURL: "http://localhost:8080/api"
+})
+instance.interceptors.request.use(
+    async config => {
+      const { accessToken: { jwtToken } } = await getCurrentSession();
+      if (jwtToken) {
+        config.headers.Authorization = "Bearer " + jwtToken
+      }
+      return config
+    },
+    error => {
+      return Promise.reject(error)
+    }
+  );
 
 export const getAllPatients = async () => {
-    const requestString = "/patients";
-    return instance.get(requestString).then(
+    const requestString = "/stages/";
+    return instance.get(requestString).then( 
         res => res.data,
         err => {
             console.error(err);
@@ -19,7 +31,7 @@ export const getAllPatients = async () => {
 };
 
 export const getPatientsByStage = async stage => {
-    const requestString = `/patients/${stage}`;
+    const requestString = `/stages/${stage}`;
     return instance.get(requestString).then(
         res => res.data,
         err => {
@@ -29,10 +41,35 @@ export const getPatientsByStage = async stage => {
     );
 };
 
-export const completeStage = async (patientId, stage) => {
-    const requestString = `/patients/${patientId}/${stage}/complete`;
+export const getPatientById = async (id) => {
+    const requestString = `/patients/${id}`;
+    return instance.get(requestString).then(
+        res => res.data,
+        err => {
+            console.error(err);
+            return null;
+        },
+    );
+};
+
+
+export const newPatient = async (patient_info) => {
+    const requestString = `/patients/`;
     return instance
-        .post(requestString, { userId: '123' }) // TODO: use AWS userId
+        .post(requestString, patient_info) // TODO: use AWS userId
+        .then(
+            res => res.data,
+            err => {
+                console.error(err);
+                return null;
+            },
+        );
+};
+
+export const updateStage = async (patientId, stage, updated_stage) => {
+    const requestString = `/patients/${patientId}/${stage}`;
+    return instance
+        .post(requestString, updated_stage) // TODO: use AWS userId
         .then(
             res => res.data,
             err => {
@@ -44,17 +81,38 @@ export const completeStage = async (patientId, stage) => {
 
 export const downloadFile = async (patientId, stage, filename) => {
     const requestString = `/patients/${patientId}/${stage}/${filename}`;
-    let credentials = await getCurrentUserInfo();
-    let a = await getCredentials();
-    console.log(a);
-    // let userID = credentials.id;
-    // return instance
-    //     .get(requestString, { userId: userID, responseType: 'blob' }) // TODO: use AWS userId
-    //     .then(
-    //         res => FileDownload(res.data, filename),
-    //         err => {
-    //             console.error(err);
-    //             return null;
-    //         },
-    //     );
+    const { accessKeyId, secretAccessKey,sessionToken} = await getCredentials();
+    return instance
+        .get(requestString,{ headers: {"accessKeyId": accessKeyId, "secretAccessKey": secretAccessKey, "sessionToken": sessionToken}, responseType: 'blob' }) // TODO: use AWS userId
+        .then(
+            res => FileDownload(res.data, filename),
+            err => {
+                console.error(err);
+                return null;
+            },
+        );
+}
+
+export const uploadFile = async (patientId, stage, filedata, filename=null) => {
+    const requestString = `/patients/${patientId}/${stage}/file`;
+    let credentials = await getCredentials();
+    let formData = new FormData();
+    filename = filename ? filename : filedata.name;
+    formData.append("uploadedFile", filedata);
+    formData.append("uploadedFileName", filename);
+    for ( var key in credentials ) {
+        formData.append(key, credentials[key]);
+    }
+    return instance
+        .post(requestString, formData, {
+            headers: {
+            'Content-Type': 'multipart/form-data',
+            }
+        });
+}
+
+export const deleteFile = async (patientId, stage, filename) => {
+    const requestString = `/patients/${patientId}/${stage}/${filename}`;
+    return instance
+        .delete(requestString);
 }
