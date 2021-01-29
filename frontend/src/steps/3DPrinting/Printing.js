@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import swal from 'sweetalert';
+
 import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
-import swal from 'sweetalert';
 import {
     deleteFile,
     downloadFile,
@@ -26,7 +27,7 @@ const Printing = (props) => {
     };
 
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const handleDownload = async (fileName) => {
         downloadFile(props.id, stageName, fileName);
@@ -35,7 +36,7 @@ const Printing = (props) => {
     const handleDelete = async (fileName) => {
         deleteFile(props.id, stageName, fileName);
         setPrintFiles(printFiles.filter((file) => file !== fileName));
-        let info_copy = info;
+        const info_copy = info;
         info_copy.files = info_copy.files.filter(
             (file_info) => file_info.filename != fileName,
         );
@@ -47,13 +48,13 @@ const Printing = (props) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
         setPrintFiles((files) => files.concat(fileToUpload.name.toUpperCase()));
-        let res = await uploadFile(
+        const res = await uploadFile(
             props.id,
             stageName,
             fileToUpload,
             fileToUpload.name.toUpperCase(),
         );
-        let info_copy = info;
+        const info_copy = info;
         info_copy.files = info_copy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
@@ -68,7 +69,7 @@ const Printing = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
-        let info_copy = info;
+        const info_copy = info;
         info_copy.notes = printNotes;
         setInfo(info_copy);
         updateStage(props.id, stageName, info_copy);

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Notes from '../../components/Notes/Notes';
 import { TextField } from '@material-ui/core';
-import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
+
+import Notes from '../../components/Notes/Notes';
+import BottomBar from '../../components/BottomBar/BottomBar';
+
 import './Feedback.scss';
 import { updateStage } from '../../utils/api';
 
@@ -21,7 +23,7 @@ const Feedback = (props) => {
     const [twoYearFeedbackDate, setTwoYearFeedbackDate] = useState('');
 
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     useEffect(() => {
         setInitialFeedback(info.initial.notes);
@@ -35,7 +37,7 @@ const Feedback = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
-        let info_copy = info;
+        const info_copy = info;
         info.initial.notes = intialFeedback;
         info.initial.date = initialFeedbackDate;
         info.sixMonth.notes = sixMonthFeedback;

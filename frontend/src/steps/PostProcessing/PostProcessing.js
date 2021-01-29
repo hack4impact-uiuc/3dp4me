@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import swal from 'sweetalert';
+
 import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
-import swal from 'sweetalert';
 import {
     downloadFile,
     uploadFile,
@@ -26,7 +27,7 @@ const PostProcessing = (props) => {
     };
 
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const handleDownload = (fileName) => {
         downloadFile(props.id, stageName, fileName);
@@ -35,7 +36,7 @@ const PostProcessing = (props) => {
     const handleDelete = async (fileName) => {
         deleteFile(props.id, stageName, fileName);
         setProcessingFiles(processingFiles.filter((file) => file !== fileName));
-        let info_copy = info;
+        const info_copy = info;
         info_copy.files = info_copy.files.filter(
             (file_info) => file_info.filename != fileName,
         );
@@ -49,13 +50,13 @@ const PostProcessing = (props) => {
         setProcessingFiles((files) =>
             files.concat(fileToUpload.name.toUpperCase()),
         );
-        let res = await uploadFile(
+        const res = await uploadFile(
             props.id,
             stageName,
             fileToUpload,
             fileToUpload.name.toUpperCase(),
         );
-        let info_copy = info;
+        const info_copy = info;
         info_copy.files = info_copy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
@@ -70,7 +71,7 @@ const PostProcessing = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
-        let info_copy = info;
+        const info_copy = info;
         info_copy.notes = processingNotes;
         setInfo(info_copy);
         updateStage(props.id, stageName, info_copy);

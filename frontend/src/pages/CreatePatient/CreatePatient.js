@@ -1,7 +1,7 @@
 import React from 'react';
 
 const CreatePatient = (props) => {
-    return <div></div>;
+    return <div />;
 };
 
 export default CreatePatient;

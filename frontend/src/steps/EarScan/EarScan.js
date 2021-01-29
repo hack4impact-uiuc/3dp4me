@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Fab, IconButton } from '@material-ui/core';
+import swal from 'sweetalert';
+
 import Notes from '../../components/Notes/Notes';
 import Files from '../../components/Files/Files';
 import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
 import BottomBar from '../../components/BottomBar/BottomBar';
-import swal from 'sweetalert';
 
 import './EarScan.scss';
 import {
@@ -39,11 +40,11 @@ const EarScan = (props) => {
             }),
     );
     const formFields = {
-        notes: notes,
+        notes,
     };
 
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const handleDownload = (fileName) => {
         downloadFile(props.id, stageName, fileName);
@@ -52,7 +53,7 @@ const EarScan = (props) => {
     const handleLeftDelete = async (fileName) => {
         deleteFile(props.id, stageName, fileName);
         setLeftEarFiles(leftEarFiles.filter((file) => file !== fileName));
-        let info_copy = info;
+        const info_copy = info;
         info_copy.files = info_copy.files.filter(
             (file_info) => file_info.filename != fileName,
         );
@@ -63,7 +64,7 @@ const EarScan = (props) => {
     const handleRightDelete = async (fileName) => {
         deleteFile(props.id, stageName, fileName);
         setRightEarFiles(rightEarFiles.filter((file) => file !== fileName));
-        let info_copy = info;
+        const info_copy = info;
         info_copy.files = info_copy.files.filter(
             (file_info) => file_info.filename != fileName,
         );
@@ -75,15 +76,15 @@ const EarScan = (props) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
         setLeftEarFiles((files) =>
-            files.concat('LEFT_' + fileToUpload.name.toUpperCase()),
+            files.concat(`LEFT_${fileToUpload.name.toUpperCase()}`),
         );
-        let res = await uploadFile(
+        const res = await uploadFile(
             props.id,
             stageName,
             fileToUpload,
-            'LEFT_' + fileToUpload.name.toUpperCase(),
+            `LEFT_${fileToUpload.name.toUpperCase()}`,
         );
-        let info_copy = info;
+        const info_copy = info;
         info_copy.files = info_copy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
@@ -97,15 +98,15 @@ const EarScan = (props) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
         setRightEarFiles((files) =>
-            files.concat('RIGHT_' + fileToUpload.name.toUpperCase()),
+            files.concat(`RIGHT_${fileToUpload.name.toUpperCase()}`),
         );
-        let res = await uploadFile(
+        const res = await uploadFile(
             props.id,
             stageName,
             fileToUpload,
-            'RIGHT_' + fileToUpload.name.toUpperCase(),
+            `RIGHT_${fileToUpload.name.toUpperCase()}`,
         );
-        let info_copy = info;
+        const info_copy = info;
         info_copy.files = info_copy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
@@ -120,7 +121,7 @@ const EarScan = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
-        let info_copy = info;
+        const info_copy = info;
         info_copy.notes = notes;
         setInfo(info_copy);
         updateStage(props.id, stageName, info_copy);

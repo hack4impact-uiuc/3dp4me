@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
+
 import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
@@ -7,7 +8,7 @@ import halfCircle from '../../assets/half-circle.svg';
 
 const BottomBar = (props) => {
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const statusIcons = {
         finished: <img alt="complete" src={check} className="status-icon" />,

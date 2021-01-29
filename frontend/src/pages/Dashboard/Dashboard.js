@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
+
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import './Dashboard.scss';
@@ -16,6 +17,7 @@ import './Dashboard.scss';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Link } from 'react-router-dom';
+
 import search from '../../assets/search.svg';
 import archive from '../../assets/archive.svg';
 import { getPatientsByStage } from '../../utils/api';
@@ -64,7 +66,7 @@ const Dashboard = (props) => {
     const [sortedField, setSortedField] = React.useState(null);
 
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const handlesort = (e) => {
         setSort(e.target.value);
@@ -74,9 +76,9 @@ const Dashboard = (props) => {
         if (edit) {
             window.location.href += `patient-info/${id}`;
         } else {
-            let name = document.getElementById('createFirstName').value;
-            let dob = document.getElementById('createDOB').value;
-            let id = document.getElementById('createId').value;
+            const name = document.getElementById('createFirstName').value;
+            const dob = document.getElementById('createDOB').value;
+            const id = document.getElementById('createId').value;
             swal(
                 lang[key].components.swal.createPatient.successMsg,
                 `${lang[key].components.swal.createPatient.firstName}: ${name}\n${lang[key].components.swal.createPatient.dob}: ${dob}\n${lang[key].components.swal.createPatient.id}: ${id}`,
@@ -86,7 +88,7 @@ const Dashboard = (props) => {
     };
 
     const createPatient = (e) => {
-        let auto_id = Math.random().toString(36).substr(2, 24);
+        const auto_id = Math.random().toString(36).substr(2, 24);
         reactSwal({
             buttons: {},
             content: (
@@ -200,7 +202,7 @@ const Dashboard = (props) => {
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
-        let filtered = patients.filter(
+        const filtered = patients.filter(
             (patient) =>
                 patient.name
                     .toLowerCase()
@@ -247,7 +249,7 @@ const Dashboard = (props) => {
                 res = await getPatientsByStage('feedbackInfo');
             }
             // What are you doing, step-patients?
-            let stepPatients = res.result;
+            const stepPatients = res.result;
             setPatients(stepPatients);
         }
     };

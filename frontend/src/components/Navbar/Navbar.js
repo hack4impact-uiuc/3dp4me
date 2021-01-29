@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
 import { AppBar, Avatar, Toolbar } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+
 import Logo from '../../assets/3dp4me_logo.png';
 import AccountDropdown from '../AccountDropdown/AccountDropdown';
 
@@ -27,7 +27,7 @@ const Navbar = (props) => {
     const [active, setActive] = useState('dashboard');
     const [anchorEl, setAnchorEl] = useState(null);
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const handleAccountClick = (e) => {
         setAnchorEl(e.currentTarget);

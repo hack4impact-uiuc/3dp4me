@@ -7,7 +7,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 const Files = (props) => {
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     return (
         <div className="files-wrapper">

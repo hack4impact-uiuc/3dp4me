@@ -9,12 +9,14 @@ import {
     TextField,
     Backdrop,
 } from '@material-ui/core';
+
 import './MedicalInfo.scss';
-import Notes from '../../components/Notes/Notes';
 import WarningIcon from '@material-ui/icons/Warning';
+import swal from 'sweetalert';
+
+import Notes from '../../components/Notes/Notes';
 import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
 import BottomBar from '../../components/BottomBar/BottomBar';
-import swal from 'sweetalert';
 import patientFile from '../../Test Data/patient.json';
 import { updateStage } from '../../utils/api';
 
@@ -48,19 +50,19 @@ const MedicalInfo = (props) => {
     const [notes, setNotes] = useState('');
     const [loading, setLoading] = useState(intialInfo.name.length === 0);
     const formFields = {
-        name: name,
-        dob: dob,
-        ssn: ssn,
-        address: address,
-        phone: phone,
-        emName: emName,
+        name,
+        dob,
+        ssn,
+        address,
+        phone,
+        emName,
         relationship: emRelationship,
-        emPhone: emPhone,
-        delivery: delivery,
-        notes: notes,
+        emPhone,
+        delivery,
+        notes,
     };
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     useEffect(() => {
         setName(info.name);
@@ -105,7 +107,7 @@ const MedicalInfo = (props) => {
     };
 
     const saveData = (e) => {
-        let info_copy = info;
+        const info_copy = info;
         info.name = name;
         info.dob = dob;
         info.ssn = ssn;

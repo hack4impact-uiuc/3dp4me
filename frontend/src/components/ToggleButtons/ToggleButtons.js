@@ -4,8 +4,8 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
@@ -16,7 +16,7 @@ const ToggleButtons = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const statusIcons = {
         unfinished: (

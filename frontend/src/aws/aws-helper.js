@@ -23,8 +23,8 @@ export async function isNormalUser() {
  * Send this to the backend whenever doing authenticated operations.
  */
 export async function getCredentials() {
-    let credentials = await Auth.currentCredentials();
-    let creds = Auth.essentialCredentials(credentials);
+    const credentials = await Auth.currentCredentials();
+    const creds = Auth.essentialCredentials(credentials);
     return creds;
 }
 

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Button, TextField } from '@material-ui/core';
 import swal from 'sweetalert';
+import CloseIcon from '@material-ui/icons/Close';
+
 import patientFile from '../../Test Data/patient.json';
 
-import CloseIcon from '@material-ui/icons/Close';
 import './ManagePatientModal.scss';
 
 const ManagePatientModal = (props) => {
     const [patientStatus, setPatientStatus] = useState('active');
 
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const handleManagePatientStatus = (e) => {
         setPatientStatus(e.target.value);
@@ -42,8 +43,8 @@ const ManagePatientModal = (props) => {
     };
 
     const handleManagePatientSave = () => {
-        let name = document.getElementById('manage-patient-name').value;
-        let dob = document.getElementById('manage-patient-dob').value;
+        const name = document.getElementById('manage-patient-name').value;
+        const dob = document.getElementById('manage-patient-dob').value;
         // TODO: call edit patient endpoint with new name / dob / patientStatus
         swal(lang[key].components.swal.managePatient.successMsg, '', 'success');
     };

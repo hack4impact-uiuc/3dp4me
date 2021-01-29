@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Button, IconButton, Snackbar, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
 import MainTable from '../../components/Table/MainTable';
+
 import './Patients.scss';
 import MuiAlert from '@material-ui/lab/Alert';
+
 // import allpatients from '../../Test Data/all-patients.json';
-import search from '../../assets/search.svg';
 import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
+
+import search from '../../assets/search.svg';
 import archive from '../../assets/archive.svg';
 import { getAllPatients } from '../../utils/api';
 
@@ -41,11 +45,11 @@ const Patients = (props) => {
     const [noPatient, setNoPatient] = useState(false);
 
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
-        let filtered = allPatients.filter(
+        const filtered = allPatients.filter(
             (patient) =>
                 patient.name
                     .toLowerCase()
@@ -66,15 +70,14 @@ const Patients = (props) => {
 
     const createPatientHelper = (edit, id) => {
         if (edit) {
-            window.location.href =
-                window.location.href.substring(
-                    0,
-                    window.location.href.indexOf('patients'),
-                ) + `patient-info/${id}`;
+            window.location.href = `${window.location.href.substring(
+                0,
+                window.location.href.indexOf('patients'),
+            )}patient-info/${id}`;
         } else {
-            let name = document.getElementById('createFirstName').value;
-            let dob = document.getElementById('createDOB').value;
-            let id = document.getElementById('createId').value;
+            const name = document.getElementById('createFirstName').value;
+            const dob = document.getElementById('createDOB').value;
+            const id = document.getElementById('createId').value;
             swal(
                 lang[key].components.swal.createPatient.successMsg,
                 `${lang[key].components.swal.createPatient.firstName}: ${name}\n${lang[key].components.swal.createPatient.dob}: ${dob}\n${lang[key].components.swal.createPatient.id}: ${id}`,
@@ -84,7 +87,7 @@ const Patients = (props) => {
     };
 
     const createPatient = (e) => {
-        let auto_id = Math.random().toString(36).substr(2, 24);
+        const auto_id = Math.random().toString(36).substr(2, 24);
         reactSwal({
             buttons: {},
             content: (
@@ -325,6 +328,10 @@ const Patients = (props) => {
             )}
         </div>
     );
+};
+
+Patients.propTypes = {
+    lang: PropTypes.string,
 };
 
 export default Patients;

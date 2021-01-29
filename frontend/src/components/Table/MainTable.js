@@ -9,10 +9,13 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+
 import Eyecon from '../../assets/view.svg';
+
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+
 import useSortableData from '../../hooks/useSortableData';
 import finishedIcon from '../../assets/check.svg';
 import partiallyIcon from '../../assets/half-circle.svg';
@@ -38,7 +41,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 const MainTable = (props) => {
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const UNSORTED_DATA = props.patients;
     const { items, requestSort, sortConfig } = useSortableData(
@@ -138,7 +141,7 @@ const MainTable = (props) => {
                             <StyledTableCell
                                 className="header"
                                 align="center"
-                            ></StyledTableCell>
+                            />
                         </TableRow>
                     </TableHead>
                     <TableBody className="table-body">

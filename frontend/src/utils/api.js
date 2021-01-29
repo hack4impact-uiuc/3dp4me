@@ -5,6 +5,7 @@ import {
     getCredentials,
     getCurrentSession,
 } from '../aws/aws-helper';
+
 const FileDownload = require('js-file-download');
 
 const instance = axios.create({
@@ -16,7 +17,7 @@ instance.interceptors.request.use(
             accessToken: { jwtToken },
         } = await getCurrentSession();
         if (jwtToken) {
-            config.headers.Authorization = 'Bearer ' + jwtToken;
+            config.headers.Authorization = `Bearer ${jwtToken}`;
         }
         return config;
     },
@@ -94,9 +95,9 @@ export const downloadFile = async (patientId, stage, filename) => {
     return instance
         .get(requestString, {
             headers: {
-                accessKeyId: accessKeyId,
-                secretAccessKey: secretAccessKey,
-                sessionToken: sessionToken,
+                accessKeyId,
+                secretAccessKey,
+                sessionToken,
             },
             responseType: 'blob',
         }) // TODO: use AWS userId
@@ -116,12 +117,12 @@ export const uploadFile = async (
     filename = null,
 ) => {
     const requestString = `/patients/${patientId}/${stage}/file`;
-    let credentials = await getCredentials();
-    let formData = new FormData();
-    filename = filename ? filename : filedata.name;
+    const credentials = await getCredentials();
+    const formData = new FormData();
+    filename = filename || filedata.name;
     formData.append('uploadedFile', filedata);
     formData.append('uploadedFileName', filename);
-    for (var key in credentials) {
+    for (const key in credentials) {
         formData.append(key, credentials[key]);
     }
     return instance.post(requestString, formData, {

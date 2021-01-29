@@ -2,14 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 import './Controller.scss';
-import MedicalInfo from '../MedicalInfo/MedicalInfo';
-import EarScan from '../EarScan/EarScan';
-import CADModel from '../CADModel/CADModel';
-import Printing from '../3DPrinting/Printing';
-import PostProcessing from '../PostProcessing/PostProcessing';
-import Delivery from '../Delivery/Delivery';
-import Feedback from '../Feedback/Feedback';
 import {
     Accordion,
     AccordionDetails,
@@ -18,13 +12,21 @@ import {
     TextField,
 } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import reactSwal from '@sweetalert/with-react';
+import swal from 'sweetalert';
+import { useParams } from 'react-router-dom';
+
+import MedicalInfo from '../MedicalInfo/MedicalInfo';
+import EarScan from '../EarScan/EarScan';
+import CADModel from '../CADModel/CADModel';
+import Printing from '../3DPrinting/Printing';
+import PostProcessing from '../PostProcessing/PostProcessing';
+import Delivery from '../Delivery/Delivery';
+import Feedback from '../Feedback/Feedback';
 import patientFiles from '../../Test Data/patient.json';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
-import reactSwal from '@sweetalert/with-react';
-import swal from 'sweetalert';
 import { getPatientById, updateStage } from '../../utils/api';
-import { useParams } from 'react-router-dom';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 
 const theme = createMuiTheme({
@@ -45,10 +47,10 @@ const Controller = (props) => {
     const [deliveryStatus, setDeliveryStatus] = useState('unfinished');
     const [feedbackStatus, setFeedbackStatus] = useState('unfinished');
     const params = useParams();
-    const id = params.id;
+    const { id } = params;
 
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const managePatient = () => {
         reactSwal({
@@ -90,7 +92,7 @@ const Controller = (props) => {
             e.target.value === 'finished'
         ) {
             setMedStatus(e.target.value);
-            let patientFileCopy = patientFile;
+            const patientFileCopy = patientFile;
             patientFileCopy.patientInfo.status = e.target.value;
             updateStage(id, 'patientInfo', patientFileCopy.patientInfo);
             setPatientFile(patientFileCopy);
@@ -103,7 +105,7 @@ const Controller = (props) => {
             e.target.value === 'finished'
         ) {
             setEarScanStatus(e.target.value);
-            let patientFileCopy = patientFile;
+            const patientFileCopy = patientFile;
             patientFileCopy.earScanInfo.status = e.target.value;
             updateStage(id, 'earScanInfo', patientFileCopy.earScanInfo);
             setPatientFile(patientFileCopy);
@@ -116,7 +118,7 @@ const Controller = (props) => {
             e.target.value === 'finished'
         ) {
             setModelStatus(e.target.value);
-            let patientFileCopy = patientFile;
+            const patientFileCopy = patientFile;
             patientFileCopy.modelInfo.status = e.target.value;
             updateStage(id, 'modelInfo', patientFileCopy.modelInfo);
             setPatientFile(patientFileCopy);
@@ -129,7 +131,7 @@ const Controller = (props) => {
             e.target.value === 'finished'
         ) {
             setPrintStatus(e.target.value);
-            let patientFileCopy = patientFile;
+            const patientFileCopy = patientFile;
             patientFileCopy.printingInfo.status = e.target.value;
             updateStage(id, 'printingInfo', patientFileCopy.printingInfo);
             setPatientFile(patientFileCopy);
@@ -142,7 +144,7 @@ const Controller = (props) => {
             e.target.value === 'finished'
         ) {
             setProcessingStatus(e.target.value);
-            let patientFileCopy = patientFile;
+            const patientFileCopy = patientFile;
             patientFileCopy.processingInfo.status = e.target.value;
             updateStage(id, 'processingInfo', patientFileCopy.processingInfo);
             setPatientFile(patientFileCopy);
@@ -155,7 +157,7 @@ const Controller = (props) => {
             e.target.value === 'finished'
         ) {
             setDeliveryStatus(e.target.value);
-            let patientFileCopy = patientFile;
+            const patientFileCopy = patientFile;
             patientFileCopy.deliveryInfo.status = e.target.value;
             updateStage(id, 'deliveryInfo', patientFileCopy.deliveryInfo);
             setPatientFile(patientFileCopy);
@@ -168,7 +170,7 @@ const Controller = (props) => {
             e.target.value === 'finished'
         ) {
             setFeedbackStatus(e.target.value);
-            let patientFileCopy = patientFile;
+            const patientFileCopy = patientFile;
             patientFileCopy.feedbackInfo.status = e.target.value;
             updateStage(id, 'feedbackInfo', patientFileCopy.feedbackInfo);
             setPatientFile(patientFileCopy);

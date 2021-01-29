@@ -9,8 +9,9 @@ import {
     RadioGroup,
     TextField,
 } from '@material-ui/core';
-import BottomBar from '../../components/BottomBar/BottomBar';
 import swal from 'sweetalert';
+
+import BottomBar from '../../components/BottomBar/BottomBar';
 import './Delivery.scss';
 import { updateStage } from '../../utils/api';
 
@@ -23,11 +24,11 @@ const Delivery = (props) => {
     const [deliveryStatus, setDeliveryStatus] = useState('');
     const formFields = {
         // address: address,
-        deliveryStatus: deliveryStatus,
+        deliveryStatus,
     };
 
     const lang = props.lang.data;
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     useEffect(() => {
         // setAddress(info.address);
@@ -35,7 +36,7 @@ const Delivery = (props) => {
     }, [trigger]);
 
     const saveData = (e) => {
-        let info_copy = info;
+        const info_copy = info;
         info_copy.deliveryStatus = deliveryStatus;
         setInfo(info_copy);
         updateStage(props.id, stageName, info_copy);

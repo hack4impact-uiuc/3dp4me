@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 
 const AccountDropdown = (props) => {
     const styles = useStyles();
-    const key = props.lang.key;
+    const { key } = props.lang;
 
     const handleLanguageSelect = (e) => {
         props.setLang(e.target.value);

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Metrics = (props) => {
+const Metrics = () => {
     return <div>metrics</div>;
 };
 

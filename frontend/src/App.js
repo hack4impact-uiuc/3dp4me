@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Amplify, Auth, Hub } from 'aws-amplify';
-import awsconfig from './aws/aws-exports.js';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import awsconfig from './aws/aws-exports.js';
 import Dashboard from './pages/Dashboard/Dashboard';
 import AccountManagement from './pages/AccountManagement/AccountManagment';
 import Metrics from './pages/Metrics/Metrics';
 import Patients from './pages/Patients/Patients';
 import Navbar from './components/Navbar/Navbar';
 import Controller from './steps/Controller/Controller';
-import language from './language.json';
+import languageData from './language-data.json';
 import Login from './components/Login/Login';
 import {
     UNDEFINED_AUTH,
@@ -21,14 +21,15 @@ import { getCurrentUserInfo } from './aws/aws-helper.js';
 Amplify.configure(awsconfig);
 
 function App() {
-    const [key, setKey] = useState('EN');
+    const [lang, setLang] = useState('EN');
     const [authLevel, setAuthLevel] = useState(UNDEFINED_AUTH);
     const [username, setUsername] = useState('');
     const [userEmail, setUserEmail] = useState('');
 
+    // Data is the raw JSON for EN and AR. Key is the currently selected language.
     const langInfo = {
-        data: language,
-        key: key,
+        data: languageData,
+        lang: lang,
     };
 
     useEffect(() => {
@@ -47,28 +48,28 @@ function App() {
             });
 
         // TODO: get user session langauge
-        setKey('EN');
+        setLang('EN');
         getUserInfo();
     }, []);
 
     setAuthListener((newAuthLevel) => setAuthLevel(newAuthLevel));
 
     if (authLevel == UNDEFINED_AUTH)
-        return <p>{language[key].components.login.authLoading}</p>;
+        return <p>{languageData[lang].components.login.authLoading}</p>;
 
     if (authLevel == UNAUTHENTICATED) return <Login />;
 
     if (authLevel == AUTHENTICATED)
         return (
-            <body dir={key === 'AR' ? 'rtl' : 'ltr'}>
+            <body dir={lang === 'AR' ? 'rtl' : 'ltr'}>
                 <Router>
                     <Navbar
                         lang={langInfo}
-                        setLang={setKey}
+                        setLang={setLang}
                         username={username}
                         userEmail={userEmail}
                     />
-                    <div className={`${key == 'AR' ? 'flip' : ''}`}>
+                    <div className={`${lang == 'AR' ? 'flip' : ''}`}>
                         <Switch>
                             <div className="content">
                                 {/* Path = BASE_URL */}
