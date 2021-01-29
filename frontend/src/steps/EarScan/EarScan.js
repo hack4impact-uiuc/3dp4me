@@ -37,9 +37,6 @@ const EarScan = (props) => {
                 return filename.startsWith('RIGHT_');
             }),
     );
-    const formFields = {
-        notes,
-    };
 
     const key = props.languageData.selectedLanguage;
     const lang = props.languageData.translations[key];

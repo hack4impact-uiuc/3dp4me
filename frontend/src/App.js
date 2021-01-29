@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Amplify, Auth, Hub } from 'aws-amplify';
+import { Amplify, Auth } from 'aws-amplify';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import awsconfig from './aws/aws-exports.js';
+import awsconfig from './aws/aws-exports';
 import Dashboard from './pages/Dashboard/Dashboard';
 import AccountManagement from './pages/AccountManagement/AccountManagment';
 import Metrics from './pages/Metrics/Metrics';
@@ -16,8 +16,8 @@ import {
     AUTHENTICATED,
     UNAUTHENTICATED,
     setAuthListener,
-} from './aws/aws-auth.js';
-import { getCurrentUserInfo } from './aws/aws-helper.js';
+} from './aws/aws-auth';
+import { getCurrentUserInfo } from './aws/aws-helper';
 
 Amplify.configure(awsconfig);
 
@@ -55,12 +55,12 @@ function App() {
 
     setAuthListener((newAuthLevel) => setAuthLevel(newAuthLevel));
 
-    if (authLevel == UNDEFINED_AUTH)
+    if (authLevel === UNDEFINED_AUTH)
         return <p>{translations[selectedLang].components.login.authLoading}</p>;
 
-    if (authLevel == UNAUTHENTICATED) return <Login />;
+    if (authLevel === UNAUTHENTICATED) return <Login />;
 
-    if (authLevel == AUTHENTICATED)
+    if (authLevel === AUTHENTICATED)
         return (
             <body dir={selectedLang === 'AR' ? 'rtl' : 'ltr'}>
                 <Router>
@@ -70,7 +70,7 @@ function App() {
                         username={username}
                         userEmail={userEmail}
                     />
-                    <div className={`${selectedLang == 'AR' ? 'flip' : ''}`}>
+                    <div className={`${selectedLang === 'AR' ? 'flip' : ''}`}>
                         <Switch>
                             <div className="content">
                                 {/* Path = BASE_URL */}

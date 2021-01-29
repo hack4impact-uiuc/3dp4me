@@ -95,7 +95,6 @@ router.get(
             })
             .on('close', function () {
                 res.end();
-                console.log('Done.');
             });
         s3Stream.pipe(res);
     }),

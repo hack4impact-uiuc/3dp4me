@@ -40,13 +40,13 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
-const MainTable = (props) => {
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+const MainTable = ({ languageData, patients, headers, rowIds }) => {
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
-    const UNSORTED_DATA = props.patients;
+    const UNSORTED_DATA = patients;
     const { items, requestSort, sortConfig } = useSortableData(
-        props.patients,
+        patients,
         UNSORTED_DATA,
     );
 
@@ -107,7 +107,7 @@ const MainTable = (props) => {
                 <Table stickyHeader className="table">
                     <TableHead>
                         <TableRow>
-                            {props.headers.map((header) => (
+                            {headers.map((header) => (
                                 <StyledTableCell
                                     onClick={() => requestSort(header.sortKey)}
                                     className="header"
@@ -148,7 +148,7 @@ const MainTable = (props) => {
                     <TableBody className="table-body">
                         {items.map((patient) => (
                             <StyledTableRow key={patient._id}>
-                                {props.rowIds.map((id) => (
+                                {rowIds.map((id) => (
                                     <StyledTableCell
                                         className={
                                             key === 'AR' ? 'cell-rtl' : 'cell'

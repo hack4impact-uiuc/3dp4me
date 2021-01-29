@@ -11,6 +11,15 @@ const DEFAULT_USER = {
 };
 
 /**
+ * Returns a list of auth role names belong to current user. Roles are written as strings.
+ */
+async function getAuthRoleNames() {
+    const user = await Auth.currentAuthenticatedUser();
+    const groups = user.signInUserSession.accessToken.payload[KEY_GROUPS];
+    return groups;
+}
+
+/**
  * Returns true if the user has normal authentication level
  */
 export async function isNormalUser() {
@@ -29,15 +38,6 @@ export async function getCredentials() {
 }
 
 /**
- * Returns a list of auth role names belong to current user. Roles are written as strings.
- */
-async function getAuthRoleNames() {
-    const user = await Auth.currentAuthenticatedUser();
-    const groups = user.signInUserSession.accessToken.payload[KEY_GROUPS];
-    return groups;
-}
-
-/**
  * Returns some info about the current signed in user
  */
 export async function getCurrentUserInfo() {
@@ -48,5 +48,5 @@ export async function getCurrentUserInfo() {
 }
 
 export async function getCurrentSession() {
-    return await Auth.currentSession();
+    return Auth.currentSession();
 }

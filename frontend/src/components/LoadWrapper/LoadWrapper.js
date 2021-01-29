@@ -1,10 +1,10 @@
 import React from 'react';
 
-const LoadWrapper = (props) => {
-    if (props.loading) {
+const LoadWrapper = ({ loading, children }) => {
+    if (loading) {
         return <></>;
     }
-    return <>{props.children}</>;
+    return <>{children}</>;
 };
 
 export default LoadWrapper;

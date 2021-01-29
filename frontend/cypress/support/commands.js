@@ -31,11 +31,7 @@ Amplify.configure(awsconfig);
 Cypress.Commands.add('login', (email, password) => {
     return Auth.signIn(email, password)
         .then((user) => {
-            console.log('===> user', user);
-
             let session = Auth.currentSession();
-
-            console.log('===> session', session);
         })
         .catch((err) => console.log('===> err', err));
 });

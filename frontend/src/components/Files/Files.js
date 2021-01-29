@@ -7,22 +7,29 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
-const Files = (props) => {
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+const Files = ({
+    languageData,
+    title,
+    fileNames,
+    handleDownload,
+    handleDelete,
+    handleUpload,
+}) => {
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     return (
         <div className="files-wrapper">
             <div className="files-header">
-                <h3>{props.title}</h3>
+                <h3>{title}</h3>
             </div>
             <div className="files-table">
-                {props.fileNames.map((fileName) => (
+                {fileNames.map((fileName) => (
                     <div className="file-row-wrapper" key={fileName}>
                         <Button
                             className="file-button"
                             onClick={() => {
-                                props.handleDownload(fileName);
+                                handleDownload(fileName);
                             }}
                         >
                             <div className="file-info-wrapper">
@@ -40,19 +47,19 @@ const Files = (props) => {
                         <button
                             className="file-close-button"
                             type="button"
-                            onClick={() => props.handleDelete(fileName)}
+                            onClick={() => handleDelete(fileName)}
                         >
                             <CloseIcon />
                         </button>
                     </div>
                 ))}
 
-                <label htmlFor={`upload-file-input-${props.title}`}>
+                <label htmlFor={`upload-file-input-${title}`}>
                     <input
-                        id={`upload-file-input-${props.title}`}
+                        id={`upload-file-input-${title}`}
                         className="upload-file-input"
                         type="file"
-                        onChange={props.handleUpload}
+                        onChange={handleUpload}
                     />
                     <Button className="file-button" component="span">
                         <AddIcon />

@@ -22,13 +22,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Navbar = (props) => {
+const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
     const classes = useStyles();
     const [active, setActive] = useState('dashboard');
     const [anchorEl, setAnchorEl] = useState(null);
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const handleAccountClick = (e) => {
         setAnchorEl(e.currentTarget);
@@ -101,10 +101,10 @@ const Navbar = (props) => {
                     <AccountDropdown
                         anchorEl={anchorEl}
                         handleClose={handleAccountClose}
-                        languageData={props.languageData}
-                        setLang={props.setSelectedLang}
-                        username={props.username}
-                        userEmail={props.userEmail}
+                        languageData={languageData}
+                        setLang={setSelectedLang}
+                        username={username}
+                        userEmail={userEmail}
                     />
                 </Toolbar>
             </AppBar>

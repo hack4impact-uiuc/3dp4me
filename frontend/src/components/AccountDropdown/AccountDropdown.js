@@ -4,6 +4,7 @@ import Menu from '@material-ui/core/Menu';
 import { makeStyles } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import PropTypes from 'prop-types';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
@@ -31,30 +32,36 @@ const useStyles = makeStyles({
     },
 });
 
-const AccountDropdown = (props) => {
+const AccountDropdown = ({
+    languageData,
+    setLang,
+    anchorEl,
+    handleClose,
+    username,
+    userEmail,
+}) => {
     const styles = useStyles();
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
 
     const handleLanguageSelect = (e) => {
-        props.setLang(e.target.value);
+        setLang(e.target.value);
     };
 
     return (
         <div>
             <Menu
                 id="account-dropdown-menu"
-                anchorEl={props.anchorEl}
+                anchorEl={anchorEl}
                 getContentAnchorEl={null}
                 anchorOrigin={{ vertical: 'bottom' }}
                 keepMounted
-                open={Boolean(props.anchorEl)}
-                onClose={props.handleClose}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
             >
                 <div className={styles.menuWrapper}>
-                    <p>{props.username}</p>
-                    <p className={styles.accountEmail}>{props.userEmail}</p>
+                    <p>{username}</p>
+                    <p className={styles.accountEmail}>{userEmail}</p>
                     <div className={styles.languageSelectorWrapper}>
                         <p>Language</p>
                         <FormControl
@@ -78,6 +85,9 @@ const AccountDropdown = (props) => {
 
 AccountDropdown.propTypes = {
     languageData: LanguageDataType.isRequired,
+    setLang: PropTypes.func.isRequired,
+    username: PropTypes.string,
+    userEmail: PropTypes.string,
 };
 
 export default AccountDropdown;

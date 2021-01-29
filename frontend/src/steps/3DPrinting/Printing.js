@@ -12,8 +12,14 @@ import {
     updateStage,
 } from '../../utils/api';
 
-const Printing = (props) => {
-    const [info, setInfo] = useState(props.info);
+const Printing = ({
+    languageData,
+    id,
+    information,
+    updatePatientFile,
+    status,
+}) => {
+    const [info, setInfo] = useState(information);
     const stageName = 'printingInfo';
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
@@ -27,22 +33,22 @@ const Printing = (props) => {
         notes: printNotes,
     };
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const handleDownload = async (fileName) => {
-        downloadFile(props.id, stageName, fileName);
+        downloadFile(id, stageName, fileName);
     };
 
     const handleDelete = async (fileName) => {
-        deleteFile(props.id, stageName, fileName);
+        deleteFile(id, stageName, fileName);
         setPrintFiles(printFiles.filter((file) => file !== fileName));
         const info_copy = info;
         info_copy.files = info_copy.files.filter(
             (file_info) => file_info.filename != fileName,
         );
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     const handleUpload = async (e) => {
@@ -50,7 +56,7 @@ const Printing = (props) => {
         const fileToUpload = e.target.files[0];
         setPrintFiles((files) => files.concat(fileToUpload.name.toUpperCase()));
         const res = await uploadFile(
-            props.id,
+            id,
             stageName,
             fileToUpload,
             fileToUpload.name.toUpperCase(),
@@ -62,7 +68,7 @@ const Printing = (props) => {
             uploadDate: res.data.data.uploadName,
         });
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     useEffect(() => {
@@ -73,8 +79,8 @@ const Printing = (props) => {
         const info_copy = info;
         info_copy.notes = printNotes;
         setInfo(info_copy);
-        updateStage(props.id, stageName, info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updateStage(id, stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.print, '', 'success');
     };
@@ -106,7 +112,7 @@ const Printing = (props) => {
         <div>
             <h1>{lang.patientView.printing.title}</h1>
             <Files
-                languageData={props.languageData}
+                languageData={languageData}
                 title={lang.components.file.title}
                 fileNames={printFiles}
                 handleDownload={handleDownload}
@@ -124,10 +130,10 @@ const Printing = (props) => {
                 lastEdited={info.lastEdited}
                 discard={{ state: trigger, setState: discardData }}
                 save={saveData}
-                status={props.status}
+                status={status}
                 edit={edit}
                 setEdit={setEdit}
-                languageData={props.languageData}
+                languageData={languageData}
             />
         </div>
     );

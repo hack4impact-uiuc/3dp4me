@@ -10,11 +10,11 @@ import {
 import WarningIcon from '@material-ui/icons/Warning';
 import './NoChangeDialog.scss';
 
-const NoChangeDialog = (props) => {
+const NoChangeDialog = ({ open, noChange, save }) => {
     return (
         <Dialog
-            open={props.open}
-            onClose={() => props.noChange(false)}
+            open={open}
+            onClose={() => noChange(false)}
             className="no-change-dialog-wrapper"
         >
             <DialogTitle className="dialog-title">
@@ -30,7 +30,7 @@ const NoChangeDialog = (props) => {
                 <Button
                     className="dialog-button"
                     onClick={() => {
-                        props.noChange(false);
+                        noChange(false);
                     }}
                     autoFocus
                     variant="outlined"
@@ -40,7 +40,7 @@ const NoChangeDialog = (props) => {
                 <Button
                     className="dialog-button"
                     onClick={() => {
-                        props.save('override');
+                        save('override');
                     }}
                     autoFocus
                     variant="outlined"

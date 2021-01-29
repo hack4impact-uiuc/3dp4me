@@ -7,11 +7,11 @@ import { LanguageDataType } from '../../utils/custom-proptypes';
 import patientFile from '../../Test Data/patient.json';
 import './ManagePatientModal.scss';
 
-const ManagePatientModal = (props) => {
+const ManagePatientModal = ({ languageData }) => {
     const [patientStatus, setPatientStatus] = useState('active');
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const handleManagePatientStatus = (e) => {
         setPatientStatus(e.target.value);

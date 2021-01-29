@@ -7,9 +7,18 @@ import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
 import halfCircle from '../../assets/half-circle.svg';
 
-const BottomBar = (props) => {
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+const BottomBar = ({
+    languageData,
+    edit,
+    lastEdited,
+    lastEditedBy,
+    status,
+    save,
+    discard,
+    setEdit,
+}) => {
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const statusIcons = {
         finished: <img alt="complete" src={check} className="status-icon" />,
@@ -33,21 +42,21 @@ const BottomBar = (props) => {
                     className="editor-section"
                     style={{ flexGrow: 1, color: 'black' }}
                 >
-                    {`${lang.components.bottombar.lastEdit.split('...')[0]} ${
-                        props.lastEditedBy
-                    } ${lang.components.bottombar.lastEdit.split('...')[1]} ${
-                        props.lastEdited
-                    }`}
+                    {`${
+                        lang.components.bottombar.lastEdit.split('...')[0]
+                    } ${lastEditedBy} ${
+                        lang.components.bottombar.lastEdit.split('...')[1]
+                    } ${lastEdited}`}
                 </div>
-                {props.edit ? (
+                {edit ? (
                     <div>
                         {key !== 'AR' ? (
                             <div>
                                 <Select
                                     className="status-selector"
                                     MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) => props.status.setStatus(e)}
-                                    defaultValue={props.status.value}
+                                    onClick={(e) => status.setStatus(e)}
+                                    defaultValue={status.value}
                                 >
                                     <MenuItem disabled value="default">
                                         {lang.components.bottombar.default}
@@ -64,13 +73,13 @@ const BottomBar = (props) => {
                                 </Select>
                                 <Button
                                     className="save-button"
-                                    onClick={() => props.save()}
+                                    onClick={() => save()}
                                 >
                                     {lang.components.button.save}
                                 </Button>
                                 <Button
                                     className="discard-button"
-                                    onClick={() => props.discard.setState()}
+                                    onClick={() => discard.setState()}
                                 >
                                     <b>
                                         {lang.components.button.discard.title}
@@ -82,8 +91,8 @@ const BottomBar = (props) => {
                                 <Select
                                     className="status-selector-ar"
                                     MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) => props.status.setStatus(e)}
-                                    defaultValue={props.status.value}
+                                    onClick={(e) => status.setStatus(e)}
+                                    defaultValue={status.value}
                                 >
                                     <MenuItem disabled value="default">
                                         {lang.components.bottombar.default}
@@ -100,13 +109,13 @@ const BottomBar = (props) => {
                                 </Select>
                                 <Button
                                     className="save-button-ar"
-                                    onClick={() => props.save()}
+                                    onClick={() => save()}
                                 >
                                     {lang.components.button.save}
                                 </Button>
                                 <Button
                                     className="discard-button"
-                                    onClick={() => props.discard.setState()}
+                                    onClick={() => discard.setState()}
                                 >
                                     <b>
                                         {lang.components.button.discard.title}
@@ -118,15 +127,15 @@ const BottomBar = (props) => {
                 ) : (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div
-                            className={`status ${props.status.value}`}
+                            className={`status ${status.value}`}
                             style={{ display: 'flex', alignItems: 'center' }}
                         >
-                            {statusIcons[props.status.value]}{' '}
-                            {lang.components.bottombar[props.status.value]}
+                            {statusIcons[status.value]}{' '}
+                            {lang.components.bottombar[status.value]}
                         </div>
                         <Button
                             className="edit-button"
-                            onClick={() => props.setEdit(true)}
+                            onClick={() => setEdit(true)}
                         >
                             {lang.components.button.edit}
                         </Button>

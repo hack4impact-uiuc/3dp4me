@@ -177,7 +177,6 @@ const Controller = (props) => {
     const getData = async () => {
         // TODO: api call to get all info about a patient
         const res = await getPatientById(id);
-        console.log(res);
         setPatientFile(res.result);
         setLoading(false);
     };
@@ -421,7 +420,7 @@ const Controller = (props) => {
                         )}
                         {step === 'printing' ? (
                             <Printing
-                                info={patientFile?.printingInfo}
+                                information={patientFile?.printingInfo}
                                 status={{
                                     value: printStatus,
                                     setStatus: handlePrintStatus,
