@@ -380,8 +380,8 @@ const Controller = ({ languageData }) => {
                             <MedicalInfo
                                 information={patientFile?.patientInfo}
                                 status={{
-                                    value: medStatus,
-                                    setStatus: handleMedStatus,
+                                    state: medStatus,
+                                    setState: handleMedStatus,
                                 }}
                                 languageData={languageData}
                                 id={id}
@@ -394,8 +394,8 @@ const Controller = ({ languageData }) => {
                             <EarScan
                                 information={patientFile?.earScanInfo}
                                 status={{
-                                    value: earScanStatus,
-                                    setStatus: handleEarScanStatus,
+                                    state: earScanStatus,
+                                    setState: handleEarScanStatus,
                                 }}
                                 languageData={languageData}
                                 id={id}
@@ -422,8 +422,8 @@ const Controller = ({ languageData }) => {
                             <Printing
                                 information={patientFile?.printingInfo}
                                 status={{
-                                    value: printStatus,
-                                    setStatus: handlePrintStatus,
+                                    state: printStatus,
+                                    setState: handlePrintStatus,
                                 }}
                                 languageData={languageData}
                                 id={id}
@@ -436,8 +436,8 @@ const Controller = ({ languageData }) => {
                             <PostProcessing
                                 information={patientFile?.processingInfo}
                                 status={{
-                                    value: processingStatus,
-                                    setStatus: handleProcessingStatus,
+                                    state: processingStatus,
+                                    setState: handleProcessingStatus,
                                 }}
                                 languageData={languageData}
                                 id={id}
@@ -450,8 +450,8 @@ const Controller = ({ languageData }) => {
                             <Delivery
                                 information={patientFile?.deliveryInfo}
                                 status={{
-                                    value: deliveryStatus,
-                                    setStatus: handleDeliveryStatus,
+                                    state: deliveryStatus,
+                                    setState: handleDeliveryStatus,
                                 }}
                                 languageData={languageData}
                                 id={id}
@@ -466,8 +466,8 @@ const Controller = ({ languageData }) => {
                             <Feedback
                                 information={patientFile?.feedbackInfo}
                                 status={{
-                                    value: feedbackStatus,
-                                    setStatus: handleFeedbackStatus,
+                                    state: feedbackStatus,
+                                    setState: handleFeedbackStatus,
                                 }}
                                 languageData={languageData}
                                 id={id}

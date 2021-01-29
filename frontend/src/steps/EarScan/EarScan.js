@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
+import PropTypes from 'prop-types';
 
+import {
+    LanguageDataType,
+    StringGetterSetterType,
+} from '../../utils/custom-proptypes';
 import Notes from '../../components/Notes/Notes';
 import Files from '../../components/Files/Files';
 import BottomBar from '../../components/BottomBar/BottomBar';
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import './EarScan.scss';
 import {
     downloadFile,
@@ -199,6 +203,10 @@ const EarScan = ({
 
 EarScan.propTypes = {
     languageData: LanguageDataType.isRequired,
+    information: PropTypes.object.isRequired,
+    status: StringGetterSetterType,
+    id: PropTypes.string.isRequired,
+    updatePatientFile: PropTypes.func.isRequired,
 };
 
 export default EarScan;

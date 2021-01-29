@@ -1,7 +1,13 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
+import {
+    StringGetterSetterType,
+    BoolGetterSetterType,
+    LanguageDataType,
+} from '../../utils/custom-proptypes';
+
 import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
@@ -55,8 +61,8 @@ const BottomBar = ({
                                 <Select
                                     className="status-selector"
                                     MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) => status.setStatus(e)}
-                                    defaultValue={status.value}
+                                    onClick={(e) => status.setState(e)}
+                                    defaultValue={status.state}
                                 >
                                     <MenuItem disabled value="default">
                                         {lang.components.bottombar.default}
@@ -91,8 +97,8 @@ const BottomBar = ({
                                 <Select
                                     className="status-selector-ar"
                                     MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) => status.setStatus(e)}
-                                    defaultValue={status.value}
+                                    onClick={(e) => status.setState(e)}
+                                    defaultValue={status.state}
                                 >
                                     <MenuItem disabled value="default">
                                         {lang.components.bottombar.default}
@@ -127,11 +133,11 @@ const BottomBar = ({
                 ) : (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div
-                            className={`status ${status.value}`}
+                            className={`status ${status.state}`}
                             style={{ display: 'flex', alignItems: 'center' }}
                         >
-                            {statusIcons[status.value]}{' '}
-                            {lang.components.bottombar[status.value]}
+                            {statusIcons[status.state]}{' '}
+                            {lang.components.bottombar[status.state]}
                         </div>
                         <Button
                             className="edit-button"
@@ -148,6 +154,13 @@ const BottomBar = ({
 
 BottomBar.propTypes = {
     languageData: LanguageDataType.isRequired,
+    edit: PropTypes.bool.isRequired,
+    lastEdited: PropTypes.string.isRequired,
+    lastEditedBy: PropTypes.string.isRequired,
+    status: StringGetterSetterType.isRequired,
+    save: PropTypes.func.isRequired,
+    discard: BoolGetterSetterType.isRequired,
+    setEdit: PropTypes.func.isRequired,
 };
 
 export default BottomBar;

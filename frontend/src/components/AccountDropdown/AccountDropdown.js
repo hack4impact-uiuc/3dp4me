@@ -37,8 +37,8 @@ const AccountDropdown = ({
     setLang,
     anchorEl,
     handleClose,
-    username,
-    userEmail,
+    username = '',
+    userEmail = '',
 }) => {
     const styles = useStyles();
 
@@ -85,6 +85,7 @@ const AccountDropdown = ({
 
 AccountDropdown.propTypes = {
     languageData: LanguageDataType.isRequired,
+    handleClose: PropTypes.func.isRequired,
     setLang: PropTypes.func.isRequired,
     username: PropTypes.string,
     userEmail: PropTypes.string,

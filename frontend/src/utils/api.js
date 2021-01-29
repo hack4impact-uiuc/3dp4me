@@ -3,6 +3,7 @@ import axios from 'axios';
 import { getCredentials, getCurrentSession } from '../aws/aws-helper';
 
 const FileDownload = require('js-file-download');
+
 const instance = axios.create({
     baseURL: 'http://localhost:8080/api',
 });

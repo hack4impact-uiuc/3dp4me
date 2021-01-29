@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
+import PropTypes from 'prop-types';
 
 import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
-import { LanguageDataType } from '../../utils/custom-proptypes';
+import {
+    LanguageDataType,
+    StringGetterSetterType,
+} from '../../utils/custom-proptypes';
 import './CADModel.scss';
 import {
     downloadFile,
@@ -196,6 +200,10 @@ const CADModel = ({
 
 CADModel.propTypes = {
     languageData: LanguageDataType.isRequired,
+    information: PropTypes.object.isRequired,
+    status: StringGetterSetterType,
+    id: PropTypes.string.isRequired,
+    updatePatientFile: PropTypes.func.isRequired,
 };
 
 export default CADModel;

@@ -10,8 +10,12 @@ import {
     Backdrop,
 } from '@material-ui/core';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
+import {
+    LanguageDataType,
+    StringGetterSetterType,
+} from '../../utils/custom-proptypes';
 
+import PropTypes from 'prop-types';
 import './MedicalInfo.scss';
 import swal from 'sweetalert';
 
@@ -276,6 +280,10 @@ const MedicalInfo = ({
 
 MedicalInfo.propTypes = {
     languageData: LanguageDataType.isRequired,
+    information: PropTypes.object.isRequired,
+    status: StringGetterSetterType,
+    id: PropTypes.string.isRequired,
+    updatePatientFile: PropTypes.func.isRequired,
 };
 
 export default MedicalInfo;

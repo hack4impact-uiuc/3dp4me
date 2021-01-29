@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
+import PropTypes from 'prop-types';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
+import {
+    LanguageDataType,
+    StringGetterSetterType,
+} from '../../utils/custom-proptypes';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
@@ -144,6 +148,10 @@ const PostProcessing = ({
 
 PostProcessing.propTypes = {
     languageData: LanguageDataType.isRequired,
+    information: PropTypes.object.isRequired,
+    status: StringGetterSetterType,
+    id: PropTypes.string.isRequired,
+    updatePatientFile: PropTypes.func.isRequired,
 };
 
 export default PostProcessing;

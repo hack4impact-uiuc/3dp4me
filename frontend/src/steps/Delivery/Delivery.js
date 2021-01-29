@@ -6,8 +6,12 @@ import {
     RadioGroup,
 } from '@material-ui/core';
 import swal from 'sweetalert';
+import PropTypes from 'prop-types';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
+import {
+    LanguageDataType,
+    StringGetterSetterType,
+} from '../../utils/custom-proptypes';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import './Delivery.scss';
 import { updateStage } from '../../utils/api';
@@ -140,6 +144,10 @@ const Delivery = ({
 
 Delivery.propTypes = {
     languageData: LanguageDataType.isRequired,
+    information: PropTypes.object.isRequired,
+    status: StringGetterSetterType,
+    id: PropTypes.string.isRequired,
+    updatePatientFile: PropTypes.func.isRequired,
 };
 
 export default Delivery;

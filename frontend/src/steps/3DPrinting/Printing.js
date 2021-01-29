@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
+import PropTypes from 'prop-types';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
+import {
+    LanguageDataType,
+    StringGetterSetterType,
+} from '../../utils/custom-proptypes';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
@@ -23,18 +27,14 @@ const Printing = ({
     const stageName = 'printingInfo';
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
+    const [printNotes, setPrintNotes] = useState('');
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
     const [printFiles, setPrintFiles] = useState(
         info.files.map((file_info) => {
             return file_info.filename;
         }),
     );
-    const [printNotes, setPrintNotes] = useState('');
-    const formFields = {
-        notes: printNotes,
-    };
-
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     const handleDownload = async (fileName) => {
         downloadFile(id, stageName, fileName);
@@ -75,7 +75,7 @@ const Printing = ({
         setPrintNotes(info.notes);
     }, [trigger]);
 
-    const saveData = (e) => {
+    const saveData = () => {
         const info_copy = info;
         info_copy.notes = printNotes;
         setInfo(info_copy);
@@ -85,7 +85,7 @@ const Printing = ({
         swal(lang.components.bottombar.savedMessage.print, '', 'success');
     };
 
-    const discardData = (e) => {
+    const discardData = () => {
         swal({
             title: lang.components.button.discard.question,
             text: lang.components.button.discard.warningMessage,
@@ -141,6 +141,10 @@ const Printing = ({
 
 Printing.propTypes = {
     languageData: LanguageDataType.isRequired,
+    information: PropTypes.object.isRequired,
+    status: StringGetterSetterType,
+    id: PropTypes.string.isRequired,
+    updatePatientFile: PropTypes.func.isRequired,
 };
 
 export default Printing;
