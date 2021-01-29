@@ -43,8 +43,8 @@ const EarScan = (props) => {
         notes,
     };
 
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const handleDownload = (fileName) => {
         downloadFile(props.id, stageName, fileName);
@@ -127,30 +127,26 @@ const EarScan = (props) => {
         updateStage(props.id, stageName, info_copy);
         props.updatePatientFile(stageName, info_copy);
         setEdit(false);
-        swal(
-            lang[key].components.bottombar.savedMessage.earScan,
-            '',
-            'success',
-        );
+        swal(lang.components.bottombar.savedMessage.earScan, '', 'success');
     };
 
     const discardData = (e) => {
         swal({
-            title: lang[key].components.button.discard.question,
-            text: lang[key].components.button.discard.warningMessage,
+            title: lang.components.button.discard.question,
+            text: lang.components.button.discard.warningMessage,
             icon: 'warning',
             buttons: true,
             dangerMode: true,
             buttons: [
-                lang[key].components.button.discard.cancelButton,
-                lang[key].components.button.discard.confirmButton,
+                lang.components.button.discard.cancelButton,
+                lang.components.button.discard.confirmButton,
             ],
         }).then((willDelete) => {
             if (willDelete) {
                 swal({
-                    title: lang[key].components.button.discard.success,
+                    title: lang.components.button.discard.success,
                     icon: 'success',
-                    buttons: lang[key].components.button.discard.confirmButton,
+                    buttons: lang.components.button.discard.confirmButton,
                 });
                 reset(!trigger);
                 setEdit(false);
@@ -160,20 +156,20 @@ const EarScan = (props) => {
 
     return (
         <div className="ear-scan-wrapper">
-            <h1>{lang[key].patientView.earScan.title}</h1>
+            <h1>{lang.patientView.earScan.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <div className="ear-scan-files">
                 <Files
-                    lang={props.lang}
-                    title={lang[key].patientView.earScan.fileHeaderLeft}
+                    languageData={props.languageData}
+                    title={lang.patientView.earScan.fileHeaderLeft}
                     fileNames={leftEarFiles}
                     handleDownload={handleDownload}
                     handleUpload={handleLeftUpload}
                     handleDelete={handleLeftDelete}
                 />
                 <Files
-                    lang={props.lang}
-                    title={lang[key].patientView.earScan.fileHeaderRight}
+                    languageData={props.languageData}
+                    title={lang.patientView.earScan.fileHeaderRight}
                     fileNames={rightEarFiles}
                     handleDownload={handleDownload}
                     handleUpload={handleRightUpload}
@@ -184,7 +180,7 @@ const EarScan = (props) => {
                 disabled={!edit}
                 value={notes}
                 state={setNotes}
-                title={lang[key].components.notes.title}
+                title={lang.components.notes.title}
             />
             <BottomBar
                 lastEditedBy={info.lastEditedBy}
@@ -194,7 +190,7 @@ const EarScan = (props) => {
                 status={props.status}
                 edit={edit}
                 setEdit={setEdit}
-                lang={props.lang}
+                languageData={props.languageData}
             />
         </div>
     );

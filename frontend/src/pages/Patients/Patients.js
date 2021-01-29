@@ -44,8 +44,8 @@ const Patients = (props) => {
     const [filterPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
 
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
@@ -79,8 +79,8 @@ const Patients = (props) => {
             const dob = document.getElementById('createDOB').value;
             const id = document.getElementById('createId').value;
             swal(
-                lang[key].components.swal.createPatient.successMsg,
-                `${lang[key].components.swal.createPatient.firstName}: ${name}\n${lang[key].components.swal.createPatient.dob}: ${dob}\n${lang[key].components.swal.createPatient.id}: ${id}`,
+                lang.components.swal.createPatient.successMsg,
+                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${id}`,
                 'success',
             );
         }
@@ -100,11 +100,11 @@ const Patients = (props) => {
                     }}
                 >
                     <h2 style={{ fontWeight: 'bolder' }}>
-                        {lang[key].components.swal.createPatient.title}
+                        {lang.components.swal.createPatient.title}
                     </h2>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>
-                            {lang[key].components.swal.createPatient.firstName}
+                            {lang.components.swal.createPatient.firstName}
                         </span>
                         <TextField
                             size="small"
@@ -114,7 +114,7 @@ const Patients = (props) => {
                             variant="outlined"
                         />
                         <span>
-                            {lang[key].components.swal.createPatient.middleName}
+                            {lang.components.swal.createPatient.middleName}
                         </span>
                         <div style={{ display: 'flex' }}>
                             <TextField
@@ -133,7 +133,7 @@ const Patients = (props) => {
                             />
                         </div>
                         <span>
-                            {lang[key].components.swal.createPatient.lastName}
+                            {lang.components.swal.createPatient.lastName}
                         </span>
                         <TextField
                             size="small"
@@ -144,9 +144,7 @@ const Patients = (props) => {
                         />
                     </div>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>
-                            {lang[key].components.swal.createPatient.dob}{' '}
-                        </span>
+                        <span>{lang.components.swal.createPatient.dob} </span>
                         <TextField
                             size="small"
                             id="createDOB"
@@ -156,9 +154,7 @@ const Patients = (props) => {
                         />
                     </div>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>
-                            {lang[key].components.swal.createPatient.id}{' '}
-                        </span>
+                        <span>{lang.components.swal.createPatient.id} </span>
                         <TextField
                             size="small"
                             id="createId"
@@ -179,18 +175,12 @@ const Patients = (props) => {
                             className={classes.swalEditButton}
                             onClick={(e) => createPatientHelper(true, auto_id)}
                         >
-                            {
-                                lang[key].components.swal.createPatient.buttons
-                                    .edit
-                            }
+                            {lang.components.swal.createPatient.buttons.edit}
                         </Button>
                         <Button
                             onClick={(e) => createPatientHelper(false, auto_id)}
                         >
-                            {
-                                lang[key].components.swal.createPatient.buttons
-                                    .noEdit
-                            }
+                            {lang.components.swal.createPatient.buttons.noEdit}
                         </Button>
                     </div>
                 </div>
@@ -221,7 +211,7 @@ const Patients = (props) => {
                     onClose={handleNoPatientClose}
                 >
                     <Alert onClose={handleNoPatientClose} severity="error">
-                        {lang[key].components.table.noPatientsFound}
+                        {lang.components.table.noPatientsFound}
                     </Alert>
                 </Snackbar>
                 <div className="header">
@@ -233,7 +223,7 @@ const Patients = (props) => {
                                     : 'all-patients-header-text'
                             }
                         >
-                            {lang[key].components.navbar.patients.pageTitle}
+                            {lang.components.navbar.patients.pageTitle}
                         </h2>
                         <div
                             style={{
@@ -259,16 +249,14 @@ const Patients = (props) => {
                             value={searchQuery}
                             size="small"
                             variant="outlined"
-                            placeholder={
-                                lang[key].components.search.placeholder
-                            }
+                            placeholder={lang.components.search.placeholder}
                         />
 
                         <Button
                             className="create-patient-button"
                             onClick={createPatient}
                         >
-                            {lang[key].components.button.createPatient}
+                            {lang.components.button.createPatient}
                         </Button>
                     </div>
                 </div>
@@ -277,61 +265,53 @@ const Patients = (props) => {
                 <MainTable
                     headers={[
                         {
-                            title: lang[key].components.table.mainHeaders.name,
+                            title: lang.components.table.mainHeaders.name,
                             sortKey: 'name',
                         },
                         {
-                            title: lang[key].components.table.mainHeaders.added,
+                            title: lang.components.table.mainHeaders.added,
                             sortKey: 'createdDate',
                         },
                         {
-                            title:
-                                lang[key].components.table.mainHeaders.lastEdit,
+                            title: lang.components.table.mainHeaders.lastEdit,
                             sortKey: 'lastEdit',
                         },
                         {
-                            title:
-                                lang[key].components.table.mainHeaders.status,
+                            title: lang.components.table.mainHeaders.status,
                             sortKey: 'status',
                         },
                     ]}
                     rowIds={['name', 'createdDate', 'lastEdited', 'status']}
-                    lang={props.lang}
+                    languageData={props.languageData}
                     patients={allPatients}
                 />
             ) : (
                 <MainTable
                     headers={[
                         {
-                            title: lang[key].components.table.mainHeaders.name,
+                            title: lang.components.table.mainHeaders.name,
                             sortKey: 'name',
                         },
                         {
-                            title: lang[key].components.table.mainHeaders.added,
+                            title: lang.components.table.mainHeaders.added,
                             sortKey: 'createdDate',
                         },
                         {
-                            title:
-                                lang[key].components.table.mainHeaders.lastEdit,
+                            title: lang.components.table.mainHeaders.lastEdit,
                             sortKey: 'lastEdit',
                         },
                         {
-                            title:
-                                lang[key].components.table.mainHeaders.status,
+                            title: lang.components.table.mainHeaders.status,
                             sortKey: 'status',
                         },
                     ]}
                     rowIds={['name', 'createdDate', 'lastEdited', 'status']}
-                    lang={props.lang}
+                    languageData={props.languageData}
                     patients={filterPatients}
                 />
             )}
         </div>
     );
-};
-
-Patients.propTypes = {
-    lang: PropTypes.string,
 };
 
 export default Patients;

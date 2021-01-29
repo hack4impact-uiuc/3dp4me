@@ -6,8 +6,8 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 
 const Files = (props) => {
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     return (
         <div className="files-wrapper">
@@ -55,7 +55,7 @@ const Files = (props) => {
                     <Button className="file-button" component="span">
                         <AddIcon />
                         <Typography align="left">
-                            <b>{lang[key].components.file.addAnother}</b>
+                            <b>{lang.components.file.addAnother}</b>
                         </Typography>
                     </Button>
                 </label>

@@ -22,8 +22,8 @@ const Feedback = (props) => {
     const [twoYearFeedback, setTwoYearFeedback] = useState('');
     const [twoYearFeedbackDate, setTwoYearFeedbackDate] = useState('');
 
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     useEffect(() => {
         setInitialFeedback(info.initial.notes);
@@ -50,30 +50,26 @@ const Feedback = (props) => {
         updateStage(props.id, stageName, info_copy);
         props.updatePatientFile(stageName, info_copy);
         setEdit(false);
-        swal(
-            lang[key].components.bottombar.savedMessage.feedback,
-            '',
-            'success',
-        );
+        swal(lang.components.bottombar.savedMessage.feedback, '', 'success');
     };
 
     const discardData = (e) => {
         swal({
-            title: lang[key].components.button.discard.question,
-            text: lang[key].components.button.discard.warningMessage,
+            title: lang.components.button.discard.question,
+            text: lang.components.button.discard.warningMessage,
             icon: 'warning',
             buttons: true,
             dangerMode: true,
             buttons: [
-                lang[key].components.button.discard.cancelButton,
-                lang[key].components.button.discard.confirmButton,
+                lang.components.button.discard.cancelButton,
+                lang.components.button.discard.confirmButton,
             ],
         }).then((willDelete) => {
             if (willDelete) {
                 swal({
-                    title: lang[key].components.button.discard.success,
+                    title: lang.components.button.discard.success,
                     icon: 'success',
-                    buttons: lang[key].components.button.discard.confirmButton,
+                    buttons: lang.components.button.discard.confirmButton,
                 });
                 reset(!trigger);
                 setEdit(false);
@@ -83,16 +79,16 @@ const Feedback = (props) => {
 
     return (
         <div className="feedback-wrapper">
-            <h1>{lang[key].patientView.feedback.title}</h1>
+            <h1>{lang.patientView.feedback.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <Notes
                 disabled={!edit}
-                title={lang[key].patientView.feedback.initial}
+                title={lang.patientView.feedback.initial}
                 value={intialFeedback}
                 state={setInitialFeedback}
             />
             <div className="collected-wrapper">
-                <h3>{lang[key].patientView.feedback.collected} </h3>
+                <h3>{lang.patientView.feedback.collected} </h3>
                 <TextField
                     className={edit ? 'active-input' : 'input-field'}
                     disabled={!edit}
@@ -103,12 +99,12 @@ const Feedback = (props) => {
             </div>
             <Notes
                 disabled={!edit}
-                title={lang[key].patientView.feedback.sixMonth}
+                title={lang.patientView.feedback.sixMonth}
                 value={sixMonthFeedback}
                 state={setSixMonthFeedback}
             />
             <div className="collected-wrapper">
-                <h3>{lang[key].patientView.feedback.collected} </h3>
+                <h3>{lang.patientView.feedback.collected} </h3>
                 <TextField
                     className={edit ? 'active-input' : 'input-field'}
                     disabled={!edit}
@@ -119,12 +115,12 @@ const Feedback = (props) => {
             </div>
             <Notes
                 disabled={!edit}
-                title={lang[key].patientView.feedback.oneYear}
+                title={lang.patientView.feedback.oneYear}
                 value={oneYearFeedback}
                 state={setOneYearFeedback}
             />
             <div className="collected-wrapper">
-                <h3>{lang[key].patientView.feedback.collected} </h3>
+                <h3>{lang.patientView.feedback.collected} </h3>
                 <TextField
                     className={edit ? 'active-input' : 'input-field'}
                     disabled={!edit}
@@ -135,12 +131,12 @@ const Feedback = (props) => {
             </div>
             <Notes
                 disabled={!edit}
-                title={lang[key].patientView.feedback.twoYear}
+                title={lang.patientView.feedback.twoYear}
                 value={twoYearFeedback}
                 state={setTwoYearFeedback}
             />
             <div className="collected-wrapper">
-                <h3>{lang[key].patientView.feedback.collected}</h3>
+                <h3>{lang.patientView.feedback.collected}</h3>
                 <TextField
                     className={edit ? 'active-input' : 'input-field'}
                     disabled={!edit}
@@ -157,7 +153,7 @@ const Feedback = (props) => {
                 status={props.status}
                 edit={edit}
                 setEdit={setEdit}
-                lang={props.lang}
+                languageData={props.languageData}
             />
         </div>
     );

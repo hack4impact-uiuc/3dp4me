@@ -27,8 +27,8 @@ const Delivery = (props) => {
         deliveryStatus,
     };
 
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     useEffect(() => {
         // setAddress(info.address);
@@ -42,30 +42,26 @@ const Delivery = (props) => {
         updateStage(props.id, stageName, info_copy);
         props.updatePatientFile(stageName, info_copy);
         setEdit(false);
-        swal(
-            lang[key].components.bottombar.savedMessage.delivery,
-            '',
-            'success',
-        );
+        swal(lang.components.bottombar.savedMessage.delivery, '', 'success');
     };
 
     const discardData = (e) => {
         swal({
-            title: lang[key].components.button.discard.question,
-            text: lang[key].components.button.discard.warningMessage,
+            title: lang.components.button.discard.question,
+            text: lang.components.button.discard.warningMessage,
             icon: 'warning',
             buttons: true,
             dangerMode: true,
             buttons: [
-                lang[key].components.button.discard.cancelButton,
-                lang[key].components.button.discard.confirmButton,
+                lang.components.button.discard.cancelButton,
+                lang.components.button.discard.confirmButton,
             ],
         }).then((willDelete) => {
             if (willDelete) {
                 swal({
-                    title: lang[key].components.button.discard.success,
+                    title: lang.components.button.discard.success,
                     icon: 'success',
-                    buttons: lang[key].components.button.discard.confirmButton,
+                    buttons: lang.components.button.discard.confirmButton,
                 });
                 reset(!trigger);
                 setEdit(false);
@@ -75,9 +71,9 @@ const Delivery = (props) => {
 
     return (
         <div className="delivery-wrapper">
-            <h1>{lang[key].patientView.delivery.title}</h1>
+            <h1>{lang.patientView.delivery.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
-            <h3>{lang[key].patientView.delivery.address}</h3>
+            <h3>{lang.patientView.delivery.address}</h3>
             {/* <TextField
                 disabled={!edit}
                 className={edit ? "active-input" : "input-field"}
@@ -87,10 +83,9 @@ const Delivery = (props) => {
             /> */}
             <p>{props.address}</p>
             <div className="delivery-address-label">
-                {lang[key].patientView.delivery.addressLabel +
-                    props.deliveryType}
+                {lang.patientView.delivery.addressLabel + props.deliveryType}
             </div>
-            <h3>{lang[key].patientView.delivery.status}</h3>
+            <h3>{lang.patientView.delivery.status}</h3>
             <FormControl disabled={!edit} component="fieldset">
                 <RadioGroup
                     name="status"
@@ -100,27 +95,27 @@ const Delivery = (props) => {
                     <FormControlLabel
                         value="notReady"
                         control={<Radio />}
-                        label={lang[key].patientView.delivery.notReady}
+                        label={lang.patientView.delivery.notReady}
                     />
                     <FormControlLabel
                         value="ready"
                         control={<Radio />}
-                        label={lang[key].patientView.delivery.ready}
+                        label={lang.patientView.delivery.ready}
                     />
                     <FormControlLabel
                         value="out"
                         control={<Radio />}
-                        label={lang[key].patientView.delivery.out}
+                        label={lang.patientView.delivery.out}
                     />
                     <FormControlLabel
                         value="handDelivered"
                         control={<Radio />}
-                        label={lang[key].patientView.delivery.handDelivered}
+                        label={lang.patientView.delivery.handDelivered}
                     />
                     <FormControlLabel
                         value="pickup"
                         control={<Radio />}
-                        label={lang[key].patientView.delivery.pickup}
+                        label={lang.patientView.delivery.pickup}
                     />
                 </RadioGroup>
             </FormControl>
@@ -132,7 +127,7 @@ const Delivery = (props) => {
                 status={props.status}
                 edit={edit}
                 setEdit={setEdit}
-                lang={props.lang}
+                languageData={props.languageData}
             />
         </div>
     );

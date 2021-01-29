@@ -49,14 +49,14 @@ const Controller = (props) => {
     const params = useParams();
     const { id } = params;
 
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const managePatient = () => {
         reactSwal({
             className: 'controller-manage-patient-swal',
             buttons: {},
-            content: <ManagePatientModal lang={props.lang} />,
+            content: <ManagePatientModal languageData={props.languageData} />,
         });
     };
 
@@ -209,7 +209,7 @@ const Controller = (props) => {
                             <div>
                                 <div className="drawer-text-section">
                                     <span className="drawer-text-label">
-                                        {lang[key].components.sidebar.name}
+                                        {lang.components.sidebar.name}
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
@@ -218,7 +218,7 @@ const Controller = (props) => {
                                 </div>
                                 <div className="drawer-text-section">
                                     <span className="drawer-text-label">
-                                        {lang[key].components.sidebar.orderID}
+                                        {lang.components.sidebar.orderID}
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
@@ -227,7 +227,7 @@ const Controller = (props) => {
                                 </div>
                                 <div className="drawer-text-section">
                                     <span className="drawer-text-label">
-                                        {lang[key].components.sidebar.dob}
+                                        {lang.components.sidebar.dob}
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
@@ -236,7 +236,7 @@ const Controller = (props) => {
                                 </div>
                                 <div className="drawer-text-section">
                                     <span className="drawer-text-label">
-                                        {lang[key].components.sidebar.status}
+                                        {lang.components.sidebar.status}
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
@@ -244,7 +244,7 @@ const Controller = (props) => {
                                     </span>
                                 </div>
                                 <span className="drawer-text-label">
-                                    {lang[key].components.notes.title}
+                                    {lang.components.notes.title}
                                 </span>
                                 <div className="drawer-notes-wrapper">
                                     <Accordion
@@ -257,7 +257,7 @@ const Controller = (props) => {
                                             }
                                         >
                                             {
-                                                lang[key].components.stepTabs
+                                                lang.components.stepTabs
                                                     .patientInfo
                                             }
                                         </AccordionSummary>
@@ -274,10 +274,7 @@ const Controller = (props) => {
                                                 <ExpandMoreIcon className="expand-icon" />
                                             }
                                         >
-                                            {
-                                                lang[key].components.stepTabs
-                                                    .earScan
-                                            }
+                                            {lang.components.stepTabs.earScan}
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             {patientFile?.earScanInfo.notes}
@@ -293,7 +290,7 @@ const Controller = (props) => {
                                             }
                                         >
                                             {
-                                                lang[key].components.stepTabs
+                                                lang.components.stepTabs
                                                     .CADModeling
                                             }
                                         </AccordionSummary>
@@ -310,10 +307,7 @@ const Controller = (props) => {
                                                 <ExpandMoreIcon className="expand-icon" />
                                             }
                                         >
-                                            {
-                                                lang[key].components.stepTabs
-                                                    .print
-                                            }
+                                            {lang.components.stepTabs.print}
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             {patientFile?.printingInfo.notes}
@@ -328,10 +322,7 @@ const Controller = (props) => {
                                                 <ExpandMoreIcon className="expand-icon" />
                                             }
                                         >
-                                            {
-                                                lang[key].components.stepTabs
-                                                    .delivery
-                                            }
+                                            {lang.components.stepTabs.delivery}
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             {patientFile?.deliveryInfo.notes}
@@ -346,10 +337,7 @@ const Controller = (props) => {
                                                 <ExpandMoreIcon className="expand-icon" />
                                             }
                                         >
-                                            {
-                                                lang[key].components.stepTabs
-                                                    .feedback
-                                            }
+                                            {lang.components.stepTabs.feedback}
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             {patientFile?.feedbackInfo.notes}
@@ -367,7 +355,7 @@ const Controller = (props) => {
                                     onClick={managePatient}
                                     className="manage-patient-button"
                                 >
-                                    {lang[key].components.button.managePatient}
+                                    {lang.components.button.managePatient}
                                 </Button>
                             </div>
                         </div>
@@ -380,7 +368,7 @@ const Controller = (props) => {
                     }`}
                 >
                     <ToggleButtons
-                        lang={props.lang}
+                        languageData={props.languageData}
                         step={step}
                         handleStep={handleStep}
                         medStatus={medStatus}
@@ -399,7 +387,7 @@ const Controller = (props) => {
                                     value: medStatus,
                                     setStatus: handleMedStatus,
                                 }}
-                                lang={props.lang}
+                                languageData={props.languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
@@ -413,7 +401,7 @@ const Controller = (props) => {
                                     value: earScanStatus,
                                     setStatus: handleEarScanStatus,
                                 }}
-                                lang={props.lang}
+                                languageData={props.languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
@@ -427,7 +415,7 @@ const Controller = (props) => {
                                     value: modelStatus,
                                     setStatus: handleModelStatus,
                                 }}
-                                lang={props.lang}
+                                languageData={props.languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
@@ -441,7 +429,7 @@ const Controller = (props) => {
                                     value: printStatus,
                                     setStatus: handlePrintStatus,
                                 }}
-                                lang={props.lang}
+                                languageData={props.languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
@@ -455,7 +443,7 @@ const Controller = (props) => {
                                     value: processingStatus,
                                     setStatus: handleProcessingStatus,
                                 }}
-                                lang={props.lang}
+                                languageData={props.languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
@@ -469,7 +457,7 @@ const Controller = (props) => {
                                     value: deliveryStatus,
                                     setStatus: handleDeliveryStatus,
                                 }}
-                                lang={props.lang}
+                                languageData={props.languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                                 address={patientFile?.patientInfo.address}
@@ -485,7 +473,7 @@ const Controller = (props) => {
                                     value: feedbackStatus,
                                     setStatus: handleFeedbackStatus,
                                 }}
-                                lang={props.lang}
+                                languageData={props.languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />

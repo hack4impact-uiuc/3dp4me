@@ -8,7 +8,7 @@ import Metrics from './pages/Metrics/Metrics';
 import Patients from './pages/Patients/Patients';
 import Navbar from './components/Navbar/Navbar';
 import Controller from './steps/Controller/Controller';
-import languageData from './language-data.json';
+import translations from './translations.json';
 import Login from './components/Login/Login';
 import {
     UNDEFINED_AUTH,
@@ -21,15 +21,15 @@ import { getCurrentUserInfo } from './aws/aws-helper.js';
 Amplify.configure(awsconfig);
 
 function App() {
-    const [lang, setLang] = useState('EN');
+    const [selectedLang, setSelectedLang] = useState('EN');
     const [authLevel, setAuthLevel] = useState(UNDEFINED_AUTH);
     const [username, setUsername] = useState('');
     const [userEmail, setUserEmail] = useState('');
 
-    // Data is the raw JSON for EN and AR. Key is the currently selected language.
-    const langInfo = {
-        data: languageData,
-        lang: lang,
+    // Data is the raw JSON for EN and AR. Key is the currently selected selectedLanguage.
+    const languageData = {
+        translations: translations,
+        selectedLanguage: selectedLang,
     };
 
     useEffect(() => {
@@ -47,50 +47,52 @@ function App() {
                 setAuthLevel(UNAUTHENTICATED);
             });
 
-        // TODO: get user session langauge
-        setLang('EN');
+        // TODO: get user session selectedLangauge
+        setSelectedLang('EN');
         getUserInfo();
     }, []);
 
     setAuthListener((newAuthLevel) => setAuthLevel(newAuthLevel));
 
     if (authLevel == UNDEFINED_AUTH)
-        return <p>{languageData[lang].components.login.authLoading}</p>;
+        return <p>{translations[selectedLang].components.login.authLoading}</p>;
 
     if (authLevel == UNAUTHENTICATED) return <Login />;
 
     if (authLevel == AUTHENTICATED)
         return (
-            <body dir={lang === 'AR' ? 'rtl' : 'ltr'}>
+            <body dir={selectedLang === 'AR' ? 'rtl' : 'ltr'}>
                 <Router>
                     <Navbar
-                        lang={langInfo}
-                        setLang={setLang}
+                        languageData={languageData}
+                        setSelectedLang={setSelectedLang}
                         username={username}
                         userEmail={userEmail}
                     />
-                    <div className={`${lang == 'AR' ? 'flip' : ''}`}>
+                    <div className={`${selectedLang == 'AR' ? 'flip' : ''}`}>
                         <Switch>
                             <div className="content">
                                 {/* Path = BASE_URL */}
                                 <Route exact path="/">
-                                    <Dashboard lang={langInfo} />
+                                    <Dashboard languageData={languageData} />
                                 </Route>
                                 {/* Path = BASE_URL/account */}
                                 <Route exact path="/account">
-                                    <AccountManagement lang={langInfo} />
+                                    <AccountManagement
+                                        languageData={languageData}
+                                    />
                                 </Route>
                                 {/* Path = BASE_URL/metrics */}
                                 <Route exact path="/metrics">
-                                    <Metrics lang={langInfo} />
+                                    <Metrics languageData={languageData} />
                                 </Route>
                                 {/* Path = BASE_URL/patients */}
                                 <Route exact path="/patients">
-                                    <Patients lang={langInfo} />
+                                    <Patients languageData={languageData} />
                                 </Route>
                                 {/* Path = BASE_URL/patient-info/PATIENT_ID */}
                                 <Route exact path="/patient-info/:id">
-                                    <Controller lang={langInfo} />
+                                    <Controller languageData={languageData} />
                                 </Route>
                             </div>
                         </Switch>

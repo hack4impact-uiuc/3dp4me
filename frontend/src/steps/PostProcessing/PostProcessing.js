@@ -26,8 +26,8 @@ const PostProcessing = (props) => {
         notes: processingNotes,
     };
 
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const handleDownload = (fileName) => {
         downloadFile(props.id, stageName, fileName);
@@ -77,29 +77,25 @@ const PostProcessing = (props) => {
         updateStage(props.id, stageName, info_copy);
         props.updatePatientFile(stageName, info_copy);
         setEdit(false);
-        swal(
-            lang[key].components.bottombar.savedMessage.processing,
-            '',
-            'success',
-        );
+        swal(lang.components.bottombar.savedMessage.processing, '', 'success');
     };
 
     const discardData = (e) => {
         swal({
-            title: lang[key].components.button.discard.question,
-            text: lang[key].components.button.discard.warningMessage,
+            title: lang.components.button.discard.question,
+            text: lang.components.button.discard.warningMessage,
             icon: 'warning',
             dangerMode: true,
             buttons: [
-                lang[key].components.button.discard.cancelButton,
-                lang[key].components.button.discard.confirmButton,
+                lang.components.button.discard.cancelButton,
+                lang.components.button.discard.confirmButton,
             ],
         }).then((willDelete) => {
             if (willDelete) {
                 swal({
-                    title: lang[key].components.button.discard.success,
+                    title: lang.components.button.discard.success,
                     icon: 'success',
-                    buttons: lang[key].components.button.discard.confirmButton,
+                    buttons: lang.components.button.discard.confirmButton,
                 });
                 reset(!trigger);
                 setEdit(false);
@@ -109,11 +105,11 @@ const PostProcessing = (props) => {
 
     return (
         <div>
-            <h1>{lang[key].patientView.postProcessing.title}</h1>
+            <h1>{lang.patientView.postProcessing.title}</h1>
             <p>Last edited by Im Tired on 10/05/2020 9:58PM</p>
             <Files
-                lang={props.lang}
-                title={lang[key].components.file.title}
+                languageData={props.languageData}
+                title={lang.components.file.title}
                 fileNames={processingFiles}
                 handleDownload={handleDownload}
                 handleUpload={handleUpload}
@@ -121,7 +117,7 @@ const PostProcessing = (props) => {
             />
             <Notes
                 disabled={!edit}
-                title={lang[key].components.notes.title}
+                title={lang.components.notes.title}
                 value={processingNotes}
                 state={setProcessingNotes}
             />
@@ -133,7 +129,7 @@ const PostProcessing = (props) => {
                 status={props.status}
                 edit={edit}
                 setEdit={setEdit}
-                lang={props.lang}
+                languageData={props.languageData}
             />
         </div>
     );

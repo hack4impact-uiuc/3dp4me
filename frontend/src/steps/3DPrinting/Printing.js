@@ -26,8 +26,8 @@ const Printing = (props) => {
         notes: printNotes,
     };
 
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const handleDownload = async (fileName) => {
         downloadFile(props.id, stageName, fileName);
@@ -75,25 +75,25 @@ const Printing = (props) => {
         updateStage(props.id, stageName, info_copy);
         props.updatePatientFile(stageName, info_copy);
         setEdit(false);
-        swal(lang[key].components.bottombar.savedMessage.print, '', 'success');
+        swal(lang.components.bottombar.savedMessage.print, '', 'success');
     };
 
     const discardData = (e) => {
         swal({
-            title: lang[key].components.button.discard.question,
-            text: lang[key].components.button.discard.warningMessage,
+            title: lang.components.button.discard.question,
+            text: lang.components.button.discard.warningMessage,
             icon: 'warning',
             dangerMode: true,
             buttons: [
-                lang[key].components.button.discard.cancelButton,
-                lang[key].components.button.discard.confirmButton,
+                lang.components.button.discard.cancelButton,
+                lang.components.button.discard.confirmButton,
             ],
         }).then((willDelete) => {
             if (willDelete) {
                 swal({
-                    title: lang[key].components.button.discard.success,
+                    title: lang.components.button.discard.success,
                     icon: 'success',
-                    buttons: lang[key].components.button.discard.confirmButton,
+                    buttons: lang.components.button.discard.confirmButton,
                 });
                 reset(!trigger);
                 setEdit(false);
@@ -103,10 +103,10 @@ const Printing = (props) => {
 
     return (
         <div>
-            <h1>{lang[key].patientView.printing.title}</h1>
+            <h1>{lang.patientView.printing.title}</h1>
             <Files
-                lang={props.lang}
-                title={lang[key].components.file.title}
+                languageData={props.languageData}
+                title={lang.components.file.title}
                 fileNames={printFiles}
                 handleDownload={handleDownload}
                 handleUpload={handleUpload}
@@ -114,7 +114,7 @@ const Printing = (props) => {
             />
             <Notes
                 disabled={!edit}
-                title={lang[key].components.notes.title}
+                title={lang.components.notes.title}
                 value={printNotes}
                 state={setPrintNotes}
             />
@@ -126,7 +126,7 @@ const Printing = (props) => {
                 status={props.status}
                 edit={edit}
                 setEdit={setEdit}
-                lang={props.lang}
+                languageData={props.languageData}
             />
         </div>
     );

@@ -9,7 +9,7 @@ router.get(
     errorWrap(async (req, res) => {
         models.Patient.find(
             {},
-            '_id patientInfo.name createdDate lastEdited status',
+            // '_id patientInfo.name createdDate lastEdited status',
         ).then((patients) => {
             fin = patients.map((info) => {
                 return {
@@ -37,7 +37,7 @@ router.get(
         const { id, stage } = req.params;
         const patientsData = await models.Patient.find(
             {},
-            '_id patientInfo.name createdDate ' + stage,
+            // '_id patientInfo.name createdDate ' + stage,
         );
         const remappedPatients = patientsData.map((info) => {
             const stageData = info[stage];

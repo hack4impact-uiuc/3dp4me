@@ -65,8 +65,8 @@ const Dashboard = (props) => {
     const [noPatient, setNoPatient] = useState(false);
     const [sortedField, setSortedField] = React.useState(null);
 
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const handlesort = (e) => {
         setSort(e.target.value);
@@ -80,8 +80,8 @@ const Dashboard = (props) => {
             const dob = document.getElementById('createDOB').value;
             const id = document.getElementById('createId').value;
             swal(
-                lang[key].components.swal.createPatient.successMsg,
-                `${lang[key].components.swal.createPatient.firstName}: ${name}\n${lang[key].components.swal.createPatient.dob}: ${dob}\n${lang[key].components.swal.createPatient.id}: ${id}`,
+                lang.components.swal.createPatient.successMsg,
+                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${id}`,
                 'success',
             );
         }
@@ -101,11 +101,11 @@ const Dashboard = (props) => {
                     }}
                 >
                     <h2 style={{ fontWeight: 'bolder' }}>
-                        {lang[key].components.swal.createPatient.title}
+                        {lang.components.swal.createPatient.title}
                     </h2>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>
-                            {lang[key].components.swal.createPatient.firstName}
+                            {lang.components.swal.createPatient.firstName}
                         </span>
                         <TextField
                             size="small"
@@ -115,7 +115,7 @@ const Dashboard = (props) => {
                             variant="outlined"
                         />
                         <span>
-                            {lang[key].components.swal.createPatient.middleName}
+                            {lang.components.swal.createPatient.middleName}
                         </span>
                         <div style={{ display: 'flex' }}>
                             <TextField
@@ -134,7 +134,7 @@ const Dashboard = (props) => {
                             />
                         </div>
                         <span>
-                            {lang[key].components.swal.createPatient.lastName}
+                            {lang.components.swal.createPatient.lastName}
                         </span>
                         <TextField
                             size="small"
@@ -145,9 +145,7 @@ const Dashboard = (props) => {
                         />
                     </div>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>
-                            {lang[key].components.swal.createPatient.dob}{' '}
-                        </span>
+                        <span>{lang.components.swal.createPatient.dob} </span>
                         <TextField
                             size="small"
                             id="createDOB"
@@ -157,9 +155,7 @@ const Dashboard = (props) => {
                         />
                     </div>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>
-                            {lang[key].components.swal.createPatient.id}{' '}
-                        </span>
+                        <span>{lang.components.swal.createPatient.id} </span>
                         <TextField
                             size="small"
                             id="createId"
@@ -180,19 +176,13 @@ const Dashboard = (props) => {
                             className={classes.swalEditButton}
                             onClick={(e) => createPatientHelper(true, auto_id)}
                         >
-                            {
-                                lang[key].components.swal.createPatient.buttons
-                                    .edit
-                            }
+                            {lang.components.swal.createPatient.buttons.edit}
                         </Button>
                         <Button
                             className={classes.swalCloseButton}
                             onClick={(e) => createPatientHelper(false, auto_id)}
                         >
-                            {
-                                lang[key].components.swal.createPatient.buttons
-                                    .noEdit
-                            }
+                            {lang.components.swal.createPatient.buttons.noEdit}
                         </Button>
                     </div>
                 </div>
@@ -281,12 +271,12 @@ const Dashboard = (props) => {
                 onClose={handleNoPatientClose}
             >
                 <Alert onClose={handleNoPatientClose} severity="error">
-                    {lang[key].components.table.noPatientsFound}
+                    {lang.components.table.noPatientsFound}
                 </Alert>
             </Snackbar>
             <div className="tabs">
                 <ToggleButtons
-                    lang={props.lang}
+                    languageData={props.languageData}
                     step={step}
                     handleStep={handleStep}
                 />
@@ -301,7 +291,7 @@ const Dashboard = (props) => {
                                     : 'patient-list-title'
                             }
                         >
-                            {lang[key].pages[stepTitle]}
+                            {lang.pages[stepTitle]}
                         </h2>
                         <TextField
                             InputProps={{
@@ -318,16 +308,14 @@ const Dashboard = (props) => {
                             value={searchQuery}
                             size="small"
                             variant="outlined"
-                            placeholder={
-                                lang[key].components.search.placeholder
-                            }
+                            placeholder={lang.components.search.placeholder}
                         />
                         {stepTitle === 'patientInfoTitle' ? (
                             <Button
                                 className="create-patient-button"
                                 onClick={createPatient}
                             >
-                                {lang[key].components.button.createPatient}
+                                {lang.components.button.createPatient}
                             </Button>
                         ) : (
                             <></>
@@ -341,26 +329,26 @@ const Dashboard = (props) => {
                                 headers={[
                                     {
                                         title:
-                                            lang[key].components.table
-                                                .mainHeaders.name,
+                                            lang.components.table.mainHeaders
+                                                .name,
                                         sortKey: 'name',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
-                                                .mainHeaders.added,
+                                            lang.components.table.mainHeaders
+                                                .added,
                                         sortKey: 'createdDate',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
-                                                .mainHeaders.lastEdit,
+                                            lang.components.table.mainHeaders
+                                                .lastEdit,
                                         sortKey: 'lastEdited',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
-                                                .mainHeaders.status,
+                                            lang.components.table.mainHeaders
+                                                .status,
                                         sortKey: 'status',
                                     },
                                 ]}
@@ -370,7 +358,7 @@ const Dashboard = (props) => {
                                     'lastEdited',
                                     'status',
                                 ]}
-                                lang={props.lang}
+                                languageData={props.languageData}
                                 patients={patients}
                             />
                         ) : (
@@ -378,26 +366,26 @@ const Dashboard = (props) => {
                                 headers={[
                                     {
                                         title:
-                                            lang[key].components.table
-                                                .mainHeaders.name,
+                                            lang.components.table.mainHeaders
+                                                .name,
                                         sortKey: 'name',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
-                                                .mainHeaders.added,
+                                            lang.components.table.mainHeaders
+                                                .added,
                                         sortKey: 'createdDate',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
-                                                .mainHeaders.lastEdit,
+                                            lang.components.table.mainHeaders
+                                                .lastEdit,
                                         sortKey: 'lastEdited',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
-                                                .mainHeaders.status,
+                                            lang.components.table.mainHeaders
+                                                .status,
                                         sortKey: 'status',
                                     },
                                 ]}
@@ -407,7 +395,7 @@ const Dashboard = (props) => {
                                     'lastEdited',
                                     'status',
                                 ]}
-                                lang={props.lang}
+                                languageData={props.languageData}
                                 patients={filterPatients}
                             />
                         )}
@@ -419,25 +407,25 @@ const Dashboard = (props) => {
                                 headers={[
                                     {
                                         title:
-                                            lang[key].components.table
+                                            lang.components.table
                                                 .feedbackHeaders.name,
                                         sortKey: 'name',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
+                                            lang.components.table
                                                 .feedbackHeaders.added,
                                         sortKey: 'createdDate',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
+                                            lang.components.table
                                                 .feedbackHeaders.feedbackCycle,
                                         sortKey: 'feedbackCycle',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
+                                            lang.components.table
                                                 .feedbackHeaders.status,
                                         sortKey: 'status',
                                     },
@@ -448,7 +436,7 @@ const Dashboard = (props) => {
                                     'feedbackCycle',
                                     'status',
                                 ]}
-                                lang={props.lang}
+                                languageData={props.languageData}
                                 patients={patients}
                             />
                         ) : (
@@ -456,25 +444,25 @@ const Dashboard = (props) => {
                                 headers={[
                                     {
                                         title:
-                                            lang[key].components.table
+                                            lang.components.table
                                                 .feedbackHeaders.name,
                                         sortKey: 'name',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
+                                            lang.components.table
                                                 .feedbackHeaders.added,
                                         sortKey: 'createdDate',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
+                                            lang.components.table
                                                 .feedbackHeaders.feedbackCycle,
                                         sortKey: 'feedbackCycle',
                                     },
                                     {
                                         title:
-                                            lang[key].components.table
+                                            lang.components.table
                                                 .feedbackHeaders.status,
                                         sortKey: 'status',
                                     },
@@ -485,7 +473,7 @@ const Dashboard = (props) => {
                                     'feedbackCycle',
                                     'status',
                                 ]}
-                                lang={props.lang}
+                                languageData={props.selectedLanguage}
                                 patients={filterPatients}
                             />
                         )}

@@ -15,8 +15,8 @@ import './ToggleButtons.scss';
 const ToggleButtons = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const statusIcons = {
         unfinished: (
@@ -72,7 +72,7 @@ const ToggleButtons = (props) => {
                     {props.medStatus !== undefined
                         ? statusIcons[props.medStatus]
                         : null}{' '}
-                    <b>{lang[key].components.stepTabs.patientInfo}</b>
+                    <b>{lang.components.stepTabs.patientInfo}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
@@ -84,7 +84,7 @@ const ToggleButtons = (props) => {
                     {props.earScanStatus !== undefined
                         ? statusIcons[props.earScanStatus]
                         : null}{' '}
-                    <b>{lang[key].components.stepTabs.earScan}</b>
+                    <b>{lang.components.stepTabs.earScan}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
@@ -96,7 +96,7 @@ const ToggleButtons = (props) => {
                     {props.modelStatus !== undefined
                         ? statusIcons[props.modelStatus]
                         : null}{' '}
-                    <b>{lang[key].components.stepTabs.CADModeling}</b>
+                    <b>{lang.components.stepTabs.CADModeling}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
@@ -108,7 +108,7 @@ const ToggleButtons = (props) => {
                     {props.printStatus !== undefined
                         ? statusIcons[props.printStatus]
                         : null}{' '}
-                    <b>{lang[key].components.stepTabs.print}</b>
+                    <b>{lang.components.stepTabs.print}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
@@ -120,7 +120,7 @@ const ToggleButtons = (props) => {
                     {props.processingStatus !== undefined
                         ? statusIcons[props.processingStatus]
                         : null}{' '}
-                    <b>{lang[key].components.stepTabs.processing}</b>
+                    <b>{lang.components.stepTabs.processing}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
@@ -132,7 +132,7 @@ const ToggleButtons = (props) => {
                     {props.deliveryStatus !== undefined
                         ? statusIcons[props.deliveryStatus]
                         : null}{' '}
-                    <b>{lang[key].components.stepTabs.delivery}</b>
+                    <b>{lang.components.stepTabs.delivery}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
@@ -144,7 +144,7 @@ const ToggleButtons = (props) => {
                     {props.feedbackStatus !== undefined
                         ? statusIcons[props.feedbackStatus]
                         : null}{' '}
-                    <b>{lang[key].components.stepTabs.feedback}</b>
+                    <b>{lang.components.stepTabs.feedback}</b>
                 </ToggleButton>
             </ToggleButtonGroup>
 
@@ -154,7 +154,7 @@ const ToggleButtons = (props) => {
                         {props.medStatus !== undefined
                             ? statusIcons[props.medStatus]
                             : null}
-                        <b>{lang[key].components.stepTabs.patientInfo}</b>
+                        <b>{lang.components.stepTabs.patientInfo}</b>
                     </div>
                 ) : null}
                 {props.step === 'scan' ? (
@@ -162,7 +162,7 @@ const ToggleButtons = (props) => {
                         {props.earScanStatus !== undefined
                             ? statusIcons[props.earScanStatus]
                             : null}
-                        <b>{lang[key].components.stepTabs.earScan}</b>
+                        <b>{lang.components.stepTabs.earScan}</b>
                     </div>
                 ) : null}
                 {props.step === 'cad' ? (
@@ -170,7 +170,7 @@ const ToggleButtons = (props) => {
                         {props.modelStatus !== undefined
                             ? statusIcons[props.modelStatus]
                             : null}
-                        <b>{lang[key].components.stepTabs.CADModeling}</b>
+                        <b>{lang.components.stepTabs.CADModeling}</b>
                     </div>
                 ) : null}
                 {props.step === 'printing' ? (
@@ -178,7 +178,7 @@ const ToggleButtons = (props) => {
                         {props.printStatus !== undefined
                             ? statusIcons[props.printStatus]
                             : null}
-                        <b>{lang[key].components.stepTabs.print}</b>
+                        <b>{lang.components.stepTabs.print}</b>
                     </div>
                 ) : null}
                 {props.step === 'processing' ? (
@@ -186,7 +186,7 @@ const ToggleButtons = (props) => {
                         {props.processingStatus !== undefined
                             ? statusIcons[props.processingStatus]
                             : null}
-                        <b>{lang[key].components.stepTabs.processing}</b>
+                        <b>{lang.components.stepTabs.processing}</b>
                     </div>
                 ) : null}
                 {props.step === 'delivery' ? (
@@ -194,7 +194,7 @@ const ToggleButtons = (props) => {
                         {props.deliveryStatus !== undefined
                             ? statusIcons[props.deliveryStatus]
                             : null}
-                        <b>{lang[key].components.stepTabs.delivery}</b>
+                        <b>{lang.components.stepTabs.delivery}</b>
                     </div>
                 ) : null}
                 {props.step === 'feedback' ? (
@@ -202,7 +202,7 @@ const ToggleButtons = (props) => {
                         {props.feedbackStatus !== undefined
                             ? statusIcons[props.feedbackStatus]
                             : null}
-                        <b>{lang[key].components.stepTabs.feedback}</b>
+                        <b>{lang.components.stepTabs.feedback}</b>
                     </div>
                 ) : null}
 
@@ -225,7 +225,7 @@ const ToggleButtons = (props) => {
                             ? statusIcons[props.medStatus]
                             : null}
                         <b className="selector-text">
-                            {lang[key].components.stepTabs.patientInfo}
+                            {lang.components.stepTabs.patientInfo}
                         </b>
                     </MenuItem>
                     <MenuItem onClick={(e) => handleCloseSelector(e, 'scan')}>
@@ -233,7 +233,7 @@ const ToggleButtons = (props) => {
                             ? statusIcons[props.earScanStatus]
                             : null}
                         <b className="selector-text">
-                            {lang[key].components.stepTabs.earScan}
+                            {lang.components.stepTabs.earScan}
                         </b>
                     </MenuItem>
                     <MenuItem onClick={(e) => handleCloseSelector(e, 'cad')}>
@@ -241,7 +241,7 @@ const ToggleButtons = (props) => {
                             ? statusIcons[props.modelStatus]
                             : null}
                         <b className="selector-text">
-                            {lang[key].components.stepTabs.CADModeling}
+                            {lang.components.stepTabs.CADModeling}
                         </b>
                     </MenuItem>
                     <MenuItem
@@ -251,7 +251,7 @@ const ToggleButtons = (props) => {
                             ? statusIcons[props.printStatus]
                             : null}
                         <b className="selector-text">
-                            {lang[key].components.stepTabs.print}
+                            {lang.components.stepTabs.print}
                         </b>
                     </MenuItem>
                     <MenuItem
@@ -261,7 +261,7 @@ const ToggleButtons = (props) => {
                             ? statusIcons[props.processingStatus]
                             : null}
                         <b className="selector-text">
-                            {lang[key].components.stepTabs.processing}
+                            {lang.components.stepTabs.processing}
                         </b>
                     </MenuItem>
                     <MenuItem
@@ -271,7 +271,7 @@ const ToggleButtons = (props) => {
                             ? statusIcons[props.deliveryStatus]
                             : null}
                         <b className="selector-text">
-                            {lang[key].components.stepTabs.delivery}
+                            {lang.components.stepTabs.delivery}
                         </b>
                     </MenuItem>
                     <MenuItem
@@ -281,7 +281,7 @@ const ToggleButtons = (props) => {
                             ? statusIcons[props.feedbackStatus]
                             : null}
                         <b className="selector-text">
-                            {lang[key].components.stepTabs.feedback}
+                            {lang.components.stepTabs.feedback}
                         </b>
                     </MenuItem>
                 </Menu>

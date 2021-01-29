@@ -61,8 +61,9 @@ const MedicalInfo = (props) => {
         delivery,
         notes,
     };
-    const lang = props.lang.data;
-    const { key } = props.lang;
+
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     useEffect(() => {
         setName(info.name);
@@ -122,30 +123,26 @@ const MedicalInfo = (props) => {
         updateStage(props.id, stageName, info_copy);
         props.updatePatientFile(stageName, info_copy);
         setEdit(false);
-        swal(
-            lang[key].components.bottombar.savedMessage.patientInfo,
-            '',
-            'success',
-        );
+        swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };
 
     const discardData = (e) => {
         swal({
-            title: lang[key].components.button.discard.question,
-            text: lang[key].components.button.discard.warningMessage,
+            title: lang.components.button.discard.question,
+            text: lang.components.button.discard.warningMessage,
             icon: 'warning',
             buttons: true,
             dangerMode: true,
             buttons: [
-                lang[key].components.button.discard.cancelButton,
-                lang[key].components.button.discard.confirmButton,
+                lang.components.button.discard.cancelButton,
+                lang.components.button.discard.confirmButton,
             ],
         }).then((willDelete) => {
             if (willDelete) {
                 swal({
-                    title: lang[key].components.button.discard.success,
+                    title: lang.components.button.discard.success,
                     icon: 'success',
-                    buttons: lang[key].components.button.discard.confirmButton,
+                    buttons: lang.components.button.discard.confirmButton,
                 });
                 reset(!trigger);
                 setEdit(false);
@@ -158,14 +155,14 @@ const MedicalInfo = (props) => {
             <Backdrop className="backdrop" open={loading}>
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <h1>{lang[key].patientView.patientInfo.title}</h1>
+            <h1>{lang.patientView.patientInfo.title}</h1>
             <p>Created by Evan Eckels on 10/05/2020 9:58PM</p>
             <p>Last edited by Anisha Rao on 10/08/2020 11:58PM</p>
             <div className="patient-divider-wrapper">
-                <h2>{lang[key].patientView.patientInfo.patientSection}</h2>
+                <h2>{lang.patientView.patientInfo.patientSection}</h2>
                 <Divider className="patient-divider" />
             </div>
-            <h3>{lang[key].patientView.patientInfo.name}</h3>
+            <h3>{lang.patientView.patientInfo.name}</h3>
             <TextField
                 disabled={!edit}
                 className={edit ? 'active-input' : 'input-field'}
@@ -173,7 +170,7 @@ const MedicalInfo = (props) => {
                 onChange={handleName}
                 value={name}
             />
-            <h3>{lang[key].patientView.patientInfo.dob}</h3>
+            <h3>{lang.patientView.patientInfo.dob}</h3>
             <TextField
                 disabled={!edit}
                 className={edit ? 'active-input' : 'input-field'}
@@ -181,7 +178,7 @@ const MedicalInfo = (props) => {
                 onChange={handleDOB}
                 value={dob}
             />
-            <h3>{lang[key].patientView.patientInfo.ssn}</h3>
+            <h3>{lang.patientView.patientInfo.ssn}</h3>
             <TextField
                 disabled={!edit}
                 className={edit ? 'active-input' : 'input-field'}
@@ -189,7 +186,7 @@ const MedicalInfo = (props) => {
                 onChange={handleSSN}
                 value={ssn}
             />
-            <h3>{lang[key].patientView.patientInfo.address}</h3>
+            <h3>{lang.patientView.patientInfo.address}</h3>
             <TextField
                 disabled={!edit}
                 className={edit ? 'active-input' : 'input-field'}
@@ -197,7 +194,7 @@ const MedicalInfo = (props) => {
                 onChange={handleAddress}
                 value={address}
             />
-            <h3>{lang[key].patientView.patientInfo.phone}</h3>
+            <h3>{lang.patientView.patientInfo.phone}</h3>
             <TextField
                 disabled={!edit}
                 className={edit ? 'active-input' : 'input-field'}
@@ -205,8 +202,8 @@ const MedicalInfo = (props) => {
                 onChange={handlePhone}
                 value={phone}
             />
-            <h2>{lang[key].patientView.patientInfo.emergencySection}</h2>
-            <h3>{lang[key].patientView.patientInfo.name}</h3>
+            <h2>{lang.patientView.patientInfo.emergencySection}</h2>
+            <h3>{lang.patientView.patientInfo.name}</h3>
             <TextField
                 disabled={!edit}
                 className={edit ? 'active-input' : 'input-field'}
@@ -214,7 +211,7 @@ const MedicalInfo = (props) => {
                 onChange={handleEmName}
                 value={emName}
             />
-            <h3>{lang[key].patientView.patientInfo.relationship}</h3>
+            <h3>{lang.patientView.patientInfo.relationship}</h3>
             <TextField
                 disabled={!edit}
                 className={edit ? 'active-input' : 'input-field'}
@@ -222,7 +219,7 @@ const MedicalInfo = (props) => {
                 onChange={handleEmRelationship}
                 value={emRelationship}
             />
-            <h3>{lang[key].patientView.patientInfo.phone}</h3>
+            <h3>{lang.patientView.patientInfo.phone}</h3>
             <TextField
                 disabled={!edit}
                 className={edit ? 'active-input' : 'input-field'}
@@ -237,14 +234,14 @@ const MedicalInfo = (props) => {
                     variant="contained"
                 >
                     <input type="file" style={{ display: 'none' }} />
-                    {lang[key].components.button.upload}
+                    {lang.components.button.upload}
                 </Button>
             </div>
             <div className="patient-divider-wrapper">
-                <h2>{lang[key].patientView.patientInfo.informationSection}</h2>
+                <h2>{lang.patientView.patientInfo.informationSection}</h2>
                 <Divider className="patient-divider" />
             </div>
-            <h3>{lang[key].patientView.patientInfo.deliverySection}</h3>
+            <h3>{lang.patientView.patientInfo.deliverySection}</h3>
             <RadioGroup
                 style={{ maxWidth: 'fit-content' }}
                 value={delivery}
@@ -252,22 +249,22 @@ const MedicalInfo = (props) => {
             >
                 <FormControlLabel
                     disabled={!edit}
-                    value={lang[key].patientView.patientInfo.handDelivery}
+                    value={lang.patientView.patientInfo.handDelivery}
                     control={<Radio value="delivery" color="primary" />}
-                    label={lang[key].patientView.patientInfo.handDelivery}
+                    label={lang.patientView.patientInfo.handDelivery}
                 />
                 <FormControlLabel
                     disabled={!edit}
-                    value={lang[key].patientView.patientInfo.pickup}
+                    value={lang.patientView.patientInfo.pickup}
                     control={<Radio value="pickup" color="primary" />}
-                    label={lang[key].patientView.patientInfo.pickup}
+                    label={lang.patientView.patientInfo.pickup}
                 />
             </RadioGroup>
             <Notes
                 name="notes"
                 disabled={!edit}
                 state={setNotes}
-                title={lang[key].components.notes.title}
+                title={lang.components.notes.title}
                 value={notes}
             />
             <BottomBar
@@ -278,7 +275,7 @@ const MedicalInfo = (props) => {
                 status={props.status}
                 edit={edit}
                 setEdit={setEdit}
-                lang={props.lang}
+                languageData={props.languageData}
             />
         </form>
     );

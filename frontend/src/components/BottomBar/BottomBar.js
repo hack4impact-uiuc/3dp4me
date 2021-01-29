@@ -7,8 +7,8 @@ import exclamation from '../../assets/exclamation.svg';
 import halfCircle from '../../assets/half-circle.svg';
 
 const BottomBar = (props) => {
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const statusIcons = {
         finished: <img alt="complete" src={check} className="status-icon" />,
@@ -32,11 +32,11 @@ const BottomBar = (props) => {
                     className="editor-section"
                     style={{ flexGrow: 1, color: 'black' }}
                 >
-                    {`${
-                        lang[key].components.bottombar.lastEdit.split('...')[0]
-                    } ${props.lastEditedBy} ${
-                        lang[key].components.bottombar.lastEdit.split('...')[1]
-                    } ${props.lastEdited}`}
+                    {`${lang.components.bottombar.lastEdit.split('...')[0]} ${
+                        props.lastEditedBy
+                    } ${lang.components.bottombar.lastEdit.split('...')[1]} ${
+                        props.lastEdited
+                    }`}
                 </div>
                 {props.edit ? (
                     <div>
@@ -49,39 +49,30 @@ const BottomBar = (props) => {
                                     defaultValue={props.status.value}
                                 >
                                     <MenuItem disabled value="default">
-                                        {lang[key].components.bottombar.default}
+                                        {lang.components.bottombar.default}
                                     </MenuItem>
                                     <MenuItem value="unfinished">
-                                        {
-                                            lang[key].components.bottombar
-                                                .unfinished
-                                        }
+                                        {lang.components.bottombar.unfinished}
                                     </MenuItem>
                                     <MenuItem value="partial">
-                                        {lang[key].components.bottombar.partial}
+                                        {lang.components.bottombar.partial}
                                     </MenuItem>
                                     <MenuItem value="finished">
-                                        {
-                                            lang[key].components.bottombar
-                                                .finished
-                                        }
+                                        {lang.components.bottombar.finished}
                                     </MenuItem>
                                 </Select>
                                 <Button
                                     className="save-button"
                                     onClick={() => props.save()}
                                 >
-                                    {lang[key].components.button.save}
+                                    {lang.components.button.save}
                                 </Button>
                                 <Button
                                     className="discard-button"
                                     onClick={() => props.discard.setState()}
                                 >
                                     <b>
-                                        {
-                                            lang[key].components.button.discard
-                                                .title
-                                        }
+                                        {lang.components.button.discard.title}
                                     </b>
                                 </Button>
                             </div>
@@ -94,39 +85,30 @@ const BottomBar = (props) => {
                                     defaultValue={props.status.value}
                                 >
                                     <MenuItem disabled value="default">
-                                        {lang[key].components.bottombar.default}
+                                        {lang.components.bottombar.default}
                                     </MenuItem>
                                     <MenuItem value="unfinished">
-                                        {
-                                            lang[key].components.bottombar
-                                                .unfinished
-                                        }
+                                        {lang.components.bottombar.unfinished}
                                     </MenuItem>
                                     <MenuItem value="partial">
-                                        {lang[key].components.bottombar.partial}
+                                        {lang.components.bottombar.partial}
                                     </MenuItem>
                                     <MenuItem value="finished">
-                                        {
-                                            lang[key].components.bottombar
-                                                .finished
-                                        }
+                                        {lang.components.bottombar.finished}
                                     </MenuItem>
                                 </Select>
                                 <Button
                                     className="save-button-ar"
                                     onClick={() => props.save()}
                                 >
-                                    {lang[key].components.button.save}
+                                    {lang.components.button.save}
                                 </Button>
                                 <Button
                                     className="discard-button"
                                     onClick={() => props.discard.setState()}
                                 >
                                     <b>
-                                        {
-                                            lang[key].components.button.discard
-                                                .title
-                                        }
+                                        {lang.components.button.discard.title}
                                     </b>
                                 </Button>
                             </div>
@@ -139,13 +121,13 @@ const BottomBar = (props) => {
                             style={{ display: 'flex', alignItems: 'center' }}
                         >
                             {statusIcons[props.status.value]}{' '}
-                            {lang[key].components.bottombar[props.status.value]}
+                            {lang.components.bottombar[props.status.value]}
                         </div>
                         <Button
                             className="edit-button"
                             onClick={() => props.setEdit(true)}
                         >
-                            {lang[key].components.button.edit}
+                            {lang.components.button.edit}
                         </Button>
                     </div>
                 )}

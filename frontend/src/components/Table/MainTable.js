@@ -40,8 +40,8 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 const MainTable = (props) => {
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const UNSORTED_DATA = props.patients;
     const { items, requestSort, sortConfig } = useSortableData(
@@ -58,7 +58,7 @@ const MainTable = (props) => {
                     width="16px"
                     src={finishedIcon}
                 />
-                {lang[key].components.bottombar.finished}
+                {lang.components.bottombar.finished}
             </div>
         ),
         'Partially Complete': (
@@ -69,7 +69,7 @@ const MainTable = (props) => {
                     width="16px"
                     src={partiallyIcon}
                 />{' '}
-                {lang[key].components.bottombar.partial}
+                {lang.components.bottombar.partial}
             </div>
         ),
         Unfinished: (
@@ -80,22 +80,22 @@ const MainTable = (props) => {
                     width="16px"
                     src={unfinishedIcon}
                 />{' '}
-                {lang[key].components.bottombar.unfinished}
+                {lang.components.bottombar.unfinished}
             </div>
         ),
         Active: (
             <div style={{ color: '#65d991' }}>
-                {lang[key].components.bottombar.active}
+                {lang.components.bottombar.active}
             </div>
         ),
         Archived: (
             <div style={{ color: 'black' }}>
-                <b>{lang[key].components.bottombar.archived}</b>
+                <b>{lang.components.bottombar.archived}</b>
             </div>
         ),
         Feedback: (
             <div style={{ color: '#5395f8' }}>
-                {lang[key].components.bottombar.feedback}
+                {lang.components.bottombar.feedback}
             </div>
         ),
     };
@@ -190,7 +190,7 @@ const MainTable = (props) => {
                                                 src={Eyecon}
                                             />
                                         </IconButton>{' '}
-                                        {lang[key].components.table.view}
+                                        {lang.components.table.view}
                                     </Link>
                                 </StyledTableCell>
                             </StyledTableRow>

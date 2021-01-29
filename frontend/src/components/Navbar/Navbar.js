@@ -26,8 +26,9 @@ const Navbar = (props) => {
     const classes = useStyles();
     const [active, setActive] = useState('dashboard');
     const [anchorEl, setAnchorEl] = useState(null);
-    const lang = props.lang.data;
-    const { key } = props.lang;
+
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const handleAccountClick = (e) => {
         setAnchorEl(e.currentTarget);
@@ -53,7 +54,7 @@ const Navbar = (props) => {
                         className={`${classes.navTitle} nav-item`}
                         to="/"
                     >
-                        {lang[key].components.navbar.dashboard.navTitle}
+                        {lang.components.navbar.dashboard.navTitle}
                     </Link>
                     <Link
                         className={`nav-item ${
@@ -62,7 +63,7 @@ const Navbar = (props) => {
                         onClick={() => setActive('dashboard')}
                         to="/"
                     >
-                        {lang[key].components.navbar.dashboard.navTitle}
+                        {lang.components.navbar.dashboard.navTitle}
                     </Link>
                     <Link
                         className={`nav-item ${
@@ -71,7 +72,7 @@ const Navbar = (props) => {
                         onClick={() => setActive('patients')}
                         to="/patients"
                     >
-                        {lang[key].components.navbar.patients.navTitle}
+                        {lang.components.navbar.patients.navTitle}
                     </Link>
                     <Link
                         className={`nav-item ${
@@ -80,7 +81,7 @@ const Navbar = (props) => {
                         onClick={() => setActive('metrics')}
                         to="/metrics"
                     >
-                        {lang[key].components.navbar.metrics.navTitle}
+                        {lang.components.navbar.metrics.navTitle}
                     </Link>
                     <Link
                         className={`nav-item ${
@@ -89,7 +90,7 @@ const Navbar = (props) => {
                         onClick={() => setActive('account')}
                         to="/account"
                     >
-                        {lang[key].components.navbar.accountManagement.navTitle}
+                        {lang.components.navbar.accountManagement.navTitle}
                     </Link>
                     <AccountCircleIcon
                         className="accountCircle"
@@ -100,8 +101,8 @@ const Navbar = (props) => {
                     <AccountDropdown
                         anchorEl={anchorEl}
                         handleClose={handleAccountClose}
-                        lang={props.lang}
-                        setLang={props.setLang}
+                        languageData={props.languageData}
+                        setLang={props.setSelectedLang}
                         username={props.username}
                         userEmail={props.userEmail}
                     />

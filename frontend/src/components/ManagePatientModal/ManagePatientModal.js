@@ -10,8 +10,8 @@ import './ManagePatientModal.scss';
 const ManagePatientModal = (props) => {
     const [patientStatus, setPatientStatus] = useState('active');
 
-    const lang = props.lang.data;
-    const { key } = props.lang;
+    const key = props.languageData.selectedLanguage;
+    const lang = props.languageData.translations[key];
 
     const handleManagePatientStatus = (e) => {
         setPatientStatus(e.target.value);
@@ -23,16 +23,14 @@ const ManagePatientModal = (props) => {
 
     const handleDeletePatient = () => {
         swal({
-            title: lang[key].components.swal.managePatient.confirmDeleteMsg,
+            title: lang.components.swal.managePatient.confirmDeleteMsg,
             icon: 'warning',
             buttons: true,
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
                 swal({
-                    title:
-                        lang[key].components.swal.managePatient
-                            .deleteSuccessMsg,
+                    title: lang.components.swal.managePatient.deleteSuccessMsg,
                     icon: 'success',
                 }).then(() => {
                     // TODO: call delete patient endpoint
@@ -46,7 +44,7 @@ const ManagePatientModal = (props) => {
         const name = document.getElementById('manage-patient-name').value;
         const dob = document.getElementById('manage-patient-dob').value;
         // TODO: call edit patient endpoint with new name / dob / patientStatus
-        swal(lang[key].components.swal.managePatient.successMsg, '', 'success');
+        swal(lang.components.swal.managePatient.successMsg, '', 'success');
     };
 
     return (
@@ -56,33 +54,27 @@ const ManagePatientModal = (props) => {
             }`}
         >
             <div className="manage-patient-header">
-                <h2>{lang[key].components.swal.managePatient.title}</h2>
+                <h2>{lang.components.swal.managePatient.title}</h2>
                 <Button onClick={handleManagePatientClose}>
                     <CloseIcon />
                 </Button>
             </div>
             <div className="profile-information-wrapper">
-                <h3>
-                    {lang[key].components.swal.managePatient.profileInformation}
-                </h3>
-                <p>{lang[key].components.swal.managePatient.name}</p>
+                <h3>{lang.components.swal.managePatient.profileInformation}</h3>
+                <p>{lang.components.swal.managePatient.name}</p>
                 <TextField
                     id="manage-patient-name"
                     defaultValue={patientFile.patientInfo.name}
                 />
-                <p>{lang[key].components.swal.managePatient.dob}</p>
+                <p>{lang.components.swal.managePatient.dob}</p>
                 <TextField
                     id="manage-patient-dob"
                     defaultValue={patientFile.patientInfo.dob}
                 />
             </div>
             <div className="profile-management-wrapper">
-                <h3>
-                    {lang[key].components.swal.managePatient.profileManagement}
-                </h3>
-                <p>
-                    {lang[key].components.swal.managePatient.archiveInformation}
-                </p>
+                <h3>{lang.components.swal.managePatient.profileManagement}</h3>
+                <p>{lang.components.swal.managePatient.archiveInformation}</p>
                 <div
                     className="profile-management-radio-button-group"
                     onChange={handleManagePatientStatus}
@@ -94,7 +86,7 @@ const ManagePatientModal = (props) => {
                             name="status"
                             checked={patientStatus === 'active'}
                         />{' '}
-                        {lang[key].components.swal.managePatient.active}
+                        {lang.components.swal.managePatient.active}
                     </div>
                     <div>
                         <input
@@ -103,7 +95,7 @@ const ManagePatientModal = (props) => {
                             name="status"
                             checked={patientStatus === 'feedback'}
                         />{' '}
-                        {lang[key].components.swal.managePatient.feedback}
+                        {lang.components.swal.managePatient.feedback}
                     </div>
                     <div>
                         <input
@@ -112,7 +104,7 @@ const ManagePatientModal = (props) => {
                             name="status"
                             checked={patientStatus === 'archived'}
                         />{' '}
-                        {lang[key].components.swal.managePatient.archive}
+                        {lang.components.swal.managePatient.archive}
                     </div>
                 </div>
             </div>
@@ -121,14 +113,12 @@ const ManagePatientModal = (props) => {
                     key === 'AR' ? 'manage-patient-delete-ar' : ''
                 }`}
             >
-                <p>
-                    {lang[key].components.swal.managePatient.deleteInformation}
-                </p>
+                <p>{lang.components.swal.managePatient.deleteInformation}</p>
                 <Button
                     className="manage-patient-delete-button"
                     onClick={handleDeletePatient}
                 >
-                    {lang[key].components.swal.managePatient.buttons.delete}
+                    {lang.components.swal.managePatient.buttons.delete}
                 </Button>
             </div>
             <div className="manage-patient-footer">
@@ -136,7 +126,7 @@ const ManagePatientModal = (props) => {
                     className="manage-patient-save-button"
                     onClick={handleManagePatientSave}
                 >
-                    {lang[key].components.swal.managePatient.buttons.save}
+                    {lang.components.swal.managePatient.buttons.save}
                 </Button>
             </div>
         </div>
