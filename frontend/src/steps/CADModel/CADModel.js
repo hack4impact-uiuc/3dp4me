@@ -6,7 +6,6 @@ import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import './CADModel.scss';
-
 import {
     downloadFile,
     uploadFile,
@@ -14,8 +13,14 @@ import {
     updateStage,
 } from '../../utils/api';
 
-const CADModel = (props) => {
-    const [info, setInfo] = useState(props.info);
+const CADModel = ({
+    languageData,
+    id,
+    updatePatientFile,
+    status,
+    information,
+}) => {
+    const [info, setInfo] = useState(information);
     const stageName = 'modelInfo';
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
@@ -38,37 +43,34 @@ const CADModel = (props) => {
                 return filename.startsWith('RIGHT_');
             }),
     );
-    const formFields = {
-        notes: CADNotes,
-    };
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const handleDownload = (fileName) => {
-        downloadFile(props.id, stageName, fileName);
+        downloadFile(id, stageName, fileName);
     };
 
     const handleLeftDelete = async (fileName) => {
-        deleteFile(props.id, stageName, fileName);
+        deleteFile(id, stageName, fileName);
         setLeftCADFiles(leftCADFiles.filter((file) => file !== fileName));
         const info_copy = info;
         info_copy.files = info_copy.files.filter(
             (file_info) => file_info.filename != fileName,
         );
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     const handleRightDelete = async (fileName) => {
-        deleteFile(props.id, stageName, fileName);
+        deleteFile(id, stageName, fileName);
         setRightCADFiles(rightCADFiles.filter((file) => file !== fileName));
         const info_copy = info;
         info_copy.files = info_copy.files.filter(
             (file_info) => file_info.filename != fileName,
         );
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     const handleLeftUpload = async (e) => {
@@ -77,7 +79,7 @@ const CADModel = (props) => {
             files.concat(`LEFT_${fileToUpload.name.toUpperCase()}`),
         );
         const res = await uploadFile(
-            props.id,
+            id,
             stageName,
             fileToUpload,
             `LEFT_${fileToUpload.name.toUpperCase()}`,
@@ -89,7 +91,7 @@ const CADModel = (props) => {
             uploadDate: res.data.data.uploadName,
         });
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     const handleRightUpload = async (e) => {
@@ -98,7 +100,7 @@ const CADModel = (props) => {
             files.concat(`RIGHT_${fileToUpload.name.toUpperCase()}`),
         );
         const res = await uploadFile(
-            props.id,
+            id,
             stageName,
             fileToUpload,
             `RIGHT_${fileToUpload.name.toUpperCase()}`,
@@ -110,24 +112,24 @@ const CADModel = (props) => {
             uploadDate: res.data.data.uploadName,
         });
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     useEffect(() => {
         setCADNotes(info.notes);
     }, [trigger]);
 
-    const saveData = (e) => {
+    const saveData = () => {
         const info_copy = info;
         info_copy.notes = CADNotes;
         setInfo(info_copy);
-        updateStage(props.id, stageName, info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updateStage(id, stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.model, '', 'success');
     };
 
-    const discardData = (e) => {
+    const discardData = () => {
         swal({
             title: lang.components.button.discard.question,
             text: lang.components.button.discard.warningMessage,
@@ -156,7 +158,7 @@ const CADModel = (props) => {
             <p>Last edited by Evan Eckels on 10/05/2020 9:58PM</p>
             <div className="cad-files">
                 <Files
-                    languageData={props.languageData}
+                    languageData={languageData}
                     title={lang.patientView.CADModeling.fileHeaderLeft}
                     fileNames={leftCADFiles}
                     handleDownload={handleDownload}
@@ -164,7 +166,7 @@ const CADModel = (props) => {
                     handleDelete={handleLeftDelete}
                 />
                 <Files
-                    languageData={props.languageData}
+                    languageData={languageData}
                     title={lang.patientView.CADModeling.fileHeaderRight}
                     fileNames={rightCADFiles}
                     handleDownload={handleDownload}
@@ -183,10 +185,10 @@ const CADModel = (props) => {
                 lastEdited={info.lastEdited}
                 discard={{ state: trigger, setState: discardData }}
                 save={saveData}
-                status={props.status}
+                status={status}
                 edit={edit}
                 setEdit={setEdit}
-                languageData={props.languageData}
+                languageData={languageData}
             />
         </div>
     );

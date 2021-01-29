@@ -13,8 +13,14 @@ import {
     updateStage,
 } from '../../utils/api';
 
-const EarScan = (props) => {
-    const [info, setInfo] = useState(props.info);
+const EarScan = ({
+    information,
+    status,
+    languageData,
+    id,
+    updatePatientFile,
+}) => {
+    const [info, setInfo] = useState(information);
     const stageName = 'earScanInfo';
     const [trigger, reset] = useState(true);
     const [notes, setNotes] = useState('');
@@ -38,33 +44,33 @@ const EarScan = (props) => {
             }),
     );
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const handleDownload = (fileName) => {
-        downloadFile(props.id, stageName, fileName);
+        downloadFile(id, stageName, fileName);
     };
 
     const handleLeftDelete = async (fileName) => {
-        deleteFile(props.id, stageName, fileName);
+        deleteFile(id, stageName, fileName);
         setLeftEarFiles(leftEarFiles.filter((file) => file !== fileName));
         const info_copy = info;
         info_copy.files = info_copy.files.filter(
             (file_info) => file_info.filename != fileName,
         );
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     const handleRightDelete = async (fileName) => {
-        deleteFile(props.id, stageName, fileName);
+        deleteFile(id, stageName, fileName);
         setRightEarFiles(rightEarFiles.filter((file) => file !== fileName));
         const info_copy = info;
         info_copy.files = info_copy.files.filter(
             (file_info) => file_info.filename != fileName,
         );
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     const handleLeftUpload = async (e) => {
@@ -74,7 +80,7 @@ const EarScan = (props) => {
             files.concat(`LEFT_${fileToUpload.name.toUpperCase()}`),
         );
         const res = await uploadFile(
-            props.id,
+            id,
             stageName,
             fileToUpload,
             `LEFT_${fileToUpload.name.toUpperCase()}`,
@@ -86,7 +92,7 @@ const EarScan = (props) => {
             uploadDate: res.data.data.uploadName,
         });
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     const handleRightUpload = async (e) => {
@@ -96,7 +102,7 @@ const EarScan = (props) => {
             files.concat(`RIGHT_${fileToUpload.name.toUpperCase()}`),
         );
         const res = await uploadFile(
-            props.id,
+            id,
             stageName,
             fileToUpload,
             `RIGHT_${fileToUpload.name.toUpperCase()}`,
@@ -108,7 +114,7 @@ const EarScan = (props) => {
             uploadDate: res.data.data.uploadName,
         });
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     useEffect(() => {
@@ -119,8 +125,8 @@ const EarScan = (props) => {
         const info_copy = info;
         info_copy.notes = notes;
         setInfo(info_copy);
-        updateStage(props.id, stageName, info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updateStage(id, stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.earScan, '', 'success');
     };
@@ -155,7 +161,7 @@ const EarScan = (props) => {
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
             <div className="ear-scan-files">
                 <Files
-                    languageData={props.languageData}
+                    languageData={languageData}
                     title={lang.patientView.earScan.fileHeaderLeft}
                     fileNames={leftEarFiles}
                     handleDownload={handleDownload}
@@ -163,7 +169,7 @@ const EarScan = (props) => {
                     handleDelete={handleLeftDelete}
                 />
                 <Files
-                    languageData={props.languageData}
+                    languageData={languageData}
                     title={lang.patientView.earScan.fileHeaderRight}
                     fileNames={rightEarFiles}
                     handleDownload={handleDownload}
@@ -182,10 +188,10 @@ const EarScan = (props) => {
                 lastEdited={info.lastEdited}
                 discard={{ state: trigger, setState: discardData }}
                 save={saveData}
-                status={props.status}
+                status={status}
                 edit={edit}
                 setEdit={setEdit}
-                languageData={props.languageData}
+                languageData={languageData}
             />
         </div>
     );

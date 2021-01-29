@@ -8,9 +8,15 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import './Feedback.scss';
 import { updateStage } from '../../utils/api';
 
-const Feedback = (props) => {
+const Feedback = ({
+    information,
+    status,
+    languageData,
+    id,
+    updatePatientFile,
+}) => {
     const stageName = 'feedbackInfo';
-    const [info, setInfo] = useState(props.info);
+    const [info, setInfo] = useState(information);
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
     const [intialFeedback, setInitialFeedback] = useState('');
@@ -22,8 +28,8 @@ const Feedback = (props) => {
     const [twoYearFeedback, setTwoYearFeedback] = useState('');
     const [twoYearFeedbackDate, setTwoYearFeedbackDate] = useState('');
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     useEffect(() => {
         setInitialFeedback(info.initial.notes);
@@ -47,8 +53,8 @@ const Feedback = (props) => {
         info.twoYear.notes = twoYearFeedback;
         info.twoYear.date = twoYearFeedbackDate;
         setInfo(info_copy);
-        updateStage(props.id, stageName, info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updateStage(id, stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.feedback, '', 'success');
     };
@@ -150,10 +156,10 @@ const Feedback = (props) => {
                 lastEdited={info.lastEdited}
                 discard={{ state: trigger, setState: discardData }}
                 save={saveData}
-                status={props.status}
+                status={status}
                 edit={edit}
                 setEdit={setEdit}
-                languageData={props.languageData}
+                languageData={languageData}
             />
         </div>
     );

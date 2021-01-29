@@ -12,8 +12,16 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import './Delivery.scss';
 import { updateStage } from '../../utils/api';
 
-const Delivery = (props) => {
-    const [info, setInfo] = useState(props.info);
+const Delivery = ({
+    information,
+    status,
+    address,
+    deliveryType,
+    languageData,
+    id,
+    updatePatientFile,
+}) => {
+    const [info, setInfo] = useState(information);
     const stageName = 'deliveryInfo';
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
@@ -24,8 +32,8 @@ const Delivery = (props) => {
         deliveryStatus,
     };
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     useEffect(() => {
         // setAddress(info.address);
@@ -36,8 +44,8 @@ const Delivery = (props) => {
         const info_copy = info;
         info_copy.deliveryStatus = deliveryStatus;
         setInfo(info_copy);
-        updateStage(props.id, stageName, info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updateStage(id, stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.delivery, '', 'success');
     };
@@ -78,9 +86,9 @@ const Delivery = (props) => {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
             /> */}
-            <p>{props.address}</p>
+            <p>{address}</p>
             <div className="delivery-address-label">
-                {lang.patientView.delivery.addressLabel + props.deliveryType}
+                {lang.patientView.delivery.addressLabel + deliveryType}
             </div>
             <h3>{lang.patientView.delivery.status}</h3>
             <FormControl disabled={!edit} component="fieldset">
@@ -121,10 +129,10 @@ const Delivery = (props) => {
                 lastEdited={info.lastEdited}
                 discard={{ state: trigger, setState: discardData }}
                 save={saveData}
-                status={props.status}
+                status={status}
                 edit={edit}
                 setEdit={setEdit}
-                languageData={props.languageData}
+                languageData={languageData}
             />
         </div>
     );

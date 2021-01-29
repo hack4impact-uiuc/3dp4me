@@ -1,16 +1,12 @@
 import axios from 'axios';
 
-import {
-    getCurrentUserInfo,
-    getCredentials,
-    getCurrentSession,
-} from '../aws/aws-helper';
+import { getCredentials, getCurrentSession } from '../aws/aws-helper';
 
 const FileDownload = require('js-file-download');
-
 const instance = axios.create({
     baseURL: 'http://localhost:8080/api',
 });
+
 instance.interceptors.request.use(
     async (config) => {
         const {
@@ -59,10 +55,10 @@ export const getPatientById = async (id) => {
     );
 };
 
-export const newPatient = async (patient_info) => {
+export const newPatient = async (patientInfo) => {
     const requestString = `/patients/`;
     return instance
-        .post(requestString, patient_info) // TODO: use AWS userId
+        .post(requestString, patientInfo) // TODO: use AWS userId
         .then(
             (res) => res.data,
             (err) => {
@@ -72,10 +68,10 @@ export const newPatient = async (patient_info) => {
         );
 };
 
-export const updateStage = async (patientId, stage, updated_stage) => {
+export const updateStage = async (patientId, stage, updatedStage) => {
     const requestString = `/patients/${patientId}/${stage}`;
     return instance
-        .post(requestString, updated_stage) // TODO: use AWS userId
+        .post(requestString, updatedStage) // TODO: use AWS userId
         .then(
             (res) => res.data,
             (err) => {

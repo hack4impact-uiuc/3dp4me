@@ -19,7 +19,13 @@ import Notes from '../../components/Notes/Notes';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { updateStage } from '../../utils/api';
 
-const MedicalInfo = (props) => {
+const MedicalInfo = ({
+    information,
+    status,
+    languageData,
+    id,
+    updatePatientFile,
+}) => {
     const intialInfo = {
         name: '',
         dob: '',
@@ -35,7 +41,7 @@ const MedicalInfo = (props) => {
     const stageName = 'patientInfo';
 
     const [trigger, reset] = useState(true);
-    const [info, setInfo] = useState(props.info);
+    const [info, setInfo] = useState(information);
     const [edit, setEdit] = useState(false);
     const [name, setName] = useState('');
     const [dob, setDOB] = useState('');
@@ -48,21 +54,9 @@ const MedicalInfo = (props) => {
     const [delivery, setDelivery] = useState('');
     const [notes, setNotes] = useState('');
     const [loading, setLoading] = useState(intialInfo.name.length === 0);
-    const formFields = {
-        name,
-        dob,
-        ssn,
-        address,
-        phone,
-        emName,
-        relationship: emRelationship,
-        emPhone,
-        delivery,
-        notes,
-    };
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     useEffect(() => {
         setName(info.name);
@@ -76,7 +70,7 @@ const MedicalInfo = (props) => {
         setDelivery(info.delivery);
         setNotes(info.notes);
         setLoading(false);
-    }, [trigger]);
+    }, [trigger, info]);
 
     const handleDelivery = (event) => {
         setDelivery(event.target.value);
@@ -119,8 +113,8 @@ const MedicalInfo = (props) => {
         info.delivery = delivery;
         info.notes = notes;
         setInfo(info_copy);
-        updateStage(props.id, stageName, info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updateStage(id, stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };
@@ -271,10 +265,10 @@ const MedicalInfo = (props) => {
                 lastEdited={info.lastEdited}
                 discard={{ state: trigger, setState: discardData }}
                 save={saveData}
-                status={props.status}
+                status={status}
                 edit={edit}
                 setEdit={setEdit}
-                languageData={props.languageData}
+                languageData={languageData}
             />
         </form>
     );

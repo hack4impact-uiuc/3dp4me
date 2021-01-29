@@ -30,7 +30,7 @@ const theme = createMuiTheme({
     direction: 'rtl',
 });
 
-const Controller = (props) => {
+const Controller = ({ languageData }) => {
     const [expanded, setExpanded] = useState(false);
     const [patient, setPatient] = useState();
     const [loading, setLoading] = useState(true);
@@ -46,14 +46,14 @@ const Controller = (props) => {
     const params = useParams();
     const { id } = params;
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const managePatient = () => {
         reactSwal({
             className: 'controller-manage-patient-swal',
             buttons: {},
-            content: <ManagePatientModal languageData={props.languageData} />,
+            content: <ManagePatientModal languageData={languageData} />,
         });
     };
 
@@ -364,7 +364,7 @@ const Controller = (props) => {
                     }`}
                 >
                     <ToggleButtons
-                        languageData={props.languageData}
+                        languageData={languageData}
                         step={step}
                         handleStep={handleStep}
                         medStatus={medStatus}
@@ -378,12 +378,12 @@ const Controller = (props) => {
                     <div className={`steps ${key === 'AR' ? 'steps-ar' : ''}`}>
                         {step === 'info' ? (
                             <MedicalInfo
-                                info={patientFile?.patientInfo}
+                                information={patientFile?.patientInfo}
                                 status={{
                                     value: medStatus,
                                     setStatus: handleMedStatus,
                                 }}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
@@ -392,12 +392,12 @@ const Controller = (props) => {
                         )}
                         {step === 'scan' ? (
                             <EarScan
-                                info={patientFile?.earScanInfo}
+                                information={patientFile?.earScanInfo}
                                 status={{
                                     value: earScanStatus,
                                     setStatus: handleEarScanStatus,
                                 }}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
@@ -406,12 +406,12 @@ const Controller = (props) => {
                         )}
                         {step === 'cad' ? (
                             <CADModel
-                                info={patientFile?.modelInfo}
+                                information={patientFile?.modelInfo}
                                 status={{
                                     value: modelStatus,
                                     setStatus: handleModelStatus,
                                 }}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
@@ -425,7 +425,7 @@ const Controller = (props) => {
                                     value: printStatus,
                                     setStatus: handlePrintStatus,
                                 }}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
@@ -434,12 +434,12 @@ const Controller = (props) => {
                         )}
                         {step === 'processing' ? (
                             <PostProcessing
-                                info={patientFile?.processingInfo}
+                                information={patientFile?.processingInfo}
                                 status={{
                                     value: processingStatus,
                                     setStatus: handleProcessingStatus,
                                 }}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
@@ -448,12 +448,12 @@ const Controller = (props) => {
                         )}
                         {step === 'delivery' ? (
                             <Delivery
-                                info={patientFile?.deliveryInfo}
+                                information={patientFile?.deliveryInfo}
                                 status={{
                                     value: deliveryStatus,
                                     setStatus: handleDeliveryStatus,
                                 }}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                                 address={patientFile?.patientInfo.address}
@@ -464,12 +464,12 @@ const Controller = (props) => {
                         )}
                         {step === 'feedback' ? (
                             <Feedback
-                                info={patientFile?.feedbackInfo}
+                                information={patientFile?.feedbackInfo}
                                 status={{
                                     value: feedbackStatus,
                                     setStatus: handleFeedbackStatus,
                                 }}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />

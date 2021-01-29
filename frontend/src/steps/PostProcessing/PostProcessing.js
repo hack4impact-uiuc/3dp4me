@@ -12,8 +12,14 @@ import {
     updateStage,
 } from '../../utils/api';
 
-const PostProcessing = (props) => {
-    const [info, setInfo] = useState(props.info);
+const PostProcessing = ({
+    information,
+    status,
+    languageData,
+    id,
+    updatePatientFile,
+}) => {
+    const [info, setInfo] = useState(information);
     const stageName = 'processingInfo';
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
@@ -27,22 +33,22 @@ const PostProcessing = (props) => {
         notes: processingNotes,
     };
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const handleDownload = (fileName) => {
-        downloadFile(props.id, stageName, fileName);
+        downloadFile(id, stageName, fileName);
     };
 
     const handleDelete = async (fileName) => {
-        deleteFile(props.id, stageName, fileName);
+        deleteFile(id, stageName, fileName);
         setProcessingFiles(processingFiles.filter((file) => file !== fileName));
         const info_copy = info;
         info_copy.files = info_copy.files.filter(
             (file_info) => file_info.filename != fileName,
         );
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     const handleUpload = async (e) => {
@@ -52,7 +58,7 @@ const PostProcessing = (props) => {
             files.concat(fileToUpload.name.toUpperCase()),
         );
         const res = await uploadFile(
-            props.id,
+            id,
             stageName,
             fileToUpload,
             fileToUpload.name.toUpperCase(),
@@ -64,7 +70,7 @@ const PostProcessing = (props) => {
             uploadDate: res.data.data.uploadName,
         });
         setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
     };
 
     useEffect(() => {
@@ -75,8 +81,8 @@ const PostProcessing = (props) => {
         const info_copy = info;
         info_copy.notes = processingNotes;
         setInfo(info_copy);
-        updateStage(props.id, stageName, info_copy);
-        props.updatePatientFile(stageName, info_copy);
+        updateStage(id, stageName, info_copy);
+        updatePatientFile(stageName, info_copy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.processing, '', 'success');
     };
@@ -109,7 +115,7 @@ const PostProcessing = (props) => {
             <h1>{lang.patientView.postProcessing.title}</h1>
             <p>Last edited by Im Tired on 10/05/2020 9:58PM</p>
             <Files
-                languageData={props.languageData}
+                languageData={languageData}
                 title={lang.components.file.title}
                 fileNames={processingFiles}
                 handleDownload={handleDownload}
@@ -127,10 +133,10 @@ const PostProcessing = (props) => {
                 lastEdited={info.lastEdited}
                 discard={{ state: trigger, setState: discardData }}
                 save={saveData}
-                status={props.status}
+                status={status}
                 edit={edit}
                 setEdit={setEdit}
-                languageData={props.languageData}
+                languageData={languageData}
             />
         </div>
     );
