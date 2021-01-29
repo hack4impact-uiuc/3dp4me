@@ -58,23 +58,23 @@ const CADModel = ({
     const handleLeftDelete = async (fileName) => {
         deleteFile(id, stageName, fileName);
         setLeftCADFiles(leftCADFiles.filter((file) => file !== fileName));
-        const info_copy = info;
-        info_copy.files = info_copy.files.filter(
-            (file_info) => file_info.filename != fileName,
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.filter(
+            (file_info) => file_info.filename !== fileName,
         );
-        setInfo(info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
     };
 
     const handleRightDelete = async (fileName) => {
         deleteFile(id, stageName, fileName);
         setRightCADFiles(rightCADFiles.filter((file) => file !== fileName));
-        const info_copy = info;
-        info_copy.files = info_copy.files.filter(
-            (file_info) => file_info.filename != fileName,
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.filter(
+            (file_info) => file_info.filename !== fileName,
         );
-        setInfo(info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
     };
 
     const handleLeftUpload = async (e) => {
@@ -88,14 +88,14 @@ const CADModel = ({
             fileToUpload,
             `LEFT_${fileToUpload.name.toUpperCase()}`,
         );
-        const info_copy = info;
-        info_copy.files = info_copy.files.concat({
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
             uploadDate: res.data.data.uploadName,
         });
-        setInfo(info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
     };
 
     const handleRightUpload = async (e) => {
@@ -109,14 +109,14 @@ const CADModel = ({
             fileToUpload,
             `RIGHT_${fileToUpload.name.toUpperCase()}`,
         );
-        const info_copy = info;
-        info_copy.files = info_copy.files.concat({
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
             uploadDate: res.data.data.uploadName,
         });
-        setInfo(info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
     };
 
     useEffect(() => {
@@ -124,11 +124,11 @@ const CADModel = ({
     }, [trigger]);
 
     const saveData = () => {
-        const info_copy = info;
-        info_copy.notes = CADNotes;
-        setInfo(info_copy);
-        updateStage(id, stageName, info_copy);
-        updatePatientFile(stageName, info_copy);
+        const infoCopy = info;
+        infoCopy.notes = CADNotes;
+        setInfo(infoCopy);
+        updateStage(id, stageName, infoCopy);
+        updatePatientFile(stageName, infoCopy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.model, '', 'success');
     };

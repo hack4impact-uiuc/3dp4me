@@ -46,8 +46,8 @@ const Feedback = ({
         setTwoYearFeedbackDate(info.twoYear.date);
     }, [trigger]);
 
-    const saveData = (e) => {
-        const info_copy = info;
+    const saveData = () => {
+        const infoCopy = info;
         info.initial.notes = intialFeedback;
         info.initial.date = initialFeedbackDate;
         info.sixMonth.notes = sixMonthFeedback;
@@ -56,14 +56,14 @@ const Feedback = ({
         info.oneYear.date = oneYearFeedbackDate;
         info.twoYear.notes = twoYearFeedback;
         info.twoYear.date = twoYearFeedbackDate;
-        setInfo(info_copy);
-        updateStage(id, stageName, info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updateStage(id, stageName, infoCopy);
+        updatePatientFile(stageName, infoCopy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.feedback, '', 'success');
     };
 
-    const discardData = (e) => {
+    const discardData = () => {
         swal({
             title: lang.components.button.discard.question,
             text: lang.components.button.discard.warningMessage,

@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Snackbar, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
 import MainTable from '../../components/Table/MainTable';
-
 import './Patients.scss';
 import MuiAlert from '@material-ui/lab/Alert';
 import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
-
 import search from '../../assets/search.svg';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import archive from '../../assets/archive.svg';
 import { getAllPatients } from '../../utils/api';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     swalEditButton: {
         backgroundColor: '#5395F8',
         color: 'white',
@@ -86,7 +83,8 @@ const Patients = (props) => {
     };
 
     const createPatient = (e) => {
-        const auto_id = Math.random().toString(36).substr(2, 24);
+        // TODO: We need to check for ID conflicts
+        const autoId = Math.random().toString(36).substr(2, 24);
         reactSwal({
             buttons: {},
             content: (
@@ -159,7 +157,7 @@ const Patients = (props) => {
                             id="createId"
                             fullWidth
                             style={{ padding: 10 }}
-                            defaultValue={auto_id}
+                            defaultValue={autoId}
                             variant="outlined"
                         />
                     </div>
@@ -172,12 +170,12 @@ const Patients = (props) => {
                     >
                         <Button
                             className={classes.swalEditButton}
-                            onClick={(e) => createPatientHelper(true, auto_id)}
+                            onClick={() => createPatientHelper(true, autoId)}
                         >
                             {lang.components.swal.createPatient.buttons.edit}
                         </Button>
                         <Button
-                            onClick={(e) => createPatientHelper(false, auto_id)}
+                            onClick={() => createPatientHelper(false, autoId)}
                         >
                             {lang.components.swal.createPatient.buttons.noEdit}
                         </Button>

@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import swal from 'sweetalert';
 import PropTypes from 'prop-types';
-
 import {
     LanguageDataType,
     StringGetterSetterType,
@@ -29,13 +28,7 @@ const Delivery = ({
     const stageName = 'deliveryInfo';
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
-    // const [address, setAddress] = useState("");
     const [deliveryStatus, setDeliveryStatus] = useState('');
-    const formFields = {
-        // address: address,
-        deliveryStatus,
-    };
-
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
@@ -44,17 +37,17 @@ const Delivery = ({
         setDeliveryStatus(info.deliveryStatus);
     }, [trigger]);
 
-    const saveData = (e) => {
-        const info_copy = info;
-        info_copy.deliveryStatus = deliveryStatus;
-        setInfo(info_copy);
-        updateStage(id, stageName, info_copy);
-        updatePatientFile(stageName, info_copy);
+    const saveData = () => {
+        const infoCopy = info;
+        infoCopy.deliveryStatus = deliveryStatus;
+        setInfo(infoCopy);
+        updateStage(id, stageName, infoCopy);
+        updatePatientFile(stageName, infoCopy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.delivery, '', 'success');
     };
 
-    const discardData = (e) => {
+    const discardData = () => {
         swal({
             title: lang.components.button.discard.question,
             text: lang.components.button.discard.warningMessage,

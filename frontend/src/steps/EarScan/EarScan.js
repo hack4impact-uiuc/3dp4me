@@ -31,8 +31,8 @@ const EarScan = ({
     const [edit, setEdit] = useState(false);
     const [leftEarFiles, setLeftEarFiles] = useState(
         info.files
-            .map((file_info) => {
-                return file_info.filename;
+            .map((fileInfo) => {
+                return fileInfo.filename;
             })
             .filter((filename) => {
                 return filename.startsWith('LEFT_');
@@ -40,8 +40,8 @@ const EarScan = ({
     );
     const [rightEarFiles, setRightEarFiles] = useState(
         info.files
-            .map((file_info) => {
-                return file_info.filename;
+            .map((fileInfo) => {
+                return fileInfo.filename;
             })
             .filter((filename) => {
                 return filename.startsWith('RIGHT_');
@@ -58,23 +58,23 @@ const EarScan = ({
     const handleLeftDelete = async (fileName) => {
         deleteFile(id, stageName, fileName);
         setLeftEarFiles(leftEarFiles.filter((file) => file !== fileName));
-        const info_copy = info;
-        info_copy.files = info_copy.files.filter(
-            (file_info) => file_info.filename != fileName,
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.filter(
+            (fileInfo) => fileInfo.filename !== fileName,
         );
-        setInfo(info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
     };
 
     const handleRightDelete = async (fileName) => {
         deleteFile(id, stageName, fileName);
         setRightEarFiles(rightEarFiles.filter((file) => file !== fileName));
-        const info_copy = info;
-        info_copy.files = info_copy.files.filter(
-            (file_info) => file_info.filename != fileName,
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.filter(
+            (fileInfo) => fileInfo.filename !== fileName,
         );
-        setInfo(info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
     };
 
     const handleLeftUpload = async (e) => {
@@ -89,14 +89,14 @@ const EarScan = ({
             fileToUpload,
             `LEFT_${fileToUpload.name.toUpperCase()}`,
         );
-        const info_copy = info;
-        info_copy.files = info_copy.files.concat({
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
             uploadDate: res.data.data.uploadName,
         });
-        setInfo(info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
     };
 
     const handleRightUpload = async (e) => {
@@ -111,31 +111,31 @@ const EarScan = ({
             fileToUpload,
             `RIGHT_${fileToUpload.name.toUpperCase()}`,
         );
-        const info_copy = info;
-        info_copy.files = info_copy.files.concat({
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
             uploadDate: res.data.data.uploadName,
         });
-        setInfo(info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
     };
 
     useEffect(() => {
         setNotes(info.notes);
     }, [trigger]);
 
-    const saveData = (e) => {
-        const info_copy = info;
-        info_copy.notes = notes;
-        setInfo(info_copy);
-        updateStage(id, stageName, info_copy);
-        updatePatientFile(stageName, info_copy);
+    const saveData = () => {
+        const infoCopy = info;
+        infoCopy.notes = notes;
+        setInfo(infoCopy);
+        updateStage(id, stageName, infoCopy);
+        updatePatientFile(stageName, infoCopy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.earScan, '', 'success');
     };
 
-    const discardData = (e) => {
+    const discardData = () => {
         swal({
             title: lang.components.button.discard.question,
             text: lang.components.button.discard.warningMessage,

@@ -5,10 +5,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
+import PropTypes from 'prop-types';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ToggleButtons.scss';
 
@@ -16,14 +16,13 @@ const ToggleButtons = ({
     languageData,
     handleStep,
     step,
-    medStatus,
-    processingStatus,
-    id,
-    modelStatus,
-    printStatus,
-    earScanStatus,
-    deliveryStatus,
-    feedbackStatus,
+    medStatus = '',
+    processingStatus = '',
+    modelStatus = '',
+    printStatus = '',
+    earScanStatus = '',
+    deliveryStatus = '',
+    feedbackStatus = '',
 }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -302,6 +301,15 @@ const ToggleButtons = ({
 
 ToggleButton.propTypes = {
     languageData: LanguageDataType.isRequired,
+    handleStep: PropTypes.func.isRequired,
+    step: PropTypes.string.isRequired,
+    medStatus: PropTypes.string,
+    processingStatus: PropTypes.string,
+    modelStatus: PropTypes.string,
+    printStatus: PropTypes.string,
+    earScanStatus: PropTypes.string,
+    deliveryStatus: PropTypes.string,
+    feedbackStatus: PropTypes.string,
 };
 
 export default ToggleButtons;

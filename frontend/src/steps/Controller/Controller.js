@@ -32,7 +32,6 @@ const theme = createMuiTheme({
 
 const Controller = ({ languageData }) => {
     const [expanded, setExpanded] = useState(false);
-    const [patient, setPatient] = useState();
     const [loading, setLoading] = useState(true);
     const [patientFile, setPatientFile] = useState();
     const [step, setStep] = useState('info');
@@ -64,21 +63,6 @@ const Controller = ({ languageData }) => {
     const handleStep = (event, newStep) => {
         if (newStep !== null) {
             setStep(newStep);
-            if (newStep === 'info') {
-                setPatient([]);
-            } else if (newStep === 'scan') {
-                setPatient([]);
-            } else if (newStep === 'cad') {
-                setPatient([]);
-            } else if (newStep === 'printing') {
-                setPatient([]);
-            } else if (newStep === 'processing') {
-                setPatient([]);
-            } else if (newStep === 'delivery') {
-                setPatient([]);
-            } else if (newStep === 'feedback') {
-                setPatient([]);
-            }
         }
     };
 

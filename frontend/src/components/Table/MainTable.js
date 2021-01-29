@@ -7,16 +7,17 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
 import { IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-
-import { LanguageDataType } from '../../utils/custom-proptypes';
+import {
+    LanguageDataType,
+    TableHeaderType,
+} from '../../utils/custom-proptypes';
 import Eyecon from '../../assets/view.svg';
-
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-
 import useSortableData from '../../hooks/useSortableData';
 import finishedIcon from '../../assets/check.svg';
 import partiallyIcon from '../../assets/half-circle.svg';
@@ -31,9 +32,6 @@ const StyledTableCell = withStyles((theme) => ({
 
 const StyledTableRow = withStyles((theme) => ({
     root: {
-        // '&:nth-of-type(odd)': {
-        //     backgroundColor: '#e5f0ff'
-        // },
         '&:hover': {
             backgroundColor: '#f0f0f0',
         },
@@ -205,6 +203,9 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
 
 MainTable.propTypes = {
     languageData: LanguageDataType.isRequired,
+    headers: PropTypes.arrayOf(TableHeaderType).isRequired,
+    rowIDs: PropTypes.arrayOf(PropTypes.string),
+    patients: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default MainTable;

@@ -104,8 +104,8 @@ const MedicalInfo = ({
         setEmPhone(e.target.value);
     };
 
-    const saveData = (e) => {
-        const info_copy = info;
+    const saveData = () => {
+        const infoCopy = info;
         info.name = name;
         info.dob = dob;
         info.ssn = ssn;
@@ -116,14 +116,14 @@ const MedicalInfo = ({
         info.emPhone = emPhone;
         info.delivery = delivery;
         info.notes = notes;
-        setInfo(info_copy);
-        updateStage(id, stageName, info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updateStage(id, stageName, infoCopy);
+        updatePatientFile(stageName, infoCopy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };
 
-    const discardData = (e) => {
+    const discardData = () => {
         swal({
             title: lang.components.button.discard.question,
             text: lang.components.button.discard.warningMessage,

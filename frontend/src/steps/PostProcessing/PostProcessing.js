@@ -29,14 +29,10 @@ const PostProcessing = ({
     const [edit, setEdit] = useState(false);
     const [processingNotes, setProcessingNotes] = useState('');
     const [processingFiles, setProcessingFiles] = useState(
-        info.files.map((file_info) => {
-            return file_info.filename;
+        info.files.map((fileInfo) => {
+            return fileInfo.filename;
         }),
     );
-    const formFields = {
-        notes: processingNotes,
-    };
-
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
@@ -47,12 +43,12 @@ const PostProcessing = ({
     const handleDelete = async (fileName) => {
         deleteFile(id, stageName, fileName);
         setProcessingFiles(processingFiles.filter((file) => file !== fileName));
-        const info_copy = info;
-        info_copy.files = info_copy.files.filter(
-            (file_info) => file_info.filename != fileName,
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.filter(
+            (fileInfo) => fileInfo.filename !== fileName,
         );
-        setInfo(info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
     };
 
     const handleUpload = async (e) => {
@@ -67,31 +63,31 @@ const PostProcessing = ({
             fileToUpload,
             fileToUpload.name.toUpperCase(),
         );
-        const info_copy = info;
-        info_copy.files = info_copy.files.concat({
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
             uploadDate: res.data.data.uploadName,
         });
-        setInfo(info_copy);
-        updatePatientFile(stageName, info_copy);
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
     };
 
     useEffect(() => {
         setProcessingNotes(info.notes);
     }, [trigger]);
 
-    const saveData = (e) => {
-        const info_copy = info;
-        info_copy.notes = processingNotes;
-        setInfo(info_copy);
-        updateStage(id, stageName, info_copy);
-        updatePatientFile(stageName, info_copy);
+    const saveData = () => {
+        const infoCopy = info;
+        infoCopy.notes = processingNotes;
+        setInfo(infoCopy);
+        updateStage(id, stageName, infoCopy);
+        updatePatientFile(stageName, infoCopy);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.processing, '', 'success');
     };
 
-    const discardData = (e) => {
+    const discardData = () => {
         swal({
             title: lang.components.button.discard.question,
             text: lang.components.button.discard.warningMessage,
