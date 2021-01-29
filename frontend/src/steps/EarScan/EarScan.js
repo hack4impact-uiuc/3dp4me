@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Fab, IconButton } from '@material-ui/core';
 import swal from 'sweetalert';
 
 import Notes from '../../components/Notes/Notes';
 import Files from '../../components/Files/Files';
-import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
 import BottomBar from '../../components/BottomBar/BottomBar';
-
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import './EarScan.scss';
 import {
     downloadFile,
@@ -194,6 +192,10 @@ const EarScan = (props) => {
             />
         </div>
     );
+};
+
+EarScan.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default EarScan;

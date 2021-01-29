@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Checkbox,
     FormControl,
     FormControlLabel,
-    FormGroup,
-    FormLabel,
     Radio,
     RadioGroup,
-    TextField,
 } from '@material-ui/core';
 import swal from 'sweetalert';
 
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import './Delivery.scss';
 import { updateStage } from '../../utils/api';
@@ -131,6 +128,10 @@ const Delivery = (props) => {
             />
         </div>
     );
+};
+
+Delivery.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default Delivery;

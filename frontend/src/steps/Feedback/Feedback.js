@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { TextField } from '@material-ui/core';
 import swal from 'sweetalert';
 
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import Notes from '../../components/Notes/Notes';
 import BottomBar from '../../components/BottomBar/BottomBar';
-
 import './Feedback.scss';
 import { updateStage } from '../../utils/api';
 
@@ -157,6 +157,10 @@ const Feedback = (props) => {
             />
         </div>
     );
+};
+
+Feedback.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default Feedback;

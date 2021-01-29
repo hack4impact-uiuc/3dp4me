@@ -3,8 +3,8 @@ import { Button, TextField } from '@material-ui/core';
 import swal from 'sweetalert';
 import CloseIcon from '@material-ui/icons/Close';
 
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import patientFile from '../../Test Data/patient.json';
-
 import './ManagePatientModal.scss';
 
 const ManagePatientModal = (props) => {
@@ -131,6 +131,10 @@ const ManagePatientModal = (props) => {
             </div>
         </div>
     );
+};
+
+ManagePatientModal.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default ManagePatientModal;

@@ -9,7 +9,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
-
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ToggleButtons.scss';
 
 const ToggleButtons = (props) => {
@@ -288,6 +288,10 @@ const ToggleButtons = (props) => {
             </div>
         </div>
     );
+};
+
+ToggleButton.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default ToggleButtons;

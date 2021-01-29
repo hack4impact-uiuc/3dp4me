@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
@@ -133,6 +134,10 @@ const PostProcessing = (props) => {
             />
         </div>
     );
+};
+
+PostProcessing.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default PostProcessing;

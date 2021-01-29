@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Button, IconButton, Snackbar, TextField } from '@material-ui/core';
+import { Button, Snackbar, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import MainTable from '../../components/Table/MainTable';
 
 import './Patients.scss';
 import MuiAlert from '@material-ui/lab/Alert';
-
-// import allpatients from '../../Test Data/all-patients.json';
 import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
 
 import search from '../../assets/search.svg';
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import archive from '../../assets/archive.svg';
 import { getAllPatients } from '../../utils/api';
 
@@ -312,6 +311,10 @@ const Patients = (props) => {
             )}
         </div>
     );
+};
+
+Patients.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default Patients;

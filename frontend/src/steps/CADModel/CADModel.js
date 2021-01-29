@@ -4,7 +4,7 @@ import swal from 'sweetalert';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
-
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import './CADModel.scss';
 
 import {
@@ -190,6 +190,10 @@ const CADModel = (props) => {
             />
         </div>
     );
+};
+
+CADModel.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default CADModel;

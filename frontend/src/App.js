@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Amplify, Auth, Hub } from 'aws-amplify';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import awsconfig from './aws/aws-exports.js';
 import Dashboard from './pages/Dashboard/Dashboard';
 import AccountManagement from './pages/AccountManagement/AccountManagment';
@@ -28,7 +29,7 @@ function App() {
 
     // Data is the raw JSON for EN and AR. Key is the currently selected selectedLanguage.
     const languageData = {
-        translations: translations,
+        translations,
         selectedLanguage: selectedLang,
     };
 

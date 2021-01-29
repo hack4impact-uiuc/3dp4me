@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
@@ -134,6 +135,10 @@ const BottomBar = (props) => {
             </Toolbar>
         </AppBar>
     );
+};
+
+BottomBar.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default BottomBar;

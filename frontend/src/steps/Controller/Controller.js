@@ -2,20 +2,18 @@ import React, { useEffect, useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import './Controller.scss';
 import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
     Button,
-    TextField,
 } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import reactSwal from '@sweetalert/with-react';
-import swal from 'sweetalert';
 import { useParams } from 'react-router-dom';
 
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import MedicalInfo from '../MedicalInfo/MedicalInfo';
 import EarScan from '../EarScan/EarScan';
 import CADModel from '../CADModel/CADModel';
@@ -23,7 +21,6 @@ import Printing from '../3DPrinting/Printing';
 import PostProcessing from '../PostProcessing/PostProcessing';
 import Delivery from '../Delivery/Delivery';
 import Feedback from '../Feedback/Feedback';
-import patientFiles from '../../Test Data/patient.json';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
 import { getPatientById, updateStage } from '../../utils/api';
@@ -485,6 +482,10 @@ const Controller = (props) => {
             </div>
         </LoadWrapper>
     );
+};
+
+Controller.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default Controller;

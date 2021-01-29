@@ -10,14 +10,13 @@ import {
     Backdrop,
 } from '@material-ui/core';
 
+import { LanguageDataType } from '../../utils/custom-proptypes';
+
 import './MedicalInfo.scss';
-import WarningIcon from '@material-ui/icons/Warning';
 import swal from 'sweetalert';
 
 import Notes from '../../components/Notes/Notes';
-import NoChangeDialog from '../../components/NoChangeDialog/NoChangeDialog';
 import BottomBar from '../../components/BottomBar/BottomBar';
-import patientFile from '../../Test Data/patient.json';
 import { updateStage } from '../../utils/api';
 
 const MedicalInfo = (props) => {
@@ -279,6 +278,10 @@ const MedicalInfo = (props) => {
             />
         </form>
     );
+};
+
+MedicalInfo.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default MedicalInfo;

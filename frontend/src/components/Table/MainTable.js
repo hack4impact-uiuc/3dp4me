@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import Eyecon from '../../assets/view.svg';
 
 import './MainTable.scss';
@@ -200,6 +201,10 @@ const MainTable = (props) => {
             </TableContainer>
         </div>
     );
+};
+
+MainTable.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default MainTable;

@@ -5,6 +5,8 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 
+import { LanguageDataType } from '../../utils/custom-proptypes';
+
 const Files = (props) => {
     const key = props.languageData.selectedLanguage;
     const lang = props.languageData.translations[key];
@@ -62,6 +64,10 @@ const Files = (props) => {
             </div>
         </div>
     );
+};
+
+Files.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default Files;

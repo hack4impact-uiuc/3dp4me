@@ -1,26 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Button,
-    MenuItem,
-    TextField,
-    Select,
-    Snackbar,
-    Grid,
-} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
+import reactSwal from '@sweetalert/with-react';
+import swal from 'sweetalert';
+import { Button, TextField, Snackbar } from '@material-ui/core';
 
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
-import './Dashboard.scss';
-
-import reactSwal from '@sweetalert/with-react';
-import swal from 'sweetalert';
-import { Link } from 'react-router-dom';
-
 import search from '../../assets/search.svg';
-import archive from '../../assets/archive.svg';
 import { getPatientsByStage } from '../../utils/api';
+import './Dashboard.scss';
+import { LanguageDataType } from '../../utils/custom-proptypes';
 
 const useStyles = makeStyles((theme) => ({
     swalEditButton: {
@@ -57,20 +47,14 @@ const Dashboard = (props) => {
     const classes = useStyles();
 
     const [patients, setPatients] = useState([]);
-    const [sort, setSort] = useState('new');
     const [step, setStep] = useState('info');
     const [searchQuery, setSearchQuery] = useState('');
     const [filterPatients, setFilteredPatients] = useState([]);
     const [stepTitle, setStepTitle] = useState('patientInfoTitle');
     const [noPatient, setNoPatient] = useState(false);
-    const [sortedField, setSortedField] = React.useState(null);
 
     const key = props.languageData.selectedLanguage;
     const lang = props.languageData.translations[key];
-
-    const handlesort = (e) => {
-        setSort(e.target.value);
-    };
 
     const createPatientHelper = (edit, id) => {
         if (edit) {
@@ -88,6 +72,7 @@ const Dashboard = (props) => {
     };
 
     const createPatient = (e) => {
+        // TODO: Might want a better way of doing this
         const auto_id = Math.random().toString(36).substr(2, 24);
         reactSwal({
             buttons: {},
@@ -244,10 +229,6 @@ const Dashboard = (props) => {
         }
     };
 
-    // useEffect(() => {
-    //   setPatients(patientInfo)
-    // }, []);
-
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
@@ -261,7 +242,7 @@ const Dashboard = (props) => {
 
     useEffect(() => {
         getPatients();
-    }, [setPatients]);
+    }, []);
 
     return (
         <div className="dashboard">
@@ -473,7 +454,7 @@ const Dashboard = (props) => {
                                     'feedbackCycle',
                                     'status',
                                 ]}
-                                languageData={props.selectedLanguage}
+                                languageData={props.languageData}
                                 patients={filterPatients}
                             />
                         )}
@@ -482,6 +463,10 @@ const Dashboard = (props) => {
             </div>
         </div>
     );
+};
+
+Dashboard.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default Dashboard;

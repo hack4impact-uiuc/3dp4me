@@ -6,6 +6,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import { LanguageDataType } from '../../utils/custom-proptypes';
+
 const useStyles = makeStyles({
     menuWrapper: {
         margin: '10px',
@@ -72,6 +74,10 @@ const AccountDropdown = (props) => {
             </Menu>
         </div>
     );
+};
+
+AccountDropdown.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default AccountDropdown;

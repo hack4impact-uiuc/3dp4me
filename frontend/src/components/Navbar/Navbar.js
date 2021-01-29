@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { AppBar, Avatar, Toolbar } from '@material-ui/core';
+import React, { useState } from 'react';
+import { AppBar, Toolbar } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
 import Logo from '../../assets/3dp4me_logo.png';
 import AccountDropdown from '../AccountDropdown/AccountDropdown';
-
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import './Navbar.scss';
 
 const useStyles = makeStyles((theme) => ({
@@ -110,6 +110,10 @@ const Navbar = (props) => {
             </AppBar>
         </div>
     );
+};
+
+Navbar.propTypes = {
+    languageData: LanguageDataType.isRequired,
 };
 
 export default Navbar;
