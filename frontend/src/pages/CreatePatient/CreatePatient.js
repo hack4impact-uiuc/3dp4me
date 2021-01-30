@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CreatePatient = (props) => {
+const CreatePatient = () => {
     return <div />;
 };
 

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 export const LanguageDataType = PropTypes.shape({
-    translations: PropTypes.object,
+    translations: PropTypes.arrayOf(PropTypes.object),
     selectedLanuage: PropTypes.string,
 });
 

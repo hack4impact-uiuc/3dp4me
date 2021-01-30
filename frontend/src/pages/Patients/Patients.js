@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Snackbar, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
 import MainTable from '../../components/Table/MainTable';
+
 import './Patients.scss';
 import MuiAlert from '@material-ui/lab/Alert';
 import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
+
 import search from '../../assets/search.svg';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import archive from '../../assets/archive.svg';
@@ -73,16 +76,16 @@ const Patients = (props) => {
         } else {
             const name = document.getElementById('createFirstName').value;
             const dob = document.getElementById('createDOB').value;
-            const id = document.getElementById('createId').value;
+            const create_id = document.getElementById('createId').value;
             swal(
                 lang.components.swal.createPatient.successMsg,
-                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${id}`,
+                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${create_id}`,
                 'success',
             );
         }
     };
 
-    const createPatient = (e) => {
+    const createPatient = () => {
         // TODO: We need to check for ID conflicts
         const autoId = Math.random().toString(36).substr(2, 24);
         reactSwal({
@@ -191,8 +194,8 @@ const Patients = (props) => {
         setAllPatients(res.result);
     };
 
-    function Alert(props) {
-        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    function Alert(alertProps) {
+        return <MuiAlert elevation={6} variant="filled" {...alertProps} />;
     }
 
     useEffect(() => {

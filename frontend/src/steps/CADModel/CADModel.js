@@ -31,8 +31,8 @@ const CADModel = ({
     const [CADNotes, setCADNotes] = useState('');
     const [leftCADFiles, setLeftCADFiles] = useState(
         info.files
-            .map((file_info) => {
-                return file_info.filename;
+            .map((fileInfo) => {
+                return fileInfo.filename;
             })
             .filter((filename) => {
                 return filename.startsWith('LEFT_');
@@ -40,8 +40,8 @@ const CADModel = ({
     );
     const [rightCADFiles, setRightCADFiles] = useState(
         info.files
-            .map((file_info) => {
-                return file_info.filename;
+            .map((fileInfo) => {
+                return fileInfo.filename;
             })
             .filter((filename) => {
                 return filename.startsWith('RIGHT_');
@@ -60,7 +60,7 @@ const CADModel = ({
         setLeftCADFiles(leftCADFiles.filter((file) => file !== fileName));
         const infoCopy = info;
         infoCopy.files = infoCopy.files.filter(
-            (file_info) => file_info.filename !== fileName,
+            (fileInfo) => fileInfo.filename !== fileName,
         );
         setInfo(infoCopy);
         updatePatientFile(stageName, infoCopy);
@@ -71,7 +71,7 @@ const CADModel = ({
         setRightCADFiles(rightCADFiles.filter((file) => file !== fileName));
         const infoCopy = info;
         infoCopy.files = infoCopy.files.filter(
-            (file_info) => file_info.filename !== fileName,
+            (fileInfo) => fileInfo.filename !== fileName,
         );
         setInfo(infoCopy);
         updatePatientFile(stageName, infoCopy);

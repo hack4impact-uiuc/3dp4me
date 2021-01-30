@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const Dashboard = (props) => {
+const Dashboard = ({ languageData }) => {
     const classes = useStyles();
 
     const [patients, setPatients] = useState([]);
@@ -53,8 +53,8 @@ const Dashboard = (props) => {
     const [stepTitle, setStepTitle] = useState('patientInfoTitle');
     const [noPatient, setNoPatient] = useState(false);
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const createPatientHelper = (edit, id) => {
         if (edit) {
@@ -71,7 +71,7 @@ const Dashboard = (props) => {
         }
     };
 
-    const createPatient = (e) => {
+    const createPatient = () => {
         // TODO: Might want a better way of doing this
         const auto_id = Math.random().toString(36).substr(2, 24);
         reactSwal({
@@ -159,13 +159,13 @@ const Dashboard = (props) => {
                     >
                         <Button
                             className={classes.swalEditButton}
-                            onClick={(e) => createPatientHelper(true, auto_id)}
+                            onClick={() => createPatientHelper(true, auto_id)}
                         >
                             {lang.components.swal.createPatient.buttons.edit}
                         </Button>
                         <Button
                             className={classes.swalCloseButton}
-                            onClick={(e) => createPatientHelper(false, auto_id)}
+                            onClick={() => createPatientHelper(false, auto_id)}
                         >
                             {lang.components.swal.createPatient.buttons.noEdit}
                         </Button>
@@ -257,7 +257,7 @@ const Dashboard = (props) => {
             </Snackbar>
             <div className="tabs">
                 <ToggleButtons
-                    languageData={props.languageData}
+                    languageData={languageData}
                     step={step}
                     handleStep={handleStep}
                 />
@@ -339,7 +339,7 @@ const Dashboard = (props) => {
                                     'lastEdited',
                                     'status',
                                 ]}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 patients={patients}
                             />
                         ) : (
@@ -376,7 +376,7 @@ const Dashboard = (props) => {
                                     'lastEdited',
                                     'status',
                                 ]}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 patients={filterPatients}
                             />
                         )}
@@ -417,7 +417,7 @@ const Dashboard = (props) => {
                                     'feedbackCycle',
                                     'status',
                                 ]}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 patients={patients}
                             />
                         ) : (
@@ -454,7 +454,7 @@ const Dashboard = (props) => {
                                     'feedbackCycle',
                                     'status',
                                 ]}
-                                languageData={props.languageData}
+                                languageData={languageData}
                                 patients={filterPatients}
                             />
                         )}
