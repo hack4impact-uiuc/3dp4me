@@ -158,14 +158,14 @@ const Controller = ({ languageData }) => {
         }
     };
 
-    const getData = async () => {
-        // TODO: api call to get all info about a patient
-        const res = await getPatientById(id);
-        setPatientFile(res.result);
-        setLoading(false);
-    };
-
     useEffect(() => {
+        const getData = async () => {
+            // TODO: api call to get all info about a patient
+            const res = await getPatientById(id);
+            setPatientFile(res.result);
+            setLoading(false);
+        };
+
         getData();
     }, [setPatientFile, setLoading]);
 
