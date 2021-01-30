@@ -1,3 +1,1 @@
-const awsconfig = {};
-
-export default awsconfig;
+export const awsconfig = {};
