@@ -2,7 +2,7 @@
     "regions": ["iad1"],
     "env": {
         "AWS_CONFIG": "@3dp4me-aws-config",
-        "DB_URI": "mongodb+srv://3dp4me:3dp4me@cluster0.exuwt.mongodb.net/3dp4me?retryWrites=true&w=majority"
+        "DB_URI": "@3dp4me-mongo-uri"
     },
     "builds": [
         { "src": "backend/app.js", "use": "@now/node" },
