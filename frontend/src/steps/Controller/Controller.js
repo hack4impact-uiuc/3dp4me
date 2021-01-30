@@ -167,7 +167,7 @@ const Controller = ({ languageData }) => {
         };
 
         getData();
-    }, [setPatientFile, setLoading]);
+    }, [setPatientFile, setLoading, id]);
 
     const updatePatientFile = (stageName, updated) => {
         setPatientFile({ ...patientFile, stageName: updated });
