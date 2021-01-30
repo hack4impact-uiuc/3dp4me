@@ -44,7 +44,7 @@ const Feedback = ({
         setOneYearFeedbackDate(info.oneYear.date);
         setTwoYearFeedback(info.twoYear.notes);
         setTwoYearFeedbackDate(info.twoYear.date);
-    }, [trigger]);
+    }, [trigger, info]);
 
     const saveData = () => {
         const infoCopy = info;
