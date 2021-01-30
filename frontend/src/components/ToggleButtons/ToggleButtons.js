@@ -300,7 +300,7 @@ const ToggleButtons = ({
     );
 };
 
-ToggleButton.propTypes = {
+ToggleButtons.propTypes = {
     languageData: LanguageDataType.isRequired,
     handleStep: PropTypes.func.isRequired,
     step: PropTypes.string.isRequired,

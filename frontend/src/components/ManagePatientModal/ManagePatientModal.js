@@ -41,8 +41,8 @@ const ManagePatientModal = ({ languageData }) => {
     };
 
     const handleManagePatientSave = () => {
-        const name = document.getElementById('manage-patient-name').value;
-        const dob = document.getElementById('manage-patient-dob').value;
+        // const name = document.getelementbyid('manage-patient-name').value;
+        // const dob = document.getelementbyid('manage-patient-dob').value;
         // TODO: call edit patient endpoint with new name / dob / patientStatus
         swal(lang.components.swal.managePatient.successMsg, '', 'success');
     };

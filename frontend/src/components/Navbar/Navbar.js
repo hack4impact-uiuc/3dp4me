@@ -3,6 +3,7 @@ import { AppBar, Toolbar } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import Logo from '../../assets/3dp4me_logo.png';
 import AccountDropdown from '../AccountDropdown/AccountDropdown';
@@ -43,6 +44,7 @@ const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
             <AppBar className={classes.appBar}>
                 <Toolbar className={`navbar ${classes.toolBar}`}>
                     <img
+                        alt="Logo"
                         className={key === 'AR' ? 'logo-ar' : ''}
                         height={32}
                         src={Logo}
@@ -113,7 +115,10 @@ const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
 };
 
 Navbar.propTypes = {
+    setSelectedLang: PropTypes.func.isRequired,
     languageData: LanguageDataType.isRequired,
+    username: PropTypes.string.isRequired,
+    userEmail: PropTypes.string.isRequired,
 };
 
 export default Navbar;

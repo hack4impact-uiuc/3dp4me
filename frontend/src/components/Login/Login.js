@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Auth } from 'aws-amplify';
 
-const Login = (props) => {
+const Login = () => {
     return (
         <div>
             <button
+                type="submit"
                 onClick={() => Auth.federatedSignIn({ provider: 'Google' })}
             >
                 Sign In

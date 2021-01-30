@@ -1,5 +1,6 @@
 import React from 'react';
 import './Notes.scss';
+import PropTypes from 'prop-types';
 
 const Notes = ({ title, disabled, value, state }) => {
     return (
@@ -19,6 +20,13 @@ const Notes = ({ title, disabled, value, state }) => {
             </div>
         </div>
     );
+};
+
+Notes.propTypes = {
+    title: PropTypes.string.isRequired,
+    disabled: PropTypes.bool.isRequired,
+    value: PropTypes.string.isRequired,
+    state: PropTypes.func.isRequired,
 };
 
 export default Notes;

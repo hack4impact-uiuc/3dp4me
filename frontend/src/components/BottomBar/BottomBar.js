@@ -2,16 +2,15 @@ import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
+import './BottomBar.scss';
+import check from '../../assets/check.svg';
+import exclamation from '../../assets/exclamation.svg';
+import halfCircle from '../../assets/half-circle.svg';
 import {
     StringGetterSetterType,
     BoolGetterSetterType,
     LanguageDataType,
 } from '../../utils/custom-proptypes';
-
-import './BottomBar.scss';
-import check from '../../assets/check.svg';
-import exclamation from '../../assets/exclamation.svg';
-import halfCircle from '../../assets/half-circle.svg';
 
 const BottomBar = ({
     languageData,

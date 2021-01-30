@@ -62,10 +62,10 @@ const Dashboard = ({ languageData }) => {
         } else {
             const name = document.getElementById('createFirstName').value;
             const dob = document.getElementById('createDOB').value;
-            const id = document.getElementById('createId').value;
+            const createId = document.getElementById('createId').value;
             swal(
                 lang.components.swal.createPatient.successMsg,
-                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${id}`,
+                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${createId}`,
                 'success',
             );
         }
@@ -73,7 +73,7 @@ const Dashboard = ({ languageData }) => {
 
     const createPatient = () => {
         // TODO: Might want a better way of doing this
-        const auto_id = Math.random().toString(36).substr(2, 24);
+        const autoId = Math.random().toString(36).substr(2, 24);
         reactSwal({
             buttons: {},
             content: (
@@ -146,7 +146,7 @@ const Dashboard = ({ languageData }) => {
                             id="createId"
                             fullWidth
                             style={{ padding: 10 }}
-                            defaultValue={auto_id}
+                            defaultValue={autoId}
                             variant="outlined"
                         />
                     </div>
@@ -159,13 +159,13 @@ const Dashboard = ({ languageData }) => {
                     >
                         <Button
                             className={classes.swalEditButton}
-                            onClick={() => createPatientHelper(true, auto_id)}
+                            onClick={() => createPatientHelper(true, autoId)}
                         >
                             {lang.components.swal.createPatient.buttons.edit}
                         </Button>
                         <Button
                             className={classes.swalCloseButton}
-                            onClick={() => createPatientHelper(false, auto_id)}
+                            onClick={() => createPatientHelper(false, autoId)}
                         >
                             {lang.components.swal.createPatient.buttons.noEdit}
                         </Button>
@@ -229,10 +229,6 @@ const Dashboard = ({ languageData }) => {
         }
     };
 
-    function Alert(props) {
-        return <MuiAlert elevation={6} variant="filled" {...props} />;
-    }
-
     // TODO: hook up dashboard to display fetched patients
     const getPatients = async () => {
         const res = await getPatientsByStage('patientInfo');
@@ -251,9 +247,14 @@ const Dashboard = ({ languageData }) => {
                 autoHideDuration={3000}
                 onClose={handleNoPatientClose}
             >
-                <Alert onClose={handleNoPatientClose} severity="error">
+                <MuiAlert
+                    onClose={handleNoPatientClose}
+                    severity="error"
+                    elevation={6}
+                    variant="filled"
+                >
                     {lang.components.table.noPatientsFound}
-                </Alert>
+                </MuiAlert>
             </Snackbar>
             <div className="tabs">
                 <ToggleButtons
@@ -278,6 +279,7 @@ const Dashboard = ({ languageData }) => {
                             InputProps={{
                                 startAdornment: (
                                     <img
+                                        alt="star"
                                         style={{ marginRight: '10px' }}
                                         src={search}
                                         width="16px"

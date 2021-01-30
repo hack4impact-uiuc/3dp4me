@@ -36,15 +36,15 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const Patients = (props) => {
+const Patients = ({ languageData }) => {
     const classes = useStyles();
     const [allPatients, setAllPatients] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
 
-    const key = props.languageData.selectedLanguage;
-    const lang = props.languageData.translations[key];
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
@@ -76,10 +76,10 @@ const Patients = (props) => {
         } else {
             const name = document.getElementById('createFirstName').value;
             const dob = document.getElementById('createDOB').value;
-            const create_id = document.getElementById('createId').value;
+            const createId = document.getElementById('createId').value;
             swal(
                 lang.components.swal.createPatient.successMsg,
-                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${create_id}`,
+                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${createId}`,
                 'success',
             );
         }
@@ -194,10 +194,6 @@ const Patients = (props) => {
         setAllPatients(res.result);
     };
 
-    function Alert(alertProps) {
-        return <MuiAlert elevation={6} variant="filled" {...alertProps} />;
-    }
-
     useEffect(() => {
         getData();
     }, [setAllPatients]);
@@ -210,9 +206,14 @@ const Patients = (props) => {
                     autoHideDuration={3000}
                     onClose={handleNoPatientClose}
                 >
-                    <Alert onClose={handleNoPatientClose} severity="error">
+                    <MuiAlert
+                        onClose={handleNoPatientClose}
+                        severity="error"
+                        elevation={6}
+                        variant="filled"
+                    >
                         {lang.components.table.noPatientsFound}
-                    </Alert>
+                    </MuiAlert>
                 </Snackbar>
                 <div className="header">
                     <div className="section">
@@ -232,12 +233,17 @@ const Patients = (props) => {
                                 marginRight: '15px',
                             }}
                         >
-                            <img className="archive-button" src={archive} />
+                            <img
+                                alt="archive"
+                                className="archive-button"
+                                src={archive}
+                            />
                         </div>
                         <TextField
                             InputProps={{
                                 startAdornment: (
                                     <img
+                                        alt="Star"
                                         style={{ marginRight: '10px' }}
                                         src={search}
                                         width="16px"
@@ -282,7 +288,7 @@ const Patients = (props) => {
                         },
                     ]}
                     rowIds={['name', 'createdDate', 'lastEdited', 'status']}
-                    languageData={props.languageData}
+                    languageData={languageData}
                     patients={allPatients}
                 />
             ) : (
@@ -306,7 +312,7 @@ const Patients = (props) => {
                         },
                     ]}
                     rowIds={['name', 'createdDate', 'lastEdited', 'status']}
-                    languageData={props.languageData}
+                    languageData={languageData}
                     patients={filterPatients}
                 />
             )}

@@ -63,6 +63,7 @@ const AccountDropdown = ({
                     <p>{username}</p>
                     <p className={styles.accountEmail}>{userEmail}</p>
                     <div className={styles.languageSelectorWrapper}>
+                        {/* TODO: ARABIC BOIIIII */}
                         <p>Language</p>
                         <FormControl
                             variant="outlined"
@@ -89,6 +90,7 @@ AccountDropdown.propTypes = {
     setLang: PropTypes.func.isRequired,
     username: PropTypes.string,
     userEmail: PropTypes.string,
+    anchorEl: PropTypes.elementType,
 };
 
 export default AccountDropdown;

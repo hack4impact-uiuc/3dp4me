@@ -33,7 +33,7 @@ const StyledTableCell = withStyles((theme) => ({
     },
 }))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
+const StyledTableRow = withStyles(() => ({
     root: {
         '&:hover': {
             backgroundColor: '#f0f0f0',
@@ -207,7 +207,7 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
 MainTable.propTypes = {
     languageData: LanguageDataType.isRequired,
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
-    rowIDs: PropTypes.arrayOf(PropTypes.string),
+    rowIds: PropTypes.arrayOf(PropTypes.string),
     patients: PropTypes.arrayOf(PropTypes.object),
 };
 

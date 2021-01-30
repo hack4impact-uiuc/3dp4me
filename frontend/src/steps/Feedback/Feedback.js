@@ -68,7 +68,6 @@ const Feedback = ({
             title: lang.components.button.discard.question,
             text: lang.components.button.discard.warningMessage,
             icon: 'warning',
-            buttons: true,
             dangerMode: true,
             buttons: [
                 lang.components.button.discard.cancelButton,

@@ -53,7 +53,6 @@ const Delivery = ({
             title: lang.components.button.discard.question,
             text: lang.components.button.discard.warningMessage,
             icon: 'warning',
-            buttons: true,
             dangerMode: true,
             buttons: [
                 lang.components.button.discard.cancelButton,
@@ -142,6 +141,8 @@ Delivery.propTypes = {
     status: StringGetterSetterType,
     id: PropTypes.string.isRequired,
     updatePatientFile: PropTypes.func.isRequired,
+    address: PropTypes.string.isRequired,
+    deliveryType: PropTypes.string.isRequired,
 };
 
 export default Delivery;

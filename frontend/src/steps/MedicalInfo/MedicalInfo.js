@@ -128,7 +128,6 @@ const MedicalInfo = ({
             title: lang.components.button.discard.question,
             text: lang.components.button.discard.warningMessage,
             icon: 'warning',
-            buttons: true,
             dangerMode: true,
             buttons: [
                 lang.components.button.discard.cancelButton,
@@ -258,7 +257,6 @@ const MedicalInfo = ({
                 />
             </RadioGroup>
             <Notes
-                name="notes"
                 disabled={!edit}
                 state={setNotes}
                 title={lang.components.notes.title}

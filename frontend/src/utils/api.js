@@ -10,13 +10,14 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     async (config) => {
+        const configCopy = config;
         const {
             accessToken: { jwtToken },
         } = await getCurrentSession();
         if (jwtToken) {
-            config.headers.Authorization = `Bearer ${jwtToken}`;
+            configCopy.headers.Authorization = `Bearer ${jwtToken}`;
         }
-        return config;
+        return configCopy;
     },
     (error) => {
         return Promise.reject(error);
@@ -116,12 +117,12 @@ export const uploadFile = async (
     const requestString = `/patients/${patientId}/${stage}/file`;
     const credentials = await getCredentials();
     const formData = new FormData();
-    filename = filename || filedata.name;
     formData.append('uploadedFile', filedata);
-    formData.append('uploadedFileName', filename);
-    for (const key in credentials) {
+    formData.append('uploadedFileName', filename || filedata.name);
+    Object.keys(credentials).forEach((key) => {
         formData.append(key, credentials[key]);
-    }
+    });
+
     return instance.post(requestString, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',

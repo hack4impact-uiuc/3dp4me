@@ -1,6 +1,7 @@
 import React from 'react';
 import './Files.scss';
 import { Button, Typography } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
@@ -75,6 +76,11 @@ const Files = ({
 
 Files.propTypes = {
     languageData: LanguageDataType.isRequired,
+    title: PropTypes.string.isRequired,
+    fileNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    handleDownload: PropTypes.func.isRequired,
+    handleDelete: PropTypes.func.isRequired,
+    handleUpload: PropTypes.func.isRequired,
 };
 
 export default Files;
