@@ -49,6 +49,10 @@ jobs:
         working-directory: ./frontend
         run: yarn
 
+      - name: Install root dependencies
+        working-directory: ./
+        run: yarn
+
       - name: Run linter
         working-directory: ./frontend
         run: yarn lint
