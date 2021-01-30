@@ -13,19 +13,20 @@
         "babel-eslint": "^10.1.0",
         "compose": "^0.1.2",
         "cra-template": "1.0.3",
+        "eslint-config-airbnb": "^18.2.1",
         "eslint-config-airbnb-base": "^14.2.1",
         "eslint-plugin-import": "^2.22.1",
         "js-file-download": "^0.4.12",
         "jss-rtl": "^0.3.0",
         "material-ui": "^0.20.2",
         "prettier": "^2.2.1",
+        "prop-types": "^15.6.0",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "react-router-dom": "^5.2.0",
         "react-scripts": "3.4.3",
         "sass": "^1.28.0",
-        "sweetalert": "^2.1.2",
-        "prop-types": "^15.6.0"
+        "sweetalert": "^2.1.2"
     },
     "scripts": {
         "start": "react-scripts start",
