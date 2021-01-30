@@ -18,7 +18,7 @@ const useSortableData = (items, UNSORTED_DATA, config = null) => {
             });
         }
         return sortableItems;
-    }, [items, sortConfig]);
+    }, [items, sortConfig, UNSORTED_DATA]);
 
     const requestSort = (key) => {
         let direction = 'ascending';

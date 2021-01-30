@@ -73,7 +73,7 @@ const Printing = ({
 
     useEffect(() => {
         setPrintNotes(info.notes);
-    }, [trigger]);
+    }, [trigger, info.notes]);
 
     const saveData = () => {
         const infoCopy = info;

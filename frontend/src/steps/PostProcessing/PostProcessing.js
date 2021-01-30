@@ -75,7 +75,7 @@ const PostProcessing = ({
 
     useEffect(() => {
         setProcessingNotes(info.notes);
-    }, [trigger]);
+    }, [trigger, info.notes]);
 
     const saveData = () => {
         const infoCopy = info;

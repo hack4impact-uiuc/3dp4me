@@ -167,7 +167,7 @@ const Controller = ({ languageData }) => {
 
     useEffect(() => {
         getData();
-    }, [setPatientFile, setLoading]);
+    }, [setPatientFile, setLoading, getData]);
 
     const updatePatientFile = (stageName, updated) => {
         setPatientFile({ ...patientFile, stageName: updated });

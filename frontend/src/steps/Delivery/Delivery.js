@@ -36,7 +36,7 @@ const Delivery = ({
     useEffect(() => {
         // setAddress(info.address);
         setDeliveryStatus(info.deliveryStatus);
-    }, [trigger]);
+    }, [trigger, info.deliveryStatus]);
 
     const saveData = () => {
         const infoCopy = info;

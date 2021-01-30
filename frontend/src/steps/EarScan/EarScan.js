@@ -123,7 +123,7 @@ const EarScan = ({
 
     useEffect(() => {
         setNotes(info.notes);
-    }, [trigger]);
+    }, [trigger, info.notes]);
 
     const saveData = () => {
         const infoCopy = info;

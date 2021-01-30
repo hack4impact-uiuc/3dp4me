@@ -121,7 +121,7 @@ const CADModel = ({
 
     useEffect(() => {
         setCADNotes(info.notes);
-    }, [trigger]);
+    }, [trigger, info.notes]);
 
     const saveData = () => {
         const infoCopy = info;
