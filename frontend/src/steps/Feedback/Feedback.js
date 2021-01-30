@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TextField } from '@material-ui/core';
 import swal from 'sweetalert';
 import PropTypes from 'prop-types';
-
+import _ from 'lodash';
 import {
     LanguageDataType,
     StringGetterSetterType,
@@ -47,7 +47,7 @@ const Feedback = ({
     }, [trigger, info]);
 
     const saveData = () => {
-        const infoCopy = info;
+        const infoCopy = _.cloneDeep(info);
         info.initial.notes = intialFeedback;
         info.initial.date = initialFeedbackDate;
         info.sixMonth.notes = sixMonthFeedback;

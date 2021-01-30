@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import swal from 'sweetalert';
 import PropTypes from 'prop-types';
-
+import _ from 'lodash';
 import {
     LanguageDataType,
     StringGetterSetterType,
@@ -39,7 +39,7 @@ const Delivery = ({
     }, [trigger, info.deliveryStatus]);
 
     const saveData = () => {
-        const infoCopy = info;
+        const infoCopy = _.cloneDeep(info);
         infoCopy.deliveryStatus = deliveryStatus;
         setInfo(infoCopy);
         updateStage(id, stageName, infoCopy);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import PropTypes from 'prop-types';
-
+import _ from 'lodash';
 import {
     LanguageDataType,
     StringGetterSetterType,
@@ -43,7 +43,7 @@ const Printing = ({
     const handleDelete = async (fileName) => {
         deleteFile(id, stageName, fileName);
         setPrintFiles(printFiles.filter((file) => file !== fileName));
-        const infoCopy = info;
+        const infoCopy = _.cloneDeep(info);
         infoCopy.files = infoCopy.files.filter(
             (fileInfo) => fileInfo.filename !== fileName,
         );
@@ -61,7 +61,7 @@ const Printing = ({
             fileToUpload,
             fileToUpload.name.toUpperCase(),
         );
-        const infoCopy = info;
+        const infoCopy = _.cloneDeep(info);
         infoCopy.files = infoCopy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
@@ -76,7 +76,7 @@ const Printing = ({
     }, [trigger, info.notes]);
 
     const saveData = () => {
-        const infoCopy = info;
+        const infoCopy = _.cloneDeep(info);
         infoCopy.notes = printNotes;
         setInfo(infoCopy);
         updateStage(id, stageName, infoCopy);
