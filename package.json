@@ -1,0 +1,46 @@
+{
+    "name": "3DP4ME",
+    "version": "1.0.0",
+    "description": "Package with the development tools for 3DP4ME (such as Prettier and Husky). Please see the individual client and api sub-packages for the actual dependencies.",
+    "devDependencies": {
+        "eslint": "^6.5.1",
+        "eslint-config-airbnb": "^18.0.1",
+        "eslint-config-prettier": "^6.3.0",
+        "eslint-plugin-flowtype": "^4.3.0",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-jsx-a11y": "^6.2.3",
+        "eslint-plugin-prettier": "^3.1.1",
+        "eslint-plugin-react": "^7.15.0",
+        "eslint-plugin-react-hooks": "^2.3.0",
+        "husky": "^4.3.8",
+        "lint-staged": "^10.5.3",
+        "prettier": "^2.2.1"
+    },
+    "scripts": {
+        "format": "prettier --write '{client/**/*.{js,jsx,css,scss,json,md},api/**/*.{js,jsx,json,md}}'"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hack4impact-uiuc/3dp4me.git"
+    },
+    "bugs": {
+        "url": "https://github.com/hack4impact-uiuc/3dp4me/issues"
+    },
+    "homepage": "https://github.com/hack4impact-uiuc/3dp4me#readme",
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "./**/*.{js,css,scss,json,md,jsx}": [
+            "prettier --write"
+        ],
+        "./api/**/*.{js,jsx}": [
+            "eslint --fix -c api/.eslintrc.json"
+        ],
+        "./client/**/*.{js,jsx}": [
+            "eslint --fix -c client/.eslintrc.json"
+        ]
+    }
+}

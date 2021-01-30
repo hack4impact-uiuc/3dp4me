@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 
 const useSortableData = (items, UNSORTED_DATA, config = null) => {
     const [sortConfig, setSortConfig] = React.useState(config);
 
     const sortedItems = React.useMemo(() => {
-        let sortableItems = [...items];
+        const sortableItems = [...items];
         if (sortConfig !== null) {
             if (sortConfig.direction === 'none') return UNSORTED_DATA;
             sortableItems.sort((a, b) => {
@@ -18,7 +18,7 @@ const useSortableData = (items, UNSORTED_DATA, config = null) => {
             });
         }
         return sortableItems;
-    }, [items, sortConfig]);
+    }, [items, sortConfig, UNSORTED_DATA]);
 
     const requestSort = (key) => {
         let direction = 'ascending';

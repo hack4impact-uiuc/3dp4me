@@ -1,56 +1,86 @@
-import React from 'react'
-import './Files.scss'
+import React from 'react';
+import './Files.scss';
 import { Button, Typography } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 
-const Files = (props) => {
-    const lang = props.lang.data;
-    const key = props.lang.key;
+import { LanguageDataType } from '../../utils/custom-proptypes';
+
+const Files = ({
+    languageData,
+    title,
+    fileNames,
+    handleDownload,
+    handleDelete,
+    handleUpload,
+}) => {
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     return (
         <div className="files-wrapper">
             <div className="files-header">
-                <h3>{props.title}</h3>
+                <h3>{title}</h3>
             </div>
             <div className="files-table">
-                {props.fileNames.map(fileName => (
+                {fileNames.map((fileName) => (
                     <div className="file-row-wrapper" key={fileName}>
-                        <Button className="file-button" onClick={() => {props.handleDownload(fileName)}}>
+                        <Button
+                            className="file-button"
+                            onClick={() => {
+                                handleDownload(fileName);
+                            }}
+                        >
                             <div className="file-info-wrapper">
                                 <ArrowDownwardIcon />
                                 <div>
                                     <Typography align="left">
                                         {`${fileName}`}
                                     </Typography>
-                                    <p id="file-upload-timestamp">10/14/2020 at 12:34PM</p>
+                                    <p id="file-upload-timestamp">
+                                        10/14/2020 at 12:34PM
+                                    </p>
                                 </div>
                             </div>
                         </Button>
-                        <button className="file-close-button" type="button" onClick={() => props.handleDelete(fileName)}>
+                        <button
+                            className="file-close-button"
+                            type="button"
+                            onClick={() => handleDelete(fileName)}
+                        >
                             <CloseIcon />
                         </button>
                     </div>
                 ))}
 
-                <label htmlFor={`upload-file-input-${props.title}`}>
+                <label htmlFor={`upload-file-input-${title}`}>
                     <input
-                        id={`upload-file-input-${props.title}`}
+                        id={`upload-file-input-${title}`}
                         className="upload-file-input"
                         type="file"
-                        onChange={props.handleUpload}
+                        onChange={handleUpload}
                     />
                     <Button className="file-button" component="span">
                         <AddIcon />
                         <Typography align="left">
-                            <b>{lang[key].components.file.addAnother}</b>
+                            <b>{lang.components.file.addAnother}</b>
                         </Typography>
                     </Button>
                 </label>
             </div>
         </div>
     );
-}
+};
+
+Files.propTypes = {
+    languageData: LanguageDataType.isRequired,
+    title: PropTypes.string.isRequired,
+    fileNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+    handleDownload: PropTypes.func.isRequired,
+    handleDelete: PropTypes.func.isRequired,
+    handleUpload: PropTypes.func.isRequired,
+};
 
 export default Files;

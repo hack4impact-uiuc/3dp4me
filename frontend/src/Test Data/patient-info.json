@@ -1,422 +1,422 @@
 [
     {
-      "_id": "5fc1e5802f4fd26efe407207",
-      "name": "Ora Hernandez",
-      "createdDate": "February 26, 2020",
-      "lastEdited": "May 12, 2020",
-      "status": "Finished"
+        "_id": "5fc1e5802f4fd26efe407207",
+        "name": "Ora Hernandez",
+        "createdDate": "February 26, 2020",
+        "lastEdited": "May 12, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580d931b7ff2fef4ce4",
-      "name": "Barlow Larson",
-      "createdDate": "November 15, 2020",
-      "lastEdited": "November 16, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580d931b7ff2fef4ce4",
+        "name": "Barlow Larson",
+        "createdDate": "November 15, 2020",
+        "lastEdited": "November 16, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580c961f67489e6cbf0",
-      "name": "Bryan Riggs",
-      "createdDate": "March 17, 2020",
-      "lastEdited": "September 6, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580c961f67489e6cbf0",
+        "name": "Bryan Riggs",
+        "createdDate": "March 17, 2020",
+        "lastEdited": "September 6, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580a76dd8bf539856e8",
-      "name": "Soto Vasquez",
-      "createdDate": "February 25, 2020",
-      "lastEdited": "April 12, 2020",
-      "status": "Finished"
+        "_id": "5fc1e580a76dd8bf539856e8",
+        "name": "Soto Vasquez",
+        "createdDate": "February 25, 2020",
+        "lastEdited": "April 12, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e5807699b84f9c191b3d",
-      "name": "Barrera Acevedo",
-      "createdDate": "May 6, 2020",
-      "lastEdited": "May 15, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e5807699b84f9c191b3d",
+        "name": "Barrera Acevedo",
+        "createdDate": "May 6, 2020",
+        "lastEdited": "May 15, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e5802238369982ce04ea",
-      "name": "Wilkerson Mullins",
-      "createdDate": "August 16, 2020",
-      "lastEdited": "April 4, 2020",
-      "status": "Finished"
+        "_id": "5fc1e5802238369982ce04ea",
+        "name": "Wilkerson Mullins",
+        "createdDate": "August 16, 2020",
+        "lastEdited": "April 4, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e58033aeb338836fb955",
-      "name": "Ursula Pruitt",
-      "createdDate": "April 26, 2020",
-      "lastEdited": "August 28, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e58033aeb338836fb955",
+        "name": "Ursula Pruitt",
+        "createdDate": "April 26, 2020",
+        "lastEdited": "August 28, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e5808283f4b9ffee368e",
-      "name": "Chen Keller",
-      "createdDate": "October 10, 2020",
-      "lastEdited": "March 21, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e5808283f4b9ffee368e",
+        "name": "Chen Keller",
+        "createdDate": "October 10, 2020",
+        "lastEdited": "March 21, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e5803b227301341e939e",
-      "name": "Edith Olsen",
-      "createdDate": "April 8, 2020",
-      "lastEdited": "April 23, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e5803b227301341e939e",
+        "name": "Edith Olsen",
+        "createdDate": "April 8, 2020",
+        "lastEdited": "April 23, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e580dc17ab4aa2f989d4",
-      "name": "Elba Gibbs",
-      "createdDate": "October 22, 2020",
-      "lastEdited": "July 3, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580dc17ab4aa2f989d4",
+        "name": "Elba Gibbs",
+        "createdDate": "October 22, 2020",
+        "lastEdited": "July 3, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e5801025fcef57f3a91b",
-      "name": "Renee Shaw",
-      "createdDate": "February 10, 2020",
-      "lastEdited": "March 27, 2020",
-      "status": "Finished"
+        "_id": "5fc1e5801025fcef57f3a91b",
+        "name": "Renee Shaw",
+        "createdDate": "February 10, 2020",
+        "lastEdited": "March 27, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e5803cb25d238f71217a",
-      "name": "Ginger Todd",
-      "createdDate": "February 27, 2020",
-      "lastEdited": "July 27, 2020",
-      "status": "Finished"
+        "_id": "5fc1e5803cb25d238f71217a",
+        "name": "Ginger Todd",
+        "createdDate": "February 27, 2020",
+        "lastEdited": "July 27, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580daf3abc1d7cecf8d",
-      "name": "Hammond Walls",
-      "createdDate": "August 14, 2020",
-      "lastEdited": "September 4, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580daf3abc1d7cecf8d",
+        "name": "Hammond Walls",
+        "createdDate": "August 14, 2020",
+        "lastEdited": "September 4, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e58075fb80cd6cad9123",
-      "name": "Dolly Huff",
-      "createdDate": "April 26, 2020",
-      "lastEdited": "September 10, 2020",
-      "status": "Finished"
+        "_id": "5fc1e58075fb80cd6cad9123",
+        "name": "Dolly Huff",
+        "createdDate": "April 26, 2020",
+        "lastEdited": "September 10, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e58031851162d218a19d",
-      "name": "Polly Gross",
-      "createdDate": "June 13, 2020",
-      "lastEdited": "November 19, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e58031851162d218a19d",
+        "name": "Polly Gross",
+        "createdDate": "June 13, 2020",
+        "lastEdited": "November 19, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580d95aec37d86b3cf3",
-      "name": "Reyes Bass",
-      "createdDate": "November 7, 2020",
-      "lastEdited": "March 10, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e580d95aec37d86b3cf3",
+        "name": "Reyes Bass",
+        "createdDate": "November 7, 2020",
+        "lastEdited": "March 10, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e58097dc0792da453a5f",
-      "name": "Booth Henry",
-      "createdDate": "October 21, 2020",
-      "lastEdited": "November 26, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e58097dc0792da453a5f",
+        "name": "Booth Henry",
+        "createdDate": "October 21, 2020",
+        "lastEdited": "November 26, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e5801c4a0e0980cf3d26",
-      "name": "Deanne Carney",
-      "createdDate": "September 15, 2020",
-      "lastEdited": "November 3, 2020",
-      "status": "Finished"
+        "_id": "5fc1e5801c4a0e0980cf3d26",
+        "name": "Deanne Carney",
+        "createdDate": "September 15, 2020",
+        "lastEdited": "November 3, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580cd87cc3a064a947f",
-      "name": "Bird Lambert",
-      "createdDate": "March 23, 2020",
-      "lastEdited": "May 25, 2020",
-      "status": "Finished"
+        "_id": "5fc1e580cd87cc3a064a947f",
+        "name": "Bird Lambert",
+        "createdDate": "March 23, 2020",
+        "lastEdited": "May 25, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580d7f9ba363a18e8f1",
-      "name": "Leticia Floyd",
-      "createdDate": "April 26, 2020",
-      "lastEdited": "July 1, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580d7f9ba363a18e8f1",
+        "name": "Leticia Floyd",
+        "createdDate": "April 26, 2020",
+        "lastEdited": "July 1, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e5805398ce1e988acb79",
-      "name": "Angela Perry",
-      "createdDate": "February 6, 2020",
-      "lastEdited": "April 6, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e5805398ce1e988acb79",
+        "name": "Angela Perry",
+        "createdDate": "February 6, 2020",
+        "lastEdited": "April 6, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580e015f9baf3ef22ca",
-      "name": "Dianne Vega",
-      "createdDate": "July 27, 2020",
-      "lastEdited": "May 28, 2020",
-      "status": "Finished"
+        "_id": "5fc1e580e015f9baf3ef22ca",
+        "name": "Dianne Vega",
+        "createdDate": "July 27, 2020",
+        "lastEdited": "May 28, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e58048c319f41f247685",
-      "name": "Tyson Eaton",
-      "createdDate": "May 28, 2020",
-      "lastEdited": "February 9, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e58048c319f41f247685",
+        "name": "Tyson Eaton",
+        "createdDate": "May 28, 2020",
+        "lastEdited": "February 9, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580d20952f1343ee64c",
-      "name": "Edwina Rosa",
-      "createdDate": "May 14, 2020",
-      "lastEdited": "November 13, 2020",
-      "status": "Finished"
+        "_id": "5fc1e580d20952f1343ee64c",
+        "name": "Edwina Rosa",
+        "createdDate": "May 14, 2020",
+        "lastEdited": "November 13, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e5806bf12be9afbfe1d9",
-      "name": "Antoinette Charles",
-      "createdDate": "March 4, 2020",
-      "lastEdited": "May 20, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e5806bf12be9afbfe1d9",
+        "name": "Antoinette Charles",
+        "createdDate": "March 4, 2020",
+        "lastEdited": "May 20, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580f1b543331bd4270a",
-      "name": "Blanchard Horton",
-      "createdDate": "March 12, 2020",
-      "lastEdited": "October 12, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e580f1b543331bd4270a",
+        "name": "Blanchard Horton",
+        "createdDate": "March 12, 2020",
+        "lastEdited": "October 12, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e580176346334e4350a6",
-      "name": "Sylvia Tanner",
-      "createdDate": "November 24, 2020",
-      "lastEdited": "October 14, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e580176346334e4350a6",
+        "name": "Sylvia Tanner",
+        "createdDate": "November 24, 2020",
+        "lastEdited": "October 14, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e580569ed0ea4fbdf6be",
-      "name": "Jeanie Dejesus",
-      "createdDate": "September 23, 2020",
-      "lastEdited": "April 13, 2020",
-      "status": "Finished"
+        "_id": "5fc1e580569ed0ea4fbdf6be",
+        "name": "Jeanie Dejesus",
+        "createdDate": "September 23, 2020",
+        "lastEdited": "April 13, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580407ab8c5789a604f",
-      "name": "Savannah Sykes",
-      "createdDate": "March 2, 2020",
-      "lastEdited": "August 1, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580407ab8c5789a604f",
+        "name": "Savannah Sykes",
+        "createdDate": "March 2, 2020",
+        "lastEdited": "August 1, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e5808fcaf3af527f6cde",
-      "name": "Sonya Mooney",
-      "createdDate": "May 1, 2020",
-      "lastEdited": "June 14, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e5808fcaf3af527f6cde",
+        "name": "Sonya Mooney",
+        "createdDate": "May 1, 2020",
+        "lastEdited": "June 14, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e580aa24f15bfb67efa5",
-      "name": "Lana Carr",
-      "createdDate": "February 3, 2020",
-      "lastEdited": "October 8, 2020",
-      "status": "Finished"
+        "_id": "5fc1e580aa24f15bfb67efa5",
+        "name": "Lana Carr",
+        "createdDate": "February 3, 2020",
+        "lastEdited": "October 8, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580cc79f8f76dde0f10",
-      "name": "Dalton Garcia",
-      "createdDate": "July 8, 2020",
-      "lastEdited": "February 16, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e580cc79f8f76dde0f10",
+        "name": "Dalton Garcia",
+        "createdDate": "July 8, 2020",
+        "lastEdited": "February 16, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e580113ddc6461174896",
-      "name": "Church Porter",
-      "createdDate": "September 2, 2020",
-      "lastEdited": "October 22, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580113ddc6461174896",
+        "name": "Church Porter",
+        "createdDate": "September 2, 2020",
+        "lastEdited": "October 22, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580439d114c5646518e",
-      "name": "Flowers Cardenas",
-      "createdDate": "July 13, 2020",
-      "lastEdited": "February 7, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580439d114c5646518e",
+        "name": "Flowers Cardenas",
+        "createdDate": "July 13, 2020",
+        "lastEdited": "February 7, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e5804d18149d00a9dd65",
-      "name": "Park Boyle",
-      "createdDate": "July 5, 2020",
-      "lastEdited": "September 22, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e5804d18149d00a9dd65",
+        "name": "Park Boyle",
+        "createdDate": "July 5, 2020",
+        "lastEdited": "September 22, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e5802ff33f5bbdda8477",
-      "name": "Avis Bradshaw",
-      "createdDate": "July 18, 2020",
-      "lastEdited": "March 7, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e5802ff33f5bbdda8477",
+        "name": "Avis Bradshaw",
+        "createdDate": "July 18, 2020",
+        "lastEdited": "March 7, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580b886aa5aca481f07",
-      "name": "Delia Melendez",
-      "createdDate": "September 15, 2020",
-      "lastEdited": "May 10, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e580b886aa5aca481f07",
+        "name": "Delia Melendez",
+        "createdDate": "September 15, 2020",
+        "lastEdited": "May 10, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e5809cead6a4d16a3456",
-      "name": "Zimmerman Dean",
-      "createdDate": "November 21, 2020",
-      "lastEdited": "May 23, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e5809cead6a4d16a3456",
+        "name": "Zimmerman Dean",
+        "createdDate": "November 21, 2020",
+        "lastEdited": "May 23, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580ef1d3953679eb3b1",
-      "name": "Jackson Hammond",
-      "createdDate": "May 16, 2020",
-      "lastEdited": "March 24, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580ef1d3953679eb3b1",
+        "name": "Jackson Hammond",
+        "createdDate": "May 16, 2020",
+        "lastEdited": "March 24, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e5809abd7e0a859bf878",
-      "name": "Lambert Mcknight",
-      "createdDate": "August 5, 2020",
-      "lastEdited": "September 13, 2020",
-      "status": "Finished"
+        "_id": "5fc1e5809abd7e0a859bf878",
+        "name": "Lambert Mcknight",
+        "createdDate": "August 5, 2020",
+        "lastEdited": "September 13, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580b21b89999d6e0430",
-      "name": "Verna Carey",
-      "createdDate": "October 4, 2020",
-      "lastEdited": "August 11, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e580b21b89999d6e0430",
+        "name": "Verna Carey",
+        "createdDate": "October 4, 2020",
+        "lastEdited": "August 11, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e580780fe16aeb666274",
-      "name": "Dickerson Williams",
-      "createdDate": "July 23, 2020",
-      "lastEdited": "February 25, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580780fe16aeb666274",
+        "name": "Dickerson Williams",
+        "createdDate": "July 23, 2020",
+        "lastEdited": "February 25, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580f1d069bdec99c251",
-      "name": "Tessa Jimenez",
-      "createdDate": "October 3, 2020",
-      "lastEdited": "August 16, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580f1d069bdec99c251",
+        "name": "Tessa Jimenez",
+        "createdDate": "October 3, 2020",
+        "lastEdited": "August 16, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580390760dab46f6cf2",
-      "name": "Andrea Ratliff",
-      "createdDate": "August 18, 2020",
-      "lastEdited": "June 26, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580390760dab46f6cf2",
+        "name": "Andrea Ratliff",
+        "createdDate": "August 18, 2020",
+        "lastEdited": "June 26, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580007233ef22d3f8ee",
-      "name": "Madeline Hebert",
-      "createdDate": "May 31, 2020",
-      "lastEdited": "May 6, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e580007233ef22d3f8ee",
+        "name": "Madeline Hebert",
+        "createdDate": "May 31, 2020",
+        "lastEdited": "May 6, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e580c0cba33d81fe087e",
-      "name": "Miriam Woodward",
-      "createdDate": "April 24, 2020",
-      "lastEdited": "July 7, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e580c0cba33d81fe087e",
+        "name": "Miriam Woodward",
+        "createdDate": "April 24, 2020",
+        "lastEdited": "July 7, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e5802a7514ea8e8def14",
-      "name": "Mclaughlin Neal",
-      "createdDate": "July 7, 2020",
-      "lastEdited": "November 1, 2020",
-      "status": "Finished"
+        "_id": "5fc1e5802a7514ea8e8def14",
+        "name": "Mclaughlin Neal",
+        "createdDate": "July 7, 2020",
+        "lastEdited": "November 1, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e58078a1f3bfa39471f5",
-      "name": "Grant Stephenson",
-      "createdDate": "July 22, 2020",
-      "lastEdited": "October 7, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e58078a1f3bfa39471f5",
+        "name": "Grant Stephenson",
+        "createdDate": "July 22, 2020",
+        "lastEdited": "October 7, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e5808f0cd9dcf3be3dee",
-      "name": "Trudy Sampson",
-      "createdDate": "July 7, 2020",
-      "lastEdited": "November 5, 2020",
-      "status": "Finished"
+        "_id": "5fc1e5808f0cd9dcf3be3dee",
+        "name": "Trudy Sampson",
+        "createdDate": "July 7, 2020",
+        "lastEdited": "November 5, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580975bf5972039b910",
-      "name": "Harriet Kemp",
-      "createdDate": "April 27, 2020",
-      "lastEdited": "September 4, 2020",
-      "status": "Finished"
+        "_id": "5fc1e580975bf5972039b910",
+        "name": "Harriet Kemp",
+        "createdDate": "April 27, 2020",
+        "lastEdited": "September 4, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580c6670b133392d2d3",
-      "name": "Lang Carrillo",
-      "createdDate": "September 9, 2020",
-      "lastEdited": "November 4, 2020",
-      "status": "Finished"
+        "_id": "5fc1e580c6670b133392d2d3",
+        "name": "Lang Carrillo",
+        "createdDate": "September 9, 2020",
+        "lastEdited": "November 4, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e5805de3dd4f9596556d",
-      "name": "Dyer Kennedy",
-      "createdDate": "June 7, 2020",
-      "lastEdited": "April 11, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e5805de3dd4f9596556d",
+        "name": "Dyer Kennedy",
+        "createdDate": "June 7, 2020",
+        "lastEdited": "April 11, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e5809beb17e242da4f14",
-      "name": "Roberts Randall",
-      "createdDate": "February 1, 2020",
-      "lastEdited": "September 13, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e5809beb17e242da4f14",
+        "name": "Roberts Randall",
+        "createdDate": "February 1, 2020",
+        "lastEdited": "September 13, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e5803a2bb216b09693e8",
-      "name": "Calhoun Mann",
-      "createdDate": "February 5, 2020",
-      "lastEdited": "March 1, 2020",
-      "status": "Finished"
+        "_id": "5fc1e5803a2bb216b09693e8",
+        "name": "Calhoun Mann",
+        "createdDate": "February 5, 2020",
+        "lastEdited": "March 1, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580e2767425926b6c02",
-      "name": "Bonnie Rogers",
-      "createdDate": "October 25, 2020",
-      "lastEdited": "March 8, 2020",
-      "status": "Finished"
+        "_id": "5fc1e580e2767425926b6c02",
+        "name": "Bonnie Rogers",
+        "createdDate": "October 25, 2020",
+        "lastEdited": "March 8, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e5803961cee8e2b4e052",
-      "name": "Bertha Velez",
-      "createdDate": "October 28, 2020",
-      "lastEdited": "October 10, 2020",
-      "status": "Partially Complete"
+        "_id": "5fc1e5803961cee8e2b4e052",
+        "name": "Bertha Velez",
+        "createdDate": "October 28, 2020",
+        "lastEdited": "October 10, 2020",
+        "status": "Partially Complete"
     },
     {
-      "_id": "5fc1e580da0acafba4bcfc37",
-      "name": "Goldie Clarke",
-      "createdDate": "June 1, 2020",
-      "lastEdited": "August 20, 2020",
-      "status": "Finished"
+        "_id": "5fc1e580da0acafba4bcfc37",
+        "name": "Goldie Clarke",
+        "createdDate": "June 1, 2020",
+        "lastEdited": "August 20, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e5805514b4181790c04a",
-      "name": "Buckley Fischer",
-      "createdDate": "November 25, 2020",
-      "lastEdited": "October 3, 2020",
-      "status": "Finished"
+        "_id": "5fc1e5805514b4181790c04a",
+        "name": "Buckley Fischer",
+        "createdDate": "November 25, 2020",
+        "lastEdited": "October 3, 2020",
+        "status": "Finished"
     },
     {
-      "_id": "5fc1e580a8db41ef56491dd7",
-      "name": "Ramona Terry",
-      "createdDate": "October 4, 2020",
-      "lastEdited": "November 15, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580a8db41ef56491dd7",
+        "name": "Ramona Terry",
+        "createdDate": "October 4, 2020",
+        "lastEdited": "November 15, 2020",
+        "status": "Unfinished"
     },
     {
-      "_id": "5fc1e580de7f2d87892f0bde",
-      "name": "Dunlap Orr",
-      "createdDate": "May 2, 2020",
-      "lastEdited": "November 2, 2020",
-      "status": "Unfinished"
+        "_id": "5fc1e580de7f2d87892f0bde",
+        "name": "Dunlap Orr",
+        "createdDate": "May 2, 2020",
+        "lastEdited": "November 2, 2020",
+        "status": "Unfinished"
     }
-  ]
+]

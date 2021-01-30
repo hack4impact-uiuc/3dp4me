@@ -1,13 +1,7 @@
 import React from 'react';
 
-const CreatePatient = (props) => {
-
-
-    return (
-        <div>
-
-        </div>
-    )
-}
+const CreatePatient = () => {
+    return <div />;
+};
 
 export default CreatePatient;

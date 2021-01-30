@@ -1,93 +1,153 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
+import swal from 'sweetalert';
+import PropTypes from 'prop-types';
+
+import {
+    LanguageDataType,
+    StringGetterSetterType,
+} from '../../utils/custom-proptypes';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
-import swal from 'sweetalert';
-import { downloadFile, uploadFile, deleteFile, updateStage } from '../../utils/api';
+import {
+    downloadFile,
+    uploadFile,
+    deleteFile,
+    updateStage,
+} from '../../utils/api';
 
-const PostProcessing = (props) => {
-
-    const [info, setInfo] = useState(props.info);
-    const stageName = "processingInfo";
+const PostProcessing = ({
+    information,
+    status,
+    languageData,
+    id,
+    updatePatientFile,
+}) => {
+    const [info, setInfo] = useState(information);
+    const stageName = 'processingInfo';
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
-    const [processingNotes, setProcessingNotes] = useState("");
-    const [processingFiles, setProcessingFiles] = useState(info.files.map((file_info) => {return file_info.filename}));
-    const formFields = {
-        notes: processingNotes,
-    }
-
-    const lang = props.lang.data;
-    const key = props.lang.key; 
+    const [processingNotes, setProcessingNotes] = useState('');
+    const [processingFiles, setProcessingFiles] = useState(
+        info.files.map((fileInfo) => {
+            return fileInfo.filename;
+        }),
+    );
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const handleDownload = (fileName) => {
-        downloadFile(props.id, stageName, fileName);
-    }
+        downloadFile(id, stageName, fileName);
+    };
 
     const handleDelete = async (fileName) => {
-        deleteFile(props.id, stageName, fileName);
-        setProcessingFiles(processingFiles.filter(file => file !== fileName));
-        let info_copy = info;
-        info_copy.files = info_copy.files.filter((file_info) => file_info.filename != fileName)
-        setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy);
-    }
+        deleteFile(id, stageName, fileName);
+        setProcessingFiles(processingFiles.filter((file) => file !== fileName));
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.filter(
+            (fileInfo) => fileInfo.filename !== fileName,
+        );
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
+    };
 
     const handleUpload = async (e) => {
         e.preventDefault();
         const fileToUpload = e.target.files[0];
-        setProcessingFiles(files => files.concat(fileToUpload.name.toUpperCase()));
-        let res = await uploadFile(props.id, stageName, fileToUpload, fileToUpload.name.toUpperCase());
-        let info_copy = info;
-        info_copy.files = info_copy.files.concat({filename: res.data.data.name, uploadedBy: res.data.data.uploadedGy, uploadDate: res.data.data.uploadName});
-        setInfo(info_copy);
-        props.updatePatientFile(stageName, info_copy)
-    }
+        setProcessingFiles((files) =>
+            files.concat(fileToUpload.name.toUpperCase()),
+        );
+        const res = await uploadFile(
+            id,
+            stageName,
+            fileToUpload,
+            fileToUpload.name.toUpperCase(),
+        );
+        const infoCopy = info;
+        infoCopy.files = infoCopy.files.concat({
+            filename: res.data.data.name,
+            uploadedBy: res.data.data.uploadedGy,
+            uploadDate: res.data.data.uploadName,
+        });
+        setInfo(infoCopy);
+        updatePatientFile(stageName, infoCopy);
+    };
 
     useEffect(() => {
         setProcessingNotes(info.notes);
-    }, [trigger]);
+    }, [trigger, info.notes]);
 
-    const saveData = (e) => {
-        let info_copy = info;
-        info_copy.notes = processingNotes;
-        setInfo(info_copy);
-        updateStage(props.id, stageName, info_copy);
-        props.updatePatientFile(stageName, info_copy);
+    const saveData = () => {
+        const infoCopy = info;
+        infoCopy.notes = processingNotes;
+        setInfo(infoCopy);
+        updateStage(id, stageName, infoCopy);
+        updatePatientFile(stageName, infoCopy);
         setEdit(false);
-        swal(lang[key].components.bottombar.savedMessage.processing, "", "success");
-    }
+        swal(lang.components.bottombar.savedMessage.processing, '', 'success');
+    };
 
-    const discardData = (e) => {
+    const discardData = () => {
         swal({
-            title: lang[key].components.button.discard.question,
-            text: lang[key].components.button.discard.warningMessage,
-            icon: "warning",
+            title: lang.components.button.discard.question,
+            text: lang.components.button.discard.warningMessage,
+            icon: 'warning',
             dangerMode: true,
-            buttons: [lang[key].components.button.discard.cancelButton, lang[key].components.button.discard.confirmButton]
-          })
-          .then((willDelete) => {
+            buttons: [
+                lang.components.button.discard.cancelButton,
+                lang.components.button.discard.confirmButton,
+            ],
+        }).then((willDelete) => {
             if (willDelete) {
-              swal({
-                title: lang[key].components.button.discard.success,
-                icon: "success",
-                buttons: lang[key].components.button.discard.confirmButton
-            });
-            reset(!trigger);
-            setEdit(false)
-            } 
-          });
-    }
+                swal({
+                    title: lang.components.button.discard.success,
+                    icon: 'success',
+                    buttons: lang.components.button.discard.confirmButton,
+                });
+                reset(!trigger);
+                setEdit(false);
+            }
+        });
+    };
 
     return (
         <div>
-            <h1>{lang[key].patientView.postProcessing.title}</h1>
+            <h1>{lang.patientView.postProcessing.title}</h1>
             <p>Last edited by Im Tired on 10/05/2020 9:58PM</p>
-            <Files lang={props.lang} title={lang[key].components.file.title} fileNames={processingFiles} handleDownload={handleDownload} handleUpload={handleUpload} handleDelete={handleDelete}/>
-            <Notes disabled={!edit} title={lang[key].components.notes.title} value={processingNotes} state={setProcessingNotes} />
-            <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{state: trigger, setState: discardData}} save = {saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <Files
+                languageData={languageData}
+                title={lang.components.file.title}
+                fileNames={processingFiles}
+                handleDownload={handleDownload}
+                handleUpload={handleUpload}
+                handleDelete={handleDelete}
+            />
+            <Notes
+                disabled={!edit}
+                title={lang.components.notes.title}
+                value={processingNotes}
+                state={setProcessingNotes}
+            />
+            <BottomBar
+                lastEditedBy={info.lastEditedBy}
+                lastEdited={info.lastEdited}
+                discard={{ state: trigger, setState: discardData }}
+                save={saveData}
+                status={status}
+                edit={edit}
+                setEdit={setEdit}
+                languageData={languageData}
+            />
         </div>
-    )
-}
+    );
+};
+
+PostProcessing.propTypes = {
+    languageData: LanguageDataType.isRequired,
+    information: PropTypes.object.isRequired,
+    status: StringGetterSetterType,
+    id: PropTypes.string.isRequired,
+    updatePatientFile: PropTypes.func.isRequired,
+};
 
 export default PostProcessing;

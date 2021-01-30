@@ -1,12 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-const AccountManagement = (props) => {
-
-    return (
-        <div>
-            account
-        </div>
-    )
-}
+const AccountManagement = () => {
+    return <div>account</div>;
+};
 
 export default AccountManagement;

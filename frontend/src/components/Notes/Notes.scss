@@ -4,20 +4,22 @@
     width: 350px;
     margin-top: 50px;
     margin-bottom: 25px;
-    
+
     .notes-header {
         background-color: $secondary;
         color: black;
         padding: 2px;
         padding-left: 10px;
 
-        h3 { font-weight: 100; }
+        h3 {
+            font-weight: 100;
+        }
     }
 
     .notes-body {
         min-width: 98%;
         max-width: 98%;
-        font-family: "Ubuntu";
+        font-family: 'Ubuntu';
         max-height: 300px;
         min-height: 100px;
         font-size: 16px;
@@ -27,7 +29,7 @@
     .active-body {
         min-width: 98%;
         max-width: 98%;
-        font-family: "Ubuntu";
+        font-family: 'Ubuntu';
         max-height: 300px;
         min-height: 100px;
         font-size: 16px;

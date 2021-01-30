@@ -8,14 +8,15 @@
     background-color: $controllerGrey;
     text-transform: uppercase;
 
-    .status-icon, .status-icon-ar {
+    .status-icon,
+    .status-icon-ar {
         width: 16px;
     }
 
     .status-icon {
         margin-right: 6px;
     }
-    
+
     .status-icon-ar {
         margin-left: 6px;
     }
@@ -36,21 +37,23 @@
             &.active {
                 background: white;
                 color: black;
-                &:hover { background: white; }
+                &:hover {
+                    background: white;
+                }
             }
         }
-	}
-
-	.toggle-button-selector {
-		display: none;
     }
-    	
-	@media (max-width: $resizeButtonGroupMaxWidth) {
-		.toggle-button-group {
-			display: none;
-		}
 
-		.toggle-button-selector {
+    .toggle-button-selector {
+        display: none;
+    }
+
+    @media (max-width: $resizeButtonGroupMaxWidth) {
+        .toggle-button-group {
+            display: none;
+        }
+
+        .toggle-button-selector {
             display: inherit;
             width: 100%;
             justify-content: space-between;
@@ -66,7 +69,7 @@
                 }
             }
         }
-	}
+    }
 }
 
 .stage-selector-menu {
@@ -77,7 +80,8 @@
         text-transform: none;
     }
 
-    .status-icon, .status-icon-ar {
+    .status-icon,
+    .status-icon-ar {
         width: 16px;
     }
 

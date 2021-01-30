@@ -1,6 +1,5 @@
 @import '../../styles/colors.scss';
 
-
 .table-container {
     height: 70vh;
     width: 90%;
@@ -19,8 +18,8 @@
         color: white;
         font-weight: bold;
         font-size: 12px;
-        text-transform: uppercase;;
-        
+        text-transform: uppercase;
+
         &:hover {
             cursor: pointer;
         }
@@ -31,7 +30,7 @@
         padding-bottom: 6px;
     }
 
-   .table-view-link {
+    .table-view-link {
         text-decoration: none;
         display: flex;
         float: right;
@@ -40,11 +39,11 @@
         color: $button;
         font-size: 13px;
         font-weight: bolder;
-       .view-icon {
-           color: $button;
-           fill: $button;
-       }
-   }
+        .view-icon {
+            color: $button;
+            fill: $button;
+        }
+    }
 
     .dropdown-arrow {
         font-size: 24px;
@@ -56,7 +55,7 @@
         padding-left: 20px;
         div {
             display: flex;
-            align-items: center; 
+            align-items: center;
         }
     }
 

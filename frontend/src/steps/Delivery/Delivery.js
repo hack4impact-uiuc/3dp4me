@@ -1,69 +1,81 @@
-import React, { useEffect, useState } from 'react'
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup, TextField } from '@material-ui/core';
-import BottomBar from '../../components/BottomBar/BottomBar';
+import React, { useEffect, useState } from 'react';
+import {
+    FormControl,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+} from '@material-ui/core';
 import swal from 'sweetalert';
+import PropTypes from 'prop-types';
+
+import {
+    LanguageDataType,
+    StringGetterSetterType,
+} from '../../utils/custom-proptypes';
+import BottomBar from '../../components/BottomBar/BottomBar';
 import './Delivery.scss';
 import { updateStage } from '../../utils/api';
 
-
-const Delivery = (props) => {
-
-    const [info, setInfo] = useState(props.info);
-    const stageName = "deliveryInfo";
+const Delivery = ({
+    information,
+    status,
+    address,
+    deliveryType,
+    languageData,
+    id,
+    updatePatientFile,
+}) => {
+    const [info, setInfo] = useState(information);
+    const stageName = 'deliveryInfo';
     const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
-    // const [address, setAddress] = useState("");
-    const [deliveryStatus, setDeliveryStatus] = useState("");
-    const formFields = {
-        // address: address,
-        deliveryStatus: deliveryStatus
-    }
-
-    const lang = props.lang.data;
-    const key = props.lang.key;
+    const [deliveryStatus, setDeliveryStatus] = useState('');
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     useEffect(() => {
         // setAddress(info.address);
-        setDeliveryStatus(info.deliveryStatus)
-    }, [trigger]);
+        setDeliveryStatus(info.deliveryStatus);
+    }, [trigger, info.deliveryStatus]);
 
-    const saveData = (e) => {
-        let info_copy = info;
-        info_copy.deliveryStatus = deliveryStatus;
-        setInfo(info_copy);
-        updateStage(props.id, stageName, info_copy);
-        props.updatePatientFile(stageName, info_copy);
+    const saveData = () => {
+        const infoCopy = info;
+        infoCopy.deliveryStatus = deliveryStatus;
+        setInfo(infoCopy);
+        updateStage(id, stageName, infoCopy);
+        updatePatientFile(stageName, infoCopy);
         setEdit(false);
-        swal(lang[key].components.bottombar.savedMessage.delivery, "", "success");
-    }
+        swal(lang.components.bottombar.savedMessage.delivery, '', 'success');
+    };
 
-    const discardData = (e) => {
+    const discardData = () => {
         swal({
-            title: lang[key].components.button.discard.question,
-            text: lang[key].components.button.discard.warningMessage,
-            icon: "warning",
-            buttons: true,
+            title: lang.components.button.discard.question,
+            text: lang.components.button.discard.warningMessage,
+            icon: 'warning',
             dangerMode: true,
-            buttons: [lang[key].components.button.discard.cancelButton, lang[key].components.button.discard.confirmButton]
-          })
-          .then((willDelete) => {
+            buttons: [
+                lang.components.button.discard.cancelButton,
+                lang.components.button.discard.confirmButton,
+            ],
+        }).then((willDelete) => {
             if (willDelete) {
-              swal({
-                title: lang[key].components.button.discard.success,
-                icon: "success",
-                buttons: lang[key].components.button.discard.confirmButton
-            });
-            reset(!trigger);
-            setEdit(false)
-            } 
-          });
-    }
+                swal({
+                    title: lang.components.button.discard.success,
+                    icon: 'success',
+                    buttons: lang.components.button.discard.confirmButton,
+                });
+                reset(!trigger);
+                setEdit(false);
+            }
+        });
+    };
 
     return (
         <div className="delivery-wrapper">
-            <h1>{lang[key].patientView.delivery.title}</h1>
+            <h1>{lang.patientView.delivery.title}</h1>
             <p>Clinic XYZ on 10/05/2020 9:58PM</p>
-            <h3>{lang[key].patientView.delivery.address}</h3>
+            <h3>{lang.patientView.delivery.address}</h3>
             {/* <TextField
                 disabled={!edit}
                 className={edit ? "active-input" : "input-field"}
@@ -71,21 +83,66 @@ const Delivery = (props) => {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
             /> */}
-            <p>{props.address}</p>
-            <div className="delivery-address-label">{lang[key].patientView.delivery.addressLabel + props.deliveryType}</div>
-            <h3>{lang[key].patientView.delivery.status}</h3>
+            <p>{address}</p>
+            <div className="delivery-address-label">
+                {lang.patientView.delivery.addressLabel + deliveryType}
+            </div>
+            <h3>{lang.patientView.delivery.status}</h3>
             <FormControl disabled={!edit} component="fieldset">
-                <RadioGroup name="status" value={deliveryStatus} onChange={(e) => setDeliveryStatus(e.target.value)}>
-                    <FormControlLabel value="notReady" control={<Radio />} label={lang[key].patientView.delivery.notReady} />
-                    <FormControlLabel value="ready" control={<Radio />} label={lang[key].patientView.delivery.ready} />
-                    <FormControlLabel value="out" control={<Radio />} label={lang[key].patientView.delivery.out} />
-                    <FormControlLabel value="handDelivered" control={<Radio />} label={lang[key].patientView.delivery.handDelivered} />
-                    <FormControlLabel value="pickup" control={<Radio />} label={lang[key].patientView.delivery.pickup} />
+                <RadioGroup
+                    name="status"
+                    value={deliveryStatus}
+                    onChange={(e) => setDeliveryStatus(e.target.value)}
+                >
+                    <FormControlLabel
+                        value="notReady"
+                        control={<Radio />}
+                        label={lang.patientView.delivery.notReady}
+                    />
+                    <FormControlLabel
+                        value="ready"
+                        control={<Radio />}
+                        label={lang.patientView.delivery.ready}
+                    />
+                    <FormControlLabel
+                        value="out"
+                        control={<Radio />}
+                        label={lang.patientView.delivery.out}
+                    />
+                    <FormControlLabel
+                        value="handDelivered"
+                        control={<Radio />}
+                        label={lang.patientView.delivery.handDelivered}
+                    />
+                    <FormControlLabel
+                        value="pickup"
+                        control={<Radio />}
+                        label={lang.patientView.delivery.pickup}
+                    />
                 </RadioGroup>
             </FormControl>
-            <BottomBar lastEditedBy={info.lastEditedBy} lastEdited={info.lastEdited} discard={{state: trigger, setState: discardData}} save={saveData} status={props.status} edit={edit} setEdit={setEdit} lang={props.lang} />
+            <BottomBar
+                lastEditedBy={info.lastEditedBy}
+                lastEdited={info.lastEdited}
+                discard={{ state: trigger, setState: discardData }}
+                save={saveData}
+                status={status}
+                edit={edit}
+                setEdit={setEdit}
+                languageData={languageData}
+            />
         </div>
-    )
-}
+    );
+};
+
+Delivery.propTypes = {
+    languageData: LanguageDataType.isRequired,
+    information: PropTypes.object.isRequired,
+    status: StringGetterSetterType,
+    id: PropTypes.string.isRequired,
+    updatePatientFile: PropTypes.func.isRequired,
+    address: PropTypes.string.isRequired,
+    deliveryType: PropTypes.string.isRequired,
+};
 
 export default Delivery;

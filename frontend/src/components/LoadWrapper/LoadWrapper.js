@@ -1,12 +1,16 @@
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const LoadWrapper = (props) => {
-    if (props.loading) {return (<></>);}
-    else {
-        return (
-            <>{props.children}</>
-        );
+const LoadWrapper = ({ loading, children }) => {
+    if (loading) {
+        return <></>;
     }
-}
+    return <>{children}</>;
+};
+
+LoadWrapper.propTypes = {
+    loading: PropTypes.bool.isRequired,
+    children: PropTypes.elementType,
+};
 
 export default LoadWrapper;

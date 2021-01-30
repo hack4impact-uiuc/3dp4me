@@ -1,18 +1,20 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { errorWrap } = require("../../utils");
-const { models } = require("../../models");
-const { uploadFile, downloadFile } = require("../../utils/aws/aws-s3-helpers");
+const { errorWrap } = require('../../utils');
+const { models } = require('../../models');
+const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
 
 // GET: Returns all patients
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        models.Patient.find().then(patientInfo => res.status(200).json({
-            code: 200, 
-            success: true, 
-            result: patientInfo
-        }));
+        models.Patient.find().then((patientInfo) =>
+            res.status(200).json({
+                code: 200,
+                success: true,
+                result: patientInfo,
+            }),
+        );
     }),
 );
 
@@ -21,7 +23,7 @@ router.get(
     '/:id',
     errorWrap(async (req, res) => {
         const { id } = req.params;
-        const patientData = await models.Patient.findById(id); 
+        const patientData = await models.Patient.findById(id);
         if (!patientData)
             res.status(404).json({
                 code: 404,
@@ -29,8 +31,8 @@ router.get(
             });
         else
             res.status(200).json({
-                code: 200, 
-                success: true, 
+                code: 200,
+                success: true,
                 result: patientData,
             });
     }),
@@ -45,8 +47,8 @@ router.get(
         const patientData = await models.Patient.findById(id, stage);
         const stageData = patientData[stage];
         res.status(200).json({
-            code: 200, 
-            success: true, 
+            code: 200,
+            success: true,
             result: stageData,
         });
     }),
@@ -63,18 +65,17 @@ router.post(
             const saved_patient = await _patient.save();
         } catch (err) {
             // TODO: Validate patient and send back good error message
-            res.status(500).send({
-
-            });
+            res.status(500).send({});
         }
 
         res.status(SUCCESS).send({
             code: SUCCESS,
             success: true,
-            message: "User successfully created.",
-            data: resp
+            message: 'User successfully created.',
+            data: resp,
         });
-}));
+    }),
+);
 
 // GET: Download a file
 router.get(
@@ -82,16 +83,21 @@ router.get(
     errorWrap(async (req, res) => {
         const { id, stage, filename } = req.params;
         //TODO: change it so that you can pass user aws credentials in a more secure manner
-        var s3Stream = downloadFile(`${id}/${stage}/${filename}`, {accessKeyId: req.headers.accesskeyid, secretAccessKey: req.headers.secretaccesskey, sessionToken: req.headers.sessiontoken}).createReadStream();
+        var s3Stream = downloadFile(`${id}/${stage}/${filename}`, {
+            accessKeyId: req.headers.accesskeyid,
+            secretAccessKey: req.headers.secretaccesskey,
+            sessionToken: req.headers.sessiontoken,
+        }).createReadStream();
         // Listen for errors returned by the service
-        s3Stream.on('error', function(err) {
-            res.json('S3 Error:' + err);
-        }).on('close', function() {
-            res.end();
-            console.log('Done.');
-        });
+        s3Stream
+            .on('error', function (err) {
+                res.json('S3 Error:' + err);
+            })
+            .on('close', function () {
+                res.end();
+            });
         s3Stream.pipe(res);
-    })
+    }),
 );
 
 // Delete: Delete a file
@@ -100,7 +106,9 @@ router.delete(
     errorWrap(async (req, res) => {
         const { id, stage, filename } = req.params;
         const patient = await models.Patient.findById(id);
-        let index = patient[stage].files.findIndex(x => x.filename==filename); 
+        let index = patient[stage].files.findIndex(
+            (x) => x.filename == filename,
+        );
         if (index > -1) {
             patient[stage].files.splice(index, 1);
         }
@@ -109,11 +117,10 @@ router.delete(
         patient.save();
         res.status(201).json({
             success: true,
-            message: 'Patient status updated with file removed'
+            message: 'Patient status updated with file removed',
         });
-    })
+    }),
 );
-
 
 // POST: upload individual files
 router.post(
@@ -121,31 +128,49 @@ router.post(
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
         //TODO: change it so that you can pass user aws credentials in a more secure manner
-        const { uploadedFileName, accessKeyId, secretAccessKey,sessionToken} = req.body;
+        const {
+            uploadedFileName,
+            accessKeyId,
+            secretAccessKey,
+            sessionToken,
+        } = req.body;
         const patient = await models.Patient.findById(id);
         let file = req.files.uploadedFile;
-        uploadFile(file.data, `${id}/${stage}/${uploadedFileName}`, {accessKeyId: accessKeyId, secretAccessKey: secretAccessKey, sessionToken: sessionToken}, function(err, data) {
-            if(err) {
-                res.json(err)
-            } else {
-                // update database only if upload was successful
-                patient[stage].files.push({filename: uploadedFileName, uploadedBy: req.user.Username, uploadDate: Date.now()});
-                patient.lastEdited = Date.now();
-                patient.save();
-                res.status(201).json({
-                    success: true,
-                    message: 'Patient status updated with new file',
-                    data: {
-                        name: uploadedFileName,
+        uploadFile(
+            file.data,
+            `${id}/${stage}/${uploadedFileName}`,
+            {
+                accessKeyId: accessKeyId,
+                secretAccessKey: secretAccessKey,
+                sessionToken: sessionToken,
+            },
+            function (err, data) {
+                if (err) {
+                    res.json(err);
+                } else {
+                    // update database only if upload was successful
+                    patient[stage].files.push({
+                        filename: uploadedFileName,
                         uploadedBy: req.user.Username,
                         uploadDate: Date.now(),
-                        mimetype: file.mimetype,
-                        size: file.size
-                    }
-                });
-            }
-        });
-    })
+                    });
+                    patient.lastEdited = Date.now();
+                    patient.save();
+                    res.status(201).json({
+                        success: true,
+                        message: 'Patient status updated with new file',
+                        data: {
+                            name: uploadedFileName,
+                            uploadedBy: req.user.Username,
+                            uploadDate: Date.now(),
+                            mimetype: file.mimetype,
+                            size: file.size,
+                        },
+                    });
+                }
+            },
+        );
+    }),
 );
 
 // POST: Updates info for patient at stage
@@ -163,9 +188,9 @@ router.post(
         patient[stage] = updatedStage;
         patient[stage].lastEdited = Date.now();
         patient[stage].lastEditedBy = req.user.Username;
-        await patient.save(function(err){
-            if(err){
-                res.json(err) //TODO: bug here, need to take a look
+        await patient.save(function (err) {
+            if (err) {
+                res.json(err); //TODO: bug here, need to take a look
             } else {
                 res.status(200).json({
                     success: true,
@@ -174,9 +199,7 @@ router.post(
                 });
             }
         });
-        
     }),
 );
-
 
 module.exports = router;

@@ -4,178 +4,313 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import PropTypes from 'prop-types';
+
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
-
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ToggleButtons.scss';
 
-const ToggleButtons = (props) => {
+const ToggleButtons = ({
+    languageData,
+    handleStep,
+    step,
+    medStatus = '',
+    processingStatus = '',
+    modelStatus = '',
+    printStatus = '',
+    earScanStatus = '',
+    deliveryStatus = '',
+    feedbackStatus = '',
+}) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
-    const lang = props.lang.data;
-    const key = props.lang.key;
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const statusIcons = {
-        unfinished: <img alt="incomplete" src={ExclamationIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />,
-        partial: <img alt="partial" src={HalfCircleIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />,
-        finished: <img alt="complete" src={CheckIcon} className={`${key === "AR" ? "status-icon-ar" : "status-icon"}`} />
-    }
+        unfinished: (
+            <img
+                alt="incomplete"
+                src={ExclamationIcon}
+                className={`${key === 'AR' ? 'status-icon-ar' : 'status-icon'}`}
+            />
+        ),
+        partial: (
+            <img
+                alt="partial"
+                src={HalfCircleIcon}
+                className={`${key === 'AR' ? 'status-icon-ar' : 'status-icon'}`}
+            />
+        ),
+        finished: (
+            <img
+                alt="complete"
+                src={CheckIcon}
+                className={`${key === 'AR' ? 'status-icon-ar' : 'status-icon'}`}
+            />
+        ),
+    };
 
     const handleClickSelector = (e) => {
         setAnchorEl(e.currentTarget);
     };
-    
+
     const handleCloseSelector = (e, newStep) => {
         setAnchorEl(null);
-        if (newStep !== "close") {
-            props.handleStep(e, newStep);
+        if (newStep !== 'close') {
+            handleStep(e, newStep);
         }
     };
 
     return (
         <div className="toggle-buttons-wrapper">
-            <ToggleButtonGroup className="toggle-button-group" size="large" exclusive value={props.step} onChange={props.handleStep}>
+            <ToggleButtonGroup
+                className="toggle-button-group"
+                size="large"
+                exclusive
+                value={step}
+                onChange={handleStep}
+            >
                 <ToggleButton
                     disableRipple
-                    className={`toggle-button ${props.step === "info" ? "active" : ""}`}
+                    className={`toggle-button ${
+                        step === 'info' ? 'active' : ''
+                    }`}
                     value="info"
                 >
-                    {props.medStatus !== undefined ? statusIcons[props.medStatus] : null} <b>{lang[key].components.stepTabs.patientInfo}</b>
+                    {medStatus !== undefined ? statusIcons[medStatus] : null}{' '}
+                    <b>{lang.components.stepTabs.patientInfo}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
-                    className={`toggle-button ${props.step === "scan" ? "active" : ""}`}
+                    className={`toggle-button ${
+                        step === 'scan' ? 'active' : ''
+                    }`}
                     value="scan"
                 >
-                    {props.earScanStatus !== undefined ? statusIcons[props.earScanStatus] : null} <b>{lang[key].components.stepTabs.earScan}</b>
+                    {earScanStatus !== undefined
+                        ? statusIcons[earScanStatus]
+                        : null}{' '}
+                    <b>{lang.components.stepTabs.earScan}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
-                    className={`toggle-button ${props.step === "cad" ? "active" : ""}`}
+                    className={`toggle-button ${
+                        step === 'cad' ? 'active' : ''
+                    }`}
                     value="cad"
                 >
-                    {props.modelStatus !== undefined ? statusIcons[props.modelStatus] : null} <b>{lang[key].components.stepTabs.CADModeling}</b>
+                    {modelStatus !== undefined
+                        ? statusIcons[modelStatus]
+                        : null}{' '}
+                    <b>{lang.components.stepTabs.CADModeling}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
-                    className={`toggle-button ${props.step === "printing" ? "active" : ""}`}
+                    className={`toggle-button ${
+                        step === 'printing' ? 'active' : ''
+                    }`}
                     value="printing"
                 >
-                    {props.printStatus !== undefined ? statusIcons[props.printStatus] : null} <b>{lang[key].components.stepTabs.print}</b>
+                    {printStatus !== undefined
+                        ? statusIcons[printStatus]
+                        : null}{' '}
+                    <b>{lang.components.stepTabs.print}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
-                    className={`toggle-button ${props.step === "processing" ? "active" : ""}`}
+                    className={`toggle-button ${
+                        step === 'processing' ? 'active' : ''
+                    }`}
                     value="processing"
                 >
-                    {props.processingStatus !== undefined ? statusIcons[props.processingStatus] : null} <b>{lang[key].components.stepTabs.processing}</b>
+                    {processingStatus !== undefined
+                        ? statusIcons[processingStatus]
+                        : null}{' '}
+                    <b>{lang.components.stepTabs.processing}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
-                    className={`toggle-button ${props.step === "delivery" ? "active" : ""}`}
+                    className={`toggle-button ${
+                        step === 'delivery' ? 'active' : ''
+                    }`}
                     value="delivery"
                 >
-                    {props.deliveryStatus !== undefined ? statusIcons[props.deliveryStatus] : null} <b>{lang[key].components.stepTabs.delivery}</b>
+                    {deliveryStatus !== undefined
+                        ? statusIcons[deliveryStatus]
+                        : null}{' '}
+                    <b>{lang.components.stepTabs.delivery}</b>
                 </ToggleButton>
                 <ToggleButton
                     disableRipple
-                    className={`toggle-button ${props.step === "feedback" ? "active" : ""}`}
+                    className={`toggle-button ${
+                        step === 'feedback' ? 'active' : ''
+                    }`}
                     value="feedback"
                 >
-                    {props.feedbackStatus !== undefined ? statusIcons[props.feedbackStatus] : null} <b>{lang[key].components.stepTabs.feedback}</b>
+                    {feedbackStatus !== undefined
+                        ? statusIcons[feedbackStatus]
+                        : null}{' '}
+                    <b>{lang.components.stepTabs.feedback}</b>
                 </ToggleButton>
             </ToggleButtonGroup>
-            
-            <div className="toggle-button-selector">
-                {props.step === "info" ? 
-                    <div className="current-step-label">
-                        {props.medStatus !== undefined ? statusIcons[props.medStatus] : null}
-                        <b>{lang[key].components.stepTabs.patientInfo}</b>
-                    </div> :
-                    null
-                }
-                {props.step === "scan" ? 
-                    <div className="current-step-label">
-                        {props.earScanStatus !== undefined ? statusIcons[props.earScanStatus] : null}
-                        <b>{lang[key].components.stepTabs.earScan}</b>
-                    </div> :
-                    null
-                }
-                {props.step === "cad" ? 
-                    <div className="current-step-label">
-                        {props.modelStatus !== undefined ? statusIcons[props.modelStatus] : null}
-                        <b>{lang[key].components.stepTabs.CADModeling}</b>
-                    </div> :
-                    null
-                }
-                {props.step === "printing" ? 
-                    <div className="current-step-label">
-                        {props.printStatus !== undefined ? statusIcons[props.printStatus] : null}
-                        <b>{lang[key].components.stepTabs.print}</b>
-                    </div> :
-                    null
-                }
-                {props.step === "processing" ? 
-                    <div className="current-step-label">
-                        {props.processingStatus !== undefined ? statusIcons[props.processingStatus] : null}
-                        <b>{lang[key].components.stepTabs.processing}</b>
-                    </div> :
-                    null
-                }
-                {props.step === "delivery" ? 
-                    <div className="current-step-label">
-                        {props.deliveryStatus !== undefined ? statusIcons[props.deliveryStatus] : null}
-                        <b>{lang[key].components.stepTabs.delivery}</b>
-                    </div> :
-                    null
-                }
-                {props.step === "feedback" ? 
-                    <div className="current-step-label">
-                        {props.feedbackStatus !== undefined ? statusIcons[props.feedbackStatus] : null}
-                        <b>{lang[key].components.stepTabs.feedback}</b>
-                    </div> :
-                    null
-                }
 
-                <IconButton aria-controls="customized-menu" aria-haspopup="true" onClick={handleClickSelector}>
+            <div className="toggle-button-selector">
+                {step === 'info' ? (
+                    <div className="current-step-label">
+                        {medStatus !== undefined
+                            ? statusIcons[medStatus]
+                            : null}
+                        <b>{lang.components.stepTabs.patientInfo}</b>
+                    </div>
+                ) : null}
+                {step === 'scan' ? (
+                    <div className="current-step-label">
+                        {earScanStatus !== undefined
+                            ? statusIcons[earScanStatus]
+                            : null}
+                        <b>{lang.components.stepTabs.earScan}</b>
+                    </div>
+                ) : null}
+                {step === 'cad' ? (
+                    <div className="current-step-label">
+                        {modelStatus !== undefined
+                            ? statusIcons[modelStatus]
+                            : null}
+                        <b>{lang.components.stepTabs.CADModeling}</b>
+                    </div>
+                ) : null}
+                {step === 'printing' ? (
+                    <div className="current-step-label">
+                        {printStatus !== undefined
+                            ? statusIcons[printStatus]
+                            : null}
+                        <b>{lang.components.stepTabs.print}</b>
+                    </div>
+                ) : null}
+                {step === 'processing' ? (
+                    <div className="current-step-label">
+                        {processingStatus !== undefined
+                            ? statusIcons[processingStatus]
+                            : null}
+                        <b>{lang.components.stepTabs.processing}</b>
+                    </div>
+                ) : null}
+                {step === 'delivery' ? (
+                    <div className="current-step-label">
+                        {deliveryStatus !== undefined
+                            ? statusIcons[deliveryStatus]
+                            : null}
+                        <b>{lang.components.stepTabs.delivery}</b>
+                    </div>
+                ) : null}
+                {step === 'feedback' ? (
+                    <div className="current-step-label">
+                        {feedbackStatus !== undefined
+                            ? statusIcons[feedbackStatus]
+                            : null}
+                        <b>{lang.components.stepTabs.feedback}</b>
+                    </div>
+                ) : null}
+
+                <IconButton
+                    aria-controls="customized-menu"
+                    aria-haspopup="true"
+                    onClick={handleClickSelector}
+                >
                     <ExpandMoreIcon />
                 </IconButton>
-                <Menu className="stage-selector-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={e => handleCloseSelector(e, "close")}>
-                    <MenuItem onClick={e => handleCloseSelector(e, "info")}>
-                        {props.medStatus !== undefined ? statusIcons[props.medStatus] : null}
-                        <b className="selector-text">{lang[key].components.stepTabs.patientInfo}</b>
+                <Menu
+                    className="stage-selector-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={(e) => handleCloseSelector(e, 'close')}
+                >
+                    <MenuItem onClick={(e) => handleCloseSelector(e, 'info')}>
+                        {medStatus !== undefined
+                            ? statusIcons[medStatus]
+                            : null}
+                        <b className="selector-text">
+                            {lang.components.stepTabs.patientInfo}
+                        </b>
                     </MenuItem>
-                    <MenuItem onClick={e => handleCloseSelector(e, "scan")}>
-                        {props.earScanStatus !== undefined ? statusIcons[props.earScanStatus] : null}
-                        <b className="selector-text">{lang[key].components.stepTabs.earScan}</b>
+                    <MenuItem onClick={(e) => handleCloseSelector(e, 'scan')}>
+                        {earScanStatus !== undefined
+                            ? statusIcons[earScanStatus]
+                            : null}
+                        <b className="selector-text">
+                            {lang.components.stepTabs.earScan}
+                        </b>
                     </MenuItem>
-                    <MenuItem onClick={e => handleCloseSelector(e, "cad")}>
-                        {props.modelStatus !== undefined ? statusIcons[props.modelStatus] : null}
-                        <b className="selector-text">{lang[key].components.stepTabs.CADModeling}</b>
+                    <MenuItem onClick={(e) => handleCloseSelector(e, 'cad')}>
+                        {modelStatus !== undefined
+                            ? statusIcons[modelStatus]
+                            : null}
+                        <b className="selector-text">
+                            {lang.components.stepTabs.CADModeling}
+                        </b>
                     </MenuItem>
-                    <MenuItem onClick={e => handleCloseSelector(e, "printing")}>
-                        {props.printStatus !== undefined ? statusIcons[props.printStatus] : null}
-                        <b className="selector-text">{lang[key].components.stepTabs.print}</b>
+                    <MenuItem
+                        onClick={(e) => handleCloseSelector(e, 'printing')}
+                    >
+                        {printStatus !== undefined
+                            ? statusIcons[printStatus]
+                            : null}
+                        <b className="selector-text">
+                            {lang.components.stepTabs.print}
+                        </b>
                     </MenuItem>
-                    <MenuItem onClick={e => handleCloseSelector(e, "processing")}>
-                        {props.processingStatus !== undefined ? statusIcons[props.processingStatus] : null}
-                        <b className="selector-text">{lang[key].components.stepTabs.processing}</b>
+                    <MenuItem
+                        onClick={(e) => handleCloseSelector(e, 'processing')}
+                    >
+                        {processingStatus !== undefined
+                            ? statusIcons[processingStatus]
+                            : null}
+                        <b className="selector-text">
+                            {lang.components.stepTabs.processing}
+                        </b>
                     </MenuItem>
-                    <MenuItem onClick={e => handleCloseSelector(e, "delivery")}>
-                        {props.deliveryStatus !== undefined ? statusIcons[props.deliveryStatus] : null}
-                        <b className="selector-text">{lang[key].components.stepTabs.delivery}</b>
+                    <MenuItem
+                        onClick={(e) => handleCloseSelector(e, 'delivery')}
+                    >
+                        {deliveryStatus !== undefined
+                            ? statusIcons[deliveryStatus]
+                            : null}
+                        <b className="selector-text">
+                            {lang.components.stepTabs.delivery}
+                        </b>
                     </MenuItem>
-                    <MenuItem onClick={e => handleCloseSelector(e, "feedback")}>
-                        {props.feedbackStatus !== undefined ? statusIcons[props.feedbackStatus] : null}
-                        <b className="selector-text">{lang[key].components.stepTabs.feedback}</b>
+                    <MenuItem
+                        onClick={(e) => handleCloseSelector(e, 'feedback')}
+                    >
+                        {feedbackStatus !== undefined
+                            ? statusIcons[feedbackStatus]
+                            : null}
+                        <b className="selector-text">
+                            {lang.components.stepTabs.feedback}
+                        </b>
                     </MenuItem>
                 </Menu>
             </div>
         </div>
     );
-}
+};
+
+ToggleButtons.propTypes = {
+    languageData: LanguageDataType.isRequired,
+    handleStep: PropTypes.func.isRequired,
+    step: PropTypes.string.isRequired,
+    medStatus: PropTypes.string,
+    processingStatus: PropTypes.string,
+    modelStatus: PropTypes.string,
+    printStatus: PropTypes.string,
+    earScanStatus: PropTypes.string,
+    deliveryStatus: PropTypes.string,
+    feedbackStatus: PropTypes.string,
+};
 
 export default ToggleButtons;
