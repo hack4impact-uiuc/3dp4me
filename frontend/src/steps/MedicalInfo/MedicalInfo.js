@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import './MedicalInfo.scss';
+import swal from 'sweetalert';
 import {
     CircularProgress,
     Divider,
@@ -10,18 +14,13 @@ import {
     Backdrop,
 } from '@material-ui/core';
 
+import Notes from '../../components/Notes/Notes';
+import BottomBar from '../../components/BottomBar/BottomBar';
+import { updateStage } from '../../utils/api';
 import {
     LanguageDataType,
     StringGetterSetterType,
 } from '../../utils/custom-proptypes';
-
-import PropTypes from 'prop-types';
-import './MedicalInfo.scss';
-import swal from 'sweetalert';
-
-import Notes from '../../components/Notes/Notes';
-import BottomBar from '../../components/BottomBar/BottomBar';
-import { updateStage } from '../../utils/api';
 
 const MedicalInfo = ({
     information,
@@ -105,17 +104,17 @@ const MedicalInfo = ({
     };
 
     const saveData = () => {
-        const infoCopy = info;
-        info.name = name;
-        info.dob = dob;
-        info.ssn = ssn;
-        info.address = address;
-        info.phone = phone;
-        info.emName = emName;
-        info.relationship = emRelationship;
-        info.emPhone = emPhone;
-        info.delivery = delivery;
-        info.notes = notes;
+        const infoCopy = _.cloneDeep(info);
+        infoCopy.name = name;
+        infoCopy.dob = dob;
+        infoCopy.ssn = ssn;
+        infoCopy.address = address;
+        infoCopy.phone = phone;
+        infoCopy.emName = emName;
+        infoCopy.relationship = emRelationship;
+        infoCopy.emPhone = emPhone;
+        infoCopy.delivery = delivery;
+        infoCopy.notes = notes;
         setInfo(infoCopy);
         updateStage(id, stageName, infoCopy);
         updatePatientFile(stageName, infoCopy);

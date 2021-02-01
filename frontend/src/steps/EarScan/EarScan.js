@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import {
     LanguageDataType,
@@ -58,7 +59,7 @@ const EarScan = ({
     const handleLeftDelete = async (fileName) => {
         deleteFile(id, stageName, fileName);
         setLeftEarFiles(leftEarFiles.filter((file) => file !== fileName));
-        const infoCopy = info;
+        const infoCopy = _.cloneDeep(info);
         infoCopy.files = infoCopy.files.filter(
             (fileInfo) => fileInfo.filename !== fileName,
         );
@@ -69,7 +70,7 @@ const EarScan = ({
     const handleRightDelete = async (fileName) => {
         deleteFile(id, stageName, fileName);
         setRightEarFiles(rightEarFiles.filter((file) => file !== fileName));
-        const infoCopy = info;
+        const infoCopy = _.cloneDeep(info);
         infoCopy.files = infoCopy.files.filter(
             (fileInfo) => fileInfo.filename !== fileName,
         );
@@ -89,7 +90,7 @@ const EarScan = ({
             fileToUpload,
             `LEFT_${fileToUpload.name.toUpperCase()}`,
         );
-        const infoCopy = info;
+        const infoCopy = _.cloneDeep(info);
         infoCopy.files = infoCopy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
@@ -111,7 +112,7 @@ const EarScan = ({
             fileToUpload,
             `RIGHT_${fileToUpload.name.toUpperCase()}`,
         );
-        const infoCopy = info;
+        const infoCopy = _.cloneDeep(info);
         infoCopy.files = infoCopy.files.concat({
             filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedGy,
@@ -126,7 +127,7 @@ const EarScan = ({
     }, [trigger, info.notes]);
 
     const saveData = () => {
-        const infoCopy = info;
+        const infoCopy = _.cloneDeep(info);
         infoCopy.notes = notes;
         setInfo(infoCopy);
         updateStage(id, stageName, infoCopy);

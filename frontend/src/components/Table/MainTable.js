@@ -10,13 +10,6 @@ import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 import { IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-
-import {
-    LanguageDataType,
-    TableHeaderType,
-} from '../../utils/custom-proptypes';
-import Eyecon from '../../assets/view.svg';
-
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
@@ -25,6 +18,11 @@ import useSortableData from '../../hooks/useSortableData';
 import finishedIcon from '../../assets/check.svg';
 import partiallyIcon from '../../assets/half-circle.svg';
 import unfinishedIcon from '../../assets/exclamation.svg';
+import Eyecon from '../../assets/view.svg';
+import {
+    LanguageDataType,
+    TableHeaderType,
+} from '../../utils/custom-proptypes';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
