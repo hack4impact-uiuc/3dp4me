@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import './MedicalInfo.scss';
+import swal from 'sweetalert';
 import {
     CircularProgress,
     Divider,
@@ -10,19 +14,13 @@ import {
     Backdrop,
 } from '@material-ui/core';
 
+import Notes from '../../components/Notes/Notes';
+import BottomBar from '../../components/BottomBar/BottomBar';
+import { updateStage } from '../../utils/api';
 import {
     LanguageDataType,
     StringGetterSetterType,
 } from '../../utils/custom-proptypes';
-
-import PropTypes from 'prop-types';
-import './MedicalInfo.scss';
-import swal from 'sweetalert';
-import _ from 'lodash';
-
-import Notes from '../../components/Notes/Notes';
-import BottomBar from '../../components/BottomBar/BottomBar';
-import { updateStage } from '../../utils/api';
 
 const MedicalInfo = ({
     information,

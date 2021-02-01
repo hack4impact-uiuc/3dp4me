@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Snackbar, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
-import MainTable from '../../components/Table/MainTable';
-
 import './Patients.scss';
 import MuiAlert from '@material-ui/lab/Alert';
 import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
 
+import MainTable from '../../components/Table/MainTable';
 import search from '../../assets/search.svg';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import archive from '../../assets/archive.svg';
