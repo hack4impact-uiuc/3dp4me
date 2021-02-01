@@ -1,0 +1,43 @@
+{
+    "regions": ["iad1"],
+    "env": {
+        "AWS_CONFIG": "@3dp4me-aws-config",
+        "DB_URI": "mongodb+srv://3dp4me:3dp4me@cluster0.exuwt.mongodb.net/3dp4me?retryWrites=true&w=majority"
+    },
+    "builds": [
+        { "src": "backend/app.js", "use": "@now/node" },
+        {
+            "src": "frontend/package.json",
+            "use": "@now/static-build",
+            "config": { "distDir": "build" }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "headers": { "cache-control": "s-maxage=0" },
+            "dest": "backend/app.js"
+        },
+        {
+            "src": "/static/(.*)",
+            "headers": { "cache-control": "s-maxage=31536000, immutable" },
+            "dest": "frontend/static/$1"
+        },
+        { "src": "/favicon.ico", "dest": "frontend/favicon.ico" },
+        {
+            "src": "/asset-manifest.json",
+            "dest": "frontend/asset-manifest.json"
+        },
+        {
+            "src": "/precache-manifest.(.*)",
+            "dest": "frontend/precache-manifest.$1"
+        },
+        { "src": "/manifest.json", "dest": "frontend/manifest.json" },
+        {
+            "src": "/service-worker.js",
+            "headers": { "cache-control": "s-maxage=0" },
+            "dest": "frontend/service-worker.js"
+        },
+        { "src": "/(.*)", "dest": "frontend/index.html" }
+    ]
+}
