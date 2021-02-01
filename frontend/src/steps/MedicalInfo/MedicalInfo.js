@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import './MedicalInfo.scss';
 import swal from 'sweetalert';
 import _ from 'lodash';
+
 import Notes from '../../components/Notes/Notes';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { updateStage } from '../../utils/api';

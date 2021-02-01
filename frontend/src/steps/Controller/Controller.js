@@ -12,6 +12,7 @@ import {
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import reactSwal from '@sweetalert/with-react';
 import { useParams } from 'react-router-dom';
+
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import MedicalInfo from '../MedicalInfo/MedicalInfo';
 import EarScan from '../EarScan/EarScan';

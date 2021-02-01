@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+
 import BottomBar from '../../components/BottomBar/BottomBar';
 import Files from '../../components/Files/Files';
 import Notes from '../../components/Notes/Notes';
