@@ -12,7 +12,6 @@ import {
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import reactSwal from '@sweetalert/with-react';
 import { useParams } from 'react-router-dom';
-
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import MedicalInfo from '../MedicalInfo/MedicalInfo';
 import EarScan from '../EarScan/EarScan';
@@ -33,8 +32,9 @@ const theme = createMuiTheme({
 const Controller = ({ languageData }) => {
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [patientFile, setPatientFile] = useState();
+    const [patientData, setPatientData] = useState();
     const [step, setStep] = useState('info');
+
     const [medStatus, setMedStatus] = useState('unfinished');
     const [earScanStatus, setEarScanStatus] = useState('unfinished');
     const [modelStatus, setModelStatus] = useState('unfinished');
@@ -42,6 +42,7 @@ const Controller = ({ languageData }) => {
     const [processingStatus, setProcessingStatus] = useState('unfinished');
     const [deliveryStatus, setDeliveryStatus] = useState('unfinished');
     const [feedbackStatus, setFeedbackStatus] = useState('unfinished');
+
     const params = useParams();
     const { id } = params;
 
@@ -73,10 +74,10 @@ const Controller = ({ languageData }) => {
             e.target.value === 'finished'
         ) {
             setMedStatus(e.target.value);
-            const patientFileCopy = patientFile;
-            patientFileCopy.patientInfo.status = e.target.value;
-            updateStage(id, 'patientInfo', patientFileCopy.patientInfo);
-            setPatientFile(patientFileCopy);
+            const patientDataCopy = patientData;
+            patientDataCopy.patientInfo.status = e.target.value;
+            updateStage(id, 'patientInfo', patientDataCopy.patientInfo);
+            setPatientData(patientDataCopy);
         }
     };
     const handleEarScanStatus = (e) => {
@@ -86,10 +87,10 @@ const Controller = ({ languageData }) => {
             e.target.value === 'finished'
         ) {
             setEarScanStatus(e.target.value);
-            const patientFileCopy = patientFile;
-            patientFileCopy.earScanInfo.status = e.target.value;
-            updateStage(id, 'earScanInfo', patientFileCopy.earScanInfo);
-            setPatientFile(patientFileCopy);
+            const patientDataCopy = patientData;
+            patientDataCopy.earScanInfo.status = e.target.value;
+            updateStage(id, 'earScanInfo', patientDataCopy.earScanInfo);
+            setPatientData(patientDataCopy);
         }
     };
     const handleModelStatus = (e) => {
@@ -99,10 +100,10 @@ const Controller = ({ languageData }) => {
             e.target.value === 'finished'
         ) {
             setModelStatus(e.target.value);
-            const patientFileCopy = patientFile;
-            patientFileCopy.modelInfo.status = e.target.value;
-            updateStage(id, 'modelInfo', patientFileCopy.modelInfo);
-            setPatientFile(patientFileCopy);
+            const patientDataCopy = patientData;
+            patientDataCopy.modelInfo.status = e.target.value;
+            updateStage(id, 'modelInfo', patientDataCopy.modelInfo);
+            setPatientData(patientDataCopy);
         }
     };
     const handlePrintStatus = (e) => {
@@ -112,10 +113,10 @@ const Controller = ({ languageData }) => {
             e.target.value === 'finished'
         ) {
             setPrintStatus(e.target.value);
-            const patientFileCopy = patientFile;
-            patientFileCopy.printingInfo.status = e.target.value;
-            updateStage(id, 'printingInfo', patientFileCopy.printingInfo);
-            setPatientFile(patientFileCopy);
+            const patientDataCopy = patientData;
+            patientDataCopy.printingInfo.status = e.target.value;
+            updateStage(id, 'printingInfo', patientDataCopy.printingInfo);
+            setPatientData(patientDataCopy);
         }
     };
     const handleProcessingStatus = (e) => {
@@ -125,10 +126,10 @@ const Controller = ({ languageData }) => {
             e.target.value === 'finished'
         ) {
             setProcessingStatus(e.target.value);
-            const patientFileCopy = patientFile;
-            patientFileCopy.processingInfo.status = e.target.value;
-            updateStage(id, 'processingInfo', patientFileCopy.processingInfo);
-            setPatientFile(patientFileCopy);
+            const patientDataCopy = patientData;
+            patientDataCopy.processingInfo.status = e.target.value;
+            updateStage(id, 'processingInfo', patientDataCopy.processingInfo);
+            setPatientData(patientDataCopy);
         }
     };
     const handleDeliveryStatus = (e) => {
@@ -138,10 +139,10 @@ const Controller = ({ languageData }) => {
             e.target.value === 'finished'
         ) {
             setDeliveryStatus(e.target.value);
-            const patientFileCopy = patientFile;
-            patientFileCopy.deliveryInfo.status = e.target.value;
-            updateStage(id, 'deliveryInfo', patientFileCopy.deliveryInfo);
-            setPatientFile(patientFileCopy);
+            const patientDataCopy = patientData;
+            patientDataCopy.deliveryInfo.status = e.target.value;
+            updateStage(id, 'deliveryInfo', patientDataCopy.deliveryInfo);
+            setPatientData(patientDataCopy);
         }
     };
     const handleFeedbackStatus = (e) => {
@@ -151,10 +152,10 @@ const Controller = ({ languageData }) => {
             e.target.value === 'finished'
         ) {
             setFeedbackStatus(e.target.value);
-            const patientFileCopy = patientFile;
-            patientFileCopy.feedbackInfo.status = e.target.value;
-            updateStage(id, 'feedbackInfo', patientFileCopy.feedbackInfo);
-            setPatientFile(patientFileCopy);
+            const patientDataCopy = patientData;
+            patientDataCopy.feedbackInfo.status = e.target.value;
+            updateStage(id, 'feedbackInfo', patientDataCopy.feedbackInfo);
+            setPatientData(patientDataCopy);
         }
     };
 
@@ -162,15 +163,15 @@ const Controller = ({ languageData }) => {
         const getData = async () => {
             // TODO: api call to get all info about a patient
             const res = await getPatientById(id);
-            setPatientFile(res.result);
+            setPatientData(res.result);
             setLoading(false);
         };
 
         getData();
-    }, [setPatientFile, setLoading, id]);
+    }, [setPatientData, setLoading, id]);
 
     const updatePatientFile = (stageName, updated) => {
-        setPatientFile({ ...patientFile, stageName: updated });
+        setPatientData({ ...patientData, stageName: updated });
     };
 
     return (
@@ -193,7 +194,7 @@ const Controller = ({ languageData }) => {
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
-                                        {patientFile?.patientInfo.name}
+                                        {patientData?.patientInfo.name}
                                     </span>
                                 </div>
                                 <div className="drawer-text-section">
@@ -202,7 +203,7 @@ const Controller = ({ languageData }) => {
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
-                                        {patientFile?.patientInfo.orderId}
+                                        {patientData?.patientInfo.orderId}
                                     </span>
                                 </div>
                                 <div className="drawer-text-section">
@@ -211,7 +212,7 @@ const Controller = ({ languageData }) => {
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
-                                        {patientFile?.patientInfo.dob}
+                                        {patientData?.patientInfo.dob}
                                     </span>
                                 </div>
                                 <div className="drawer-text-section">
@@ -220,7 +221,7 @@ const Controller = ({ languageData }) => {
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
-                                        {patientFile?.patientInfo.status}
+                                        {patientData?.patientInfo.status}
                                     </span>
                                 </div>
                                 <span className="drawer-text-label">
@@ -242,7 +243,7 @@ const Controller = ({ languageData }) => {
                                             }
                                         </AccordionSummary>
                                         <AccordionDetails>
-                                            {patientFile?.patientInfo.notes}
+                                            {patientData?.patientInfo.notes}
                                         </AccordionDetails>
                                     </Accordion>
                                     <Accordion
@@ -257,7 +258,7 @@ const Controller = ({ languageData }) => {
                                             {lang.components.stepTabs.earScan}
                                         </AccordionSummary>
                                         <AccordionDetails>
-                                            {patientFile?.earScanInfo.notes}
+                                            {patientData?.earScanInfo.notes}
                                         </AccordionDetails>
                                     </Accordion>
                                     <Accordion
@@ -275,7 +276,7 @@ const Controller = ({ languageData }) => {
                                             }
                                         </AccordionSummary>
                                         <AccordionDetails>
-                                            {patientFile?.modelInfo.notes}
+                                            {patientData?.modelInfo.notes}
                                         </AccordionDetails>
                                     </Accordion>
                                     <Accordion
@@ -290,7 +291,7 @@ const Controller = ({ languageData }) => {
                                             {lang.components.stepTabs.print}
                                         </AccordionSummary>
                                         <AccordionDetails>
-                                            {patientFile?.printingInfo.notes}
+                                            {patientData?.printingInfo.notes}
                                         </AccordionDetails>
                                     </Accordion>
                                     <Accordion
@@ -305,7 +306,7 @@ const Controller = ({ languageData }) => {
                                             {lang.components.stepTabs.delivery}
                                         </AccordionSummary>
                                         <AccordionDetails>
-                                            {patientFile?.deliveryInfo.notes}
+                                            {patientData?.deliveryInfo.notes}
                                         </AccordionDetails>
                                     </Accordion>
                                     <Accordion
@@ -320,7 +321,7 @@ const Controller = ({ languageData }) => {
                                             {lang.components.stepTabs.feedback}
                                         </AccordionSummary>
                                         <AccordionDetails>
-                                            {patientFile?.feedbackInfo.notes}
+                                            {patientData?.feedbackInfo.notes}
                                         </AccordionDetails>
                                     </Accordion>
                                 </div>
@@ -362,7 +363,7 @@ const Controller = ({ languageData }) => {
                     <div className={`steps ${key === 'AR' ? 'steps-ar' : ''}`}>
                         {step === 'info' ? (
                             <MedicalInfo
-                                information={patientFile?.patientInfo}
+                                information={patientData?.patientInfo}
                                 status={{
                                     state: medStatus,
                                     setState: handleMedStatus,
@@ -376,7 +377,7 @@ const Controller = ({ languageData }) => {
                         )}
                         {step === 'scan' ? (
                             <EarScan
-                                information={patientFile?.earScanInfo}
+                                information={patientData?.earScanInfo}
                                 status={{
                                     state: earScanStatus,
                                     setState: handleEarScanStatus,
@@ -390,7 +391,7 @@ const Controller = ({ languageData }) => {
                         )}
                         {step === 'cad' ? (
                             <CADModel
-                                information={patientFile?.modelInfo}
+                                information={patientData?.modelInfo}
                                 status={{
                                     value: modelStatus,
                                     setStatus: handleModelStatus,
@@ -404,7 +405,7 @@ const Controller = ({ languageData }) => {
                         )}
                         {step === 'printing' ? (
                             <Printing
-                                information={patientFile?.printingInfo}
+                                information={patientData?.printingInfo}
                                 status={{
                                     state: printStatus,
                                     setState: handlePrintStatus,
@@ -418,7 +419,7 @@ const Controller = ({ languageData }) => {
                         )}
                         {step === 'processing' ? (
                             <PostProcessing
-                                information={patientFile?.processingInfo}
+                                information={patientData?.processingInfo}
                                 status={{
                                     state: processingStatus,
                                     setState: handleProcessingStatus,
@@ -432,7 +433,7 @@ const Controller = ({ languageData }) => {
                         )}
                         {step === 'delivery' ? (
                             <Delivery
-                                information={patientFile?.deliveryInfo}
+                                information={patientData?.deliveryInfo}
                                 status={{
                                     state: deliveryStatus,
                                     setState: handleDeliveryStatus,
@@ -440,15 +441,15 @@ const Controller = ({ languageData }) => {
                                 languageData={languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
-                                address={patientFile?.patientInfo.address}
-                                deliveryType={patientFile?.patientInfo.delivery}
+                                address={patientData?.patientInfo.address}
+                                deliveryType={patientData?.patientInfo.delivery}
                             />
                         ) : (
                             <></>
                         )}
                         {step === 'feedback' ? (
                             <Feedback
-                                information={patientFile?.feedbackInfo}
+                                information={patientData?.feedbackInfo}
                                 status={{
                                     state: feedbackStatus,
                                     setState: handleFeedbackStatus,
