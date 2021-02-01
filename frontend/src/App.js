@@ -62,7 +62,7 @@ function App() {
 
     if (authLevel === AUTHENTICATED)
         return (
-            <body dir={selectedLang === 'AR' ? 'rtl' : 'ltr'}>
+            <div dir={selectedLang === 'AR' ? 'rtl' : 'ltr'}>
                 <Router>
                     <Navbar
                         languageData={languageData}
@@ -101,7 +101,7 @@ function App() {
                         </Switch>
                     </div>
                 </Router>
-            </body>
+            </div>
         );
 }
 
