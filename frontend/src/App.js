@@ -70,32 +70,34 @@ function App() {
                         username={username}
                         userEmail={userEmail}
                     />
-                    <div className={`${selectedLang === 'AR' ? 'flip' : ''}`}>
+                    <div
+                        className={`${
+                            selectedLang === 'AR' ? 'flip' : ''
+                        } content`}
+                    >
                         <Switch>
-                            <div className="content">
-                                {/* Path = BASE_URL */}
-                                <Route exact path="/">
-                                    <Dashboard languageData={languageData} />
-                                </Route>
-                                {/* Path = BASE_URL/account */}
-                                <Route exact path="/account">
-                                    <AccountManagement
-                                        languageData={languageData}
-                                    />
-                                </Route>
-                                {/* Path = BASE_URL/metrics */}
-                                <Route exact path="/metrics">
-                                    <Metrics languageData={languageData} />
-                                </Route>
-                                {/* Path = BASE_URL/patients */}
-                                <Route exact path="/patients">
-                                    <Patients languageData={languageData} />
-                                </Route>
-                                {/* Path = BASE_URL/patient-info/PATIENT_ID */}
-                                <Route exact path="/patient-info/:id">
-                                    <Controller languageData={languageData} />
-                                </Route>
-                            </div>
+                            {/* Path = BASE_URL */}
+                            <Route exact path="/">
+                                <Dashboard languageData={languageData} />
+                            </Route>
+                            {/* Path = BASE_URL/account */}
+                            <Route exact path="/account">
+                                <AccountManagement
+                                    languageData={languageData}
+                                />
+                            </Route>
+                            {/* Path = BASE_URL/metrics */}
+                            <Route exact path="/metrics">
+                                <Metrics languageData={languageData} />
+                            </Route>
+                            {/* Path = BASE_URL/patients */}
+                            <Route exact path="/patients">
+                                <Patients languageData={languageData} />
+                            </Route>
+                            {/* Path = BASE_URL/patient-info/PATIENT_ID */}
+                            <Route exact path="/patient-info/:id">
+                                <Controller languageData={languageData} />
+                            </Route>
                         </Switch>
                     </div>
                 </Router>
