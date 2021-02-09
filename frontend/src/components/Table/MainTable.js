@@ -110,6 +110,7 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                                 <StyledTableCell
                                     onClick={() => requestSort(header.sortKey)}
                                     className="header"
+                                    key={header.title}
                                     align={key === 'AR' ? 'right' : 'left'}
                                 >
                                     <div
@@ -152,6 +153,7 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                                         className={
                                             key === 'AR' ? 'cell-rtl' : 'cell'
                                         }
+                                        key={patient._id + id}
                                         align={key === 'AR' ? 'right' : 'left'}
                                     >
                                         {id === 'status' ? (
