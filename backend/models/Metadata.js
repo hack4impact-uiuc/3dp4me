@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const stepSchema = new mongoose.Schema({
+    key: { type: String, required: true },
     displayNameEnglish: { type: String, required: true },
     displayNameArabic: { type: String, required: true },
     stepNumber: { type: Number, required: true },
