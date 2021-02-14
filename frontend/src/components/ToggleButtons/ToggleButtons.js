@@ -304,6 +304,7 @@ ToggleButtons.propTypes = {
     languageData: LanguageDataType.isRequired,
     handleStep: PropTypes.func.isRequired,
     step: PropTypes.string.isRequired,
+    // TODO: Enfoce status enum options
     medStatus: PropTypes.string,
     processingStatus: PropTypes.string,
     modelStatus: PropTypes.string,

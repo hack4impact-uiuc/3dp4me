@@ -89,6 +89,67 @@ export const updateStage = async (patientId, stage, updatedStage) => {
         );
 };
 
+export const getStageMetadata = async () => {
+    return [
+        {
+            key: 'pateintInfo',
+            displayName: { EN: 'PatientInfo', AR: 'معلومات المريض' },
+            stepNumber: 1,
+            fields: [
+                {
+                    key: 'firstName',
+                    fieldType: 'String',
+                    displayName: { EN: 'First Name', AR: 'لومات ا' },
+                    fieldNumber: 1,
+                    isVisibleOnDashboard: true,
+                },
+                {
+                    key: 'lastName',
+                    fieldType: 'String',
+                    displayName: { EN: 'Last Name', AR: 'لومات ا' },
+                    fieldNumber: 2,
+                    isVisibleOnDashboard: true,
+                },
+                {
+                    key: 'jordanSSN',
+                    fieldType: 'String',
+                    displayName: { EN: 'Jordan SSN', AR: 'لومات ا' },
+                    fieldNumber: 3,
+                    isVisibleOnDashboard: false,
+                },
+            ],
+        },
+        {
+            key: 'cadModel',
+            displayName: { EN: 'CAD Modeling', AR: 'معلومات المريض' },
+            stepNumber: 2,
+            fields: [
+                {
+                    key: 'firstName',
+                    fieldType: 'String',
+                    displayName: { EN: 'First Name', AR: 'لومات ا' },
+                    fieldNumber: 1,
+                    isVisibleOnDashboard: true,
+                },
+                {
+                    key: 'fileSizeKb',
+                    fieldType: 'Number',
+                    displayName: { EN: 'File Size (Kb)', AR: 'لومات ا' },
+                    fieldNumber: 2,
+                    isVisibleOnDashboard: true,
+                },
+                {
+                    key: 'CAD File',
+                    fieldType: 'File',
+                    displayName: { EN: 'CAD File', AR: 'لومات ا' },
+                    fieldNumber: 3,
+                    isVisibleOnDashboard: false,
+                },
+            ],
+        },
+    ];
+};
+
 export const downloadFile = async (patientId, stage, filename) => {
     const requestString = `/patients/${patientId}/${stage}/${filename}`;
     const {
