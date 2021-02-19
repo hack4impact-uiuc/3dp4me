@@ -7,7 +7,7 @@ var cors = require('cors');
 const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
 const requireAuthentication = require('./middleware/authentication');
-
+const { models } = require('./models');
 const app = express();
 app.use(cors());
 app.use(errorHandler);
