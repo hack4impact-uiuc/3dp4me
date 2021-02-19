@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const fieldEnum = {
     STRING: 'String',
+    MULTI_LINE: 'String',
     FILE: 'File',
     NUMBER: 'Number',
     DATE: 'Date',
@@ -61,4 +62,4 @@ const stepSchema = new mongoose.Schema({
 });
 
 const Step = mongoose.model('steps', stepSchema);
-module.exports = { Step };
+module.exports = { Step, fieldEnum };
