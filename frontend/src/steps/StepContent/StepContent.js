@@ -14,7 +14,7 @@ import {
     Backdrop,
 } from '@material-ui/core';
 
-import { getStageMetadata } from '../../utils/api';
+import { getStepMetadata } from '../../utils/api';
 import Notes from '../../components/Notes/Notes';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { updateStage } from '../../utils/api';
@@ -27,6 +27,7 @@ const StepContent = ({
     // metaData,
     // stepData,
     languageData,
+    stepKey,
     id,
     updatePatientFile,
 }) => {
@@ -46,8 +47,8 @@ const StepContent = ({
     }, [trigger]);
 
     const fetchData = async () => {
-        const response = await getStageMetadata();
-        if (response != null) setMetaData(response[0]);
+        const response = await getStepMetadata(stepKey);
+        if (response != null) setMetaData(response);
 
         setLoading(false);
     };
@@ -97,20 +98,74 @@ const StepContent = ({
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
 
-        return metaData.fields.map((field) => {
-            return (
-                <div>
-                    <h3>{field.displayName[key]}</h3>
-                    <TextField
-                        disabled={!edit}
-                        className={edit ? 'active-input' : 'input-field'}
-                        variant="outlined"
-                        onChange={handleSimpleUpdate}
-                        // TODO
-                        // value={dob}
-                    />
-                </div>
-            );
+        let fields = _.cloneDeep(metaData.fields);
+        fields.sort((a, b) => a.fieldNumber - b.fieldNumber);
+        return fields.map((field) => {
+            if (field.fieldType == 'String') {
+                return (
+                    <div>
+                        <h3>{field.displayName[key]}</h3>
+                        <TextField
+                            disabled={!edit}
+                            className={edit ? 'active-input' : 'input-field'}
+                            variant="outlined"
+                            onChange={handleSimpleUpdate}
+                            // TODO
+                            // value={dob}
+                        />
+                    </div>
+                );
+            } else if (field.fieldType == 'MultilineString') {
+                return (
+                    <div>
+                        <Notes
+                            disabled={!edit}
+                            state={handleSimpleUpdate}
+                            title={field.displayName[key]}
+                            // value={notes}
+                        />
+                    </div>
+                );
+            } else if (field.fieldType == 'Date') {
+                return (
+                    <div>
+                        <h3>{field.displayName[key]}</h3>
+                        <TextField
+                            disabled={!edit}
+                            className={edit ? 'active-input' : 'input-field'}
+                            variant="outlined"
+                            onChange={handleSimpleUpdate}
+                            // TODO
+                            // value={dob}
+                        />
+                    </div>
+                );
+            } else if (field.fieldType == 'Phone') {
+                return (
+                    <div>
+                        <h3>{field.displayName[key]}</h3>
+                        <TextField
+                            disabled={!edit}
+                            className={edit ? 'active-input' : 'input-field'}
+                            variant="outlined"
+                            onChange={handleSimpleUpdate}
+                            // TODO
+                            // value={dob}
+                        />
+                    </div>
+                );
+            } else if (field.fieldType == 'Divider') {
+                return (
+                    <div className="patient-divider-wrapper">
+                        <h2>{field.displayName[key]}</h2>
+                        <Divider className="patient-divider" />
+                    </div>
+                );
+            } else if (field.fieldType == 'Header') {
+                return <h3>{field.displayName[key]}</h3>;
+            }
+
+            return null;
         });
     };
 

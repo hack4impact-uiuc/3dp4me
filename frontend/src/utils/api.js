@@ -89,7 +89,11 @@ export const updateStage = async (patientId, stage, updatedStage) => {
         );
 };
 
-export const getStageMetadata = async () => {
+export const getStepMetadata = async (stepKey) => {
+    return (await getAllStepsMetadata())[0];
+};
+
+export const getAllStepsMetadata = async () => {
     return [
         {
             key: 'pateintInfo',
@@ -97,11 +101,25 @@ export const getStageMetadata = async () => {
             stepNumber: 1,
             fields: [
                 {
+                    key: 'patientDivider',
+                    fieldType: 'Divider',
+                    displayName: { EN: 'Patient', AR: 'لومات ا' },
+                    fieldNumber: 0,
+                    isVisibleOnDashboard: false,
+                },
+                {
                     key: 'firstName',
                     fieldType: 'String',
                     displayName: { EN: 'First Name', AR: 'لومات ا' },
                     fieldNumber: 1,
                     isVisibleOnDashboard: true,
+                },
+                {
+                    key: 'notes',
+                    fieldType: 'MultilineString',
+                    displayName: { EN: 'Notes', AR: 'لومات ا' },
+                    fieldNumber: 11,
+                    isVisibleOnDashboard: false,
                 },
                 {
                     key: 'lastName',
@@ -115,6 +133,55 @@ export const getStageMetadata = async () => {
                     fieldType: 'String',
                     displayName: { EN: 'Jordan SSN', AR: 'لومات ا' },
                     fieldNumber: 3,
+                    isVisibleOnDashboard: false,
+                },
+                {
+                    key: 'dob',
+                    fieldType: 'Date',
+                    displayName: { EN: 'DOB', AR: 'لومات ا' },
+                    fieldNumber: 4,
+                    isVisibleOnDashboard: false,
+                },
+                {
+                    key: 'phone',
+                    fieldType: 'Phone',
+                    displayName: { EN: 'Phone', AR: 'لومات ا' },
+                    fieldNumber: 5,
+                    isVisibleOnDashboard: false,
+                },
+                {
+                    key: 'emContact',
+                    fieldType: 'Header',
+                    displayName: { EN: 'Emergency Contact', AR: 'لومات ا' },
+                    fieldNumber: 6,
+                    isVisibleOnDashboard: false,
+                },
+                {
+                    key: 'name',
+                    fieldType: 'String',
+                    displayName: { EN: 'Name', AR: 'لومات ا' },
+                    fieldNumber: 7,
+                    isVisibleOnDashboard: false,
+                },
+                {
+                    key: 'relationship',
+                    fieldType: 'String',
+                    displayName: { EN: 'Relationship', AR: 'لومات ا' },
+                    fieldNumber: 8,
+                    isVisibleOnDashboard: false,
+                },
+                {
+                    key: 'phone',
+                    fieldType: 'Phone',
+                    displayName: { EN: 'Phone', AR: 'لومات ا' },
+                    fieldNumber: 9,
+                    isVisibleOnDashboard: false,
+                },
+                {
+                    key: 'infoDivider',
+                    fieldType: 'Divider',
+                    displayName: { EN: 'Information', AR: 'لومات ا' },
+                    fieldNumber: 10,
                     isVisibleOnDashboard: false,
                 },
             ],

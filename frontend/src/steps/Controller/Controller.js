@@ -369,6 +369,7 @@ const Controller = ({ languageData }) => {
                                 // stepData={null}
                                 languageData={languageData}
                                 id={id}
+                                stepKey="patientInfo"
                                 updatePatientFile={updatePatientFile}
                             />
                         ) : (
