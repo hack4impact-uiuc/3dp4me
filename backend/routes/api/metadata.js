@@ -9,11 +9,9 @@ router.post(
     '/steps',
     errorWrap(async (req, res) => {
         const steps = req.body;
-        const saved_steps = null;
+        const new_steps = new models.Step(steps);
 
-        const new_steps = new models.MetaData(steps);
-
-        await new_steps.save(function (err) {
+        await new_steps.save(function (err, data) {
             if (err) {
                 res.json(err);
             } else {
@@ -21,7 +19,7 @@ router.post(
                     code: 200,
                     success: true,
                     message: 'Step successfully created.',
-                    data: saved_steps,
+                    data: data,
                 });
             }
         });
