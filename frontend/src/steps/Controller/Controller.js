@@ -14,6 +14,7 @@ import reactSwal from '@sweetalert/with-react';
 import { useParams } from 'react-router-dom';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import StepContent from '../StepContent/StepContent';
 import MedicalInfo from '../MedicalInfo/MedicalInfo';
 import EarScan from '../EarScan/EarScan';
 import CADModel from '../CADModel/CADModel';
@@ -363,17 +364,24 @@ const Controller = ({ languageData }) => {
                     />
                     <div className={`steps ${key === 'AR' ? 'steps-ar' : ''}`}>
                         {step === 'info' ? (
-                            <MedicalInfo
-                                information={patientData?.patientInfo}
-                                status={{
-                                    state: medStatus,
-                                    setState: handleMedStatus,
-                                }}
+                            <StepContent
+                                // metaData={null}
+                                // stepData={null}
                                 languageData={languageData}
                                 id={id}
                                 updatePatientFile={updatePatientFile}
                             />
                         ) : (
+                            // <MedicalInfo
+                            //     information={patientData?.patientInfo}
+                            //     status={{
+                            //         state: medStatus,
+                            //         setState: handleMedStatus,
+                            //     }}
+                            //     languageData={languageData}
+                            //     id={id}
+                            //     updatePatientFile={updatePatientFile}
+                            // />
                             <></>
                         )}
                         {step === 'scan' ? (
