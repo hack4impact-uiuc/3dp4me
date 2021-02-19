@@ -6,22 +6,56 @@ const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
 
 // POST metadata/steps
 router.post(
-    '/metadata/steps',
+    '/steps',
     errorWrap(async (req, res) => {
         const steps = req.body;
+        const saved_steps = null;
 
-        try {
-            const new_steps = new models.metaData(steps);
-            const saved_steps = await _steps.save();
-        } catch (error) {
-            res.status(500).send({ error });
-        }
+        const new_steps = new models.MetaData(steps);
 
-        res.status(SUCCESS).send({
-            code: SUCCESS,
-            success: true,
-            message: 'Step successfully created.',
-            data: resp,
+        await new_steps.save(function (err) {
+            if (err) {
+                res.json(err);
+            } else {
+                res.status(200).json({
+                    code: 200,
+                    success: true,
+                    message: 'Step successfully created.',
+                    data: saved_steps,
+                });
+            }
         });
     }),
 );
+
+// PUT metadata/steps/:stepkey
+router.put(
+    '/steps/:stepkey',
+    errorWrap(async (req, res) => {
+        try {
+            const { stepkey } = req.params;
+            const step = await models.Step.find({ key: stepkey });
+            step.set(req.body);
+            const result = await step.save();
+            res.send(result);
+        } catch (error) {
+            res.status(500).send(error);
+        }
+    }),
+);
+
+// DELETE metadata/steps/:stepkey
+router.delete(
+    '/steps/:stepkey',
+    errorWrap(async (req, res) => {
+        const { stepkey } = req.params;
+        const step = await models.Step.find({ key: stepkey });
+        step.delete();
+        res.status(201).json({
+            success: true,
+            message: 'Step deleted',
+        });
+    }),
+);
+
+module.exports = router;
