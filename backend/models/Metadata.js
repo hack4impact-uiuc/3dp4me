@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const fieldEnum = {
     STRING: 'String',
-    MULTI_LINE: 'String',
+    MULTILINE_STRING: 'String',
     FILE: 'File',
     NUMBER: 'Number',
     DATE: 'Date',
