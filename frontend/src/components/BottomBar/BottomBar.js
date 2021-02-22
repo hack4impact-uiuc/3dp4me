@@ -18,6 +18,7 @@ const BottomBar = ({
     lastEdited,
     lastEditedBy,
     status,
+    setStatus,
     save,
     discard,
     setEdit,
@@ -60,8 +61,8 @@ const BottomBar = ({
                                 <Select
                                     className="status-selector"
                                     MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) => status.setState(e)}
-                                    defaultValue={status.state}
+                                    onClick={(e) => setStatus(e)}
+                                    defaultValue={status}
                                 >
                                     <MenuItem disabled value="default">
                                         {lang.components.bottombar.default}
@@ -96,8 +97,8 @@ const BottomBar = ({
                                 <Select
                                     className="status-selector-ar"
                                     MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) => status.setState(e)}
-                                    defaultValue={status.state}
+                                    onClick={(e) => setStatus(e)}
+                                    defaultValue={status}
                                 >
                                     <MenuItem disabled value="default">
                                         {lang.components.bottombar.default}
@@ -132,11 +133,11 @@ const BottomBar = ({
                 ) : (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div
-                            className={`status ${status.state}`}
+                            className={`status ${status}`}
                             style={{ display: 'flex', alignItems: 'center' }}
                         >
-                            {statusIcons[status.state]}{' '}
-                            {lang.components.bottombar[status.state]}
+                            {statusIcons[status]}{' '}
+                            {lang.components.bottombar[status]}
                         </div>
                         <Button
                             className="edit-button"
@@ -156,7 +157,8 @@ BottomBar.propTypes = {
     edit: PropTypes.bool.isRequired,
     lastEdited: PropTypes.string.isRequired,
     lastEditedBy: PropTypes.string.isRequired,
-    status: StringGetterSetterType.isRequired,
+    status: PropTypes.string.isRequired,
+    onStatusChange: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
     discard: BoolGetterSetterType.isRequired,
     setEdit: PropTypes.func.isRequired,

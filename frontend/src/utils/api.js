@@ -90,7 +90,26 @@ export const updateStage = async (patientId, stage, updatedStage) => {
 };
 
 export const getStepMetadata = async (stepKey) => {
-    return (await getAllStepsMetadata())[0];
+    return (await getAllStepsMetadata())[1];
+};
+
+export const getStepData = async (stepKey, patientId) => {
+    return {
+        firstName: 'Firstname',
+        lastName: 'Lastname',
+        notes: 'No notes',
+        jordanSSN: 12345678,
+        dob: new Date(),
+        phone: '847 123-4567',
+        status: 'unfinished',
+        leftEarscan: [
+            {
+                fileName: 'LeftEarscan.STP',
+                uploadedBy: 'User',
+                uploadedDate: new Date(),
+            },
+        ],
+    };
 };
 
 export const getAllStepsMetadata = async () => {
@@ -157,21 +176,21 @@ export const getAllStepsMetadata = async () => {
                     isVisibleOnDashboard: false,
                 },
                 {
-                    key: 'name',
+                    key: 'emContactName',
                     fieldType: 'String',
                     displayName: { EN: 'Name', AR: 'لومات ا' },
                     fieldNumber: 7,
                     isVisibleOnDashboard: false,
                 },
                 {
-                    key: 'relationship',
+                    key: 'emRelationship',
                     fieldType: 'String',
                     displayName: { EN: 'Relationship', AR: 'لومات ا' },
                     fieldNumber: 8,
                     isVisibleOnDashboard: false,
                 },
                 {
-                    key: 'phone',
+                    key: 'emPhone',
                     fieldType: 'Phone',
                     displayName: { EN: 'Phone', AR: 'لومات ا' },
                     fieldNumber: 9,
@@ -206,7 +225,7 @@ export const getAllStepsMetadata = async () => {
                     isVisibleOnDashboard: true,
                 },
                 {
-                    key: 'CAD File',
+                    key: 'leftEarscan',
                     fieldType: 'File',
                     displayName: { EN: 'CAD File', AR: 'لومات ا' },
                     fieldNumber: 3,
