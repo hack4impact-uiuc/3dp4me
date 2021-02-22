@@ -106,7 +106,7 @@ export const getStepData = async (stepKey, patientId) => {
             {
                 fileName: 'LeftEarscan.STP',
                 uploadedBy: 'User',
-                uploadedDate: new Date(),
+                uploadDate: new Date(),
             },
         ],
     };

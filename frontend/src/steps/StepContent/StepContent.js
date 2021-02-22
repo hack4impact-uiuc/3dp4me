@@ -34,7 +34,7 @@ const StepContent = ({
     patientId,
     updatePatientFile,
 }) => {
-    const stageName = 'patientInfo';
+    const stageName = stepKey;
 
     const [trigger, reset] = useState(true);
     const [metaData, setMetaData] = useState(null);
@@ -73,28 +73,24 @@ const StepContent = ({
         downloadFile(patientId, stageName, fileName);
     };
 
-    const handleFileUpload = async (key, filename) => {
-        // // TOOD: Finish this
-        // const fileToUpload = filename;
-        // let updatedFiles = _.cloneDeep(stepData[key]);
-        // updatedFiles.concat(`LEFT_${fileToUpload.name.toUpperCase()}`);
-        // handleSimpleUpdate(key, updatedFiles);
-        // setLeftCADFiles((files) =>
-        //     files.concat(`LEFT_${fileToUpload.name.toUpperCase()}`),
-        // );
-        // const res = await uploadFile(
-        //     id,
-        //     stageName,
-        //     fileToUpload,
-        //     `LEFT_${fileToUpload.name.toUpperCase()}`,
-        // );
-        // const infoCopy = _.cloneDeep(info);
-        // infoCopy.files = infoCopy.files.concat({
-        //     filename: res.data.data.name,
-        //     uploadedBy: res.data.data.uploadedGy,
-        //     uploadDate: res.data.data.uploadName,
-        // });
-        // setInfo(infoCopy);
+    const handleFileUpload = async (key, file) => {
+        const formattedFileName = `LEFT_${file.name}`;
+        const res = await uploadFile(
+            patientId,
+            stageName,
+            file,
+            formattedFileName,
+        );
+
+        // TODO: Display error if res is null
+        let files = _.cloneDeep(stepData[key]);
+        files = files.concat({
+            fileName: res.data.data.name,
+            uploadedBy: res.data.data.uploadedBy,
+            uploadDate: res.data.data.uploadDate,
+        });
+
+        handleSimpleUpdate(key, files);
         // updatePatientFile(stageName, infoCopy);
     };
 
@@ -197,8 +193,9 @@ const StepContent = ({
                         languageData={languageData}
                         title={field.displayName[key]}
                         files={stepData[field.key]}
-                        handleDownload={handleFileUpload}
-                        handleUpload={handleFileDownload}
+                        fieldKey={field.key}
+                        handleDownload={handleFileDownload}
+                        handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}
                     />
                 );

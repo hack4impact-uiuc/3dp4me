@@ -38,7 +38,7 @@ const Files = ({
                                 {`${file.fileName}`}
                             </Typography>
                             <p id="file-upload-timestamp">
-                                {file.uploadedDate.toString()}
+                                {file.uploadDate.toString()}
                             </p>
                         </div>
                     </div>
@@ -67,7 +67,7 @@ const Files = ({
                         className="upload-file-input"
                         type="file"
                         onChange={(e) => {
-                            handleUpload(fieldKey, e.target.value);
+                            handleUpload(fieldKey, e.target.files[0]);
                         }}
                     />
                     <Button className="file-button" component="span">
