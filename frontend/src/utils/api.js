@@ -90,10 +90,13 @@ export const updateStage = async (patientId, stage, updatedStage) => {
 };
 
 export const getStepMetadata = async (stepKey) => {
-    return (await getAllStepsMetadata())[1];
+    // TODO: Replace with actual backend call
+    if (stepKey == 'patientInfo') return (await getAllStepsMetadata())[0];
+    else return (await getAllStepsMetadata())[1];
 };
 
 export const getStepData = async (stepKey, patientId) => {
+    // TODO: Replace with backend call
     return {
         firstName: 'Firstname',
         lastName: 'Lastname',

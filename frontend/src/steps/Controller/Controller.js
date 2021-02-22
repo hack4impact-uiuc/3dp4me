@@ -373,27 +373,13 @@ const Controller = ({ languageData }) => {
                                 updatePatientFile={updatePatientFile}
                             />
                         ) : (
-                            // <MedicalInfo
-                            //     information={patientData?.patientInfo}
-                            //     status={{
-                            //         state: medStatus,
-                            //         setState: handleMedStatus,
-                            //     }}
-                            //     languageData={languageData}
-                            //     id={id}
-                            //     updatePatientFile={updatePatientFile}
-                            // />
                             <></>
                         )}
                         {step === 'scan' ? (
-                            <EarScan
-                                information={patientData?.earScanInfo}
-                                status={{
-                                    state: earScanStatus,
-                                    setState: handleEarScanStatus,
-                                }}
+                            <StepContent
                                 languageData={languageData}
-                                id={id}
+                                patientId={id}
+                                stepKey="scan"
                                 updatePatientFile={updatePatientFile}
                             />
                         ) : (
