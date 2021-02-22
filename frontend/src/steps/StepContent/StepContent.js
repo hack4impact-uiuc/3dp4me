@@ -34,8 +34,6 @@ const StepContent = ({
     patientId,
     updatePatientFile,
 }) => {
-    const stageName = stepKey;
-
     const [trigger, reset] = useState(true);
     const [metaData, setMetaData] = useState(null);
     const [stepData, setStepData] = useState(null);
@@ -62,7 +60,7 @@ const StepContent = ({
     };
 
     const handleFileDelete = async (key, file) => {
-        deleteFile(patientId, stageName, file.fileName);
+        deleteFile(patientId, stepKey, file.fileName);
         let updatedFiles = _.cloneDeep(stepData[key]);
         updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
 
@@ -70,14 +68,14 @@ const StepContent = ({
     };
 
     const handleFileDownload = (fileName) => {
-        downloadFile(patientId, stageName, fileName);
+        downloadFile(patientId, stepKey, fileName);
     };
 
     const handleFileUpload = async (key, file) => {
         const formattedFileName = `LEFT_${file.name}`;
         const res = await uploadFile(
             patientId,
-            stageName,
+            stepKey,
             file,
             formattedFileName,
         );
@@ -91,7 +89,6 @@ const StepContent = ({
         });
 
         handleSimpleUpdate(key, files);
-        // updatePatientFile(stageName, infoCopy);
     };
 
     const handleSimpleUpdate = (key, value) => {
@@ -101,8 +98,7 @@ const StepContent = ({
     };
 
     const saveData = () => {
-        updateStage(patientId, stageName, stepData);
-        updatePatientFile(stageName, stepData);
+        updateStage(patientId, stepKey, stepData);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };

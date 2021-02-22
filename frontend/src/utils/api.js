@@ -91,7 +91,7 @@ export const updateStage = async (patientId, stage, updatedStage) => {
 
 export const getStepMetadata = async (stepKey) => {
     // TODO: Replace with actual backend call
-    if (stepKey == 'patientInfo') return (await getAllStepsMetadata())[0];
+    if (stepKey == 'info') return (await getAllStepsMetadata())[0];
     else return (await getAllStepsMetadata())[1];
 };
 
@@ -118,7 +118,7 @@ export const getStepData = async (stepKey, patientId) => {
 export const getAllStepsMetadata = async () => {
     return [
         {
-            key: 'pateintInfo',
+            key: 'info',
             displayName: { EN: 'PatientInfo', AR: 'معلومات المريض' },
             stepNumber: 1,
             fields: [

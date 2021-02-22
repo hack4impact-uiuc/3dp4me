@@ -24,7 +24,11 @@ import Delivery from '../Delivery/Delivery';
 import Feedback from '../Feedback/Feedback';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
-import { getPatientById, updateStage } from '../../utils/api';
+import {
+    getAllStepsMetadata,
+    getPatientById,
+    updateStage,
+} from '../../utils/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 
 const theme = createMuiTheme({
@@ -35,7 +39,8 @@ const Controller = ({ languageData }) => {
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
     const [patientData, setPatientData] = useState();
-    const [step, setStep] = useState('info');
+    const [selectedStep, setSelectedStep] = useState('info');
+    const [stepMetaData, setStepMetaData] = useState(null);
 
     const [medStatus, setMedStatus] = useState('unfinished');
     const [earScanStatus, setEarScanStatus] = useState('unfinished');
@@ -63,117 +68,42 @@ const Controller = ({ languageData }) => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    const handleStep = (event, newStep) => {
-        if (newStep !== null) {
-            setStep(newStep);
-        }
-    };
+    const onStepChange = (event, newStep) => {
+        if (newStep === null) return;
 
-    const handleMedStatus = (e) => {
-        if (
-            e.target.value === 'unfinished' ||
-            e.target.value === 'partial' ||
-            e.target.value === 'finished'
-        ) {
-            setMedStatus(e.target.value);
-            const patientDataCopy = patientData;
-            patientDataCopy.patientInfo.status = e.target.value;
-            updateStage(id, 'patientInfo', patientDataCopy.patientInfo);
-            setPatientData(patientDataCopy);
-        }
-    };
-    const handleEarScanStatus = (e) => {
-        if (
-            e.target.value === 'unfinished' ||
-            e.target.value === 'partial' ||
-            e.target.value === 'finished'
-        ) {
-            setEarScanStatus(e.target.value);
-            const patientDataCopy = patientData;
-            patientDataCopy.earScanInfo.status = e.target.value;
-            updateStage(id, 'earScanInfo', patientDataCopy.earScanInfo);
-            setPatientData(patientDataCopy);
-        }
-    };
-    const handleModelStatus = (e) => {
-        if (
-            e.target.value === 'unfinished' ||
-            e.target.value === 'partial' ||
-            e.target.value === 'finished'
-        ) {
-            setModelStatus(e.target.value);
-            const patientDataCopy = patientData;
-            patientDataCopy.modelInfo.status = e.target.value;
-            updateStage(id, 'modelInfo', patientDataCopy.modelInfo);
-            setPatientData(patientDataCopy);
-        }
-    };
-    const handlePrintStatus = (e) => {
-        if (
-            e.target.value === 'unfinished' ||
-            e.target.value === 'partial' ||
-            e.target.value === 'finished'
-        ) {
-            setPrintStatus(e.target.value);
-            const patientDataCopy = patientData;
-            patientDataCopy.printingInfo.status = e.target.value;
-            updateStage(id, 'printingInfo', patientDataCopy.printingInfo);
-            setPatientData(patientDataCopy);
-        }
-    };
-    const handleProcessingStatus = (e) => {
-        if (
-            e.target.value === 'unfinished' ||
-            e.target.value === 'partial' ||
-            e.target.value === 'finished'
-        ) {
-            setProcessingStatus(e.target.value);
-            const patientDataCopy = patientData;
-            patientDataCopy.processingInfo.status = e.target.value;
-            updateStage(id, 'processingInfo', patientDataCopy.processingInfo);
-            setPatientData(patientDataCopy);
-        }
-    };
-    const handleDeliveryStatus = (e) => {
-        if (
-            e.target.value === 'unfinished' ||
-            e.target.value === 'partial' ||
-            e.target.value === 'finished'
-        ) {
-            setDeliveryStatus(e.target.value);
-            const patientDataCopy = patientData;
-            patientDataCopy.deliveryInfo.status = e.target.value;
-            updateStage(id, 'deliveryInfo', patientDataCopy.deliveryInfo);
-            setPatientData(patientDataCopy);
-        }
-    };
-    const handleFeedbackStatus = (e) => {
-        if (
-            e.target.value === 'unfinished' ||
-            e.target.value === 'partial' ||
-            e.target.value === 'finished'
-        ) {
-            setFeedbackStatus(e.target.value);
-            const patientDataCopy = patientData;
-            patientDataCopy.feedbackInfo.status = e.target.value;
-            updateStage(id, 'feedbackInfo', patientDataCopy.feedbackInfo);
-            setPatientData(patientDataCopy);
-        }
+        setSelectedStep(newStep);
     };
 
     useEffect(() => {
         const getData = async () => {
-            // TODO: api call to get all info about a patient
-            const res = await getPatientById(id);
-            setPatientData(res.result);
+            const metaData = await getAllStepsMetadata();
+            // TODO: Handle bad response
+            setStepMetaData(metaData);
             setLoading(false);
         };
 
         getData();
     }, [setPatientData, setLoading, id]);
 
-    const updatePatientFile = (stageName, updated) => {
-        setPatientData({ ...patientData, stageName: updated });
+    const generateStepContent = () => {
+        if (stepMetaData == null) return null;
+
+        return (
+            <div className={`steps ${key === 'AR' ? 'steps-ar' : ''}`}>
+                {stepMetaData.map((step) => {
+                    if (step.key === selectedStep) {
+                        return (
+                            <StepContent
+                                languageData={languageData}
+                                patientId={id}
+                                stepKey="patientInfo"
+                            />
+                        );
+                    }
+                    return null;
+                })}
+            </div>
+        );
     };
 
     return (
@@ -352,8 +282,8 @@ const Controller = ({ languageData }) => {
                 >
                     <ToggleButtons
                         languageData={languageData}
-                        step={step}
-                        handleStep={handleStep}
+                        step={selectedStep}
+                        handleStep={onStepChange}
                         medStatus={medStatus}
                         earScanStatus={earScanStatus}
                         modelStatus={modelStatus}
@@ -362,102 +292,7 @@ const Controller = ({ languageData }) => {
                         deliveryStatus={deliveryStatus}
                         feedbackStatus={feedbackStatus}
                     />
-                    <div className={`steps ${key === 'AR' ? 'steps-ar' : ''}`}>
-                        {step === 'info' ? (
-                            <StepContent
-                                // metaData={null}
-                                // stepData={null}
-                                languageData={languageData}
-                                patientId={id}
-                                stepKey="patientInfo"
-                                updatePatientFile={updatePatientFile}
-                            />
-                        ) : (
-                            <></>
-                        )}
-                        {step === 'scan' ? (
-                            <StepContent
-                                languageData={languageData}
-                                patientId={id}
-                                stepKey="scan"
-                                updatePatientFile={updatePatientFile}
-                            />
-                        ) : (
-                            <></>
-                        )}
-                        {step === 'cad' ? (
-                            <CADModel
-                                information={patientData?.modelInfo}
-                                status={{
-                                    value: modelStatus,
-                                    setStatus: handleModelStatus,
-                                }}
-                                languageData={languageData}
-                                id={id}
-                                updatePatientFile={updatePatientFile}
-                            />
-                        ) : (
-                            <></>
-                        )}
-                        {step === 'printing' ? (
-                            <Printing
-                                information={patientData?.printingInfo}
-                                status={{
-                                    state: printStatus,
-                                    setState: handlePrintStatus,
-                                }}
-                                languageData={languageData}
-                                id={id}
-                                updatePatientFile={updatePatientFile}
-                            />
-                        ) : (
-                            <></>
-                        )}
-                        {step === 'processing' ? (
-                            <PostProcessing
-                                information={patientData?.processingInfo}
-                                status={{
-                                    state: processingStatus,
-                                    setState: handleProcessingStatus,
-                                }}
-                                languageData={languageData}
-                                id={id}
-                                updatePatientFile={updatePatientFile}
-                            />
-                        ) : (
-                            <></>
-                        )}
-                        {step === 'delivery' ? (
-                            <Delivery
-                                information={patientData?.deliveryInfo}
-                                status={{
-                                    state: deliveryStatus,
-                                    setState: handleDeliveryStatus,
-                                }}
-                                languageData={languageData}
-                                id={id}
-                                updatePatientFile={updatePatientFile}
-                                address={patientData?.patientInfo.address}
-                                deliveryType={patientData?.patientInfo.delivery}
-                            />
-                        ) : (
-                            <></>
-                        )}
-                        {step === 'feedback' ? (
-                            <Feedback
-                                information={patientData?.feedbackInfo}
-                                status={{
-                                    state: feedbackStatus,
-                                    setState: handleFeedbackStatus,
-                                }}
-                                languageData={languageData}
-                                id={id}
-                                updatePatientFile={updatePatientFile}
-                            />
-                        ) : (
-                            <></>
-                        )}
-                    </div>
+                    {generateStepContent()}
                 </div>
             </div>
         </LoadWrapper>
