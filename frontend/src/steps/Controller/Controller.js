@@ -96,7 +96,7 @@ const Controller = ({ languageData }) => {
                             <StepContent
                                 languageData={languageData}
                                 patientId={id}
-                                stepKey="patientInfo"
+                                stepKey={step.key}
                             />
                         );
                     }
