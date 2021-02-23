@@ -32,11 +32,14 @@ router.put(
     errorWrap(async (req, res) => {
         try {
             const { stepkey } = req.params;
-            const step = await models.Step.find({ key: stepkey });
-            step.set(req.body);
+            const step = await models.Step.findOneAndUpdate(
+                { key: stepkey },
+                { $set: req.body },
+            );
             const result = await step.save();
             res.send(result);
         } catch (error) {
+            console.log(error);
             res.status(500).send(error);
         }
     }),
@@ -47,12 +50,20 @@ router.delete(
     '/steps/:stepkey',
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
-        const step = await models.Step.find({ key: stepkey });
-        step.delete();
-        res.status(201).json({
-            success: true,
-            message: 'Step deleted',
-        });
+
+        const step = await models.Step.deleteOne({ key: stepkey });
+
+        if (step.deletedCount === 0) {
+            res.status(404).json({
+                success: false,
+                message: 'Step not found',
+            });
+        } else {
+            res.status(201).json({
+                success: true,
+                message: 'Step deleted',
+            });
+        }
     }),
 );
 
