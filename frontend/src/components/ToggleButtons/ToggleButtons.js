@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,6 +12,7 @@ import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ToggleButtons.scss';
+import { getStageMetadata } from '../../utils/api';
 
 const ToggleButtons = ({
     languageData,
@@ -26,6 +27,7 @@ const ToggleButtons = ({
     feedbackStatus = '',
 }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [steps, setSteps] = React.useState([]);
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -65,6 +67,31 @@ const ToggleButtons = ({
         }
     };
 
+    useEffect(async () => {
+        const step = await getStageMetadata();
+        if (step != null) {
+            setSteps(step);
+        }
+    });
+
+    function generateToggleButtons() {
+        console.log(steps);
+        return steps.map((element) => {
+            return (
+                <ToggleButton
+                    disableRipple
+                    className={`toggle-button ${
+                        step === element.key ? 'active' : ''
+                    }`}
+                    value={element.key}
+                >
+                    {/* {medStatus !== undefined ? statusIcons[medStatus] : null}{' '} */}
+                    <b>{element.displayName[key]}</b>
+                </ToggleButton>
+            );
+        });
+    }
+
     return (
         <div className="toggle-buttons-wrapper">
             <ToggleButtonGroup
@@ -74,88 +101,7 @@ const ToggleButtons = ({
                 value={step}
                 onChange={handleStep}
             >
-                <ToggleButton
-                    disableRipple
-                    className={`toggle-button ${
-                        step === 'info' ? 'active' : ''
-                    }`}
-                    value="info"
-                >
-                    {medStatus !== undefined ? statusIcons[medStatus] : null}{' '}
-                    <b>{lang.components.stepTabs.patientInfo}</b>
-                </ToggleButton>
-                <ToggleButton
-                    disableRipple
-                    className={`toggle-button ${
-                        step === 'scan' ? 'active' : ''
-                    }`}
-                    value="scan"
-                >
-                    {earScanStatus !== undefined
-                        ? statusIcons[earScanStatus]
-                        : null}{' '}
-                    <b>{lang.components.stepTabs.earScan}</b>
-                </ToggleButton>
-                <ToggleButton
-                    disableRipple
-                    className={`toggle-button ${
-                        step === 'cad' ? 'active' : ''
-                    }`}
-                    value="cad"
-                >
-                    {modelStatus !== undefined
-                        ? statusIcons[modelStatus]
-                        : null}{' '}
-                    <b>{lang.components.stepTabs.CADModeling}</b>
-                </ToggleButton>
-                <ToggleButton
-                    disableRipple
-                    className={`toggle-button ${
-                        step === 'printing' ? 'active' : ''
-                    }`}
-                    value="printing"
-                >
-                    {printStatus !== undefined
-                        ? statusIcons[printStatus]
-                        : null}{' '}
-                    <b>{lang.components.stepTabs.print}</b>
-                </ToggleButton>
-                <ToggleButton
-                    disableRipple
-                    className={`toggle-button ${
-                        step === 'processing' ? 'active' : ''
-                    }`}
-                    value="processing"
-                >
-                    {processingStatus !== undefined
-                        ? statusIcons[processingStatus]
-                        : null}{' '}
-                    <b>{lang.components.stepTabs.processing}</b>
-                </ToggleButton>
-                <ToggleButton
-                    disableRipple
-                    className={`toggle-button ${
-                        step === 'delivery' ? 'active' : ''
-                    }`}
-                    value="delivery"
-                >
-                    {deliveryStatus !== undefined
-                        ? statusIcons[deliveryStatus]
-                        : null}{' '}
-                    <b>{lang.components.stepTabs.delivery}</b>
-                </ToggleButton>
-                <ToggleButton
-                    disableRipple
-                    className={`toggle-button ${
-                        step === 'feedback' ? 'active' : ''
-                    }`}
-                    value="feedback"
-                >
-                    {feedbackStatus !== undefined
-                        ? statusIcons[feedbackStatus]
-                        : null}{' '}
-                    <b>{lang.components.stepTabs.feedback}</b>
-                </ToggleButton>
+                {generateToggleButtons()}
             </ToggleButtonGroup>
 
             <div className="toggle-button-selector">
