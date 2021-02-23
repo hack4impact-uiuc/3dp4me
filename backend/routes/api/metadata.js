@@ -30,18 +30,13 @@ router.post(
 router.put(
     '/steps/:stepkey',
     errorWrap(async (req, res) => {
-        try {
-            const { stepkey } = req.params;
-            const step = await models.Step.findOneAndUpdate(
-                { key: stepkey },
-                { $set: req.body },
-            );
-            const result = await step.save();
-            res.send(result);
-        } catch (error) {
-            console.log(error);
-            res.status(500).send(error);
-        }
+        const { stepkey } = req.params;
+        const step = await models.Step.findOneAndUpdate(
+            { key: stepkey },
+            { $set: req.body },
+        );
+        const result = await step.save();
+        res.send(result);
     }),
 );
 
