@@ -1,5 +1,9 @@
-export const infoData = [
-    {
+export const patientData = {
+    name: 'John doe',
+    orderId: '12345678',
+    status: 'active',
+    info: {
+        key: 'info',
         firstName: 'John',
         patientId: 1,
         lastName: 'Doe',
@@ -9,20 +13,8 @@ export const infoData = [
         phone: '847 123-4567',
         status: 'unfinished',
     },
-    {
-        firstName: 'Jane',
-        lastName: 'Doe',
-        patientId: 2,
-        notes: 'None',
-        jordanSSN: 910111213,
-        dob: new Date(),
-        phone: '847 123-0000',
-        status: 'unfinished',
-    },
-];
-
-export const cadData = [
-    {
+    cadModel: {
+        key: 'cadModel',
         firstName: 'John',
         fileSizeKb: 1024,
         leftEarscan: [
@@ -33,20 +25,9 @@ export const cadData = [
             },
         ],
         status: 'unfinished',
+        notes: 'No CAD notes',
     },
-    {
-        firstName: 'Jane',
-        fileSizeKb: 2048,
-        leftEarscan: [
-            {
-                fileName: 'Earscan2.STP',
-                uploadedBy: 'CAD Person',
-                uploadDate: new Date(),
-            },
-        ],
-        status: 'unfinished',
-    },
-];
+};
 
 export const allStepMetadata = [
     {
@@ -158,6 +139,13 @@ export const allStepMetadata = [
                 displayName: { EN: 'File Size (Kb)', AR: 'لومات ا' },
                 fieldNumber: 2,
                 isVisibleOnDashboard: true,
+            },
+            {
+                key: 'notes',
+                fieldType: 'MultilineString',
+                displayName: { EN: 'Notes', AR: 'لومات ا' },
+                fieldNumber: 11,
+                isVisibleOnDashboard: false,
             },
             {
                 key: 'leftEarscan',

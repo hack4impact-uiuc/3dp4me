@@ -20,42 +20,29 @@ import {
     updateStage,
 } from '../../utils/api';
 import TextField from '../../components/Fields/TextField';
-import { getStepMetadata, getStepData } from '../../utils/api';
 import Notes from '../../components/Notes/Notes';
 import BottomBar from '../../components/BottomBar/BottomBar';
-import {
-    LanguageDataType,
-    StringGetterSetterType,
-} from '../../utils/custom-proptypes';
+import { LanguageDataType } from '../../utils/custom-proptypes';
 
-const StepContent = ({ languageData, stepKey, patientId }) => {
+const StepContent = ({
+    languageData,
+    patientId,
+    metaData,
+    loading,
+    stepData,
+    onDataSaved,
+}) => {
+    // TODO: pass back data onDataSaved
+    // onDataSaved should have the step that was updated as a param
     const [trigger, reset] = useState(true);
-    const [metaData, setMetaData] = useState(null);
-    const [stepData, setStepData] = useState(null);
     const [edit, setEdit] = useState(false);
-    const [loading, setLoading] = useState(true);
     const [completionStatus, setCompletionStatus] = useState(null);
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
-    useEffect(() => {
-        fetchData();
-    }, [trigger]);
-
-    const fetchData = async () => {
-        const metadataResponse = await getStepMetadata(stepKey);
-        if (metadataResponse != null) setMetaData(metadataResponse);
-
-        const response = await getStepData(stepKey);
-        if (response != null) setStepData(response);
-
-        setCompletionStatus(response.status);
-        setLoading(false);
-    };
-
     const handleFileDelete = async (key, file) => {
-        deleteFile(patientId, stepKey, file.fileName);
+        deleteFile(patientId, stepData.stepKey, file.fileName);
         let updatedFiles = _.cloneDeep(stepData[key]);
         updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
 
@@ -63,7 +50,7 @@ const StepContent = ({ languageData, stepKey, patientId }) => {
     };
 
     const handleFileDownload = (fileName) => {
-        downloadFile(patientId, stepKey, fileName);
+        downloadFile(patientId, stepData.stepKey, fileName);
     };
 
     const handleFileUpload = async (key, file) => {
@@ -71,7 +58,7 @@ const StepContent = ({ languageData, stepKey, patientId }) => {
         const formattedFileName = `LEFT_${file.name}`;
         const res = await uploadFile(
             patientId,
-            stepKey,
+            stepData.stepKey,
             file,
             formattedFileName,
         );
@@ -90,11 +77,12 @@ const StepContent = ({ languageData, stepKey, patientId }) => {
     const handleSimpleUpdate = (key, value) => {
         let updatedStepData = _.cloneDeep(stepData);
         updatedStepData[key] = value;
-        setStepData(updatedStepData);
+        // TODO: Figure out how to handle updates
+        // setStepData(updatedStepData);
     };
 
     const saveData = () => {
-        updateStage(patientId, stepKey, stepData);
+        updateStage(patientId, stepData.stepKey, stepData);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };
@@ -153,6 +141,7 @@ const StepContent = ({ languageData, stepKey, patientId }) => {
                             disabled={!edit}
                             state={handleSimpleUpdate}
                             title={field.displayName[key]}
+                            key={field.key}
                             value={stepData[field.key]}
                         />
                     </div>
@@ -186,6 +175,7 @@ const StepContent = ({ languageData, stepKey, patientId }) => {
                         title={field.displayName[key]}
                         files={stepData[field.key]}
                         fieldKey={field.key}
+                        key={field.key}
                         handleDownload={handleFileDownload}
                         handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}

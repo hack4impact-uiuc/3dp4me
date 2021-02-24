@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { getCredentials, getCurrentSession } from '../aws/aws-helper';
-import { allStepMetadata, cadData, infoData } from './mock-data';
+import { allStepMetadata, patientData } from './mock-data';
 
 const FileDownload = require('js-file-download');
 
@@ -54,14 +54,16 @@ export const getPatientsByStage = async (stage) => {
 };
 
 export const getPatientById = async (id) => {
-    const requestString = `/patients/${id}`;
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
+    return patientData;
+    // TODO: Uncomment this when the backend is ready for the new data format
+    // const requestString = `/patients/${id}`;
+    // return instance.get(requestString).then(
+    //     (res) => res.data,
+    //     (err) => {
+    //         console.error(err);
+    //         return null;
+    //     },
+    // );
 };
 
 export const newPatient = async (patientInfo) => {
@@ -101,11 +103,11 @@ export const getStepMetadata = async (stepKey) => {
     return stepData;
 };
 
-export const getStepData = async (stepKey, patientId) => {
-    // TODO: Replace with backend call
-    if (stepKey == 'info') return infoData[0];
-    else return cadData[0];
-};
+// export const getStepData = async (stepKey, patientId) => {
+//     // TODO: Replace with backend call
+//     if (stepKey == 'info') return infoData[0];
+//     else return cadData[0];
+// };
 
 export const getAllStepsMetadata = async () => {
     // TODO: Replace with backend call

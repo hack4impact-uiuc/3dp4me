@@ -38,9 +38,10 @@ const theme = createMuiTheme({
 const Controller = ({ languageData }) => {
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [patientData, setPatientData] = useState();
+
     const [selectedStep, setSelectedStep] = useState('info');
     const [stepMetaData, setStepMetaData] = useState(null);
+    const [patientData, setPatientData] = useState();
 
     const [medStatus, setMedStatus] = useState('unfinished');
     const [earScanStatus, setEarScanStatus] = useState('unfinished');
@@ -51,7 +52,7 @@ const Controller = ({ languageData }) => {
     const [feedbackStatus, setFeedbackStatus] = useState('unfinished');
 
     const params = useParams();
-    const { id } = params;
+    const { patientId } = params;
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -77,16 +78,19 @@ const Controller = ({ languageData }) => {
     useEffect(() => {
         const getData = async () => {
             const metaData = await getAllStepsMetadata();
+            const data = await getPatientById(patientId);
             // TODO: Handle bad response
             setStepMetaData(metaData);
+            setPatientData(data);
             setLoading(false);
         };
 
         getData();
-    }, [setPatientData, setLoading, id]);
+    }, [setStepMetaData, setPatientData, setLoading, patientId]);
 
     const generateStepContent = () => {
         if (stepMetaData == null) return null;
+        if (patientData == null) return null;
 
         return (
             <div className={`steps ${key === 'AR' ? 'steps-ar' : ''}`}>
@@ -95,12 +99,48 @@ const Controller = ({ languageData }) => {
                         return (
                             <StepContent
                                 languageData={languageData}
-                                patientId={id}
-                                stepKey={step.key}
+                                patientId={patientId}
+                                metaData={stepMetaData.find(
+                                    (s) => s.key === step.key,
+                                )}
+                                stepData={patientData[step.key]}
+                                loading={loading}
                             />
                         );
                     }
                     return null;
+                })}
+            </div>
+        );
+    };
+
+    const generateNoteSidebar = () => {
+        if (stepMetaData == null) return null;
+        if (patientData == null) return null;
+
+        return (
+            <div className="drawer-notes-wrapper">
+                {stepMetaData.map((metaData) => {
+                    if (metaData.fields.find((f) => f.key === 'notes') == null)
+                        return null;
+
+                    return (
+                        <Accordion
+                            expanded={expanded === metaData.key}
+                            onChange={handleNotePanel(metaData.key)}
+                        >
+                            <AccordionSummary
+                                expandIcon={
+                                    <ExpandMoreIcon className="expand-icon" />
+                                }
+                            >
+                                {metaData.displayName[key]}
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                {patientData[metaData.key].notes}
+                            </AccordionDetails>
+                        </Accordion>
+                    );
                 })}
             </div>
         );
@@ -126,7 +166,7 @@ const Controller = ({ languageData }) => {
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
-                                        {patientData?.patientInfo.name}
+                                        {patientData?.name}
                                     </span>
                                 </div>
                                 <div className="drawer-text-section">
@@ -135,16 +175,7 @@ const Controller = ({ languageData }) => {
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
-                                        {patientData?.patientInfo.orderId}
-                                    </span>
-                                </div>
-                                <div className="drawer-text-section">
-                                    <span className="drawer-text-label">
-                                        {lang.components.sidebar.dob}
-                                    </span>{' '}
-                                    <br />
-                                    <span className="drawer-text">
-                                        {patientData?.patientInfo.dob}
+                                        {patientData?.orderId}
                                     </span>
                                 </div>
                                 <div className="drawer-text-section">
@@ -153,110 +184,13 @@ const Controller = ({ languageData }) => {
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
-                                        {patientData?.patientInfo.status}
+                                        {patientData?.status}
                                     </span>
                                 </div>
                                 <span className="drawer-text-label">
                                     {lang.components.notes.title}
                                 </span>
-                                <div className="drawer-notes-wrapper">
-                                    <Accordion
-                                        expanded={expanded === 'info'}
-                                        onChange={handleNotePanel('info')}
-                                    >
-                                        <AccordionSummary
-                                            expandIcon={
-                                                <ExpandMoreIcon className="expand-icon" />
-                                            }
-                                        >
-                                            {
-                                                lang.components.stepTabs
-                                                    .patientInfo
-                                            }
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            {patientData?.patientInfo.notes}
-                                        </AccordionDetails>
-                                    </Accordion>
-                                    <Accordion
-                                        expanded={expanded === 'scan'}
-                                        onChange={handleNotePanel('scan')}
-                                    >
-                                        <AccordionSummary
-                                            expandIcon={
-                                                <ExpandMoreIcon className="expand-icon" />
-                                            }
-                                        >
-                                            {lang.components.stepTabs.earScan}
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            {patientData?.earScanInfo.notes}
-                                        </AccordionDetails>
-                                    </Accordion>
-                                    <Accordion
-                                        expanded={expanded === 'cad'}
-                                        onChange={handleNotePanel('cad')}
-                                    >
-                                        <AccordionSummary
-                                            expandIcon={
-                                                <ExpandMoreIcon className="expand-icon" />
-                                            }
-                                        >
-                                            {
-                                                lang.components.stepTabs
-                                                    .CADModeling
-                                            }
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            {patientData?.modelInfo.notes}
-                                        </AccordionDetails>
-                                    </Accordion>
-                                    <Accordion
-                                        expanded={expanded === 'processing'}
-                                        onChange={handleNotePanel('processing')}
-                                    >
-                                        <AccordionSummary
-                                            expandIcon={
-                                                <ExpandMoreIcon className="expand-icon" />
-                                            }
-                                        >
-                                            {lang.components.stepTabs.print}
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            {patientData?.printingInfo.notes}
-                                        </AccordionDetails>
-                                    </Accordion>
-                                    <Accordion
-                                        expanded={expanded === 'delivery'}
-                                        onChange={handleNotePanel('delivery')}
-                                    >
-                                        <AccordionSummary
-                                            expandIcon={
-                                                <ExpandMoreIcon className="expand-icon" />
-                                            }
-                                        >
-                                            {lang.components.stepTabs.delivery}
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            {patientData?.deliveryInfo.notes}
-                                        </AccordionDetails>
-                                    </Accordion>
-                                    <Accordion
-                                        expanded={expanded === 'feedback'}
-                                        onChange={handleNotePanel('feedback')}
-                                    >
-                                        <AccordionSummary
-                                            expandIcon={
-                                                <ExpandMoreIcon className="expand-icon" />
-                                            }
-                                        >
-                                            {lang.components.stepTabs.feedback}
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            {patientData?.feedbackInfo.notes}
-                                        </AccordionDetails>
-                                    </Accordion>
-                                </div>
+                                {generateNoteSidebar()}
                             </div>
                             <div
                                 style={{
