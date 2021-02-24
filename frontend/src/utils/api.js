@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { getCredentials, getCurrentSession } from '../aws/aws-helper';
+import { allStepMetadata, cadData, infoData } from './mock-data';
 
 const FileDownload = require('js-file-download');
 
@@ -90,153 +91,25 @@ export const updateStage = async (patientId, stage, updatedStage) => {
 };
 
 export const getStepMetadata = async (stepKey) => {
-    // TODO: Replace with actual backend call
-    if (stepKey == 'info') return (await getAllStepsMetadata())[0];
-    else return (await getAllStepsMetadata())[1];
+    // TODO: Replace with backend call
+    let stepData = null;
+
+    allStepMetadata.forEach((step) => {
+        if (step.key === stepKey) stepData = step;
+    });
+
+    return stepData;
 };
 
 export const getStepData = async (stepKey, patientId) => {
     // TODO: Replace with backend call
-    return {
-        firstName: 'Firstname',
-        lastName: 'Lastname',
-        notes: 'No notes',
-        jordanSSN: 12345678,
-        dob: new Date(),
-        phone: '847 123-4567',
-        status: 'unfinished',
-        leftEarscan: [
-            {
-                fileName: 'LeftEarscan.STP',
-                uploadedBy: 'User',
-                uploadDate: new Date(),
-            },
-        ],
-    };
+    if (stepKey == 'info') return infoData[0];
+    else return cadData[0];
 };
 
 export const getAllStepsMetadata = async () => {
-    return [
-        {
-            key: 'info',
-            displayName: { EN: 'PatientInfo', AR: 'معلومات المريض' },
-            stepNumber: 1,
-            fields: [
-                {
-                    key: 'patientDivider',
-                    fieldType: 'Divider',
-                    displayName: { EN: 'Patient', AR: 'لومات ا' },
-                    fieldNumber: 0,
-                    isVisibleOnDashboard: false,
-                },
-                {
-                    key: 'firstName',
-                    fieldType: 'String',
-                    displayName: { EN: 'First Name', AR: 'لومات ا' },
-                    fieldNumber: 1,
-                    isVisibleOnDashboard: true,
-                },
-                {
-                    key: 'notes',
-                    fieldType: 'MultilineString',
-                    displayName: { EN: 'Notes', AR: 'لومات ا' },
-                    fieldNumber: 11,
-                    isVisibleOnDashboard: false,
-                },
-                {
-                    key: 'lastName',
-                    fieldType: 'String',
-                    displayName: { EN: 'Last Name', AR: 'لومات ا' },
-                    fieldNumber: 2,
-                    isVisibleOnDashboard: true,
-                },
-                {
-                    key: 'jordanSSN',
-                    fieldType: 'String',
-                    displayName: { EN: 'Jordan SSN', AR: 'لومات ا' },
-                    fieldNumber: 3,
-                    isVisibleOnDashboard: false,
-                },
-                {
-                    key: 'dob',
-                    fieldType: 'Date',
-                    displayName: { EN: 'DOB', AR: 'لومات ا' },
-                    fieldNumber: 4,
-                    isVisibleOnDashboard: false,
-                },
-                {
-                    key: 'phone',
-                    fieldType: 'Phone',
-                    displayName: { EN: 'Phone', AR: 'لومات ا' },
-                    fieldNumber: 5,
-                    isVisibleOnDashboard: false,
-                },
-                {
-                    key: 'emContact',
-                    fieldType: 'Header',
-                    displayName: { EN: 'Emergency Contact', AR: 'لومات ا' },
-                    fieldNumber: 6,
-                    isVisibleOnDashboard: false,
-                },
-                {
-                    key: 'emContactName',
-                    fieldType: 'String',
-                    displayName: { EN: 'Name', AR: 'لومات ا' },
-                    fieldNumber: 7,
-                    isVisibleOnDashboard: false,
-                },
-                {
-                    key: 'emRelationship',
-                    fieldType: 'String',
-                    displayName: { EN: 'Relationship', AR: 'لومات ا' },
-                    fieldNumber: 8,
-                    isVisibleOnDashboard: false,
-                },
-                {
-                    key: 'emPhone',
-                    fieldType: 'Phone',
-                    displayName: { EN: 'Phone', AR: 'لومات ا' },
-                    fieldNumber: 9,
-                    isVisibleOnDashboard: false,
-                },
-                {
-                    key: 'infoDivider',
-                    fieldType: 'Divider',
-                    displayName: { EN: 'Information', AR: 'لومات ا' },
-                    fieldNumber: 10,
-                    isVisibleOnDashboard: false,
-                },
-            ],
-        },
-        {
-            key: 'cadModel',
-            displayName: { EN: 'CAD Modeling', AR: 'معلومات المريض' },
-            stepNumber: 2,
-            fields: [
-                {
-                    key: 'firstName',
-                    fieldType: 'String',
-                    displayName: { EN: 'First Name', AR: 'لومات ا' },
-                    fieldNumber: 1,
-                    isVisibleOnDashboard: true,
-                },
-                {
-                    key: 'fileSizeKb',
-                    fieldType: 'Number',
-                    displayName: { EN: 'File Size (Kb)', AR: 'لومات ا' },
-                    fieldNumber: 2,
-                    isVisibleOnDashboard: true,
-                },
-                {
-                    key: 'leftEarscan',
-                    fieldType: 'File',
-                    displayName: { EN: 'CAD File', AR: 'لومات ا' },
-                    fieldNumber: 3,
-                    isVisibleOnDashboard: false,
-                },
-            ],
-        },
-    ];
+    // TODO: Replace with backend call
+    return allStepMetadata;
 };
 
 export const downloadFile = async (patientId, stage, filename) => {

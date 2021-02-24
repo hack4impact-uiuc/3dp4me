@@ -28,12 +28,7 @@ import {
     StringGetterSetterType,
 } from '../../utils/custom-proptypes';
 
-const StepContent = ({
-    languageData,
-    stepKey,
-    patientId,
-    updatePatientFile,
-}) => {
+const StepContent = ({ languageData, stepKey, patientId }) => {
     const [trigger, reset] = useState(true);
     const [metaData, setMetaData] = useState(null);
     const [stepData, setStepData] = useState(null);
@@ -72,6 +67,7 @@ const StepContent = ({
     };
 
     const handleFileUpload = async (key, file) => {
+        // TODO: Fix this
         const formattedFileName = `LEFT_${file.name}`;
         const res = await uploadFile(
             patientId,
@@ -246,9 +242,7 @@ const StepContent = ({
 StepContent.propTypes = {
     languageData: LanguageDataType.isRequired,
     information: PropTypes.object.isRequired,
-    status: StringGetterSetterType,
     patientId: PropTypes.string.isRequired,
-    updatePatientFile: PropTypes.func.isRequired,
 };
 
 export default StepContent;

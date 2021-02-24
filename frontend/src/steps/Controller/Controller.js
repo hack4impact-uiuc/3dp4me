@@ -285,6 +285,7 @@ const Controller = ({ languageData }) => {
                         step={selectedStep}
                         handleStep={onStepChange}
                         medStatus={medStatus}
+                        // TODO: Pass metadata here
                         earScanStatus={earScanStatus}
                         modelStatus={modelStatus}
                         printStatus={printStatus}
