@@ -3,7 +3,6 @@ const {
     statusEnum,
     deliveryEnum,
     overallStatusEnum,
-    fileSchema,
     feedbackEnum,
 } = require('./Patient');
 
