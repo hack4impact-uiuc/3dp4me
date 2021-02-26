@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
-const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
 
 // POST metadata/steps
 router.post(
@@ -35,8 +34,19 @@ router.put(
             { key: stepkey },
             { $set: req.body },
         );
-        const result = await step.save();
-        res.send(result);
+
+        await new_steps.save(function (err, data) {
+            if (err) {
+                res.json(err);
+            } else {
+                res.status(200).json({
+                    code: 200,
+                    sucess: true,
+                    message: 'Step successfully edited.',
+                    data: data,
+                });
+            }
+        });
     }),
 );
 
