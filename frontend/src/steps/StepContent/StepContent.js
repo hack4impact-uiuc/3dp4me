@@ -33,8 +33,6 @@ const StepContent = ({
     stepData,
     onDataSaved,
 }) => {
-    // TODO: pass back data onDataSaved
-    // onDataSaved should have the step that was updated as a param
     const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
 
@@ -54,8 +52,11 @@ const StepContent = ({
     };
 
     const handleFileUpload = async (key, file) => {
-        // TODO: Fix this
-        const formattedFileName = `LEFT_${file.name}`;
+        let filePrefix = '';
+        if (metaData.fields[key].prefix != null)
+            filePrefix = metaData.fields[key].prefix + '_';
+
+        const formattedFileName = `${filePrefix}${file.name}`;
         const res = await uploadFile(
             patientId,
             stepData.key,
@@ -235,6 +236,10 @@ StepContent.propTypes = {
     languageData: LanguageDataType.isRequired,
     information: PropTypes.object.isRequired,
     patientId: PropTypes.string.isRequired,
+    metaData: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    stepData: PropTypes.object.isRequired,
+    onDataSaved: PropTypes.func.isRequired,
 };
 
 export default StepContent;
