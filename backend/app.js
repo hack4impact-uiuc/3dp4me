@@ -28,6 +28,8 @@ mongoose.connection
         console.log('Error connecting to the database: ', error),
     );
 
+mongoose.set('useFindAndModify', false);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
