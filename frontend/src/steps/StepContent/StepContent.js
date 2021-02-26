@@ -34,9 +34,8 @@ const StepContent = ({
 }) => {
     // TODO: pass back data onDataSaved
     // onDataSaved should have the step that was updated as a param
-    const [trigger, reset] = useState(true);
     const [edit, setEdit] = useState(false);
-    const [completionStatus, setCompletionStatus] = useState(null);
+    const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -75,10 +74,9 @@ const StepContent = ({
     };
 
     const handleSimpleUpdate = (key, value) => {
-        let updatedStepData = _.cloneDeep(stepData);
-        updatedStepData[key] = value;
-        // TODO: Figure out how to handle updates
-        // setStepData(updatedStepData);
+        let dataCopy = _.cloneDeep(updatedData);
+        dataCopy[key] = value;
+        setUpdatedData(dataCopy);
     };
 
     const saveData = () => {
@@ -97,14 +95,15 @@ const StepContent = ({
                 lang.components.button.discard.cancelButton,
                 lang.components.button.discard.confirmButton,
             ],
-        }).then((willDelete) => {
-            if (willDelete) {
+        }).then((isDeleteConfirmed) => {
+            if (isDeleteConfirmed) {
                 swal({
                     title: lang.components.button.discard.success,
                     icon: 'success',
                     buttons: lang.components.button.discard.confirmButton,
                 });
-                reset(!trigger);
+                // TODO: Nonexistent values don't get reset.
+                setUpdatedData(_.cloneDeep(stepData));
                 setEdit(false);
             }
         });
@@ -118,11 +117,9 @@ const StepContent = ({
 
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
-        if (stepData == null) return null;
+        if (updatedData == null) return null;
 
-        let fields = _.cloneDeep(metaData.fields);
-        fields.sort((a, b) => a.fieldNumber - b.fieldNumber);
-        return fields.map((field) => {
+        return metaData.fields.map((field) => {
             if (field.fieldType == 'String') {
                 return (
                     <TextField
@@ -131,7 +128,7 @@ const StepContent = ({
                         onChange={handleSimpleUpdate}
                         key={field.key}
                         fieldId={field.key}
-                        value={stepData[field.key]}
+                        value={updatedData[field.key]}
                     />
                 );
             } else if (field.fieldType == 'MultilineString') {
@@ -139,10 +136,11 @@ const StepContent = ({
                     <div>
                         <Notes
                             disabled={!edit}
-                            state={handleSimpleUpdate}
+                            onChange={handleSimpleUpdate}
                             title={field.displayName[key]}
                             key={field.key}
-                            value={stepData[field.key]}
+                            fieldId={field.key}
+                            value={updatedData[field.key]}
                         />
                     </div>
                 );
@@ -154,7 +152,7 @@ const StepContent = ({
                         onChange={handleSimpleUpdate}
                         key={field.key}
                         fieldId={field.key}
-                        value={stepData[field.key]}
+                        value={updatedData[field.key]}
                     />
                 );
             } else if (field.fieldType == 'Phone') {
@@ -165,7 +163,7 @@ const StepContent = ({
                         onChange={handleSimpleUpdate}
                         fieldId={field.key}
                         key={field.key}
-                        value={stepData[field.key]}
+                        value={updatedData[field.key]}
                     />
                 );
             } else if (field.fieldType == 'File') {
@@ -173,7 +171,7 @@ const StepContent = ({
                     <Files
                         languageData={languageData}
                         title={field.displayName[key]}
-                        files={stepData[field.key]}
+                        files={updatedData[field.key]}
                         fieldKey={field.key}
                         key={field.key}
                         handleDownload={handleFileDownload}
@@ -201,17 +199,33 @@ const StepContent = ({
 
         return (
             <BottomBar
-                // lastEditedBy={info.lastEditedBy}
-                // lastEdited={info.lastEdited}
-                discard={{ state: trigger, setState: discardData }}
-                save={saveData}
-                status={completionStatus}
-                setStatus={setCompletionStatus}
+                lastEditedBy={stepData?.lastEditedBy}
+                lastEdited={stepData?.lastEdited}
+                onDiscard={discardData}
+                onSave={saveData}
+                status={updatedData?.status}
+                onStatusChange={handleSimpleUpdate}
                 edit={edit}
                 setEdit={setEdit}
                 languageData={languageData}
             />
         );
+    };
+
+    const formatDate = (date, language) => {
+        if (date == null) return 'Undefined';
+
+        let locale = 'ar-SA';
+        if (language == 'EN') locale = 'en-US';
+
+        var options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        };
+        return date.toLocaleDateString(locale, options);
     };
 
     return (
@@ -220,9 +234,12 @@ const StepContent = ({
                 <CircularProgress color="inherit" />
             </Backdrop>
             {generateHeader()}
-            {/* TODO: Get real data from DB */}
-            <p>Created by Evan Eckels on 10/05/2020 9:58PM</p>
-            <p>Last edited by Anisha Rao on 10/08/2020 11:58PM</p>
+            <p>{`${lang.components.step.lastEditedBy} ${
+                stepData?.lastEditedBy
+            } ${lang.components.step.on} ${formatDate(
+                stepData?.lastEdited,
+                key,
+            )}`}</p>
             {genereateFields()}
             {generateFooter()}
         </form>

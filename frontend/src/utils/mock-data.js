@@ -12,6 +12,8 @@ export const patientData = {
         dob: new Date(),
         phone: '847 123-4567',
         status: 'unfinished',
+        lastEdited: new Date(),
+        lastEditedBy: 'Sir Humphrey',
     },
     cadModel: {
         key: 'cadModel',
@@ -26,6 +28,8 @@ export const patientData = {
         ],
         status: 'unfinished',
         notes: 'No CAD notes',
+        lastEdited: new Date(),
+        lastEditedBy: 'Sir Humphrey',
     },
 };
 

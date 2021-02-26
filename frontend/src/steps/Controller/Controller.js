@@ -92,6 +92,7 @@ const Controller = ({ languageData }) => {
         if (stepMetaData == null) return null;
         if (patientData == null) return null;
 
+        // TODO: Sort by step number
         return (
             <div className={`steps ${key === 'AR' ? 'steps-ar' : ''}`}>
                 {stepMetaData.map((step) => {

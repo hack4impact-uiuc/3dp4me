@@ -18,9 +18,9 @@ const BottomBar = ({
     lastEdited,
     lastEditedBy,
     status,
-    setStatus,
-    save,
-    discard,
+    onStatusChange,
+    onSave,
+    onDiscard,
     setEdit,
 }) => {
     const key = languageData.selectedLanguage;
@@ -61,7 +61,9 @@ const BottomBar = ({
                                 <Select
                                     className="status-selector"
                                     MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) => setStatus(e)}
+                                    onClick={(e) =>
+                                        onStatusChange('status', e.target.value)
+                                    }
                                     defaultValue={status}
                                 >
                                     <MenuItem disabled value="default">
@@ -79,13 +81,13 @@ const BottomBar = ({
                                 </Select>
                                 <Button
                                     className="save-button"
-                                    onClick={() => save()}
+                                    onClick={onSave}
                                 >
                                     {lang.components.button.save}
                                 </Button>
                                 <Button
                                     className="discard-button"
-                                    onClick={() => discard.setState()}
+                                    onClick={onDiscard}
                                 >
                                     <b>
                                         {lang.components.button.discard.title}
@@ -97,7 +99,9 @@ const BottomBar = ({
                                 <Select
                                     className="status-selector-ar"
                                     MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) => setStatus(e)}
+                                    onClick={(e) =>
+                                        onStatusChange('status', e.target.value)
+                                    }
                                     defaultValue={status}
                                 >
                                     <MenuItem disabled value="default">
@@ -115,13 +119,13 @@ const BottomBar = ({
                                 </Select>
                                 <Button
                                     className="save-button-ar"
-                                    onClick={() => save()}
+                                    onClick={onSave}
                                 >
                                     {lang.components.button.save}
                                 </Button>
                                 <Button
                                     className="discard-button"
-                                    onClick={() => discard.setState()}
+                                    onClick={onDiscard}
                                 >
                                     <b>
                                         {lang.components.button.discard.title}
@@ -159,8 +163,8 @@ BottomBar.propTypes = {
     lastEditedBy: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
     onStatusChange: PropTypes.func.isRequired,
-    save: PropTypes.func.isRequired,
-    discard: BoolGetterSetterType.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onDiscard: BoolGetterSetterType.isRequired,
     setEdit: PropTypes.func.isRequired,
 };
 
