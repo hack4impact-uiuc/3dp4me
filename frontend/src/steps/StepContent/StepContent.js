@@ -3,6 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
+import { formatDate } from '../../utils/date';
 import Files from '../../components/Files/Files';
 import {
     CircularProgress,
@@ -41,7 +42,7 @@ const StepContent = ({
     const lang = languageData.translations[key];
 
     const handleFileDelete = async (key, file) => {
-        deleteFile(patientId, stepData.stepKey, file.fileName);
+        deleteFile(patientId, stepData.key, file.fileName);
         let updatedFiles = _.cloneDeep(stepData[key]);
         updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
 
@@ -49,7 +50,7 @@ const StepContent = ({
     };
 
     const handleFileDownload = (fileName) => {
-        downloadFile(patientId, stepData.stepKey, fileName);
+        downloadFile(patientId, stepData.key, fileName);
     };
 
     const handleFileUpload = async (key, file) => {
@@ -57,7 +58,7 @@ const StepContent = ({
         const formattedFileName = `LEFT_${file.name}`;
         const res = await uploadFile(
             patientId,
-            stepData.stepKey,
+            stepData.key,
             file,
             formattedFileName,
         );
@@ -80,7 +81,7 @@ const StepContent = ({
     };
 
     const saveData = () => {
-        updateStage(patientId, stepData.stepKey, stepData);
+        onDataSaved(stepData.key, updatedData);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };
@@ -210,22 +211,6 @@ const StepContent = ({
                 languageData={languageData}
             />
         );
-    };
-
-    const formatDate = (date, language) => {
-        if (date == null) return 'Undefined';
-
-        let locale = 'ar-SA';
-        if (language == 'EN') locale = 'en-US';
-
-        var options = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        };
-        return date.toLocaleDateString(locale, options);
     };
 
     return (

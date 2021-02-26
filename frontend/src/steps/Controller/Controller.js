@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import _ from 'lodash';
 import './Controller.scss';
 import {
     Accordion,
@@ -12,16 +13,8 @@ import {
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import reactSwal from '@sweetalert/with-react';
 import { useParams } from 'react-router-dom';
-
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import StepContent from '../StepContent/StepContent';
-import MedicalInfo from '../MedicalInfo/MedicalInfo';
-import EarScan from '../EarScan/EarScan';
-import CADModel from '../CADModel/CADModel';
-import Printing from '../3DPrinting/Printing';
-import PostProcessing from '../PostProcessing/PostProcessing';
-import Delivery from '../Delivery/Delivery';
-import Feedback from '../Feedback/Feedback';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
 import {
@@ -41,7 +34,7 @@ const Controller = ({ languageData }) => {
 
     const [selectedStep, setSelectedStep] = useState('info');
     const [stepMetaData, setStepMetaData] = useState(null);
-    const [patientData, setPatientData] = useState();
+    const [patientData, setPatientData] = useState(null);
 
     const [medStatus, setMedStatus] = useState('unfinished');
     const [earScanStatus, setEarScanStatus] = useState('unfinished');
@@ -67,6 +60,13 @@ const Controller = ({ languageData }) => {
 
     const handleNotePanel = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
+    };
+
+    const onStepSaved = (stepKey, stepData) => {
+        let newPatientData = _.cloneDeep(patientData);
+        newPatientData[stepKey] = _.cloneDeep(stepData);
+        setPatientData(newPatientData);
+        updateStage(patientId, stepKey, stepData);
     };
 
     const onStepChange = (event, newStep) => {
@@ -101,6 +101,7 @@ const Controller = ({ languageData }) => {
                             <StepContent
                                 languageData={languageData}
                                 patientId={patientId}
+                                onDataSaved={onStepSaved}
                                 metaData={stepMetaData.find(
                                     (s) => s.key === step.key,
                                 )}

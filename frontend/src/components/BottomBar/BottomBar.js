@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
-
+import { formatDate } from '../../utils/date';
 import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
@@ -49,10 +49,10 @@ const BottomBar = ({
                     style={{ flexGrow: 1, color: 'black' }}
                 >
                     {`${
-                        lang.components.bottombar.lastEdit.split('...')[0]
+                        lang.components.bottombar.lastEditedBy
                     } ${lastEditedBy} ${
-                        lang.components.bottombar.lastEdit.split('...')[1]
-                    } ${lastEdited}`}
+                        lang.components.bottombar.on
+                    } ${formatDate(lastEdited, key)}`}
                 </div>
                 {edit ? (
                     <div>
