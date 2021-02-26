@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
-const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
 const { fieldEnum } = require('../../models/Metadata');
 
 const addCollection = async (stepMetadata) => {
