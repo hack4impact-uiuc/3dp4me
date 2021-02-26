@@ -7,8 +7,11 @@ const {
     feedbackEnum,
 } = require('./Patient');
 
+const { Step } = require('./Metadata');
+
 const models = {
     Patient,
+    Step,
 };
 
 module.exports = {

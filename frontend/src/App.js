@@ -11,6 +11,7 @@ import Navbar from './components/Navbar/Navbar';
 import Controller from './steps/Controller/Controller';
 import translations from './translations.json';
 import Login from './components/Login/Login';
+import ToggleButton from './components/ToggleButtons/ToggleButtons';
 import {
     UNDEFINED_AUTH,
     AUTHENTICATED,
