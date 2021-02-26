@@ -31,6 +31,7 @@ const addCollection = async (stepMetadata) => {
             case fieldEnum.DATE:
                 stepSchema = { type: Date, required: true, default: null };
                 break;
+            //TODO: add validator for international phone numbers
             case fieldEnum.PHONE:
                 stepSchema = { type: String, required: true, default: '' };
                 break;
@@ -51,8 +52,6 @@ const addCollection = async (stepMetadata) => {
     });
 };
 
-//TODO: Add validation for steps
-//TODO: Add default values
 // POST metadata/steps
 router.post(
     '/steps',
