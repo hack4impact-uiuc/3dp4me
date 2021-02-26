@@ -8,6 +8,7 @@ const {
 } = require('./Patient');
 
 const { Step } = require('./Metadata');
+const { fileSchema } = require('./Step');
 
 const models = {
     Patient,
