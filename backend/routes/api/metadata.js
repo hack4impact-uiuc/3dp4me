@@ -55,7 +55,6 @@ router.delete(
     '/steps/:stepkey',
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
-
         const step = await models.Step.deleteOne({ key: stepkey });
 
         if (step.deletedCount === 0) {
