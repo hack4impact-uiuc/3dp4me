@@ -69,7 +69,7 @@ const Controller = ({ languageData }) => {
         updateStage(patientId, stepKey, stepData);
     };
 
-    const onStepChange = (event, newStep) => {
+    const onStepChange = (newStep) => {
         if (newStep === null) return;
 
         setSelectedStep(newStep);
@@ -226,15 +226,9 @@ const Controller = ({ languageData }) => {
                     <ToggleButtons
                         languageData={languageData}
                         step={selectedStep}
+                        patientData={patientData}
+                        metaData={stepMetaData}
                         handleStep={onStepChange}
-                        medStatus={medStatus}
-                        // TODO: Pass metadata here
-                        earScanStatus={earScanStatus}
-                        modelStatus={modelStatus}
-                        printStatus={printStatus}
-                        processingStatus={processingStatus}
-                        deliveryStatus={deliveryStatus}
-                        feedbackStatus={feedbackStatus}
                     />
                     {generateStepContent()}
                 </div>

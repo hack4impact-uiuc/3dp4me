@@ -6,32 +6,21 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
-
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ToggleButtons.scss';
-import { getStageMetadata } from '../../utils/api';
-import { keyBy, set } from 'lodash';
 
 const ToggleButtons = ({
     languageData,
     handleStep,
+    metaData,
+    patientData,
     step,
-    medStatus = '',
-    processingStatus = '',
-    modelStatus = '',
-    printStatus = '',
-    earScanStatus = '',
-    deliveryStatus = '',
-    feedbackStatus = '',
 }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [steps, setSteps] = React.useState([]);
-
     const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     const statusIcons = {
         unfinished: (
@@ -64,20 +53,14 @@ const ToggleButtons = ({
     const handleCloseSelector = (e, newStep) => {
         setAnchorEl(null);
         if (newStep !== 'close') {
-            handleStep(e, newStep);
+            handleStep(newStep);
         }
     };
 
-    useEffect(async () => {
-        const step = await getStageMetadata();
-        if (step != null) {
-            setSteps(step);
-        }
-    }, [setSteps]);
-
     function generateToggleButtons() {
-        console.log(steps);
-        return steps.map((element) => {
+        if (metaData == null) return null;
+
+        return metaData.map((element) => {
             return (
                 <ToggleButton
                     disableRipple
@@ -86,7 +69,9 @@ const ToggleButtons = ({
                     }`}
                     value={element.key}
                 >
-                    {/* {medStatus !== undefined ? statusIcons[medStatus] : null}{' '} */}
+                    {patientData != null
+                        ? statusIcons[patientData[element.key].status]
+                        : null}{' '}
                     <b>{element.displayName[key]}</b>
                 </ToggleButton>
             );
@@ -94,14 +79,16 @@ const ToggleButtons = ({
     }
 
     function generateLabels() {
-        return steps.map((element) => {
+        if (metaData == null) return null;
+
+        return metaData.map((element) => {
             return (
                 <div className="toggle-button-selector">
                     {step === element.key ? (
                         <div className="current-step-label">
-                            {/*{medStatus !== undefined
-                                ? statusIcons[medStatus]
-                            : null}*/}
+                            {patientData != null
+                                ? statusIcons[patientData[element.key].status]
+                                : null}{' '}
                             <b>{element.displayName[key]}</b>
                         </div>
                     ) : null}
@@ -111,12 +98,14 @@ const ToggleButtons = ({
     }
 
     function generateMenuItems() {
-        return steps.map((element) => {
+        if (metaData == null) return null;
+
+        return metaData.map((element) => {
             return (
                 <MenuItem onClick={(e) => handleCloseSelector(e, element.key)}>
-                    {/* {medStatus !== undefined
-                            ? statusIcons[medStatus]
-                       : null} */}
+                    {patientData != null
+                        ? statusIcons[patientData[element.key].status]
+                        : null}{' '}
                     <b className="selector-text">{element.displayName[key]}</b>
                 </MenuItem>
             );
@@ -130,7 +119,7 @@ const ToggleButtons = ({
                 size="large"
                 exclusive
                 value={step}
-                onChange={handleStep}
+                onChange={(e, newStep) => handleStep(newStep)}
             >
                 {generateToggleButtons()}
             </ToggleButtonGroup>

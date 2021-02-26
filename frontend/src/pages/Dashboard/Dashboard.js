@@ -8,7 +8,7 @@ import { Button, TextField, Snackbar } from '@material-ui/core';
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import search from '../../assets/search.svg';
-import { getPatientsByStage } from '../../utils/api';
+import { getAllStepsMetadata, getPatientsByStage } from '../../utils/api';
 import './Dashboard.scss';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
@@ -47,6 +47,7 @@ const Dashboard = ({ languageData }) => {
     const classes = useStyles();
 
     const [patients, setPatients] = useState([]);
+    const [stepMetaData, setStepMetaData] = useState(null);
     const [step, setStep] = useState('info');
     const [searchQuery, setSearchQuery] = useState('');
     const [filterPatients, setFilteredPatients] = useState([]);
@@ -196,44 +197,23 @@ const Dashboard = ({ languageData }) => {
         setNoPatient(false);
     };
 
-    const handleStep = async (event, newStep) => {
+    const handleStep = async (stepKey) => {
         setSearchQuery('');
-        if (newStep !== null) {
-            setStep(newStep);
-            let res = {};
-            if (newStep === 'info') {
-                setStepTitle('patientInfoTitle');
-                res = await getPatientsByStage('patientInfo');
-            } else if (newStep === 'scan') {
-                setStepTitle('earScanTitle');
-                res = await getPatientsByStage('earScanInfo');
-            } else if (newStep === 'cad') {
-                setStepTitle('CADModelingTitle');
-                res = await getPatientsByStage('modelInfo');
-            } else if (newStep === 'printing') {
-                setStepTitle('printingTitle');
-                res = await getPatientsByStage('printingInfo');
-            } else if (newStep === 'processing') {
-                setStepTitle('postProcessingTitle');
-                res = await getPatientsByStage('processingInfo');
-            } else if (newStep === 'delivery') {
-                setStepTitle('deliveryTitle');
-                res = await getPatientsByStage('deliveryInfo');
-            } else if (newStep === 'feedback') {
-                setStepTitle('feedbackTitle');
-                res = await getPatientsByStage('feedbackInfo');
-            }
-            // What are you doing, step-patients?
-            const stepPatients = res.result;
-            setPatients(stepPatients);
+        if (stepKey !== null) {
+            setStep(stepKey);
+            const res = getPatientsByStage(stepKey);
+            // TODO: Set patients to be result of getPatients by stage
+            // setPatients(stepPatients);
         }
     };
 
     // TODO: hook up dashboard to display fetched patients
     const getPatients = async () => {
         const res = await getPatientsByStage('patientInfo');
+        const metaData = await getAllStepsMetadata();
         // TODO: Error handling
         setPatients(res.result);
+        setStepMetaData(metaData);
     };
 
     useEffect(() => {
@@ -260,6 +240,7 @@ const Dashboard = ({ languageData }) => {
                 <ToggleButtons
                     languageData={languageData}
                     step={step}
+                    metaData={stepMetaData}
                     handleStep={handleStep}
                 />
             </div>
