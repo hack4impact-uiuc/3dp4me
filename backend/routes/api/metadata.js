@@ -3,11 +3,18 @@ const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
+const mongoose = require('mongoose');
 
-const addCollection = async (stepMetadata) => {
+const addCollection = (stepMetadata) => {
     let stepSchema = {};
     stepSchema.patientId = { type: String, required: true, unique: true };
-
+    stepSchema.status = { type: String, required: true, default: 'incomplete' };
+    stepSchema.lastEdited = { type: Date, required: true, default: new Date() };
+    stepSchema.lastEditedBy = {
+        type: String,
+        required: true,
+        default: 'Admin',
+    };
     stepMetadata.fields.forEach((field) => {
         switch (field.type) {
             case fieldEnum.STRING:
@@ -35,10 +42,20 @@ const addCollection = async (stepMetadata) => {
                 stepSchema = { type: String, required: true, default: '' };
                 break;
             case fieldEnum.DROPDOWN:
-                stepSchema = { type: String, required: true, default: '' };
+                stepSchema = {
+                    type: String,
+                    required: true,
+                    default: '',
+                    enum: field.options,
+                };
                 break;
             case fieldEnum.RADIO_BUTTON:
-                stepSchema = { type: String, required: true, default: '' };
+                stepSchema = {
+                    type: String,
+                    required: true,
+                    default: '',
+                    enum: field.options,
+                };
                 break;
             case fieldEnum.FILE:
                 stepSchema = {
@@ -49,6 +66,8 @@ const addCollection = async (stepMetadata) => {
                 break;
         }
     });
+    const schema = new mongoose.Schema(stepSchema);
+    mongoose.model(stepMetadata.key, schema);
 };
 
 // POST metadata/steps
