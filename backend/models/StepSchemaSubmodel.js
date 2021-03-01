@@ -6,4 +6,10 @@ const fileSchema = new mongoose.Schema({
     uploadDate: { type: Date, required: true },
 });
 
-module.exports = { fileSchema };
+const stageStatusEnum = {
+    UNFINISHED: 'unfinished',
+    PARTIAL: 'partial',
+    FINISHED: 'finished',
+};
+
+module.exports = { fileSchema, stageStatusEnum };
