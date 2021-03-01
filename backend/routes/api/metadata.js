@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const isValidNumber = require('libphonenumber-js');
 const { errorWrap } = require('../../utils');
-const { models } = require('../../models');
+const { models, fileSchema } = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 
@@ -45,12 +46,15 @@ const addCollection = (stepMetadata) => {
                     default: null,
                 };
                 break;
-            //TODO: add validator for international phone numbers
             case fieldEnum.PHONE:
                 stepSchema[field.key] = {
                     type: String,
                     required: true,
                     default: '',
+                    validate: {
+                        validator: isValidNumber,
+                        message: 'Not a valid phone number',
+                    },
                 };
                 break;
             case fieldEnum.DROPDOWN:
