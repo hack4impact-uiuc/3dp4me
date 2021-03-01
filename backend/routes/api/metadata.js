@@ -70,6 +70,7 @@ const addCollection = (stepMetadata) => {
     mongoose.model(stepMetadata.key, schema);
 };
 
+
 // POST metadata/steps
 router.post(
     '/steps',
@@ -102,8 +103,21 @@ router.put(
             { key: stepkey },
             { $set: req.body },
         );
+      
         const result = await step.save();
         res.send(result);
+
+        await new_steps.save(function (err, data) {
+            if (err) {
+                res.json(err);
+            } else {
+                res.status(200).json({
+                    code: 200,
+                    sucess: true,
+                    message: 'Step successfully edited.',
+                    data: data,
+                });
+            }
     }),
 );
 
@@ -112,7 +126,6 @@ router.delete(
     '/steps/:stepkey',
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
-
         const step = await models.Step.deleteOne({ key: stepkey });
 
         if (step.deletedCount === 0) {
