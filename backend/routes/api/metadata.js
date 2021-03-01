@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const isValidNumber = require('libphonenumber-js');
 const { errorWrap } = require('../../utils');
-const { models, fileSchema, statusEnum } = require('../../models');
+const { models, fileSchema, stepStatusEnum } = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 
@@ -12,8 +12,8 @@ const addCollection = (stepMetadata) => {
     stepSchema.status = {
         type: String,
         required: true,
-        enum: Object.values(statusEnum),
-        default: statusEnum.UNFINISHED,
+        enum: Object.values(stepStatusEnum),
+        default: stepStatusEnum.UNFINISHED,
     };
     stepSchema.lastEdited = { type: Date, required: true, default: new Date() };
     stepSchema.lastEditedBy = {
