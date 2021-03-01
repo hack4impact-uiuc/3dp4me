@@ -70,7 +70,6 @@ const addCollection = (stepMetadata) => {
     mongoose.model(stepMetadata.key, schema);
 };
 
-
 // POST metadata/steps
 router.post(
     '/steps',
@@ -103,11 +102,8 @@ router.put(
             { key: stepkey },
             { $set: req.body },
         );
-      
-        const result = await step.save();
-        res.send(result);
 
-        await new_steps.save(function (err, data) {
+        await step.save(function (err, data) {
             if (err) {
                 res.json(err);
             } else {
@@ -118,6 +114,7 @@ router.put(
                     data: data,
                 });
             }
+        });
     }),
 );
 
