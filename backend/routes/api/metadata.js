@@ -42,6 +42,9 @@ const addCollection = (stepMetadata) => {
                 stepSchema = { type: String, required: true, default: '' };
                 break;
             case fieldEnum.DROPDOWN:
+                if (field.options == null)
+                    throw new Error('Dropdown must have options');
+
                 stepSchema = {
                     type: String,
                     required: true,
@@ -50,6 +53,9 @@ const addCollection = (stepMetadata) => {
                 };
                 break;
             case fieldEnum.RADIO_BUTTON:
+                if (field.options == null)
+                    throw new Error('Radio button must have options');
+                console.log(field.options);
                 stepSchema = {
                     type: String,
                     required: true,
@@ -64,6 +70,8 @@ const addCollection = (stepMetadata) => {
                     default: [],
                 };
                 break;
+            default:
+                throw new Error(`Unrecognized field type, ${field.type}`);
         }
     });
     const schema = new mongoose.Schema(stepSchema);
@@ -77,19 +85,29 @@ router.post(
         const steps = req.body;
         const new_steps = new models.Step(steps);
 
-        await new_steps.save(function (err, data) {
-            if (err) {
-                res.json(err);
-            } else {
-                addCollection(new_steps);
-                res.status(200).json({
-                    code: 200,
-                    success: true,
-                    message: 'Step successfully created.',
-                    data: data,
-                });
-            }
-        });
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        try {
+            await new_steps.save();
+            addCollection(new_steps);
+            res.status(200).json({
+                code: 200,
+                success: true,
+                message: 'Step successfully created.',
+                data: data,
+            });
+
+            await session.commitTransaction();
+        } catch (error) {
+            await session.abortTransaction();
+            res.status(500).json({
+                code: 500,
+                success: false,
+                message: `Step could not be added: ${error}`,
+            });
+        } finally {
+            session.endSession();
+        }
     }),
 );
 
