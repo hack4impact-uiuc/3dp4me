@@ -95,8 +95,8 @@ router.post(
     errorWrap(async (req, res) => {
         const steps = req.body;
         const new_step_metadata = new models.Step(steps);
-
         const session = await mongoose.startSession();
+
         try {
             await session.withTransaction(async () => {
                 await new_step_metadata.save();
