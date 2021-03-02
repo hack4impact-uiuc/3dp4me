@@ -7,7 +7,7 @@ var cors = require('cors');
 const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
 const requireAuthentication = require('./middleware/authentication');
-
+const { models } = require('./models');
 const app = express();
 app.use(cors());
 app.use(errorHandler);
@@ -27,6 +27,8 @@ mongoose.connection
     .on('error', (error) =>
         console.log('Error connecting to the database: ', error),
     );
+
+mongoose.set('useFindAndModify', false);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
