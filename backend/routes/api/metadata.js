@@ -16,7 +16,7 @@ const addCollection = (stepMetadata) => {
         default: 'Admin',
     };
     stepMetadata.fields.forEach((field) => {
-        switch (field.type) {
+        switch (field.fieldType) {
             case fieldEnum.STRING:
                 stepSchema[field.key] = {
                     type: String,
@@ -32,20 +32,32 @@ const addCollection = (stepMetadata) => {
                 };
                 break;
             case fieldEnum.NUMBER:
-                stepSchema = { type: Number, required: true, default: 0 };
+                stepSchema[field.key] = {
+                    type: Number,
+                    required: true,
+                    default: 0,
+                };
                 break;
             case fieldEnum.DATE:
-                stepSchema = { type: Date, required: true, default: null };
+                stepSchema[field.key] = {
+                    type: Date,
+                    required: true,
+                    default: null,
+                };
                 break;
             //TODO: add validator for international phone numbers
             case fieldEnum.PHONE:
-                stepSchema = { type: String, required: true, default: '' };
+                stepSchema[field.key] = {
+                    type: String,
+                    required: true,
+                    default: '',
+                };
                 break;
             case fieldEnum.DROPDOWN:
                 if (field.options == null)
                     throw new Error('Dropdown must have options');
 
-                stepSchema = {
+                stepSchema[field.key] = {
                     type: String,
                     required: true,
                     default: '',
@@ -55,8 +67,7 @@ const addCollection = (stepMetadata) => {
             case fieldEnum.RADIO_BUTTON:
                 if (field.options == null)
                     throw new Error('Radio button must have options');
-                console.log(field.options);
-                stepSchema = {
+                stepSchema[field.key] = {
                     type: String,
                     required: true,
                     default: '',
@@ -64,7 +75,7 @@ const addCollection = (stepMetadata) => {
                 };
                 break;
             case fieldEnum.FILE:
-                stepSchema = {
+                stepSchema[field.key] = {
                     type: [fileSchema],
                     required: true,
                     default: [],
@@ -83,23 +94,22 @@ router.post(
     '/steps',
     errorWrap(async (req, res) => {
         const steps = req.body;
-        const new_steps = new models.Step(steps);
+        const new_step_metadata = new models.Step(steps);
 
         const session = await mongoose.startSession();
-        session.startTransaction();
         try {
-            await new_steps.save();
-            addCollection(new_steps);
+            await session.withTransaction(async () => {
+                await new_step_metadata.save();
+                addCollection(steps);
+            });
+
             res.status(200).json({
                 code: 200,
                 success: true,
                 message: 'Step successfully created.',
-                data: data,
+                data: new_step_metadata,
             });
-
-            await session.commitTransaction();
         } catch (error) {
-            await session.abortTransaction();
             res.status(500).json({
                 code: 500,
                 success: false,
