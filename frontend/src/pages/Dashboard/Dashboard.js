@@ -58,7 +58,6 @@ const Dashboard = ({ languageData }) => {
     const [step, setStep] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredPatients, setFilteredPatients] = useState([]);
-    const [stepTitle, setStepTitle] = useState('patientInfoTitle');
     const [noPatient, setNoPatient] = useState(false);
 
     const key = languageData.selectedLanguage;
@@ -338,16 +337,12 @@ const Dashboard = ({ languageData }) => {
                             variant="outlined"
                             placeholder={lang.components.search.placeholder}
                         />
-                        {stepTitle === 'patientInfoTitle' ? (
-                            <Button
-                                className="create-patient-button"
-                                onClick={createPatient}
-                            >
-                                {lang.components.button.createPatient}
-                            </Button>
-                        ) : (
-                            <></>
-                        )}
+                        <Button
+                            className="create-patient-button"
+                            onClick={createPatient}
+                        >
+                            {lang.components.button.createPatient}
+                        </Button>
                     </div>
                 </div>
                 {generateMainTable()}
