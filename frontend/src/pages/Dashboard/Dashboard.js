@@ -49,7 +49,7 @@ const Dashboard = ({ languageData }) => {
     const [stepsMetaData, setStepsMetaData] = useState(null);
     const [step, setStep] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
-    const [filterPatients, setFilteredPatients] = useState([]);
+    const [filteredPatients, setFilteredPatients] = useState([]);
     const [stepTitle, setStepTitle] = useState('patientInfoTitle');
     const [noPatient, setNoPatient] = useState(false);
 
@@ -232,7 +232,9 @@ const Dashboard = ({ languageData }) => {
                     headers={generateHeaders(element.fields)}
                     rowIds={generateRowIds(element.fields)}
                     languageData={languageData}
-                    patients={patients}
+                    patients={
+                        searchQuery.length === 0 ? patients : filteredPatients
+                    }
                 />
             );
         });
