@@ -36,14 +36,6 @@ const Controller = ({ languageData }) => {
     const [stepMetaData, setStepMetaData] = useState(null);
     const [patientData, setPatientData] = useState(null);
 
-    const [medStatus, setMedStatus] = useState('unfinished');
-    const [earScanStatus, setEarScanStatus] = useState('unfinished');
-    const [modelStatus, setModelStatus] = useState('unfinished');
-    const [printStatus, setPrintStatus] = useState('unfinished');
-    const [processingStatus, setProcessingStatus] = useState('unfinished');
-    const [deliveryStatus, setDeliveryStatus] = useState('unfinished');
-    const [feedbackStatus, setFeedbackStatus] = useState('unfinished');
-
     const params = useParams();
     const { patientId } = params;
 

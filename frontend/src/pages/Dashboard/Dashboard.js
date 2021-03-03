@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
@@ -10,6 +11,13 @@ import search from '../../assets/search.svg';
 import { getAllStepsMetadata, getPatientsByStage } from '../../utils/api';
 import './Dashboard.scss';
 import { LanguageDataType } from '../../utils/custom-proptypes';
+
+// TODO: Expand these as needed
+const REQUIRED_HEADERS = [
+    { title: 'name', sortKey: 'name' },
+    { title: 'status', sortKey: 'status' },
+];
+const REQUIRED_SORT_KEYS = REQUIRED_HEADERS.map((header) => header.sortKey);
 
 const useStyles = makeStyles(() => ({
     swalEditButton: {
@@ -221,6 +229,16 @@ const Dashboard = ({ languageData }) => {
         getPatients();
     }, [setPatients, setStepsMetaData, setStep]);
 
+    function generatePageHeader() {
+        if (stepsMetaData == null) return lang.components.table.loading;
+
+        return stepsMetaData.map((element) => {
+            if (step !== element.key) return null;
+
+            return <h>{element.displayName[key]}</h>;
+        });
+    }
+
     function generateMainTable() {
         if (stepsMetaData == null) return null;
 
@@ -243,12 +261,12 @@ const Dashboard = ({ languageData }) => {
     function generateHeaders(fields) {
         if (fields == null) return [];
 
-        let headers = [];
+        let headers = _.cloneDeep(REQUIRED_HEADERS);
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 headers.push({
                     title: field.displayName[key],
-                    sortKey: field.fieldKey,
+                    sortKey: field.key,
                 });
         });
 
@@ -258,9 +276,9 @@ const Dashboard = ({ languageData }) => {
     function generateRowIds(fields) {
         if (fields == null) return [];
 
-        let rowIDs = [];
+        let rowIDs = _.cloneDeep(REQUIRED_SORT_KEYS);
         fields.forEach((field) => {
-            if (field.isVisibleOnDashboard) rowIDs.push(field.fieldKey);
+            if (field.isVisibleOnDashboard) rowIDs.push(field.key);
         });
 
         return rowIDs;
@@ -300,7 +318,7 @@ const Dashboard = ({ languageData }) => {
                                     : 'patient-list-title'
                             }
                         >
-                            {lang.pages[stepTitle]}
+                            {generatePageHeader()}
                         </h2>
                         <TextField
                             InputProps={{
