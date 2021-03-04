@@ -15,12 +15,14 @@ const addCollection = (stepMetadata) => {
         enum: Object.values(stepStatusEnum),
         default: stepStatusEnum.UNFINISHED,
     };
+    stepSchema.orderId = { type: String, required: true, unique: true };
     stepSchema.lastEdited = { type: Date, required: true, default: new Date() };
     stepSchema.lastEditedBy = {
         type: String,
         required: true,
         default: 'Admin',
     };
+    stepSchema.notes = { type: String, required: true, default: '' };
     stepMetadata.fields.forEach((field) => {
         switch (field.fieldType) {
             case fieldEnum.STRING:
@@ -48,7 +50,7 @@ const addCollection = (stepMetadata) => {
                 stepSchema[field.key] = {
                     type: Date,
                     required: true,
-                    default: null,
+                    default: new Date(),
                 };
                 break;
             case fieldEnum.PHONE:
