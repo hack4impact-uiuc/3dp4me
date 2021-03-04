@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+
 import { resolveObjPath } from '../../utils/object';
 import useSortableData from '../../hooks/useSortableData';
 import finishedIcon from '../../assets/check.svg';

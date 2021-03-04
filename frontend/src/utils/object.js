@@ -5,7 +5,7 @@
  * @param {String} path Dot seperated path
  */
 export function resolveObjPath(obj, path) {
-    var r = path.split('.');
+    const r = path.split('.');
     if (path) return resolveObjPath(obj[r.shift()], r.join('.'));
 
     return obj;

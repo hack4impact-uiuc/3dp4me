@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
 import { CircularProgress, Divider, Backdrop } from '@material-ui/core';
+
 import { formatDate } from '../../utils/date';
 import Files from '../../components/Files/Files';
 import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
@@ -46,10 +47,13 @@ const StepContent = ({
 
     const handleFileUpload = async (fileKey, file) => {
         let filePrefix = '';
-        let fieldMetadata = metaData.fields.find((field) => {
+        const fieldMetadata = metaData.fields.find((field) => {
             return field.key === fileKey;
         });
-        if (fieldMetadata.filePrefix != null && fieldMetadata.filePrefix != '')
+        if (
+            fieldMetadata.filePrefix !== null &&
+            fieldMetadata.filePrefix !== ''
+        )
             filePrefix = `${fieldMetadata.filePrefix}_`;
 
         const formattedFileName = `${filePrefix}${file.name}`;

@@ -48,17 +48,18 @@ export const getAllPatients = async () => {
 };
 
 export const getPatientsByStage = async (stage) => {
+    console.log(stage);
     return [patientData];
 
     // TODO: Replace with api call
-    const requestString = `/stages/${stage}`;
+    /* const requestString = `/stages/${stage}`;
     return instance.get(requestString).then(
         (res) => res.data,
         (err) => {
             console.error(err);
             return null;
         },
-    );
+    ); */
 };
 
 export const getPatientById = async (id) => {
