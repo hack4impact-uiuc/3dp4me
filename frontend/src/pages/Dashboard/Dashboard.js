@@ -208,18 +208,18 @@ const Dashboard = ({ languageData }) => {
         setSearchQuery('');
         if (stepKey !== null) {
             setStep(stepKey);
-            // const res = getPatientsByStage(stepKey);
+            const res = await getPatientsByStage(stepKey);
             // TODO: Set patients to be result of getPatients by stage
-            // setPatients(stepPatients);
+            setPatients(res);
         }
     };
 
     // TODO: hook up dashboard to display fetched patients
     const getPatients = async () => {
-        const res = await getPatientsByStage('patientInfo');
+        const res = await getPatientsByStage(step);
         const metaData = await getAllStepsMetadata();
         // TODO: Error handling
-        setPatients(res.result);
+        setPatients(res);
         setStepsMetaData(metaData);
 
         if (metaData.length > 0) setStep(metaData[0].key);
@@ -254,12 +254,13 @@ const Dashboard = ({ languageData }) => {
         return headers;
     }
 
-    function generateRowIds(fields) {
+    function generateRowIds(stepKey, fields) {
         if (fields == null) return [];
 
         const rowIDs = _.cloneDeep(REQUIRED_SORT_KEYS);
         fields.forEach((field) => {
-            if (field.isVisibleOnDashboard) rowIDs.push(field.key);
+            if (field.isVisibleOnDashboard)
+                rowIDs.push(`${stepKey}.${field.key}`);
         });
 
         return rowIDs;
@@ -274,7 +275,7 @@ const Dashboard = ({ languageData }) => {
             return (
                 <MainTable
                     headers={generateHeaders(element.fields)}
-                    rowIds={generateRowIds(element.fields)}
+                    rowIds={generateRowIds(element.key, element.fields)}
                     languageData={languageData}
                     patients={
                         searchQuery.length === 0 ? patients : filteredPatients

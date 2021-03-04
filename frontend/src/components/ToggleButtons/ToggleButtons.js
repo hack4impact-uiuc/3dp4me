@@ -6,7 +6,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
-
+import { STEP_STATUS } from '../../utils/constants';
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
@@ -24,21 +24,21 @@ const ToggleButtons = ({
     const key = languageData.selectedLanguage;
 
     const statusIcons = {
-        unfinished: (
+        [STEP_STATUS.UNFINISHED]: (
             <img
                 alt="incomplete"
                 src={ExclamationIcon}
                 className={`${key === 'AR' ? 'status-icon-ar' : 'status-icon'}`}
             />
         ),
-        partial: (
+        [STEP_STATUS.PARTIALLY_FINISHED]: (
             <img
                 alt="partial"
                 src={HalfCircleIcon}
                 className={`${key === 'AR' ? 'status-icon-ar' : 'status-icon'}`}
             />
         ),
-        finished: (
+        [STEP_STATUS.FINISHED]: (
             <img
                 alt="complete"
                 src={CheckIcon}

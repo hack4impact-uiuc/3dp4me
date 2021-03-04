@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-
+import { resolveObjPath } from '../../utils/object';
 import useSortableData from '../../hooks/useSortableData';
 import finishedIcon from '../../assets/check.svg';
 import partiallyIcon from '../../assets/half-circle.svg';
@@ -23,6 +23,7 @@ import {
     LanguageDataType,
     TableHeaderType,
 } from '../../utils/custom-proptypes';
+import { PATIENT_STATUS } from '../../utils/constants';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -83,17 +84,17 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                 {lang.components.bottombar.unfinished}
             </div>
         ),
-        Active: (
+        [PATIENT_STATUS.ACTIVE]: (
             <div style={{ color: '#65d991' }}>
                 {lang.components.bottombar.active}
             </div>
         ),
-        Archived: (
+        [PATIENT_STATUS.ARCHIVE]: (
             <div style={{ color: 'black' }}>
                 <b>{lang.components.bottombar.archived}</b>
             </div>
         ),
-        Feedback: (
+        [PATIENT_STATUS.FEEDBACK]: (
             <div style={{ color: '#5395f8' }}>
                 {lang.components.bottombar.feedback}
             </div>
@@ -158,22 +159,32 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                                     >
                                         {id === 'status' ? (
                                             <>
-                                                {patient[id] === 'Feedback' ||
-                                                patient[id] === 'Archived' ||
-                                                patient[id] === 'Active' ? (
+                                                {Object.values(
+                                                    PATIENT_STATUS,
+                                                ).includes(
+                                                    resolveObjPath(patient, id),
+                                                ) ? (
                                                     <b>
                                                         {
                                                             statusStyle[
-                                                                patient[id]
+                                                                resolveObjPath(
+                                                                    patient,
+                                                                    id,
+                                                                )
                                                             ]
                                                         }
                                                     </b>
                                                 ) : (
-                                                    statusStyle[patient[id]]
+                                                    statusStyle[
+                                                        resolveObjPath(
+                                                            patient,
+                                                            id,
+                                                        )
+                                                    ]
                                                 )}
                                             </>
                                         ) : (
-                                            patient[id]
+                                            resolveObjPath(patient, id)
                                         )}
                                     </StyledTableCell>
                                 ))}

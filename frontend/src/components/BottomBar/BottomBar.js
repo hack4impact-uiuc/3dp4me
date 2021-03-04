@@ -11,6 +11,7 @@ import {
     BoolGetterSetterType,
     LanguageDataType,
 } from '../../utils/custom-proptypes';
+import { STEP_STATUS } from '../../utils/constants';
 
 const BottomBar = ({
     languageData,
@@ -27,11 +28,15 @@ const BottomBar = ({
     const lang = languageData.translations[key];
 
     const statusIcons = {
-        finished: <img alt="complete" src={check} className="status-icon" />,
-        unfinished: (
+        [STEP_STATUS.FINISHED]: (
+            <img alt="complete" src={check} className="status-icon" />
+        ),
+        [STEP_STATUS.UNFINISHED]: (
             <img alt="incomplete" src={exclamation} className="status-icon" />
         ),
-        partial: <img alt="partial" src={halfCircle} className="status-icon" />,
+        [STEP_STATUS.PARTIALLY_FINISHED]: (
+            <img alt="partial" src={halfCircle} className="status-icon" />
+        ),
     };
     return (
         <AppBar
@@ -69,13 +74,15 @@ const BottomBar = ({
                                     <MenuItem disabled value="default">
                                         {lang.components.bottombar.default}
                                     </MenuItem>
-                                    <MenuItem value="unfinished">
+                                    <MenuItem value={STEP_STATUS.UNFINISHED}>
                                         {lang.components.bottombar.unfinished}
                                     </MenuItem>
-                                    <MenuItem value="partial">
+                                    <MenuItem
+                                        value={STEP_STATUS.PARTIALLY_FINISHED}
+                                    >
                                         {lang.components.bottombar.partial}
                                     </MenuItem>
-                                    <MenuItem value="finished">
+                                    <MenuItem value={STEP_STATUS.FINISHED}>
                                         {lang.components.bottombar.finished}
                                     </MenuItem>
                                 </Select>
@@ -107,13 +114,15 @@ const BottomBar = ({
                                     <MenuItem disabled value="default">
                                         {lang.components.bottombar.default}
                                     </MenuItem>
-                                    <MenuItem value="unfinished">
+                                    <MenuItem value={STEP_STATUS.UNFINISHED}>
                                         {lang.components.bottombar.unfinished}
                                     </MenuItem>
-                                    <MenuItem value="partial">
+                                    <MenuItem
+                                        value={STEP_STATUS.PARTIALLY_FINISHED}
+                                    >
                                         {lang.components.bottombar.partial}
                                     </MenuItem>
-                                    <MenuItem value="finished">
+                                    <MenuItem value={STEP_STATUS.FINISHED}>
                                         {lang.components.bottombar.finished}
                                     </MenuItem>
                                 </Select>

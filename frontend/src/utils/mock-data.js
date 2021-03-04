@@ -154,6 +154,7 @@ export const allStepMetadata = [
             {
                 key: 'leftEarscan',
                 fieldType: 'File',
+                filePrefix: 'LEFT',
                 displayName: { EN: 'CAD File', AR: 'لومات ا' },
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
