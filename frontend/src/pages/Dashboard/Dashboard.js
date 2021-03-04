@@ -214,19 +214,28 @@ const Dashboard = ({ languageData }) => {
     };
 
     // TODO: hook up dashboard to display fetched patients
-    const getPatients = async () => {
-        const res = await getPatientsByStage(step);
-        const metaData = await getAllStepsMetadata();
-        // TODO: Error handling
-        setPatients(res);
-        setStepsMetaData(metaData);
-
-        if (metaData.length > 0) setStep(metaData[0].key);
-    };
 
     useEffect(() => {
+        const getMetadata = async () => {
+            const metaData = await getAllStepsMetadata();
+            // TODO: Error handling
+            setStepsMetaData(metaData);
+
+            if (metaData.length > 0) setStep(metaData[0].key);
+        };
+
+        getMetadata();
+    }, [setStep, setStepsMetaData]);
+
+    useEffect(() => {
+        const getPatients = async () => {
+            const res = await getPatientsByStage(step);
+            // TODO: Error handling
+            setPatients(res);
+        };
+
         getPatients();
-    }, [setPatients, setStepsMetaData, setStep]);
+    }, [setPatients, step]);
 
     function generatePageHeader() {
         if (stepsMetaData == null) return lang.components.table.loading;
