@@ -5,7 +5,10 @@ import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
-
+import {
+    REQUIRED_DASHBOARD_SORT_KEYS,
+    REQUIRED_DASHBOARD_HEADERS,
+} from '../../utils/constants';
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import search from '../../assets/search.svg';
@@ -14,11 +17,6 @@ import './Dashboard.scss';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
 // TODO: Expand these as needed
-const REQUIRED_HEADERS = [
-    { title: 'name', sortKey: 'name' },
-    { title: 'status', sortKey: 'status' },
-];
-const REQUIRED_SORT_KEYS = REQUIRED_HEADERS.map((header) => header.sortKey);
 
 const useStyles = makeStyles(() => ({
     swalEditButton: {
@@ -242,7 +240,7 @@ const Dashboard = ({ languageData }) => {
     function generateHeaders(fields) {
         if (fields == null) return [];
 
-        const headers = _.cloneDeep(REQUIRED_HEADERS);
+        const headers = _.cloneDeep(REQUIRED_DASHBOARD_HEADERS);
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 headers.push({
@@ -257,7 +255,7 @@ const Dashboard = ({ languageData }) => {
     function generateRowIds(stepKey, fields) {
         if (fields == null) return [];
 
-        const rowIDs = _.cloneDeep(REQUIRED_SORT_KEYS);
+        const rowIDs = _.cloneDeep(REQUIRED_DASHBOARD_SORT_KEYS);
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 rowIDs.push(`${stepKey}.${field.key}`);
