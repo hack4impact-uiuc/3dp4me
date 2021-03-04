@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { TextField as Text } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
@@ -23,7 +23,7 @@ const TextField = ({ displayName, isDisabled, fieldId, value, onChange }) => {
 TextField.propTypes = {
     displayName: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
-    key: PropTypes.string.isRequired,
+    fieldId: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
 };

@@ -2,9 +2,9 @@ export const formatDate = (date, language) => {
     if (date == null) return 'Undefined';
 
     let locale = 'ar-SA';
-    if (language == 'EN') locale = 'en-US';
+    if (language === 'EN') locale = 'en-US';
 
-    var options = {
+    const options = {
         year: 'numeric',
         month: 'long',
         day: 'numeric',

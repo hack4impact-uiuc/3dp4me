@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { getCredentials, getCurrentSession } from '../aws/aws-helper';
+
 import { allStepMetadata, patientData } from './mock-data';
 
 const FileDownload = require('js-file-download');
@@ -54,6 +55,7 @@ export const getPatientsByStage = async (stage) => {
 };
 
 export const getPatientById = async (id) => {
+    console.log(id);
     return patientData;
     // TODO: Uncomment this when the backend is ready for the new data format
     // const requestString = `/patients/${id}`;

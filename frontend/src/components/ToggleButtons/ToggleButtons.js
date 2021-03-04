@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,6 +6,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
+
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
@@ -151,14 +152,8 @@ ToggleButtons.propTypes = {
     languageData: LanguageDataType.isRequired,
     handleStep: PropTypes.func.isRequired,
     step: PropTypes.string.isRequired,
-    // TODO: Enfoce status enum options
-    medStatus: PropTypes.string,
-    processingStatus: PropTypes.string,
-    modelStatus: PropTypes.string,
-    printStatus: PropTypes.string,
-    earScanStatus: PropTypes.string,
-    deliveryStatus: PropTypes.string,
-    feedbackStatus: PropTypes.string,
+    metaData: PropTypes.object.isRequired,
+    patientData: PropTypes.object.isRequired,
 };
 
 export default ToggleButtons;

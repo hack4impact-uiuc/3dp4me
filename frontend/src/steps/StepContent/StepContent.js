@@ -1,25 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
+import { CircularProgress, Divider, Backdrop } from '@material-ui/core';
+
 import { formatDate } from '../../utils/date';
 import Files from '../../components/Files/Files';
-import {
-    CircularProgress,
-    Divider,
-    Button,
-    FormControlLabel,
-    Radio,
-    RadioGroup,
-    Backdrop,
-} from '@material-ui/core';
-import {
-    downloadFile,
-    uploadFile,
-    deleteFile,
-    updateStage,
-} from '../../utils/api';
+import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
 import TextField from '../../components/Fields/TextField';
 import Notes from '../../components/Notes/Notes';
 import BottomBar from '../../components/BottomBar/BottomBar';
@@ -39,22 +27,28 @@ const StepContent = ({
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
-    const handleFileDelete = async (key, file) => {
+    const handleSimpleUpdate = (fieldKey, value) => {
+        const dataCopy = _.cloneDeep(updatedData);
+        dataCopy[fieldKey] = value;
+        setUpdatedData(dataCopy);
+    };
+
+    const handleFileDelete = async (fileKey, file) => {
         deleteFile(patientId, stepData.key, file.fileName);
-        let updatedFiles = _.cloneDeep(stepData[key]);
+        let updatedFiles = _.cloneDeep(stepData[fileKey]);
         updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
 
-        handleSimpleUpdate(key, updatedFiles);
+        handleSimpleUpdate(fileKey, updatedFiles);
     };
 
     const handleFileDownload = (fileName) => {
         downloadFile(patientId, stepData.key, fileName);
     };
 
-    const handleFileUpload = async (key, file) => {
+    const handleFileUpload = async (fileKey, file) => {
         let filePrefix = '';
-        if (metaData.fields[key].prefix != null)
-            filePrefix = metaData.fields[key].prefix + '_';
+        if (metaData.fields[fileKey].prefix != null)
+            filePrefix = `${metaData.fields[fileKey].prefix}_`;
 
         const formattedFileName = `${filePrefix}${file.name}`;
         const res = await uploadFile(
@@ -65,20 +59,14 @@ const StepContent = ({
         );
 
         // TODO: Display error if res is null
-        let files = _.cloneDeep(stepData[key]);
+        let files = _.cloneDeep(stepData[fileKey]);
         files = files.concat({
             fileName: res.data.data.name,
             uploadedBy: res.data.data.uploadedBy,
             uploadDate: res.data.data.uploadDate,
         });
 
-        handleSimpleUpdate(key, files);
-    };
-
-    const handleSimpleUpdate = (key, value) => {
-        let dataCopy = _.cloneDeep(updatedData);
-        dataCopy[key] = value;
-        setUpdatedData(dataCopy);
+        handleSimpleUpdate(fileKey, files);
     };
 
     const saveData = () => {
@@ -122,7 +110,7 @@ const StepContent = ({
         if (updatedData == null) return null;
 
         return metaData.fields.map((field) => {
-            if (field.fieldType == 'String') {
+            if (field.fieldType === 'String') {
                 return (
                     <TextField
                         displayName={field.displayName[key]}
@@ -133,7 +121,8 @@ const StepContent = ({
                         value={updatedData[field.key]}
                     />
                 );
-            } else if (field.fieldType == 'MultilineString') {
+            }
+            if (field.fieldType === 'MultilineString') {
                 return (
                     <div>
                         <Notes
@@ -146,7 +135,8 @@ const StepContent = ({
                         />
                     </div>
                 );
-            } else if (field.fieldType == 'Date') {
+            }
+            if (field.fieldType === 'Date') {
                 return (
                     <TextField
                         displayName={field.displayName[key]}
@@ -157,7 +147,8 @@ const StepContent = ({
                         value={updatedData[field.key]}
                     />
                 );
-            } else if (field.fieldType == 'Phone') {
+            }
+            if (field.fieldType === 'Phone') {
                 return (
                     <TextField
                         displayName={field.displayName[key]}
@@ -168,7 +159,8 @@ const StepContent = ({
                         value={updatedData[field.key]}
                     />
                 );
-            } else if (field.fieldType == 'File') {
+            }
+            if (field.fieldType === 'File') {
                 return (
                     <Files
                         languageData={languageData}
@@ -181,14 +173,16 @@ const StepContent = ({
                         handleDelete={handleFileDelete}
                     />
                 );
-            } else if (field.fieldType == 'Divider') {
+            }
+            if (field.fieldType === 'Divider') {
                 return (
                     <div className="patient-divider-wrapper">
                         <h2>{field.displayName[key]}</h2>
                         <Divider className="patient-divider" />
                     </div>
                 );
-            } else if (field.fieldType == 'Header') {
+            }
+            if (field.fieldType === 'Header') {
                 return <h3>{field.displayName[key]}</h3>;
             }
 
@@ -234,7 +228,6 @@ const StepContent = ({
 
 StepContent.propTypes = {
     languageData: LanguageDataType.isRequired,
-    information: PropTypes.object.isRequired,
     patientId: PropTypes.string.isRequired,
     metaData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,

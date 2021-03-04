@@ -5,6 +5,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
+
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import search from '../../assets/search.svg';
@@ -207,7 +208,7 @@ const Dashboard = ({ languageData }) => {
         setSearchQuery('');
         if (stepKey !== null) {
             setStep(stepKey);
-            const res = getPatientsByStage(stepKey);
+            // const res = getPatientsByStage(stepKey);
             // TODO: Set patients to be result of getPatients by stage
             // setPatients(stepPatients);
         }
@@ -238,6 +239,32 @@ const Dashboard = ({ languageData }) => {
         });
     }
 
+    function generateHeaders(fields) {
+        if (fields == null) return [];
+
+        const headers = _.cloneDeep(REQUIRED_HEADERS);
+        fields.forEach((field) => {
+            if (field.isVisibleOnDashboard)
+                headers.push({
+                    title: field.displayName[key],
+                    sortKey: field.key,
+                });
+        });
+
+        return headers;
+    }
+
+    function generateRowIds(fields) {
+        if (fields == null) return [];
+
+        const rowIDs = _.cloneDeep(REQUIRED_SORT_KEYS);
+        fields.forEach((field) => {
+            if (field.isVisibleOnDashboard) rowIDs.push(field.key);
+        });
+
+        return rowIDs;
+    }
+
     function generateMainTable() {
         if (stepsMetaData == null) return null;
 
@@ -255,32 +282,6 @@ const Dashboard = ({ languageData }) => {
                 />
             );
         });
-    }
-
-    function generateHeaders(fields) {
-        if (fields == null) return [];
-
-        let headers = _.cloneDeep(REQUIRED_HEADERS);
-        fields.forEach((field) => {
-            if (field.isVisibleOnDashboard)
-                headers.push({
-                    title: field.displayName[key],
-                    sortKey: field.key,
-                });
-        });
-
-        return headers;
-    }
-
-    function generateRowIds(fields) {
-        if (fields == null) return [];
-
-        let rowIDs = _.cloneDeep(REQUIRED_SORT_KEYS);
-        fields.forEach((field) => {
-            if (field.isVisibleOnDashboard) rowIDs.push(field.key);
-        });
-
-        return rowIDs;
     }
 
     return (

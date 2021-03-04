@@ -23,8 +23,9 @@ const Notes = ({ title, disabled, fieldId, value, onChange }) => {
 Notes.propTypes = {
     title: PropTypes.string.isRequired,
     disabled: PropTypes.bool.isRequired,
+    fieldId: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
-    state: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
 };
 
 export default Notes;

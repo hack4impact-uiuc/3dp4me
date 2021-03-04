@@ -1,3 +1,4 @@
+/* eslint no-param-reassign: "warn" */
 import React, { useEffect, useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -13,6 +14,7 @@ import {
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import reactSwal from '@sweetalert/with-react';
 import { useParams } from 'react-router-dom';
+
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import StepContent from '../StepContent/StepContent';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
@@ -55,7 +57,7 @@ const Controller = ({ languageData }) => {
     };
 
     const onStepSaved = (stepKey, stepData) => {
-        let newPatientData = _.cloneDeep(patientData);
+        const newPatientData = _.cloneDeep(patientData);
         newPatientData[stepKey] = _.cloneDeep(stepData);
         setPatientData(newPatientData);
         updateStage(patientId, stepKey, stepData);
@@ -73,8 +75,8 @@ const Controller = ({ languageData }) => {
             const data = await getPatientById(patientId);
 
             metaData = metaData.sort((a, b) => a.stepNumber - b.stepNumber);
-            metaData.forEach((step) => {
-                step.fields = step.fields.sort(
+            metaData.forEach((stepData) => {
+                stepData.fields = stepData.fields.sort(
                     (a, b) => a.fieldNumber - b.fieldNumber,
                 );
             });
