@@ -2,15 +2,16 @@ import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
+import { formatDate } from '../../utils/date';
 import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
 import halfCircle from '../../assets/half-circle.svg';
 import {
-    StringGetterSetterType,
     BoolGetterSetterType,
     LanguageDataType,
 } from '../../utils/custom-proptypes';
+import { STEP_STATUS } from '../../utils/constants';
 
 const BottomBar = ({
     languageData,
@@ -18,19 +19,24 @@ const BottomBar = ({
     lastEdited,
     lastEditedBy,
     status,
-    save,
-    discard,
+    onStatusChange,
+    onSave,
+    onDiscard,
     setEdit,
 }) => {
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
     const statusIcons = {
-        finished: <img alt="complete" src={check} className="status-icon" />,
-        unfinished: (
+        [STEP_STATUS.FINISHED]: (
+            <img alt="complete" src={check} className="status-icon" />
+        ),
+        [STEP_STATUS.UNFINISHED]: (
             <img alt="incomplete" src={exclamation} className="status-icon" />
         ),
-        partial: <img alt="partial" src={halfCircle} className="status-icon" />,
+        [STEP_STATUS.PARTIALLY_FINISHED]: (
+            <img alt="partial" src={halfCircle} className="status-icon" />
+        ),
     };
     return (
         <AppBar
@@ -48,10 +54,10 @@ const BottomBar = ({
                     style={{ flexGrow: 1, color: 'black' }}
                 >
                     {`${
-                        lang.components.bottombar.lastEdit.split('...')[0]
+                        lang.components.bottombar.lastEditedBy
                     } ${lastEditedBy} ${
-                        lang.components.bottombar.lastEdit.split('...')[1]
-                    } ${lastEdited}`}
+                        lang.components.bottombar.on
+                    } ${formatDate(lastEdited, key)}`}
                 </div>
                 {edit ? (
                     <div>
@@ -60,31 +66,35 @@ const BottomBar = ({
                                 <Select
                                     className="status-selector"
                                     MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) => status.setState(e)}
-                                    defaultValue={status.state}
+                                    onClick={(e) =>
+                                        onStatusChange('status', e.target.value)
+                                    }
+                                    defaultValue={status}
                                 >
                                     <MenuItem disabled value="default">
                                         {lang.components.bottombar.default}
                                     </MenuItem>
-                                    <MenuItem value="unfinished">
+                                    <MenuItem value={STEP_STATUS.UNFINISHED}>
                                         {lang.components.bottombar.unfinished}
                                     </MenuItem>
-                                    <MenuItem value="partial">
+                                    <MenuItem
+                                        value={STEP_STATUS.PARTIALLY_FINISHED}
+                                    >
                                         {lang.components.bottombar.partial}
                                     </MenuItem>
-                                    <MenuItem value="finished">
+                                    <MenuItem value={STEP_STATUS.FINISHED}>
                                         {lang.components.bottombar.finished}
                                     </MenuItem>
                                 </Select>
                                 <Button
                                     className="save-button"
-                                    onClick={() => save()}
+                                    onClick={onSave}
                                 >
                                     {lang.components.button.save}
                                 </Button>
                                 <Button
                                     className="discard-button"
-                                    onClick={() => discard.setState()}
+                                    onClick={onDiscard}
                                 >
                                     <b>
                                         {lang.components.button.discard.title}
@@ -96,31 +106,35 @@ const BottomBar = ({
                                 <Select
                                     className="status-selector-ar"
                                     MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) => status.setState(e)}
-                                    defaultValue={status.state}
+                                    onClick={(e) =>
+                                        onStatusChange('status', e.target.value)
+                                    }
+                                    defaultValue={status}
                                 >
                                     <MenuItem disabled value="default">
                                         {lang.components.bottombar.default}
                                     </MenuItem>
-                                    <MenuItem value="unfinished">
+                                    <MenuItem value={STEP_STATUS.UNFINISHED}>
                                         {lang.components.bottombar.unfinished}
                                     </MenuItem>
-                                    <MenuItem value="partial">
+                                    <MenuItem
+                                        value={STEP_STATUS.PARTIALLY_FINISHED}
+                                    >
                                         {lang.components.bottombar.partial}
                                     </MenuItem>
-                                    <MenuItem value="finished">
+                                    <MenuItem value={STEP_STATUS.FINISHED}>
                                         {lang.components.bottombar.finished}
                                     </MenuItem>
                                 </Select>
                                 <Button
                                     className="save-button-ar"
-                                    onClick={() => save()}
+                                    onClick={onSave}
                                 >
                                     {lang.components.button.save}
                                 </Button>
                                 <Button
                                     className="discard-button"
-                                    onClick={() => discard.setState()}
+                                    onClick={onDiscard}
                                 >
                                     <b>
                                         {lang.components.button.discard.title}
@@ -132,11 +146,11 @@ const BottomBar = ({
                 ) : (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div
-                            className={`status ${status.state}`}
+                            className={`status ${status}`}
                             style={{ display: 'flex', alignItems: 'center' }}
                         >
-                            {statusIcons[status.state]}{' '}
-                            {lang.components.bottombar[status.state]}
+                            {statusIcons[status]}{' '}
+                            {lang.components.bottombar[status]}
                         </div>
                         <Button
                             className="edit-button"
@@ -156,9 +170,10 @@ BottomBar.propTypes = {
     edit: PropTypes.bool.isRequired,
     lastEdited: PropTypes.string.isRequired,
     lastEditedBy: PropTypes.string.isRequired,
-    status: StringGetterSetterType.isRequired,
-    save: PropTypes.func.isRequired,
-    discard: BoolGetterSetterType.isRequired,
+    status: PropTypes.string.isRequired,
+    onStatusChange: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onDiscard: BoolGetterSetterType.isRequired,
     setEdit: PropTypes.func.isRequired,
 };
 

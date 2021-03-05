@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
 
+import {
+    REQUIRED_DASHBOARD_SORT_KEYS,
+    REQUIRED_DASHBOARD_HEADERS,
+} from '../../utils/constants';
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import search from '../../assets/search.svg';
-import { getPatientsByStage } from '../../utils/api';
+import { getAllStepsMetadata, getPatientsByStage } from '../../utils/api';
 import './Dashboard.scss';
 import { LanguageDataType } from '../../utils/custom-proptypes';
+
+// TODO: Expand these as needed
 
 const useStyles = makeStyles(() => ({
     swalEditButton: {
@@ -47,10 +54,10 @@ const Dashboard = ({ languageData }) => {
     const classes = useStyles();
 
     const [patients, setPatients] = useState([]);
-    const [step, setStep] = useState('info');
+    const [stepsMetaData, setStepsMetaData] = useState(null);
+    const [step, setStep] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
-    const [filterPatients, setFilteredPatients] = useState([]);
-    const [stepTitle, setStepTitle] = useState('patientInfoTitle');
+    const [filteredPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
 
     const key = languageData.selectedLanguage;
@@ -196,49 +203,95 @@ const Dashboard = ({ languageData }) => {
         setNoPatient(false);
     };
 
-    const handleStep = async (event, newStep) => {
+    const handleStep = async (stepKey) => {
         setSearchQuery('');
-        if (newStep !== null) {
-            setStep(newStep);
-            let res = {};
-            if (newStep === 'info') {
-                setStepTitle('patientInfoTitle');
-                res = await getPatientsByStage('patientInfo');
-            } else if (newStep === 'scan') {
-                setStepTitle('earScanTitle');
-                res = await getPatientsByStage('earScanInfo');
-            } else if (newStep === 'cad') {
-                setStepTitle('CADModelingTitle');
-                res = await getPatientsByStage('modelInfo');
-            } else if (newStep === 'printing') {
-                setStepTitle('printingTitle');
-                res = await getPatientsByStage('printingInfo');
-            } else if (newStep === 'processing') {
-                setStepTitle('postProcessingTitle');
-                res = await getPatientsByStage('processingInfo');
-            } else if (newStep === 'delivery') {
-                setStepTitle('deliveryTitle');
-                res = await getPatientsByStage('deliveryInfo');
-            } else if (newStep === 'feedback') {
-                setStepTitle('feedbackTitle');
-                res = await getPatientsByStage('feedbackInfo');
-            }
-            // What are you doing, step-patients?
-            const stepPatients = res.result;
-            setPatients(stepPatients);
+        if (stepKey !== null) {
+            setStep(stepKey);
+            const res = await getPatientsByStage(stepKey);
+            // TODO: Set patients to be result of getPatients by stage
+            setPatients(res);
         }
     };
 
     // TODO: hook up dashboard to display fetched patients
-    const getPatients = async () => {
-        const res = await getPatientsByStage('patientInfo');
-        // TODO: Error handling
-        setPatients(res.result);
-    };
 
     useEffect(() => {
+        const getMetadata = async () => {
+            const metaData = await getAllStepsMetadata();
+            // TODO: Error handling
+            setStepsMetaData(metaData);
+
+            if (metaData.length > 0) setStep(metaData[0].key);
+        };
+
+        getMetadata();
+    }, [setStep, setStepsMetaData]);
+
+    useEffect(() => {
+        const getPatients = async () => {
+            const res = await getPatientsByStage(step);
+            // TODO: Error handling
+            setPatients(res);
+        };
+
         getPatients();
-    }, []);
+    }, [setPatients, step]);
+
+    function generatePageHeader() {
+        if (stepsMetaData == null) return lang.components.table.loading;
+
+        return stepsMetaData.map((element) => {
+            if (step !== element.key) return null;
+
+            return <h>{element.displayName[key]}</h>;
+        });
+    }
+
+    function generateHeaders(fields) {
+        if (fields == null) return [];
+
+        const headers = _.cloneDeep(REQUIRED_DASHBOARD_HEADERS);
+        fields.forEach((field) => {
+            if (field.isVisibleOnDashboard)
+                headers.push({
+                    title: field.displayName[key],
+                    sortKey: field.key,
+                });
+        });
+
+        return headers;
+    }
+
+    function generateRowIds(stepKey, fields) {
+        if (fields == null) return [];
+
+        const rowIDs = _.cloneDeep(REQUIRED_DASHBOARD_SORT_KEYS);
+        fields.forEach((field) => {
+            if (field.isVisibleOnDashboard)
+                rowIDs.push(`${stepKey}.${field.key}`);
+        });
+
+        return rowIDs;
+    }
+
+    function generateMainTable() {
+        if (stepsMetaData == null) return null;
+
+        return stepsMetaData.map((element) => {
+            if (step !== element.key) return null;
+
+            return (
+                <MainTable
+                    headers={generateHeaders(element.fields)}
+                    rowIds={generateRowIds(element.key, element.fields)}
+                    languageData={languageData}
+                    patients={
+                        searchQuery.length === 0 ? patients : filteredPatients
+                    }
+                />
+            );
+        });
+    }
 
     return (
         <div className="dashboard">
@@ -260,6 +313,7 @@ const Dashboard = ({ languageData }) => {
                 <ToggleButtons
                     languageData={languageData}
                     step={step}
+                    metaData={stepsMetaData}
                     handleStep={handleStep}
                 />
             </div>
@@ -273,7 +327,7 @@ const Dashboard = ({ languageData }) => {
                                     : 'patient-list-title'
                             }
                         >
-                            {lang.pages[stepTitle]}
+                            {generatePageHeader()}
                         </h2>
                         <TextField
                             InputProps={{
@@ -293,175 +347,15 @@ const Dashboard = ({ languageData }) => {
                             variant="outlined"
                             placeholder={lang.components.search.placeholder}
                         />
-                        {stepTitle === 'patientInfoTitle' ? (
-                            <Button
-                                className="create-patient-button"
-                                onClick={createPatient}
-                            >
-                                {lang.components.button.createPatient}
-                            </Button>
-                        ) : (
-                            <></>
-                        )}
+                        <Button
+                            className="create-patient-button"
+                            onClick={createPatient}
+                        >
+                            {lang.components.button.createPatient}
+                        </Button>
                     </div>
                 </div>
-                {stepTitle !== 'feedbackTitle' ? (
-                    <>
-                        {searchQuery.length === 0 ? (
-                            <MainTable
-                                headers={[
-                                    {
-                                        title:
-                                            lang.components.table.mainHeaders
-                                                .name,
-                                        sortKey: 'name',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table.mainHeaders
-                                                .added,
-                                        sortKey: 'createdDate',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table.mainHeaders
-                                                .lastEdit,
-                                        sortKey: 'lastEdited',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table.mainHeaders
-                                                .status,
-                                        sortKey: 'status',
-                                    },
-                                ]}
-                                rowIds={[
-                                    'name',
-                                    'createdDate',
-                                    'lastEdited',
-                                    'status',
-                                ]}
-                                languageData={languageData}
-                                patients={patients}
-                            />
-                        ) : (
-                            <MainTable
-                                headers={[
-                                    {
-                                        title:
-                                            lang.components.table.mainHeaders
-                                                .name,
-                                        sortKey: 'name',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table.mainHeaders
-                                                .added,
-                                        sortKey: 'createdDate',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table.mainHeaders
-                                                .lastEdit,
-                                        sortKey: 'lastEdited',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table.mainHeaders
-                                                .status,
-                                        sortKey: 'status',
-                                    },
-                                ]}
-                                rowIds={[
-                                    'name',
-                                    'createdDate',
-                                    'lastEdited',
-                                    'status',
-                                ]}
-                                languageData={languageData}
-                                patients={filterPatients}
-                            />
-                        )}
-                    </>
-                ) : (
-                    <>
-                        {searchQuery.length === 0 ? (
-                            <MainTable
-                                headers={[
-                                    {
-                                        title:
-                                            lang.components.table
-                                                .feedbackHeaders.name,
-                                        sortKey: 'name',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table
-                                                .feedbackHeaders.added,
-                                        sortKey: 'createdDate',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table
-                                                .feedbackHeaders.feedbackCycle,
-                                        sortKey: 'feedbackCycle',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table
-                                                .feedbackHeaders.status,
-                                        sortKey: 'status',
-                                    },
-                                ]}
-                                rowIds={[
-                                    'name',
-                                    'createdDate',
-                                    'feedbackCycle',
-                                    'status',
-                                ]}
-                                languageData={languageData}
-                                patients={patients}
-                            />
-                        ) : (
-                            <MainTable
-                                headers={[
-                                    {
-                                        title:
-                                            lang.components.table
-                                                .feedbackHeaders.name,
-                                        sortKey: 'name',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table
-                                                .feedbackHeaders.added,
-                                        sortKey: 'createdDate',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table
-                                                .feedbackHeaders.feedbackCycle,
-                                        sortKey: 'feedbackCycle',
-                                    },
-                                    {
-                                        title:
-                                            lang.components.table
-                                                .feedbackHeaders.status,
-                                        sortKey: 'status',
-                                    },
-                                ]}
-                                rowIds={[
-                                    'name',
-                                    'createdDate',
-                                    'feedbackCycle',
-                                    'status',
-                                ]}
-                                languageData={languageData}
-                                patients={filterPatients}
-                            />
-                        )}
-                    </>
-                )}
+                {generateMainTable()}
             </div>
         </div>
     );

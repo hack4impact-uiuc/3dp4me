@@ -11,6 +11,10 @@ import search from '../../assets/search.svg';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import archive from '../../assets/archive.svg';
 import { getAllPatients } from '../../utils/api';
+import {
+    REQUIRED_DASHBOARD_HEADERS,
+    REQUIRED_DASHBOARD_SORT_KEYS,
+} from '../../utils/constants';
 
 const useStyles = makeStyles(() => ({
     swalEditButton: {
@@ -189,7 +193,7 @@ const Patients = ({ languageData }) => {
     const getData = async () => {
         // TODO: api call to get all patients and assign it to all patients state variable
         const res = await getAllPatients();
-        setAllPatients(res.result);
+        setAllPatients(res);
     };
 
     useEffect(() => {
@@ -265,55 +269,15 @@ const Patients = ({ languageData }) => {
                     </div>
                 </div>
             </div>
-            {searchQuery.length === 0 ? (
-                <MainTable
-                    headers={[
-                        {
-                            title: lang.components.table.mainHeaders.name,
-                            sortKey: 'name',
-                        },
-                        {
-                            title: lang.components.table.mainHeaders.added,
-                            sortKey: 'createdDate',
-                        },
-                        {
-                            title: lang.components.table.mainHeaders.lastEdit,
-                            sortKey: 'lastEdit',
-                        },
-                        {
-                            title: lang.components.table.mainHeaders.status,
-                            sortKey: 'status',
-                        },
-                    ]}
-                    rowIds={['name', 'createdDate', 'lastEdited', 'status']}
-                    languageData={languageData}
-                    patients={allPatients}
-                />
-            ) : (
-                <MainTable
-                    headers={[
-                        {
-                            title: lang.components.table.mainHeaders.name,
-                            sortKey: 'name',
-                        },
-                        {
-                            title: lang.components.table.mainHeaders.added,
-                            sortKey: 'createdDate',
-                        },
-                        {
-                            title: lang.components.table.mainHeaders.lastEdit,
-                            sortKey: 'lastEdit',
-                        },
-                        {
-                            title: lang.components.table.mainHeaders.status,
-                            sortKey: 'status',
-                        },
-                    ]}
-                    rowIds={['name', 'createdDate', 'lastEdited', 'status']}
-                    languageData={languageData}
-                    patients={filterPatients}
-                />
-            )}
+            <MainTable
+                headers={REQUIRED_DASHBOARD_HEADERS}
+                rowIds={REQUIRED_DASHBOARD_SORT_KEYS}
+                languageData={languageData}
+                patients={
+                    searchQuery.length === 0 ? allPatients : filterPatients
+                }
+            />
+            )
         </div>
     );
 };

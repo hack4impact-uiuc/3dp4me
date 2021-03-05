@@ -2,6 +2,8 @@ import axios from 'axios';
 
 import { getCredentials, getCurrentSession } from '../aws/aws-helper';
 
+import { allStepMetadata, patientData } from './mock-data';
+
 const FileDownload = require('js-file-download');
 
 const IN_DEV_ENV =
@@ -31,6 +33,9 @@ instance.interceptors.request.use(
 );
 
 export const getAllPatients = async () => {
+    return [patientData];
+    // TODO: Replace with API call
+    /*
     const requestString = '/stages/';
     return instance.get(requestString).then(
         (res) => res.data,
@@ -39,28 +44,36 @@ export const getAllPatients = async () => {
             return null;
         },
     );
+    */
 };
 
 export const getPatientsByStage = async (stage) => {
-    const requestString = `/stages/${stage}`;
+    console.log(stage);
+    return [patientData];
+
+    // TODO: Replace with api call
+    /* const requestString = `/stages/${stage}`;
     return instance.get(requestString).then(
         (res) => res.data,
         (err) => {
             console.error(err);
             return null;
         },
-    );
+    ); */
 };
 
 export const getPatientById = async (id) => {
-    const requestString = `/patients/${id}`;
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
+    console.log(id);
+    return patientData;
+    // TODO: Uncomment this when the backend is ready for the new data format
+    // const requestString = `/patients/${id}`;
+    // return instance.get(requestString).then(
+    //     (res) => res.data,
+    //     (err) => {
+    //         console.error(err);
+    //         return null;
+    //     },
+    // );
 };
 
 export const newPatient = async (patientInfo) => {
@@ -87,6 +100,22 @@ export const updateStage = async (patientId, stage, updatedStage) => {
                 return null;
             },
         );
+};
+
+export const getStepMetadata = async (stepKey) => {
+    // TODO: Replace with backend call
+    let stepData = null;
+
+    allStepMetadata.forEach((step) => {
+        if (step.key === stepKey) stepData = step;
+    });
+
+    return stepData;
+};
+
+export const getAllStepsMetadata = async () => {
+    // TODO: Replace with backend call
+    return allStepMetadata;
 };
 
 export const downloadFile = async (patientId, stage, filename) => {
