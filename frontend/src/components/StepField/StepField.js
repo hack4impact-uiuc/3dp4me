@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '../../components/Fields/TextField';
 import { Divider } from '@material-ui/core';
-import Notes from '../../components/Notes/Notes';
-import Files from '../../components/Files/Files';
+
+import TextField from '../Fields/TextField';
+import Notes from '../Notes/Notes';
+import Files from '../Files/Files';
 import { FIELD_TYPES } from '../../utils/constants';
 
 const StepField = ({

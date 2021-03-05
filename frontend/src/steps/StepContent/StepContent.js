@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
 import { CircularProgress, Backdrop } from '@material-ui/core';
+
 import { formatDate } from '../../utils/date';
 import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
 import StepField from '../../components/StepField/StepField';
