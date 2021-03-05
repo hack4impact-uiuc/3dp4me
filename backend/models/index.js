@@ -3,11 +3,11 @@ const {
     statusEnum,
     deliveryEnum,
     overallStatusEnum,
-    fileSchema,
     feedbackEnum,
 } = require('./Patient');
 
 const { Step } = require('./Metadata');
+const { fileSchema, stepStatusEnum } = require('./StepSchemaSubmodel');
 
 const models = {
     Patient,
@@ -20,5 +20,6 @@ module.exports = {
     deliveryEnum,
     overallStatusEnum,
     fileSchema,
+    stepStatusEnum,
     feedbackEnum,
 };
