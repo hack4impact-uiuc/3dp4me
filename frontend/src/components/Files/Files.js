@@ -85,16 +85,16 @@ const Files = ({
 Files.propTypes = {
     languageData: LanguageDataType.isRequired,
     title: PropTypes.string.isRequired,
-    files: PropTypes.arrayOf(
-        PropTypes.shape({
-            fileName: PropTypes.string.isRequired,
-            uploadDate: PropTypes.instanceOf(Date),
-        }),
-    ).isRequired,
     fieldKey: PropTypes.string.isRequired,
     handleDownload: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
     handleUpload: PropTypes.func.isRequired,
+    files: PropTypes.arrayOf(
+        PropTypes.shape({
+            fileName: PropTypes.string.isRequired,
+            uploadDate: PropTypes.instanceOf(Date).isRequired,
+        }),
+    ).isRequired,
 };
 
 export default Files;
