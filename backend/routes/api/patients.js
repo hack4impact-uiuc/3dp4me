@@ -18,12 +18,20 @@ router.get(
     }),
 );
 
+const getStepKeys = () => {
+    // const steps = await models.Step.find({});
+    // const stepKeys = [];
+    // steps.forEach(element => stepKeys.append(element.key));
+    // return stepKeys;
+};
+
 // GET: Returns everything associated with patient
 router.get(
     '/:id',
     errorWrap(async (req, res) => {
         const { id } = req.params;
         const patientData = await models.Patient.findById(id);
+        const stepKeys = getStepKeys;
         if (!patientData)
             res.status(404).json({
                 code: 404,
