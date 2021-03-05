@@ -19,7 +19,7 @@ router.get(
 );
 
 const getStepKeys = async () => {
-    const steps = await models.Step.find([]);
+    const steps = await models.Step.find({});
     const stepKeys = [];
     steps.forEach((element) => stepKeys.append(element.key));
     return stepKeys;
