@@ -23,5 +23,4 @@ module.exports = {
     deliveryEnum,
     feedbackEnum,
     overallStatusEnum,
-    fileSchema,
 };
