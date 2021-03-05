@@ -2,7 +2,7 @@ import React from 'react';
 import './Notes.scss';
 import PropTypes from 'prop-types';
 
-const Notes = ({ title, disabled, value, state }) => {
+const Notes = ({ title, disabled, fieldId, value, onChange }) => {
     return (
         <div className="notes-wrapper">
             <div className="notes-header">
@@ -11,9 +11,7 @@ const Notes = ({ title, disabled, value, state }) => {
             <div>
                 <textarea
                     disabled={disabled}
-                    onChange={(e) => {
-                        state(e.target.value);
-                    }}
+                    onChange={(e) => onChange(fieldId, e.target.value)}
                     value={value}
                     className={disabled ? 'notes-body' : 'active-body'}
                 />
@@ -25,8 +23,9 @@ const Notes = ({ title, disabled, value, state }) => {
 Notes.propTypes = {
     title: PropTypes.string.isRequired,
     disabled: PropTypes.bool.isRequired,
+    fieldId: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
-    state: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
 };
 
 export default Notes;

@@ -6,6 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import patientFile from '../../Test Data/patient.json';
 import './ManagePatientModal.scss';
+import { PATIENT_STATUS, PATIENT_KEY_STATUS } from '../../utils/constants';
 
 const ManagePatientModal = ({ languageData }) => {
     const [patientStatus, setPatientStatus] = useState('active');
@@ -82,27 +83,27 @@ const ManagePatientModal = ({ languageData }) => {
                     <div>
                         <input
                             type="radio"
-                            value="active"
-                            name="status"
-                            checked={patientStatus === 'active'}
+                            value={PATIENT_STATUS.ACTIVE}
+                            name={PATIENT_KEY_STATUS}
+                            checked={patientStatus === PATIENT_STATUS.ACTIVE}
                         />{' '}
                         {lang.components.swal.managePatient.active}
                     </div>
                     <div>
                         <input
                             type="radio"
-                            value="feedback"
-                            name="status"
-                            checked={patientStatus === 'feedback'}
+                            value={PATIENT_STATUS.FEEDBACK}
+                            name={PATIENT_KEY_STATUS}
+                            checked={patientStatus === PATIENT_STATUS.FEEDBACK}
                         />{' '}
                         {lang.components.swal.managePatient.feedback}
                     </div>
                     <div>
                         <input
                             type="radio"
-                            value="archived"
-                            name="status"
-                            checked={patientStatus === 'archived'}
+                            value={PATIENT_STATUS.ARCHIVE}
+                            name={PATIENT_KEY_STATUS}
+                            checked={patientStatus === PATIENT_STATUS.ARCHIVE}
                         />{' '}
                         {lang.components.swal.managePatient.archive}
                     </div>
