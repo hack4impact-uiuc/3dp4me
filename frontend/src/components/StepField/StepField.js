@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import TextField from '../../components/Fields/TextField';
 import { Divider } from '@material-ui/core';
 import Notes from '../../components/Notes/Notes';
 import Files from '../../components/Files/Files';
+import { FIELD_TYPES } from '../../utils/constants';
 
 const StepField = ({
     fieldType,
     displayName,
     value,
     fieldId,
-    isDisabled,
-    handleSimpleUpdate,
-    handleFileDownload,
-    handleFileUpload,
-    handleFileDelete,
     languageData,
+    isDisabled = true,
+    handleSimpleUpdate = () => {},
+    handleFileDownload = () => {},
+    handleFileUpload = () => {},
+    handleFileDelete = () => {},
 }) => {
     const generateField = () => {
         switch (fieldType) {
-            case 'String':
+            case FIELD_TYPES.STRING:
                 return (
                     <TextField
                         displayName={displayName}
@@ -28,7 +30,7 @@ const StepField = ({
                         value={value}
                     />
                 );
-            case 'MultilineString':
+            case FIELD_TYPES.MULTILINE_STRING:
                 return (
                     <div>
                         <Notes
@@ -40,7 +42,7 @@ const StepField = ({
                         />
                     </div>
                 );
-            case 'Date':
+            case FIELD_TYPES.DATE:
                 return (
                     <TextField
                         displayName={displayName}
@@ -50,7 +52,7 @@ const StepField = ({
                         value={value}
                     />
                 );
-            case 'Phone':
+            case FIELD_TYPES.PHONE:
                 return (
                     <TextField
                         displayName={displayName}
@@ -60,7 +62,7 @@ const StepField = ({
                         value={value}
                     />
                 );
-            case 'File':
+            case FIELD_TYPES.FILE:
                 return (
                     <Files
                         languageData={languageData}
@@ -72,7 +74,7 @@ const StepField = ({
                         handleDelete={handleFileDelete}
                     />
                 );
-            case 'Divider':
+            case FIELD_TYPES.DIVIDER:
                 return (
                     <div className="patient-divider-wrapper">
                         <h2>{displayName}</h2>
@@ -87,6 +89,22 @@ const StepField = ({
     };
 
     return <div>{generateField()}</div>;
+};
+
+StepField.propTypes = {
+    fieldType: PropTypes.string.isRequired,
+    value: PropTypes.any.isRequired,
+    languageData: PropTypes.object.isRequired,
+    fieldId: PropTypes.string.isRequired,
+    isDisabled: PropTypes.bool,
+    handleSimpleUpdate: PropTypes.func,
+    handleFileDownload: PropTypes.func,
+    handleFileUpload: PropTypes.func,
+    handleFileDelete: PropTypes.func,
+    displayName: PropTypes.shape({
+        EN: PropTypes.string,
+        AR: PropTypes.string,
+    }).isRequired,
 };
 
 export default StepField;

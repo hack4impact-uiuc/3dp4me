@@ -20,7 +20,7 @@ export const PATIENT_STATUS = {
 
 export const FIELD_TYPES = {
     STRING: 'String',
-    MULTILINE_STRING: 'String',
+    MULTILINE_STRING: 'MultilineString',
     FILE: 'File',
     NUMBER: 'Number',
     DATE: 'Date',
