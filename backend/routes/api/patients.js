@@ -18,11 +18,11 @@ router.get(
     }),
 );
 
-const getStepKeys = () => {
-    // const steps = await models.Step.find({});
-    // const stepKeys = [];
-    // steps.forEach(element => stepKeys.append(element.key));
-    // return stepKeys;
+const getStepKeys = async () => {
+    const steps = await models.Step.find([]);
+    const stepKeys = [];
+    steps.forEach((element) => stepKeys.append(element.key));
+    return stepKeys;
 };
 
 // GET: Returns everything associated with patient
