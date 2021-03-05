@@ -3,13 +3,10 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
-import { CircularProgress, Divider, Backdrop } from '@material-ui/core';
-
+import { CircularProgress, Backdrop } from '@material-ui/core';
 import { formatDate } from '../../utils/date';
-import Files from '../../components/Files/Files';
 import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
-import TextField from '../../components/Fields/TextField';
-import Notes from '../../components/Notes/Notes';
+import StepField from '../../components/StepField/StepField';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
@@ -114,85 +111,22 @@ const StepContent = ({
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
         if (updatedData == null) return null;
-
         return metaData.fields.map((field) => {
-            if (field.fieldType === 'String') {
-                return (
-                    <TextField
-                        displayName={field.displayName[key]}
-                        isDisabled={!edit}
-                        onChange={handleSimpleUpdate}
-                        key={field.key}
-                        fieldId={field.key}
-                        value={updatedData[field.key]}
-                    />
-                );
-            }
-            if (field.fieldType === 'MultilineString') {
-                return (
-                    <div>
-                        <Notes
-                            disabled={!edit}
-                            onChange={handleSimpleUpdate}
-                            title={field.displayName[key]}
-                            key={field.key}
-                            fieldId={field.key}
-                            value={updatedData[field.key]}
-                        />
-                    </div>
-                );
-            }
-            if (field.fieldType === 'Date') {
-                return (
-                    <TextField
-                        displayName={field.displayName[key]}
-                        isDisabled={!edit}
-                        onChange={handleSimpleUpdate}
-                        key={field.key}
-                        fieldId={field.key}
-                        value={updatedData[field.key]}
-                    />
-                );
-            }
-            if (field.fieldType === 'Phone') {
-                return (
-                    <TextField
-                        displayName={field.displayName[key]}
-                        isDisabled={!edit}
-                        onChange={handleSimpleUpdate}
-                        fieldId={field.key}
-                        key={field.key}
-                        value={updatedData[field.key]}
-                    />
-                );
-            }
-            if (field.fieldType === 'File') {
-                return (
-                    <Files
-                        languageData={languageData}
-                        title={field.displayName[key]}
-                        files={updatedData[field.key]}
-                        fieldKey={field.key}
-                        key={field.key}
-                        handleDownload={handleFileDownload}
-                        handleUpload={handleFileUpload}
-                        handleDelete={handleFileDelete}
-                    />
-                );
-            }
-            if (field.fieldType === 'Divider') {
-                return (
-                    <div className="patient-divider-wrapper">
-                        <h2>{field.displayName[key]}</h2>
-                        <Divider className="patient-divider" />
-                    </div>
-                );
-            }
-            if (field.fieldType === 'Header') {
-                return <h3>{field.displayName[key]}</h3>;
-            }
-
-            return null;
+            return (
+                <StepField
+                    fieldType={field.fieldType}
+                    displayName={field.displayName[key]}
+                    value={updatedData[field.key]}
+                    fieldId={field.key}
+                    key={field.key}
+                    isDisabled={!edit}
+                    handleSimpleUpdate={handleSimpleUpdate}
+                    handleFileDownload={handleFileDownload}
+                    handleFileUpload={handleFileUpload}
+                    handleFileDelete={handleFileDelete}
+                    languageData={languageData}
+                />
+            );
         });
     };
 
