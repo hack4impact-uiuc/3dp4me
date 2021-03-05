@@ -6,6 +6,12 @@ const fileSchema = new mongoose.Schema({
     uploadDate: { type: Date, required: true },
 });
 
+const overallStatusEnum = {
+    ACTIVE: 'Active',
+    ARCHIVED: 'Archived',
+    FEEDBACK: 'Feedback',
+};
+
 // TODO: add / remove stage fields as needed
 const patientSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -22,5 +28,6 @@ module.exports = {
     Patient,
     deliveryEnum,
     feedbackEnum,
+    overallStatusEnum,
     fileSchema,
 };
