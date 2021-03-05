@@ -47,6 +47,17 @@ export async function getCurrentUserInfo() {
     return userInfo;
 }
 
+/**
+ * Updates a user's language attribute in AWS Cognito User Groups
+ * @param {String} langKey The user's preferred language. Either "EN" or "AR".
+ */
+export async function saveLanguagePreference(langKey) {
+    const user = await Auth.currentAuthenticatedUser();
+    Auth.updateUserAttributes(user, {
+        'custom:language': langKey,
+    });
+}
+
 export async function getCurrentSession() {
     return Auth.currentSession();
 }
