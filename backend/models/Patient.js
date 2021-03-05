@@ -6,14 +6,12 @@ const fileSchema = new mongoose.Schema({
     uploadDate: { type: Date, required: true },
 });
 
-//Keep this
 const overallStatusEnum = {
     ACTIVE: 'Active',
     ARCHIVED: 'Archived',
     FEEDBACK: 'Feedback',
 };
 
-//Keep this
 const stageStatusEnum = {
     UNFINISHED: 'unfinished',
     PARTIAL: 'partial',
