@@ -1,3 +1,4 @@
+require('express-async-errors');
 require('dotenv').config();
 require('./utils/aws/aws-setup');
 const mongoose = require('mongoose');
@@ -7,10 +8,9 @@ var cors = require('cors');
 const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
 const requireAuthentication = require('./middleware/authentication');
-const { models } = require('./models');
 const app = express();
 app.use(cors());
-app.use(errorHandler);
+
 app.use(
     fileUpload({
         createParentPath: true,
@@ -36,5 +36,6 @@ app.use(bodyParser.json());
 // TODO: Move this to use Role-based
 app.use(requireAuthentication);
 app.use(require('./routes'));
+app.use(errorHandler);
 
 module.exports = app;
