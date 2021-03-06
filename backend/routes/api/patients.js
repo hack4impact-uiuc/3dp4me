@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
@@ -30,8 +31,15 @@ router.get(
     '/:id',
     errorWrap(async (req, res) => {
         const { id } = req.params;
-        const patientData = await models.Patient.findById(id);
-        const stepKeys = getStepKeys;
+        let patientData = await models.Patient.findById(id);
+        const stepKeys = await getStepKeys();
+        stepKeys = stepKeys.forEach(async (stepKey) => {
+            const stepData = await mongoose
+                .model(stepKey)
+                .find({ patientId: id });
+            patientData[stepKey] = stepData;
+        });
+
         if (!patientData)
             res.status(404).json({
                 code: 404,
