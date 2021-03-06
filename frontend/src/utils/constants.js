@@ -18,4 +18,17 @@ export const PATIENT_STATUS = {
     ACTIVE: 'active',
 };
 
+export const FIELD_TYPES = {
+    STRING: 'String',
+    MULTILINE_STRING: 'MultilineString',
+    FILE: 'File',
+    NUMBER: 'Number',
+    DATE: 'Date',
+    PHONE: 'Phone',
+    DIVIDER: 'Divider',
+    HEADER: 'Header',
+    RADIO_BUTTON: 'RadioButton',
+    DROPDOWN: 'Dropdown',
+};
+
 export const PATIENT_KEY_STATUS = 'status';
