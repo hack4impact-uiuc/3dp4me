@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { saveLanguagePreference } from '../../aws/aws-helper';
 
 const useStyles = makeStyles({
     menuWrapper: {
@@ -46,6 +47,7 @@ const AccountDropdown = ({
 
     const handleLanguageSelect = (e) => {
         setLang(e.target.value);
+        saveLanguagePreference(e.target.value);
     };
 
     return (
