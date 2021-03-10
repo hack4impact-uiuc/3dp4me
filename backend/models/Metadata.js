@@ -22,6 +22,7 @@ const fieldSchema = new mongoose.Schema({
         required: true,
         default: fieldEnum.STRING,
     },
+    options: { type: [Object], default: [] },
     isVisibleOnDashboard: { type: Boolean, required: true },
     displayName: {
         EN: { type: String, required: true },
