@@ -92,12 +92,14 @@ const addCollection = (stepMetadata) => {
                     default: [],
                 };
                 break;
+            case fieldEnum.DIVIDER:
+            break;
             default:
                 throw new Error(`Unrecognized field type, ${field.type}`);
         }
     });
     const schema = new mongoose.Schema(stepSchema);
-    mongoose.model(stepMetadata.key, schema);
+    mongoose.model(stepMetadata.key, schema, stepMetadata.key);
 };
 
 // POST metadata/steps
