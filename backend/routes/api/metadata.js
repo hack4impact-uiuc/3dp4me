@@ -93,7 +93,7 @@ const addCollection = (stepMetadata) => {
                 };
                 break;
             case fieldEnum.DIVIDER:
-            break;
+                break;
             default:
                 throw new Error(`Unrecognized field type, ${field.type}`);
         }
