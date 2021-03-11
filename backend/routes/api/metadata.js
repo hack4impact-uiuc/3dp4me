@@ -15,7 +15,6 @@ const addCollection = (stepMetadata) => {
         enum: Object.values(stepStatusEnum),
         default: stepStatusEnum.UNFINISHED,
     };
-    stepSchema.orderId = { type: String, required: true, unique: true };
     stepSchema.lastEdited = { type: Date, required: true, default: new Date() };
     stepSchema.lastEditedBy = {
         type: String,
