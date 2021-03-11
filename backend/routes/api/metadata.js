@@ -21,7 +21,6 @@ const addCollection = (stepMetadata) => {
         required: true,
         default: 'Admin',
     };
-    stepSchema.notes = { type: String, required: true, default: '' };
     stepMetadata.fields.forEach((field) => {
         switch (field.fieldType) {
             case fieldEnum.STRING:
