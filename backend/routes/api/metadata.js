@@ -100,6 +100,28 @@ const addCollection = (stepMetadata) => {
     mongoose.model(stepMetadata.key, schema);
 };
 
+// GET metadata/steps
+router.get(
+    '/steps',
+    errorWrap(async (req, res) => {
+        const metaData = await models.Step.find({});
+        if (!metaData) {
+            res.status(404).json({
+                code: 404,
+                success: true,
+                message: 'Steps not found.',
+            });
+        } else {
+            res.status(200).json({
+                code: 200,
+                success: true,
+                message: 'Steps returned successfully.',
+                result: metaData,
+            });
+        }
+    }),
+);
+
 // POST metadata/steps
 router.post(
     '/steps',
