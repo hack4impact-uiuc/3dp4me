@@ -5,7 +5,6 @@ const { errorWrap } = require('../../utils');
 const { models, fileSchema, stepStatusEnum } = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
-const { restart } = require('nodemon');
 
 const addCollection = (stepMetadata) => {
     let stepSchema = {};
@@ -77,7 +76,7 @@ const addCollection = (stepMetadata) => {
                 };
                 break;
             case fieldEnum.RADIO_BUTTON:
-                if (field.options == null)
+                if (field.options == null && field.options.length() >= 1)
                     throw new Error('Radio button must have options');
                 stepSchema[field.key] = {
                     type: Number,
@@ -117,7 +116,7 @@ router.post(
                         field.fieldType == field.fieldEnum.DROPDOWN
                     ) {
                         if (field.option == null) {
-                            res.status(400).json({
+                            return res.status(400).json({
                                 code: 400,
                                 success: false,
                                 message:
