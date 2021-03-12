@@ -21,8 +21,8 @@ router.get(
 
 const getStepKeys = async () => {
     const steps = await models.Step.find({});
-    const stepKeys = [];
-    steps.forEach((element) => stepKeys.append(element.key));
+    let stepKeys = [];
+    steps.forEach((element) => stepKeys.push(element.key));
     return stepKeys;
 };
 
@@ -32,13 +32,13 @@ router.get(
     errorWrap(async (req, res) => {
         const { id } = req.params;
         let patientData = await models.Patient.findById(id);
-        const stepKeys = await getStepKeys();
-        stepKeys = stepKeys.forEach(async (stepKey) => {
-            const stepData = await mongoose
-                .model(stepKey)
-                .find({ patientId: id });
-            patientData[stepKey] = stepData;
-        });
+        let stepKeys = await getStepKeys();
+
+        for (const stepKey of stepKeys) {
+            const collection = await mongoose.connection.db.collection(stepKey);
+            const stepData = await collection.findOne({ patientId: id });
+            patientData.set(stepKey, stepData, { strict: false });
+        }
 
         if (!patientData)
             res.status(404).json({
