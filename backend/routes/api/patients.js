@@ -38,18 +38,21 @@ router.get(
     }),
 );
 
-// GET: Returns everything associated with patient stage
+// GET: Returns everything associated with patient step
 router.get(
-    '/:id/:stage',
+    '/:stepkey',
     errorWrap(async (req, res) => {
-        const { id, stage } = req.params;
-        // TODO: Just query for the stage data only
-        const patientData = await models.Patient.findById(id, stage);
-        const stageData = patientData[stage];
+        const { stepkey } = req.params;
+        const patientData = await models.Patient.find();
+        const stepData = await models.Step.find({ key: stepkey });
+        patientData.forEach((patient) => {
+            patient.append(stepData.find(patient.id));
+        });
+
         res.status(200).json({
             code: 200,
             success: true,
-            result: stageData,
+            result: patientData,
         });
     }),
 );
