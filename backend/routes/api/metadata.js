@@ -76,7 +76,7 @@ const addCollection = (stepMetadata) => {
                 };
                 break;
             case fieldEnum.RADIO_BUTTON:
-                if (field.options == null && field.options.length() >= 1)
+                if (field.options == null)
                     throw new Error('Radio button must have options');
                 stepSchema[field.key] = {
                     type: Number,
@@ -115,7 +115,10 @@ router.post(
                         field.fieldType == fieldEnum.RADIO_BUTTON ||
                         field.fieldType == field.fieldEnum.DROPDOWN
                     ) {
-                        if (field.option == null) {
+                        if (
+                            field.option == null &&
+                            field.options.length() >= 1
+                        ) {
                             return res.status(400).json({
                                 code: 400,
                                 success: false,
