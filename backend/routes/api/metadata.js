@@ -15,14 +15,12 @@ const addCollection = (stepMetadata) => {
         enum: Object.values(stepStatusEnum),
         default: stepStatusEnum.UNFINISHED,
     };
-    stepSchema.orderId = { type: String, required: true, unique: true };
     stepSchema.lastEdited = { type: Date, required: true, default: new Date() };
     stepSchema.lastEditedBy = {
         type: String,
         required: true,
         default: 'Admin',
     };
-    stepSchema.notes = { type: String, required: true, default: '' };
     stepMetadata.fields.forEach((field) => {
         switch (field.fieldType) {
             case fieldEnum.STRING:
@@ -92,12 +90,14 @@ const addCollection = (stepMetadata) => {
                     default: [],
                 };
                 break;
+            case fieldEnum.DIVIDER:
+                break;
             default:
                 throw new Error(`Unrecognized field type, ${field.type}`);
         }
     });
     const schema = new mongoose.Schema(stepSchema);
-    mongoose.model(stepMetadata.key, schema);
+    mongoose.model(stepMetadata.key, schema, stepMetadata.key);
 };
 
 // GET metadata/steps
