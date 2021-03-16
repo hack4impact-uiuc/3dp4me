@@ -9,18 +9,20 @@ const SectionTab = ({ languageData }) => {
     const key = languageData.selectedLanguage;
     const [stepMetadata, setStepMetadata] = useState([]);
 
-    useEffect(async () => {
-        const metadata = await getAllStepsMetadata();
-        if (metadata != null) {
-            setStepMetadata(metadata);
-        }
+    useEffect(() => {
+        const fetchData = async () => {
+            const metadata = await getAllStepsMetadata();
+            if (metadata != null) {
+                setStepMetadata(metadata);
+            }
+        };
+        fetchData();
     }, [setStepMetadata]);
 
     return stepMetadata.map((element) => {
         return (
             <div className="sidebar">
                 <ListItem button> {element.displayName[key]} </ListItem>
-                <ListItem button />
             </div>
         );
     });
