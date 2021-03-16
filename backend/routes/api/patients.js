@@ -54,24 +54,7 @@ router.get(
     }),
 );
 
-// GET: Returns everything associated with patient stage
-router.get(
-    '/:id/:stage',
-    errorWrap(async (req, res) => {
-        const { id, stage } = req.params;
-        // TODO: Just query for the stage data only
-        const patientData = await models.Patient.findById(id, stage);
-        const stageData = patientData[stage];
-        res.status(200).json({
-            code: 200,
-            success: true,
-            result: stageData,
-        });
-    }),
-);
-
 // POST: new patient
-// TODO: Implement and test
 router.post(
     '/',
     errorWrap(async (req, res) => {
