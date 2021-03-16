@@ -39,6 +39,12 @@ function App() {
             const userInfo = await getCurrentUserInfo();
             setUsername(userInfo.username);
             setUserEmail(userInfo.email);
+
+            if (
+                userInfo.attributes &&
+                ['EN', 'AR'].includes(userInfo.attributes['custom:language'])
+            )
+                setSelectedLang(userInfo.attributes['custom:language']);
         };
 
         Auth.currentAuthenticatedUser()
@@ -49,8 +55,6 @@ function App() {
                 setAuthLevel(UNAUTHENTICATED);
             });
 
-        // TODO: get user session selectedLangauge
-        setSelectedLang('EN');
         getUserInfo();
     }, []);
 
