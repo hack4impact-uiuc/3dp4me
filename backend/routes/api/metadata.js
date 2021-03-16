@@ -116,7 +116,7 @@ router.post(
                         field.fieldType == field.fieldEnum.DROPDOWN
                     ) {
                         if (
-                            field.option == null &&
+                            field.option == null ||
                             field.options.length() >= 1
                         ) {
                             return res.status(400).json({
