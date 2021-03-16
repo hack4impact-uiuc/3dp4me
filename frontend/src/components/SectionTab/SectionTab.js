@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
-import { getStageMetadata } from '../../utils/api';
+import { getAllStepsMetadata } from '../../utils/api';
 
 const SectionTab = ({ languageData }) => {
     const key = languageData.selectedLanguage;
     const [stepMetadata, setStepMetadata] = useState([]);
 
     useEffect(async () => {
-        const metadata = await getStageMetadata();
+        const metadata = await getAllStepsMetadata();
         if (metadata != null) {
             setStepMetadata(metadata);
         }

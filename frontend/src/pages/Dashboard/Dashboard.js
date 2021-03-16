@@ -59,7 +59,6 @@ const Dashboard = ({ languageData }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
-    const [stepMetadata, setStepMetadata] = useState([]);
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -216,13 +215,6 @@ const Dashboard = ({ languageData }) => {
 
     // TODO: hook up dashboard to display fetched patients
 
-    useEffect(async () => {
-        const stepMetadata = await getStageMetadata();
-        if (stepMetadata != null) {
-            setStepMetadata(stepMetadata);
-        }
-    }, [setStepMetadata]);
-
     useEffect(() => {
         const getMetadata = async () => {
             const metaData = await getAllStepsMetadata();
@@ -298,43 +290,6 @@ const Dashboard = ({ languageData }) => {
                     }
                 />
             );
-        });
-    }
-
-    function generateMainTable() {
-        return stepMetadata.map((element) => {
-            if (stepTitle !== element.key) {
-                return null;
-            }
-            return (
-                <MainTable
-                    headers={generateHeaders(element)}
-                    rowIds={generateRowIds(element)}
-                    languageData={languageData}
-                    patients={patients}
-                />
-            );
-        });
-    }
-
-    function generateHeaders(element) {
-        return element.fields.map((value) => {
-            if (value.isVisibleOnDashboard) {
-                return {
-                    title: element.displayName[key],
-                    sortKey: element.key,
-                };
-            }
-            return null;
-        });
-    }
-
-    function generateRowIds(element) {
-        return element.fields.map((value) => {
-            if (value.isVisibleOnDashboard) {
-                return element.key;
-            }
-            return null;
         });
     }
 
