@@ -6,6 +6,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
+import { keyBy, set } from 'lodash';
 
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
@@ -13,7 +14,6 @@ import HalfCircleIcon from '../../assets/half-circle.svg';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ToggleButtons.scss';
 import { getStageMetadata } from '../../utils/api';
-import { keyBy, set } from 'lodash';
 
 const ToggleButtons = ({
     languageData,
@@ -99,9 +99,9 @@ const ToggleButtons = ({
                 <div className="toggle-button-selector">
                     {step === element.key ? (
                         <div className="current-step-label">
-                            {/*{medStatus !== undefined
+                            {/* {medStatus !== undefined
                                 ? statusIcons[medStatus]
-                            : null}*/}
+                            : null} */}
                             <b>{element.displayName[key]}</b>
                         </div>
                     ) : null}

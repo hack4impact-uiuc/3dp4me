@@ -8,10 +8,9 @@ import { Button, TextField, Snackbar } from '@material-ui/core';
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import search from '../../assets/search.svg';
-import { getPatientsByStage } from '../../utils/api';
+import { getPatientsByStage, getStageMetadata } from '../../utils/api';
 import './Dashboard.scss';
 import { LanguageDataType } from '../../utils/custom-proptypes';
-import { getStageMetadata } from '../../utils/api';
 
 const useStyles = makeStyles(() => ({
     swalEditButton: {
