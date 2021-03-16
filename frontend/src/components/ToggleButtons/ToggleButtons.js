@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,7 +6,6 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
-import { keyBy, set } from 'lodash';
 
 import { STEP_STATUS } from '../../utils/constants';
 import CheckIcon from '../../assets/check.svg';
@@ -14,7 +13,6 @@ import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ToggleButtons.scss';
-import { getStageMetadata } from '../../utils/api';
 
 const ToggleButtons = ({
     languageData,
