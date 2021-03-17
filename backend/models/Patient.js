@@ -18,7 +18,7 @@ const patientSchema = new mongoose.Schema({
     status: { type: overallStatusEnum, required: true },
 });
 
-const Patient = mongoose.model('Patient', patientSchema);
+const Patient = mongoose.model('Patient', patientSchema, 'Patient');
 
 module.exports = {
     Patient,

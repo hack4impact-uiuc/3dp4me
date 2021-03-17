@@ -59,19 +59,23 @@ router.post(
     '/',
     errorWrap(async (req, res) => {
         const patient = req.body;
+
         try {
             const new_patient = new models.Patient(patient);
-            const saved_patient = await _patient.save();
-        } catch (err) {
-            // TODO: Validate patient and send back good error message
-            res.status(500).send({});
+            const saved_patient = await new_patient.save();
+        } catch (error) {
+            return res.status(401).json({
+                code: 401,
+                success: false,
+                message: 'Request is invalid or missing fields.',
+            });
         }
 
-        res.status(SUCCESS).send({
-            code: SUCCESS,
+        res.status(201).json({
+            code: 201,
             success: true,
             message: 'User successfully created.',
-            data: resp,
+            data: patient,
         });
     }),
 );
