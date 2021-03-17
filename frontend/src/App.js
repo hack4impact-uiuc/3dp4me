@@ -8,6 +8,7 @@ import AccountManagement from './pages/AccountManagement/AccountManagment';
 import Metrics from './pages/Metrics/Metrics';
 import Patients from './pages/Patients/Patients';
 import Navbar from './components/Navbar/Navbar';
+import SectionTab from './components/SectionTab/SectionTab';
 import Controller from './steps/Controller/Controller';
 import translations from './translations.json';
 import Login from './components/Login/Login';
@@ -101,6 +102,9 @@ function App() {
                             {/* Path = BASE_URL/patient-info/PATIENT_ID */}
                             <Route exact path="/patient-info/:id">
                                 <Controller languageData={languageData} />
+                            </Route>
+                            <Route exact path="/section-tab">
+                                <SectionTab languageData={languageData} />
                             </Route>
                         </Switch>
                     </div>
