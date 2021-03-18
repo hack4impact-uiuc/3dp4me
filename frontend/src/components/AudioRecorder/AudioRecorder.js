@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@material-ui/core';
 import MicRecorder from 'mic-recorder-to-mp3';
 
 const AudioRecorder = () => {
+    const [file, setFile] = useState(null);
     const recorder = new MicRecorder({ bitRate: 128 });
 
     const startRecording = () => {
@@ -19,9 +20,16 @@ const AudioRecorder = () => {
                     lastModified: Date.now(),
                 });
 
-                const player = new Audio(URL.createObjectURL(file));
-                player.play();
+                setFile(file);
+                //const player = new Audio(URL.createObjectURL(file));
+                //player.play();
             });
+    };
+
+    const renderPlayer = () => {
+        if (file == null) return null;
+
+        return <ReactAudioPlayer src={'recording.mp3'} controls />;
     };
 
     return (

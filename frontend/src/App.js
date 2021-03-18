@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Amplify, Auth } from 'aws-amplify';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-
+import AudioRecorder from './components/AudioRecorder/AudioRecorder';
 import { awsconfig } from './aws/aws-exports';
 import Dashboard from './pages/Dashboard/Dashboard';
 import AccountManagement from './pages/AccountManagement/AccountManagment';

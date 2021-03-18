@@ -42,5 +42,8 @@
         "./client/**/*.{js,jsx}": [
             "eslint --fix -c client/.eslintrc.json"
         ]
+    },
+    "dependencies": {
+        "react-audio-player": "^0.14.0"
     }
 }
