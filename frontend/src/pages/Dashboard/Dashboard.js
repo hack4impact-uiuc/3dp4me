@@ -4,7 +4,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
-import { Button, TextField, Snackbar } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import {
+    Button,
+    Notes,
+    TextField,
+    Snackbar,
+    Select,
+    MenuItem,
+    Checkbox,
+} from '@material-ui/core';
 
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
@@ -14,6 +23,7 @@ import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import search from '../../assets/search.svg';
 import { getAllStepsMetadata, getPatientsByStage } from '../../utils/api';
+import { FIELD_TYPES } from '../../utils/constants';
 import './Dashboard.scss';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
@@ -50,7 +60,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const Dashboard = ({ languageData }) => {
+const Dashboard = ({ languageData, fieldType, fieldT }) => {
     const classes = useStyles();
 
     const [patients, setPatients] = useState([]);
@@ -182,6 +192,160 @@ const Dashboard = ({ languageData }) => {
         });
     };
 
+    const createField = () => {
+        // TODO: Might want a better way of doing this
+        const autoId = Math.random().toString(36).substr(2, 24);
+        reactSwal({
+            buttons: {},
+            content: (
+                <div
+                    style={{
+                        marginRight: '10px',
+                        fontFamily: 'Ubuntu',
+                        margin: '0px !important',
+                        textAlign: 'left',
+                    }}
+                >
+                    <h2 style={{ fontWeight: 'bolder' }}>
+                        {lang.components.swal.createField.title}
+                    </h2>
+                    <h2 style={{ fontWeight: 'normal' }}>
+                        {lang.components.swal.createField.title2}
+                    </h2>
+                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                        <span>
+                            {lang.components.swal.createField.fieldType}
+                        </span>
+                        <div style={{ padding: 10 }}>
+                            <Select
+                                value={fieldT}
+                                onChange={handleFieldTypeSelect}
+                                labelId="demo-simple-select-label"
+                                MenuProps={{
+                                    style: { zIndex: 35001 },
+                                }}
+                                defaultValue={'String'}
+                            >
+                                <MenuItem value={FIELD_TYPES.STRING}>
+                                    {FIELD_TYPES.STRING}
+                                </MenuItem>
+                                <MenuItem value={FIELD_TYPES.MULTILINE_STRING}>
+                                    {FIELD_TYPES.MULTILINE_STRING}
+                                </MenuItem>
+                                <MenuItem value={FIELD_TYPES.FILE}>
+                                    {FIELD_TYPES.FILE}
+                                </MenuItem>
+                                <MenuItem value={FIELD_TYPES.NUMBER}>
+                                    {FIELD_TYPES.NUMBER}
+                                </MenuItem>
+                                <MenuItem value={FIELD_TYPES.DATE}>
+                                    {FIELD_TYPES.DATE}
+                                </MenuItem>
+                                <MenuItem value={FIELD_TYPES.PHONE}>
+                                    {FIELD_TYPES.PHONE}
+                                </MenuItem>
+                                <MenuItem value={FIELD_TYPES.DIVIDER}>
+                                    {FIELD_TYPES.DIVIDER}
+                                </MenuItem>
+                                <MenuItem value={FIELD_TYPES.HEADER}>
+                                    {FIELD_TYPES.HEADER}
+                                </MenuItem>
+                                <MenuItem value={FIELD_TYPES.RADIO_BUTTON}>
+                                    {FIELD_TYPES.RADIO_BUTTON}
+                                </MenuItem>
+                                <MenuItem value={FIELD_TYPES.DROPDOWN}>
+                                    {FIELD_TYPES.DROPDOWN}
+                                </MenuItem>
+                            </Select>
+                        </div>
+                        <span>
+                            {lang.components.swal.createField.clearance}
+                        </span>
+                        <div style={{ padding: 10 }}>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                MenuProps={{
+                                    style: { zIndex: 35001 },
+                                }}
+                                defaultValue={'Confidential'}
+                            >
+                                <MenuItem value={'Confidential'}>
+                                    Confidential
+                                </MenuItem>
+                                <MenuItem value={'Secret'}>Secret</MenuItem>
+                                <MenuItem value={'Top Secret'}>
+                                    Top Secret
+                                </MenuItem>
+                            </Select>
+                        </div>
+                        <div style={{ padding: 10 }}>
+                            <Checkbox
+                                size="small"
+                                fullWidth
+                                style={{ padding: 10 }}
+                            />
+                            <span>
+                                {
+                                    lang.components.swal.createField
+                                        .showOnDashBoard
+                                }
+                            </span>
+                        </div>
+                    </div>
+                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                        <span>{lang.components.swal.createField.field} </span>
+                        <div style={{ fontSize: '12px', textAlign: 'left' }}>
+                            <span>
+                                {lang.components.swal.createField.arabic}{' '}
+                            </span>
+                        </div>
+                        <TextField
+                            size="small"
+                            id="createDOB"
+                            fullWidth
+                            style={{ padding: 10 }}
+                            variant="outlined"
+                        />
+                        <div style={{ fontSize: '12px', textAlign: 'left' }}>
+                            <span>
+                                {lang.components.swal.createField.english}{' '}
+                            </span>
+                        </div>
+                        <TextField
+                            size="small"
+                            id="createId"
+                            fullWidth
+                            style={{ padding: 10 }}
+                            variant="outlined"
+                        />
+                    </div>
+                    {generateFields(fieldT)}
+                    <div
+                        style={{
+                            display: 'flex',
+                            float: 'right',
+                            paddingBottom: '10px',
+                        }}
+                    >
+                        <Button
+                            className={classes.swalEditButton}
+                            onClick={() => createPatientHelper(true, autoId)}
+                        >
+                            {lang.components.swal.createField.buttons.edit}
+                        </Button>
+                        <Button
+                            className={classes.swalCloseButton}
+                            onClick={() => createPatientHelper(false, autoId)}
+                        >
+                            {lang.components.swal.createField.buttons.discard}
+                        </Button>
+                    </div>
+                </div>
+            ),
+        });
+    };
+
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
         const filtered = patients.filter(
@@ -293,6 +457,122 @@ const Dashboard = ({ languageData }) => {
         });
     }
 
+    const handleFieldTypeSelect = (e) => {
+        console.log(e.target.value);
+        fieldType = e.target.value;
+        fieldT = e.target.value;
+        console.log(fieldType);
+    };
+
+    Dashboard.defaultProps = {
+        fieldType: 'String',
+    };
+
+    const generateFields = () => {
+        console.log('Hi');
+        console.log(fieldT);
+
+        if (fieldType === 'String') {
+            return (
+                <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                    <div style={{ fontSize: '12px', textAlign: 'left' }}>
+                        <span>
+                            {lang.components.swal.createField.arabicChoice}
+                        </span>
+                    </div>
+                    <TextField
+                        size="small"
+                        id="createDOB"
+                        fullWidth
+                        style={{ padding: 10 }}
+                        variant="outlined"
+                    />
+                    <div style={{ fontSize: '12px', textAlign: 'left' }}>
+                        <span>
+                            {lang.components.swal.createField.englishChoice}
+                        </span>
+                    </div>
+                    <TextField
+                        size="small"
+                        id="createId"
+                        fullWidth
+                        style={{ padding: 10 }}
+                        variant="outlined"
+                    />
+                </div>
+            );
+        }
+        if (fieldType === 'MultilineString') {
+            return (
+                <div>
+                    <TextField
+                    /**disabled={!edit}
+                            onChange={handleSimpleUpdate}
+                            title={field.displayName[key]}
+                            key={field.key}
+                            fieldId={field.key}
+                            value={updatedData[field.key]}**/
+                    />
+                </div>
+            );
+        }
+        if (fieldType === 'Date') {
+            return (
+                <TextField
+                /**displayName={field.displayName[key]}
+                        isDisabled={!edit}
+                        onChange={handleSimpleUpdate}
+                        key={field.key}
+                        fieldId={field.key}
+                        value={updatedData[field.key]}**/
+                />
+            );
+        }
+        if (fieldType === 'Phone') {
+            return (
+                <TextField
+                /**displayName={field.displayName[key]}
+                        isDisabled={!edit}
+                        onChange={handleSimpleUpdate}
+                        fieldId={field.key}
+                        key={field.key}
+                        value={updatedData[field.key]}**/
+                />
+            );
+        }
+        if (fieldType === 'File') {
+            return (
+                <TextField
+                /**languageData={languageData}
+                        title={field.displayName[key]}
+                        files={updatedData[field.key]}
+                        fieldKey={field.key}
+                        key={field.key}
+                        handleDownload={handleFileDownload}
+                        handleUpload={handleFileUpload}
+                        handleDelete={handleFileDelete}**/
+                />
+            );
+        }
+        if (fieldType === 'Divider') {
+            return <h3>{'Divider'}</h3>;
+        }
+        if (fieldType === 'Header') {
+            return <h3>{'Header'}</h3>;
+        }
+        if (fieldType === 'Number') {
+            return <h3>{'Number'}</h3>;
+        }
+        if (fieldType === 'RadioButton') {
+            return <h3>{'RadioButton'}</h3>;
+        }
+        if (fieldType === 'Dropdown') {
+            return <h3>{'Dropdown'}</h3>;
+        }
+
+        return null;
+    };
+
     return (
         <div className="dashboard">
             <Snackbar
@@ -353,6 +633,12 @@ const Dashboard = ({ languageData }) => {
                         >
                             {lang.components.button.createPatient}
                         </Button>
+                        <Button
+                            className="create-field-button"
+                            onClick={createField}
+                        >
+                            {lang.components.button.createField}
+                        </Button>
                     </div>
                 </div>
                 {generateMainTable()}
@@ -363,6 +649,7 @@ const Dashboard = ({ languageData }) => {
 
 Dashboard.propTypes = {
     languageData: LanguageDataType.isRequired,
+    fieldType: PropTypes.string.isRequired,
 };
 
 export default Dashboard;

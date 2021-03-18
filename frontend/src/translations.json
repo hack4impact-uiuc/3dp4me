@@ -74,6 +74,7 @@
             },
             "button": {
                 "createPatient": "Create Patient",
+                "createField": "Create Field",
                 "upload": "Upload File",
                 "save": "Save",
                 "edit": "Edit Step",
@@ -129,6 +130,22 @@
                     "buttons": {
                         "delete": "Delete Patient",
                         "save": "Save"
+                    }
+                },
+                "createField": {
+                    "title": "New Field",
+                    "title2": "Field Settings",
+                    "fieldType": "Field Type",
+                    "clearance": "Clearance Level",
+                    "showOnDashBoard": "Show on Dashboard",
+                    "field": "Field",
+                    "arabic": "Arabic Question",
+                    "arabicChoice": "Arabic Choice",
+                    "english": "English Question",
+                    "englishChoice": "English Choice",
+                    "buttons": {
+                        "save": "Save",
+                        "discard": "Discard"
                     }
                 }
             }
