@@ -13,6 +13,7 @@ import {
     Select,
     MenuItem,
     Checkbox,
+    Modal,
 } from '@material-ui/core';
 
 import {
@@ -60,7 +61,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const Dashboard = ({ languageData, fieldType, fieldT }) => {
+const Dashboard = ({ languageData }) => {
     const classes = useStyles();
 
     const [patients, setPatients] = useState([]);
@@ -69,6 +70,7 @@ const Dashboard = ({ languageData, fieldType, fieldT }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
+    const [fieldType, setFieldType] = useState('String');
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -193,11 +195,9 @@ const Dashboard = ({ languageData, fieldType, fieldT }) => {
     };
 
     const createField = () => {
-        // TODO: Might want a better way of doing this
         const autoId = Math.random().toString(36).substr(2, 24);
-        reactSwal({
-            buttons: {},
-            content: (
+        return (
+            <Modal open={true}>
                 <div
                     style={{
                         marginRight: '10px',
@@ -218,7 +218,7 @@ const Dashboard = ({ languageData, fieldType, fieldT }) => {
                         </span>
                         <div style={{ padding: 10 }}>
                             <Select
-                                value={fieldT}
+                                //value={fieldType}
                                 onChange={handleFieldTypeSelect}
                                 labelId="demo-simple-select-label"
                                 MenuProps={{
@@ -320,7 +320,7 @@ const Dashboard = ({ languageData, fieldType, fieldT }) => {
                             variant="outlined"
                         />
                     </div>
-                    {generateFields(fieldT)}
+                    {generateFields()}
                     <div
                         style={{
                             display: 'flex',
@@ -342,8 +342,8 @@ const Dashboard = ({ languageData, fieldType, fieldT }) => {
                         </Button>
                     </div>
                 </div>
-            ),
-        });
+            </Modal>
+        );
     };
 
     const handleSearch = (e) => {
@@ -459,19 +459,12 @@ const Dashboard = ({ languageData, fieldType, fieldT }) => {
 
     const handleFieldTypeSelect = (e) => {
         console.log(e.target.value);
-        fieldType = e.target.value;
-        fieldT = e.target.value;
+        setFieldType(e.target.value);
         console.log(fieldType);
     };
 
-    Dashboard.defaultProps = {
-        fieldType: 'String',
-    };
-
     const generateFields = () => {
-        console.log('Hi');
-        console.log(fieldT);
-
+        //console.log(fieldType)
         if (fieldType === 'String') {
             return (
                 <div style={{ fontSize: '17px', textAlign: 'left' }}>
@@ -641,6 +634,7 @@ const Dashboard = ({ languageData, fieldType, fieldT }) => {
                         </Button>
                     </div>
                 </div>
+                {createField()}
                 {generateMainTable()}
             </div>
         </div>
