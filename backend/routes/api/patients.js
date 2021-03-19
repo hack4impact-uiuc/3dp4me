@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
@@ -18,12 +19,27 @@ router.get(
     }),
 );
 
+const getStepKeys = async () => {
+    const steps = await models.Step.find({});
+    let stepKeys = [];
+    steps.forEach((element) => stepKeys.push(element.key));
+    return stepKeys;
+};
+
 // GET: Returns everything associated with patient
 router.get(
     '/:id',
     errorWrap(async (req, res) => {
         const { id } = req.params;
-        const patientData = await models.Patient.findById(id);
+        let patientData = await models.Patient.findById(id);
+        let stepKeys = await getStepKeys();
+
+        for (const stepKey of stepKeys) {
+            const collection = await mongoose.connection.db.collection(stepKey);
+            const stepData = await collection.findOne({ patientId: id });
+            patientData.set(stepKey, stepData, { strict: false });
+        }
+
         if (!patientData)
             res.status(404).json({
                 code: 404,
@@ -38,41 +54,28 @@ router.get(
     }),
 );
 
-// GET: Returns everything associated with patient stage
-router.get(
-    '/:id/:stage',
-    errorWrap(async (req, res) => {
-        const { id, stage } = req.params;
-        // TODO: Just query for the stage data only
-        const patientData = await models.Patient.findById(id, stage);
-        const stageData = patientData[stage];
-        res.status(200).json({
-            code: 200,
-            success: true,
-            result: stageData,
-        });
-    }),
-);
-
 // POST: new patient
-// TODO: Implement and test
 router.post(
     '/',
     errorWrap(async (req, res) => {
         const patient = req.body;
+
         try {
             const new_patient = new models.Patient(patient);
-            const saved_patient = await _patient.save();
-        } catch (err) {
-            // TODO: Validate patient and send back good error message
-            res.status(500).send({});
+            const saved_patient = await new_patient.save();
+        } catch (error) {
+            return res.status(401).json({
+                code: 401,
+                success: false,
+                message: 'Request is invalid or missing fields.',
+            });
         }
 
-        res.status(SUCCESS).send({
-            code: SUCCESS,
+        res.status(201).json({
+            code: 201,
             success: true,
             message: 'User successfully created.',
-            data: resp,
+            data: patient,
         });
     }),
 );
