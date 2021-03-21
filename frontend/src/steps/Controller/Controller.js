@@ -59,6 +59,7 @@ const Controller = ({ languageData }) => {
     const onStepSaved = (stepKey, stepData) => {
         const newPatientData = _.cloneDeep(patientData);
         newPatientData[stepKey] = _.cloneDeep(stepData);
+        console.log(newPatientData);
         setPatientData(newPatientData);
         updateStage(patientId, stepKey, stepData);
     };
@@ -106,7 +107,7 @@ const Controller = ({ languageData }) => {
                                 metaData={stepMetaData.find(
                                     (s) => s.key === step.key,
                                 )}
-                                stepData={patientData[step.key]}
+                                stepData={patientData[step.key] ?? {}}
                                 loading={loading}
                             />
                         );
@@ -126,6 +127,8 @@ const Controller = ({ languageData }) => {
                 {stepMetaData.map((metaData) => {
                     if (metaData.fields.find((f) => f.key === 'notes') == null)
                         return null;
+
+                    if (patientData[metaData.key]?.notes == null) return null;
 
                     return (
                         <Accordion

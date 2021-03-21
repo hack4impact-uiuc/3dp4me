@@ -74,7 +74,7 @@ const StepContent = ({
     };
 
     const saveData = () => {
-        onDataSaved(stepData.key, updatedData);
+        onDataSaved(metaData.key, updatedData);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };
@@ -111,13 +111,12 @@ const StepContent = ({
 
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
-        if (updatedData == null) return null;
         return metaData.fields.map((field) => {
             return (
                 <StepField
                     fieldType={field.fieldType}
                     displayName={field.displayName[key]}
-                    value={updatedData[field.key]}
+                    value={updatedData ? updatedData[field.key] : null}
                     fieldId={field.key}
                     key={field.key}
                     isDisabled={!edit}
@@ -132,8 +131,6 @@ const StepContent = ({
     };
 
     const generateFooter = () => {
-        if (stepData == null) return null;
-
         return (
             <BottomBar
                 lastEditedBy={stepData?.lastEditedBy}
