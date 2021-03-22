@@ -302,115 +302,6 @@ const Dashboard = ({ languageData }) => {
         });
     }
 
-    const handleFieldTypeSelect = (e) => {
-        console.log(e.target.value);
-        setFieldType(e.target.value);
-        console.log(fieldType);
-    };
-
-    const generateFields = () => {
-        //console.log(fieldType)
-        if (fieldType === 'String') {
-            return (
-                <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                    <div style={{ fontSize: '12px', textAlign: 'left' }}>
-                        <span>
-                            {lang.components.swal.createField.arabicChoice}
-                        </span>
-                    </div>
-                    <TextField
-                        size="small"
-                        id="createDOB"
-                        fullWidth
-                        style={{ padding: 10 }}
-                        variant="outlined"
-                    />
-                    <div style={{ fontSize: '12px', textAlign: 'left' }}>
-                        <span>
-                            {lang.components.swal.createField.englishChoice}
-                        </span>
-                    </div>
-                    <TextField
-                        size="small"
-                        id="createId"
-                        fullWidth
-                        style={{ padding: 10 }}
-                        variant="outlined"
-                    />
-                </div>
-            );
-        }
-        if (fieldType === 'MultilineString') {
-            return (
-                <div>
-                    <TextField
-                    /**disabled={!edit}
-                            onChange={handleSimpleUpdate}
-                            title={field.displayName[key]}
-                            key={field.key}
-                            fieldId={field.key}
-                            value={updatedData[field.key]}**/
-                    />
-                </div>
-            );
-        }
-        if (fieldType === 'Date') {
-            return (
-                <TextField
-                /**displayName={field.displayName[key]}
-                        isDisabled={!edit}
-                        onChange={handleSimpleUpdate}
-                        key={field.key}
-                        fieldId={field.key}
-                        value={updatedData[field.key]}**/
-                />
-            );
-        }
-        if (fieldType === 'Phone') {
-            return (
-                <TextField
-                /**displayName={field.displayName[key]}
-                        isDisabled={!edit}
-                        onChange={handleSimpleUpdate}
-                        fieldId={field.key}
-                        key={field.key}
-                        value={updatedData[field.key]}**/
-                />
-            );
-        }
-        if (fieldType === 'File') {
-            return (
-                <TextField
-                /**languageData={languageData}
-                        title={field.displayName[key]}
-                        files={updatedData[field.key]}
-                        fieldKey={field.key}
-                        key={field.key}
-                        handleDownload={handleFileDownload}
-                        handleUpload={handleFileUpload}
-                        handleDelete={handleFileDelete}**/
-                />
-            );
-        }
-        if (fieldType === 'Divider') {
-            return <h3>{'Divider'}</h3>;
-        }
-        if (fieldType === 'Header') {
-            return <h3>{'Header'}</h3>;
-        }
-        if (fieldType === 'Number') {
-            return <h3>{'Number'}</h3>;
-        }
-        if (fieldType === 'RadioButton') {
-            return <h3>{'RadioButton'}</h3>;
-        }
-        if (fieldType === 'Dropdown') {
-            return <h3>{'Dropdown'}</h3>;
-        }
-
-        return null;
-    };
-
     return (
         <div className="dashboard">
             <Snackbar
@@ -471,15 +362,8 @@ const Dashboard = ({ languageData }) => {
                         >
                             {lang.components.button.createPatient}
                         </Button>
-                        <Button
-                            className="create-field-button"
-                            onClick={createField}
-                        >
-                            {lang.components.button.createField}
-                        </Button>
                     </div>
                 </div>
-                {createField()}
                 {generateMainTable()}
             </div>
         </div>
@@ -488,7 +372,6 @@ const Dashboard = ({ languageData }) => {
 
 Dashboard.propTypes = {
     languageData: LanguageDataType.isRequired,
-    fieldType: PropTypes.string.isRequired,
 };
 
 export default Dashboard;

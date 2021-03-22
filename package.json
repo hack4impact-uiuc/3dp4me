@@ -42,5 +42,9 @@
         "./client/**/*.{js,jsx}": [
             "eslint --fix -c client/.eslintrc.json"
         ]
+    },
+    "dependencies": {
+        "react-flexbox-grid": "^2.1.2",
+        "react-native-web": "^0.15.0"
     }
 }

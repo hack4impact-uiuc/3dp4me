@@ -140,12 +140,14 @@
                     "showOnDashBoard": "Show on Dashboard",
                     "field": "Field",
                     "arabic": "Arabic Question",
-                    "arabicChoice": "Arabic Choice",
+                    "arabicChoice": "Arabic Choice #",
                     "english": "English Question",
-                    "englishChoice": "English Choice",
+                    "englishChoice": "English Choice #",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard"
+                        "discard": "Discard",
+                        "addChoice": "+",
+                        "removeChoice": "x"
                     }
                 }
             }

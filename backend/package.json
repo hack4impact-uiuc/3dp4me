@@ -18,7 +18,8 @@
         "express-fileupload": "^1.2.0",
         "libphonenumber-js": "^1.9.11",
         "mongoose": "^5.10.10",
-        "prettier": "^2.2.1"
+        "prettier": "^2.2.1",
+        "react-flexbox-grid": "^2.1.2"
     },
     "devDependencies": {
         "nodemon": "^2.0.4"

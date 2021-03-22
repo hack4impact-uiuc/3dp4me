@@ -1,13 +1,19 @@
 import './SectionTab.css';
 import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
+import PropTypes from 'prop-types';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { getAllStepsMetadata } from '../../utils/api';
 
+import { Button } from '@material-ui/core';
+import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
+
 const SectionTab = ({ languageData }) => {
     const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
     const [stepMetadata, setStepMetadata] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,13 +25,47 @@ const SectionTab = ({ languageData }) => {
         fetchData();
     }, [setStepMetadata]);
 
-    return stepMetadata.map((element) => {
+    const generateSteps = () => {
+        return stepMetadata.map((element) => {
+            return (
+                <div className="sidebar">
+                    <ListItem button> {element.displayName[key]} </ListItem>
+                </div>
+            );
+        });
+    };
+
+    const onModalClose = () => {
+        setModalOpen(false);
+    };
+
+    const generateNewFieldPopup = () => {
         return (
-            <div className="sidebar">
-                <ListItem button> {element.displayName[key]} </ListItem>
-            </div>
+            <CreateFieldModal
+                isOpen={modalOpen}
+                onModalClose={onModalClose}
+                languageData={languageData}
+            ></CreateFieldModal>
         );
-    });
+    };
+
+    return (
+        <div>
+            <span> {generateSteps()}</span>
+            <div>
+                <ListItem
+                    className="sidebar"
+                    button
+                    onClick={() => {
+                        setModalOpen(true);
+                    }}
+                >
+                    Add New Field
+                </ListItem>
+            </div>
+            {generateNewFieldPopup()}
+        </div>
+    );
 };
 
 SectionTab.propTypes = {
