@@ -4,7 +4,6 @@ import ListItem from '@material-ui/core/ListItem';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { getAllStepsMetadata } from '../../utils/api';
-
 import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
 
 const SectionTab = ({ languageData }) => {
@@ -42,7 +41,7 @@ const SectionTab = ({ languageData }) => {
                 isOpen={modalOpen}
                 onModalClose={onModalClose}
                 languageData={languageData}
-            ></CreateFieldModal>
+            />
         );
     };
 

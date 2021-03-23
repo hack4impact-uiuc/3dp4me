@@ -1,6 +1,4 @@
-import { FIELD_TYPES } from '../../utils/constants';
 import React, { useState } from 'react';
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import {
     Button,
     TextField,
@@ -11,6 +9,9 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+
+import { LanguageDataType } from '../../utils/custom-proptypes';
+import { FIELD_TYPES } from '../../utils/constants';
 
 const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
@@ -33,7 +34,7 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
 
     const generateChoices = () => {
         const choices = [];
-        for (var i = 0; i < numChoices; i++) {
+        for (let i = 0; i < numChoices; i += 1) {
             choices.push(
                 <Grid>
                     <Row>
@@ -360,7 +361,7 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                             MenuProps={{
                                 style: { zIndex: 35001 },
                             }}
-                            defaultValue={'String'}
+                            defaultValue="String"
                         >
                             <MenuItem value={FIELD_TYPES.STRING}>
                                 {FIELD_TYPES.STRING}
@@ -401,13 +402,13 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                             MenuProps={{
                                 style: { zIndex: 35001 },
                             }}
-                            defaultValue={'Confidential'}
+                            defaultValue="Confidential"
                         >
-                            <MenuItem value={'Confidential'}>
+                            <MenuItem value="Confidential">
                                 Confidential
                             </MenuItem>
-                            <MenuItem value={'Secret'}>Secret</MenuItem>
-                            <MenuItem value={'Top Secret'}>Top Secret</MenuItem>
+                            <MenuItem value="Secret">Secret</MenuItem>
+                            <MenuItem value="Top Secret">Top Secret</MenuItem>
                         </Select>
                     </div>
                     <div style={{ padding: 10 }}>
