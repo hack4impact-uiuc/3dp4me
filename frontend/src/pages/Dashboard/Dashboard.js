@@ -14,7 +14,6 @@ import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import search from '../../assets/search.svg';
 import { getAllStepsMetadata, getPatientsByStage } from '../../utils/api';
-
 import './Dashboard.scss';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
