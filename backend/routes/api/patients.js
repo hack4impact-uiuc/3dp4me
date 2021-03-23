@@ -59,10 +59,10 @@ router.post(
     '/',
     errorWrap(async (req, res) => {
         const patient = req.body;
-
+        let saved_patient = null;
         try {
             const new_patient = new models.Patient(patient);
-            const saved_patient = await new_patient.save();
+            saved_patient = await new_patient.save();
         } catch (error) {
             return res.status(401).json({
                 code: 401,
