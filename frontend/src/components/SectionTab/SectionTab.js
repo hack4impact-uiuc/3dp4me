@@ -1,17 +1,14 @@
 import './SectionTab.css';
 import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
-import PropTypes from 'prop-types';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { getAllStepsMetadata } from '../../utils/api';
 
-import { Button } from '@material-ui/core';
 import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
 
 const SectionTab = ({ languageData }) => {
     const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
     const [stepMetadata, setStepMetadata] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
 

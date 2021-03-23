@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
 const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
-    const [fieldType, setFieldType] = useState('String');
+    const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
     const [numChoices, setNumChoices] = useState(1);
 
     const key = languageData.selectedLanguage;
@@ -89,13 +89,68 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
 
     const generateFields = () => {
         if (
-            fieldType === 'String' ||
-            fieldType === 'MultilineString' ||
-            fieldType === 'Date' ||
-            fieldType === 'Phone' ||
-            fieldType === 'Number' ||
-            fieldType === 'RadioButton' ||
-            fieldType === 'Dropdown'
+            fieldType === FIELD_TYPES.STRING ||
+            fieldType === FIELD_TYPES.MULTILINE_STRING ||
+            fieldType === FIELD_TYPES.DATE ||
+            fieldType === FIELD_TYPES.PHONE ||
+            fieldType === FIELD_TYPES.NUMBER
+        ) {
+            return (
+                <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                        <Grid>
+                            <Row>
+                                <Col style={{ padding: 10 }}>
+                                    <div
+                                        style={{
+                                            fontSize: '12px',
+                                            textAlign: 'left',
+                                        }}
+                                    >
+                                        <span>
+                                            {
+                                                lang.components.swal.createField
+                                                    .arabic
+                                            }
+                                        </span>
+                                    </div>
+                                    <TextField
+                                        size="small"
+                                        fullWidth
+                                        style={{ padding: 10 }}
+                                        variant="outlined"
+                                    />
+                                </Col>
+                                <Col style={{ padding: 10 }}>
+                                    <div
+                                        style={{
+                                            fontSize: '12px',
+                                            textAlign: 'left',
+                                        }}
+                                    >
+                                        <span>
+                                            {
+                                                lang.components.swal.createField
+                                                    .english
+                                            }
+                                        </span>
+                                    </div>
+                                    <TextField
+                                        size="small"
+                                        fullWidth
+                                        style={{ padding: 10 }}
+                                        variant="outlined"
+                                    />
+                                </Col>
+                            </Row>
+                        </Grid>
+                    </div>
+                </div>
+            );
+        }
+        if (
+            fieldType === FIELD_TYPES.RADIO_BUTTON ||
+            fieldType === FIELD_TYPES.DROPDOWN
         ) {
             return (
                 <div style={{ fontSize: '17px', textAlign: 'left' }}>
@@ -161,23 +216,115 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                 </div>
             );
         }
-        if (fieldType === 'File') {
+        if (fieldType === FIELD_TYPES.FILE) {
             // Need to update this to allow for collection of a file
-            return;
+            return null;
         }
-        if (fieldType === 'Divider') {
+        if (fieldType === FIELD_TYPES.DIVIDER) {
             return (
-                <div>
-                    <h3>{'Divider'}</h3>
-                    <TextField variant="outlined" />
+                <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                        <Grid>
+                            <Row>
+                                <Col style={{ padding: 10 }}>
+                                    <div
+                                        style={{
+                                            fontSize: '12px',
+                                            textAlign: 'left',
+                                        }}
+                                    >
+                                        <span>
+                                            {
+                                                lang.components.swal.createField
+                                                    .arabicDividerName
+                                            }
+                                        </span>
+                                    </div>
+                                    <TextField
+                                        size="small"
+                                        fullWidth
+                                        style={{ padding: 10 }}
+                                        variant="outlined"
+                                    />
+                                </Col>
+                                <Col style={{ padding: 10 }}>
+                                    <div
+                                        style={{
+                                            fontSize: '12px',
+                                            textAlign: 'left',
+                                        }}
+                                    >
+                                        <span>
+                                            {
+                                                lang.components.swal.createField
+                                                    .englishDividerName
+                                            }
+                                        </span>
+                                    </div>
+                                    <TextField
+                                        size="small"
+                                        fullWidth
+                                        style={{ padding: 10 }}
+                                        variant="outlined"
+                                    />
+                                </Col>
+                            </Row>
+                        </Grid>
+                    </div>
                 </div>
             );
         }
-        if (fieldType === 'Header') {
+        if (fieldType === FIELD_TYPES.HEADER) {
             return (
-                <div>
-                    <h3>{'Header'}</h3>
-                    <TextField variant="outlined" />
+                <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                        <Grid>
+                            <Row>
+                                <Col style={{ padding: 10 }}>
+                                    <div
+                                        style={{
+                                            fontSize: '12px',
+                                            textAlign: 'left',
+                                        }}
+                                    >
+                                        <span>
+                                            {
+                                                lang.components.swal.createField
+                                                    .arabicHeaderName
+                                            }
+                                        </span>
+                                    </div>
+                                    <TextField
+                                        size="small"
+                                        fullWidth
+                                        style={{ padding: 10 }}
+                                        variant="outlined"
+                                    />
+                                </Col>
+                                <Col style={{ padding: 10 }}>
+                                    <div
+                                        style={{
+                                            fontSize: '12px',
+                                            textAlign: 'left',
+                                        }}
+                                    >
+                                        <span>
+                                            {
+                                                lang.components.swal.createField
+                                                    .englishHeaderName
+                                            }
+                                        </span>
+                                    </div>
+                                    <TextField
+                                        size="small"
+                                        fullWidth
+                                        style={{ padding: 10 }}
+                                        variant="outlined"
+                                    />
+                                </Col>
+                            </Row>
+                        </Grid>
+                    </div>
                 </div>
             );
         }

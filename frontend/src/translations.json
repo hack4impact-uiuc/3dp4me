@@ -141,8 +141,12 @@
                     "field": "Field",
                     "arabic": "Arabic Question",
                     "arabicChoice": "Arabic Choice #",
+                    "arabicDividerName": "Arabic Divider Name",
+                    "arabicHeaderName": "Arabic Header Name",
                     "english": "English Question",
                     "englishChoice": "English Choice #",
+                    "englishDividerName": "English Divider Name",
+                    "englishHeaderName": "English Header Name",
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
@@ -347,6 +351,28 @@
                     "buttons": {
                         "delete": "\u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636",
                         "save": "\u062d\u0641\u0638"
+                    }
+                },
+                "createField": {
+                    "title": "New Field",
+                    "title2": "Field Settings",
+                    "fieldType": "Field Type",
+                    "clearance": "Clearance Level",
+                    "showOnDashBoard": "Show on Dashboard",
+                    "field": "Field",
+                    "arabic": "Arabic Question",
+                    "arabicChoice": "Arabic Choice #",
+                    "arabicDividerName": "Arabic Divider Name",
+                    "arabicHeaderName": "Arabic Header Name",
+                    "english": "English Question",
+                    "englishChoice": "English Choice #",
+                    "englishDividerName": "English Divider Name",
+                    "englishHeaderName": "English Header Name",
+                    "buttons": {
+                        "save": "Save",
+                        "discard": "Discard",
+                        "addChoice": "+",
+                        "removeChoice": "x"
                     }
                 }
             }

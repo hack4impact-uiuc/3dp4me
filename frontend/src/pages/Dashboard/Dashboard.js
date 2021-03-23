@@ -4,17 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
-import PropTypes from 'prop-types';
-import {
-    Button,
-    Notes,
-    TextField,
-    Snackbar,
-    Select,
-    MenuItem,
-    Checkbox,
-    Modal,
-} from '@material-ui/core';
+import { Button, TextField, Snackbar } from '@material-ui/core';
 
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
