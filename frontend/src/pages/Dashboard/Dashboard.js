@@ -17,6 +17,8 @@ import { getAllStepsMetadata, getPatientsByStage } from '../../utils/api';
 import './Dashboard.scss';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
+// TODO: Expand these as needed
+
 const useStyles = makeStyles(() => ({
     swalEditButton: {
         backgroundColor: '#5395F8',
