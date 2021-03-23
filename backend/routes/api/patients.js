@@ -75,7 +75,7 @@ router.post(
             code: 201,
             success: true,
             message: 'User successfully created.',
-            data: patient,
+            data: saved_patient,
         });
     }),
 );
