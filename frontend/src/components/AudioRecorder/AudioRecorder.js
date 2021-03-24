@@ -1,9 +1,18 @@
+import WaveSurfer from 'wavesurfer.js';
+import MicrophonePlugin from 'wavesurfer.js/dist/plugin/wavesurfer.microphone.js';
+import 'videojs-wavesurfer/dist/css/videojs.wavesurfer.css';
+import Wavesurfer from 'videojs-wavesurfer/dist/videojs.wavesurfer.js';
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from 'react-modal';
 import { Button } from '@material-ui/core';
-import MicRecorder from 'mic-recorder-to-mp3';
+import videojs from 'video.js';
+import RecordRTC from 'recordrtc';
+import Record from 'videojs-record/dist/videojs.record.js';
+import 'video.js/dist/video-js.min.css';
+import 'videojs-record/dist/css/videojs.record.css';
 
+WaveSurfer.microphone = MicrophonePlugin;
 // const useStyles = makeStyles(() => ({
 //     playButton: {
 //         backgroundColor: '#5395F8',
@@ -39,57 +48,14 @@ const AudioRecorder = () => {
     // const classes = useStyles();
     const [file, setFile] = useState(null);
     const [player, setPlayer] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
     const [isModalOpen, setModalOpen] = useState(false);
-    const recorder = new MicRecorder({ bitRate: 128 });
-
-    const startRecording = () => {
-        recorder.start();
-    };
-
-    const stopRecording = () => {
-        recorder
-            .stop()
-            .getMp3()
-            .then(([buffer, blob]) => {
-                const file = new File(buffer, 'recording.mp3', {
-                    type: blob.type,
-                    lastModified: Date.now(),
-                });
-
-                const p = new Audio(URL.createObjectURL(file));
-
-                setPlayer(p);
-                setFile(file);
-                setModalOpen(true);
-            });
-    };
-
-    const onModalClose = () => {
-        setModalOpen(false);
-    };
-
-    const onPlay = () => {
-        player.play();
-    };
-
-    const onPause = () => {
-        player.pause();
-    };
+    const [recordState, setRecordState] = useState(null);
 
     return (
         <div>
-            <Modal
-                isOpen={isModalOpen}
-                onAfterOpen={() => {}}
-                onAfterClose={() => {}}
-                onRequestClose={onModalClose}
-            >
-                <Button onClick={onPlay}>Listen</Button>
-                <Button onClick={onPause}>Pause</Button>
-            </Modal>
-
-            <Button onClick={startRecording}>Start Recording</Button>
-            <Button onClick={stopRecording}>Stop Recording</Button>
+            <audio id="myAudio" class="video-js vjs-default-skin"></audio>
         </div>
     );
 };
