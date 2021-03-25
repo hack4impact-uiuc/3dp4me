@@ -160,7 +160,7 @@ class AudioRecorder extends React.Component {
     };
 
     saveRecording = () => {
-        var file_object = fetch(this.state.blobURL)
+        fetch(this.state.blobURL)
             .then((r) => r.blob())
             .then((blob) => {
                 var file_name = `${

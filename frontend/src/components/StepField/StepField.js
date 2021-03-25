@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Divider } from '@material-ui/core';
-
+import AudioRecorder from '../../components/AudioRecorder/AudioRecorder';
 import TextField from '../Fields/TextField';
 import Notes from '../Notes/Notes';
 import Files from '../Files/Files';
@@ -73,6 +73,17 @@ const StepField = ({
                         handleDownload={handleFileDownload}
                         handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}
+                    />
+                );
+            case FIELD_TYPES.AUDIO:
+                return (
+                    <AudioRecorder
+                        languageData={languageData}
+                        handleUpload={handleFileUpload}
+                        handleDelete={handleFileDelete}
+                        files={value}
+                        title={displayName}
+                        fieldKey={fieldId}
                     />
                 );
             case FIELD_TYPES.DIVIDER:

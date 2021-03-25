@@ -48,6 +48,13 @@ export const allStepMetadata = [
                 isVisibleOnDashboard: false,
             },
             {
+                key: 'audio',
+                fieldType: 'Audio',
+                displayName: { EN: 'User Story', AR: 'لومات ا' },
+                fieldNumber: 1,
+                isVisibleOnDashboard: false,
+            },
+            {
                 key: 'firstName',
                 fieldType: 'String',
                 displayName: { EN: 'First Name', AR: 'لومات ا' },
