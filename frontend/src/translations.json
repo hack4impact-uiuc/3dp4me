@@ -103,6 +103,7 @@
                 "start": "Start",
                 "stop": "Stop",
                 "save": "Save",
+                "close": "Close",
                 "discard": "Discard"
             },
             "swal": {
@@ -309,6 +310,7 @@
                 "start": "بداية",
                 "stop": "قف",
                 "save": "حفظ",
+                "close": "أغلق",
                 "discard": "تجاهل"
             },
             "swal": {

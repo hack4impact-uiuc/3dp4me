@@ -15,6 +15,13 @@ export const patientData = {
         status: 'unfinished',
         lastEdited: new Date(),
         lastEditedBy: 'Sir Humphrey',
+        audio: [
+            {
+                fileName: 'Recording.mp3',
+                uploadedBy: 'Matthew',
+                uploadDate: new Date(),
+            },
+        ],
     },
     cadModel: {
         key: 'cadModel',

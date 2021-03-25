@@ -1,6 +1,6 @@
 import MicRecorder from 'mic-recorder-to-mp3';
 import AddIcon from '@material-ui/icons/Add';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import CloseIcon from '@material-ui/icons/Close';
 import { Button, Modal, Typography } from '@material-ui/core';
 import React from 'react';
@@ -19,7 +19,8 @@ class AudioRecorder extends React.Component {
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
         this.state = {
-            isModalOpen: false,
+            isPlaybackModalOpen: false,
+            isRecordModalOpen: false,
             isRecording: false,
             isPaused: false,
             blobURL: '',
@@ -110,7 +111,14 @@ class AudioRecorder extends React.Component {
 
     onModalOpen = () => {
         this.setState({
-            isModalOpen: true,
+            isRecordModalOpen: true,
+        });
+    };
+
+    closePlaybackModal = () => {
+        // TODO: What happens if we close while playing
+        this.setState({
+            isPlaybackModalOpen: false,
         });
     };
 
@@ -118,12 +126,16 @@ class AudioRecorder extends React.Component {
         if (this.state.isRecording) this.stopRecording();
 
         this.setState({
-            isModalOpen: false,
+            isRecordModalOpen: false,
             isRecording: false,
         });
     };
 
-    handlePlay = () => {};
+    handlePlay = () => {
+        this.setState({
+            isPlaybackModalOpen: true,
+        });
+    };
 
     RenderExistingFiles = () => {
         if (this.props.files == null) return null;
@@ -137,7 +149,7 @@ class AudioRecorder extends React.Component {
                     }}
                 >
                     <div className="file-info-wrapper">
-                        <ArrowDownwardIcon />
+                        <PlayArrowIcon />
                         <div>
                             <Typography align="left">
                                 {`${file.fileName}`}
@@ -177,7 +189,7 @@ class AudioRecorder extends React.Component {
         if (this.state.isRecording) this.stopRecording();
 
         this.setState({
-            isModalOpen: false,
+            isRecordModalOpen: false,
             isRecording: false,
         });
     };
@@ -222,7 +234,10 @@ class AudioRecorder extends React.Component {
                     </div>
                 </div>
 
-                <Modal open={this.state.isModalOpen} className="record-modal">
+                <Modal
+                    open={this.state.isRecordModalOpen}
+                    className="record-modal"
+                >
                     <div>
                         <audio
                             ref="audioSource"
@@ -250,6 +265,21 @@ class AudioRecorder extends React.Component {
                             className="mr-3 add-collec-btn"
                         >
                             {this.state.lang.components.audio.discard}
+                        </Button>
+                    </div>
+                </Modal>
+                <Modal
+                    open={this.state.isPlaybackModalOpen}
+                    onClose={this.closePlaybackModal}
+                >
+                    <div>
+                        <audio
+                            ref="audioSource"
+                            controls="controls"
+                            src={this.state.blobURL || ''}
+                        />
+                        <Button onClick={this.closePlaybackModal}>
+                            {this.state.lang.components.audio.close}
                         </Button>
                     </div>
                 </Modal>
