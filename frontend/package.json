@@ -27,7 +27,8 @@
         "react-router-dom": "^5.2.0",
         "react-scripts": "3.4.3",
         "sass": "^1.28.0",
-        "sweetalert": "^2.1.2"
+        "sweetalert": "^2.1.2",
+        "react-flexbox-grid": "^2.1.2"
     },
     "scripts": {
         "start": "react-scripts start",

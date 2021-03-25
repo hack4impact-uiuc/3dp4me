@@ -19,3 +19,7 @@ export const StringGetterSetterType = PropTypes.shape({
     state: PropTypes.string.isRequired,
     setState: PropTypes.func.isRequired,
 });
+
+export const fieldType = PropTypes.shape({
+    state: PropTypes.string.isRequired,
+});
