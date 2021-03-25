@@ -1,10 +1,13 @@
 import React from 'react';
 import AudioRecorder from '../../components/AudioRecorder/AudioRecorder';
 
-const AccountManagement = () => {
+const AccountManagement = ({ languageData }) => {
     return (
         <div className="dashboard">
-            <AudioRecorder />
+            <AudioRecorder
+                languageData={languageData}
+                title="Audio Recording"
+            />
         </div>
     );
 };
