@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
@@ -19,27 +18,12 @@ router.get(
     }),
 );
 
-const getStepKeys = async () => {
-    const steps = await models.Step.find({});
-    let stepKeys = [];
-    steps.forEach((element) => stepKeys.push(element.key));
-    return stepKeys;
-};
-
 // GET: Returns everything associated with patient
 router.get(
     '/:id',
     errorWrap(async (req, res) => {
         const { id } = req.params;
-        let patientData = await models.Patient.findById(id);
-        let stepKeys = await getStepKeys();
-
-        for (const stepKey of stepKeys) {
-            const collection = await mongoose.connection.db.collection(stepKey);
-            const stepData = await collection.findOne({ patientId: id });
-            patientData.set(stepKey, stepData, { strict: false });
-        }
-
+        const patientData = await models.Patient.findById(id);
         if (!patientData)
             res.status(404).json({
                 code: 404,
@@ -54,44 +38,59 @@ router.get(
     }),
 );
 
+// GET: Returns everything associated with patient stage
+router.get(
+    '/:id/:stage',
+    errorWrap(async (req, res) => {
+        const { id, stage } = req.params;
+        // TODO: Just query for the stage data only
+        const patientData = await models.Patient.findById(id, stage);
+        const stageData = patientData[stage];
+        res.status(200).json({
+            code: 200,
+            success: true,
+            result: stageData,
+        });
+    }),
+);
+
 // POST: new patient
+// TODO: Implement and test
 router.post(
     '/',
     errorWrap(async (req, res) => {
         const patient = req.body;
-
         try {
             const new_patient = new models.Patient(patient);
-            const saved_patient = await new_patient.save();
-        } catch (error) {
-            return res.status(401).json({
-                code: 401,
-                success: false,
-                message: 'Request is invalid or missing fields.',
-            });
+            const saved_patient = await _patient.save();
+        } catch (err) {
+            // TODO: Validate patient and send back good error message
+            res.status(500).send({});
         }
 
-        res.status(201).json({
-            code: 201,
+        res.status(SUCCESS).send({
+            code: SUCCESS,
             success: true,
             message: 'User successfully created.',
-            data: patient,
+            data: resp,
         });
     }),
 );
 
 // GET: Download a file
 router.get(
-    '/:id/:stage/:filename',
+    '/:id/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
-        const { id, stage, filename } = req.params;
-        //TODO: change it so that you can pass user aws credentials in a more secure manner
-        var s3Stream = downloadFile(`${id}/${stage}/${filename}`, {
-            accessKeyId: req.headers.accesskeyid,
-            secretAccessKey: req.headers.secretaccesskey,
-            sessionToken: req.headers.sessiontoken,
-        }).createReadStream();
-        // Listen for errors returned by the service
+        const { id, stepKey, fieldKey, fileName } = req.params;
+        var s3Stream = downloadFile(
+            `${id}/${stepKey}/${fieldKey}/${filename}`,
+            {
+                accessKeyId: req.headers.accesskeyid,
+                secretAccessKey: req.headers.secretaccesskey,
+                sessionToken: req.headers.sessiontoken,
+            },
+        ).createReadStream();
+
         s3Stream
             .on('error', function (err) {
                 res.json('S3 Error:' + err);
@@ -105,29 +104,43 @@ router.get(
 
 // Delete: Delete a file
 router.delete(
-    '/:id/:stage/:filename',
+    '/:id/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
-        const { id, stage, filename } = req.params;
-        const patient = await models.Patient.findById(id);
-        let index = patient[stage].files.findIndex(
-            (x) => x.filename == filename,
-        );
-        if (index > -1) {
-            patient[stage].files.splice(index, 1);
+        const { id, stepKey, fieldKey, fileName } = req.params;
+
+        const patient = await models.Patient.findOne({ patientId: id });
+        const collection = await mongoose.connection.db.collection(stepKey);
+        stepData = await collection.findOne({ patientId: id });
+        let index = stepData[fieldKey].findIndex((x) => x.filename == fileName);
+
+        if (index == -1) {
+            return res.status(404).json({
+                success: false,
+                message: `File ${fileName} does not exist`,
+            });
         }
-        // TODO: Remove this file from AWS as well
+
+        // TODO: Remove this file from AWS as well once we have a "do you want to remove this" on the frontend
+        stepData[fieldKey].splice(index, 1);
+
+        stepData.lastEdited = Date.now();
+        stepData.lastEditedBy = req.user.Username;
+        stepData.save();
+
         patient.lastEdited = Date.now();
+        patient.lastEditedBy = req.user.Username;
         patient.save();
+
         res.status(201).json({
             success: true,
-            message: 'Patient status updated with file removed',
+            message: 'File successfully removed',
         });
     }),
 );
 
 // POST: upload individual files
 router.post(
-    '/:id/:stage/file',
+    '/:id/:stage/:fieldKey/file',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
         //TODO: change it so that you can pass user aws credentials in a more secure manner
