@@ -4,12 +4,17 @@ import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
 import { CircularProgress, Backdrop } from '@material-ui/core';
-
 import { formatDate } from '../../utils/date';
-import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
+import {
+    downloadFile,
+    uploadFile,
+    uploadAudioFile,
+    deleteFile,
+} from '../../utils/api';
 import StepField from '../../components/StepField/StepField';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { FIELD_TYPES } from '../../utils/constants';
 
 const StepContent = ({
     languageData,
@@ -31,12 +36,12 @@ const StepContent = ({
         setUpdatedData(dataCopy);
     };
 
-    const handleFileDelete = async (fileKey, file) => {
+    const handleFileDelete = async (fieldKey, file) => {
         deleteFile(patientId, stepData.key, file.fileName);
-        let updatedFiles = _.cloneDeep(stepData[fileKey]);
+        let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
         updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
 
-        handleSimpleUpdate(fileKey, updatedFiles);
+        handleSimpleUpdate(fieldKey, updatedFiles);
     };
 
     const handleFileDownload = (fileName) => {
@@ -44,31 +49,32 @@ const StepContent = ({
     };
 
     const handleFileUpload = async (fileKey, file) => {
-        let filePrefix = '';
         const fieldMetadata = metaData.fields.find((field) => {
             return field.key === fileKey;
         });
-        if (
-            fieldMetadata.filePrefix !== null &&
-            fieldMetadata.filePrefix !== ''
-        )
-            filePrefix = `${fieldMetadata.filePrefix}_`;
 
-        const formattedFileName = `${filePrefix}${file.name}`;
-        const res = await uploadFile(
-            patientId,
-            stepData.key,
-            file,
-            formattedFileName,
-        );
+        let res = null;
+        if (fieldMetadata.fieldType == FIELD_TYPES.AUDIO) {
+            res = await uploadAudioFile(
+                patientId,
+                stepData.key,
+                file,
+                file.name,
+            );
+        } else {
+            res = await uploadFile(patientId, stepData.key, file, file.name);
+        }
 
         // TODO: Display error if res is null
         let files = _.cloneDeep(stepData[fileKey]);
-        files = files.concat({
+        let newFile = {
             fileName: res.data.data.name,
             uploadedBy: res.data.data.uploadedBy,
             uploadDate: res.data.data.uploadDate,
-        });
+        };
+
+        if (files) files = files.concat(newFile);
+        else files = [newFile];
 
         handleSimpleUpdate(fileKey, files);
     };

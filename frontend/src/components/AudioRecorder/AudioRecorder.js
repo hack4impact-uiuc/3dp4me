@@ -123,6 +123,8 @@ class AudioRecorder extends React.Component {
         });
     };
 
+    handlePlay = () => {};
+
     RenderExistingFiles = () => {
         if (this.props.files == null) return null;
 
@@ -131,7 +133,7 @@ class AudioRecorder extends React.Component {
                 <Button
                     className="file-button"
                     onClick={() => {
-                        this.props.handleDownload(this.props.fieldKey, file);
+                        this.handlePlay(this.props.fieldKey, file);
                     }}
                 >
                     <div className="file-info-wrapper">
