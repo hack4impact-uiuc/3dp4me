@@ -110,8 +110,10 @@ router.delete(
 
         const patient = await models.Patient.findOne({ patientId: id });
         const collection = await mongoose.connection.db.collection(stepKey);
-        stepData = await collection.findOne({ patientId: id });
-        let index = stepData[fieldKey].findIndex((x) => x.filename == fileName);
+        const stepData = await collection.findOne({ patientId: id });
+        const index = stepData[fieldKey].findIndex(
+            (x) => x.filename == fileName,
+        );
 
         if (index == -1) {
             return res.status(404).json({
@@ -140,21 +142,24 @@ router.delete(
 
 // POST: upload individual files
 router.post(
-    '/:id/:stage/:fieldKey/file',
+    '/:id/:stepKey/:fieldKey/file',
     errorWrap(async (req, res) => {
-        const { id, stage } = req.params;
-        //TODO: change it so that you can pass user aws credentials in a more secure manner
+        const { id, stepKey, fieldKey } = req.params;
         const {
             uploadedFileName,
             accessKeyId,
             secretAccessKey,
             sessionToken,
         } = req.body;
-        const patient = await models.Patient.findById(id);
+
+        const patient = await models.Patient.findOne({ patientId: id });
+        const collection = await mongoose.connection.db.collection(stepKey);
+        const stepData = await collection.findOne({ patientId: id });
+
         let file = req.files.uploadedFile;
         uploadFile(
             file.data,
-            `${id}/${stage}/${uploadedFileName}`,
+            `${id}/${stepKey}/${fieldKey}/${uploadedFileName}`,
             {
                 accessKeyId: accessKeyId,
                 secretAccessKey: secretAccessKey,
@@ -165,16 +170,21 @@ router.post(
                     res.json(err);
                 } else {
                     // update database only if upload was successful
-                    patient[stage].files.push({
+                    stepData[fieldKey].push({
                         filename: uploadedFileName,
                         uploadedBy: req.user.Username,
                         uploadDate: Date.now(),
                     });
+                    stepData.lastEdited = Date.now();
+                    stepData.lastEditedBy = req.user.Username;
+                    stepData.save();
+
                     patient.lastEdited = Date.now();
+                    patient.lastEdited = req.user.Username;
                     patient.save();
                     res.status(201).json({
                         success: true,
-                        message: 'Patient status updated with new file',
+                        message: 'File successfully uploaded',
                         data: {
                             name: uploadedFileName,
                             uploadedBy: req.user.Username,

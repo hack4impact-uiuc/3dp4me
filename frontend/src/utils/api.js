@@ -48,7 +48,6 @@ export const getAllPatients = async () => {
 };
 
 export const getPatientsByStage = async (stage) => {
-    console.log(stage);
     return [patientData];
 
     // TODO: Replace with api call
@@ -63,7 +62,6 @@ export const getPatientsByStage = async (stage) => {
 };
 
 export const getPatientById = async (id) => {
-    console.log(id);
     return patientData;
     // TODO: Uncomment this when the backend is ready for the new data format
     // const requestString = `/patients/${id}`;
@@ -145,11 +143,12 @@ export const downloadFile = async (patientId, stage, filename) => {
 
 export const uploadFile = async (
     patientId,
-    stage,
+    stepKey,
+    fieldKey,
+    filename,
     filedata,
-    filename = null,
 ) => {
-    const requestString = `/patients/${patientId}/${stage}/file`;
+    const requestString = `/patients/${patientId}/${stepKey}/${fieldKey}/${filename}`;
     const credentials = await getCredentials();
     const formData = new FormData();
     formData.append('uploadedFile', filedata);
