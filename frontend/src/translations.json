@@ -99,7 +99,11 @@
                 "addAnother": "Add Another"
             },
             "audio": {
-                "addAnother": "Add Recording"
+                "addAnother": "Add Recording",
+                "start": "Start",
+                "stop": "Stop",
+                "save": "Save",
+                "discard": "Discard"
             },
             "swal": {
                 "createPatient": {
@@ -301,7 +305,11 @@
                 "addAnother": "\u0623\u0636\u0641 \u0622\u062e\u0631"
             },
             "audio": {
-                "addAnother": "إضافة التسجيل"
+                "addAnother": "إضافة التسجيل",
+                "start": "بداية",
+                "stop": "قف",
+                "save": "حفظ",
+                "discard": "تجاهل"
             },
             "swal": {
                 "createPatient": {

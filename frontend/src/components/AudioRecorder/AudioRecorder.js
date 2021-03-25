@@ -114,6 +114,15 @@ class AudioRecorder extends React.Component {
         });
     };
 
+    discardRecording = () => {
+        if (this.state.isRecording) this.stopRecording();
+
+        this.setState({
+            isModalOpen: false,
+            isRecording: false,
+        });
+    };
+
     RenderExistingFiles = () => {
         if (this.props.files == null) return null;
 
@@ -148,6 +157,27 @@ class AudioRecorder extends React.Component {
                 </button>
             </div>
         ));
+    };
+
+    saveRecording = () => {
+        var file_object = fetch(this.state.blobURL)
+            .then((r) => r.blob())
+            .then((blob) => {
+                var file_name = `${
+                    this.props.fieldKey
+                }_${Math.random().toString(36).substring(6)}.mp3`;
+                var file_object = new File([blob], file_name, {
+                    type: 'audio/mp3',
+                });
+                this.props.handleUpload(this.props.fieldKey, file_object);
+            });
+
+        if (this.state.isRecording) this.stopRecording();
+
+        this.setState({
+            isModalOpen: false,
+            isRecording: false,
+        });
     };
 
     render() {
@@ -190,19 +220,35 @@ class AudioRecorder extends React.Component {
                     </div>
                 </div>
 
-                <Modal open={this.state.isModalOpen}>
+                <Modal open={this.state.isModalOpen} className="record-modal">
                     <div>
-                        <Button
-                            onClick={this.toggleRecording}
-                            className="mr-3 add-collec-btn"
-                        >
-                            {isRecording ? 'Stop' : 'Start'}
-                        </Button>
                         <audio
                             ref="audioSource"
                             controls="controls"
                             src={this.state.blobURL || ''}
                         />
+                        <Button
+                            onClick={this.toggleRecording}
+                            className="mr-3 add-collec-btn"
+                        >
+                            {isRecording
+                                ? this.state.lang.components.audio.stop
+                                : this.state.lang.components.audio.start}
+                        </Button>
+                        {isRecording || this.state.blobURL == '' || (
+                            <Button
+                                onClick={this.saveRecording}
+                                className="mr-3 add-collec-btn"
+                            >
+                                {this.state.lang.components.audio.save}
+                            </Button>
+                        )}
+                        <Button
+                            onClick={this.discardRecording}
+                            className="mr-3 add-collec-btn"
+                        >
+                            {this.state.lang.components.audio.discard}
+                        </Button>
                     </div>
                 </Modal>
             </div>

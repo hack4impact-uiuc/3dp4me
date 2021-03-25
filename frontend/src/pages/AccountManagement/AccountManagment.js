@@ -6,7 +6,11 @@ const AccountManagement = ({ languageData }) => {
         <div className="dashboard">
             <AudioRecorder
                 languageData={languageData}
+                handleUpload={(n, f) => {
+                    console.log(f);
+                }}
                 title="Audio Recording"
+                fieldKey="voicememo"
             />
         </div>
     );
