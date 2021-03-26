@@ -181,51 +181,16 @@ router.post(
     '/:id/:stage',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        const steps = await models.Step.find({ key: stage });
-        const session = await mongoose.startSession();
-
-        if (steps.length == 0) {
-            return res.status(404).json({
-                code: 404,
-                success: false,
-                message: 'Stage not found.',
-            });
-        }
-
-        const patient = await models.Patient.findById(id);
-        if (!patient) {
-            return res.status(404).json({
-                code: 404,
-                success: false,
-                message: 'Patient not found.',
-            });
-        }
-
+        //TODO: Add auth check for permissions
         const updatedStage = req.body;
-        try {
-            await session.withTransaction(async () => {
-                const collection = await mongoose.connection.db.collection(
-                    stage,
-                );
-                updatedStage.lastEdited = Date.now();
-                console.log(req);
-                updatedStage.lastEditedBy = req.user.Username;
-                const stepData = await collection.findOneAndUpdate(
-                    { patientId: id },
-                    { $set: updatedStage },
-                    { upsert: true, setDefaultsOnInsert: true, new: true },
-                );
-            });
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({
-                code: 500,
-                success: false,
-                message: error,
-            });
-        }
+        const patient = await models.Patient.findById(id);
+
+        // TODO: Check that patient returned exists
+        //TODO: use name of input field possibly?
         patient.lastEdited = Date.now();
-        patient.lastEditedBy = req.user.Username;
+        patient[stage] = updatedStage;
+        patient[stage].lastEdited = Date.now();
+        patient[stage].lastEditedBy = req.user.Username;
         await patient.save(function (err) {
             if (err) {
                 res.json(err); //TODO: bug here, need to take a look
