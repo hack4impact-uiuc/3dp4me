@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
+const mongoose = require('mongoose');
 
 // Get all patients  basic info
 router.get(
@@ -31,29 +32,30 @@ router.get(
 );
 
 // GET: Returns basic stage info for every user
+// GET: Returns everything associated with patient step
 router.get(
     '/:stage',
     errorWrap(async (req, res) => {
-        const { id, stage } = req.params;
-        const patientsData = await models.Patient.find(
-            {},
-            // '_id patientInfo.name createdDate ' + stage,
-        );
-        const remappedPatients = patientsData.map((info) => {
-            const stageData = info[stage];
-            return {
-                _id: info._id,
-                name: info.patientInfo.name,
-                createdDate: info.createdDate,
-                feedbackCycle: stageData.feedbackCycle,
-                lastEdited: stageData.lastEdited,
-                status: stageData.status,
-            };
-        });
+        const { stage } = req.params;
+        let stepData = null;
+        const steps = await models.Step.find({ key: stage });
+
+        // Check if stage exists in metadataf
+        if (steps.length == 0) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Stage not found.',
+            });
+        }
+
+        const collection = await mongoose.connection.db.collection(stage);
+        stepData = await collection.find({}).toArray();
+
         res.status(200).json({
             code: 200,
             success: true,
-            result: remappedPatients,
+            result: stepData,
         });
     }),
 );

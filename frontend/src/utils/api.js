@@ -118,8 +118,8 @@ export const getAllStepsMetadata = async () => {
     return allStepMetadata;
 };
 
-export const downloadFile = async (patientId, stage, filename) => {
-    const requestString = `/patients/${patientId}/${stage}/${filename}`;
+export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
+    const requestString = `/patients/${patientId}/${stepKey}/${fieldKey}/${filename}`;
     const {
         accessKeyId,
         secretAccessKey,
@@ -145,11 +145,12 @@ export const downloadFile = async (patientId, stage, filename) => {
 
 export const uploadFile = async (
     patientId,
-    stage,
+    stepKey,
+    fieldKey,
+    filename,
     filedata,
-    filename = null,
 ) => {
-    const requestString = `/patients/${patientId}/${stage}/file`;
+    const requestString = `/patients/${patientId}/${stepKey}/${fieldKey}/${filename}`;
     const credentials = await getCredentials();
     const formData = new FormData();
     formData.append('uploadedFile', filedata);
@@ -165,39 +166,7 @@ export const uploadFile = async (
     });
 };
 
-export const uploadAudioFile = async (
-    patientId,
-    stage,
-    filedata,
-    filename = null,
-) => {
-    return {
-        data: {
-            data: {
-                name: 'uploaded_file',
-                uploadedBy: 'Matthew',
-                uploadDate: new Date(),
-            },
-        },
-    };
-    // TODO: When connect to backend when ready
-    // const requestString = `/patients/${patientId}/${stage}/file`;
-    // const credentials = await getCredentials();
-    // const formData = new FormData();
-    // formData.append('uploadedFile', filedata);
-    // formData.append('uploadedFileName', filename || filedata.name);
-    // Object.keys(credentials).forEach((key) => {
-    //     formData.append(key, credentials[key]);
-    // });
-
-    // return instance.post(requestString, formData, {
-    //     headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //     },
-    // });
-};
-
-export const deleteFile = async (patientId, stage, filename) => {
-    const requestString = `/patients/${patientId}/${stage}/${filename}`;
+export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
+    const requestString = `/patients/${patientId}/${stepKey}/${fieldKey}/${filename}`;
     return instance.delete(requestString);
 };

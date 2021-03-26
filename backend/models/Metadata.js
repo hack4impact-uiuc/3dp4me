@@ -14,6 +14,11 @@ const fieldEnum = {
     AUDIO: 'Audio',
 };
 
+const languageSchema = new mongoose.Schema({
+    EN: { type: String, required: true },
+    AR: { type: String, required: true },
+});
+
 const fieldSchema = new mongoose.Schema({
     fieldNumber: { type: Number, required: true },
     key: { type: String, required: true },
@@ -23,6 +28,7 @@ const fieldSchema = new mongoose.Schema({
         required: true,
         default: fieldEnum.STRING,
     },
+    options: { type: [languageSchema], default: [] },
     isVisibleOnDashboard: { type: Boolean, required: true },
     displayName: {
         EN: { type: String, required: true },

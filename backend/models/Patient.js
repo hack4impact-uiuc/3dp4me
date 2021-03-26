@@ -6,9 +6,11 @@ const overallStatusEnum = {
     FEEDBACK: 'Feedback',
 };
 
-// TODO: add / remove stage fields as needed
 const patientSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    firstName: { type: String, required: true },
+    fathersName: { type: String, required: false, default: '' },
+    grandfathersName: { type: String, required: false, default: '' },
+    familyName: { type: String, required: true },
     dateCreated: { type: Date, required: true, default: new Date() },
     orderId: { type: String, required: true },
     lastEdited: { type: Date, required: true, default: new Date() },
@@ -16,7 +18,7 @@ const patientSchema = new mongoose.Schema({
     status: { type: overallStatusEnum, required: true },
 });
 
-const Patient = mongoose.model('Patient', patientSchema);
+const Patient = mongoose.model('Patient', patientSchema, 'Patient');
 
 module.exports = {
     Patient,

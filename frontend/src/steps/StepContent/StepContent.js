@@ -37,50 +37,44 @@ const StepContent = ({
     };
 
     const handleFileDelete = async (fieldKey, file) => {
-        deleteFile(patientId, stepData.key, file.fileName);
+        deleteFile(patientId, stepData.key, fieldKey, file.fileName);
+        if (!updatedData[fieldKey]) return;
+
         let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
         updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
 
         handleSimpleUpdate(fieldKey, updatedFiles);
     };
 
-    const handleFileDownload = (fileName) => {
-        downloadFile(patientId, stepData.key, fileName);
+    const handleFileDownload = (fieldKey, fileName) => {
+        downloadFile(patientId, stepData.key, fieldKey, fileName);
     };
 
-    const handleFileUpload = async (fileKey, file) => {
-        const fieldMetadata = metaData.fields.find((field) => {
-            return field.key === fileKey;
-        });
-
-        let res = null;
-        if (fieldMetadata.fieldType == FIELD_TYPES.AUDIO) {
-            res = await uploadAudioFile(
-                patientId,
-                stepData.key,
-                file,
-                file.name,
-            );
-        } else {
-            res = await uploadFile(patientId, stepData.key, file, file.name);
-        }
+    const handleFileUpload = async (fieldKey, file) => {
+        const res = await uploadFile(
+            patientId,
+            stepData.key,
+            fieldKey,
+            file.name,
+            file,
+        );
 
         // TODO: Display error if res is null
-        let files = _.cloneDeep(stepData[fileKey]);
-        let newFile = {
+        newfile = {
             fileName: res.data.data.name,
             uploadedBy: res.data.data.uploadedBy,
             uploadDate: res.data.data.uploadDate,
         };
 
+        let files = _.cloneDeep(updatedData[fieldKey]);
         if (files) files = files.concat(newFile);
         else files = [newFile];
 
-        handleSimpleUpdate(fileKey, files);
+        handleSimpleUpdate(fieldKey, files);
     };
 
     const saveData = () => {
-        onDataSaved(stepData.key, updatedData);
+        onDataSaved(metaData.key, updatedData);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };
@@ -117,13 +111,12 @@ const StepContent = ({
 
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
-        if (updatedData == null) return null;
         return metaData.fields.map((field) => {
             return (
                 <StepField
                     fieldType={field.fieldType}
                     displayName={field.displayName[key]}
-                    value={updatedData[field.key]}
+                    value={updatedData ? updatedData[field.key] : null}
                     fieldId={field.key}
                     key={field.key}
                     isDisabled={!edit}
@@ -138,8 +131,6 @@ const StepContent = ({
     };
 
     const generateFooter = () => {
-        if (stepData == null) return null;
-
         return (
             <BottomBar
                 lastEditedBy={stepData?.lastEditedBy}
