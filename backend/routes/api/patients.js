@@ -41,7 +41,6 @@ router.get(
             patientData.set(stepKey, stepData, { strict: false });
         }
 
-        const patientData = await models.Patient.findById(id);
         if (!patientData)
             res.status(404).json({
                 code: 404,
