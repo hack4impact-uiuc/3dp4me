@@ -116,8 +116,8 @@ export const getAllStepsMetadata = async () => {
     return allStepMetadata;
 };
 
-export const downloadFile = async (patientId, stage, filename) => {
-    const requestString = `/patients/${patientId}/${stage}/${filename}`;
+export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
+    const requestString = `/patients/${patientId}/${stepKey}/${fieldKey}/${filename}`;
     const {
         accessKeyId,
         secretAccessKey,

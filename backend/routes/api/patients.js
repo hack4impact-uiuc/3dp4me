@@ -84,7 +84,7 @@ router.get(
     errorWrap(async (req, res) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
         var s3Stream = downloadFile(
-            `${id}/${stepKey}/${fieldKey}/${filename}`,
+            `${id}/${stepKey}/${fieldKey}/${fileName}`,
             {
                 accessKeyId: req.headers.accesskeyid,
                 secretAccessKey: req.headers.secretaccesskey,
