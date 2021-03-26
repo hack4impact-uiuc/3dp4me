@@ -18,11 +18,7 @@ import {
     UNAUTHENTICATED,
     setAuthListener,
 } from './aws/aws-auth';
-import {
-    getCurrentUserInfo,
-    getCredentials,
-    getCurrentSession,
-} from './aws/aws-helper';
+import { getCurrentUserInfo } from './aws/aws-helper';
 
 Amplify.configure(awsconfig);
 
@@ -43,8 +39,6 @@ function App() {
             const userInfo = await getCurrentUserInfo();
             setUsername(userInfo.username);
             setUserEmail(userInfo.email);
-
-            console.log(JSON.stringify(await getCurrentSession()));
 
             if (
                 userInfo.attributes &&

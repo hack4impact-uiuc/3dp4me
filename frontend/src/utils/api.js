@@ -48,6 +48,7 @@ export const getAllPatients = async () => {
 };
 
 export const getPatientsByStage = async (stage) => {
+    console.log(stage);
     return [patientData];
 
     // TODO: Replace with api call
@@ -62,6 +63,7 @@ export const getPatientsByStage = async (stage) => {
 };
 
 export const getPatientById = async (id) => {
+    console.log(id);
     return patientData;
     // TODO: Uncomment this when the backend is ready for the new data format
     // const requestString = `/patients/${id}`;
