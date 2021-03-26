@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
@@ -108,9 +109,30 @@ router.delete(
     errorWrap(async (req, res) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
 
-        const patient = await models.Patient.findOne({ patientId: id });
+        const patient = await models.Patient.findById(id);
+        if (patient == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Patient with id ${id} not found`,
+            });
+        }
+
         const collection = await mongoose.connection.db.collection(stepKey);
+        if (collection == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Step with key ${stepKey} not found`,
+            });
+        }
+
         const stepData = await collection.findOne({ patientId: id });
+        if (stepData == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Patient does not have any data on record for this step`,
+            });
+        }
+
         const index = stepData[fieldKey].findIndex(
             (x) => x.filename == fileName,
         );
@@ -127,7 +149,7 @@ router.delete(
 
         stepData.lastEdited = Date.now();
         stepData.lastEditedBy = req.user.Username;
-        stepData.save();
+        collection.findOneAndUpdate({ patientId: id }, { $set: stepData });
 
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.Username;
@@ -142,7 +164,7 @@ router.delete(
 
 // POST: upload individual files
 router.post(
-    '/:id/:stepKey/:fieldKey/file',
+    '/:id/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
         const { id, stepKey, fieldKey } = req.params;
         const {
@@ -152,9 +174,32 @@ router.post(
             sessionToken,
         } = req.body;
 
-        const patient = await models.Patient.findOne({ patientId: id });
+        const patient = await models.Patient.findById(id);
+        if (patient == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Cannot find patient with id ${id}`,
+            });
+        }
+
+        const collectionInfo = await mongoose.connection.db
+            .listCollections({ name: stepKey })
+            .toArray();
+        if (collectionInfo.length == 0) {
+            return res.status(404).json({
+                success: false,
+                message: `Step with key ${stepKey} not found`,
+            });
+        }
+
         const collection = await mongoose.connection.db.collection(stepKey);
-        const stepData = await collection.findOne({ patientId: id });
+        let stepData = await collection.findOne({ patientId: id });
+        const doesPatientHaveData = stepData != null;
+
+        // If the admin adds a new step after the user was added, then the stepData will not be found.
+        if (!doesPatientHaveData) {
+            stepData = { [fieldKey]: [], patientId: id };
+        }
 
         let file = req.files.uploadedFile;
         uploadFile(
@@ -165,11 +210,10 @@ router.post(
                 secretAccessKey: secretAccessKey,
                 sessionToken: sessionToken,
             },
-            function (err, data) {
+            async function (err, data) {
                 if (err) {
                     res.json(err);
                 } else {
-                    // update database only if upload was successful
                     stepData[fieldKey].push({
                         filename: uploadedFileName,
                         uploadedBy: req.user.Username,
@@ -177,11 +221,16 @@ router.post(
                     });
                     stepData.lastEdited = Date.now();
                     stepData.lastEditedBy = req.user.Username;
-                    stepData.save();
+                    collection.findOneAndUpdate(
+                        { patientId: id },
+                        { $set: stepData },
+                        { upsert: true },
+                    );
 
                     patient.lastEdited = Date.now();
-                    patient.lastEdited = req.user.Username;
+                    patient.lastEditedBy = req.user.Username;
                     patient.save();
+
                     res.status(201).json({
                         success: true,
                         message: 'File successfully uploaded',

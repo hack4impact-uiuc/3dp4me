@@ -164,7 +164,7 @@ export const uploadFile = async (
     });
 };
 
-export const deleteFile = async (patientId, stage, filename) => {
-    const requestString = `/patients/${patientId}/${stage}/${filename}`;
+export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
+    const requestString = `/patients/${patientId}/${stepKey}/${fieldKey}/${filename}`;
     return instance.delete(requestString);
 };

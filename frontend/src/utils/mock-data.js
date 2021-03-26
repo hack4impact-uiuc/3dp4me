@@ -1,5 +1,5 @@
 export const patientData = {
-    _id: '12345689',
+    _id: '60513ea026012209dacf39f7',
     name: 'John doe',
     orderId: '12345678',
     status: 'active',
@@ -16,8 +16,8 @@ export const patientData = {
         lastEdited: new Date(),
         lastEditedBy: 'Sir Humphrey',
     },
-    cadModel: {
-        key: 'cadModel',
+    model: {
+        key: 'model',
         firstName: 'John',
         fileSizeKb: 1024,
         leftEarscan: [
@@ -127,7 +127,7 @@ export const allStepMetadata = [
         ],
     },
     {
-        key: 'cadModel',
+        key: 'model',
         displayName: { EN: 'CAD Modeling', AR: 'معلومات المريض' },
         stepNumber: 2,
         fields: [

@@ -32,7 +32,7 @@ const StepContent = ({
     };
 
     const handleFileDelete = async (fileKey, file) => {
-        deleteFile(patientId, stepData.key, file.fileName);
+        deleteFile(patientId, stepData.key, fileKey, file.fileName);
         let updatedFiles = _.cloneDeep(stepData[fileKey]);
         updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
 
