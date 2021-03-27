@@ -44,6 +44,8 @@
         ]
     },
     "dependencies": {
-        "react-audio-player": "^0.14.0"
+        "react-audio-player": "^0.14.0",
+        "react-flexbox-grid": "^2.1.2",
+        "react-native-web": "^0.15.0"
     }
 }
