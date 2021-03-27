@@ -118,7 +118,6 @@ class AudioRecorder extends React.Component {
     };
 
     closePlaybackModal = () => {
-        // TODO: What happens if we close while playing
         this.setState({
             isPlaybackModalOpen: false,
         });
@@ -256,7 +255,7 @@ class AudioRecorder extends React.Component {
                         />
                         <Button
                             onClick={this.toggleRecording}
-                            className="mr-3 add-collec-btn"
+                            className="btn-toggle-record"
                         >
                             {isRecording
                                 ? this.state.lang.components.audio.stop
@@ -265,14 +264,14 @@ class AudioRecorder extends React.Component {
                         {isRecording || this.state.blobURL == '' || (
                             <Button
                                 onClick={this.saveRecording}
-                                className="mr-3 add-collec-btn"
+                                className="btn-save-recording"
                             >
                                 {this.state.lang.components.audio.save}
                             </Button>
                         )}
                         <Button
                             onClick={this.discardRecording}
-                            className="mr-3 add-collec-btn"
+                            className="btn-discard-recording"
                         >
                             {this.state.lang.components.audio.discard}
                         </Button>
@@ -281,6 +280,7 @@ class AudioRecorder extends React.Component {
                 <Modal
                     open={this.state.isPlaybackModalOpen}
                     onClose={this.closePlaybackModal}
+                    className="playback-modal"
                 >
                     <div>
                         <audio
@@ -288,7 +288,10 @@ class AudioRecorder extends React.Component {
                             controls="controls"
                             src={this.state.playbackBlobURL || ''}
                         />
-                        <Button onClick={this.closePlaybackModal}>
+                        <Button
+                            onClick={this.closePlaybackModal}
+                            className="btn-close-playback"
+                        >
                             {this.state.lang.components.audio.close}
                         </Button>
                     </div>
