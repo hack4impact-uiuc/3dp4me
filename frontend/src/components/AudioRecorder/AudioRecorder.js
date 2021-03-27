@@ -5,6 +5,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { Button, Modal, Typography } from '@material-ui/core';
 import React from 'react';
 import './AudioRecorder.scss';
+import { downloadBlobWithoutSaving } from '../../utils/api';
 
 /*
  * For whatever reason, this component cannot be written functionally.
@@ -24,6 +25,7 @@ class AudioRecorder extends React.Component {
             isRecording: false,
             isPaused: false,
             blobURL: '',
+            playbackBlobURL: '',
             isBlocked: false,
             lang: this.props.languageData.translations[
                 this.props.languageData.selectedLanguage
@@ -131,9 +133,17 @@ class AudioRecorder extends React.Component {
         });
     };
 
-    handlePlay = () => {
+    handlePlay = async (file) => {
+        const blob = await downloadBlobWithoutSaving(
+            this.props.patientId,
+            this.props.stepKey,
+            this.props.fieldKey,
+            file.fileName,
+        );
+        const blobURL = URL.createObjectURL(blob);
         this.setState({
             isPlaybackModalOpen: true,
+            playbackBlobURL: blobURL,
         });
     };
 
@@ -145,7 +155,7 @@ class AudioRecorder extends React.Component {
                 <Button
                     className="file-button"
                     onClick={() => {
-                        this.handlePlay(this.props.fieldKey, file);
+                        this.handlePlay(file);
                     }}
                 >
                     <div className="file-info-wrapper">
@@ -276,7 +286,7 @@ class AudioRecorder extends React.Component {
                         <audio
                             ref="audioSource"
                             controls="controls"
-                            src={this.state.blobURL || ''}
+                            src={this.state.playbackBlobURL || ''}
                         />
                         <Button onClick={this.closePlaybackModal}>
                             {this.state.lang.components.audio.close}

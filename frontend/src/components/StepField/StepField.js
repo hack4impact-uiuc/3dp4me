@@ -12,6 +12,8 @@ const StepField = ({
     displayName,
     value,
     fieldId,
+    patientId,
+    stepKey,
     languageData,
     isDisabled = true,
     handleSimpleUpdate = () => {},
@@ -81,6 +83,8 @@ const StepField = ({
                         languageData={languageData}
                         handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}
+                        patientId={patientId}
+                        stepKey={stepKey}
                         files={value}
                         title={displayName}
                         fieldKey={fieldId}
