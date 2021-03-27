@@ -118,25 +118,6 @@ export const getAllStepsMetadata = async () => {
     return allStepMetadata;
 };
 
-export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
-    const blob = await downloadBlobWithoutSaving(
-        patientId,
-        stepKey,
-        fieldKey,
-        filename,
-    );
-    if (!blob) {
-        console.error('Could not download file');
-        return;
-    }
-
-    try {
-        FileDownload(blob, filename);
-    } catch (error) {
-        console.error(error);
-    }
-};
-
 export const downloadBlobWithoutSaving = async (
     patientId,
     stepKey,
@@ -169,6 +150,25 @@ export const downloadBlobWithoutSaving = async (
     if (!res) return null;
 
     return res.data;
+};
+
+export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
+    const blob = await downloadBlobWithoutSaving(
+        patientId,
+        stepKey,
+        fieldKey,
+        filename,
+    );
+    if (!blob) {
+        console.error('Could not download file');
+        return;
+    }
+
+    try {
+        FileDownload(blob, filename);
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 export const uploadFile = async (

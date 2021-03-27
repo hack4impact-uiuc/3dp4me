@@ -1,8 +1,7 @@
 import React from 'react';
-import AudioRecorder from '../../components/AudioRecorder/AudioRecorder';
 
-const AccountManagement = ({ languageData }) => {
-    return <div className="dashboard"></div>;
+const AccountManagement = () => {
+    return <div className="dashboard" />;
 };
 
 export default AccountManagement;

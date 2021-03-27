@@ -1,9 +1,12 @@
+/* eslint-disable */
+
 import MicRecorder from 'mic-recorder-to-mp3';
 import AddIcon from '@material-ui/icons/Add';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import CloseIcon from '@material-ui/icons/Close';
 import { Button, Modal, Typography } from '@material-ui/core';
 import React from 'react';
+
 import './AudioRecorder.scss';
 import { downloadBlobWithoutSaving } from '../../utils/api';
 
@@ -59,7 +62,7 @@ class AudioRecorder extends React.Component {
             .then(async ([buffer, blob]) => {
                 const blobURL = URL.createObjectURL(blob);
                 this.setState({
-                    blobURL: blobURL,
+                    blobURL,
                     isRecording: false,
                 });
             })
@@ -73,7 +76,7 @@ class AudioRecorder extends React.Component {
         if (navigator.mediaDevices.getUserMedia === undefined) {
             navigator.mediaDevices.getUserMedia = function (constraints) {
                 // First get ahold of the legacy getUserMedia, if present
-                var getUserMedia =
+                const getUserMedia =
                     navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
                 // Some browsers just don't implement it - return a rejected promise with an error
@@ -103,7 +106,7 @@ class AudioRecorder extends React.Component {
                 console.log(
                     'Please give permission for the microphone to record audio.',
                 );
-                console.log(err.name + ': ' + err.message);
+                console.log(`${err.name}: ${err.message}`);
             });
     };
 
@@ -147,7 +150,7 @@ class AudioRecorder extends React.Component {
     };
 
     RenderExistingFiles = () => {
-        if (this.props.files == null) return null;
+        if (this.props.files === null) return null;
 
         return this.props.files.map((file) => (
             <div className="file-row-wrapper" key={file.fileName}>
@@ -186,10 +189,10 @@ class AudioRecorder extends React.Component {
         fetch(this.state.blobURL)
             .then((r) => r.blob())
             .then((blob) => {
-                var file_name = `${
+                const file_name = `${
                     this.props.fieldKey
                 }_${Math.random().toString(36).substring(6)}.mp3`;
-                var file_object = new File([blob], file_name, {
+                const file_object = new File([blob], file_name, {
                     type: 'audio/mp3',
                 });
                 this.props.handleUpload(this.props.fieldKey, file_object);
@@ -261,7 +264,7 @@ class AudioRecorder extends React.Component {
                                 ? this.state.lang.components.audio.stop
                                 : this.state.lang.components.audio.start}
                         </Button>
-                        {isRecording || this.state.blobURL == '' || (
+                        {isRecording || this.state.blobURL === '' || (
                             <Button
                                 onClick={this.saveRecording}
                                 className="btn-save-recording"

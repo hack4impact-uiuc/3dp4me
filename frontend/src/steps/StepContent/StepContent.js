@@ -4,17 +4,12 @@ import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
 import { CircularProgress, Backdrop } from '@material-ui/core';
+
 import { formatDate } from '../../utils/date';
-import {
-    downloadFile,
-    uploadFile,
-    uploadAudioFile,
-    deleteFile,
-} from '../../utils/api';
+import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
 import StepField from '../../components/StepField/StepField';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
-import { FIELD_TYPES } from '../../utils/constants';
 
 const StepContent = ({
     languageData,
@@ -60,7 +55,7 @@ const StepContent = ({
         );
 
         // TODO: Display error if res is null
-        let newFile = {
+        const newFile = {
             fileName: res.data.data.name,
             uploadedBy: res.data.data.uploadedBy,
             uploadDate: res.data.data.uploadDate,

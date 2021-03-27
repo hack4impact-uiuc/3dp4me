@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Divider } from '@material-ui/core';
-import AudioRecorder from '../../components/AudioRecorder/AudioRecorder';
+
+import AudioRecorder from '../AudioRecorder/AudioRecorder';
 import TextField from '../Fields/TextField';
 import Notes from '../Notes/Notes';
 import Files from '../Files/Files';
@@ -12,9 +13,9 @@ const StepField = ({
     displayName,
     value,
     fieldId,
-    patientId,
-    stepKey,
     languageData,
+    patientId = '',
+    stepKey = '',
     isDisabled = true,
     handleSimpleUpdate = () => {},
     handleFileDownload = () => {},
@@ -113,6 +114,8 @@ StepField.propTypes = {
     languageData: PropTypes.object.isRequired,
     fieldId: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool,
+    patientId: PropTypes.string,
+    stepKey: PropTypes.string,
     handleSimpleUpdate: PropTypes.func,
     handleFileDownload: PropTypes.func,
     handleFileUpload: PropTypes.func,
