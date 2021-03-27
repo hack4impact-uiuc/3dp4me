@@ -60,7 +60,7 @@ const StepContent = ({
         );
 
         // TODO: Display error if res is null
-        newfile = {
+        let newFile = {
             fileName: res.data.data.name,
             uploadedBy: res.data.data.uploadedBy,
             uploadDate: res.data.data.uploadDate,

@@ -3,8 +3,8 @@ export const patientData = {
     name: 'John doe',
     orderId: '12345678',
     status: 'active',
-    info: {
-        key: 'info',
+    medicalinfos: {
+        key: 'medicalinfos',
         firstName: 'John',
         patientId: 1,
         lastName: 'Doe',
@@ -43,7 +43,7 @@ export const patientData = {
 
 export const allStepMetadata = [
     {
-        key: 'info',
+        key: 'medicalinfos',
         displayName: { EN: 'PatientInfo', AR: 'معلومات المريض' },
         stepNumber: 1,
         fields: [
@@ -55,7 +55,7 @@ export const allStepMetadata = [
                 isVisibleOnDashboard: false,
             },
             {
-                key: 'audio',
+                key: 'lifeStory',
                 fieldType: 'Audio',
                 displayName: { EN: 'User Story', AR: 'لومات ا' },
                 fieldNumber: 1,
