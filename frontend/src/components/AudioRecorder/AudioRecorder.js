@@ -150,7 +150,7 @@ class AudioRecorder extends React.Component {
     };
 
     RenderExistingFiles = () => {
-        if (this.props.files === null) return null;
+        if (this.props.files == null) return null;
 
         return this.props.files.map((file) => (
             <div className="file-row-wrapper" key={file.fileName}>
