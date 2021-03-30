@@ -59,7 +59,6 @@ const Controller = ({ languageData }) => {
     const onStepSaved = (stepKey, stepData) => {
         const newPatientData = _.cloneDeep(patientData);
         newPatientData[stepKey] = _.cloneDeep(stepData);
-        console.log(newPatientData);
         setPatientData(newPatientData);
         updateStage(patientId, stepKey, stepData);
     };

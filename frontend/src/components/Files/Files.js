@@ -28,7 +28,7 @@ const Files = ({
                 <Button
                     className="file-button"
                     onClick={() => {
-                        handleDownload(fieldKey, file);
+                        handleDownload(fieldKey, file.fileName);
                     }}
                 >
                     <div className="file-info-wrapper">
