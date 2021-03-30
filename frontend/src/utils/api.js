@@ -124,7 +124,7 @@ export const downloadBlobWithoutSaving = async (
     fieldKey,
     filename,
 ) => {
-    const requestString = `/patients/${patientId}/${stepKey}/${fieldKey}/${filename}`;
+    const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     const {
         accessKeyId,
         secretAccessKey,
@@ -178,7 +178,7 @@ export const uploadFile = async (
     filename,
     filedata,
 ) => {
-    const requestString = `/patients/${patientId}/${stepKey}/${fieldKey}/${filename}`;
+    const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     const credentials = await getCredentials();
     const formData = new FormData();
     formData.append('uploadedFile', filedata);
@@ -195,6 +195,6 @@ export const uploadFile = async (
 };
 
 export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
-    const requestString = `/patients/${patientId}/${stepKey}/${fieldKey}/${filename}`;
+    const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     return instance.delete(requestString);
 };

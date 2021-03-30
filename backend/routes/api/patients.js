@@ -70,26 +70,30 @@ router.post(
     '/',
     errorWrap(async (req, res) => {
         const patient = req.body;
+        let saved_patient = null;
         try {
             const new_patient = new models.Patient(patient);
-            const saved_patient = await _patient.save();
-        } catch (err) {
-            // TODO: Validate patient and send back good error message
-            res.status(500).send({});
+            saved_patient = await new_patient.save();
+        } catch (error) {
+            return res.status(401).json({
+                code: 401,
+                success: false,
+                message: 'Request is invalid or missing fields.',
+            });
         }
 
         res.status(SUCCESS).send({
             code: SUCCESS,
             success: true,
             message: 'User successfully created.',
-            data: resp,
+            data: saved_patient,
         });
     }),
 );
 
 // GET: Download a file
 router.get(
-    '/:id/:stepKey/:fieldKey/:fileName',
+    '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
         var s3Stream = downloadFile(
@@ -114,7 +118,7 @@ router.get(
 
 // Delete: Delete a file
 router.delete(
-    '/:id/:stepKey/:fieldKey/:fileName',
+    '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
 
@@ -173,7 +177,7 @@ router.delete(
 
 // POST: upload individual files
 router.post(
-    '/:id/:stepKey/:fieldKey/:fileName',
+    '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
         const { id, stepKey, fieldKey } = req.params;
         const {
@@ -262,16 +266,51 @@ router.post(
     '/:id/:stage',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        //TODO: Add auth check for permissions
-        const updatedStage = req.body;
-        const patient = await models.Patient.findById(id);
+        const steps = await models.Step.find({ key: stage });
+        const session = await mongoose.startSession();
 
-        // TODO: Check that patient returned exists
-        //TODO: use name of input field possibly?
+        if (steps.length == 0) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Stage not found.',
+            });
+        }
+
+        const patient = await models.Patient.findById(id);
+        if (!patient) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Patient not found.',
+            });
+        }
+
+        const updatedStage = req.body;
+        try {
+            await session.withTransaction(async () => {
+                const collection = await mongoose.connection.db.collection(
+                    stage,
+                );
+                updatedStage.lastEdited = Date.now();
+                updatedStage.lastEditedBy = req.user.Username;
+
+                const stepData = await collection.findOneAndUpdate(
+                    { patientId: id },
+                    { $set: updatedStage },
+                    { upsert: true, setDefaultsOnInsert: true, new: true },
+                );
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                code: 500,
+                success: false,
+                message: error,
+            });
+        }
         patient.lastEdited = Date.now();
-        patient[stage] = updatedStage;
-        patient[stage].lastEdited = Date.now();
-        patient[stage].lastEditedBy = req.user.Username;
+        patient.lastEditedBy = req.user.Username;
         await patient.save(function (err) {
             if (err) {
                 res.json(err); //TODO: bug here, need to take a look
