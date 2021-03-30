@@ -34,7 +34,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // TODO: Move this to use Role-based
-// app.use(requireAuthentication);
+app.use(requireAuthentication);
 app.use(require('./routes'));
 app.use(errorHandler);
 
