@@ -208,8 +208,8 @@ router.post(
                     stage,
                 );
                 updatedStage.lastEdited = Date.now();
-                console.log(req);
                 updatedStage.lastEditedBy = req.user.Username;
+
                 const stepData = await collection.findOneAndUpdate(
                     { patientId: id },
                     { $set: updatedStage },
