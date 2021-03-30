@@ -2,11 +2,15 @@ const mongoose = require('mongoose');
 
 const fieldEnum = {
     STRING: 'String',
-    MULTILINE_STRING: 'String',
+    MULTILINE_STRING: 'MultilineString',
     FILE: 'File',
     NUMBER: 'Number',
     DATE: 'Date',
-    ENUM: 'Enum',
+    PHONE: 'Phone',
+    DIVIDER: 'Divider',
+    HEADER: 'Header',
+    RADIO_BUTTON: 'RadioButton',
+    DROPDOWN: 'Dropdown',
 };
 
 const fieldSchema = new mongoose.Schema({

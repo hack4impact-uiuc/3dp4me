@@ -12,7 +12,6 @@ import SectionTab from './components/SectionTab/SectionTab';
 import Controller from './steps/Controller/Controller';
 import translations from './translations.json';
 import Login from './components/Login/Login';
-import ToggleButton from './components/ToggleButtons/ToggleButtons';
 import {
     UNDEFINED_AUTH,
     AUTHENTICATED,
@@ -40,6 +39,12 @@ function App() {
             const userInfo = await getCurrentUserInfo();
             setUsername(userInfo.username);
             setUserEmail(userInfo.email);
+
+            if (
+                userInfo.attributes &&
+                ['EN', 'AR'].includes(userInfo.attributes['custom:language'])
+            )
+                setSelectedLang(userInfo.attributes['custom:language']);
         };
 
         Auth.currentAuthenticatedUser()
@@ -50,8 +55,6 @@ function App() {
                 setAuthLevel(UNAUTHENTICATED);
             });
 
-        // TODO: get user session selectedLangauge
-        setSelectedLang('EN');
         getUserInfo();
     }, []);
 

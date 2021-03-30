@@ -1,44 +1,67 @@
 import './SectionTab.css';
 import React, { useState, useEffect } from 'react';
-import { LanguageDataType } from '../../utils/custom-proptypes';
-import { getStageMetadata } from '../../utils/api';
 import ListItem from '@material-ui/core/ListItem';
+
+import { LanguageDataType } from '../../utils/custom-proptypes';
+import { getAllStepsMetadata } from '../../utils/api';
+import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
 
 const SectionTab = ({ languageData }) => {
     const key = languageData.selectedLanguage;
-    const [step, setStep] = useState('pateintInfo');
     const [stepMetadata, setStepMetadata] = useState([]);
-    //const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
+    const [modalOpen, setModalOpen] = useState(false);
 
-    const generateFields = () => {
-        if (stepMetadata == null || stepMetadata.fields == null) return null;
-        //if (updatedData == null) return null;
-        return stepMetadata.fields.map((field) => {
+    useEffect(() => {
+        const fetchData = async () => {
+            const metadata = await getAllStepsMetadata();
+            if (metadata != null) {
+                setStepMetadata(metadata);
+            }
+        };
+        fetchData();
+    }, [setStepMetadata]);
+
+    const generateSteps = () => {
+        return stepMetadata.map((element) => {
             return (
-                <label>
-                    field.displayName;
-                    <input type="" name="" />
-                </label>
+                <div className="sidebar">
+                    <ListItem button> {element.displayName[key]} </ListItem>
+                </div>
             );
         });
     };
 
-    useEffect(async () => {
-        const stepMetadata = await getStageMetadata();
-        if (stepMetadata != null) {
-            setStepMetadata(stepMetadata);
-        }
-    }, [setStepMetadata]);
+    const onModalClose = () => {
+        setModalOpen(false);
+    };
 
-    return stepMetadata.map((element, ...rest) => {
+    const generateNewFieldPopup = () => {
         return (
-            <div className="sidebar">
-                <ListItem button> {element.displayName[key]} </ListItem>
-                <ListItem button></ListItem>
-                generateFields();
-            </div>
+            <CreateFieldModal
+                isOpen={modalOpen}
+                onModalClose={onModalClose}
+                languageData={languageData}
+            />
         );
-    });
+    };
+
+    return (
+        <div>
+            <span> {generateSteps()}</span>
+            <div>
+                <ListItem
+                    className="sidebar"
+                    button
+                    onClick={() => {
+                        setModalOpen(true);
+                    }}
+                >
+                    Add New Field
+                </ListItem>
+            </div>
+            {generateNewFieldPopup()}
+        </div>
+    );
 };
 
 SectionTab.propTypes = {
