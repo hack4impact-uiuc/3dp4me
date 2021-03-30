@@ -32,45 +32,36 @@ const StepContent = ({
     };
 
     const handleFileDelete = async (fileKey, file) => {
-        deleteFile(patientId, stepData.key, file.fileName);
+        console.log(file.fileName);
+        deleteFile(patientId, stepData.key, fileKey, file.fileName);
         let updatedFiles = _.cloneDeep(stepData[fileKey]);
         updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
 
         handleSimpleUpdate(fileKey, updatedFiles);
     };
 
-    const handleFileDownload = (fileName) => {
-        downloadFile(patientId, stepData.key, fileName);
+    const handleFileDownload = (fieldKey, fileName) => {
+        downloadFile(patientId, stepData.key, fieldKey, fileName);
     };
 
-    const handleFileUpload = async (fileKey, file) => {
-        let filePrefix = '';
-        const fieldMetadata = metaData.fields.find((field) => {
-            return field.key === fileKey;
-        });
-        if (
-            fieldMetadata.filePrefix !== null &&
-            fieldMetadata.filePrefix !== ''
-        )
-            filePrefix = `${fieldMetadata.filePrefix}_`;
-
-        const formattedFileName = `${filePrefix}${file.name}`;
+    const handleFileUpload = async (fieldKey, file) => {
         const res = await uploadFile(
             patientId,
             stepData.key,
+            fieldKey,
+            file.name,
             file,
-            formattedFileName,
         );
 
         // TODO: Display error if res is null
-        let files = _.cloneDeep(stepData[fileKey]);
+        let files = _.cloneDeep(updatedData[fieldKey]);
         files = files.concat({
             fileName: res.data.data.name,
             uploadedBy: res.data.data.uploadedBy,
             uploadDate: res.data.data.uploadDate,
         });
 
-        handleSimpleUpdate(fileKey, files);
+        handleSimpleUpdate(fieldKey, files);
     };
 
     const saveData = () => {
