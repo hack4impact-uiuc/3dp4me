@@ -63,7 +63,11 @@ router.post(
         try {
             req.body.lastEditedBy = req.user.Username;
             const new_patient = new models.Patient(patient);
-            saved_patient = await new_patient.save();
+            saved_patient = await new_patient.findOneAndUpdate(
+                { _id: id },
+                { $set: new_patient },
+                { upsert: true, setDefaultsOnInsert: true, new: true },
+            );
         } catch (error) {
             console.log(error);
             return res.status(401).json({
