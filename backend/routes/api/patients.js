@@ -19,7 +19,6 @@ router.get(
     }),
 );
 
-// GET: Returns everything associated with patient
 const getStepKeys = async () => {
     const steps = await models.Step.find({});
     let stepKeys = [];
@@ -44,28 +43,18 @@ router.get(
         if (!patientData)
             res.status(404).json({
                 code: 404,
+                success: false,
+            });
+        else
+            res.status(200).json({
+                code: 200,
+                success: true,
+                result: patientData,
             });
     }),
 );
 
-// GET: Returns everything associated with patient stage
-router.get(
-    '/:id/:stage',
-    errorWrap(async (req, res) => {
-        const { id, stage } = req.params;
-        // TODO: Just query for the stage data only
-        const patientData = await models.Patient.findById(id, stage);
-        const stageData = patientData[stage];
-        res.status(200).json({
-            code: 200,
-            success: true,
-            result: stageData,
-        });
-    }),
-);
-
 // POST: new patient
-// TODO: Implement and test
 router.post(
     '/',
     errorWrap(async (req, res) => {
@@ -82,8 +71,8 @@ router.post(
             });
         }
 
-        res.status(SUCCESS).send({
-            code: SUCCESS,
+        res.status(201).json({
+            code: 201,
             success: true,
             message: 'User successfully created.',
             data: saved_patient,
