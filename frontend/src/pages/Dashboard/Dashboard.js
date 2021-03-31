@@ -5,7 +5,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
-
+import { getPatientName } from '../../utils/utils';
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
     REQUIRED_DASHBOARD_HEADERS,
@@ -184,15 +184,24 @@ const Dashboard = ({ languageData }) => {
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
-        const filtered = patients.filter(
-            (patient) =>
-                patient.name
-                    .toLowerCase()
-                    .indexOf(e.target.value.toLowerCase()) !== -1 ||
-                patient._id.indexOf(e.target.value) !== -1,
+        const filtered = patients.filter((patient) =>
+            doesPatientMatchQuery(patient, e.target.value),
         );
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);
+    };
+
+    const doesPatientMatchQuery = (patient, query) => {
+        if (
+            getPatientName(patient)
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) !== -1
+        )
+            return true;
+
+        if (patient._id.indexOf(query) !== -1) return true;
+
+        return false;
     };
 
     const handleNoPatientClose = (event, reason) => {

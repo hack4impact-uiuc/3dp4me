@@ -33,7 +33,7 @@ instance.interceptors.request.use(
 );
 
 export const getAllPatients = async () => {
-    const requestString = '/stages/';
+    const requestString = '/patients';
     return instance.get(requestString).then(
         (res) => res.data,
         (err) => {
