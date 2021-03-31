@@ -207,13 +207,14 @@ const Dashboard = ({ languageData }) => {
         setSearchQuery('');
         if (stepKey !== null) {
             setStep(stepKey);
-            const res = await getPatientsByStage(stepKey);
-            // TODO: Set patients to be result of getPatients by stage
-            setPatients(res);
+            const res = await getPatientsByStage(step);
+
+            // TODO: Error handling
+            if (!res?.success || !res?.result) return;
+
+            setPatients(res.result);
         }
     };
-
-    // TODO: hook up dashboard to display fetched patients
 
     useEffect(() => {
         const getMetadata = async () => {
@@ -230,8 +231,10 @@ const Dashboard = ({ languageData }) => {
     useEffect(() => {
         const getPatients = async () => {
             const res = await getPatientsByStage(step);
-            // TODO: Error handling
-            setPatients(res);
+
+            if (!res?.success || !res?.result) return;
+
+            setPatients(res.result);
         };
 
         getPatients();
