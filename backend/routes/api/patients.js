@@ -289,6 +289,7 @@ router.post(
                 );
                 updatedStage.lastEdited = Date.now();
                 updatedStage.lastEditedBy = req.user.Username;
+                delete updatedStage._id;
 
                 const stepData = await collection.findOneAndUpdate(
                     { patientId: id },

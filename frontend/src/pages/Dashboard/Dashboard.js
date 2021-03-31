@@ -257,7 +257,7 @@ const Dashboard = ({ languageData }) => {
             if (field.isVisibleOnDashboard)
                 headers.push({
                     title: field.displayName[key],
-                    sortKey: field.key,
+                    sortKey: `${step}.${field.key}`,
                 });
         });
 
