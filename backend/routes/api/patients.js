@@ -61,9 +61,11 @@ router.post(
         const patient = req.body;
         let saved_patient = null;
         try {
+            req.body.lastEditedBy = req.user.Username;
             const new_patient = new models.Patient(patient);
             saved_patient = await new_patient.save();
         } catch (error) {
+            console.log(error);
             return res.status(401).json({
                 code: 401,
                 success: false,
@@ -75,7 +77,7 @@ router.post(
             code: 201,
             success: true,
             message: 'User successfully created.',
-            data: saved_patient,
+            result: saved_patient,
         });
     }),
 );

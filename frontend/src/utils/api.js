@@ -65,7 +65,7 @@ export const getPatientById = async (id) => {
     );
 };
 
-export const newPatient = async (patientInfo) => {
+export const postNewPatient = async (patientInfo) => {
     const requestString = `/patients/`;
     return instance
         .post(requestString, patientInfo) // TODO: use AWS userId

@@ -13,7 +13,11 @@ import {
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import search from '../../assets/search.svg';
-import { getAllStepsMetadata, getPatientsByStage } from '../../utils/api';
+import {
+    getAllStepsMetadata,
+    getPatientsByStage,
+    postNewPatient,
+} from '../../utils/api';
 import './Dashboard.scss';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
@@ -63,17 +67,29 @@ const Dashboard = ({ languageData }) => {
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
-    const createPatientHelper = (edit, id) => {
-        if (edit) {
+    const createPatientHelper = async (edit) => {
+        let patient = {};
+        patient.firstName = document.getElementById('createFirstName').value;
+        patient.fathersName = document.getElementById(
+            'createFathersName',
+        ).value;
+        patient.grandfathersName = document.getElementById(
+            'createGrandfathersName',
+        ).value;
+        patient.familyName = document.getElementById('createFamilyName').value;
+
+        const res = await postNewPatient(patient);
+
+        if (res?.success && edit) {
+            const id = res.result._id;
             window.location.href += `patient-info/${id}`;
         } else {
-            const name = document.getElementById('createFirstName').value;
-            const dob = document.getElementById('createDOB').value;
-            const createId = document.getElementById('createId').value;
             swal(
-                lang.components.swal.createPatient.successMsg,
-                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${createId}`,
-                'success',
+                res?.success
+                    ? lang.components.swal.createPatient.successMsg
+                    : lang.components.swal.createPatient.failMsg,
+                '',
+                res?.success ? 'success' : 'warning',
             );
         }
     };
@@ -112,14 +128,14 @@ const Dashboard = ({ languageData }) => {
                         <div style={{ display: 'flex' }}>
                             <TextField
                                 size="small"
-                                id="createMiddleName1"
+                                id="createFathersName"
                                 fullWidth
                                 style={{ padding: 10 }}
                                 variant="outlined"
                             />
                             <TextField
                                 size="small"
-                                id="createMiddleName2"
+                                id="createGrandfathersName"
                                 fullWidth
                                 style={{ padding: 10 }}
                                 variant="outlined"
@@ -130,30 +146,9 @@ const Dashboard = ({ languageData }) => {
                         </span>
                         <TextField
                             size="small"
-                            id="createLastName"
+                            id="createFamilyName"
                             fullWidth
                             style={{ padding: 10 }}
-                            variant="outlined"
-                        />
-                    </div>
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>{lang.components.swal.createPatient.dob} </span>
-                        <TextField
-                            size="small"
-                            id="createDOB"
-                            fullWidth
-                            style={{ padding: 10 }}
-                            variant="outlined"
-                        />
-                    </div>
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>{lang.components.swal.createPatient.id} </span>
-                        <TextField
-                            size="small"
-                            id="createId"
-                            fullWidth
-                            style={{ padding: 10 }}
-                            defaultValue={autoId}
                             variant="outlined"
                         />
                     </div>
@@ -166,13 +161,13 @@ const Dashboard = ({ languageData }) => {
                     >
                         <Button
                             className={classes.swalEditButton}
-                            onClick={() => createPatientHelper(true, autoId)}
+                            onClick={() => createPatientHelper(true)}
                         >
                             {lang.components.swal.createPatient.buttons.edit}
                         </Button>
                         <Button
                             className={classes.swalCloseButton}
-                            onClick={() => createPatientHelper(false, autoId)}
+                            onClick={() => createPatientHelper(false)}
                         >
                             {lang.components.swal.createPatient.buttons.noEdit}
                         </Button>
