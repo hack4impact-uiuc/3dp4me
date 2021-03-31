@@ -55,17 +55,14 @@ export const getPatientsByStage = async (stage) => {
 };
 
 export const getPatientById = async (id) => {
-    console.log(id);
-    return patientData;
-    // TODO: Uncomment this when the backend is ready for the new data format
-    // const requestString = `/patients/${id}`;
-    // return instance.get(requestString).then(
-    //     (res) => res.data,
-    //     (err) => {
-    //         console.error(err);
-    //         return null;
-    //     },
-    // );
+    const requestString = `/patients/${id}`;
+    return instance.get(requestString).then(
+        (res) => res.data,
+        (err) => {
+            console.error(err);
+            return null;
+        },
+    );
 };
 
 export const newPatient = async (patientInfo) => {

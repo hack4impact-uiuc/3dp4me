@@ -19,6 +19,8 @@ const StepContent = ({
     stepData,
     onDataSaved,
 }) => {
+    console.log(metaData);
+    console.log(stepData);
     const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
 
@@ -105,6 +107,7 @@ const StepContent = ({
     };
 
     const genereateFields = () => {
+        console.log(metaData);
         if (metaData == null || metaData.fields == null) return null;
         return metaData.fields.map((field) => {
             return (
@@ -152,7 +155,7 @@ const StepContent = ({
             <p>{`${lang.components.step.lastEditedBy} ${
                 stepData?.lastEditedBy
             } ${lang.components.step.on} ${formatDate(
-                stepData?.lastEdited,
+                new Date(stepData?.lastEdited),
                 key,
             )}`}</p>
             {genereateFields()}

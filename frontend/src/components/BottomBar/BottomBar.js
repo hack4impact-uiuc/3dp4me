@@ -57,7 +57,7 @@ const BottomBar = ({
                         lang.components.bottombar.lastEditedBy
                     } ${lastEditedBy} ${
                         lang.components.bottombar.on
-                    } ${formatDate(lastEdited, key)}`}
+                    } ${formatDate(new Date(lastEdited), key)}`}
                 </div>
                 {edit ? (
                     <div>

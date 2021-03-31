@@ -32,25 +32,25 @@ router.get(
     errorWrap(async (req, res) => {
         const { id } = req.params;
         let patientData = await models.Patient.findById(id);
-        let stepKeys = await getStepKeys();
+        if (!patientData)
+            return res.status(404).json({
+                code: 404,
+                message: `Patient with id ${id} not found`,
+                success: false,
+            });
 
+        let stepKeys = await getStepKeys();
         for (const stepKey of stepKeys) {
             const collection = await mongoose.connection.db.collection(stepKey);
             const stepData = await collection.findOne({ patientId: id });
             patientData.set(stepKey, stepData, { strict: false });
         }
 
-        if (!patientData)
-            res.status(404).json({
-                code: 404,
-                success: false,
-            });
-        else
-            res.status(200).json({
-                code: 200,
-                success: true,
-                result: patientData,
-            });
+        res.status(200).json({
+            code: 200,
+            success: true,
+            result: patientData,
+        });
     }),
 );
 
