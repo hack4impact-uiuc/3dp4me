@@ -2,8 +2,6 @@ import axios from 'axios';
 
 import { getCredentials, getCurrentSession } from '../aws/aws-helper';
 
-import { allStepMetadata, patientData } from './mock-data';
-
 const FileDownload = require('js-file-download');
 
 const IN_DEV_ENV =

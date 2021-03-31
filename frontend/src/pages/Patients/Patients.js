@@ -5,6 +5,7 @@ import './Patients.scss';
 import MuiAlert from '@material-ui/lab/Alert';
 import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
+
 import { getPatientName } from '../../utils/utils';
 import MainTable from '../../components/Table/MainTable';
 import search from '../../assets/search.svg';
@@ -48,15 +49,6 @@ const Patients = ({ languageData }) => {
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
-    const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
-        const filtered = allPatients.filter((patient) =>
-            doesPatientMatchQuery(patient, e.target.value),
-        );
-        setNoPatient(filtered.length === 0);
-        setFilteredPatients(filtered);
-    };
-
     const doesPatientMatchQuery = (patient, query) => {
         if (
             getPatientName(patient)
@@ -68,6 +60,15 @@ const Patients = ({ languageData }) => {
         if (patient._id.indexOf(query) !== -1) return true;
 
         return false;
+    };
+
+    const handleSearch = (e) => {
+        setSearchQuery(e.target.value);
+        const filtered = allPatients.filter((patient) =>
+            doesPatientMatchQuery(patient, e.target.value),
+        );
+        setNoPatient(filtered.length === 0);
+        setFilteredPatients(filtered);
     };
 
     const handleNoPatientClose = (event, reason) => {

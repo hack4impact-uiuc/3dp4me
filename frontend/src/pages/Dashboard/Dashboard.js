@@ -5,6 +5,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
+
 import { getPatientName } from '../../utils/utils';
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
@@ -68,7 +69,7 @@ const Dashboard = ({ languageData }) => {
     const lang = languageData.translations[key];
 
     const createPatientHelper = async (edit) => {
-        let patient = {};
+        const patient = {};
         patient.firstName = document.getElementById('createFirstName').value;
         patient.fathersName = document.getElementById(
             'createFathersName',
@@ -95,8 +96,6 @@ const Dashboard = ({ languageData }) => {
     };
 
     const createPatient = () => {
-        // TODO: Might want a better way of doing this
-        const autoId = Math.random().toString(36).substr(2, 24);
         reactSwal({
             buttons: {},
             content: (
@@ -177,15 +176,6 @@ const Dashboard = ({ languageData }) => {
         });
     };
 
-    const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
-        const filtered = patients.filter((patient) =>
-            doesPatientMatchQuery(patient, e.target.value),
-        );
-        setNoPatient(filtered.length === 0);
-        setFilteredPatients(filtered);
-    };
-
     const doesPatientMatchQuery = (patient, query) => {
         if (
             getPatientName(patient)
@@ -197,6 +187,15 @@ const Dashboard = ({ languageData }) => {
         if (patient._id.indexOf(query) !== -1) return true;
 
         return false;
+    };
+
+    const handleSearch = (e) => {
+        setSearchQuery(e.target.value);
+        const filtered = patients.filter((patient) =>
+            doesPatientMatchQuery(patient, e.target.value),
+        );
+        setNoPatient(filtered.length === 0);
+        setFilteredPatients(filtered);
     };
 
     const handleNoPatientClose = (event, reason) => {

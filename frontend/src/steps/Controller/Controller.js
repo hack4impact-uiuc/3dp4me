@@ -78,7 +78,7 @@ const Controller = ({ languageData }) => {
 
             res = await getPatientById(patientId);
             if (!res?.success || !res?.result) return;
-            let data = res.result;
+            const data = res.result;
 
             metaData = metaData.sort((a, b) => a.stepNumber - b.stepNumber);
             metaData.forEach((stepData) => {
