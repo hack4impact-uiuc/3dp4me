@@ -1,5 +1,7 @@
 export const REQUIRED_DASHBOARD_HEADERS = [
-    { title: 'name', sortKey: 'name' },
+    { title: 'firstName', sortKey: 'firstName' },
+    { title: 'familyName', sortKey: 'familyName' },
+    { title: 'lastEdited', sortKey: 'lastEdited' },
     { title: 'status', sortKey: 'status' },
 ];
 export const REQUIRED_DASHBOARD_SORT_KEYS = REQUIRED_DASHBOARD_HEADERS.map(

@@ -50,15 +50,36 @@ const Patients = ({ languageData }) => {
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
-        const filtered = allPatients.filter(
-            (patient) =>
-                patient.name
-                    .toLowerCase()
-                    .indexOf(e.target.value.toLowerCase()) !== -1 ||
-                patient._id.indexOf(e.target.value) !== -1,
+        const filtered = allPatients.filter((patient) =>
+            doesPatientMatchQuery(patient, e.target.value),
         );
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);
+    };
+
+    const getPatientName = (patient) => {
+        let name = patient.firstName;
+
+        if (patient.fathersName) name += ` ${patient.fathersName}`;
+
+        if (patient.grandfathersName) name += ` ${patient.grandfathersName}`;
+
+        if (patient.familyName) name += ` ${patient.familyName}`;
+
+        return name;
+    };
+
+    const doesPatientMatchQuery = (patient, query) => {
+        if (
+            getPatientName(patient)
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) !== -1
+        )
+            return true;
+
+        if (patient._id.indexOf(query) !== -1) return true;
+
+        return false;
     };
 
     const handleNoPatientClose = (event, reason) => {
@@ -191,9 +212,10 @@ const Patients = ({ languageData }) => {
     };
 
     const getData = async () => {
-        // TODO: api call to get all patients and assign it to all patients state variable
         const res = await getAllPatients();
-        setAllPatients(res);
+        if (res?.result == null || res?.code !== 200) return;
+
+        setAllPatients(res.result);
     };
 
     useEffect(() => {

@@ -33,9 +33,6 @@ instance.interceptors.request.use(
 );
 
 export const getAllPatients = async () => {
-    return [patientData];
-    // TODO: Replace with API call
-    /*
     const requestString = '/stages/';
     return instance.get(requestString).then(
         (res) => res.data,
@@ -44,7 +41,6 @@ export const getAllPatients = async () => {
             return null;
         },
     );
-    */
 };
 
 export const getPatientsByStage = async (stage) => {

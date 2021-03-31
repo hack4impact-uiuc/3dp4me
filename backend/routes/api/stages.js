@@ -12,20 +12,10 @@ router.get(
             {},
             // '_id patientInfo.name createdDate lastEdited status',
         ).then((patients) => {
-            fin = patients.map((info) => {
-                return {
-                    _id: info._id,
-                    name: info.patientInfo.name,
-                    createdDate: info.createdDate,
-                    lastEdited: info.lastEdited,
-                    status: info.status,
-                };
-            });
-
             res.status(200).json({
                 code: 200,
                 success: true,
-                result: fin,
+                result: patients,
             });
         });
     }),
