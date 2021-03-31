@@ -94,20 +94,15 @@ export const updateStage = async (patientId, stage, updatedStage) => {
         );
 };
 
-export const getStepMetadata = async (stepKey) => {
-    // TODO: Replace with backend call
-    let stepData = null;
-
-    allStepMetadata.forEach((step) => {
-        if (step.key === stepKey) stepData = step;
-    });
-
-    return stepData;
-};
-
 export const getAllStepsMetadata = async () => {
-    // TODO: Replace with backend call
-    return allStepMetadata;
+    const requestString = '/metadata/steps';
+    return instance.get(requestString).then(
+        (res) => res.data,
+        (err) => {
+            console.error(err);
+            return null;
+        },
+    );
 };
 
 export const downloadBlobWithoutSaving = async (

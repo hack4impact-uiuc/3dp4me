@@ -71,9 +71,11 @@ const Controller = ({ languageData }) => {
 
     useEffect(() => {
         const getData = async () => {
-            let metaData = await getAllStepsMetadata();
-            const data = await getPatientById(patientId);
+            const res = await getAllStepsMetadata();
+            if (!res?.success || !res?.result) return;
 
+            let metaData = res.result;
+            const data = await getPatientById(patientId);
             metaData = metaData.sort((a, b) => a.stepNumber - b.stepNumber);
             metaData.forEach((stepData) => {
                 stepData.fields = stepData.fields.sort(

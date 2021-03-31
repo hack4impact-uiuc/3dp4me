@@ -218,11 +218,13 @@ const Dashboard = ({ languageData }) => {
 
     useEffect(() => {
         const getMetadata = async () => {
-            const metaData = await getAllStepsMetadata();
-            // TODO: Error handling
-            setStepsMetaData(metaData);
+            const res = await getAllStepsMetadata();
+            if (!res?.success || !res?.result) return;
 
-            if (metaData.length > 0) setStep(metaData[0].key);
+            // TODO: Error handling
+            setStepsMetaData(res.result);
+
+            if (res.result.length > 0) setStep(res.result[0].key);
         };
 
         getMetadata();
