@@ -7,9 +7,9 @@ const fileSchema = new mongoose.Schema({
 });
 
 const stepStatusEnum = {
-    UNFINISHED: 'unfinished',
-    PARTIAL: 'partial',
-    FINISHED: 'finished',
+    UNFINISHED: 'Unfinished',
+    PARTIAL: 'Partial',
+    FINISHED: 'Finished',
 };
 
 module.exports = { fileSchema, stepStatusEnum };

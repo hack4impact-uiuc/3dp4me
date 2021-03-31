@@ -9,15 +9,15 @@ export const REQUIRED_DASHBOARD_SORT_KEYS = REQUIRED_DASHBOARD_HEADERS.map(
 );
 
 export const STEP_STATUS = {
-    FINISHED: 'finished',
-    UNFINISHED: 'unfinished',
-    PARTIALLY_FINISHED: 'partial',
+    FINISHED: 'Finished',
+    UNFINISHED: 'Unfinished',
+    PARTIALLY_FINISHED: 'Partial',
 };
 
 export const PATIENT_STATUS = {
-    FEEDBACK: 'feedback',
-    ARCHIVE: 'archive',
-    ACTIVE: 'active',
+    FEEDBACK: 'Feedback',
+    ARCHIVE: 'Archive',
+    ACTIVE: 'Active',
 };
 
 export const FIELD_TYPES = {

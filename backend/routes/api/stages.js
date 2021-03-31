@@ -13,7 +13,7 @@ router.get(
         let stepData = [];
         const steps = await models.Step.find({ key: stage });
 
-        // Check if stage exists in metadataf
+        // Check if stage exists in metadata
         if (steps.length == 0) {
             return res.status(404).json({
                 code: 404,
@@ -25,15 +25,17 @@ router.get(
         const collection = await mongoose.connection.db.collection(stage);
 
         // TODO: Replace with an aggregation command that gets all patient data then $lookup on patientId for stage
-        // TODO: TEst with stage data
         let patients = await models.Patient.find({
             status: overallStatusEnum.ACTIVE,
         });
+
         for (let i = 0; i < patients.length; i++) {
             const stepInfo = await collection.findOne({
-                patientId: patients[i]._id,
+                patientId: patients[i]._id.toString(),
             });
-            stepData[i] = Object.assign(patients[i], stepInfo);
+
+            stepData[i] = patients[i].toObject();
+            stepData[i][stage] = stepInfo;
         }
 
         res.status(200).json({

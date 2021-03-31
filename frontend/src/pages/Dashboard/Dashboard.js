@@ -216,7 +216,7 @@ const Dashboard = ({ languageData }) => {
         setSearchQuery('');
         if (stepKey !== null) {
             setStep(stepKey);
-            const res = await getPatientsByStage(step);
+            const res = await getPatientsByStage(stepKey);
 
             // TODO: Error handling
             if (!res?.success || !res?.result) return;
@@ -227,29 +227,22 @@ const Dashboard = ({ languageData }) => {
 
     useEffect(() => {
         const getMetadata = async () => {
-            const res = await getAllStepsMetadata();
+            let res = await getAllStepsMetadata();
             if (!res?.success || !res?.result) return;
 
             // TODO: Error handling
             setStepsMetaData(res.result);
 
             if (res.result.length > 0) setStep(res.result[0].key);
-        };
 
-        getMetadata();
-    }, [setStep, setStepsMetaData]);
-
-    useEffect(() => {
-        const getPatients = async () => {
-            const res = await getPatientsByStage(step);
-
+            res = await getPatientsByStage(res.result[0].key);
             if (!res?.success || !res?.result) return;
 
             setPatients(res.result);
         };
 
-        getPatients();
-    }, [setPatients, step]);
+        getMetadata();
+    }, [setStep, setStepsMetaData]);
 
     function generatePageHeader() {
         if (stepsMetaData == null) return lang.components.table.loading;
