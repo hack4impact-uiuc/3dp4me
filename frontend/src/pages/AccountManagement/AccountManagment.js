@@ -1,7 +1,7 @@
 import React from 'react';
 
 const AccountManagement = () => {
-    return <div>account</div>;
+    return <div className="dashboard" />;
 };
 
 export default AccountManagement;

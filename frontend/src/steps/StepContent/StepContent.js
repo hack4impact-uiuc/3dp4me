@@ -31,13 +31,14 @@ const StepContent = ({
         setUpdatedData(dataCopy);
     };
 
-    const handleFileDelete = async (fileKey, file) => {
-        console.log(file.fileName);
-        deleteFile(patientId, stepData.key, fileKey, file.fileName);
-        let updatedFiles = _.cloneDeep(stepData[fileKey]);
+    const handleFileDelete = async (fieldKey, file) => {
+        deleteFile(patientId, stepData.key, fieldKey, file.fileName);
+        if (!updatedData[fieldKey]) return;
+
+        let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
         updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
 
-        handleSimpleUpdate(fileKey, updatedFiles);
+        handleSimpleUpdate(fieldKey, updatedFiles);
     };
 
     const handleFileDownload = (fieldKey, fileName) => {
@@ -54,12 +55,15 @@ const StepContent = ({
         );
 
         // TODO: Display error if res is null
-        let files = _.cloneDeep(updatedData[fieldKey]);
-        files = files.concat({
+        const newFile = {
             fileName: res.data.data.name,
             uploadedBy: res.data.data.uploadedBy,
             uploadDate: res.data.data.uploadDate,
-        });
+        };
+
+        let files = _.cloneDeep(updatedData[fieldKey]);
+        if (files) files = files.concat(newFile);
+        else files = [newFile];
 
         handleSimpleUpdate(fieldKey, files);
     };
@@ -111,6 +115,8 @@ const StepContent = ({
                     fieldId={field.key}
                     key={field.key}
                     isDisabled={!edit}
+                    patientId={patientId}
+                    stepKey={stepData.key}
                     handleSimpleUpdate={handleSimpleUpdate}
                     handleFileDownload={handleFileDownload}
                     handleFileUpload={handleFileUpload}

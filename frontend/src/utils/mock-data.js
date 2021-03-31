@@ -3,8 +3,8 @@ export const patientData = {
     name: 'John doe',
     orderId: '12345678',
     status: 'active',
-    info: {
-        key: 'info',
+    medicalinfos: {
+        key: 'medicalinfos',
         firstName: 'John',
         patientId: 1,
         lastName: 'Doe',
@@ -15,6 +15,13 @@ export const patientData = {
         status: 'unfinished',
         lastEdited: new Date(),
         lastEditedBy: 'Sir Humphrey',
+        audio: [
+            {
+                fileName: 'Recording.mp3',
+                uploadedBy: 'Matthew',
+                uploadDate: new Date(),
+            },
+        ],
     },
     model: {
         key: 'model',
@@ -36,7 +43,7 @@ export const patientData = {
 
 export const allStepMetadata = [
     {
-        key: 'info',
+        key: 'medicalinfos',
         displayName: { EN: 'PatientInfo', AR: 'معلومات المريض' },
         readableGroups: ['Admin', 'Volunteer'],
         writableGroups: ['Admin', 'Volunteer'],
@@ -49,6 +56,13 @@ export const allStepMetadata = [
                 readableGroups: ['Admin', 'CAD People'],
                 writableGroups: ['Admin'],
                 fieldNumber: 0,
+                isVisibleOnDashboard: false,
+            },
+            {
+                key: 'lifeStory',
+                fieldType: 'Audio',
+                displayName: { EN: 'User Story', AR: 'لومات ا' },
+                fieldNumber: 1,
                 isVisibleOnDashboard: false,
             },
             {

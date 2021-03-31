@@ -118,29 +118,57 @@ export const getAllStepsMetadata = async () => {
     return allStepMetadata;
 };
 
-export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
+export const downloadBlobWithoutSaving = async (
+    patientId,
+    stepKey,
+    fieldKey,
+    filename,
+) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     const {
         accessKeyId,
         secretAccessKey,
         sessionToken,
     } = await getCredentials();
-    return instance
-        .get(requestString, {
+
+    let res = null;
+
+    try {
+        res = await instance.get(requestString, {
             headers: {
                 accessKeyId,
                 secretAccessKey,
                 sessionToken,
             },
             responseType: 'blob',
-        }) // TODO: use AWS userId
-        .then(
-            (res) => FileDownload(res.data, filename),
-            (err) => {
-                console.error(err);
-                return null;
-            },
-        );
+        });
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+
+    if (!res) return null;
+
+    return res.data;
+};
+
+export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
+    const blob = await downloadBlobWithoutSaving(
+        patientId,
+        stepKey,
+        fieldKey,
+        filename,
+    );
+    if (!blob) {
+        console.error('Could not download file');
+        return;
+    }
+
+    try {
+        FileDownload(blob, filename);
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 export const uploadFile = async (

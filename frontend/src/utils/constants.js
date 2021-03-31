@@ -29,6 +29,7 @@ export const FIELD_TYPES = {
     HEADER: 'Header',
     RADIO_BUTTON: 'RadioButton',
     DROPDOWN: 'Dropdown',
+    AUDIO: 'Audio',
 };
 
 export const PATIENT_KEY_STATUS = 'status';

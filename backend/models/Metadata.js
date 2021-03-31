@@ -11,6 +11,7 @@ const fieldEnum = {
     HEADER: 'Header',
     RADIO_BUTTON: 'RadioButton',
     DROPDOWN: 'Dropdown',
+    AUDIO: 'Audio',
 };
 
 const languageSchema = new mongoose.Schema({
