@@ -25,6 +25,7 @@ import {
     updateStage,
 } from '../../utils/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
+import { getPatientName } from '../../utils/utils';
 
 const theme = createMuiTheme({
     direction: 'rtl',
@@ -178,7 +179,7 @@ const Controller = ({ languageData }) => {
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
-                                        {patientData?.name}
+                                        {getPatientName(patientData)}
                                     </span>
                                 </div>
                                 <div className="drawer-text-section">

@@ -5,7 +5,7 @@ import './Patients.scss';
 import MuiAlert from '@material-ui/lab/Alert';
 import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
-
+import { getPatientName } from '../../utils/utils';
 import MainTable from '../../components/Table/MainTable';
 import search from '../../assets/search.svg';
 import { LanguageDataType } from '../../utils/custom-proptypes';
@@ -55,18 +55,6 @@ const Patients = ({ languageData }) => {
         );
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);
-    };
-
-    const getPatientName = (patient) => {
-        let name = patient.firstName;
-
-        if (patient.fathersName) name += ` ${patient.fathersName}`;
-
-        if (patient.grandfathersName) name += ` ${patient.grandfathersName}`;
-
-        if (patient.familyName) name += ` ${patient.familyName}`;
-
-        return name;
     };
 
     const doesPatientMatchQuery = (patient, query) => {

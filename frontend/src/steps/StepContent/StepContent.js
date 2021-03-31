@@ -107,7 +107,6 @@ const StepContent = ({
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
         return metaData.fields.map((field) => {
-            console.log('GENERATING');
             return (
                 <StepField
                     fieldType={field.fieldType}
