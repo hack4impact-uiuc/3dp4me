@@ -135,12 +135,9 @@ router.post(
                 new_step_metadata.fields.forEach((field) => {
                     if (
                         field.fieldType == fieldEnum.RADIO_BUTTON ||
-                        field.fieldType == field.fieldEnum.DROPDOWN
+                        field.fieldType == fieldEnum.DROPDOWN
                     ) {
-                        if (
-                            field.option == null ||
-                            field.options.length() >= 1
-                        ) {
+                        if (field.options == null || field.options.length < 1) {
                             return res.status(400).json({
                                 code: 400,
                                 success: false,
