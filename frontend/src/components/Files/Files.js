@@ -91,7 +91,7 @@ Files.propTypes = {
     handleUpload: PropTypes.func.isRequired,
     files: PropTypes.arrayOf(
         PropTypes.shape({
-            fileName: PropTypes.string.isRequired,
+            filename: PropTypes.string.isRequired,
             uploadDate: PropTypes.instanceOf(Date).isRequired,
         }),
     ).isRequired,
