@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
-const { models } = require('../../models');
+const { models, overallStatusEnum } = require('../../models');
 const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
 
 // GET: Returns all patients
@@ -32,25 +32,25 @@ router.get(
     errorWrap(async (req, res) => {
         const { id } = req.params;
         let patientData = await models.Patient.findById(id);
-        let stepKeys = await getStepKeys();
+        if (!patientData)
+            return res.status(404).json({
+                code: 404,
+                message: `Patient with id ${id} not found`,
+                success: false,
+            });
 
+        let stepKeys = await getStepKeys();
         for (const stepKey of stepKeys) {
             const collection = await mongoose.connection.db.collection(stepKey);
             const stepData = await collection.findOne({ patientId: id });
             patientData.set(stepKey, stepData, { strict: false });
         }
 
-        if (!patientData)
-            res.status(404).json({
-                code: 404,
-                success: false,
-            });
-        else
-            res.status(200).json({
-                code: 200,
-                success: true,
-                result: patientData,
-            });
+        res.status(200).json({
+            code: 200,
+            success: true,
+            result: patientData,
+        });
     }),
 );
 
@@ -61,9 +61,15 @@ router.post(
         const patient = req.body;
         let saved_patient = null;
         try {
+            req.body.lastEditedBy = req.user.Username;
             const new_patient = new models.Patient(patient);
-            saved_patient = await new_patient.save();
+            saved_patient = await new_patient.findOneAndUpdate(
+                { _id: id },
+                { $set: new_patient },
+                { upsert: true, setDefaultsOnInsert: true, new: true },
+            );
         } catch (error) {
+            console.log(error);
             return res.status(401).json({
                 code: 401,
                 success: false,
@@ -75,7 +81,7 @@ router.post(
             code: 201,
             success: true,
             message: 'User successfully created.',
-            data: saved_patient,
+            result: saved_patient,
         });
     }),
 );
@@ -196,12 +202,10 @@ router.post(
 
         const collection = await mongoose.connection.db.collection(stepKey);
         let stepData = await collection.findOne({ patientId: id });
-        const doesPatientHaveData = stepData != null;
 
-        // If the admin adds a new step after the user was added, then the stepData will not be found.
-        if (!doesPatientHaveData) {
-            stepData = { [fieldKey]: [], patientId: id };
-        }
+        // Set ID in case patient does not have any information for this step yet
+        stepData.patientId = id;
+        if (!stepData || !stepData[fieldKey]) stepData[fieldKey] = [];
 
         let file = req.files.uploadedFile;
         uploadFile(
@@ -283,6 +287,7 @@ router.post(
                 );
                 updatedStage.lastEdited = Date.now();
                 updatedStage.lastEditedBy = req.user.Username;
+                delete updatedStage._id;
 
                 const stepData = await collection.findOneAndUpdate(
                     { patientId: id },

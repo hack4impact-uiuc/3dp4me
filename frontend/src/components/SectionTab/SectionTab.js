@@ -13,10 +13,10 @@ const SectionTab = ({ languageData }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const metadata = await getAllStepsMetadata();
-            if (metadata != null) {
-                setStepMetadata(metadata);
-            }
+            const res = await getAllStepsMetadata();
+            if (!res?.success || !res?.result) return;
+
+            setStepMetadata(res.result);
         };
         fetchData();
     }, [setStepMetadata]);

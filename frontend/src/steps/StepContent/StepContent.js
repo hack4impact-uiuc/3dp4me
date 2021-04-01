@@ -32,23 +32,23 @@ const StepContent = ({
     };
 
     const handleFileDelete = async (fieldKey, file) => {
-        deleteFile(patientId, stepData.key, fieldKey, file.fileName);
+        deleteFile(patientId, metaData.key, fieldKey, file.filename);
         if (!updatedData[fieldKey]) return;
 
         let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
-        updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
+        updatedFiles = updatedFiles.filter((f) => f.filename !== file.filename);
 
         handleSimpleUpdate(fieldKey, updatedFiles);
     };
 
-    const handleFileDownload = (fieldKey, fileName) => {
-        downloadFile(patientId, stepData.key, fieldKey, fileName);
+    const handleFileDownload = (fieldKey, filename) => {
+        downloadFile(patientId, metaData.key, fieldKey, filename);
     };
 
     const handleFileUpload = async (fieldKey, file) => {
         const res = await uploadFile(
             patientId,
-            stepData.key,
+            metaData.key,
             fieldKey,
             file.name,
             file,
@@ -56,7 +56,7 @@ const StepContent = ({
 
         // TODO: Display error if res is null
         const newFile = {
-            fileName: res.data.data.name,
+            filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedBy,
             uploadDate: res.data.data.uploadDate,
         };
@@ -116,7 +116,7 @@ const StepContent = ({
                     key={field.key}
                     isDisabled={!edit}
                     patientId={patientId}
-                    stepKey={stepData.key}
+                    stepKey={metaData.key}
                     handleSimpleUpdate={handleSimpleUpdate}
                     handleFileDownload={handleFileDownload}
                     handleFileUpload={handleFileUpload}
@@ -152,7 +152,7 @@ const StepContent = ({
             <p>{`${lang.components.step.lastEditedBy} ${
                 stepData?.lastEditedBy
             } ${lang.components.step.on} ${formatDate(
-                stepData?.lastEdited,
+                new Date(stepData?.lastEdited),
                 key,
             )}`}</p>
             {genereateFields()}
