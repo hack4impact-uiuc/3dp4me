@@ -6,7 +6,7 @@
     "dependencies": {
         "aws-amplify": "^3.3.3",
         "aws-amplify-react-native": "^4.2.7",
-        "aws-sdk": "^2.785.0",
+        "aws-sdk": "^2.877.0",
         "axios": "^0.21.1",
         "babel-eslint": "^10.1.0",
         "body-parser": "^1.19.0",

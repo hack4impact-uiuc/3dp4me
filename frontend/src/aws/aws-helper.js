@@ -1,6 +1,4 @@
 import { Auth } from 'aws-amplify';
-import { awsconfig } from './aws-exports';
-import AWS from 'aws-sdk';
 
 const KEY_GROUPS = 'cognito:groups';
 const KEY_BASIC_USER = '3DP_4ME_USER';
