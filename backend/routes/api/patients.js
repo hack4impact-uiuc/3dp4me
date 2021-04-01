@@ -4,6 +4,10 @@ const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models, overallStatusEnum } = require('../../models');
 const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
+const {
+    ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY,
+} = require('../../utils/aws/aws-exports');
 
 // GET: Returns all patients
 router.get(
@@ -94,9 +98,8 @@ router.get(
         var s3Stream = downloadFile(
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
             {
-                accessKeyId: req.headers.accesskeyid,
-                secretAccessKey: req.headers.secretaccesskey,
-                sessionToken: req.headers.sessiontoken,
+                accessKeyId: ACCESS_KEY_ID,
+                secretAccessKey: SECRET_ACCESS_KEY,
             },
         ).createReadStream();
 
@@ -174,14 +177,7 @@ router.delete(
 router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
-        const { id, stepKey, fieldKey } = req.params;
-        const {
-            uploadedFileName,
-            accessKeyId,
-            secretAccessKey,
-            sessionToken,
-        } = req.body;
-
+        const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
         if (patient == null) {
             return res.status(404).json({
@@ -210,18 +206,17 @@ router.post(
         let file = req.files.uploadedFile;
         uploadFile(
             file.data,
-            `${id}/${stepKey}/${fieldKey}/${uploadedFileName}`,
+            `${id}/${stepKey}/${fieldKey}/${fileName}`,
             {
-                accessKeyId: accessKeyId,
-                secretAccessKey: secretAccessKey,
-                sessionToken: sessionToken,
+                accessKeyId: ACCESS_KEY_ID,
+                secretAccessKey: SECRET_ACCESS_KEY,
             },
             async function (err, data) {
                 if (err) {
                     res.json(err);
                 } else {
                     stepData[fieldKey].push({
-                        filename: uploadedFileName,
+                        filename: fileName,
                         uploadedBy: req.user.Username,
                         uploadDate: Date.now(),
                     });
@@ -241,7 +236,7 @@ router.post(
                         success: true,
                         message: 'File successfully uploaded',
                         data: {
-                            name: uploadedFileName,
+                            name: fileName,
                             uploadedBy: req.user.Username,
                             uploadDate: Date.now(),
                             mimetype: file.mimetype,
