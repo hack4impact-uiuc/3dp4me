@@ -87,8 +87,9 @@ const Controller = ({ languageData }) => {
                 );
             });
             // TODO: Handle bad response
-
             if (metaData.length > 0) setSelectedStep(metaData[0].key);
+
+            console.log(data);
 
             setStepMetaData(metaData);
             setPatientData(data);

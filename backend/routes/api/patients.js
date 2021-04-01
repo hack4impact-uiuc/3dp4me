@@ -202,12 +202,10 @@ router.post(
 
         const collection = await mongoose.connection.db.collection(stepKey);
         let stepData = await collection.findOne({ patientId: id });
-        const doesPatientHaveData = stepData != null;
 
-        // If the admin adds a new step after the user was added, then the stepData will not be found.
-        if (!doesPatientHaveData) {
-            stepData = { [fieldKey]: [], patientId: id };
-        }
+        // Set ID in case patient does not have any information for this step yet
+        stepData.patientId = id;
+        if (!stepData || !stepData[fieldKey]) stepData[fieldKey] = [];
 
         let file = req.files.uploadedFile;
         uploadFile(
