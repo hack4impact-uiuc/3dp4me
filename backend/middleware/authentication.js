@@ -1,4 +1,5 @@
 var AWS = require('aws-sdk');
+const { COGNITO_REGION } = require('../utils/aws/aws-exports');
 
 const requireAuthentication = async (req, res, next) => {
     try {
@@ -10,7 +11,9 @@ const requireAuthentication = async (req, res, next) => {
         };
 
         // TODO: Should we create a new one each time, or should we hold a single global?
-        var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+        var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider(
+            { region: COGNITO_REGION },
+        );
         const user = await cognitoidentityserviceprovider
             .getUser(params)
             .promise();
