@@ -48,12 +48,19 @@ const requireAuthentication = async (req, res, next) => {
     }
 };
 
-const requireRole = async (req, res, next) => {
-    if (!req.user) await requireAuthentication();
+const requireRole = (role) => {
+    return async (req, res, next) => {
+        if (!req.user) await requireAuthentication();
 
-    // TODO: implement
+        if (!req.user.roles.includes(role))
+            return res.status(403).json({
+                success: false,
+                message:
+                    'You are not approved to access this resource. Please contact an administrator.',
+            });
 
-    next();
+        next();
+    };
 };
 
 module.exports = requireAuthentication;
