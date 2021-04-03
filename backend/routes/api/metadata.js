@@ -90,10 +90,17 @@ const addCollection = (stepMetadata) => {
                     default: [],
                 };
                 break;
+            case fieldEnum.AUDIO:
+                stepSchema[field.key] = {
+                    type: [fileSchema],
+                    required: true,
+                    default: [],
+                };
+                break;
             case fieldEnum.DIVIDER:
                 break;
             default:
-                throw new Error(`Unrecognized field type, ${field.type}`);
+                throw new Error(`Unrecognized field type, ${field.fieldType}`);
         }
     });
     const schema = new mongoose.Schema(stepSchema);

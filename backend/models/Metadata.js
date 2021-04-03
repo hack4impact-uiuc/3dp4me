@@ -20,21 +20,18 @@ const languageSchema = new mongoose.Schema({
 });
 
 const validateOptions = async (questionOptionSchema) => {
-    var questionID = Object.create(null);
     var questionIndex = Object.create(null);
     for (var i = 0; i < questionOptionSchema.length; ++i) {
         var value = questionOptionSchema[i];
-        if (value.ID in questionID || value.Index in questionIndex) {
+        if (value.Index in questionIndex) {
             return false;
         }
-        questionID[value.ID] = true;
         questionIndex[value.Index] = true;
     }
     return true;
 };
 
 const questionOptionSchema = new mongoose.Schema({
-    ID: { type: String, required: true, unique: true },
     Index: { type: Number, required: true },
     IsHidden: { type: Boolean, required: true, default: false },
     Question: { type: languageSchema, required: true },
@@ -54,7 +51,7 @@ const fieldSchema = new mongoose.Schema({
         default: [],
         validate: {
             validator: validateOptions,
-            message: 'ID and Index must be unique',
+            message: 'Index must be unique',
         },
     },
     isVisibleOnDashboard: { type: Boolean, required: true },

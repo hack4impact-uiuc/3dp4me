@@ -25,6 +25,7 @@ const StepField = ({
     const generateField = () => {
         switch (fieldType) {
             case FIELD_TYPES.STRING:
+            case FIELD_TYPES.NUMBER:
                 return (
                     <TextField
                         displayName={displayName}

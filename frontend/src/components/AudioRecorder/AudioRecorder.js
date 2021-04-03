@@ -140,7 +140,7 @@ class AudioRecorder extends React.Component {
             this.props.patientId,
             this.props.stepKey,
             this.props.fieldKey,
-            file.fileName,
+            file.filename,
         );
         const blobURL = URL.createObjectURL(blob);
         this.setState({
@@ -153,7 +153,7 @@ class AudioRecorder extends React.Component {
         if (this.props.files == null) return null;
 
         return this.props.files.map((file) => (
-            <div className="file-row-wrapper" key={file.fileName}>
+            <div className="file-row-wrapper" key={file.filename}>
                 <Button
                     className="file-button"
                     onClick={() => {
@@ -164,7 +164,7 @@ class AudioRecorder extends React.Component {
                         <PlayArrowIcon />
                         <div>
                             <Typography align="left">
-                                {`${file.fileName}`}
+                                {`${file.filename}`}
                             </Typography>
                             <p id="file-upload-timestamp">
                                 {file.uploadDate.toString()}

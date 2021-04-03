@@ -18,7 +18,7 @@ const BottomBar = ({
     edit,
     lastEdited,
     lastEditedBy,
-    status,
+    status = STEP_STATUS.UNFINISHED,
     onStatusChange,
     onSave,
     onDiscard,
@@ -57,7 +57,7 @@ const BottomBar = ({
                         lang.components.bottombar.lastEditedBy
                     } ${lastEditedBy} ${
                         lang.components.bottombar.on
-                    } ${formatDate(lastEdited, key)}`}
+                    } ${formatDate(new Date(lastEdited), key)}`}
                 </div>
                 {edit ? (
                     <div>
@@ -170,7 +170,7 @@ BottomBar.propTypes = {
     edit: PropTypes.bool.isRequired,
     lastEdited: PropTypes.string.isRequired,
     lastEditedBy: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
+    status: PropTypes.string,
     onStatusChange: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     onDiscard: BoolGetterSetterType.isRequired,
