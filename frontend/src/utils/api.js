@@ -171,3 +171,8 @@ export const addUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
     return instance.put(requestString);
 };
+
+export const getAllUsers = async () => {
+    const requestString = `/users`;
+    return instance.get(requestString);
+};

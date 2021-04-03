@@ -12,10 +12,39 @@ const {
     SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
 
-// Returns all users information
+// Get all users
 router.get(
     '/',
-    errorWrap(async (req, res) => {}),
+    errorWrap(async (req, res) => {
+        var params = {
+            UserPoolId: USER_POOL_ID,
+        };
+
+        var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider(
+            {
+                region: COGNITO_REGION,
+                accessKeyId: ACCESS_KEY_ID,
+                secretAccessKey: SECRET_ACCESS_KEY,
+            },
+        );
+
+        const data = await cognitoidentityserviceprovider.listUsers(
+            params,
+            (err, data) => {
+                if (err) {
+                    return res.status(500).json({
+                        success: false,
+                        message: err,
+                    });
+                }
+
+                return res.status(200).json({
+                    success: true,
+                    result: data,
+                });
+            },
+        );
+    }),
 );
 
 // Gives a user a role
@@ -45,7 +74,7 @@ router.put(
             },
         );
 
-        const result = await cognitoidentityserviceprovider.adminUpdateUserAttributes(
+        await cognitoidentityserviceprovider.adminUpdateUserAttributes(
             params,
             (err, data) => {
                 if (err) {
