@@ -3,7 +3,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
-import { CircularProgress, Backdrop } from '@material-ui/core';
+import { CircularProgress, Backdrop, Button } from '@material-ui/core';
 
 import { formatDate } from '../../utils/date';
 import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
@@ -21,6 +21,7 @@ const StepContent = ({
 }) => {
     const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
+    const [currentQuestion, setCurrentQuestion] = useState(0);
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -111,22 +112,64 @@ const StepContent = ({
 
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
+
+        // if the current step is a survey step then only return the right numbered question
         return metaData.fields.map((field) => {
-            return (
-                <StepField
-                    fieldType={field.fieldType}
-                    displayName={field.displayName[key]}
-                    value={updatedData ? updatedData[field.key] : null}
-                    fieldId={field.key}
-                    key={field.key}
-                    isDisabled={!edit}
-                    handleSimpleUpdate={handleSimpleUpdate}
-                    handleFileDownload={handleFileDownload}
-                    handleFileUpload={handleFileUpload}
-                    handleFileDelete={handleFileDelete}
-                    languageData={languageData}
-                />
-            );
+            if (stepData.key === 'info') {
+                // replace with survey step once complete
+                if (currentQuestion === field.fieldNumber) {
+                    return (
+                        <div>
+                            <StepField
+                                fieldType={field.fieldType}
+                                displayName={field.displayName[key]}
+                                value={
+                                    updatedData ? updatedData[field.key] : null
+                                }
+                                fieldId={field.key}
+                                key={field.key}
+                                isDisabled={!edit}
+                                handleSimpleUpdate={handleSimpleUpdate}
+                                handleFileDownload={handleFileDownload}
+                                handleFileUpload={handleFileUpload}
+                                handleFileDelete={handleFileDelete}
+                                languageData={languageData}
+                            />
+                            <Button
+                                onClick={() => {
+                                    if (currentQuestion !== 0)
+                                        setCurrentQuestion(currentQuestion - 1);
+                                }}
+                            >
+                                {lang.components.button.previous}
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setCurrentQuestion(currentQuestion + 1);
+                                }}
+                            >
+                                {lang.components.button.next}
+                            </Button>
+                        </div>
+                    );
+                } else return null;
+            } else {
+                return (
+                    <StepField
+                        fieldType={field.fieldType}
+                        displayName={field.displayName[key]}
+                        value={updatedData ? updatedData[field.key] : null}
+                        fieldId={field.key}
+                        key={field.key}
+                        isDisabled={!edit}
+                        handleSimpleUpdate={handleSimpleUpdate}
+                        handleFileDownload={handleFileDownload}
+                        handleFileUpload={handleFileUpload}
+                        handleFileDelete={handleFileDelete}
+                        languageData={languageData}
+                    />
+                );
+            }
         });
     };
 
