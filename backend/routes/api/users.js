@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
-const { models } = require('../../models');
-const mongoose = require('mongoose');
 const AWS = require('aws-sdk');
 const {
     USER_POOL_ID,
@@ -99,7 +97,6 @@ router.put(
             });
         }
 
-        // TODO: We're gonna want to store roles in the DB. Once we do, make sure this is a valid role.
         const userRoles = await getUserRoles(username);
         const params = createAttributeUpdateParams(
             username,
