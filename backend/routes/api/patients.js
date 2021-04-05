@@ -63,15 +63,11 @@ router.post(
     '/',
     errorWrap(async (req, res) => {
         const patient = req.body;
-        let saved_patient = null;
+        let new_patient = null;
         try {
             req.body.lastEditedBy = req.user.Username;
-            const new_patient = new models.Patient(patient);
-            saved_patient = await new_patient.findOneAndUpdate(
-                { _id: id },
-                { $set: new_patient },
-                { upsert: true, setDefaultsOnInsert: true, new: true },
-            );
+            new_patient = new models.Patient(patient);
+            new_patient.save();
         } catch (error) {
             console.log(error);
             return res.status(401).json({
@@ -85,7 +81,7 @@ router.post(
             code: 201,
             success: true,
             message: 'User successfully created.',
-            result: saved_patient,
+            result: new_patient,
         });
     }),
 );
