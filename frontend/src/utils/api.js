@@ -1,7 +1,5 @@
 import axios from 'axios';
-
-import { getCredentials, getCurrentSession } from '../aws/aws-helper';
-
+import { getCurrentSession } from '../aws/aws-helper';
 const FileDownload = require('js-file-download');
 
 const IN_DEV_ENV =
@@ -107,21 +105,10 @@ export const downloadBlobWithoutSaving = async (
     filename,
 ) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
-    const {
-        accessKeyId,
-        secretAccessKey,
-        sessionToken,
-    } = await getCredentials();
-
     let res = null;
 
     try {
         res = await instance.get(requestString, {
-            headers: {
-                accessKeyId,
-                secretAccessKey,
-                sessionToken,
-            },
             responseType: 'blob',
         });
     } catch (error) {
@@ -141,6 +128,7 @@ export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
         fieldKey,
         filename,
     );
+
     if (!blob) {
         console.error('Could not download file');
         return;
@@ -161,13 +149,9 @@ export const uploadFile = async (
     filedata,
 ) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
-    const credentials = await getCredentials();
     const formData = new FormData();
     formData.append('uploadedFile', filedata);
     formData.append('uploadedFileName', filename || filedata.name);
-    Object.keys(credentials).forEach((key) => {
-        formData.append(key, credentials[key]);
-    });
 
     return instance.post(requestString, formData, {
         headers: {
@@ -179,4 +163,14 @@ export const uploadFile = async (
 export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     return instance.delete(requestString);
+};
+
+export const addUserRole = async (username, roleName) => {
+    const requestString = `/users/${username}/roles/${roleName}`;
+    return instance.put(requestString);
+};
+
+export const getAllUsers = async () => {
+    const requestString = `/users`;
+    return instance.get(requestString);
 };

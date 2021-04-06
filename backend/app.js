@@ -7,7 +7,7 @@ const fileUpload = require('express-fileupload');
 var cors = require('cors');
 const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
-const requireAuthentication = require('./middleware/authentication');
+const { requireAuthentication } = require('./middleware/authentication');
 const app = express();
 app.use(cors());
 

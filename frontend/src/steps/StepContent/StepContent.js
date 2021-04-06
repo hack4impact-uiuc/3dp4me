@@ -53,7 +53,6 @@ const StepContent = ({
             file.name,
             file,
         );
-
         // TODO: Display error if res is null
         const newFile = {
             filename: res.data.data.name,
