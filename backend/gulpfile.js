@@ -8,6 +8,7 @@ var exec = require('child_process').exec;
 const paths = {
     prod_build: '../prod-build',
     server_file_name: 'server.bundle.js',
+    server_src: './**/*',
     react_src: '../frontend/build/**/*',
     react_dist: '../prod-build/frontend/build',
     zipped_file_name: 'full-application.zip',
@@ -45,7 +46,10 @@ function copyReactCodeTask() {
 
 function copyNodeJSCodeTask() {
     log('building and copying server code into the directory');
-    return src(['package.json', 'app.js']).pipe(dest(`${paths.prod_build}`));
+
+    return src(`${paths.server_src}`).pipe(dest(`${paths.prod_build}`));
+    // src('package.json').pipe(dest(`${paths.prod_build}`))
+    // return src('./bin/www').pipe(dest(`${paths.prod_build}/bin`));
 }
 
 function zippingTask() {
