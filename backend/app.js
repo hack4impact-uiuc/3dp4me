@@ -1,6 +1,7 @@
 require('express-async-errors');
 require('dotenv').config();
 require('./utils/aws/aws-setup');
+const path = require('path');
 const mongoose = require('mongoose');
 const express = require('express');
 const fileUpload = require('express-fileupload');
@@ -9,6 +10,10 @@ const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
 const app = express();
+
+// TODO: This should only be in for production
+app.use(express.static(path.join(__dirname, 'frontend')));
+
 app.use(cors());
 
 app.use(
