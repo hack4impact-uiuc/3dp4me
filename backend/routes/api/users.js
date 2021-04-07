@@ -88,6 +88,21 @@ function arrayUnique(array) {
     return a;
 }
 
+/**
+ * Removes invalid roles from the incoming roles array. For example, if a user has a role that is later deleted,
+ * this will remove that old role from the user.
+ */
+const getValidRoles = async (roles) => {
+    let validRoles = [];
+
+    for (role of roles) {
+        const roleIsValid = await isRoleValid(role);
+        if (roleIsValid) validRoles.push(role);
+    }
+
+    return validRoles;
+};
+
 const createAttributeUpdateParams = (username, oldRoles, newRole) => {
     let roles = arrayUnique(oldRoles.concat(newRole));
 
@@ -119,7 +134,12 @@ router.put(
         }
 
         const userRoles = await getUserRoles(username);
-        const params = createAttributeUpdateParams(username, userRoles, roleId);
+        const validUserRoles = await getValidRoles(userRoles);
+        const params = createAttributeUpdateParams(
+            username,
+            validUserRoles,
+            roleId,
+        );
         const identityProvider = getIdentityProvider();
 
         await identityProvider.adminUpdateUserAttributes(
@@ -140,5 +160,7 @@ router.put(
         );
     }),
 );
+
+// TODO: Delete role
 
 module.exports = router;
