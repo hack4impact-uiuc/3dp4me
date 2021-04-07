@@ -107,10 +107,10 @@ const createAttributeUpdateParams = (username, oldRoles, newRole) => {
 
 // Gives a user a role
 router.put(
-    '/:username/roles/:roleName',
+    '/:username/roles/:roleId',
     errorWrap(async (req, res) => {
-        const { username, roleName } = req.params;
-        const roleIsValid = await isRoleValid(roleName);
+        const { username, roleId } = req.params;
+        const roleIsValid = await isRoleValid(roleId);
         if (!roleIsValid) {
             return res.status(400).json({
                 success: false,
@@ -119,11 +119,7 @@ router.put(
         }
 
         const userRoles = await getUserRoles(username);
-        const params = createAttributeUpdateParams(
-            username,
-            userRoles,
-            roleName,
-        );
+        const params = createAttributeUpdateParams(username, userRoles, roleId);
         const identityProvider = getIdentityProvider();
 
         await identityProvider.adminUpdateUserAttributes(
