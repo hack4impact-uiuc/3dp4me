@@ -57,10 +57,14 @@ const getUserByUsername = async (username) => {
     };
 
     const identityProvider = getIdentityProvider();
-    identityProvider.adminGetUser(params, (err, data) => {
-        if (err) return null;
-        return data;
-    });
+    let user = null;
+    try {
+        user = await identityProvider.adminGetUser(params).promise();
+    } catch (e) {
+        console.log(e);
+    }
+
+    return user;
 };
 
 const getUserRoles = async (username) => {
@@ -68,8 +72,19 @@ const getUserRoles = async (username) => {
     return parseUserSecurityRoles(user);
 };
 
+function arrayUnique(array) {
+    var a = array.concat();
+    for (var i = 0; i < a.length; ++i) {
+        for (var j = i + 1; j < a.length; ++j) {
+            if (a[i] === a[j]) a.splice(j--, 1);
+        }
+    }
+
+    return a;
+}
+
 const createAttributeUpdateParams = (username, oldRoles, newRole) => {
-    let roles = oldRoles.concat(newRoles);
+    let roles = arrayUnique(oldRoles.concat(newRole));
 
     const params = {
         UserAttributes: [

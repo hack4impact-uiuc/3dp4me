@@ -17,11 +17,13 @@ const getUser = async (accessToken) => {
 };
 
 const parseUserSecurityRoles = (user) => {
+    if (!user || !user.UserAttributes) return [];
+
     const securityRolesString = user.UserAttributes.find(
         (attribute) => attribute.Name === SECURITY_ROLE_ATTRIBUTE_NAME,
     );
 
-    if (!securityRolesString) return null;
+    if (!securityRolesString) return [];
 
     return JSON.parse(securityRolesString.Value);
 };
@@ -32,7 +34,7 @@ const requireAuthentication = async (req, res, next) => {
         const user = await getUser(accessToken);
         user.roles = parseUserSecurityRoles(user);
 
-        if (user.roles == null) {
+        if (user.roles === []) {
             return res.status(403).json({
                 success: false,
                 message:
@@ -43,7 +45,7 @@ const requireAuthentication = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        console.error(error);
+        console.log(error);
         return res.status(401).json({
             success: false,
             message: 'Authentication Failed',
@@ -54,7 +56,6 @@ const requireAuthentication = async (req, res, next) => {
 const requireRole = (role) => {
     return async (req, res, next) => {
         if (!req.user) await requireAuthentication();
-
         if (!req.user.roles.includes(role)) {
             return res.status(403).json({
                 success: false,
