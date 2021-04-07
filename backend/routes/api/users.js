@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
+const { models } = require('../../models/index');
 const AWS = require('aws-sdk');
 const {
     USER_POOL_ID,
@@ -45,12 +46,11 @@ router.get(
     }),
 );
 
-// TODO: Test this
 const isRoleValid = async (role) => {
-    const roles = await models.Role.find({}).toArray();
-    roles.forEach((r) => {
-        if (role._id == r._id) return true;
-    });
+    const roles = await models.Role.find({});
+    for (r of roles) {
+        if (role.toString() === r._id.toString()) return true;
+    }
 
     return false;
 };
