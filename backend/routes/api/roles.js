@@ -71,11 +71,30 @@ router.put(
 );
 
 // Delete role
-router.put(
+router.delete(
     '/:roleId',
     errorWrap(async (req, res) => {
         const { roleId } = req.params;
-        // TODO: Check if mutable
+        const role = await models.Role.findById(roleId);
+        if (role == null) {
+            return res.status(400).json({
+                success: false,
+                message: `Role with ID "${roleId}" does not exist`,
+            });
+        }
+
+        if (!role.isMutable) {
+            return res.status(400).json({
+                success: false,
+                message: `Role with ID "${roleId}" is not allowed to be deleted`,
+            });
+        }
+
+        await models.Role.findByIdAndDelete(roleId);
+        return res.status(200).json({
+            success: true,
+            message: 'Role deleted',
+        });
         // TODO: When role is added/removed from user, cleanse user
     }),
 );
