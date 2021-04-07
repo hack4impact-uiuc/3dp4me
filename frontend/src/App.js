@@ -65,7 +65,7 @@ function App() {
 
     if (authLevel === UNAUTHENTICATED) return <Login />;
 
-    if (authLevel === AUTHENTICATED || true)
+    if (authLevel === AUTHENTICATED)
         return (
             <div dir={selectedLang === 'AR' ? 'rtl' : 'ltr'}>
                 <Router>
