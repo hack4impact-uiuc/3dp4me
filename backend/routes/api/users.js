@@ -45,9 +45,14 @@ router.get(
     }),
 );
 
-const isRoleValid = (role) => {
-    // TODO: Check if the role is in the DB
-    return true;
+// TODO: Test this
+const isRoleValid = async (role) => {
+    const roles = await models.Role.find({}).toArray();
+    roles.forEach((r) => {
+        if (role._id == r._id) return true;
+    });
+
+    return false;
 };
 
 const getUserByUsername = async (username) => {
@@ -90,7 +95,8 @@ router.put(
     '/:username/roles/:roleName',
     errorWrap(async (req, res) => {
         const { username, roleName } = req.params;
-        if (!isRoleValid(roleName)) {
+        const roleIsValid = await isRoleValid(roleName);
+        if (!roleIsValid) {
             return res.status(400).json({
                 success: false,
                 message: 'The requested role is not valid',
