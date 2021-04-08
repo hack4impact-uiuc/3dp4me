@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getCurrentSession } from '../aws/aws-helper';
+
 const FileDownload = require('js-file-download');
 
 const IN_DEV_ENV =

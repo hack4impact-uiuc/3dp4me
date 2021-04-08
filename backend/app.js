@@ -11,9 +11,7 @@ const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
 const app = express();
 
-// TODO: This should only be in for production
 app.use(express.static(path.join(__dirname, '../frontend/build')));
-
 app.use(cors());
 
 app.use(
