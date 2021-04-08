@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
+const { models } = require('../../models/index');
 const AWS = require('aws-sdk');
 const {
     USER_POOL_ID,
@@ -8,6 +9,7 @@ const {
     COGNITO_REGION,
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
+    SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
 } = require('../../utils/aws/aws-exports');
 
 const { parseUserSecurityRoles } = require('../../middleware/authentication');
@@ -45,9 +47,13 @@ router.get(
     }),
 );
 
-const isRoleValid = (role) => {
-    // TODO: Check if the role is in the DB
-    return true;
+const isRoleValid = async (role) => {
+    const roles = await models.Role.find({});
+    for (r of roles) {
+        if (role.toString() === r._id.toString()) return true;
+    }
+
+    return false;
 };
 
 const getUserByUsername = async (username) => {
@@ -83,8 +89,27 @@ function arrayUnique(array) {
     return a;
 }
 
+/**
+ * Removes invalid roles from the incoming roles array. For example, if a user has a role that is later deleted,
+ * this will remove that old role from the user.
+ */
+const getValidRoles = async (roles) => {
+    let validRoles = [];
+
+    for (role of roles) {
+        const roleIsValid = await isRoleValid(role);
+        if (roleIsValid) validRoles.push(role);
+    }
+
+    return validRoles;
+};
+
 const createAttributeUpdateParams = (username, oldRoles, newRole) => {
     let roles = arrayUnique(oldRoles.concat(newRole));
+    let rolesStringified = JSON.stringify(roles);
+
+    // AWS puts a hard limit on how many roles we can store
+    if (rolesStringified.length > SECURITY_ROLE_ATTRIBUTE_MAX_LEN) return null;
 
     const params = {
         UserAttributes: [
@@ -102,10 +127,11 @@ const createAttributeUpdateParams = (username, oldRoles, newRole) => {
 
 // Gives a user a role
 router.put(
-    '/:username/roles/:roleName',
+    '/:username/roles/:roleId',
     errorWrap(async (req, res) => {
-        const { username, roleName } = req.params;
-        if (!isRoleValid(roleName)) {
+        const { username, roleId } = req.params;
+        const roleIsValid = await isRoleValid(roleId);
+        if (!roleIsValid) {
             return res.status(400).json({
                 success: false,
                 message: 'The requested role is not valid',
@@ -113,13 +139,22 @@ router.put(
         }
 
         const userRoles = await getUserRoles(username);
+        const validUserRoles = await getValidRoles(userRoles);
         const params = createAttributeUpdateParams(
             username,
-            userRoles,
-            roleName,
+            validUserRoles,
+            roleId,
         );
-        const identityProvider = getIdentityProvider();
 
+        if (!params) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    'This user has reached the max amount of roles. They are not allowed to have any more.',
+            });
+        }
+
+        const identityProvider = getIdentityProvider();
         await identityProvider.adminUpdateUserAttributes(
             params,
             (err, data) => {
@@ -138,5 +173,7 @@ router.put(
         );
     }),
 );
+
+// TODO: Delete role
 
 module.exports = router;
