@@ -6,6 +6,74 @@ const { models, fileSchema, stepStatusEnum } = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 
+const generateFieldSchema = (field) => {
+    switch (field.fieldType) {
+        case fieldEnum.STRING:
+            return {
+                type: String,
+                required: true,
+                default: '',
+            };
+        case fieldEnum.MULTILINE_STRING:
+            return {
+                type: String,
+                required: true,
+                default: '',
+            };
+        case fieldEnum.NUMBER:
+            return {
+                type: Number,
+                required: true,
+                default: 0,
+            };
+        case fieldEnum.DATE:
+            return {
+                type: Date,
+                required: true,
+                default: new Date(),
+            };
+        case fieldEnum.PHONE:
+            return {
+                type: String,
+                required: true,
+                default: '',
+                validate: {
+                    validator: isValidNumber,
+                    message: 'Not a valid phone number',
+                },
+            };
+        case fieldEnum.DROPDOWN:
+            if (field.options == null)
+                throw new Error('Dropdown must have options');
+
+            return {
+                type: Number,
+                required: true,
+                default: 0,
+                enum: field.options,
+            };
+        case fieldEnum.RADIO_BUTTON:
+            if (field.options == null)
+                throw new Error('Radio button must have options');
+            return {
+                type: Number,
+                required: true,
+                default: 0,
+                enum: field.options,
+            };
+        case fieldEnum.FILE:
+            return {
+                type: [fileSchema],
+                required: true,
+                default: [],
+            };
+        case fieldEnum.DIVIDER:
+            return null;
+        default:
+            throw new Error(`Unrecognized field type, ${field.type}`);
+    }
+};
+
 const addCollection = (stepMetadata) => {
     let stepSchema = {};
     stepSchema.patientId = { type: String, required: true, unique: true };
@@ -22,78 +90,9 @@ const addCollection = (stepMetadata) => {
         default: 'Admin',
     };
     stepMetadata.fields.forEach((field) => {
-        switch (field.fieldType) {
-            case fieldEnum.STRING:
-                stepSchema[field.key] = {
-                    type: String,
-                    required: true,
-                    default: '',
-                };
-                break;
-            case fieldEnum.MULTILINE_STRING:
-                stepSchema[field.key] = {
-                    type: String,
-                    required: true,
-                    default: '',
-                };
-                break;
-            case fieldEnum.NUMBER:
-                stepSchema[field.key] = {
-                    type: Number,
-                    required: true,
-                    default: 0,
-                };
-                break;
-            case fieldEnum.DATE:
-                stepSchema[field.key] = {
-                    type: Date,
-                    required: true,
-                    default: new Date(),
-                };
-                break;
-            case fieldEnum.PHONE:
-                stepSchema[field.key] = {
-                    type: String,
-                    required: true,
-                    default: '',
-                    validate: {
-                        validator: isValidNumber,
-                        message: 'Not a valid phone number',
-                    },
-                };
-                break;
-            case fieldEnum.DROPDOWN:
-                if (field.options == null)
-                    throw new Error('Dropdown must have options');
-
-                stepSchema[field.key] = {
-                    type: Number,
-                    required: true,
-                    default: 0,
-                    enum: field.options,
-                };
-                break;
-            case fieldEnum.RADIO_BUTTON:
-                if (field.options == null)
-                    throw new Error('Radio button must have options');
-                stepSchema[field.key] = {
-                    type: Number,
-                    required: true,
-                    default: 0,
-                    enum: field.options,
-                };
-                break;
-            case fieldEnum.FILE:
-                stepSchema[field.key] = {
-                    type: [fileSchema],
-                    required: true,
-                    default: [],
-                };
-                break;
-            case fieldEnum.DIVIDER:
-                break;
-            default:
-                throw new Error(`Unrecognized field type, ${field.type}`);
+        const generatedSchema = generateFieldSchema(field);
+        if (generatedSchema) {
+            stepSchema[field.key] = generatedSchema;
         }
     });
     const schema = new mongoose.Schema(stepSchema);
@@ -172,15 +171,82 @@ router.post(
     }),
 );
 
+const getFieldByKey = (object_list, key) => {
+    for (object of object_list) {
+        console.log(object.key === key);
+
+        if (object.key === key) {
+            return object;
+        }
+    }
+
+    return null;
+};
+
 // PUT metadata/steps/:stepkey
 router.put(
     '/steps/:stepkey',
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
-        const step = await models.Step.findOneAndUpdate(
-            { key: stepkey },
-            { $set: req.body },
-        );
+        const session = await mongoose.startSession();
+        step_to_edit = await models.Step.findOne({ key: stepkey });
+        //TODO: rename to camel case
+        let addedFields = [];
+
+        //
+        req.body.fields.forEach((request_field) => {
+            // If both fields are the same but fieldtypes are not the same
+            const field = getFieldByKey(step_to_edit.fields, request_field.key);
+            console.log(field);
+            if (field && field.type == request_field.type) {
+                //TODO: add logic for this case
+            } else if (
+                !field &&
+                !addedFields.some(
+                    (addedField) => addedField.key === request_field.key,
+                )
+            ) {
+                addedFields.push(request_field);
+            } else {
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Invalid request',
+                });
+            }
+        });
+        if (
+            req.body.fields.length - addedFields.length <=
+            step_to_edit.fields.length
+        ) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Cannot delete fields',
+            });
+        }
+
+        await session.withTransaction(async () => {
+            const schema = await mongoose.model(stepkey).schema;
+
+            const addedFieldsObject = {};
+
+            addedFields.forEach((field) => {
+                addedFieldObject[field.key] = generateFieldSchema(field);
+            });
+            console.log(addedFieldsObject);
+            console.log(collection);
+            console.log(addedFieldsObject);
+            schema.add(addedFieldsObject);
+
+            const step = await models.Step.findOneAndUpdate(
+                { key: stepkey },
+                { $set: req.body },
+            );
+        });
+
+        // Check if user changed field type
+        // Check whetehr user deleted or added to metadata object
 
         await step.save(function (err, data) {
             if (err) {
