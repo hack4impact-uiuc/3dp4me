@@ -193,7 +193,7 @@ router.post(
         }
 
         const collection = await mongoose.connection.db.collection(stepKey);
-        let stepData = await collection.findOne({ patientId: id });
+        let stepData = (await collection.findOne({ patientId: id })) || {};
 
         // Set ID in case patient does not have any information for this step yet
         stepData.patientId = id;
