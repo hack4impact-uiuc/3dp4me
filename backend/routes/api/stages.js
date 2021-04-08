@@ -1,35 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
-const { models } = require('../../models');
+const { models, overallStatusEnum } = require('../../models');
 const mongoose = require('mongoose');
-
-// Get all patients  basic info
-router.get(
-    '/',
-    errorWrap(async (req, res) => {
-        models.Patient.find(
-            {},
-            // '_id patientInfo.name createdDate lastEdited status',
-        ).then((patients) => {
-            fin = patients.map((info) => {
-                return {
-                    _id: info._id,
-                    name: info.patientInfo.name,
-                    createdDate: info.createdDate,
-                    lastEdited: info.lastEdited,
-                    status: info.status,
-                };
-            });
-
-            res.status(200).json({
-                code: 200,
-                success: true,
-                result: fin,
-            });
-        });
-    }),
-);
 
 // GET: Returns basic stage info for every user
 // GET: Returns everything associated with patient step
@@ -37,10 +10,10 @@ router.get(
     '/:stage',
     errorWrap(async (req, res) => {
         const { stage } = req.params;
-        let stepData = null;
+        let stepData = [];
         const steps = await models.Step.find({ key: stage });
 
-        // Check if stage exists in metadataf
+        // Check if stage exists in metadata
         if (steps.length == 0) {
             return res.status(404).json({
                 code: 404,
@@ -50,7 +23,20 @@ router.get(
         }
 
         const collection = await mongoose.connection.db.collection(stage);
-        stepData = await collection.find({}).toArray();
+
+        // TODO: Replace with an aggregation command that gets all patient data then $lookup on patientId for stage
+        let patients = await models.Patient.find({
+            status: overallStatusEnum.ACTIVE,
+        });
+
+        for (let i = 0; i < patients.length; i++) {
+            const stepInfo = await collection.findOne({
+                patientId: patients[i]._id.toString(),
+            });
+
+            stepData[i] = patients[i].toObject();
+            stepData[i][stage] = stepInfo;
+        }
 
         res.status(200).json({
             code: 200,

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Divider } from '@material-ui/core';
 
+import AudioRecorder from '../AudioRecorder/AudioRecorder';
 import TextField from '../Fields/TextField';
 import Notes from '../Notes/Notes';
 import Files from '../Files/Files';
@@ -13,6 +14,8 @@ const StepField = ({
     value,
     fieldId,
     languageData,
+    patientId = '',
+    stepKey = '',
     isDisabled = true,
     handleSimpleUpdate = () => {},
     handleFileDownload = () => {},
@@ -22,6 +25,7 @@ const StepField = ({
     const generateField = () => {
         switch (fieldType) {
             case FIELD_TYPES.STRING:
+            case FIELD_TYPES.NUMBER:
                 return (
                     <TextField
                         displayName={displayName}
@@ -75,6 +79,19 @@ const StepField = ({
                         handleDelete={handleFileDelete}
                     />
                 );
+            case FIELD_TYPES.AUDIO:
+                return (
+                    <AudioRecorder
+                        languageData={languageData}
+                        handleUpload={handleFileUpload}
+                        handleDelete={handleFileDelete}
+                        patientId={patientId}
+                        stepKey={stepKey}
+                        files={value}
+                        title={displayName}
+                        fieldKey={fieldId}
+                    />
+                );
             case FIELD_TYPES.DIVIDER:
                 return (
                     <div className="patient-divider-wrapper">
@@ -98,6 +115,8 @@ StepField.propTypes = {
     languageData: PropTypes.object.isRequired,
     fieldId: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool,
+    patientId: PropTypes.string,
+    stepKey: PropTypes.string,
     handleSimpleUpdate: PropTypes.func,
     handleFileDownload: PropTypes.func,
     handleFileUpload: PropTypes.func,

@@ -22,7 +22,6 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
 
     const handleFieldTypeSelect = (e) => {
         setFieldType(e.target.value);
-        console.log(fieldType);
     };
 
     const incrementChoices = () => {
