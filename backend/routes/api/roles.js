@@ -3,12 +3,6 @@ const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models/index');
 
-// TODO: This should be moved into /users
-// In AWS, we store the roles by a list of mongo IDs. AWS Puts a hard limit on the length
-// of the security roles attribute, so we must make sure we don't give a user too many roles.
-// The length of one role entry is the length of the monogoID (24) and a comma (1)
-const ROLE_ENTRY_LENGTH = 24 + 1;
-
 // Get all roles
 router.get(
     '/',
