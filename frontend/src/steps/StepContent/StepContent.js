@@ -3,7 +3,13 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
-import { CircularProgress, Backdrop, Button } from '@material-ui/core';
+import {
+    CircularProgress,
+    Backdrop,
+    Button,
+    Select,
+    MenuItem,
+} from '@material-ui/core';
 
 import { formatDate } from '../../utils/date';
 import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
@@ -22,6 +28,7 @@ const StepContent = ({
     const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
     const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -80,6 +87,10 @@ const StepContent = ({
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };
 
+    const handleQuestionFormatSelect = (e) => {
+        setSingleQuestionFormat(e.target.value);
+    };
+
     const discardData = () => {
         swal({
             title: lang.components.button.discard.question,
@@ -113,28 +124,32 @@ const StepContent = ({
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
 
+        console.log(metaData.fields);
+
         // if the current step is a survey step then only return the right numbered question
         return metaData.fields.map((field) => {
-            if (stepData.key === 'info') {
+            const stepField = (
+                <StepField
+                    fieldType={field.fieldType}
+                    displayName={field.displayName[key]}
+                    value={updatedData ? updatedData[field.key] : null}
+                    fieldId={field.key}
+                    key={field.key}
+                    isDisabled={!edit}
+                    handleSimpleUpdate={handleSimpleUpdate}
+                    handleFileDownload={handleFileDownload}
+                    handleFileUpload={handleFileUpload}
+                    handleFileDelete={handleFileDelete}
+                    languageData={languageData}
+                />
+            );
+            if (singleQuestionFormat) {
                 // replace with survey step once complete
                 if (currentQuestion === field.fieldNumber) {
+                    console.log('hi');
                     return (
                         <div>
-                            <StepField
-                                fieldType={field.fieldType}
-                                displayName={field.displayName[key]}
-                                value={
-                                    updatedData ? updatedData[field.key] : null
-                                }
-                                fieldId={field.key}
-                                key={field.key}
-                                isDisabled={!edit}
-                                handleSimpleUpdate={handleSimpleUpdate}
-                                handleFileDownload={handleFileDownload}
-                                handleFileUpload={handleFileUpload}
-                                handleFileDelete={handleFileDelete}
-                                languageData={languageData}
-                            />
+                            {stepField}
                             <Button
                                 onClick={() => {
                                     if (currentQuestion !== 0)
@@ -145,7 +160,11 @@ const StepContent = ({
                             </Button>
                             <Button
                                 onClick={() => {
-                                    setCurrentQuestion(currentQuestion + 1);
+                                    if (
+                                        currentQuestion !==
+                                        metaData.fields.length - 1
+                                    )
+                                        setCurrentQuestion(currentQuestion + 1);
                                 }}
                             >
                                 {lang.components.button.next}
@@ -154,21 +173,7 @@ const StepContent = ({
                     );
                 } else return null;
             } else {
-                return (
-                    <StepField
-                        fieldType={field.fieldType}
-                        displayName={field.displayName[key]}
-                        value={updatedData ? updatedData[field.key] : null}
-                        fieldId={field.key}
-                        key={field.key}
-                        isDisabled={!edit}
-                        handleSimpleUpdate={handleSimpleUpdate}
-                        handleFileDownload={handleFileDownload}
-                        handleFileUpload={handleFileUpload}
-                        handleFileDelete={handleFileDelete}
-                        languageData={languageData}
-                    />
-                );
+                return <div>{stepField}</div>;
             }
         });
     };
@@ -195,6 +200,16 @@ const StepContent = ({
                 <CircularProgress color="inherit" />
             </Backdrop>
             {generateHeader()}
+            <Select
+                MenuProps={{
+                    style: { zIndex: 35001 },
+                }}
+                defaultValue={false}
+                onChange={handleQuestionFormatSelect}
+            >
+                <MenuItem value={false}>All Questions</MenuItem>
+                <MenuItem value={true}>Single Question</MenuItem>
+            </Select>
             <p>{`${lang.components.step.lastEditedBy} ${
                 stepData?.lastEditedBy
             } ${lang.components.step.on} ${formatDate(
