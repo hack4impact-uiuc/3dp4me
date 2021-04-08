@@ -9,6 +9,7 @@ const {
     COGNITO_REGION,
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
+    SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
 } = require('../../utils/aws/aws-exports');
 
 const { parseUserSecurityRoles } = require('../../middleware/authentication');
@@ -105,6 +106,10 @@ const getValidRoles = async (roles) => {
 
 const createAttributeUpdateParams = (username, oldRoles, newRole) => {
     let roles = arrayUnique(oldRoles.concat(newRole));
+    let rolesStringified = JSON.stringify(roles);
+
+    // AWS puts a hard limit on how many roles we can store
+    if (rolesStringified.length > SECURITY_ROLE_ATTRIBUTE_MAX_LEN) return null;
 
     const params = {
         UserAttributes: [
@@ -140,8 +145,16 @@ router.put(
             validUserRoles,
             roleId,
         );
-        const identityProvider = getIdentityProvider();
 
+        if (!params) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    'This user has reached the max amount of roles. They are not allowed to have any more.',
+            });
+        }
+
+        const identityProvider = getIdentityProvider();
         await identityProvider.adminUpdateUserAttributes(
             params,
             (err, data) => {
