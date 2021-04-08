@@ -1,6 +1,7 @@
 require('express-async-errors');
 require('dotenv').config();
 require('./utils/aws/aws-setup');
+const path = require('path');
 const mongoose = require('mongoose');
 const express = require('express');
 const fileUpload = require('express-fileupload');
@@ -9,6 +10,8 @@ const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
 const app = express();
+
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 app.use(cors());
 
 app.use(
@@ -33,7 +36,6 @@ mongoose.set('useFindAndModify', false);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// TODO: Move this to use Role-based
 app.use(requireAuthentication);
 app.use(require('./routes'));
 app.use(errorHandler);
