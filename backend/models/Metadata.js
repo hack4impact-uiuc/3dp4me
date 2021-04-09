@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const fieldEnum = {
+    AUDIO: 'Audio',
     STRING: 'String',
     MULTILINE_STRING: 'MultilineString',
     FILE: 'File',
@@ -10,6 +11,7 @@ const fieldEnum = {
     DIVIDER: 'Divider',
     HEADER: 'Header',
     RADIO_BUTTON: 'RadioButton',
+    MULTI_SELECT: 'MultiSelect',
     DROPDOWN: 'Dropdown',
 };
 
