@@ -100,7 +100,7 @@ function App() {
                                 <Patients languageData={languageData} />
                             </Route>
                             {/* Path = BASE_URL/patient-info/PATIENT_ID */}
-                            <Route exact path="/patient-info/:id">
+                            <Route exact path="/patient-info/:patientId">
                                 <Controller languageData={languageData} />
                             </Route>
                             <Route exact path="/section-tab">

@@ -42,26 +42,26 @@ const generateFieldSchema = (field) => {
                     message: 'Not a valid phone number',
                 },
             };
-        case fieldEnum.DROPDOWN:
-            if (field.options == null)
-                throw new Error('Dropdown must have options');
-
-            return {
-                type: Number,
-                required: true,
-                default: 0,
-                enum: field.options,
-            };
         case fieldEnum.RADIO_BUTTON:
             if (field.options == null)
                 throw new Error('Radio button must have options');
+
             return {
-                type: Number,
+                type: [questionOptionSchema],
                 required: true,
-                default: 0,
-                enum: field.options,
+                default: [],
+                validate: {
+                    validator: validateOptions,
+                    message: 'Index must be unique',
+                },
             };
         case fieldEnum.FILE:
+            return {
+                type: [fileSchema],
+                required: true,
+                default: [],
+            };
+        case fieldEnum.AUDIO:
             return {
                 type: [fileSchema],
                 required: true,
@@ -91,9 +91,7 @@ const addCollection = (stepMetadata) => {
     };
     stepMetadata.fields.forEach((field) => {
         const generatedSchema = generateFieldSchema(field);
-        if (generatedSchema) {
-            stepSchema[field.key] = generatedSchema;
-        }
+        if (generatedSchema) stepSchema[field.key] = generatedSchema;
     });
     const schema = new mongoose.Schema(stepSchema);
     mongoose.model(stepMetadata.key, schema, stepMetadata.key);
@@ -132,19 +130,12 @@ router.post(
         try {
             await session.withTransaction(async () => {
                 new_step_metadata.fields.forEach((field) => {
-                    if (
-                        field.fieldType == fieldEnum.RADIO_BUTTON ||
-                        field.fieldType == fieldEnum.DROPDOWN
-                    ) {
-                        if (
-                            field.options == null ||
-                            field.options.length == 0
-                        ) {
+                    if (field.fieldType == fieldEnum.RADIO_BUTTON) {
+                        if (field.options == null || field.options.length < 1) {
                             return res.status(400).json({
                                 code: 400,
                                 success: false,
-                                message:
-                                    'Dropdowns or radiobuttons require options.',
+                                message: 'Radiobuttons require options.',
                             });
                         }
                     }

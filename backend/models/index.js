@@ -8,10 +8,12 @@ const {
 
 const { Step } = require('./Metadata');
 const { fileSchema, stepStatusEnum } = require('./StepSchemaSubmodel');
+const { Role } = require('./Role');
 
 const models = {
     Patient,
     Step,
+    Role,
 };
 
 module.exports = {

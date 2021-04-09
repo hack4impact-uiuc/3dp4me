@@ -24,18 +24,18 @@ const Files = ({
         if (files == null) return null;
 
         return files.map((file) => (
-            <div className="file-row-wrapper" key={file.fileName}>
+            <div className="file-row-wrapper" key={file.filename}>
                 <Button
                     className="file-button"
                     onClick={() => {
-                        handleDownload(fieldKey, file);
+                        handleDownload(fieldKey, file.filename);
                     }}
                 >
                     <div className="file-info-wrapper">
                         <ArrowDownwardIcon />
                         <div>
                             <Typography align="left">
-                                {`${file.fileName}`}
+                                {`${file.filename}`}
                             </Typography>
                             <p id="file-upload-timestamp">
                                 {file.uploadDate.toString()}
@@ -91,7 +91,7 @@ Files.propTypes = {
     handleUpload: PropTypes.func.isRequired,
     files: PropTypes.arrayOf(
         PropTypes.shape({
-            fileName: PropTypes.string.isRequired,
+            filename: PropTypes.string.isRequired,
             uploadDate: PropTypes.instanceOf(Date).isRequired,
         }),
     ).isRequired,

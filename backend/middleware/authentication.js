@@ -1,27 +1,72 @@
 var AWS = require('aws-sdk');
+const {
+    COGNITO_REGION,
+    SECURITY_ROLE_ATTRIBUTE_NAME,
+} = require('../utils/aws/aws-exports');
+
+const getUser = async (accessToken) => {
+    var params = {
+        AccessToken: accessToken,
+    };
+
+    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider(
+        { region: COGNITO_REGION },
+    );
+
+    return await cognitoidentityserviceprovider.getUser(params).promise();
+};
+
+const parseUserSecurityRoles = (user) => {
+    if (!user || !user.UserAttributes) return [];
+
+    const securityRolesString = user.UserAttributes.find(
+        (attribute) => attribute.Name === SECURITY_ROLE_ATTRIBUTE_NAME,
+    );
+
+    if (!securityRolesString) return [];
+
+    return JSON.parse(securityRolesString.Value);
+};
 
 const requireAuthentication = async (req, res, next) => {
     try {
-        // TODO: Get more reliable way of accessing token
         const accessToken = req.headers.authorization.split(' ')[1];
+        const user = await getUser(accessToken);
+        user.roles = parseUserSecurityRoles(user);
 
-        var params = {
-            AccessToken: accessToken,
-        };
+        if (user.roles === []) {
+            return res.status(403).json({
+                success: false,
+                message:
+                    'You are not approved to access this site. Please contact an administrator.',
+            });
+        }
 
-        // TODO: Should we create a new one each time, or should we hold a single global?
-        var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-        const user = await cognitoidentityserviceprovider
-            .getUser(params)
-            .promise();
         req.user = user;
-
         next();
     } catch (error) {
+        console.error(error);
         return res.status(401).json({
+            success: false,
             message: 'Authentication Failed',
         });
     }
 };
 
-module.exports = requireAuthentication;
+const requireRole = (role) => {
+    return async (req, res, next) => {
+        if (!req.user) await requireAuthentication();
+        if (!req.user.roles.includes(role)) {
+            return res.status(403).json({
+                success: false,
+                message:
+                    'You are not approved to access this resource. Please contact an administrator.',
+            });
+        }
+
+        next();
+    };
+};
+
+module.exports.requireAuthentication = requireAuthentication;
+module.exports.parseUserSecurityRoles = parseUserSecurityRoles;

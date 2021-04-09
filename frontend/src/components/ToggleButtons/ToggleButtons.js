@@ -63,6 +63,11 @@ const ToggleButtons = ({
         if (metaData == null) return null;
 
         return metaData.map((element) => {
+            let status = null;
+            if (patientData)
+                status =
+                    patientData[element.key]?.status ?? STEP_STATUS.UNFINISHED;
+
             return (
                 <ToggleButton
                     disableRipple
@@ -71,9 +76,7 @@ const ToggleButtons = ({
                     }`}
                     value={element.key}
                 >
-                    {patientData && patientData[element.key]?.status
-                        ? statusIcons[patientData[element.key]?.status]
-                        : null}{' '}
+                    {patientData ? statusIcons[status] : null}{' '}
                     <b>{element.displayName[key]}</b>
                 </ToggleButton>
             );
