@@ -1,6 +1,7 @@
 import { Button } from '@material-ui/core';
 import React from 'react';
-import { addUserRole, getAllUsers, removeUserRole } from '../../utils/api';
+
+import { getAllUsers, removeUserRole } from '../../utils/api';
 
 const AccountManagement = () => {
     const addRole = async () => {
