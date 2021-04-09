@@ -171,6 +171,11 @@ export const addUserRole = async (username, roleName) => {
     return instance.put(requestString);
 };
 
+export const removeUserRole = async (username, roleName) => {
+    const requestString = `/users/${username}/roles/${roleName}`;
+    return instance.delete(requestString);
+};
+
 export const getAllUsers = async () => {
     const requestString = `/users`;
     return instance.get(requestString);

@@ -105,7 +105,9 @@ const getValidRoles = async (roles) => {
 };
 
 const createAttributeUpdateParams = (username, oldRoles, newRole) => {
-    let roles = arrayUnique(oldRoles.concat(newRole));
+    let roles = oldRoles;
+    if (newRole) roles = arrayUnique(oldRoles.concat(newRole));
+
     let rolesStringified = JSON.stringify(roles);
 
     // AWS puts a hard limit on how many roles we can store
@@ -189,11 +191,7 @@ router.delete(
         }
 
         userRoles.splice(roleIndex, 1);
-        const params = createAttributeUpdateParams(
-            username,
-            validUserRoles,
-            roleId,
-        );
+        const params = createAttributeUpdateParams(username, userRoles, null);
 
         const identityProvider = getIdentityProvider();
         await identityProvider.adminUpdateUserAttributes(
@@ -208,7 +206,7 @@ router.delete(
 
                 return res.status(200).json({
                     success: true,
-                    message: 'Role successfully added',
+                    message: 'Role successfully removed',
                 });
             },
         );
