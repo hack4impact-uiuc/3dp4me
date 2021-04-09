@@ -101,4 +101,4 @@ const stepSchema = new mongoose.Schema({
 });
 
 const Step = mongoose.model('steps', stepSchema);
-module.exports = { Step, fieldEnum };
+module.exports = { Step, fieldEnum, questionOptionSchema, validateOptions };

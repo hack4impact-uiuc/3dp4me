@@ -2,7 +2,12 @@ const express = require('express');
 const router = express.Router();
 const isValidNumber = require('libphonenumber-js');
 const { errorWrap } = require('../../utils');
-const { models, fileSchema, stepStatusEnum } = require('../../models');
+const {
+    models,
+    fileSchema,
+    stepStatusEnum,
+    validateOptions,
+} = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 
@@ -47,7 +52,7 @@ const generateFieldSchema = (field) => {
                 throw new Error('Radio button must have options');
 
             return {
-                type: [questionOptionSchema],
+                type: [models.questionOptionSchema],
                 required: true,
                 default: [],
                 validate: {
