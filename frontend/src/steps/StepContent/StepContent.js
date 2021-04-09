@@ -16,6 +16,7 @@ import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
 import StepField from '../../components/StepField/StepField';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { FIELD_TYPES } from '../../utils/constants';
 
 const StepContent = ({
     languageData,
@@ -117,10 +118,7 @@ const StepContent = ({
 
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
-
-        console.log(metaData.fields);
-
-        // if the current step is a survey step then only return the right numbered question
+        // if displaying a single question per page, only return the right numbered question
         return metaData.fields.map((field) => {
             const stepField = (
                 <StepField
@@ -139,34 +137,46 @@ const StepContent = ({
                     languageData={languageData}
                 />
             );
+
             if (singleQuestionFormat) {
-                // replace with survey step once complete
                 if (currentQuestion === field.fieldNumber) {
-                    console.log('hi');
-                    return (
-                        <div>
-                            {stepField}
-                            <Button
-                                onClick={() => {
-                                    if (currentQuestion !== 0)
-                                        setCurrentQuestion(currentQuestion - 1);
-                                }}
-                            >
-                                {lang.components.button.previous}
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    if (
-                                        currentQuestion !==
-                                        metaData.fields.length - 1
-                                    )
-                                        setCurrentQuestion(currentQuestion + 1);
-                                }}
-                            >
-                                {lang.components.button.next}
-                            </Button>
-                        </div>
-                    );
+                    if (
+                        field.fieldType === FIELD_TYPES.HEADER ||
+                        field.fieldType === FIELD_TYPES.DIVIDER
+                    ) {
+                        if (currentQuestion !== metaData.fields.length - 1)
+                            setCurrentQuestion(currentQuestion + 1);
+                        return null;
+                    } else {
+                        return (
+                            <div>
+                                {stepField}
+                                <Button
+                                    onClick={() => {
+                                        if (currentQuestion !== 0)
+                                            setCurrentQuestion(
+                                                currentQuestion - 1,
+                                            );
+                                    }}
+                                >
+                                    {lang.components.button.previous}
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        if (
+                                            currentQuestion !==
+                                            metaData.fields.length - 1
+                                        )
+                                            setCurrentQuestion(
+                                                currentQuestion + 1,
+                                            );
+                                    }}
+                                >
+                                    {lang.components.button.next}
+                                </Button>
+                            </div>
+                        );
+                    }
                 } else return null;
             } else {
                 return <div>{stepField}</div>;

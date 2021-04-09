@@ -36,7 +36,7 @@ mongoose.set('useFindAndModify', false);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(requireAuthentication);
+//app.use(requireAuthentication);
 app.use(require('./routes'));
 app.use(errorHandler);
 
