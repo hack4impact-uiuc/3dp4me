@@ -174,6 +174,45 @@ router.put(
     }),
 );
 
-// TODO: Delete role
+// Deletes user role
+router.delete(
+    '/:username/roles/:roleId',
+    errorWrap(async (req, res) => {
+        const { username, roleId } = req.params;
+        const userRoles = await getUserRoles(username);
+        const roleIndex = userRoles.indexOf(roleId);
+        if (roleIndex == -1) {
+            return res.status(400).json({
+                success: false,
+                message: 'User does not have role',
+            });
+        }
+
+        userRoles.splice(roleIndex, 1);
+        const params = createAttributeUpdateParams(
+            username,
+            validUserRoles,
+            roleId,
+        );
+
+        const identityProvider = getIdentityProvider();
+        await identityProvider.adminUpdateUserAttributes(
+            params,
+            (err, data) => {
+                if (err) {
+                    return res.status(500).json({
+                        success: false,
+                        message: err,
+                    });
+                }
+
+                return res.status(200).json({
+                    success: true,
+                    message: 'Role successfully added',
+                });
+            },
+        );
+    }),
+);
 
 module.exports = router;
