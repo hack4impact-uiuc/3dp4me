@@ -40,4 +40,9 @@ app.use(bodyParser.json());
 app.use(require('./routes'));
 app.use(errorHandler);
 
+// TODO: We also need to do some error handling here
+process.on('unhandledRejection', function (reason, p) {
+    //call handler here
+});
+
 module.exports = app;

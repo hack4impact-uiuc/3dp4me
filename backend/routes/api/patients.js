@@ -207,7 +207,7 @@ router.post(
                 accessKeyId: ACCESS_KEY_ID,
                 secretAccessKey: SECRET_ACCESS_KEY,
             },
-            async function (err, data) {
+            await async function (err, data) {
                 if (err) {
                     res.json(err);
                 } else {

@@ -211,6 +211,7 @@ router.put(
                 });
             }
         });
+
         if (
             req.body.fields.length - addedFields.length <=
             step_to_edit.fields.length
