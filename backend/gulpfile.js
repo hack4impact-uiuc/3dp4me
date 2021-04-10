@@ -67,10 +67,8 @@ function copyNodeJSCodeTask() {
     src('build/index.js')
         .pipe(rename('www'))
         .pipe(dest(`${paths.server_source_dest}`));
-    src(['build/index.js.map', './.env']).pipe(
-        dest(`${paths.server_source_dest}`),
-    );
-    return src(['package.json']).pipe(dest(`${paths.prod_build}`));
+    src(['build/index.js.map']).pipe(dest(`${paths.server_source_dest}`));
+    return src(['package.json', './.env']).pipe(dest(`${paths.prod_build}`));
 }
 
 function zippingTask() {
