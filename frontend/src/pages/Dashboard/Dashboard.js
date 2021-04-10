@@ -5,7 +5,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
-
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { getPatientName } from '../../utils/utils';
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
@@ -64,7 +64,7 @@ const Dashboard = ({ languageData }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
-
+    const errorWrap = useErrorWrap();
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
@@ -226,6 +226,9 @@ const Dashboard = ({ languageData }) => {
 
             // TODO: Error handling
             setStepsMetaData(res.result);
+            errorWrap(() => {
+                throw 'An error occurred';
+            });
 
             if (res.result.length > 0) setStep(res.result[0].key);
 

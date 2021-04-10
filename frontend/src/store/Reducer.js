@@ -5,7 +5,7 @@ const Reducer = (state, action) => {
         case REDUCER_ACTIONS.SET_ERROR:
             return {
                 ...state,
-                error: action.payload,
+                error: action.error,
                 isErrorVisible: true,
             };
         case REDUCER_ACTIONS.CLEAR_ERROR:

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Modal, RootRef } from '@material-ui/core';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Dashboard from './pages/Dashboard/Dashboard';
@@ -14,10 +14,6 @@ import { useErrorWrap } from './hooks/useErrorWrap';
 
 function AppContent({ languageData, onLanguageChange, username, userEmail }) {
     const [state, dispatch] = useContext(Context);
-    useErrorWrap(() => {
-        throw 'Error occurred';
-    });
-
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
@@ -29,7 +25,6 @@ function AppContent({ languageData, onLanguageChange, username, userEmail }) {
                 container={() => RootRef.current}
             >
                 <div>
-                    <h1>TESTESTS</h1>
                     <h1>{message}</h1>
                 </div>
             </Modal>
@@ -39,8 +34,6 @@ function AppContent({ languageData, onLanguageChange, username, userEmail }) {
     const handleErrorModalClose = () => {
         dispatch({ action: REDUCER_ACTIONS.CLEAR_ERROR });
     };
-
-    console.log(state.isErrorVisible);
 
     const renderAppContent = () => {
         // TODO: Add some state for if the user can't authenticate
@@ -57,7 +50,7 @@ function AppContent({ languageData, onLanguageChange, username, userEmail }) {
                         <Switch>
                             <Route exact path="/">
                                 <ErrorModal
-                                    message={state.errorMessage}
+                                    message={state.error}
                                     isOpen={state.isErrorVisible}
                                     onClose={handleErrorModalClose}
                                 />
