@@ -36,6 +36,7 @@ export const FIELD_TYPES = {
 
 export const REDUCER_ACTIONS = {
     SET_ERROR: 'SET_ERROR',
+    CLEAR_ERROR: 'CLEAR_ERROR',
 };
 
 export const PATIENT_KEY_STATUS = 'status';

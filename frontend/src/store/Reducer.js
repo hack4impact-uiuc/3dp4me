@@ -6,6 +6,12 @@ const Reducer = (state, action) => {
             return {
                 ...state,
                 error: action.payload,
+                isErrorVisible: true,
+            };
+        case REDUCER_ACTIONS.CLEAR_ERROR:
+            return {
+                ...state,
+                isErrorVisible: false,
             };
     }
 };

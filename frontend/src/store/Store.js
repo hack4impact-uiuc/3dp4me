@@ -3,6 +3,7 @@ import Reducer from './Reducer';
 
 const initialState = {
     error: null,
+    isErrorVisible: false,
 };
 
 const Store = ({ children }) => {
