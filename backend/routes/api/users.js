@@ -105,7 +105,9 @@ const getValidRoles = async (roles) => {
 };
 
 const createAttributeUpdateParams = (username, oldRoles, newRole) => {
-    let roles = arrayUnique(oldRoles.concat(newRole));
+    let roles = oldRoles;
+    if (newRole) roles = arrayUnique(oldRoles.concat(newRole));
+
     let rolesStringified = JSON.stringify(roles);
 
     // AWS puts a hard limit on how many roles we can store
@@ -174,6 +176,41 @@ router.put(
     }),
 );
 
-// TODO: Delete role
+// Deletes user role
+router.delete(
+    '/:username/roles/:roleId',
+    errorWrap(async (req, res) => {
+        const { username, roleId } = req.params;
+        const userRoles = await getUserRoles(username);
+        const roleIndex = userRoles.indexOf(roleId);
+        if (roleIndex == -1) {
+            return res.status(400).json({
+                success: false,
+                message: 'User does not have role',
+            });
+        }
+
+        userRoles.splice(roleIndex, 1);
+        const params = createAttributeUpdateParams(username, userRoles, null);
+
+        const identityProvider = getIdentityProvider();
+        await identityProvider.adminUpdateUserAttributes(
+            params,
+            (err, data) => {
+                if (err) {
+                    return res.status(500).json({
+                        success: false,
+                        message: err,
+                    });
+                }
+
+                return res.status(200).json({
+                    success: true,
+                    message: 'Role successfully removed',
+                });
+            },
+        );
+    }),
+);
 
 module.exports = router;

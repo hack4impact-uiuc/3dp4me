@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { getCurrentSession } from '../aws/aws-helper';
 
 const FileDownload = require('js-file-download');
@@ -169,6 +170,11 @@ export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
 export const addUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
     return instance.put(requestString);
+};
+
+export const removeUserRole = async (username, roleName) => {
+    const requestString = `/users/${username}/roles/${roleName}`;
+    return instance.delete(requestString);
 };
 
 export const getAllUsers = async () => {
