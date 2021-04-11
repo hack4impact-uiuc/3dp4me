@@ -108,10 +108,9 @@ const StepContent = ({
         return metaData.fields.map((field) => {
             return (
                 <StepField
-                    fieldType={field.fieldType}
                     displayName={field.displayName[key]}
+                    metadata={field}
                     value={updatedData ? updatedData[field.key] : null}
-                    fieldId={field.key}
                     key={field.key}
                     isDisabled={!edit}
                     patientId={patientId}
