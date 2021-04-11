@@ -99,7 +99,7 @@ const Controller = ({ languageData }) => {
         };
 
         getData();
-    }, [setStepMetaData, setPatientData, setLoading, patientId]);
+    }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
 
     const generateStepContent = () => {
         if (stepMetaData == null) return null;

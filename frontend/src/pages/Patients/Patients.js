@@ -211,7 +211,7 @@ const Patients = ({ languageData }) => {
 
     useEffect(() => {
         getData();
-    }, [setAllPatients]);
+    }, [setAllPatients, errorWrap]);
 
     return (
         <div className="all-patients">

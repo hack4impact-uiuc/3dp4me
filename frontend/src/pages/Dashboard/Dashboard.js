@@ -231,7 +231,7 @@ const Dashboard = ({ languageData }) => {
         };
 
         getMetadata();
-    }, [setStep, setStepsMetaData]);
+    }, [setStep, setStepsMetaData, errorWrap]);
 
     function generatePageHeader() {
         if (stepsMetaData == null) return lang.components.table.loading;

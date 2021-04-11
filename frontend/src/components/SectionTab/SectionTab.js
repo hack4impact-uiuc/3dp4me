@@ -21,7 +21,7 @@ const SectionTab = ({ languageData }) => {
             });
         };
         fetchData();
-    }, [setStepMetadata]);
+    }, [setStepMetadata, errorWrap]);
 
     const generateSteps = () => {
         return stepMetadata.map((element) => {

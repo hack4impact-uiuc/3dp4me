@@ -20,10 +20,7 @@ function AppContent({ languageData, onLanguageChange, username, userEmail }) {
         dispatch({ type: REDUCER_ACTIONS.CLEAR_ERROR });
     };
 
-    console.log(state.isErrorVisible);
-
     const renderAppContent = () => {
-        // TODO: Add some state for if the user can't authenticate
         return (
             <div dir={key === 'AR' ? 'rtl' : 'ltr'}>
                 <Router>
