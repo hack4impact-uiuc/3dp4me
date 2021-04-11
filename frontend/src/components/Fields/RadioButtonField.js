@@ -1,11 +1,12 @@
 import { FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const RadioButtonField = ({
     fieldId,
     title,
     langKey,
-    value,
+    value = '',
     options,
     isDisabled,
     onChange,
@@ -14,9 +15,10 @@ const RadioButtonField = ({
         return options.map((option) => {
             if (option.IsHidden && value?.toString() !== option._id.toString())
                 return null;
-            console.log(value);
+
             return (
                 <FormControlLabel
+                    key={option._id}
                     value={option._id}
                     control={<Radio />}
                     label={option.Question[langKey]}
@@ -25,8 +27,6 @@ const RadioButtonField = ({
             );
         });
     };
-
-    // TODO: SOrt
 
     return (
         <div>
@@ -40,6 +40,25 @@ const RadioButtonField = ({
             </RadioGroup>
         </div>
     );
+};
+
+RadioButtonField.propTypes = {
+    fieldId: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    langKey: PropTypes.string.isRequired,
+    value: PropTypes.string,
+    isDisabled: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired,
+    options: PropTypes.arrayOf(
+        PropTypes.shape({
+            IsHidden: PropTypes.bool.isRequired,
+            _id: PropTypes.string.isRequired,
+            Question: PropTypes.shape({
+                EN: PropTypes.string.isRequired,
+                AR: PropTypes.string.isRequired,
+            }),
+        }),
+    ),
 };
 
 // TODO: Proptypes
