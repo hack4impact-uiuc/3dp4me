@@ -7,18 +7,20 @@ const RadioButtonField = ({
     langKey,
     value,
     options,
+    isDisabled,
     onChange,
 }) => {
     const generateQuestions = () => {
         return options.map((option) => {
             if (option.IsHidden && value?.toString() !== option._id.toString())
                 return null;
-
+            console.log(value);
             return (
                 <FormControlLabel
-                    value={value}
+                    value={option._id}
                     control={<Radio />}
                     label={option.Question[langKey]}
+                    disabled={isDisabled}
                 />
             );
         });
@@ -32,6 +34,7 @@ const RadioButtonField = ({
             <RadioGroup
                 name={fieldId}
                 onChange={(e) => onChange(fieldId, e.target.value)}
+                value={value}
             >
                 {generateQuestions()}
             </RadioGroup>

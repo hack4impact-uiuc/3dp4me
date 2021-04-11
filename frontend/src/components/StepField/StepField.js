@@ -85,6 +85,7 @@ const StepField = ({
                 return (
                     <RadioButtonField
                         fieldId={metadata.key}
+                        isDisabled={isDisabled}
                         title={displayName}
                         langKey={langKey}
                         value={value}
