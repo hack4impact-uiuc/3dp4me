@@ -9,6 +9,7 @@ import React from 'react';
 
 import './AudioRecorder.scss';
 import { downloadBlobWithoutSaving } from '../../utils/api';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 /*
  * For whatever reason, this component cannot be written functionally.

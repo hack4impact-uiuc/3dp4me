@@ -16,6 +16,7 @@ import {
     REQUIRED_DASHBOARD_HEADERS,
     REQUIRED_DASHBOARD_SORT_KEYS,
 } from '../../utils/constants';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const useStyles = makeStyles(() => ({
     swalEditButton: {
@@ -45,6 +46,7 @@ const Patients = ({ languageData }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
+    const errorWrap = useErrorWrap();
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -201,10 +203,10 @@ const Patients = ({ languageData }) => {
     };
 
     const getData = async () => {
-        const res = await getAllPatients();
-        if (res?.result == null || res?.code !== 200) return;
-
-        setAllPatients(res.result);
+        errorWrap(async () => {
+            const res = await getAllPatients();
+            setAllPatients(res.result);
+        });
     };
 
     useEffect(() => {

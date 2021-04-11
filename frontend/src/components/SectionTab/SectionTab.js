@@ -5,18 +5,20 @@ import ListItem from '@material-ui/core/ListItem';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { getAllStepsMetadata } from '../../utils/api';
 import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const SectionTab = ({ languageData }) => {
     const key = languageData.selectedLanguage;
     const [stepMetadata, setStepMetadata] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
+    const errorWrap = useErrorWrap();
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await getAllStepsMetadata();
-            if (!res?.success || !res?.result) return;
-
-            setStepMetadata(res.result);
+            errorWrap(async () => {
+                const res = await getAllStepsMetadata();
+                setStepMetadata(res.result);
+            });
         };
         fetchData();
     }, [setStepMetadata]);

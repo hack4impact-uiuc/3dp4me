@@ -79,12 +79,12 @@ const Dashboard = ({ languageData }) => {
         ).value;
         patient.familyName = document.getElementById('createFamilyName').value;
 
-        const res = await postNewPatient(patient);
-
-        if (res?.success && edit) {
+        let res = null;
+        try {
+            res = await postNewPatient(patient);
             const id = res.result._id;
             window.location.href += `patient-info/${id}`;
-        } else {
+        } catch (error) {
             swal(
                 res?.success
                     ? lang.components.swal.createPatient.successMsg
@@ -210,32 +210,22 @@ const Dashboard = ({ languageData }) => {
         setSearchQuery('');
         if (stepKey !== null) {
             setStep(stepKey);
-            const res = await getPatientsByStage(stepKey);
-
-            // TODO: Error handling
-            if (!res?.success || !res?.result) return;
-
-            setPatients(res.result);
+            errorWrap(async () => {
+                const res = await getPatientsByStage(stepKey);
+                setPatients(res.result);
+            });
         }
     };
 
     useEffect(() => {
         const getMetadata = async () => {
-            let res = await getAllStepsMetadata();
-            if (!res?.success || !res?.result) return;
-
-            // TODO: Error handling
-            setStepsMetaData(res.result);
-            errorWrap(() => {
-                throw 'An error occurred';
+            errorWrap(async () => {
+                let res = await getAllStepsMetadata();
+                setStepsMetaData(res.result);
+                if (res.result.length > 0) setStep(res.result[0].key);
+                res = await getPatientsByStage(res.result[0].key);
+                setPatients(res.result);
             });
-
-            if (res.result.length > 0) setStep(res.result[0].key);
-
-            res = await getPatientsByStage(res.result[0].key);
-            if (!res?.success || !res?.result) return;
-
-            setPatients(res.result);
         };
 
         getMetadata();

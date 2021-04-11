@@ -32,72 +32,54 @@ instance.interceptors.request.use(
 
 export const getAllPatients = async () => {
     const requestString = '/patients';
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
 
 export const getPatientsByStage = async (stage) => {
     const requestString = `/stages/${stage}`;
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
 
 export const getPatientById = async (id) => {
     const requestString = `/patients/${id}`;
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
 
 export const postNewPatient = async (patientInfo) => {
     const requestString = `/patients/`;
-    return instance
-        .post(requestString, patientInfo) // TODO: use AWS userId
-        .then(
-            (res) => res.data,
-            (err) => {
-                console.error(err);
-                return null;
-            },
-        );
+    const res = await instance.post(requestString, patientInfo);
+
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
 
 export const updateStage = async (patientId, stage, updatedStage) => {
     const requestString = `/patients/${patientId}/${stage}`;
-    return instance
-        .post(requestString, updatedStage) // TODO: use AWS userId
-        .then(
-            (res) => res.data,
-            (err) => {
-                console.error(err);
-                return null;
-            },
-        );
+    const res = await instance.post(requestString, updatedStage);
+
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
 
 export const getAllStepsMetadata = async () => {
     const requestString = '/metadata/steps';
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
+
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
 
 export const downloadBlobWithoutSaving = async (
