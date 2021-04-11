@@ -85,6 +85,14 @@ const Controller = ({ languageData }) => {
                 stepData.fields = stepData.fields.sort(
                     (a, b) => a.fieldNumber - b.fieldNumber,
                 );
+
+                stepData.fields.forEach((field) => {
+                    if (!field.options?.length) return;
+
+                    field.options = field.options.sort(
+                        (a, b) => a.Index - b.Index,
+                    );
+                });
             });
             // TODO: Handle bad response
             if (metaData.length > 0) setSelectedStep(metaData[0].key);
