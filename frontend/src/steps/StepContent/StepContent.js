@@ -112,6 +112,7 @@ const StepContent = ({
                     metadata={field}
                     value={updatedData ? updatedData[field.key] : null}
                     key={field.key}
+                    langKey={key}
                     isDisabled={!edit}
                     patientId={patientId}
                     stepKey={metaData.key}

@@ -12,6 +12,7 @@ import RadioButtonField from '../Fields/RadioButtonField';
 const StepField = ({
     metadata,
     value,
+    langKey,
     languageData,
     patientId = '',
     displayName,
@@ -83,7 +84,9 @@ const StepField = ({
             case FIELD_TYPES.RADIO_BUTTON:
                 return (
                     <RadioButtonField
+                        fieldId={metadata.key}
                         title={displayName}
+                        langKey={langKey}
                         value={value}
                         options={metadata.options}
                         onChange={handleSimpleUpdate}
