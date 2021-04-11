@@ -1,9 +1,10 @@
 import { useContext } from 'react';
+
 import { Context } from '../store/Store';
 import { REDUCER_ACTIONS } from '../utils/constants';
 
 export const useErrorWrap = () => {
-    const [state, dispatch] = useContext(Context);
+    const dispatch = useContext(Context)[1];
 
     return async (func) => {
         try {

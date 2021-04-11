@@ -5,6 +5,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
+
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { getPatientName } from '../../utils/utils';
 import {
@@ -83,7 +84,8 @@ const Dashboard = ({ languageData }) => {
         try {
             res = await postNewPatient(patient);
             const id = res.result._id;
-            window.location.href += `patient-info/${id}`;
+
+            if (edit) window.location.href += `patient-info/${id}`;
         } catch (error) {
             swal(
                 res?.success

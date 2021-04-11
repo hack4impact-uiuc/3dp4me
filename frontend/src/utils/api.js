@@ -33,7 +33,7 @@ instance.interceptors.request.use(
 export const getAllPatients = async () => {
     const requestString = '/patients';
     const res = await instance.get(requestString);
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
@@ -41,7 +41,7 @@ export const getAllPatients = async () => {
 export const getPatientsByStage = async (stage) => {
     const requestString = `/stages/${stage}`;
     const res = await instance.get(requestString);
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
@@ -50,7 +50,7 @@ export const getPatientById = async (id) => {
     const requestString = `/patients/${id}`;
     const res = await instance.get(requestString);
 
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
@@ -59,7 +59,7 @@ export const postNewPatient = async (patientInfo) => {
     const requestString = `/patients/`;
     const res = await instance.post(requestString, patientInfo);
 
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
@@ -68,7 +68,7 @@ export const updateStage = async (patientId, stage, updatedStage) => {
     const requestString = `/patients/${patientId}/${stage}`;
     const res = await instance.post(requestString, updatedStage);
 
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
@@ -77,7 +77,7 @@ export const getAllStepsMetadata = async () => {
     const requestString = '/metadata/steps';
 
     const res = await instance.get(requestString);
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
@@ -113,12 +113,12 @@ export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
         filename,
     );
 
-    if (!blob) throw 'Could not download file';
+    if (!blob) throw new Error('Could not download file');
 
     try {
         await FileDownload(blob, filename);
     } catch (error) {
-        throw 'Could not download file';
+        throw new Error('Could not download file');
     }
 };
 
@@ -140,7 +140,7 @@ export const uploadFile = async (
         },
     });
 
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
@@ -149,7 +149,7 @@ export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     const res = await instance.delete(requestString);
 
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
@@ -158,7 +158,7 @@ export const addUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
     const res = await instance.put(requestString);
 
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
@@ -167,7 +167,7 @@ export const removeUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
     const res = await instance.delete(requestString);
 
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
@@ -176,7 +176,7 @@ export const getAllUsers = async () => {
     const requestString = `/users`;
     const res = await instance.get(requestString);
 
-    if (!res?.data?.success) throw res?.data?.message;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };

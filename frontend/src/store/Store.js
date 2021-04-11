@@ -1,4 +1,6 @@
 import React, { createContext, useReducer } from 'react';
+import PropTypes from 'prop-types';
+
 import Reducer from './Reducer';
 
 const initialState = {
@@ -16,4 +18,8 @@ const Store = ({ children }) => {
 };
 
 export const Context = createContext(initialState);
+
+Store.propTypes = {
+    children: PropTypes.element,
+};
 export default Store;

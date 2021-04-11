@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Modal, RootRef } from '@material-ui/core';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import Dashboard from './pages/Dashboard/Dashboard';
 import AccountManagement from './pages/AccountManagement/AccountManagment';
 import Metrics from './pages/Metrics/Metrics';
@@ -10,12 +11,10 @@ import SectionTab from './components/SectionTab/SectionTab';
 import Controller from './steps/Controller/Controller';
 import { REDUCER_ACTIONS } from './utils/constants';
 import { Context } from './store/Store';
-import { useErrorWrap } from './hooks/useErrorWrap';
 
 function AppContent({ languageData, onLanguageChange, username, userEmail }) {
     const [state, dispatch] = useContext(Context);
     const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     const ErrorModal = ({ message, isOpen, onClose }) => {
         return (

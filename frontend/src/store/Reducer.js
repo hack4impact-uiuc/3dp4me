@@ -13,6 +13,8 @@ const Reducer = (state, action) => {
                 ...state,
                 isErrorVisible: false,
             };
+        default:
+            return state;
     }
 };
 

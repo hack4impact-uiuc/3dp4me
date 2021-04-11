@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Amplify, Auth } from 'aws-amplify';
+
 import Store from './store/Store';
 import AppContent from './AppContent';
 import { awsconfig } from './aws/aws-exports';
