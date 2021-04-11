@@ -113,15 +113,12 @@ export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
         filename,
     );
 
-    if (!blob) {
-        console.error('Could not download file');
-        return;
-    }
+    if (!blob) throw 'Could not download file';
 
     try {
-        FileDownload(blob, filename);
+        await FileDownload(blob, filename);
     } catch (error) {
-        console.error(error);
+        throw 'Could not download file';
     }
 };
 
@@ -137,29 +134,49 @@ export const uploadFile = async (
     formData.append('uploadedFile', filedata);
     formData.append('uploadedFileName', filename || filedata.name);
 
-    return instance.post(requestString, formData, {
+    const res = await instance.post(requestString, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
     });
+
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
 
 export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
-    return instance.delete(requestString);
+    const res = await instance.delete(requestString);
+
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
 
 export const addUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
-    return instance.put(requestString);
+    const res = await instance.put(requestString);
+
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
 
 export const removeUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
-    return instance.delete(requestString);
+    const res = await instance.delete(requestString);
+
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
 
 export const getAllUsers = async () => {
     const requestString = `/users`;
-    return instance.get(requestString);
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw res?.data?.message;
+
+    return res.data;
 };
