@@ -135,8 +135,9 @@ StepField.propTypes = {
     handleFileDelete: PropTypes.func,
     displayName: PropTypes.string,
     stepKey: PropTypes.string,
+    langKey: PropTypes.string,
     metadata: PropTypes.shape({
-        fieldId: PropTypes.string.isRequired,
+        key: PropTypes.string.isRequired,
         fieldType: PropTypes.string.isRequired,
         options: PropTypes.arrayOf(PropTypes.string),
     }),
