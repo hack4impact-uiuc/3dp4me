@@ -60,12 +60,11 @@ const Controller = ({ languageData }) => {
     };
 
     const onStepSaved = (stepKey, stepData) => {
-        const newPatientData = _.cloneDeep(patientData);
-        newPatientData[stepKey] = _.cloneDeep(stepData);
-        setPatientData(newPatientData);
-
         errorWrap(async () => {
+            const newPatientData = _.cloneDeep(patientData);
+            newPatientData[stepKey] = _.cloneDeep(stepData);
             await updateStage(patientId, stepKey, stepData);
+            setPatientData(newPatientData);
         });
     };
 

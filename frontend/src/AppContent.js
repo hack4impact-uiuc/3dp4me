@@ -17,8 +17,10 @@ function AppContent({ languageData, onLanguageChange, username, userEmail }) {
     const key = languageData.selectedLanguage;
 
     const handleErrorModalClose = () => {
-        dispatch({ action: REDUCER_ACTIONS.CLEAR_ERROR });
+        dispatch({ type: REDUCER_ACTIONS.CLEAR_ERROR });
     };
+
+    console.log(state.isErrorVisible);
 
     const renderAppContent = () => {
         // TODO: Add some state for if the user can't authenticate
@@ -31,14 +33,16 @@ function AppContent({ languageData, onLanguageChange, username, userEmail }) {
                         username={username}
                         userEmail={userEmail}
                     />
+
+                    <ErrorModal
+                        message={state.error}
+                        isOpen={state.isErrorVisible}
+                        onClose={handleErrorModalClose}
+                    />
+
                     <div className={`${key === 'AR' ? 'flip' : ''} content`}>
                         <Switch>
                             <Route exact path="/">
-                                <ErrorModal
-                                    message={state.error}
-                                    isOpen={state.isErrorVisible}
-                                    onClose={handleErrorModalClose}
-                                />
                                 <Dashboard languageData={languageData} />
                             </Route>
                             <Route exact path="/account">
