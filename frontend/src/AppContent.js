@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Modal, RootRef } from '@material-ui/core';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Dashboard from './pages/Dashboard/Dashboard';
@@ -9,26 +8,13 @@ import Patients from './pages/Patients/Patients';
 import Navbar from './components/Navbar/Navbar';
 import SectionTab from './components/SectionTab/SectionTab';
 import Controller from './steps/Controller/Controller';
+import ErrorModal from './components/ErrorModal/ErrorModal';
 import { REDUCER_ACTIONS } from './utils/constants';
 import { Context } from './store/Store';
 
 function AppContent({ languageData, onLanguageChange, username, userEmail }) {
     const [state, dispatch] = useContext(Context);
     const key = languageData.selectedLanguage;
-
-    const ErrorModal = ({ message, isOpen, onClose }) => {
-        return (
-            <Modal
-                open={isOpen}
-                onClose={onClose}
-                container={() => RootRef.current}
-            >
-                <div>
-                    <h1>{message}</h1>
-                </div>
-            </Modal>
-        );
-    };
 
     const handleErrorModalClose = () => {
         dispatch({ action: REDUCER_ACTIONS.CLEAR_ERROR });
