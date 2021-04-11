@@ -202,14 +202,13 @@ const Patients = ({ languageData }) => {
         });
     };
 
-    const getData = async () => {
-        errorWrap(async () => {
-            const res = await getAllPatients();
-            setAllPatients(res.result);
-        });
-    };
-
     useEffect(() => {
+        const getData = async () => {
+            errorWrap(async () => {
+                const res = await getAllPatients();
+                setAllPatients(res.result);
+            });
+        };
         getData();
     }, [setAllPatients, errorWrap]);
 
