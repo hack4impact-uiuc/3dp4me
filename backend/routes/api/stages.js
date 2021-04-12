@@ -1,59 +1,47 @@
 const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
-const { models } = require('../../models');
-
-// Get all patients  basic info
-router.get(
-    '/',
-    errorWrap(async (req, res) => {
-        models.Patient.find(
-            {},
-            // '_id patientInfo.name createdDate lastEdited status',
-        ).then((patients) => {
-            fin = patients.map((info) => {
-                return {
-                    _id: info._id,
-                    name: info.patientInfo.name,
-                    createdDate: info.createdDate,
-                    lastEdited: info.lastEdited,
-                    status: info.status,
-                };
-            });
-
-            res.status(200).json({
-                code: 200,
-                success: true,
-                result: fin,
-            });
-        });
-    }),
-);
+const { models, overallStatusEnum } = require('../../models');
+const mongoose = require('mongoose');
 
 // GET: Returns basic stage info for every user
+// GET: Returns everything associated with patient step
 router.get(
     '/:stage',
     errorWrap(async (req, res) => {
-        const { id, stage } = req.params;
-        const patientsData = await models.Patient.find(
-            {},
-            // '_id patientInfo.name createdDate ' + stage,
-        );
-        const remappedPatients = patientsData.map((info) => {
-            const stageData = info[stage];
-            return {
-                _id: info._id,
-                name: info.patientInfo.name,
-                createdDate: info.createdDate,
-                feedbackCycle: stageData.feedbackCycle,
-                lastEdited: stageData.lastEdited,
-                status: stageData.status,
-            };
+        const { stage } = req.params;
+        let stepData = [];
+        const steps = await models.Step.find({ key: stage });
+
+        // Check if stage exists in metadata
+        if (steps.length == 0) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Stage not found.',
+            });
+        }
+
+        const collection = await mongoose.connection.db.collection(stage);
+
+        // TODO: Replace with an aggregation command that gets all patient data then $lookup on patientId for stage
+        let patients = await models.Patient.find({
+            status: overallStatusEnum.ACTIVE,
         });
+
+        for (let i = 0; i < patients.length; i++) {
+            const stepInfo = await collection.findOne({
+                patientId: patients[i]._id.toString(),
+            });
+
+            stepData[i] = patients[i].toObject();
+            stepData[i][stage] = stepInfo;
+        }
+
         res.status(200).json({
             code: 200,
             success: true,
-            result: remappedPatients,
+            result: stepData,
         });
     }),
 );

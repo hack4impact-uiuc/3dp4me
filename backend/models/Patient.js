@@ -11,14 +11,18 @@ const patientSchema = new mongoose.Schema({
     fathersName: { type: String, required: false, default: '' },
     grandfathersName: { type: String, required: false, default: '' },
     familyName: { type: String, required: true },
-    dateCreated: { type: Date, required: true, default: new Date() },
-    orderId: { type: String, required: true },
-    lastEdited: { type: Date, required: true, default: new Date() },
+    dateCreated: { type: Date, required: false, default: new Date() },
+    orderId: { type: String, required: false, default: '' },
+    lastEdited: { type: Date, required: false, default: new Date() },
     lastEditedBy: { type: String, required: true },
-    status: { type: overallStatusEnum, required: true },
+    status: {
+        type: overallStatusEnum,
+        required: false,
+        default: overallStatusEnum.ACTIVE,
+    },
 });
 
-const Patient = mongoose.model('Patient', patientSchema);
+const Patient = mongoose.model('Patient', patientSchema, 'Patient');
 
 module.exports = {
     Patient,

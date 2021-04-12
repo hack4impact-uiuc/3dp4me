@@ -31,50 +31,44 @@ const StepContent = ({
         setUpdatedData(dataCopy);
     };
 
-    const handleFileDelete = async (fileKey, file) => {
-        deleteFile(patientId, stepData.key, file.fileName);
-        let updatedFiles = _.cloneDeep(stepData[fileKey]);
-        updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
+    const handleFileDelete = async (fieldKey, file) => {
+        deleteFile(patientId, metaData.key, fieldKey, file.filename);
+        if (!updatedData[fieldKey]) return;
 
-        handleSimpleUpdate(fileKey, updatedFiles);
+        let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
+        updatedFiles = updatedFiles.filter((f) => f.filename !== file.filename);
+
+        handleSimpleUpdate(fieldKey, updatedFiles);
     };
 
-    const handleFileDownload = (fileName) => {
-        downloadFile(patientId, stepData.key, fileName);
+    const handleFileDownload = (fieldKey, filename) => {
+        downloadFile(patientId, metaData.key, fieldKey, filename);
     };
 
-    const handleFileUpload = async (fileKey, file) => {
-        let filePrefix = '';
-        const fieldMetadata = metaData.fields.find((field) => {
-            return field.key === fileKey;
-        });
-        if (
-            fieldMetadata.filePrefix !== null &&
-            fieldMetadata.filePrefix !== ''
-        )
-            filePrefix = `${fieldMetadata.filePrefix}_`;
-
-        const formattedFileName = `${filePrefix}${file.name}`;
+    const handleFileUpload = async (fieldKey, file) => {
         const res = await uploadFile(
             patientId,
-            stepData.key,
+            metaData.key,
+            fieldKey,
+            file.name,
             file,
-            formattedFileName,
         );
-
         // TODO: Display error if res is null
-        let files = _.cloneDeep(stepData[fileKey]);
-        files = files.concat({
-            fileName: res.data.data.name,
+        const newFile = {
+            filename: res.data.data.name,
             uploadedBy: res.data.data.uploadedBy,
             uploadDate: res.data.data.uploadDate,
-        });
+        };
 
-        handleSimpleUpdate(fileKey, files);
+        let files = _.cloneDeep(updatedData[fieldKey]);
+        if (files) files = files.concat(newFile);
+        else files = [newFile];
+
+        handleSimpleUpdate(fieldKey, files);
     };
 
     const saveData = () => {
-        onDataSaved(stepData.key, updatedData);
+        onDataSaved(metaData.key, updatedData);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };
@@ -111,16 +105,17 @@ const StepContent = ({
 
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
-        if (updatedData == null) return null;
         return metaData.fields.map((field) => {
             return (
                 <StepField
                     fieldType={field.fieldType}
                     displayName={field.displayName[key]}
-                    value={updatedData[field.key]}
+                    value={updatedData ? updatedData[field.key] : null}
                     fieldId={field.key}
                     key={field.key}
                     isDisabled={!edit}
+                    patientId={patientId}
+                    stepKey={metaData.key}
                     handleSimpleUpdate={handleSimpleUpdate}
                     handleFileDownload={handleFileDownload}
                     handleFileUpload={handleFileUpload}
@@ -132,8 +127,6 @@ const StepContent = ({
     };
 
     const generateFooter = () => {
-        if (stepData == null) return null;
-
         return (
             <BottomBar
                 lastEditedBy={stepData?.lastEditedBy}
@@ -158,7 +151,7 @@ const StepContent = ({
             <p>{`${lang.components.step.lastEditedBy} ${
                 stepData?.lastEditedBy
             } ${lang.components.step.on} ${formatDate(
-                stepData?.lastEdited,
+                new Date(stepData?.lastEdited),
                 key,
             )}`}</p>
             {genereateFields()}

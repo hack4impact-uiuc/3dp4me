@@ -63,6 +63,11 @@ const ToggleButtons = ({
         if (metaData == null) return null;
 
         return metaData.map((element) => {
+            let status = null;
+            if (patientData)
+                status =
+                    patientData[element.key]?.status ?? STEP_STATUS.UNFINISHED;
+
             return (
                 <ToggleButton
                     disableRipple
@@ -71,9 +76,7 @@ const ToggleButtons = ({
                     }`}
                     value={element.key}
                 >
-                    {patientData != null
-                        ? statusIcons[patientData[element.key].status]
-                        : null}{' '}
+                    {patientData ? statusIcons[status] : null}{' '}
                     <b>{element.displayName[key]}</b>
                 </ToggleButton>
             );
@@ -88,7 +91,7 @@ const ToggleButtons = ({
                 <div className="toggle-button-selector">
                     {step === element.key ? (
                         <div className="current-step-label">
-                            {patientData != null
+                            {patientData && patientData[element.key]?.status
                                 ? statusIcons[patientData[element.key].status]
                                 : null}{' '}
                             <b>{element.displayName[key]}</b>
@@ -105,7 +108,7 @@ const ToggleButtons = ({
         return metaData.map((element) => {
             return (
                 <MenuItem onClick={(e) => handleCloseSelector(e, element.key)}>
-                    {patientData != null
+                    {patientData && patientData[element.key]?.status
                         ? statusIcons[patientData[element.key].status]
                         : null}{' '}
                     <b className="selector-text">{element.displayName[key]}</b>
