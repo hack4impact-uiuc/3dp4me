@@ -1,6 +1,6 @@
 @import '../../styles/colors.scss';
 
-body {
+.login-body {
     background-color: $loginBackground;
 }
 
@@ -23,7 +23,7 @@ body {
 .inner {
 }
 
-.header {
+.login-header {
     display: flex;
     flex-wrap: nowrap;
     width: 100%;
