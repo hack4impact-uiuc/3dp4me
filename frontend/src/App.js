@@ -6,6 +6,8 @@ import AppContent from './AppContent';
 import { awsconfig } from './aws/aws-exports';
 import translations from './translations.json';
 import Login from './components/Login/Login';
+import { registerLocale } from 'react-datepicker';
+import { enUS, arSA } from 'date-fns/locale';
 import {
     UNDEFINED_AUTH,
     AUTHENTICATED,
@@ -15,6 +17,8 @@ import {
 import { getCurrentUserInfo } from './aws/aws-helper';
 
 Amplify.configure(awsconfig);
+registerLocale('EN', enUS);
+registerLocale('AR', arSA);
 
 function App() {
     const [selectedLang, setSelectedLang] = useState('EN');

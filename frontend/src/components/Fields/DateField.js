@@ -1,39 +1,41 @@
 import React from 'react';
-import { TextField as Text } from '@material-ui/core';
+import DatePicker from 'react-datepicker';
 import PropTypes from 'prop-types';
+import 'react-datepicker/dist/react-datepicker.css';
 
-const TextField = ({
+const DateField = ({
+    langKey,
     displayName,
-    type,
     isDisabled,
     fieldId,
     value,
     onChange,
 }) => {
-    const sendChanges = (e) => {
-        onChange(fieldId, e.target.value);
+    const sendChanges = (date) => {
+        onChange(fieldId, date.toString());
     };
+
     return (
         <div>
             <h3>{displayName}</h3>
-            <Text
+            <DatePicker
+                selected={Date.parse(value)}
                 disabled={isDisabled}
+                locale={langKey}
                 className={!isDisabled ? 'active-input' : 'input-field'}
-                variant="outlined"
                 onChange={sendChanges}
-                value={value}
             />
         </div>
     );
 };
 
-TextField.propTypes = {
+DateField.propTypes = {
+    langKey: PropTypes.string.isRequired,
     displayName: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
     fieldId: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
 };
 
-export default TextField;
+export default DateField;
