@@ -1,9 +1,7 @@
 import './Sidebar.css';
-import React, { useState, useEffect } from 'react';
-import ListItem from '@material-ui/core/ListItem';
+import React from 'react';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
-import { getAllStepsMetadata } from '../../utils/api';
 
 const Sidebar = ({ languageData, onClick, stepMetadata }) => {
     const key = languageData.selectedLanguage;
@@ -16,7 +14,7 @@ const Sidebar = ({ languageData, onClick, stepMetadata }) => {
         return (
             <div>
                 <button
-                    className="sidebar"
+                    type="button"
                     onClick={() => onButtonClick(element.key)}
                 >
                     {element.displayName[key]}

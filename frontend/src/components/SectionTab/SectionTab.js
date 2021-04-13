@@ -7,7 +7,6 @@ import { getAllStepsMetadata } from '../../utils/api';
 import Sidebar from '../Sidebar/Sidebar';
 import StepManagementContent from '../StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
-import { rest } from 'lodash';
 
 const SectionTab = ({ languageData }) => {
     const key = languageData.selectedLanguage;
@@ -21,7 +20,7 @@ const SectionTab = ({ languageData }) => {
 
     function GenerateStepManagementContent() {
         return stepMetadata.map((element) => {
-            if (selectedStep != element.key) {
+            if (selectedStep !== element.key) {
                 return null;
             }
             return (
