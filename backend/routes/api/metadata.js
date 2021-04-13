@@ -115,7 +115,7 @@ router.get(
         if (!metaData) {
             res.status(404).json({
                 code: 404,
-                success: true,
+                success: false,
                 message: 'Steps not found.',
             });
         } else {
