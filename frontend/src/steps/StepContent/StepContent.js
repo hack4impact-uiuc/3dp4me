@@ -10,6 +10,7 @@ import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
 import StepField from '../../components/StepField/StepField';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const StepContent = ({
     languageData,
@@ -21,6 +22,7 @@ const StepContent = ({
 }) => {
     const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
+    const errorWrap = useErrorWrap();
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -32,39 +34,47 @@ const StepContent = ({
     };
 
     const handleFileDelete = async (fieldKey, file) => {
-        deleteFile(patientId, metaData.key, fieldKey, file.filename);
-        if (!updatedData[fieldKey]) return;
+        errorWrap(async () => {
+            await deleteFile(patientId, metaData.key, fieldKey, file.filename);
+            if (!updatedData[fieldKey]) return;
 
-        let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
-        updatedFiles = updatedFiles.filter((f) => f.filename !== file.filename);
+            let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
+            updatedFiles = updatedFiles.filter(
+                (f) => f.filename !== file.filename,
+            );
 
-        handleSimpleUpdate(fieldKey, updatedFiles);
+            handleSimpleUpdate(fieldKey, updatedFiles);
+        });
     };
 
     const handleFileDownload = (fieldKey, filename) => {
-        downloadFile(patientId, metaData.key, fieldKey, filename);
+        errorWrap(async () => {
+            await downloadFile(patientId, metaData.key, fieldKey, filename);
+        });
     };
 
     const handleFileUpload = async (fieldKey, file) => {
-        const res = await uploadFile(
-            patientId,
-            metaData.key,
-            fieldKey,
-            file.name,
-            file,
-        );
-        // TODO: Display error if res is null
-        const newFile = {
-            filename: res.data.data.name,
-            uploadedBy: res.data.data.uploadedBy,
-            uploadDate: res.data.data.uploadDate,
-        };
+        errorWrap(async () => {
+            const res = await uploadFile(
+                patientId,
+                metaData.key,
+                fieldKey,
+                file.name,
+                file,
+            );
 
-        let files = _.cloneDeep(updatedData[fieldKey]);
-        if (files) files = files.concat(newFile);
-        else files = [newFile];
+            const newFile = {
+                filename: res.data.data.name,
+                uploadedBy: res.data.data.uploadedBy,
+                uploadDate: res.data.data.uploadDate,
+            };
 
-        handleSimpleUpdate(fieldKey, files);
+            let files = _.cloneDeep(updatedData[fieldKey]);
+            if (files) files = files.concat(newFile);
+            else files = [newFile];
+
+            handleSimpleUpdate(fieldKey, files);
+        });
     };
 
     const saveData = () => {

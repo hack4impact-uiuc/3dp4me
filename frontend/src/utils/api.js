@@ -32,72 +32,54 @@ instance.interceptors.request.use(
 
 export const getAllPatients = async () => {
     const requestString = '/patients';
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const getPatientsByStage = async (stage) => {
     const requestString = `/stages/${stage}`;
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const getPatientById = async (id) => {
     const requestString = `/patients/${id}`;
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const postNewPatient = async (patientInfo) => {
     const requestString = `/patients/`;
-    return instance
-        .post(requestString, patientInfo) // TODO: use AWS userId
-        .then(
-            (res) => res.data,
-            (err) => {
-                console.error(err);
-                return null;
-            },
-        );
+    const res = await instance.post(requestString, patientInfo);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const updateStage = async (patientId, stage, updatedStage) => {
     const requestString = `/patients/${patientId}/${stage}`;
-    return instance
-        .post(requestString, updatedStage) // TODO: use AWS userId
-        .then(
-            (res) => res.data,
-            (err) => {
-                console.error(err);
-                return null;
-            },
-        );
+    const res = await instance.post(requestString, updatedStage);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const getAllStepsMetadata = async () => {
     const requestString = '/metadata/steps';
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
+
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const downloadBlobWithoutSaving = async (
@@ -131,15 +113,12 @@ export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
         filename,
     );
 
-    if (!blob) {
-        console.error('Could not download file');
-        return;
-    }
+    if (!blob) throw new Error('Could not download file');
 
     try {
-        FileDownload(blob, filename);
+        await FileDownload(blob, filename);
     } catch (error) {
-        console.error(error);
+        throw new Error('Could not download file');
     }
 };
 
@@ -155,29 +134,49 @@ export const uploadFile = async (
     formData.append('uploadedFile', filedata);
     formData.append('uploadedFileName', filename || filedata.name);
 
-    return instance.post(requestString, formData, {
+    const res = await instance.post(requestString, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
     });
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
-    return instance.delete(requestString);
+    const res = await instance.delete(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const addUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
-    return instance.put(requestString);
+    const res = await instance.put(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const removeUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
-    return instance.delete(requestString);
+    const res = await instance.delete(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const getAllUsers = async () => {
     const requestString = `/users`;
-    return instance.get(requestString);
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };

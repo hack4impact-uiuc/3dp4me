@@ -26,6 +26,7 @@ import {
 } from '../../utils/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import { getPatientName } from '../../utils/utils';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const theme = createMuiTheme({
     direction: 'rtl',
@@ -34,6 +35,7 @@ const theme = createMuiTheme({
 const Controller = ({ languageData }) => {
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
+    const errorWrap = useErrorWrap();
 
     const [selectedStep, setSelectedStep] = useState(null);
     const [stepMetaData, setStepMetaData] = useState(null);
@@ -58,10 +60,12 @@ const Controller = ({ languageData }) => {
     };
 
     const onStepSaved = (stepKey, stepData) => {
-        const newPatientData = _.cloneDeep(patientData);
-        newPatientData[stepKey] = _.cloneDeep(stepData);
-        setPatientData(newPatientData);
-        updateStage(patientId, stepKey, stepData);
+        errorWrap(async () => {
+            const newPatientData = _.cloneDeep(patientData);
+            newPatientData[stepKey] = _.cloneDeep(stepData);
+            await updateStage(patientId, stepKey, stepData);
+            setPatientData(newPatientData);
+        });
     };
 
     const onStepChange = (newStep) => {
@@ -72,38 +76,38 @@ const Controller = ({ languageData }) => {
 
     useEffect(() => {
         const getData = async () => {
-            let res = await getAllStepsMetadata();
-            if (!res?.success || !res?.result) return;
-            let metaData = res.result;
+            errorWrap(async () => {
+                let res = await getAllStepsMetadata();
+                let metaData = res.result;
 
-            res = await getPatientById(patientId);
-            if (!res?.success || !res?.result) return;
-            const data = res.result;
+                res = await getPatientById(patientId);
+                const data = res.result;
 
-            metaData = metaData.sort((a, b) => a.stepNumber - b.stepNumber);
-            metaData.forEach((stepData) => {
-                stepData.fields = stepData.fields.sort(
-                    (a, b) => a.fieldNumber - b.fieldNumber,
-                );
-
-                stepData.fields.forEach((field) => {
-                    if (!field.options?.length) return;
-
-                    field.options = field.options.sort(
-                        (a, b) => a.Index - b.Index,
+                metaData = metaData.sort((a, b) => a.stepNumber - b.stepNumber);
+                metaData.forEach((stepData) => {
+                    stepData.fields = stepData.fields.sort(
+                        (a, b) => a.fieldNumber - b.fieldNumber,
                     );
-                });
-            });
-            // TODO: Handle bad response
-            if (metaData.length > 0) setSelectedStep(metaData[0].key);
 
-            setStepMetaData(metaData);
-            setPatientData(data);
-            setLoading(false);
+                    stepData.fields.forEach((field) => {
+                        if (!field.options?.length) return;
+
+                        field.options = field.options.sort(
+                            (a, b) => a.Index - b.Index,
+                        );
+                    });
+                });
+
+                if (metaData.length > 0) setSelectedStep(metaData[0].key);
+
+                setStepMetaData(metaData);
+                setPatientData(data);
+                setLoading(false);
+            });
         };
 
         getData();
-    }, [setStepMetaData, setPatientData, setLoading, patientId]);
+    }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
 
     const generateStepContent = () => {
         if (stepMetaData == null) return null;
