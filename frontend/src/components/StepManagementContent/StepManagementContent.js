@@ -1,6 +1,7 @@
 import './StepManagementContent.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import 'semantic-ui-css/semantic.min.css';
+import { Form, Checkbox } from 'semantic-ui-react';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
@@ -9,6 +10,7 @@ const StepManagementContent = ({ languageData, fields }) => {
 
     function generateButtonInfo() {
         return fields.map((field) => {
+            console.log(fields);
             return (
                 <div className="ui card">
                     <div className="content">
@@ -16,7 +18,9 @@ const StepManagementContent = ({ languageData, fields }) => {
                         <div className="description">
                             Field Type: {field.fieldType}
                         </div>
-                        <i className="pencil alternate icon"></i>
+                        <button class="ui button">
+                            <i class="pencil alternate icon"></i>
+                        </button>
                     </div>
                 </div>
             );

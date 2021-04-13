@@ -4,16 +4,45 @@ import ListItem from '@material-ui/core/ListItem';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { getAllStepsMetadata } from '../../utils/api';
+import Sidebar from '../Sidebar/Sidebar';
+import StepManagementContent from '../StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
+import { rest } from 'lodash';
 
 const SectionTab = ({ languageData }) => {
     const key = languageData.selectedLanguage;
     const [stepMetadata, setStepMetadata] = useState([]);
+    const [selectedStep, setSelectedStep] = useState('');
     const [modalOpen, setModalOpen] = useState(false);
+
+    function UpdateSelectedStep(stepKey) {
+        setSelectedStep(stepKey);
+    }
+
+    function GenerateStepManagementContent() {
+        return stepMetadata.map((element) => {
+            if (selectedStep != element.key) {
+                return null;
+            }
+            return (
+                <StepManagementContent
+                    languageData={languageData}
+                    fields={element.fields}
+                />
+            );
+        });
+    }
 
     useEffect(() => {
         const fetchData = async () => {
             const res = await getAllStepsMetadata();
+
+            if (res != null) {
+                setStepMetadata(res.result);
+            }
+            if (res.result > 1) {
+                setSelectedStep(res[0].key);
+            }
             if (!res?.success || !res?.result) return;
 
             setStepMetadata(res.result);
@@ -47,6 +76,16 @@ const SectionTab = ({ languageData }) => {
 
     return (
         <div>
+            <div className="dashboard section-management-container">
+                <div>
+                    <Sidebar
+                        languageData={languageData}
+                        onClick={UpdateSelectedStep}
+                        stepMetadata={stepMetadata}
+                    />
+                </div>
+                {GenerateStepManagementContent()}
+            </div>
             <span> {generateSteps()}</span>
             <div>
                 <ListItem
