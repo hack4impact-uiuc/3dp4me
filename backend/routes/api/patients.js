@@ -86,6 +86,30 @@ router.post(
     }),
 );
 
+router.put(
+    '/:id',
+    errorWrap(async (req, res) => {
+        const { id } = req.params;
+        const patient = await models.Patient.findOneAndUpdate(
+            { _id: id },
+            { $set: req.body },
+        );
+
+        await patient.save(function (err, data) {
+            if (err) {
+                res.json(err);
+            } else {
+                res.status(200).json({
+                    code: 200,
+                    success: true,
+                    message: 'Patient successfully edited.',
+                    data: data,
+                });
+            }
+        });
+    }),
+);
+
 // GET: Download a file
 router.get(
     '/:id/files/:stepKey/:fieldKey/:fileName',
