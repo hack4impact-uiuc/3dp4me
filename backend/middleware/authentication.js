@@ -30,7 +30,6 @@ const parseUserSecurityRoles = (user) => {
 
 const requireAuthentication = async (req, res, next) => {
     try {
-        // TODO: Check if req.path contains '/api'. If not, then don't quthenticate
         const accessToken = req.headers.authorization.split(' ')[1];
         const user = await getUser(accessToken);
         user.roles = parseUserSecurityRoles(user);
