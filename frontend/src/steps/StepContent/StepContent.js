@@ -213,8 +213,12 @@ const StepContent = ({
                 defaultValue={false}
                 onChange={handleQuestionFormatSelect}
             >
-                <MenuItem value={false}>All Questions</MenuItem>
-                <MenuItem value={true}>Single Question</MenuItem>
+                <MenuItem value={false}>
+                    {lang.components.selectQuestionFormat.allQuestions}
+                </MenuItem>
+                <MenuItem value={true}>
+                    {lang.components.selectQuestionFormat.singleQuestion}
+                </MenuItem>
             </Select>
             <p>{`${lang.components.step.lastEditedBy} ${
                 stepData?.lastEditedBy
