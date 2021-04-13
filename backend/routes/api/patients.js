@@ -95,17 +95,11 @@ router.put(
             { $set: req.body },
         );
 
-        await patient.save(function (err, data) {
-            if (err) {
-                res.json(err);
-            } else {
-                res.status(200).json({
-                    code: 200,
-                    success: true,
-                    message: 'Patient successfully edited.',
-                    data: data,
-                });
-            }
+        res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Patient successfully edited.',
+            data: patient,
         });
     }),
 );
