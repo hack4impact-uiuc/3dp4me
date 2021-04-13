@@ -1,5 +1,6 @@
 import React from 'react';
 import { Auth } from 'aws-amplify';
+
 import Logo from '../../assets/3dp4me_logo.png';
 import GoogleLogo from '../../assets/google_logo.svg';
 
