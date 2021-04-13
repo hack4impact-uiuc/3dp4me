@@ -8,10 +8,10 @@ import './Login.scss';
 
 const Login = () => {
     return (
-        <div className="wrapper">
+        <div className="wrapper login-body">
             <div className="centered">
                 <div className="inner">
-                    <div className="header">
+                    <div className="login-header">
                         <img src={Logo} alt="3DP4ME logo" />
                         <h3>Dashboard Login</h3>
                     </div>

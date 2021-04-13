@@ -77,6 +77,7 @@ const Controller = ({ languageData }) => {
     useEffect(() => {
         const getData = async () => {
             errorWrap(async () => {
+                console.log('CALLED');
                 let res = await getAllStepsMetadata();
                 let metaData = res.result;
 
@@ -88,6 +89,14 @@ const Controller = ({ languageData }) => {
                     stepData.fields = stepData.fields.sort(
                         (a, b) => a.fieldNumber - b.fieldNumber,
                     );
+
+                    stepData.fields.forEach((field) => {
+                        if (!field.options?.length) return;
+
+                        field.options = field.options.sort(
+                            (a, b) => a.Index - b.Index,
+                        );
+                    });
                 });
 
                 if (metaData.length > 0) setSelectedStep(metaData[0].key);
