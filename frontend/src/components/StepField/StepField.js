@@ -9,6 +9,7 @@ import Files from '../Files/Files';
 import { FIELD_TYPES } from '../../utils/constants';
 import RadioButtonField from '../Fields/RadioButtonField';
 import DateField from '../Fields/DateField';
+import PhoneField from '../Fields/PhoneField';
 
 const StepField = ({
     metadata,
@@ -43,6 +44,16 @@ const StepField = ({
                         displayName={displayName}
                         isDisabled={isDisabled}
                         type="number"
+                        onChange={handleSimpleUpdate}
+                        fieldId={metadata.key}
+                        value={value}
+                    />
+                );
+            case FIELD_TYPES.PHONE:
+                return (
+                    <PhoneField
+                        displayName={displayName}
+                        isDisabled={isDisabled}
                         onChange={handleSimpleUpdate}
                         fieldId={metadata.key}
                         value={value}
