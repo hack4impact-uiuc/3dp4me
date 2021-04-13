@@ -77,7 +77,6 @@ const Controller = ({ languageData }) => {
     useEffect(() => {
         const getData = async () => {
             errorWrap(async () => {
-                console.log('CALLED');
                 let res = await getAllStepsMetadata();
                 let metaData = res.result;
 
