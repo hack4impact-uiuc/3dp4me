@@ -36,8 +36,21 @@ mongoose.set('useFindAndModify', false);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// This allows the backend to either serve routes or redirect to frontend
+app.get('/*', function (req, res, next) {
+    if (req._parsedOriginalUrl.path.includes('/api')) next();
+    else
+        res.sendFile(
+            path.join(__dirname, '../frontend/build/index.html'),
+            function (err) {
+                if (err) res.status(500).send(err);
+            },
+        );
+});
+
 app.use(requireAuthentication);
 app.use(require('./routes'));
+
 app.use(errorHandler);
 
 module.exports = app;
