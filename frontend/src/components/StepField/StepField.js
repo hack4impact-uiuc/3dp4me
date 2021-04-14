@@ -82,16 +82,6 @@ const StepField = ({
                         value={value}
                     />
                 );
-            case FIELD_TYPES.PHONE:
-                return (
-                    <TextField
-                        displayName={displayName}
-                        isDisabled={isDisabled}
-                        onChange={handleSimpleUpdate}
-                        fieldId={metadata.key}
-                        value={value}
-                    />
-                );
             case FIELD_TYPES.FILE:
                 return (
                     <Files

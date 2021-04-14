@@ -13,7 +13,7 @@ const PhoneField = ({
     const asYouType = new AsYouType();
 
     const sendChanges = (e) => {
-        let phoneNumber = e.target.value;
+        const phoneNumber = e.target.value;
         onChange(fieldId, phoneNumber);
     };
 
@@ -39,7 +39,6 @@ PhoneField.propTypes = {
     isDisabled: PropTypes.bool.isRequired,
     fieldId: PropTypes.string.isRequired,
     value: PropTypes.string,
-    type: PropTypes.string,
     onChange: PropTypes.func.isRequired,
 };
 
