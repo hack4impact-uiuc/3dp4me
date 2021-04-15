@@ -125,7 +125,10 @@
                 "managePatient": {
                     "title": "Manage Patient",
                     "profileInformation": "Profile Information",
-                    "name": "Name",
+                    "firstName": "First Name",
+                    "fatherName": "Father Name",
+                    "grandfatherName": "Grandfather Name",
+                    "familyName": "Family Name",
                     "dob": "DOB",
                     "profileManagement": "Profile Management",
                     "archiveInformation": "Archiving a patient will take them off of the dashboard view",
@@ -139,7 +142,8 @@
                     "buttons": {
                         "delete": "Delete Patient",
                         "save": "Save"
-                    }
+                    },
+                    "orderId": "Order Id"
                 },
                 "createField": {
                     "title": "New Field",
@@ -355,8 +359,10 @@
                 "managePatient": {
                     "title": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0631\u064a\u0636",
                     "profileInformation": "\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a",
-                    "name": "\u0627\u0633\u0645",
-                    "dob": "DOB",
+                    "firstName": "الاسم الأول",
+                    "fatherName": "اسم الأب",
+                    "grandfatherName": "اسم جده",
+                    "familyName": "اسم العائلة",
                     "profileManagement": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a",
                     "archiveInformation": "\u0633\u062a\u0624\u062f\u064a \u0623\u0631\u0634\u0641\u0629 \u0627\u0644\u0645\u0631\u064a\u0636 \u0625\u0644\u0649 \u0625\u0632\u0627\u0644\u062a\u0647 \u0645\u0646 \u0639\u0631\u0636 \u0644\u0648\u062d\u0629 \u0627\u0644\u0642\u064a\u0627\u062f\u0629",
                     "active": "\u0646\u0634\u064a\u0637",
@@ -369,7 +375,8 @@
                     "buttons": {
                         "delete": "\u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636",
                         "save": "\u062d\u0641\u0638"
-                    }
+                    },
+                    "orderId": "رقم التعريف الخاص بالطلب"
                 },
                 "createField": {
                     "title": "New Field",

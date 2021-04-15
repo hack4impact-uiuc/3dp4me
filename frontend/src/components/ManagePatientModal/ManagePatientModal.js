@@ -119,19 +119,7 @@ const ManagePatientModal = ({ languageData }) => {
                     </div>
                 </div>
             </div>
-            <div
-                className={`manage-patient-delete ${
-                    key === 'AR' ? 'manage-patient-delete-ar' : ''
-                }`}
-            >
-                <p>{lang.components.swal.managePatient.deleteInformation}</p>
-                <Button
-                    className="manage-patient-delete-button"
-                    onClick={handleDeletePatient}
-                >
-                    {lang.components.swal.managePatient.buttons.delete}
-                </Button>
-            </div>
+
             <div className="manage-patient-footer">
                 <Button
                     className="manage-patient-save-button"
