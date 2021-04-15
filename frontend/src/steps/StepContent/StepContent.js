@@ -63,10 +63,11 @@ const StepContent = ({
                 file,
             );
 
+            console.log(res);
             const newFile = {
-                filename: res.data.data.name,
-                uploadedBy: res.data.data.uploadedBy,
-                uploadDate: res.data.data.uploadDate,
+                filename: res.data.name,
+                uploadedBy: res.data.uploadedBy,
+                uploadDate: res.data.uploadDate,
             };
 
             let files = _.cloneDeep(updatedData[fieldKey]);
