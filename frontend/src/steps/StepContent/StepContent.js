@@ -3,13 +3,20 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
-import { CircularProgress, Backdrop } from '@material-ui/core';
+import {
+    CircularProgress,
+    Backdrop,
+    Button,
+    Select,
+    MenuItem,
+} from '@material-ui/core';
 
 import { formatDate } from '../../utils/date';
 import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
 import StepField from '../../components/StepField/StepField';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { FIELD_TYPES } from '../../utils/constants';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const StepContent = ({
@@ -22,6 +29,8 @@ const StepContent = ({
 }) => {
     const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
+    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
     const errorWrap = useErrorWrap();
 
     const key = languageData.selectedLanguage;
@@ -83,6 +92,10 @@ const StepContent = ({
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
     };
 
+    const handleQuestionFormatSelect = (e) => {
+        setSingleQuestionFormat(e.target.value);
+    };
+
     const discardData = () => {
         swal({
             title: lang.components.button.discard.question,
@@ -115,8 +128,9 @@ const StepContent = ({
 
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
+        // if displaying a single question per page, only return the right numbered question
         return metaData.fields.map((field) => {
-            return (
+            const stepField = (
                 <StepField
                     displayName={field.displayName[key]}
                     metadata={field}
@@ -133,6 +147,50 @@ const StepContent = ({
                     languageData={languageData}
                 />
             );
+
+            if (singleQuestionFormat) {
+                if (currentQuestion === field.fieldNumber) {
+                    if (
+                        field.fieldType === FIELD_TYPES.HEADER ||
+                        field.fieldType === FIELD_TYPES.DIVIDER
+                    ) {
+                        if (currentQuestion !== metaData.fields.length - 1)
+                            setCurrentQuestion(currentQuestion + 1);
+                        return null;
+                    } else {
+                        return (
+                            <div>
+                                {stepField}
+                                <Button
+                                    onClick={() => {
+                                        if (currentQuestion !== 0)
+                                            setCurrentQuestion(
+                                                currentQuestion - 1,
+                                            );
+                                    }}
+                                >
+                                    {lang.components.button.previous}
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        if (
+                                            currentQuestion !==
+                                            metaData.fields.length - 1
+                                        )
+                                            setCurrentQuestion(
+                                                currentQuestion + 1,
+                                            );
+                                    }}
+                                >
+                                    {lang.components.button.next}
+                                </Button>
+                            </div>
+                        );
+                    }
+                } else return null;
+            } else {
+                return <div>{stepField}</div>;
+            }
         });
     };
 
@@ -158,6 +216,20 @@ const StepContent = ({
                 <CircularProgress color="inherit" />
             </Backdrop>
             {generateHeader()}
+            <Select
+                MenuProps={{
+                    style: { zIndex: 35001 },
+                }}
+                defaultValue={false}
+                onChange={handleQuestionFormatSelect}
+            >
+                <MenuItem value={false}>
+                    {lang.components.selectQuestionFormat.allQuestions}
+                </MenuItem>
+                <MenuItem value={true}>
+                    {lang.components.selectQuestionFormat.singleQuestion}
+                </MenuItem>
+            </Select>
             <p>{`${lang.components.step.lastEditedBy} ${
                 stepData?.lastEditedBy
             } ${lang.components.step.on} ${formatDate(
