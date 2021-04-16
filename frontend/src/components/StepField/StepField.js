@@ -8,6 +8,8 @@ import Notes from '../Notes/Notes';
 import Files from '../Files/Files';
 import { FIELD_TYPES } from '../../utils/constants';
 import RadioButtonField from '../Fields/RadioButtonField';
+import DateField from '../Fields/DateField';
+import PhoneField from '../Fields/PhoneField';
 
 const StepField = ({
     metadata,
@@ -26,9 +28,30 @@ const StepField = ({
     const generateField = () => {
         switch (metadata.fieldType) {
             case FIELD_TYPES.STRING:
+                return (
+                    <TextField
+                        displayName={displayName}
+                        isDisabled={isDisabled}
+                        type="text"
+                        onChange={handleSimpleUpdate}
+                        fieldId={metadata.key}
+                        value={value}
+                    />
+                );
             case FIELD_TYPES.NUMBER:
                 return (
                     <TextField
+                        displayName={displayName}
+                        isDisabled={isDisabled}
+                        type="number"
+                        onChange={handleSimpleUpdate}
+                        fieldId={metadata.key}
+                        value={value}
+                    />
+                );
+            case FIELD_TYPES.PHONE:
+                return (
+                    <PhoneField
                         displayName={displayName}
                         isDisabled={isDisabled}
                         onChange={handleSimpleUpdate}
@@ -50,19 +73,10 @@ const StepField = ({
                 );
             case FIELD_TYPES.DATE:
                 return (
-                    <TextField
+                    <DateField
                         displayName={displayName}
                         isDisabled={isDisabled}
-                        onChange={handleSimpleUpdate}
-                        fieldId={metadata.key}
-                        value={value}
-                    />
-                );
-            case FIELD_TYPES.PHONE:
-                return (
-                    <TextField
-                        displayName={displayName}
-                        isDisabled={isDisabled}
+                        langKey={langKey}
                         onChange={handleSimpleUpdate}
                         fieldId={metadata.key}
                         value={value}
