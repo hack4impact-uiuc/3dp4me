@@ -40,4 +40,8 @@ app.use(requireAuthentication);
 app.use(require('./routes'));
 app.use(errorHandler);
 
+process.on('unhandledRejection', function (reason, p) {
+    console.log(`UNHANDLED REJECTION: ${reason}`);
+});
+
 module.exports = app;

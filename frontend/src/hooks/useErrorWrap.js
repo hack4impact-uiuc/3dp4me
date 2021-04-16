@@ -10,6 +10,7 @@ export const useErrorWrap = () => {
             try {
                 if (func) await func();
             } catch (error) {
+                console.error(error);
                 dispatch({
                     type: REDUCER_ACTIONS.SET_ERROR,
                     error: error.toString(),
