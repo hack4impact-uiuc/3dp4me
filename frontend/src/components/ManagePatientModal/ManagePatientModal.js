@@ -22,25 +22,6 @@ const ManagePatientModal = ({ languageData }) => {
         swal.close();
     };
 
-    const handleDeletePatient = () => {
-        swal({
-            title: lang.components.swal.managePatient.confirmDeleteMsg,
-            icon: 'warning',
-            buttons: true,
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                swal({
-                    title: lang.components.swal.managePatient.deleteSuccessMsg,
-                    icon: 'success',
-                }).then(() => {
-                    // TODO: call delete patient endpoint
-                    window.location.href = '/';
-                });
-            }
-        });
-    };
-
     const handleManagePatientSave = () => {
         // const name = document.getelementbyid('manage-patient-name').value;
         // const dob = document.getelementbyid('manage-patient-dob').value;
