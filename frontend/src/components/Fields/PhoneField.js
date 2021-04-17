@@ -1,40 +1,45 @@
 import React from 'react';
 import { TextField as Text } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { AsYouType, isValidPhoneNumber } from 'libphonenumber-js';
 
-const TextField = ({
+const PhoneField = ({
     displayName,
-    type = '',
     isDisabled,
     fieldId,
     value = '',
     onChange,
 }) => {
+    const asYouType = new AsYouType();
+
     const sendChanges = (e) => {
-        onChange(fieldId, e.target.value);
+        const phoneNumber = e.target.value;
+        onChange(fieldId, phoneNumber);
     };
+
     return (
         <div>
             <h3>{displayName}</h3>
+            <p>Format: +1 234 567 8910</p>
             <Text
-                type={type}
+                type="tel"
                 disabled={isDisabled}
                 className={!isDisabled ? 'active-input' : 'input-field'}
                 variant="outlined"
                 onChange={sendChanges}
-                value={value}
+                error={!isValidPhoneNumber(value)}
+                value={asYouType.input(value)}
             />
         </div>
     );
 };
 
-TextField.propTypes = {
+PhoneField.propTypes = {
     displayName: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
     fieldId: PropTypes.string.isRequired,
     value: PropTypes.string,
-    type: PropTypes.string,
     onChange: PropTypes.func.isRequired,
 };
 
-export default TextField;
+export default PhoneField;
