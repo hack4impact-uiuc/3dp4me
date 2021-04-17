@@ -1,5 +1,4 @@
 import React from 'react';
-import { AmplifySignOut } from '@aws-amplify/ui-react';
 import Menu from '@material-ui/core/Menu';
 import { Button, makeStyles } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
