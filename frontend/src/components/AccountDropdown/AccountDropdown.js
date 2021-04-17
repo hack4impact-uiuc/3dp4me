@@ -1,14 +1,14 @@
 import React from 'react';
 import { AmplifySignOut } from '@aws-amplify/ui-react';
 import Menu from '@material-ui/core/Menu';
-import { makeStyles } from '@material-ui/core';
+import { Button, makeStyles } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import PropTypes from 'prop-types';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
-import { saveLanguagePreference } from '../../aws/aws-helper';
+import { saveLanguagePreference, signOut } from '../../aws/aws-helper';
 
 const useStyles = makeStyles({
     menuWrapper: {
@@ -78,7 +78,7 @@ const AccountDropdown = ({
                         </FormControl>
                     </div>
                     <div className={styles.signOutButton}>
-                        <AmplifySignOut />
+                        <Button onClick={signOut}>Sign Out</Button>
                     </div>
                 </div>
             </Menu>
