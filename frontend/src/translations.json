@@ -2,7 +2,8 @@
     "EN": {
         "components": {
             "login": {
-                "authLoading": "Authenticating User"
+                "authLoading": "Authenticating User",
+                "signOut": "Sign Out"
             },
             "navbar": {
                 "dashboard": {
@@ -239,7 +240,8 @@
     "AR": {
         "components": {
             "login": {
-                "authLoading": "مصادقة المستخدم"
+                "authLoading": "مصادقة المستخدم",
+                "signOut": "Sign Out"
             },
             "navbar": {
                 "dashboard": {

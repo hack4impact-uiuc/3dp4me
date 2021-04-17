@@ -44,6 +44,7 @@ const AccountDropdown = ({
     const styles = useStyles();
 
     const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const handleLanguageSelect = (e) => {
         setLang(e.target.value);
@@ -78,7 +79,9 @@ const AccountDropdown = ({
                         </FormControl>
                     </div>
                     <div className={styles.signOutButton}>
-                        <Button onClick={signOut}>Sign Out</Button>
+                        <Button onClick={signOut}>
+                            {lang.components.login.signOut}
+                        </Button>
                     </div>
                 </div>
             </Menu>
