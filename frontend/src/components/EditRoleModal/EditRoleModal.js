@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { Modal } from '@material-ui/core';
 import TextField from '../Fields/TextField';
+import MultiSelectField from '../Fields/MultiSelectField';
+import PropTypes from 'prop-types';
 
 const EditRoleModal = ({
     languageData,
@@ -10,9 +12,19 @@ const EditRoleModal = ({
     onClose,
     userName,
     userEmail,
+    selectedRoles,
+    allRoles,
 }) => {
+    const [userRoles, setUserRoles] = useState(selectedRoles);
+
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
+
+    const onRolesChange = (id, roles) => {
+        console.log('SETTING TO' + roles);
+        setUserRoles(roles);
+        console.log('SET TO' + userRoles);
+    };
 
     return (
         <Modal open={isOpen} onClose={onClose}>
@@ -29,6 +41,14 @@ const EditRoleModal = ({
                     type="text"
                     isDisabled={true}
                     value={userEmail}
+                />
+                <MultiSelectField
+                    title="Roles"
+                    langKey={key}
+                    options={allRoles}
+                    selectedOptions={userRoles}
+                    onChange={onRolesChange}
+                    isDisabled={false}
                 />
             </div>
         </Modal>
