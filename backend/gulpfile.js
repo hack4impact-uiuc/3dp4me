@@ -68,12 +68,14 @@ function copyNodeJSCodeTask() {
         .pipe(rename('www'))
         .pipe(dest(`${paths.server_source_dest}`));
     src(['build/index.js.map']).pipe(dest(`${paths.server_source_dest}`));
-    return src(['package.json', './.env']).pipe(dest(`${paths.prod_build}`));
+    return src(['package.json', '.env', '.npmrc']).pipe(
+        dest(`${paths.prod_build}`),
+    );
 }
 
 function zippingTask() {
     log('zipping the code ');
-    return src(`${paths.prod_build}/**`)
+    return src(`${paths.prod_build}/**`, { dot: true })
         .pipe(zip(`${paths.zipped_file_name}`))
         .pipe(dest(`${paths.prod_build}`));
 }
