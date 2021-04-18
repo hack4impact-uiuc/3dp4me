@@ -12,6 +12,9 @@ const BASE_URL = IN_DEV_ENV
 
 const instance = axios.create({
     baseURL: BASE_URL,
+    validateStatus: (status) => {
+        return true;
+    },
 });
 
 instance.interceptors.request.use(
