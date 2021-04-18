@@ -3,7 +3,6 @@ import {
     FormControl,
     FormControlLabel,
     FormGroup,
-    Radio,
 } from '@material-ui/core';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -19,16 +18,14 @@ const MultiSelectField = ({
 }) => {
     const onSelectionChange = (e) => {
         let updatedOptions = [];
-        console.log('BEFORE' + selectedOptions);
 
         if (!e.target.checked) {
             updatedOptions = selectedOptions.filter(
                 (option) => option.toString() !== e.target.name.toString(),
             );
         } else {
-            updatedOptions = selectedOptions.concat(e.target.name.toString());
+            updatedOptions = selectedOptions.concat([e.target.name.toString()]);
         }
-        console.log('AFTER' + updatedOptions);
 
         onChange(fieldId, updatedOptions);
     };
@@ -46,6 +43,7 @@ const MultiSelectField = ({
                         <Checkbox
                             checked={isChecked}
                             name={option._id}
+                            value={option._id}
                             onChange={onSelectionChange}
                         />
                     }
@@ -59,12 +57,7 @@ const MultiSelectField = ({
     return (
         <FormControl>
             <h3>{title}</h3>
-            <FormGroup
-                name={fieldId}
-                onChange={(e) => onChange(fieldId, e.target.value)}
-            >
-                {generateQuestions()}
-            </FormGroup>
+            <FormGroup name={fieldId}>{generateQuestions()}</FormGroup>
         </FormControl>
     );
 };

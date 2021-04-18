@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import _ from 'lodash';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { Modal } from '@material-ui/core';
 import TextField from '../Fields/TextField';
@@ -21,9 +21,7 @@ const EditRoleModal = ({
     const lang = languageData.translations[key];
 
     const onRolesChange = (id, roles) => {
-        console.log('SETTING TO' + roles);
         setUserRoles(roles);
-        console.log('SET TO' + userRoles);
     };
 
     return (
@@ -50,6 +48,7 @@ const EditRoleModal = ({
                     onChange={onRolesChange}
                     isDisabled={false}
                 />
+                Access
             </div>
         </Modal>
     );
