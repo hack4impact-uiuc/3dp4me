@@ -6,7 +6,7 @@ const { models, fileSchema, stepStatusEnum } = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 
-const addCollection = (stepMetadata) => {
+const generateSchemaFromMetadata = (stepMetadata) => {
     let stepSchema = {};
     stepSchema.patientId = { type: String, required: true, unique: true };
     stepSchema.status = {
@@ -223,3 +223,4 @@ router.delete(
 );
 
 module.exports = router;
+module.exports.generateSchemaFromMetadata = generateSchemaFromMetadata;

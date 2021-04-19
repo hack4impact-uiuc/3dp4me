@@ -22,25 +22,6 @@ const ManagePatientModal = ({ languageData }) => {
         swal.close();
     };
 
-    const handleDeletePatient = () => {
-        swal({
-            title: lang.components.swal.managePatient.confirmDeleteMsg,
-            icon: 'warning',
-            buttons: true,
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                swal({
-                    title: lang.components.swal.managePatient.deleteSuccessMsg,
-                    icon: 'success',
-                }).then(() => {
-                    // TODO: call delete patient endpoint
-                    window.location.href = '/';
-                });
-            }
-        });
-    };
-
     const handleManagePatientSave = () => {
         // const name = document.getelementbyid('manage-patient-name').value;
         // const dob = document.getelementbyid('manage-patient-dob').value;
@@ -62,15 +43,25 @@ const ManagePatientModal = ({ languageData }) => {
             </div>
             <div className="profile-information-wrapper">
                 <h3>{lang.components.swal.managePatient.profileInformation}</h3>
-                <p>{lang.components.swal.managePatient.name}</p>
+                <p>{lang.components.swal.managePatient.firstName}</p>
                 <TextField
-                    id="manage-patient-name"
-                    defaultValue={patientFile.patientInfo.name}
+                    id="manage-patient-firstName"
+                    defaultValue={patientFile.patientInfo.firstName}
                 />
-                <p>{lang.components.swal.managePatient.dob}</p>
+                <p>{lang.components.swal.managePatient.fatherName}</p>
                 <TextField
-                    id="manage-patient-dob"
-                    defaultValue={patientFile.patientInfo.dob}
+                    id="manage-patient-fatherName"
+                    defaultValue={patientFile.patientInfo.fatherName}
+                />
+                <p>{lang.components.swal.managePatient.grandfatherName}</p>
+                <TextField
+                    id="manage-patient-grandfatherName"
+                    defaultValue={patientFile.patientInfo.grandfatherName}
+                />
+                <p>{lang.components.swal.managePatient.familyName}</p>
+                <TextField
+                    id="manage-patient-familyName"
+                    defaultValue={patientFile.patientInfo.familyName}
                 />
             </div>
             <div className="profile-management-wrapper">
@@ -109,19 +100,7 @@ const ManagePatientModal = ({ languageData }) => {
                     </div>
                 </div>
             </div>
-            <div
-                className={`manage-patient-delete ${
-                    key === 'AR' ? 'manage-patient-delete-ar' : ''
-                }`}
-            >
-                <p>{lang.components.swal.managePatient.deleteInformation}</p>
-                <Button
-                    className="manage-patient-delete-button"
-                    onClick={handleDeletePatient}
-                >
-                    {lang.components.swal.managePatient.buttons.delete}
-                </Button>
-            </div>
+
             <div className="manage-patient-footer">
                 <Button
                     className="manage-patient-save-button"
@@ -130,6 +109,11 @@ const ManagePatientModal = ({ languageData }) => {
                     {lang.components.swal.managePatient.buttons.save}
                 </Button>
             </div>
+            <p>{lang.components.swal.managePatient.orderId}</p>
+            <TextField
+                id="manage-patient-orderId"
+                defaultValue={patientFile.patientInfo.orderId}
+            />
         </div>
     );
 };
