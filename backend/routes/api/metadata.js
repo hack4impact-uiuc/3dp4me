@@ -15,14 +15,12 @@ const addCollection = (stepMetadata) => {
         enum: Object.values(stepStatusEnum),
         default: stepStatusEnum.UNFINISHED,
     };
-    stepSchema.orderId = { type: String, required: true, unique: true };
     stepSchema.lastEdited = { type: Date, required: true, default: new Date() };
     stepSchema.lastEditedBy = {
         type: String,
         required: true,
         default: 'Admin',
     };
-    stepSchema.notes = { type: String, required: true, default: '' };
     stepMetadata.fields.forEach((field) => {
         switch (field.fieldType) {
             case fieldEnum.STRING:
@@ -69,9 +67,9 @@ const addCollection = (stepMetadata) => {
                     throw new Error('Dropdown must have options');
 
                 stepSchema[field.key] = {
-                    type: String,
+                    type: Number,
                     required: true,
-                    default: '',
+                    default: 0,
                     enum: field.options,
                 };
                 break;
@@ -79,9 +77,9 @@ const addCollection = (stepMetadata) => {
                 if (field.options == null)
                     throw new Error('Radio button must have options');
                 stepSchema[field.key] = {
-                    type: String,
+                    type: Number,
                     required: true,
-                    default: '',
+                    default: 0,
                     enum: field.options,
                 };
                 break;
@@ -92,13 +90,44 @@ const addCollection = (stepMetadata) => {
                     default: [],
                 };
                 break;
+            case fieldEnum.AUDIO:
+                stepSchema[field.key] = {
+                    type: [fileSchema],
+                    required: true,
+                    default: [],
+                };
+                break;
+            case fieldEnum.DIVIDER:
+                break;
             default:
-                throw new Error(`Unrecognized field type, ${field.type}`);
+                throw new Error(`Unrecognized field type, ${field.fieldType}`);
         }
     });
     const schema = new mongoose.Schema(stepSchema);
-    mongoose.model(stepMetadata.key, schema);
+    mongoose.model(stepMetadata.key, schema, stepMetadata.key);
 };
+
+// GET metadata/steps
+router.get(
+    '/steps',
+    errorWrap(async (req, res) => {
+        const metaData = await models.Step.find({});
+        if (!metaData) {
+            res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Steps not found.',
+            });
+        } else {
+            res.status(200).json({
+                code: 200,
+                success: true,
+                message: 'Steps returned successfully.',
+                result: metaData,
+            });
+        }
+    }),
+);
 
 // POST metadata/steps
 router.post(
@@ -110,6 +139,21 @@ router.post(
 
         try {
             await session.withTransaction(async () => {
+                new_step_metadata.fields.forEach((field) => {
+                    if (
+                        field.fieldType == fieldEnum.RADIO_BUTTON ||
+                        field.fieldType == fieldEnum.DROPDOWN
+                    ) {
+                        if (field.options == null || field.options.length < 1) {
+                            return res.status(400).json({
+                                code: 400,
+                                success: false,
+                                message:
+                                    'Dropdowns or radiobuttons require options.',
+                            });
+                        }
+                    }
+                });
                 await new_step_metadata.save();
                 addCollection(steps);
             });

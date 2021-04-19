@@ -6,25 +6,35 @@
     "dependencies": {
         "aws-amplify": "^3.3.3",
         "aws-amplify-react-native": "^4.2.7",
-        "aws-sdk": "^2.785.0",
+        "aws-sdk": "^2.877.0",
         "axios": "^0.21.1",
         "babel-eslint": "^10.1.0",
         "body-parser": "^1.19.0",
         "cors": "^2.8.5",
+        "del": "^6.0.0",
         "dotenv": "^8.2.0",
         "eslint": "^7.18.0",
         "express": "^4.17.1",
         "express-async-errors": "^3.1.1",
         "express-fileupload": "^1.2.0",
+        "fs": "^0.0.1-security",
+        "gulp": "^4.0.2",
+        "gulp-rename": "^2.0.0",
+        "gulp-zip": "^5.1.0",
         "libphonenumber-js": "^1.9.11",
         "mongoose": "^5.10.10",
-        "prettier": "^2.2.1"
+        "node": "^15.12.0",
+        "prettier": "^2.2.1",
+        "webpack": "^5.30.0",
+        "webpack-cli": "^4.6.0",
+        "webpack-node-externals": "^2.5.2"
     },
     "devDependencies": {
         "nodemon": "^2.0.4"
     },
     "scripts": {
         "dev": "nodemon ./bin/www",
+        "build": "webpack ./bin/www",
         "start": "node ./bin/www",
         "lint": "eslint --fix \"./**/*.{js,jsx}\" -c .eslintrc.json",
         "format": "prettier --write \"./**/*.{js,jsx,json,md}\"",

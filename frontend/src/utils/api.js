@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-import { getCredentials, getCurrentSession } from '../aws/aws-helper';
-
-import { allStepMetadata, patientData } from './mock-data';
+import { getCurrentSession } from '../aws/aws-helper';
 
 const FileDownload = require('js-file-download');
 
@@ -33,139 +31,152 @@ instance.interceptors.request.use(
 );
 
 export const getAllPatients = async () => {
-    return [patientData];
-    // TODO: Replace with API call
-    /*
-    const requestString = '/stages/';
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    );
-    */
+    const requestString = '/patients';
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const getPatientsByStage = async (stage) => {
-    console.log(stage);
-    return [patientData];
+    const requestString = `/stages/${stage}`;
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
-    // TODO: Replace with api call
-    /* const requestString = `/stages/${stage}`;
-    return instance.get(requestString).then(
-        (res) => res.data,
-        (err) => {
-            console.error(err);
-            return null;
-        },
-    ); */
+    return res.data;
 };
 
 export const getPatientById = async (id) => {
-    console.log(id);
-    return patientData;
-    // TODO: Uncomment this when the backend is ready for the new data format
-    // const requestString = `/patients/${id}`;
-    // return instance.get(requestString).then(
-    //     (res) => res.data,
-    //     (err) => {
-    //         console.error(err);
-    //         return null;
-    //     },
-    // );
+    const requestString = `/patients/${id}`;
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
-export const newPatient = async (patientInfo) => {
+export const postNewPatient = async (patientInfo) => {
     const requestString = `/patients/`;
-    return instance
-        .post(requestString, patientInfo) // TODO: use AWS userId
-        .then(
-            (res) => res.data,
-            (err) => {
-                console.error(err);
-                return null;
-            },
-        );
+    const res = await instance.post(requestString, patientInfo);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
 export const updateStage = async (patientId, stage, updatedStage) => {
     const requestString = `/patients/${patientId}/${stage}`;
-    return instance
-        .post(requestString, updatedStage) // TODO: use AWS userId
-        .then(
-            (res) => res.data,
-            (err) => {
-                console.error(err);
-                return null;
-            },
-        );
-};
+    const res = await instance.post(requestString, updatedStage);
 
-export const getStepMetadata = async (stepKey) => {
-    // TODO: Replace with backend call
-    let stepData = null;
+    if (!res?.data?.success) throw new Error(res?.data?.message);
 
-    allStepMetadata.forEach((step) => {
-        if (step.key === stepKey) stepData = step;
-    });
-
-    return stepData;
+    return res.data;
 };
 
 export const getAllStepsMetadata = async () => {
-    // TODO: Replace with backend call
-    return allStepMetadata;
+    const requestString = '/metadata/steps';
+
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
-export const downloadFile = async (patientId, stage, filename) => {
-    const requestString = `/patients/${patientId}/${stage}/${filename}`;
-    const {
-        accessKeyId,
-        secretAccessKey,
-        sessionToken,
-    } = await getCredentials();
-    return instance
-        .get(requestString, {
-            headers: {
-                accessKeyId,
-                secretAccessKey,
-                sessionToken,
-            },
+export const downloadBlobWithoutSaving = async (
+    patientId,
+    stepKey,
+    fieldKey,
+    filename,
+) => {
+    const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
+    let res = null;
+
+    try {
+        res = await instance.get(requestString, {
             responseType: 'blob',
-        }) // TODO: use AWS userId
-        .then(
-            (res) => FileDownload(res.data, filename),
-            (err) => {
-                console.error(err);
-                return null;
-            },
-        );
+        });
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+
+    if (!res) return null;
+
+    return res.data;
+};
+
+export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
+    const blob = await downloadBlobWithoutSaving(
+        patientId,
+        stepKey,
+        fieldKey,
+        filename,
+    );
+
+    if (!blob) throw new Error('Could not download file');
+
+    try {
+        await FileDownload(blob, filename);
+    } catch (error) {
+        throw new Error('Could not download file');
+    }
 };
 
 export const uploadFile = async (
     patientId,
-    stage,
+    stepKey,
+    fieldKey,
+    filename,
     filedata,
-    filename = null,
 ) => {
-    const requestString = `/patients/${patientId}/${stage}/file`;
-    const credentials = await getCredentials();
+    const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     const formData = new FormData();
     formData.append('uploadedFile', filedata);
     formData.append('uploadedFileName', filename || filedata.name);
-    Object.keys(credentials).forEach((key) => {
-        formData.append(key, credentials[key]);
-    });
 
-    return instance.post(requestString, formData, {
+    const res = await instance.post(requestString, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
     });
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };
 
-export const deleteFile = async (patientId, stage, filename) => {
-    const requestString = `/patients/${patientId}/${stage}/${filename}`;
-    return instance.delete(requestString);
+export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
+    const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
+    const res = await instance.delete(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const addUserRole = async (username, roleName) => {
+    const requestString = `/users/${username}/roles/${roleName}`;
+    const res = await instance.put(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const removeUserRole = async (username, roleName) => {
+    const requestString = `/users/${username}/roles/${roleName}`;
+    const res = await instance.delete(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const getAllUsers = async () => {
+    const requestString = `/users`;
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
 };

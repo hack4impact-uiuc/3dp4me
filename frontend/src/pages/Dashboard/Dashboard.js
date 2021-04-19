@@ -6,6 +6,8 @@ import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
 
+import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { getPatientName } from '../../utils/utils';
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
     REQUIRED_DASHBOARD_HEADERS,
@@ -13,7 +15,11 @@ import {
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import search from '../../assets/search.svg';
-import { getAllStepsMetadata, getPatientsByStage } from '../../utils/api';
+import {
+    getAllStepsMetadata,
+    getPatientsByStage,
+    postNewPatient,
+} from '../../utils/api';
 import './Dashboard.scss';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
@@ -59,28 +65,39 @@ const Dashboard = ({ languageData }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
-
+    const errorWrap = useErrorWrap();
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
-    const createPatientHelper = (edit, id) => {
-        if (edit) {
-            window.location.href += `patient-info/${id}`;
-        } else {
-            const name = document.getElementById('createFirstName').value;
-            const dob = document.getElementById('createDOB').value;
-            const createId = document.getElementById('createId').value;
+    const createPatientHelper = async (edit) => {
+        const patient = {};
+        patient.firstName = document.getElementById('createFirstName').value;
+        patient.fathersName = document.getElementById(
+            'createFathersName',
+        ).value;
+        patient.grandfathersName = document.getElementById(
+            'createGrandfathersName',
+        ).value;
+        patient.familyName = document.getElementById('createFamilyName').value;
+
+        let res = null;
+        try {
+            res = await postNewPatient(patient);
+            const id = res.result._id;
+
+            if (edit) window.location.href += `patient-info/${id}`;
+        } catch (error) {
             swal(
-                lang.components.swal.createPatient.successMsg,
-                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${createId}`,
-                'success',
+                res?.success
+                    ? lang.components.swal.createPatient.successMsg
+                    : lang.components.swal.createPatient.failMsg,
+                '',
+                res?.success ? 'success' : 'warning',
             );
         }
     };
 
     const createPatient = () => {
-        // TODO: Might want a better way of doing this
-        const autoId = Math.random().toString(36).substr(2, 24);
         reactSwal({
             buttons: {},
             content: (
@@ -112,14 +129,14 @@ const Dashboard = ({ languageData }) => {
                         <div style={{ display: 'flex' }}>
                             <TextField
                                 size="small"
-                                id="createMiddleName1"
+                                id="createFathersName"
                                 fullWidth
                                 style={{ padding: 10 }}
                                 variant="outlined"
                             />
                             <TextField
                                 size="small"
-                                id="createMiddleName2"
+                                id="createGrandfathersName"
                                 fullWidth
                                 style={{ padding: 10 }}
                                 variant="outlined"
@@ -130,30 +147,9 @@ const Dashboard = ({ languageData }) => {
                         </span>
                         <TextField
                             size="small"
-                            id="createLastName"
+                            id="createFamilyName"
                             fullWidth
                             style={{ padding: 10 }}
-                            variant="outlined"
-                        />
-                    </div>
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>{lang.components.swal.createPatient.dob} </span>
-                        <TextField
-                            size="small"
-                            id="createDOB"
-                            fullWidth
-                            style={{ padding: 10 }}
-                            variant="outlined"
-                        />
-                    </div>
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>{lang.components.swal.createPatient.id} </span>
-                        <TextField
-                            size="small"
-                            id="createId"
-                            fullWidth
-                            style={{ padding: 10 }}
-                            defaultValue={autoId}
                             variant="outlined"
                         />
                     </div>
@@ -166,13 +162,13 @@ const Dashboard = ({ languageData }) => {
                     >
                         <Button
                             className={classes.swalEditButton}
-                            onClick={() => createPatientHelper(true, autoId)}
+                            onClick={() => createPatientHelper(true)}
                         >
                             {lang.components.swal.createPatient.buttons.edit}
                         </Button>
                         <Button
                             className={classes.swalCloseButton}
-                            onClick={() => createPatientHelper(false, autoId)}
+                            onClick={() => createPatientHelper(false)}
                         >
                             {lang.components.swal.createPatient.buttons.noEdit}
                         </Button>
@@ -182,14 +178,23 @@ const Dashboard = ({ languageData }) => {
         });
     };
 
+    const doesPatientMatchQuery = (patient, query) => {
+        if (
+            getPatientName(patient)
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) !== -1
+        )
+            return true;
+
+        if (patient._id.indexOf(query) !== -1) return true;
+
+        return false;
+    };
+
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
-        const filtered = patients.filter(
-            (patient) =>
-                patient.name
-                    .toLowerCase()
-                    .indexOf(e.target.value.toLowerCase()) !== -1 ||
-                patient._id.indexOf(e.target.value) !== -1,
+        const filtered = patients.filter((patient) =>
+            doesPatientMatchQuery(patient, e.target.value),
         );
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);
@@ -207,35 +212,26 @@ const Dashboard = ({ languageData }) => {
         setSearchQuery('');
         if (stepKey !== null) {
             setStep(stepKey);
-            const res = await getPatientsByStage(stepKey);
-            // TODO: Set patients to be result of getPatients by stage
-            setPatients(res);
+            errorWrap(async () => {
+                const res = await getPatientsByStage(stepKey);
+                setPatients(res.result);
+            });
         }
     };
 
-    // TODO: hook up dashboard to display fetched patients
-
     useEffect(() => {
         const getMetadata = async () => {
-            const metaData = await getAllStepsMetadata();
-            // TODO: Error handling
-            setStepsMetaData(metaData);
-
-            if (metaData.length > 0) setStep(metaData[0].key);
+            errorWrap(async () => {
+                let res = await getAllStepsMetadata();
+                setStepsMetaData(res.result);
+                if (res.result.length > 0) setStep(res.result[0].key);
+                res = await getPatientsByStage(res.result[0].key);
+                setPatients(res.result);
+            });
         };
 
         getMetadata();
-    }, [setStep, setStepsMetaData]);
-
-    useEffect(() => {
-        const getPatients = async () => {
-            const res = await getPatientsByStage(step);
-            // TODO: Error handling
-            setPatients(res);
-        };
-
-        getPatients();
-    }, [setPatients, step]);
+    }, [setStep, setStepsMetaData, errorWrap]);
 
     function generatePageHeader() {
         if (stepsMetaData == null) return lang.components.table.loading;
@@ -255,7 +251,7 @@ const Dashboard = ({ languageData }) => {
             if (field.isVisibleOnDashboard)
                 headers.push({
                     title: field.displayName[key],
-                    sortKey: field.key,
+                    sortKey: `${step}.${field.key}`,
                 });
         });
 

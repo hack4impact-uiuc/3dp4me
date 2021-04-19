@@ -25,6 +25,8 @@ import {
     updateStage,
 } from '../../utils/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
+import { getPatientName } from '../../utils/utils';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const theme = createMuiTheme({
     direction: 'rtl',
@@ -33,8 +35,9 @@ const theme = createMuiTheme({
 const Controller = ({ languageData }) => {
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
+    const errorWrap = useErrorWrap();
 
-    const [selectedStep, setSelectedStep] = useState('info');
+    const [selectedStep, setSelectedStep] = useState(null);
     const [stepMetaData, setStepMetaData] = useState(null);
     const [patientData, setPatientData] = useState(null);
 
@@ -57,10 +60,12 @@ const Controller = ({ languageData }) => {
     };
 
     const onStepSaved = (stepKey, stepData) => {
-        const newPatientData = _.cloneDeep(patientData);
-        newPatientData[stepKey] = _.cloneDeep(stepData);
-        setPatientData(newPatientData);
-        updateStage(patientId, stepKey, stepData);
+        errorWrap(async () => {
+            const newPatientData = _.cloneDeep(patientData);
+            newPatientData[stepKey] = _.cloneDeep(stepData);
+            await updateStage(patientId, stepKey, stepData);
+            setPatientData(newPatientData);
+        });
     };
 
     const onStepChange = (newStep) => {
@@ -71,29 +76,43 @@ const Controller = ({ languageData }) => {
 
     useEffect(() => {
         const getData = async () => {
-            let metaData = await getAllStepsMetadata();
-            const data = await getPatientById(patientId);
+            errorWrap(async () => {
+                let res = await getAllStepsMetadata();
+                let metaData = res.result;
 
-            metaData = metaData.sort((a, b) => a.stepNumber - b.stepNumber);
-            metaData.forEach((stepData) => {
-                stepData.fields = stepData.fields.sort(
-                    (a, b) => a.fieldNumber - b.fieldNumber,
-                );
+                res = await getPatientById(patientId);
+                const data = res.result;
+
+                metaData = metaData.sort((a, b) => a.stepNumber - b.stepNumber);
+                metaData.forEach((stepData) => {
+                    stepData.fields = stepData.fields.sort(
+                        (a, b) => a.fieldNumber - b.fieldNumber,
+                    );
+
+                    stepData.fields.forEach((field) => {
+                        if (!field.options?.length) return;
+
+                        field.options = field.options.sort(
+                            (a, b) => a.Index - b.Index,
+                        );
+                    });
+                });
+
+                if (metaData.length > 0) setSelectedStep(metaData[0].key);
+
+                setStepMetaData(metaData);
+                setPatientData(data);
+                setLoading(false);
             });
-            // TODO: Handle bad response
-            setStepMetaData(metaData);
-            setPatientData(data);
-            setLoading(false);
         };
 
         getData();
-    }, [setStepMetaData, setPatientData, setLoading, patientId]);
+    }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
 
     const generateStepContent = () => {
         if (stepMetaData == null) return null;
         if (patientData == null) return null;
 
-        // TODO: Sort by step number
         return (
             <div className={`steps ${key === 'AR' ? 'steps-ar' : ''}`}>
                 {stepMetaData.map((step) => {
@@ -106,7 +125,7 @@ const Controller = ({ languageData }) => {
                                 metaData={stepMetaData.find(
                                     (s) => s.key === step.key,
                                 )}
-                                stepData={patientData[step.key]}
+                                stepData={patientData[step.key] ?? {}}
                                 loading={loading}
                             />
                         );
@@ -126,6 +145,8 @@ const Controller = ({ languageData }) => {
                 {stepMetaData.map((metaData) => {
                     if (metaData.fields.find((f) => f.key === 'notes') == null)
                         return null;
+
+                    if (patientData[metaData.key]?.notes == null) return null;
 
                     return (
                         <Accordion
@@ -169,7 +190,7 @@ const Controller = ({ languageData }) => {
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
-                                        {patientData?.name}
+                                        {getPatientName(patientData)}
                                     </span>
                                 </div>
                                 <div className="drawer-text-section">

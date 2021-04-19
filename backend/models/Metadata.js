@@ -11,7 +11,31 @@ const fieldEnum = {
     HEADER: 'Header',
     RADIO_BUTTON: 'RadioButton',
     DROPDOWN: 'Dropdown',
+    AUDIO: 'Audio',
 };
+
+const languageSchema = new mongoose.Schema({
+    EN: { type: String, required: true },
+    AR: { type: String, required: true },
+});
+
+const validateOptions = async (questionOptionSchema) => {
+    var questionIndex = Object.create(null);
+    for (var i = 0; i < questionOptionSchema.length; ++i) {
+        var value = questionOptionSchema[i];
+        if (value.Index in questionIndex) {
+            return false;
+        }
+        questionIndex[value.Index] = true;
+    }
+    return true;
+};
+
+const questionOptionSchema = new mongoose.Schema({
+    Index: { type: Number, required: true },
+    IsHidden: { type: Boolean, required: true, default: false },
+    Question: { type: languageSchema, required: true },
+});
 
 const fieldSchema = new mongoose.Schema({
     fieldNumber: { type: Number, required: true },
@@ -21,6 +45,14 @@ const fieldSchema = new mongoose.Schema({
         enum: Object.values(fieldEnum),
         required: true,
         default: fieldEnum.STRING,
+    },
+    options: {
+        type: [questionOptionSchema],
+        default: [],
+        validate: {
+            validator: validateOptions,
+            message: 'Index must be unique',
+        },
     },
     isVisibleOnDashboard: { type: Boolean, required: true },
     displayName: {

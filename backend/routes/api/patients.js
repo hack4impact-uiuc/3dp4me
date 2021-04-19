@@ -1,8 +1,13 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
-const { models } = require('../../models');
+const { models, overallStatusEnum } = require('../../models');
 const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
+const {
+    ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY,
+} = require('../../utils/aws/aws-exports');
 
 // GET: Returns all patients
 router.get(
@@ -18,77 +23,82 @@ router.get(
     }),
 );
 
+const getStepKeys = async () => {
+    const steps = await models.Step.find({});
+    let stepKeys = [];
+    steps.forEach((element) => stepKeys.push(element.key));
+    return stepKeys;
+};
+
 // GET: Returns everything associated with patient
 router.get(
     '/:id',
     errorWrap(async (req, res) => {
         const { id } = req.params;
-        const patientData = await models.Patient.findById(id);
+        let patientData = await models.Patient.findById(id);
         if (!patientData)
-            res.status(404).json({
+            return res.status(404).json({
                 code: 404,
+                message: `Patient with id ${id} not found`,
                 success: false,
             });
-        else
-            res.status(200).json({
-                code: 200,
-                success: true,
-                result: patientData,
-            });
-    }),
-);
 
-// GET: Returns everything associated with patient stage
-router.get(
-    '/:id/:stage',
-    errorWrap(async (req, res) => {
-        const { id, stage } = req.params;
-        // TODO: Just query for the stage data only
-        const patientData = await models.Patient.findById(id, stage);
-        const stageData = patientData[stage];
+        let stepKeys = await getStepKeys();
+        for (const stepKey of stepKeys) {
+            const collection = await mongoose.connection.db.collection(stepKey);
+            const stepData = await collection.findOne({ patientId: id });
+            patientData.set(stepKey, stepData, { strict: false });
+        }
+
         res.status(200).json({
             code: 200,
             success: true,
-            result: stageData,
+            result: patientData,
         });
     }),
 );
 
 // POST: new patient
-// TODO: Implement and test
 router.post(
     '/',
     errorWrap(async (req, res) => {
         const patient = req.body;
+        let new_patient = null;
         try {
-            const new_patient = new models.Patient(patient);
-            const saved_patient = await _patient.save();
-        } catch (err) {
-            // TODO: Validate patient and send back good error message
-            res.status(500).send({});
+            req.body.lastEditedBy = req.user.Username;
+            new_patient = new models.Patient(patient);
+            new_patient.save();
+        } catch (error) {
+            console.log(error);
+            return res.status(401).json({
+                code: 401,
+                success: false,
+                message: 'Request is invalid or missing fields.',
+            });
         }
 
-        res.status(SUCCESS).send({
-            code: SUCCESS,
+        res.status(201).json({
+            code: 201,
             success: true,
             message: 'User successfully created.',
-            data: resp,
+            result: new_patient,
         });
     }),
 );
 
 // GET: Download a file
 router.get(
-    '/:id/:stage/:filename',
+    '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
-        const { id, stage, filename } = req.params;
-        //TODO: change it so that you can pass user aws credentials in a more secure manner
-        var s3Stream = downloadFile(`${id}/${stage}/${filename}`, {
-            accessKeyId: req.headers.accesskeyid,
-            secretAccessKey: req.headers.secretaccesskey,
-            sessionToken: req.headers.sessiontoken,
-        }).createReadStream();
-        // Listen for errors returned by the service
+        const { id, stepKey, fieldKey, fileName } = req.params;
+        var s3Stream = downloadFile(
+            `${id}/${stepKey}/${fieldKey}/${fileName}`,
+            {
+                accessKeyId: ACCESS_KEY_ID,
+                secretAccessKey: SECRET_ACCESS_KEY,
+            },
+        ).createReadStream();
+
         s3Stream
             .on('error', function (err) {
                 res.json('S3 Error:' + err);
@@ -102,65 +112,127 @@ router.get(
 
 // Delete: Delete a file
 router.delete(
-    '/:id/:stage/:filename',
+    '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
-        const { id, stage, filename } = req.params;
+        const { id, stepKey, fieldKey, fileName } = req.params;
+
         const patient = await models.Patient.findById(id);
-        let index = patient[stage].files.findIndex(
-            (x) => x.filename == filename,
-        );
-        if (index > -1) {
-            patient[stage].files.splice(index, 1);
+        if (patient == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Patient with id ${id} not found`,
+            });
         }
-        // TODO: Remove this file from AWS as well
+
+        const collection = await mongoose.connection.db.collection(stepKey);
+        if (collection == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Step with key ${stepKey} not found`,
+            });
+        }
+
+        const stepData = await collection.findOne({ patientId: id });
+        if (stepData == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Patient does not have any data on record for this step`,
+            });
+        }
+
+        const index = stepData[fieldKey].findIndex(
+            (x) => x.filename == fileName,
+        );
+
+        if (index == -1) {
+            return res.status(404).json({
+                success: false,
+                message: `File ${fileName} does not exist`,
+            });
+        }
+
+        // TODO: Remove this file from AWS as well once we have a "do you want to remove this" on the frontend
+        stepData[fieldKey].splice(index, 1);
+
+        stepData.lastEdited = Date.now();
+        stepData.lastEditedBy = req.user.Username;
+        collection.findOneAndUpdate({ patientId: id }, { $set: stepData });
+
         patient.lastEdited = Date.now();
+        patient.lastEditedBy = req.user.Username;
         patient.save();
+
         res.status(201).json({
             success: true,
-            message: 'Patient status updated with file removed',
+            message: 'File successfully removed',
         });
     }),
 );
 
 // POST: upload individual files
 router.post(
-    '/:id/:stage/file',
+    '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
-        const { id, stage } = req.params;
-        //TODO: change it so that you can pass user aws credentials in a more secure manner
-        const {
-            uploadedFileName,
-            accessKeyId,
-            secretAccessKey,
-            sessionToken,
-        } = req.body;
+        const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
+        if (patient == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Cannot find patient with id ${id}`,
+            });
+        }
+
+        const collectionInfo = await mongoose.connection.db
+            .listCollections({ name: stepKey })
+            .toArray();
+        if (collectionInfo.length == 0) {
+            return res.status(404).json({
+                success: false,
+                message: `Step with key ${stepKey} not found`,
+            });
+        }
+
+        const collection = await mongoose.connection.db.collection(stepKey);
+        let stepData = (await collection.findOne({ patientId: id })) || {};
+
+        // Set ID in case patient does not have any information for this step yet
+        stepData.patientId = id;
+        if (!stepData || !stepData[fieldKey]) stepData[fieldKey] = [];
+
         let file = req.files.uploadedFile;
         uploadFile(
             file.data,
-            `${id}/${stage}/${uploadedFileName}`,
+            `${id}/${stepKey}/${fieldKey}/${fileName}`,
             {
-                accessKeyId: accessKeyId,
-                secretAccessKey: secretAccessKey,
-                sessionToken: sessionToken,
+                accessKeyId: ACCESS_KEY_ID,
+                secretAccessKey: SECRET_ACCESS_KEY,
             },
-            function (err, data) {
+            async function (err, data) {
                 if (err) {
                     res.json(err);
                 } else {
-                    // update database only if upload was successful
-                    patient[stage].files.push({
-                        filename: uploadedFileName,
+                    stepData[fieldKey].push({
+                        filename: fileName,
                         uploadedBy: req.user.Username,
                         uploadDate: Date.now(),
                     });
+                    stepData.lastEdited = Date.now();
+                    stepData.lastEditedBy = req.user.Username;
+                    collection.findOneAndUpdate(
+                        { patientId: id },
+                        { $set: stepData },
+                        { upsert: true },
+                    );
+
                     patient.lastEdited = Date.now();
+                    patient.lastEditedBy = req.user.Username;
                     patient.save();
+
                     res.status(201).json({
                         success: true,
-                        message: 'Patient status updated with new file',
+                        message: 'File successfully uploaded',
                         data: {
-                            name: uploadedFileName,
+                            name: fileName,
                             uploadedBy: req.user.Username,
                             uploadDate: Date.now(),
                             mimetype: file.mimetype,
@@ -178,16 +250,52 @@ router.post(
     '/:id/:stage',
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        //TODO: Add auth check for permissions
-        const updatedStage = req.body;
-        const patient = await models.Patient.findById(id);
+        const steps = await models.Step.find({ key: stage });
+        const session = await mongoose.startSession();
 
-        // TODO: Check that patient returned exists
-        //TODO: use name of input field possibly?
+        if (steps.length == 0) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Stage not found.',
+            });
+        }
+
+        const patient = await models.Patient.findById(id);
+        if (!patient) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Patient not found.',
+            });
+        }
+
+        const updatedStage = req.body;
+        try {
+            await session.withTransaction(async () => {
+                const collection = await mongoose.connection.db.collection(
+                    stage,
+                );
+                updatedStage.lastEdited = Date.now();
+                updatedStage.lastEditedBy = req.user.Username;
+                delete updatedStage._id;
+
+                const stepData = await collection.findOneAndUpdate(
+                    { patientId: id },
+                    { $set: updatedStage },
+                    { upsert: true, setDefaultsOnInsert: true, new: true },
+                );
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                code: 500,
+                success: false,
+                message: error,
+            });
+        }
         patient.lastEdited = Date.now();
-        patient[stage] = updatedStage;
-        patient[stage].lastEdited = Date.now();
-        patient[stage].lastEditedBy = req.user.Username;
+        patient.lastEditedBy = req.user.Username;
         await patient.save(function (err) {
             if (err) {
                 res.json(err); //TODO: bug here, need to take a look

@@ -3,15 +3,21 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './StepContent.scss';
 import swal from 'sweetalert';
-import { CircularProgress, Divider, Backdrop } from '@material-ui/core';
+import {
+    CircularProgress,
+    Backdrop,
+    Button,
+    Select,
+    MenuItem,
+} from '@material-ui/core';
 
 import { formatDate } from '../../utils/date';
-import Files from '../../components/Files/Files';
 import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
-import TextField from '../../components/Fields/TextField';
-import Notes from '../../components/Notes/Notes';
+import StepField from '../../components/StepField/StepField';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { FIELD_TYPES } from '../../utils/constants';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const StepContent = ({
     languageData,
@@ -23,6 +29,9 @@ const StepContent = ({
 }) => {
     const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
+    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
+    const errorWrap = useErrorWrap();
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -33,52 +42,58 @@ const StepContent = ({
         setUpdatedData(dataCopy);
     };
 
-    const handleFileDelete = async (fileKey, file) => {
-        deleteFile(patientId, stepData.key, file.fileName);
-        let updatedFiles = _.cloneDeep(stepData[fileKey]);
-        updatedFiles = updatedFiles.filter((f) => f.fileName !== file.fileName);
+    const handleFileDelete = async (fieldKey, file) => {
+        errorWrap(async () => {
+            await deleteFile(patientId, metaData.key, fieldKey, file.filename);
+            if (!updatedData[fieldKey]) return;
 
-        handleSimpleUpdate(fileKey, updatedFiles);
+            let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
+            updatedFiles = updatedFiles.filter(
+                (f) => f.filename !== file.filename,
+            );
+
+            handleSimpleUpdate(fieldKey, updatedFiles);
+        });
     };
 
-    const handleFileDownload = (fileName) => {
-        downloadFile(patientId, stepData.key, fileName);
+    const handleFileDownload = (fieldKey, filename) => {
+        errorWrap(async () => {
+            await downloadFile(patientId, metaData.key, fieldKey, filename);
+        });
     };
 
-    const handleFileUpload = async (fileKey, file) => {
-        let filePrefix = '';
-        const fieldMetadata = metaData.fields.find((field) => {
-            return field.key === fileKey;
+    const handleFileUpload = async (fieldKey, file) => {
+        errorWrap(async () => {
+            const res = await uploadFile(
+                patientId,
+                metaData.key,
+                fieldKey,
+                file.name,
+                file,
+            );
+
+            const newFile = {
+                filename: res.data.data.name,
+                uploadedBy: res.data.data.uploadedBy,
+                uploadDate: res.data.data.uploadDate,
+            };
+
+            let files = _.cloneDeep(updatedData[fieldKey]);
+            if (files) files = files.concat(newFile);
+            else files = [newFile];
+
+            handleSimpleUpdate(fieldKey, files);
         });
-        if (
-            fieldMetadata.filePrefix !== null &&
-            fieldMetadata.filePrefix !== ''
-        )
-            filePrefix = `${fieldMetadata.filePrefix}_`;
-
-        const formattedFileName = `${filePrefix}${file.name}`;
-        const res = await uploadFile(
-            patientId,
-            stepData.key,
-            file,
-            formattedFileName,
-        );
-
-        // TODO: Display error if res is null
-        let files = _.cloneDeep(stepData[fileKey]);
-        files = files.concat({
-            fileName: res.data.data.name,
-            uploadedBy: res.data.data.uploadedBy,
-            uploadDate: res.data.data.uploadDate,
-        });
-
-        handleSimpleUpdate(fileKey, files);
     };
 
     const saveData = () => {
-        onDataSaved(stepData.key, updatedData);
+        onDataSaved(metaData.key, updatedData);
         setEdit(false);
         swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
+    };
+
+    const handleQuestionFormatSelect = (e) => {
+        setSingleQuestionFormat(e.target.value);
     };
 
     const discardData = () => {
@@ -113,92 +128,73 @@ const StepContent = ({
 
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
-        if (updatedData == null) return null;
-
+        // if displaying a single question per page, only return the right numbered question
         return metaData.fields.map((field) => {
-            if (field.fieldType === 'String') {
-                return (
-                    <TextField
-                        displayName={field.displayName[key]}
-                        isDisabled={!edit}
-                        onChange={handleSimpleUpdate}
-                        key={field.key}
-                        fieldId={field.key}
-                        value={updatedData[field.key]}
-                    />
-                );
-            }
-            if (field.fieldType === 'MultilineString') {
-                return (
-                    <div>
-                        <Notes
-                            disabled={!edit}
-                            onChange={handleSimpleUpdate}
-                            title={field.displayName[key]}
-                            key={field.key}
-                            fieldId={field.key}
-                            value={updatedData[field.key]}
-                        />
-                    </div>
-                );
-            }
-            if (field.fieldType === 'Date') {
-                return (
-                    <TextField
-                        displayName={field.displayName[key]}
-                        isDisabled={!edit}
-                        onChange={handleSimpleUpdate}
-                        key={field.key}
-                        fieldId={field.key}
-                        value={updatedData[field.key]}
-                    />
-                );
-            }
-            if (field.fieldType === 'Phone') {
-                return (
-                    <TextField
-                        displayName={field.displayName[key]}
-                        isDisabled={!edit}
-                        onChange={handleSimpleUpdate}
-                        fieldId={field.key}
-                        key={field.key}
-                        value={updatedData[field.key]}
-                    />
-                );
-            }
-            if (field.fieldType === 'File') {
-                return (
-                    <Files
-                        languageData={languageData}
-                        title={field.displayName[key]}
-                        files={updatedData[field.key]}
-                        fieldKey={field.key}
-                        key={field.key}
-                        handleDownload={handleFileDownload}
-                        handleUpload={handleFileUpload}
-                        handleDelete={handleFileDelete}
-                    />
-                );
-            }
-            if (field.fieldType === 'Divider') {
-                return (
-                    <div className="patient-divider-wrapper">
-                        <h2>{field.displayName[key]}</h2>
-                        <Divider className="patient-divider" />
-                    </div>
-                );
-            }
-            if (field.fieldType === 'Header') {
-                return <h3>{field.displayName[key]}</h3>;
-            }
+            const stepField = (
+                <StepField
+                    displayName={field.displayName[key]}
+                    metadata={field}
+                    value={updatedData ? updatedData[field.key] : null}
+                    key={field.key}
+                    langKey={key}
+                    isDisabled={!edit}
+                    patientId={patientId}
+                    stepKey={metaData.key}
+                    handleSimpleUpdate={handleSimpleUpdate}
+                    handleFileDownload={handleFileDownload}
+                    handleFileUpload={handleFileUpload}
+                    handleFileDelete={handleFileDelete}
+                    languageData={languageData}
+                />
+            );
 
-            return null;
+            if (singleQuestionFormat) {
+                if (currentQuestion === field.fieldNumber) {
+                    if (
+                        field.fieldType === FIELD_TYPES.HEADER ||
+                        field.fieldType === FIELD_TYPES.DIVIDER
+                    ) {
+                        if (currentQuestion !== metaData.fields.length - 1)
+                            setCurrentQuestion(currentQuestion + 1);
+                        return null;
+                    } else {
+                        return (
+                            <div>
+                                {stepField}
+                                <Button
+                                    onClick={() => {
+                                        if (currentQuestion !== 0)
+                                            setCurrentQuestion(
+                                                currentQuestion - 1,
+                                            );
+                                    }}
+                                >
+                                    {lang.components.button.previous}
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        if (
+                                            currentQuestion !==
+                                            metaData.fields.length - 1
+                                        )
+                                            setCurrentQuestion(
+                                                currentQuestion + 1,
+                                            );
+                                    }}
+                                >
+                                    {lang.components.button.next}
+                                </Button>
+                            </div>
+                        );
+                    }
+                } else return null;
+            } else {
+                return <div>{stepField}</div>;
+            }
         });
     };
 
     const generateFooter = () => {
-        if (stepData == null) return null;
-
         return (
             <BottomBar
                 lastEditedBy={stepData?.lastEditedBy}
@@ -220,10 +216,24 @@ const StepContent = ({
                 <CircularProgress color="inherit" />
             </Backdrop>
             {generateHeader()}
+            <Select
+                MenuProps={{
+                    style: { zIndex: 35001 },
+                }}
+                defaultValue={false}
+                onChange={handleQuestionFormatSelect}
+            >
+                <MenuItem value={false}>
+                    {lang.components.selectQuestionFormat.allQuestions}
+                </MenuItem>
+                <MenuItem value={true}>
+                    {lang.components.selectQuestionFormat.singleQuestion}
+                </MenuItem>
+            </Select>
             <p>{`${lang.components.step.lastEditedBy} ${
                 stepData?.lastEditedBy
             } ${lang.components.step.on} ${formatDate(
-                stepData?.lastEdited,
+                new Date(stepData?.lastEdited),
                 key,
             )}`}</p>
             {genereateFields()}

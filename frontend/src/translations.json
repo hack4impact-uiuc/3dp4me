@@ -72,11 +72,18 @@
                 "serial": "Serial",
                 "status": "Status"
             },
+            "selectQuestionFormat": {
+                "allQuestions": "All Questions",
+                "singleQuestion": "Single Question"
+            },
             "button": {
                 "createPatient": "Create Patient",
+                "createField": "Create Field",
                 "upload": "Upload File",
                 "save": "Save",
                 "edit": "Edit Step",
+                "next": "Next",
+                "previous": "Previous",
                 "discard": {
                     "title": "Discard",
                     "question": "Are you sure?",
@@ -98,6 +105,14 @@
                 "title": "Files",
                 "addAnother": "Add Another"
             },
+            "audio": {
+                "addAnother": "Add Recording",
+                "start": "Start",
+                "stop": "Stop",
+                "save": "Save",
+                "close": "Close",
+                "discard": "Discard"
+            },
             "swal": {
                 "createPatient": {
                     "title": "New Patient",
@@ -107,6 +122,7 @@
                     "dob": "DOB",
                     "id": "ID",
                     "successMsg": "Created Patient",
+                    "failMsg": "Could not create Patient",
                     "buttons": {
                         "noEdit": "Save and Close",
                         "edit": "Save and Continue Editing"
@@ -129,6 +145,28 @@
                     "buttons": {
                         "delete": "Delete Patient",
                         "save": "Save"
+                    }
+                },
+                "createField": {
+                    "title": "New Field",
+                    "title2": "Field Settings",
+                    "fieldType": "Field Type",
+                    "clearance": "Clearance Level",
+                    "showOnDashBoard": "Show on Dashboard",
+                    "field": "Field",
+                    "arabic": "Arabic Question",
+                    "arabicChoice": "Arabic Choice #",
+                    "arabicDividerName": "Arabic Divider Name",
+                    "arabicHeaderName": "Arabic Header Name",
+                    "english": "English Question",
+                    "englishChoice": "English Choice #",
+                    "englishDividerName": "English Divider Name",
+                    "englishHeaderName": "English Header Name",
+                    "buttons": {
+                        "save": "Save",
+                        "discard": "Discard",
+                        "addChoice": "+",
+                        "removeChoice": "x"
                     }
                 }
             }
@@ -271,11 +309,17 @@
                 "serial": "\u0645\u0633\u0644\u0633\u0644",
                 "status": "\u0627\u0644\u062d\u0627\u0644\u0629"
             },
+            "selectQuestionFormat": {
+                "allQuestions": "All Questions",
+                "singleQuestion": "Single Question"
+            },
             "button": {
                 "createPatient": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",
                 "upload": "\u0631\u0641\u0639 \u0645\u0644\u0641",
                 "save": "\u062d\u0641\u0638",
                 "edit": "\u062a\u062d\u0631\u064a\u0631 \u0627\u0644\u062e\u0637\u0648\u0629",
+                "next": "Next",
+                "previous": "Previous",
                 "discard": {
                     "title": "\u062a\u062c\u0627\u0647\u0644",
                     "question": "\u0647\u0644 \u0623\u0646\u062a \u0648\u0627\u062b\u0642\u061f",
@@ -297,6 +341,14 @@
                 "title": "\u0627\u0644\u0645\u0644\u0641\u0627\u062a",
                 "addAnother": "\u0623\u0636\u0641 \u0622\u062e\u0631"
             },
+            "audio": {
+                "addAnother": "إضافة التسجيل",
+                "start": "بداية",
+                "stop": "قف",
+                "save": "حفظ",
+                "close": "أغلق",
+                "discard": "تجاهل"
+            },
             "swal": {
                 "createPatient": {
                     "title": "\u0645\u0631\u064a\u0636 \u062c\u062f\u064a\u062f",
@@ -306,6 +358,7 @@
                     "dob": "DOB",
                     "id": "\u0625\u0630",
                     "successMsg": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",
+                    "failMsg": "تعذر إنشاء المريض",
                     "buttons": {
                         "noEdit": "\u0627\u062d\u0641\u0638 \u0648\u0623\u063a\u0644\u0642",
                         "edit": "\u0627\u062d\u0641\u0638 \u0648\u062a\u0627\u0628\u0639 \u0627\u0644\u062a\u062d\u0631\u064a\u0631"
@@ -328,6 +381,28 @@
                     "buttons": {
                         "delete": "\u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636",
                         "save": "\u062d\u0641\u0638"
+                    }
+                },
+                "createField": {
+                    "title": "New Field",
+                    "title2": "Field Settings",
+                    "fieldType": "Field Type",
+                    "clearance": "Clearance Level",
+                    "showOnDashBoard": "Show on Dashboard",
+                    "field": "Field",
+                    "arabic": "Arabic Question",
+                    "arabicChoice": "Arabic Choice #",
+                    "arabicDividerName": "Arabic Divider Name",
+                    "arabicHeaderName": "Arabic Header Name",
+                    "english": "English Question",
+                    "englishChoice": "English Choice #",
+                    "englishDividerName": "English Divider Name",
+                    "englishHeaderName": "English Header Name",
+                    "buttons": {
+                        "save": "Save",
+                        "discard": "Discard",
+                        "addChoice": "+",
+                        "removeChoice": "x"
                     }
                 }
             }
