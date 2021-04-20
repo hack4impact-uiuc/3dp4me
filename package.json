@@ -44,7 +44,10 @@
         ]
     },
     "dependencies": {
+        "date-fns": "^2.21.1",
+        "libphonenumber-js": "^1.9.16",
         "react-audio-player": "^0.14.0",
+        "react-datepicker": "^3.8.0",
         "react-flexbox-grid": "^2.1.2",
         "react-native-web": "^0.15.0"
     }

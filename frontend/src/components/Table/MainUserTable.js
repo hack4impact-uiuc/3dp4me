@@ -46,10 +46,10 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
     const lang = languageData.translations[key];
 
     const UNSORTED_DATA = users;
-    const { items, requestSort, sortConfig } = useSortableData(
+    /** , requestSort, sortConfig } = useSortableData(
         users,
         UNSORTED_DATA,
-    );
+    );**/
 
     const statusStyle = {
         Finished: (
