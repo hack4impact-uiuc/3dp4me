@@ -194,9 +194,17 @@ router.put(
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const step = await models.Step.findOneAndUpdate(
+            { writableGroups: { $in: [req.user._id.toString()] } },
             { key: stepkey },
             { $set: req.body },
         );
+        if (!step) {
+            return res.status(401).json({
+                code: 401,
+                success: false,
+                message: 'Step cannot be edited with current permissions',
+            });
+        }
 
         await step.save(function (err, data) {
             if (err) {

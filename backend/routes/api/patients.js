@@ -10,7 +10,7 @@ const {
 } = require('../../utils/aws/aws-exports');
 const {
     requireAuthentication,
-    isAdmin,
+    requireAdmin,
 } = require('../../middleware/authentication');
 
 // GET: Returns all patients
@@ -93,6 +93,7 @@ router.post(
 
 router.put(
     '/:id',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { id } = req.params;
         const patient = await models.Patient.findOneAndUpdate(
