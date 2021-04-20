@@ -2,8 +2,6 @@ import './Sidebar.css';
 import React from 'react';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
-import StepManagementContent from '../StepManagementContent/StepManagementContent';
-import _ from 'lodash';
 
 const Sidebar = ({
     languageData,
@@ -27,11 +25,14 @@ const Sidebar = ({
                 >
                     {element.displayName[key]}
                 </button>
-                <button onClick={() => onDownPressed(element.key)}>
-                    <i className="chevron down icon"></i>
+                <button
+                    type="button"
+                    onClick={() => onDownPressed(element.key)}
+                >
+                    <i className="chevron down icon" />
                 </button>
-                <button onClick={() => onUpPressed(element.key)}>
-                    <i className="chevron up icon"></i>
+                <button type="button" onClick={() => onUpPressed(element.key)}>
+                    <i className="chevron up icon" />
                 </button>
             </div>
         );
