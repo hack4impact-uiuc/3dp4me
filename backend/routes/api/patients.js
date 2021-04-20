@@ -91,6 +91,33 @@ router.post(
     }),
 );
 
+router.put(
+    '/:id',
+    errorWrap(async (req, res) => {
+        const { id } = req.params;
+        const patient = await models.Patient.findOneAndUpdate(
+            { _id: id },
+            { $set: req.body },
+            { new: true },
+        );
+
+        if (patient == null) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Patient with that id not found.',
+            });
+        }
+
+        res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Patient successfully edited.',
+            data: patient,
+        });
+    }),
+);
+
 // GET: Download a file
 router.get(
     '/:id/files/:stepKey/:fieldKey/:fileName',
