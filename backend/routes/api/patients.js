@@ -8,7 +8,10 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
-const { requireAuthentication } = require('../../middleware/authentication');
+const {
+    requireAuthentication,
+    isAdmin,
+} = require('../../middleware/authentication');
 
 // GET: Returns all patients
 router.get(
@@ -35,7 +38,6 @@ const getStepKeys = async () => {
 // GET: Returns everything associated with patient
 router.get(
     '/:id',
-    requireAuthentication,
     errorWrap(async (req, res) => {
         const { id } = req.params;
         let patientData = await models.Patient.findById(id);
@@ -64,7 +66,6 @@ router.get(
 // POST: new patient
 router.post(
     '/',
-    requireAuthentication,
     errorWrap(async (req, res) => {
         const patient = req.body;
         let new_patient = null;
@@ -176,7 +177,6 @@ router.delete(
 // POST: upload individual files
 router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
-    requireAuthentication,
     errorWrap(async (req, res) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
@@ -253,7 +253,6 @@ router.post(
 // POST: Updates info for patient at stage
 router.post(
     '/:id/:stage',
-    requireAuthentication,
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
         const steps = await models.Step.find({ key: stage });
