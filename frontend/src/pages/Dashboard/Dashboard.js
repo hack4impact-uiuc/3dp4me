@@ -5,6 +5,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 import { getPatientName } from '../../utils/utils';
 import {
