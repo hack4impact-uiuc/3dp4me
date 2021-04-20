@@ -112,7 +112,7 @@ const generateSchemaFromMetadata = (stepMetadata) => {
 router.get(
     '/steps',
     errorWrap(async (req, res) => {
-        const metaData;
+        let metaData;
 
         if (isAdmin(req.user)) {
             metaData = await models.Step.find({});
