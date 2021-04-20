@@ -213,24 +213,12 @@ router.post(
                     res.json(err);
                 } else {
                     var updatedFileName = fileName;
-                    console.log(stepData[fieldKey]);
                     if (
                         stepData[fieldKey].filter(
                             (e) => e.filename === fileName,
                         ).length > 0
                     ) {
                         var numPrev = 1;
-                        console.log(
-                            stepData[fieldKey].filter(
-                                (e) =>
-                                    e.filename ===
-                                    fileName.split('.')[0] +
-                                        '_' +
-                                        numPrev +
-                                        '.' +
-                                        fileName.split('.')[1],
-                            ).length,
-                        );
                         while (
                             stepData[fieldKey].filter(
                                 (e) =>
@@ -251,7 +239,6 @@ router.post(
                             updatedFileName.split('.')[1];
                     }
 
-                    console.log(updatedFileName);
                     stepData[fieldKey].push({
                         filename: updatedFileName,
                         uploadedBy: req.user.Username,
