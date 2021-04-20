@@ -65,7 +65,9 @@ router.post(
         const patient = req.body;
         let new_patient = null;
         try {
-            req.body.lastEditedBy = req.user.Username;
+            req.body.lastEditedBy = req.user.UserAttributes.filter(
+                (e) => e.Name === 'name',
+            )[0].Value;
             new_patient = new models.Patient(patient);
             new_patient.save();
         } catch (error) {
@@ -151,15 +153,17 @@ router.delete(
             });
         }
 
+        const name = req.user.UserAttributes.filter((e) => e.Name === 'name')[0]
+            .Value;
         // TODO: Remove this file from AWS as well once we have a "do you want to remove this" on the frontend
         stepData[fieldKey].splice(index, 1);
 
         stepData.lastEdited = Date.now();
-        stepData.lastEditedBy = req.user.Username;
+        stepData.lastEditedBy = name;
         collection.findOneAndUpdate({ patientId: id }, { $set: stepData });
 
         patient.lastEdited = Date.now();
-        patient.lastEditedBy = req.user.Username;
+        patient.lastEditedBy = name;
         patient.save();
 
         res.status(201).json({
@@ -211,13 +215,16 @@ router.post(
                 if (err) {
                     res.json(err);
                 } else {
+                    const name = req.user.UserAttributes.filter(
+                        (e) => e.Name === 'name',
+                    )[0].Value;
                     stepData[fieldKey].push({
                         filename: fileName,
-                        uploadedBy: req.user.Username,
+                        uploadedBy: name,
                         uploadDate: Date.now(),
                     });
                     stepData.lastEdited = Date.now();
-                    stepData.lastEditedBy = req.user.Username;
+                    stepData.lastEditedBy = name;
                     collection.findOneAndUpdate(
                         { patientId: id },
                         { $set: stepData },
@@ -225,7 +232,7 @@ router.post(
                     );
 
                     patient.lastEdited = Date.now();
-                    patient.lastEditedBy = req.user.Username;
+                    patient.lastEditedBy = name;
                     patient.save();
 
                     res.status(201).json({
@@ -233,7 +240,7 @@ router.post(
                         message: 'File successfully uploaded',
                         data: {
                             name: fileName,
-                            uploadedBy: req.user.Username,
+                            uploadedBy: name,
                             uploadDate: Date.now(),
                             mimetype: file.mimetype,
                             size: file.size,
@@ -252,6 +259,8 @@ router.post(
         const { id, stage } = req.params;
         const steps = await models.Step.find({ key: stage });
         const session = await mongoose.startSession();
+        const name = req.user.UserAttributes.filter((e) => e.Name === 'name')[0]
+            .Value;
 
         if (steps.length == 0) {
             return res.status(404).json({
@@ -277,9 +286,8 @@ router.post(
                     stage,
                 );
                 updatedStage.lastEdited = Date.now();
-                updatedStage.lastEditedBy = req.user.Username;
+                updatedStage.lastEditedBy = name;
                 delete updatedStage._id;
-
                 const stepData = await collection.findOneAndUpdate(
                     { patientId: id },
                     { $set: updatedStage },
@@ -295,7 +303,7 @@ router.post(
             });
         }
         patient.lastEdited = Date.now();
-        patient.lastEditedBy = req.user.Username;
+        patient.lastEditedBy = name;
         await patient.save(function (err) {
             if (err) {
                 res.json(err); //TODO: bug here, need to take a look
