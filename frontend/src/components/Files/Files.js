@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
-
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
 const Files = ({
@@ -16,6 +15,7 @@ const Files = ({
     handleDownload,
     handleDelete,
     handleUpload,
+    isDisabled,
 }) => {
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -46,7 +46,9 @@ const Files = ({
                 <button
                     className="file-close-button"
                     type="button"
-                    onClick={() => handleDelete(fieldKey, file)}
+                    onClick={() => {
+                        if (!isDisabled) handleDelete(fieldKey, file);
+                    }}
                 >
                     <CloseIcon />
                 </button>
@@ -67,7 +69,8 @@ const Files = ({
                         className="upload-file-input"
                         type="file"
                         onChange={(e) => {
-                            handleUpload(fieldKey, e.target.files[0]);
+                            if (!isDisabled)
+                                handleUpload(fieldKey, e.target.files[0]);
                         }}
                     />
                     <Button className="file-button" component="span">
@@ -89,6 +92,7 @@ Files.propTypes = {
     handleDownload: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
     handleUpload: PropTypes.func.isRequired,
+    isDisabled: PropTypes.bool.isRequired,
     files: PropTypes.arrayOf(
         PropTypes.shape({
             filename: PropTypes.string.isRequired,
