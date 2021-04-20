@@ -5,6 +5,7 @@ const { errorWrap } = require('../../utils');
 const { models, fileSchema, stepStatusEnum } = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
+const { requireAuthentication } = require('../../middleware/authentication');
 
 const generateSchemaFromMetadata = (stepMetadata) => {
     let stepSchema = {};
@@ -110,6 +111,7 @@ const generateSchemaFromMetadata = (stepMetadata) => {
 // GET metadata/steps
 router.get(
     '/steps',
+    requireAuthentication,
     errorWrap(async (req, res) => {
         const metaData = await models.Step.find({});
         if (!metaData) {
@@ -132,6 +134,8 @@ router.get(
 // POST metadata/steps
 router.post(
     '/steps',
+    requireAuthentication,
+    requireRole('Admin'),
     errorWrap(async (req, res) => {
         const steps = req.body;
         const new_step_metadata = new models.Step(steps);
@@ -179,6 +183,8 @@ router.post(
 // PUT metadata/steps/:stepkey
 router.put(
     '/steps/:stepkey',
+    requireAuthentication,
+    requireRole('Admin'),
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const step = await models.Step.findOneAndUpdate(
@@ -204,6 +210,8 @@ router.put(
 // DELETE metadata/steps/:stepkey
 router.delete(
     '/steps/:stepkey',
+    requireAuthentication,
+    requireRole('Admin'),
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const step = await models.Step.deleteOne({ key: stepkey });
