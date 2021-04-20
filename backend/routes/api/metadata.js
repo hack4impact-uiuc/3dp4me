@@ -5,7 +5,10 @@ const { errorWrap } = require('../../utils');
 const { models, fileSchema, stepStatusEnum } = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
-const { requireAuthentication } = require('../../middleware/authentication');
+const {
+    requireAuthentication,
+    requireRole,
+} = require('../../middleware/authentication');
 
 const generateSchemaFromMetadata = (stepMetadata) => {
     let stepSchema = {};
