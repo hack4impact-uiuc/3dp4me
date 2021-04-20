@@ -93,7 +93,16 @@ router.put(
         const patient = await models.Patient.findOneAndUpdate(
             { _id: id },
             { $set: req.body },
+            { new: true },
         );
+
+        if (patient == null) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Patient with that id not found.',
+            });
+        }
 
         res.status(200).json({
             code: 200,
