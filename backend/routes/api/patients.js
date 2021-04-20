@@ -173,6 +173,7 @@ router.delete(
 router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
+        console.log('hi');
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
         if (patient == null) {
@@ -211,14 +212,48 @@ router.post(
                 if (err) {
                     res.json(err);
                 } else {
-                    const numExisting = collection.fieldKey.find({
-                        filename: fileName,
-                    }).length;
-                    if (numExisting > 0)
-                        fileName += '_' + numExisting.toString();
+                    var updatedFileName = fileName;
+                    console.log(stepData[fieldKey]);
+                    if (
+                        stepData[fieldKey].filter(
+                            (e) => e.filename === fileName,
+                        ).length > 0
+                    ) {
+                        var numPrev = 1;
+                        console.log(
+                            stepData[fieldKey].filter(
+                                (e) =>
+                                    e.filename ===
+                                    fileName.split('.')[0] +
+                                        '_' +
+                                        numPrev +
+                                        '.' +
+                                        fileName.split('.')[1],
+                            ).length,
+                        );
+                        while (
+                            stepData[fieldKey].filter(
+                                (e) =>
+                                    e.filename ===
+                                    fileName.split('.')[0] +
+                                        '_' +
+                                        numPrev +
+                                        '.' +
+                                        fileName.split('.')[1],
+                            ).length > 0
+                        )
+                            numPrev += 1;
+                        updatedFileName =
+                            updatedFileName.split('.')[0] +
+                            '_' +
+                            numPrev +
+                            '.' +
+                            updatedFileName.split('.')[1];
+                    }
 
+                    console.log(updatedFileName);
                     stepData[fieldKey].push({
-                        filename: fileName,
+                        filename: updatedFileName,
                         uploadedBy: req.user.Username,
                         uploadDate: Date.now(),
                     });
@@ -238,7 +273,7 @@ router.post(
                         success: true,
                         message: 'File successfully uploaded',
                         data: {
-                            name: fileName,
+                            name: updatedFileName,
                             uploadedBy: req.user.Username,
                             uploadDate: Date.now(),
                             mimetype: file.mimetype,
