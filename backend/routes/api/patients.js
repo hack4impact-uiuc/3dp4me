@@ -211,6 +211,12 @@ router.post(
                 if (err) {
                     res.json(err);
                 } else {
+                    const numExisting = collection.fieldKey.find({
+                        filename: fileName,
+                    }).length;
+                    if (numExisting > 0)
+                        fileName += '_' + numExisting.toString();
+
                     stepData[fieldKey].push({
                         filename: fileName,
                         uploadedBy: req.user.Username,
