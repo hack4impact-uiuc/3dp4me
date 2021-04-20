@@ -8,6 +8,7 @@ import Sidebar from '../Sidebar/Sidebar';
 import StepManagementContent from '../StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
 import _ from 'lodash';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const SectionTab = ({ languageData }) => {
     const key = languageData.selectedLanguage;
