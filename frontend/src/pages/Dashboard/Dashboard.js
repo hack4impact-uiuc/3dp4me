@@ -5,8 +5,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
-import { useErrorWrap } from '../../hooks/useErrorWrap';
 
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { getPatientName } from '../../utils/utils';
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
@@ -65,7 +65,7 @@ const Dashboard = ({ languageData }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
-
+    const errorWrap = useErrorWrap();
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
@@ -80,12 +80,13 @@ const Dashboard = ({ languageData }) => {
         ).value;
         patient.familyName = document.getElementById('createFamilyName').value;
 
-        const res = await postNewPatient(patient);
-
-        if (res?.success && edit) {
+        let res = null;
+        try {
+            res = await postNewPatient(patient);
             const id = res.result._id;
-            window.location.href += `patient-info/${id}`;
-        } else {
+
+            if (edit) window.location.href += `patient-info/${id}`;
+        } catch (error) {
             swal(
                 res?.success
                     ? lang.components.swal.createPatient.successMsg
@@ -211,33 +212,26 @@ const Dashboard = ({ languageData }) => {
         setSearchQuery('');
         if (stepKey !== null) {
             setStep(stepKey);
-            const res = await getPatientsByStage(stepKey);
-
-            // TODO: Error handling
-            if (!res?.success || !res?.result) return;
-
-            setPatients(res.result);
+            errorWrap(async () => {
+                const res = await getPatientsByStage(stepKey);
+                setPatients(res.result);
+            });
         }
     };
 
     useEffect(() => {
         const getMetadata = async () => {
-            let res = await getAllStepsMetadata();
-            if (!res?.success || !res?.result) return;
-
-            // TODO: Error handling
-            setStepsMetaData(res.result);
-
-            if (res.result.length > 0) setStep(res.result[0].key);
-
-            res = await getPatientsByStage(res.result[0].key);
-            if (!res?.success || !res?.result) return;
-
-            setPatients(res.result);
+            errorWrap(async () => {
+                let res = await getAllStepsMetadata();
+                setStepsMetaData(res.result);
+                if (res.result.length > 0) setStep(res.result[0].key);
+                res = await getPatientsByStage(res.result[0].key);
+                setPatients(res.result);
+            });
         };
 
         getMetadata();
-    }, [setStep, setStepsMetaData]);
+    }, [setStep, setStepsMetaData, errorWrap]);
 
     function generatePageHeader() {
         if (stepsMetaData == null) return lang.components.table.loading;

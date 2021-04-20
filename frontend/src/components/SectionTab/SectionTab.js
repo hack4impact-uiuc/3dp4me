@@ -38,13 +38,13 @@ const SectionTab = ({ languageData }) => {
         }
     }
 
-    function onCardDownPressed(stepKey) {
+    function onCardDownPressed(stepKey, fieldKey) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
         console.log(updatedMetadata);
-        const foundField = updatedMetadata.find(
-            (field) => field.fields.key === stepKey,
+        const foundStep = updatedMetadata.find(
+            (field) => field.key === stepKey,
         );
-        console.log(foundField);
+        const foundField = foundStep.find((field) => field.key === fieldKey);
         /*const afterField = updatedMetadata.find( (fields) => fields.fieldNumber === foundField.fieldNumber + 1);
         if (foundField.fieldNumber != updatedMetadata.length - 1) {
             foundField.fieldNumber++;

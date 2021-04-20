@@ -6,7 +6,7 @@ const { models, fileSchema, stepStatusEnum } = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 
-const addCollection = (stepMetadata) => {
+const generateSchemaFromMetadata = (stepMetadata) => {
     let stepSchema = {};
     stepSchema.patientId = { type: String, required: true, unique: true };
     stepSchema.status = {
@@ -115,7 +115,7 @@ router.get(
         if (!metaData) {
             res.status(404).json({
                 code: 404,
-                success: true,
+                success: false,
                 message: 'Steps not found.',
             });
         } else {
@@ -223,3 +223,4 @@ router.delete(
 );
 
 module.exports = router;
+module.exports.generateSchemaFromMetadata = generateSchemaFromMetadata;
