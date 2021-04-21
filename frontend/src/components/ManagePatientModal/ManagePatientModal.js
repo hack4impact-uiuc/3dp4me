@@ -7,9 +7,11 @@ import { LanguageDataType } from '../../utils/custom-proptypes';
 import patientFile from '../../Test Data/patient.json';
 import './ManagePatientModal.scss';
 import { PATIENT_STATUS, PATIENT_KEY_STATUS } from '../../utils/constants';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const ManagePatientModal = ({ languageData }) => {
     const [patientStatus, setPatientStatus] = useState('active');
+    const errorWrap = useErrorWrap();
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -22,10 +24,46 @@ const ManagePatientModal = ({ languageData }) => {
         swal.close();
     };
 
+    const getRadioButtonValue = (buttonName) => {
+        let ele = document.getElementsByName(buttonName);
+
+        for (let i = 0; i < ele.length; i++) {
+            if (ele[i].checked) return ele[i].value;
+        }
+
+        return null;
+    };
+
+    // TODO: Populate modal data
+
     const handleManagePatientSave = () => {
-        // const name = document.getelementbyid('manage-patient-name').value;
-        // const dob = document.getelementbyid('manage-patient-dob').value;
-        // TODO: call edit patient endpoint with new name / dob / patientStatus
+        const firstName = document.getElementById('manage-patient-firstName')
+            .value;
+        const fatherName = document.getElementById('manage-patient-fatherName')
+            .value;
+        const grandfatherName = document.getElementById(
+            'manage-patient-grandfatherName',
+        ).value;
+        const familyName = document.getElementById('manage-patient-familyName')
+            .value;
+        const orderId = document.getElementById('manage-patient-orderId').value;
+        const status = getRadioButtonValue(PATIENT_KEY_STATUS);
+
+        const updatedData = {
+            firstName: firstName,
+            fathersName: fatherName,
+            grandfathersName: grandfatherName,
+            familyName: familyName,
+            orderId: orderId,
+        };
+
+        if (status) updatedData.status = status;
+
+        useErrorWrap(async () => {
+            /// TODO: Get patientID
+            updatePatient(patientId, updatedData);
+        });
+
         swal(lang.components.swal.managePatient.successMsg, '', 'success');
     };
 
