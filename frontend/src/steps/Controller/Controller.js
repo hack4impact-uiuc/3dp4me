@@ -51,7 +51,13 @@ const Controller = ({ languageData }) => {
         reactSwal({
             className: 'controller-manage-patient-swal',
             buttons: {},
-            content: <ManagePatientModal languageData={languageData} />,
+            content: (
+                <ManagePatientModal
+                    languageData={languageData}
+                    patientId={patientId}
+                    patientData={patientData}
+                />
+            ),
         });
     };
 

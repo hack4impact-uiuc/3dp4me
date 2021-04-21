@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { Button, TextField } from '@material-ui/core';
 import swal from 'sweetalert';
 import CloseIcon from '@material-ui/icons/Close';
-
+import PropTypes from 'prop-types';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import patientFile from '../../Test Data/patient.json';
 import './ManagePatientModal.scss';
 import { PATIENT_STATUS, PATIENT_KEY_STATUS } from '../../utils/constants';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { updatePatient } from '../../utils/api';
 
-const ManagePatientModal = ({ languageData }) => {
+const ManagePatientModal = ({ languageData, patientId, patientData }) => {
     const [patientStatus, setPatientStatus] = useState('active');
     const errorWrap = useErrorWrap();
 
@@ -36,7 +37,7 @@ const ManagePatientModal = ({ languageData }) => {
 
     // TODO: Populate modal data
 
-    const handleManagePatientSave = () => {
+    const handleManagePatientSave = async () => {
         const firstName = document.getElementById('manage-patient-firstName')
             .value;
         const fatherName = document.getElementById('manage-patient-fatherName')
@@ -59,9 +60,9 @@ const ManagePatientModal = ({ languageData }) => {
 
         if (status) updatedData.status = status;
 
-        useErrorWrap(async () => {
-            /// TODO: Get patientID
-            updatePatient(patientId, updatedData);
+        // Think we need to get rid of the swal
+        await errorWrap(async () => {
+            await updatePatient(patientId, updatedData);
         });
 
         swal(lang.components.swal.managePatient.successMsg, '', 'success');
@@ -158,6 +159,8 @@ const ManagePatientModal = ({ languageData }) => {
 
 ManagePatientModal.propTypes = {
     languageData: LanguageDataType.isRequired,
+    patientId: PropTypes.string.isRequired,
+    patientData: PropTypes.object.isRequired,
 };
 
 export default ManagePatientModal;
