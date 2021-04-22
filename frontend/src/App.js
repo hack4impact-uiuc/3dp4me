@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Amplify, Auth } from 'aws-amplify';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { registerLocale } from 'react-datepicker';
+import { enUS, arSA } from 'date-fns/locale';
 
+import Store from './store/Store';
+import AppContent from './AppContent';
 import { awsconfig } from './aws/aws-exports';
-import Dashboard from './pages/Dashboard/Dashboard';
-import AccountManagement from './pages/AccountManagement/AccountManagment';
-import Metrics from './pages/Metrics/Metrics';
-import Patients from './pages/Patients/Patients';
-import Navbar from './components/Navbar/Navbar';
-import SectionTab from './components/SectionTab/SectionTab';
-import Controller from './steps/Controller/Controller';
 import translations from './translations.json';
 import Login from './components/Login/Login';
 import {
@@ -21,6 +17,8 @@ import {
 import { getCurrentUserInfo } from './aws/aws-helper';
 
 Amplify.configure(awsconfig);
+registerLocale('EN', enUS);
+registerLocale('AR', arSA);
 
 function App() {
     const [selectedLang, setSelectedLang] = useState('EN');
@@ -67,49 +65,14 @@ function App() {
 
     if (authLevel === AUTHENTICATED)
         return (
-            <div dir={selectedLang === 'AR' ? 'rtl' : 'ltr'}>
-                <Router>
-                    <Navbar
-                        languageData={languageData}
-                        setSelectedLang={setSelectedLang}
-                        username={username}
-                        userEmail={userEmail}
-                    />
-                    <div
-                        className={`${
-                            selectedLang === 'AR' ? 'flip' : ''
-                        } content`}
-                    >
-                        <Switch>
-                            {/* Path = BASE_URL */}
-                            <Route exact path="/">
-                                <Dashboard languageData={languageData} />
-                            </Route>
-                            {/* Path = BASE_URL/account */}
-                            <Route exact path="/account">
-                                <AccountManagement
-                                    languageData={languageData}
-                                />
-                            </Route>
-                            {/* Path = BASE_URL/metrics */}
-                            <Route exact path="/metrics">
-                                <Metrics languageData={languageData} />
-                            </Route>
-                            {/* Path = BASE_URL/patients */}
-                            <Route exact path="/patients">
-                                <Patients languageData={languageData} />
-                            </Route>
-                            {/* Path = BASE_URL/patient-info/PATIENT_ID */}
-                            <Route exact path="/patient-info/:patientId">
-                                <Controller languageData={languageData} />
-                            </Route>
-                            <Route exact path="/section-tab">
-                                <SectionTab languageData={languageData} />
-                            </Route>
-                        </Switch>
-                    </div>
-                </Router>
-            </div>
+            <Store>
+                <AppContent
+                    languageData={languageData}
+                    onLanguageChange={setSelectedLang}
+                    username={username}
+                    userEmail={userEmail}
+                />
+            </Store>
         );
 }
 

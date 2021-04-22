@@ -6,7 +6,6 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import CloseIcon from '@material-ui/icons/Close';
 import { Button, Modal, Typography } from '@material-ui/core';
 import React from 'react';
-
 import './AudioRecorder.scss';
 import { downloadBlobWithoutSaving } from '../../utils/api';
 
