@@ -1,4 +1,3 @@
-/* eslint no-param-reassign: "warn" */
 import React, { useEffect, useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,9 +11,7 @@ import {
     Button,
 } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import reactSwal from '@sweetalert/with-react';
 import { useParams } from 'react-router-dom';
-
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import StepContent from '../StepContent/StepContent';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
@@ -40,26 +37,15 @@ const Controller = ({ languageData }) => {
     const [selectedStep, setSelectedStep] = useState(null);
     const [stepMetaData, setStepMetaData] = useState(null);
     const [patientData, setPatientData] = useState(null);
+    const [isManagePatientModalOpen, setManagePatientModalOpen] = useState(
+        false,
+    );
 
     const params = useParams();
     const { patientId } = params;
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
-
-    const managePatient = () => {
-        reactSwal({
-            className: 'controller-manage-patient-swal',
-            buttons: {},
-            content: (
-                <ManagePatientModal
-                    languageData={languageData}
-                    patientId={patientId}
-                    patientData={patientData}
-                />
-            ),
-        });
-    };
 
     const handleNotePanel = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -179,6 +165,13 @@ const Controller = ({ languageData }) => {
     return (
         <LoadWrapper loading={loading}>
             <div className="root">
+                <ManagePatientModal
+                    languageData={languageData}
+                    patientId={patientId}
+                    patientData={patientData}
+                    isOpen={isManagePatientModalOpen}
+                    onClose={() => setManagePatientModalOpen(false)}
+                />
                 <ThemeProvider theme={key === 'AR' ? theme : null}>
                     <Drawer
                         className={key === 'EN' ? 'drawer' : 'drawer-rtl'}
@@ -229,7 +222,9 @@ const Controller = ({ languageData }) => {
                                 }}
                             >
                                 <Button
-                                    onClick={managePatient}
+                                    onClick={() =>
+                                        setManagePatientModalOpen(true)
+                                    }
                                     className="manage-patient-button"
                                 >
                                     {lang.components.button.managePatient}
