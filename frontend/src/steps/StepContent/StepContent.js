@@ -158,40 +158,35 @@ const StepContent = ({
                         if (currentQuestion !== metaData.fields.length - 1)
                             setCurrentQuestion(currentQuestion + 1);
                         return null;
-                    } else {
-                        return (
-                            <div>
-                                {stepField}
-                                <Button
-                                    onClick={() => {
-                                        if (currentQuestion !== 0)
-                                            setCurrentQuestion(
-                                                currentQuestion - 1,
-                                            );
-                                    }}
-                                >
-                                    {lang.components.button.previous}
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        if (
-                                            currentQuestion !==
-                                            metaData.fields.length - 1
-                                        )
-                                            setCurrentQuestion(
-                                                currentQuestion + 1,
-                                            );
-                                    }}
-                                >
-                                    {lang.components.button.next}
-                                </Button>
-                            </div>
-                        );
                     }
-                } else return null;
-            } else {
-                return <div>{stepField}</div>;
+                    return (
+                        <div>
+                            {stepField}
+                            <Button
+                                onClick={() => {
+                                    if (currentQuestion !== 0)
+                                        setCurrentQuestion(currentQuestion - 1);
+                                }}
+                            >
+                                {lang.components.button.previous}
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    if (
+                                        currentQuestion !==
+                                        metaData.fields.length - 1
+                                    )
+                                        setCurrentQuestion(currentQuestion + 1);
+                                }}
+                            >
+                                {lang.components.button.next}
+                            </Button>
+                        </div>
+                    );
+                }
+                return null;
             }
+            return <div>{stepField}</div>;
         });
     };
 
@@ -227,7 +222,7 @@ const StepContent = ({
                 <MenuItem value={false}>
                     {lang.components.selectQuestionFormat.allQuestions}
                 </MenuItem>
-                <MenuItem value={true}>
+                <MenuItem value>
                     {lang.components.selectQuestionFormat.singleQuestion}
                 </MenuItem>
             </Select>
