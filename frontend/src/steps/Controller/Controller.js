@@ -1,3 +1,4 @@
+/* eslint no-param-reassign: "warn" */
 import React, { useEffect, useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,6 +13,8 @@ import {
 } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
+import swal from 'sweetalert';
+
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import StepContent from '../StepContent/StepContent';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
@@ -25,7 +28,6 @@ import {
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import { getPatientName } from '../../utils/utils';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
-import swal from 'sweetalert';
 
 const theme = createMuiTheme({
     direction: 'rtl',
@@ -63,7 +65,7 @@ const Controller = ({ languageData }) => {
     };
 
     const onPatientDataSaved = async (newPatientData) => {
-        let patientDataCopy = _.cloneDeep(patientData);
+        const patientDataCopy = _.cloneDeep(patientData);
         Object.assign(patientDataCopy, newPatientData);
         await errorWrap(async () => {
             await updatePatient(patientId, patientDataCopy);

@@ -7,12 +7,13 @@ import {
     Modal,
     TextField,
 } from '@material-ui/core';
+import _ from 'lodash';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
+
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ManagePatientModal.scss';
-import { PATIENT_STATUS, PATIENT_KEY_STATUS } from '../../utils/constants';
-import _ from 'lodash';
+import { PATIENT_STATUS } from '../../utils/constants';
 
 const ManagePatientModal = ({
     languageData,
@@ -145,8 +146,10 @@ const ManagePatientModal = ({
 
 ManagePatientModal.propTypes = {
     languageData: LanguageDataType.isRequired,
-    patientId: PropTypes.string.isRequired,
     patientData: PropTypes.object.isRequired,
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onDataSave: PropTypes.func.isRequired,
 };
 
 export default ManagePatientModal;
