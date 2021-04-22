@@ -4,6 +4,7 @@ import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import MultiSelectField from '../../components/Fields/MultiSelectField';
 
 import { getAllUsers, removeUserRole } from '../../utils/api';
+import { ACCESS_LEVELS } from '../../utils/constants';
 
 const AccountManagement = ({ languageData }) => {
     const addRole = async () => {
@@ -44,17 +45,20 @@ const AccountManagement = ({ languageData }) => {
         },
     ];
 
-    let MOCK_UESR_ROLES = ['1'];
+    let MOCK_USER_DATA = {
+        userName: 'Matthew Walowski',
+        userEmail: 'mattwalowski@gmail.com',
+        roles: ['1'],
+        accessLevel: ACCESS_LEVELS.PENDING,
+    };
 
     return (
         <div className="dashboard">
             <EditRoleModal
                 languageData={languageData}
                 isOpen={true}
-                userName="Matthew Walowski"
-                userEmail="mattwalowski@gmail.com"
+                userInfo={MOCK_USER_DATA}
                 allRoles={MOCK_ALL_ROLES}
-                selectedRoles={MOCK_UESR_ROLES}
             />
             <Button onClick={addRole}> TEST BUTTONG </Button>
         </div>
