@@ -7,11 +7,13 @@ import {
     InputLabel,
     MenuItem,
     Select,
+    Button,
 } from '@material-ui/core';
 import TextField from '../Fields/TextField';
 import MultiSelectField from '../Fields/MultiSelectField';
 import PropTypes from 'prop-types';
 import { ACCESS_LEVELS } from '../../utils/constants.js';
+import './EditRoleModal.scss';
 
 const EditRoleModal = ({
     languageData,
@@ -29,18 +31,26 @@ const EditRoleModal = ({
         setUserData({ ...userData, roles: roles });
     };
 
+    const onAccessChange = (event) => {
+        setUserData({ ...userData, accessLevel: event.target.value });
+    };
+
+    const onSave = (event) => {
+        // TODO: Make post requests and callback to parent
+    };
+
     return (
         <Modal open={isOpen} onClose={onClose}>
-            <div style={{ display: 'flex', 'flex-direction': 'column' }}>
-                <h2>Edit Account</h2>
+            <div className="edit-role-modal-wrapper">
+                <h2>{lang.accountManagement.editAccount}</h2>
                 <TextField
-                    displayName="Name"
+                    displayName={lang.accountManagement.username}
                     type="text"
                     isDisabled={true}
                     value={userData?.userName}
                 />
                 <TextField
-                    displayName="Name"
+                    displayName={lang.accountManagement.email}
                     type="text"
                     isDisabled={true}
                     value={userData?.userEmail}
@@ -54,17 +64,31 @@ const EditRoleModal = ({
                     isDisabled={false}
                 />
                 <FormControl>
-                    <InputLabel>Access</InputLabel>
+                    <InputLabel>{lang.accountManagement.access}</InputLabel>
                     <Select
                         native
                         value={userData?.accessLevel}
-                        // onChange={handleChange}
+                        onChange={onAccessChange}
                     >
-                        <option value={ACCESS_LEVELS.GRANTED}>Approved</option>
-                        <option value={ACCESS_LEVELS.REVOKED}>Revoked</option>
-                        <option value={ACCESS_LEVELS.PENDING}>Pending</option>
+                        <option value={ACCESS_LEVELS.GRANTED}>
+                            {lang.accountManagement.Approved}
+                        </option>
+                        <option value={ACCESS_LEVELS.REVOKED}>
+                            {lang.accountManagement.Revoked}
+                        </option>
+                        <option value={ACCESS_LEVELS.PENDING}>
+                            {lang.accountManagement.Pending}
+                        </option>
                     </Select>
                 </FormControl>
+                <div>
+                    <Button onClick={onSave}>
+                        {lang.accountManagement.Save}
+                    </Button>
+                    <Button onClick={onClose}>
+                        {lang.accountManagement.Discard}
+                    </Button>
+                </div>
             </div>
         </Modal>
     );
