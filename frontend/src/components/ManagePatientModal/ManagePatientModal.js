@@ -1,79 +1,32 @@
 import React, { useState } from 'react';
-import { Button, Modal, TextField } from '@material-ui/core';
+import {
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    Button,
+    Modal,
+    TextField,
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ManagePatientModal.scss';
 import { PATIENT_STATUS, PATIENT_KEY_STATUS } from '../../utils/constants';
-import { useErrorWrap } from '../../hooks/useErrorWrap';
-import { updatePatient } from '../../utils/api';
 import _ from 'lodash';
 
 const ManagePatientModal = ({
     languageData,
-    patientId,
     patientData,
     isOpen,
     onClose,
     onDataSave,
 }) => {
-    const errorWrap = useErrorWrap();
     const [updatedPatientData, setUpdatedPatientData] = useState(
         _.cloneDeep(patientData),
     );
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
-
-    const handleManagePatientStatus = (e) => {
-        //setPatientStatus(e.target.value);
-    };
-
-    const handleManagePatientClose = () => {
-        // swal.close();
-    };
-
-    const getRadioButtonValue = (buttonName) => {
-        let ele = document.getElementsByName(buttonName);
-
-        for (let i = 0; i < ele.length; i++) {
-            if (ele[i].checked) return ele[i].value;
-        }
-
-        return null;
-    };
-
-    // TODO: Populate modal data
-    const handleManagePatientSave = async () => {
-        const firstName = document.getElementById('manage-patient-firstName')
-            .value;
-        const fatherName = document.getElementById('manage-patient-fatherName')
-            .value;
-        const grandfatherName = document.getElementById(
-            'manage-patient-grandfatherName',
-        ).value;
-        const familyName = document.getElementById('manage-patient-familyName')
-            .value;
-        const orderId = document.getElementById('manage-patient-orderId').value;
-        const status = getRadioButtonValue(PATIENT_KEY_STATUS);
-
-        const updatedData = {
-            firstName: firstName,
-            fathersName: fatherName,
-            grandfathersName: grandfatherName,
-            familyName: familyName,
-            orderId: orderId,
-        };
-
-        if (status) updatedData.status = status;
-
-        // Think we need to get rid of the swal
-        await errorWrap(async () => {
-            await updatePatient(patientId, updatedData);
-        });
-
-        // swal(lang.components.swal.managePatient.successMsg, '', 'success');
-    };
 
     const onFieldUpdate = (e) => {
         e.persist();
@@ -92,7 +45,7 @@ const ManagePatientModal = ({
             >
                 <div className="manage-patient-header">
                     <h2>{lang.components.swal.managePatient.title}</h2>
-                    <Button onClick={handleManagePatientClose}>
+                    <Button onClick={onClose}>
                         <CloseIcon />
                     </Button>
                 </div>
@@ -133,45 +86,38 @@ const ManagePatientModal = ({
                     <p>
                         {lang.components.swal.managePatient.archiveInformation}
                     </p>
-                    <div
-                        className="profile-management-radio-button-group"
-                        onChange={handleManagePatientStatus}
-                    >
+                    <div className="profile-management-radio-button-group">
                         <div>
-                            <input
-                                type="radio"
-                                value={PATIENT_STATUS.ACTIVE}
-                                name={PATIENT_KEY_STATUS}
-                                checked={
-                                    patientData?.status ===
-                                    PATIENT_STATUS.ACTIVE
-                                }
-                            />{' '}
-                            {lang.components.swal.managePatient.active}
-                        </div>
-                        <div>
-                            <input
-                                type="radio"
-                                value={PATIENT_STATUS.FEEDBACK}
-                                name={PATIENT_KEY_STATUS}
-                                checked={
-                                    patientData?.status ===
-                                    PATIENT_STATUS.FEEDBACK
-                                }
-                            />{' '}
-                            {lang.components.swal.managePatient.feedback}
-                        </div>
-                        <div>
-                            <input
-                                type="radio"
-                                value={PATIENT_STATUS.ARCHIVE}
-                                name={PATIENT_KEY_STATUS}
-                                checked={
-                                    patientData?.status ===
-                                    PATIENT_STATUS.ARCHIVE
-                                }
-                            />{' '}
-                            {lang.components.swal.managePatient.archive}
+                            <RadioGroup
+                                name="status"
+                                onChange={onFieldUpdate}
+                                value={updatedPatientData?.status}
+                            >
+                                <FormControlLabel
+                                    value={PATIENT_STATUS.ACTIVE}
+                                    control={<Radio />}
+                                    label={
+                                        lang.components.swal.managePatient
+                                            .active
+                                    }
+                                />
+                                <FormControlLabel
+                                    value={PATIENT_STATUS.FEEDBACK}
+                                    control={<Radio />}
+                                    label={
+                                        lang.components.swal.managePatient
+                                            .feedback
+                                    }
+                                />
+                                <FormControlLabel
+                                    value={PATIENT_STATUS.ARCHIVE}
+                                    control={<Radio />}
+                                    label={
+                                        lang.components.swal.managePatient
+                                            .archive
+                                    }
+                                />
+                            </RadioGroup>
                         </div>
                     </div>
                 </div>
@@ -179,7 +125,9 @@ const ManagePatientModal = ({
                 <div className="manage-patient-footer">
                     <Button
                         className="manage-patient-save-button"
-                        onClick={handleManagePatientSave}
+                        onClick={() => {
+                            onDataSave(updatedPatientData);
+                        }}
                     >
                         {lang.components.swal.managePatient.buttons.save}
                     </Button>

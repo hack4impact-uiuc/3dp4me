@@ -19,11 +19,13 @@ import ManagePatientModal from '../../components/ManagePatientModal/ManagePatien
 import {
     getAllStepsMetadata,
     getPatientById,
+    updatePatient,
     updateStage,
 } from '../../utils/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import { getPatientName } from '../../utils/utils';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
+import swal from 'sweetalert';
 
 const theme = createMuiTheme({
     direction: 'rtl',
@@ -58,6 +60,32 @@ const Controller = ({ languageData }) => {
             await updateStage(patientId, stepKey, stepData);
             setPatientData(newPatientData);
         });
+    };
+
+    const onPatientDataSaved = async (newPatientData) => {
+        let patientDataCopy = _.cloneDeep(patientData);
+        Object.assign(patientDataCopy, newPatientData);
+        await errorWrap(async () => {
+            await updatePatient(patientId, patientDataCopy);
+            setPatientData(patientDataCopy);
+            swal(lang.components.swal.managePatient.successMsg, '', 'success');
+        });
+
+        setManagePatientModalOpen(false);
+    };
+
+    /**
+     * Gets the current patient model data. (Removes all of the step data)
+     */
+    const getCurrentPatientModelData = () => {
+        return {
+            firstName: patientData?.firstName,
+            familyName: patientData?.familyName,
+            fathersName: patientData?.fathersName,
+            grandfathersName: patientData?.grandfathersName,
+            orderId: patientData?.orderId,
+            status: patientData?.status,
+        };
     };
 
     const onStepChange = (newStep) => {
@@ -167,8 +195,8 @@ const Controller = ({ languageData }) => {
             <div className="root">
                 <ManagePatientModal
                     languageData={languageData}
-                    patientId={patientId}
-                    patientData={patientData}
+                    onDataSave={onPatientDataSaved}
+                    patientData={getCurrentPatientModelData()}
                     isOpen={isManagePatientModalOpen}
                     onClose={() => setManagePatientModalOpen(false)}
                 />
