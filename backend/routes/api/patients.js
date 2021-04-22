@@ -67,7 +67,7 @@ router.post(
         try {
             req.body.lastEditedBy = req.user.Username;
             new_patient = new models.Patient(patient);
-            new_patient.save();
+            await new_patient.save();
         } catch (error) {
             console.log(error);
             return res.status(401).json({
@@ -82,6 +82,33 @@ router.post(
             success: true,
             message: 'User successfully created.',
             result: new_patient,
+        });
+    }),
+);
+
+router.put(
+    '/:id',
+    errorWrap(async (req, res) => {
+        const { id } = req.params;
+        const patient = await models.Patient.findOneAndUpdate(
+            { _id: id },
+            { $set: req.body },
+            { new: true },
+        );
+
+        if (patient == null) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Patient with that id not found.',
+            });
+        }
+
+        res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Patient successfully edited.',
+            data: patient,
         });
     }),
 );

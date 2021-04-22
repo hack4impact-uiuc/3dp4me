@@ -8,7 +8,7 @@ const IN_DEV_ENV =
     !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 const BASE_URL = IN_DEV_ENV
     ? 'http://localhost:8080/api'
-    : 'https://3dp4me.vercel.app/api';
+    : 'https://3dp4me.eu-north-1.elasticbeanstalk.com/api';
 
 const instance = axios.create({
     baseURL: BASE_URL,
@@ -67,6 +67,15 @@ export const postNewPatient = async (patientInfo) => {
 export const updateStage = async (patientId, stage, updatedStage) => {
     const requestString = `/patients/${patientId}/${stage}`;
     const res = await instance.post(requestString, updatedStage);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const updatePatient = async (patientId, updatedData) => {
+    const requestString = `/patients/${patientId}`;
+    const res = await instance.put(requestString, updatedData);
 
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
