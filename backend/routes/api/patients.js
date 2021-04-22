@@ -67,7 +67,7 @@ router.post(
         try {
             req.body.lastEditedBy = req.user.Username;
             new_patient = new models.Patient(patient);
-            new_patient.save();
+            await new_patient.save();
         } catch (error) {
             console.log(error);
             return res.status(401).json({
