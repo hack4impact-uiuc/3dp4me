@@ -87,13 +87,14 @@ const Dashboard = ({ languageData }) => {
 
             if (edit) window.location.href += `patient-info/${id}`;
         } catch (error) {
-            swal(
-                res?.success
+            console.error(error);
+        } finally {
+            swal({
+                title: res?.success
                     ? lang.components.swal.createPatient.successMsg
                     : lang.components.swal.createPatient.failMsg,
-                '',
-                res?.success ? 'success' : 'warning',
-            );
+                icon: res?.success ? 'success' : 'warning',
+            });
         }
     };
 
@@ -224,9 +225,11 @@ const Dashboard = ({ languageData }) => {
             errorWrap(async () => {
                 let res = await getAllStepsMetadata();
                 setStepsMetaData(res.result);
-                if (res.result.length > 0) setStep(res.result[0].key);
-                res = await getPatientsByStage(res.result[0].key);
-                setPatients(res.result);
+                if (res.result.length > 0) {
+                    setStep(res.result[0].key);
+                    res = await getPatientsByStage(res.result[0].key);
+                    setPatients(res.result);
+                }
             });
         };
 
