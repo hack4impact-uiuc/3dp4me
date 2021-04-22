@@ -169,6 +169,26 @@ router.delete(
     }),
 );
 
+const modifyFileName = async (filename, data) => {
+    var updatedFileName = filename;
+    var file = '';
+    var suffix = '';
+    if (filename.includes('.')) {
+        file = filename.split('.')[0];
+        suffix = '.' + filename.split('.')[1];
+    } else file = filename;
+    if (data.filter((e) => e.filename === filename).length > 0) {
+        var numPrev = 1;
+        while (
+            data.filter((e) => e.filename === file + '_' + numPrev + suffix)
+                .length > 0
+        )
+            numPrev += 1;
+        updatedFileName = file + '_' + numPrev + suffix;
+    }
+    return updatedFileName;
+};
+
 // POST: upload individual files
 router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
@@ -211,35 +231,12 @@ router.post(
                 if (err) {
                     res.json(err);
                 } else {
-                    var updatedFileName = fileName;
-                    if (
-                        stepData[fieldKey].filter(
-                            (e) => e.filename === fileName,
-                        ).length > 0
-                    ) {
-                        var numPrev = 1;
-                        while (
-                            stepData[fieldKey].filter(
-                                (e) =>
-                                    e.filename ===
-                                    fileName.split('.')[0] +
-                                        '_' +
-                                        numPrev +
-                                        '.' +
-                                        fileName.split('.')[1],
-                            ).length > 0
-                        )
-                            numPrev += 1;
-                        updatedFileName =
-                            updatedFileName.split('.')[0] +
-                            '_' +
-                            numPrev +
-                            '.' +
-                            updatedFileName.split('.')[1];
-                    }
-
+                    const modifiedFileName = await modifyFileName(
+                        fileName,
+                        stepData[fieldKey],
+                    );
                     stepData[fieldKey].push({
-                        filename: updatedFileName,
+                        filename: modifiedFileName,
                         uploadedBy: req.user.Username,
                         uploadDate: Date.now(),
                     });
@@ -259,13 +256,14 @@ router.post(
                         success: true,
                         message: 'File successfully uploaded',
                         data: {
-                            name: updatedFileName,
+                            name: modifiedFileName,
                             uploadedBy: req.user.Username,
                             uploadDate: Date.now(),
                             mimetype: file.mimetype,
                             size: file.size,
                         },
                     });
+                    /*console.log(res.data)*/
                 }
             },
         );
