@@ -29,13 +29,13 @@ const parseUserSecurityRoles = (user) => {
 };
 
 const parseUserName = (user) => {
-    if (!user || !user.UserAttributes) return [];
+    if (!user || !user.UserAttributes) return '';
 
     const name = user.UserAttributes.find(
         (attribute) => attribute.Name === 'name',
     );
 
-    if (!name) return [];
+    if (!name) return '';
 
     return name.Value;
 };
