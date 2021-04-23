@@ -176,7 +176,9 @@ const modifyFileName = async (filename, data) => {
     if (filename.includes('.')) {
         file = filename.split('.')[0];
         suffix = '.' + filename.split('.')[1];
-    } else file = filename;
+    } else {
+        file = filename;
+    }
     if (data.filter((e) => e.filename === filename).length > 0) {
         var numPrev = 1;
         while (
