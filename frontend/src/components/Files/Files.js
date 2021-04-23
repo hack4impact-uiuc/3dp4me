@@ -72,6 +72,7 @@ const Files = ({
                             if (!isDisabled)
                                 handleUpload(fieldKey, e.target.files[0]);
                         }}
+                        disabled={isDisabled}
                     />
                     <Button className="file-button" component="span">
                         <AddIcon />
