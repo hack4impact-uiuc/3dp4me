@@ -1,8 +1,7 @@
 import { Button } from '@material-ui/core';
 import React from 'react';
-import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
-import MultiSelectField from '../../components/Fields/MultiSelectField';
 
+import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { getAllUsers, removeUserRole } from '../../utils/api';
 import { ACCESS_LEVELS } from '../../utils/constants';
 
@@ -45,7 +44,7 @@ const AccountManagement = ({ languageData }) => {
         },
     ];
 
-    let MOCK_USER_DATA = {
+    const MOCK_USER_DATA = {
         userName: 'Matthew Walowski',
         userEmail: 'mattwalowski@gmail.com',
         roles: ['1'],
@@ -56,7 +55,7 @@ const AccountManagement = ({ languageData }) => {
         <div className="dashboard">
             <EditRoleModal
                 languageData={languageData}
-                isOpen={true}
+                isOpen
                 userInfo={MOCK_USER_DATA}
                 allRoles={MOCK_ALL_ROLES}
             />

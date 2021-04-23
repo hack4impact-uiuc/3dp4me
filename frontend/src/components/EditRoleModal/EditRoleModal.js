@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import {
     Modal,
     FormControl,
     InputLabel,
-    MenuItem,
     Select,
     Button,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+
+import { LanguageDataType } from '../../utils/custom-proptypes';
 import TextField from '../Fields/TextField';
 import MultiSelectField from '../Fields/MultiSelectField';
-import PropTypes from 'prop-types';
-import { ACCESS_LEVELS } from '../../utils/constants.js';
+import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
 
 const EditRoleModal = ({
@@ -28,7 +28,7 @@ const EditRoleModal = ({
     const lang = languageData.translations[key];
 
     const onRolesChange = (id, roles) => {
-        setUserData({ ...userData, roles: roles });
+        setUserData({ ...userData, roles });
     };
 
     const onAccessChange = (event) => {
@@ -37,6 +37,7 @@ const EditRoleModal = ({
 
     const onSave = (event) => {
         // TODO: Make post requests and callback to parent
+        console.log(event);
     };
 
     return (
@@ -46,13 +47,13 @@ const EditRoleModal = ({
                 <TextField
                     displayName={lang.accountManagement.username}
                     type="text"
-                    isDisabled={true}
+                    isDisabled
                     value={userData?.userName}
                 />
                 <TextField
                     displayName={lang.accountManagement.email}
                     type="text"
-                    isDisabled={true}
+                    isDisabled
                     value={userData?.userEmail}
                 />
                 <MultiSelectField
@@ -95,11 +96,11 @@ const EditRoleModal = ({
 };
 
 EditRoleModal.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    allRoles: PropTypes.arrayOf(PropTypes.string),
     languageData: LanguageDataType.isRequired,
-    handleClose: PropTypes.func.isRequired,
-    setLang: PropTypes.func.isRequired,
-    anchorEl: PropTypes.elementType,
-    userData: PropTypes.shape({
+    userInfo: PropTypes.shape({
         username: PropTypes.string,
         userEmail: PropTypes.string,
         roles: PropTypes.arrayOf(PropTypes.String),
