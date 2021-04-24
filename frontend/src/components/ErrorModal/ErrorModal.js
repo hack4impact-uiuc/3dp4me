@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Modal, RootRef } from '@material-ui/core';
+import './ErrorModal.scss';
+import WarningIcon from '../../assets/warning.svg';
 
 const ErrorModal = ({ message = 'An error occured', isOpen, onClose }) => {
     return (
@@ -9,8 +11,13 @@ const ErrorModal = ({ message = 'An error occured', isOpen, onClose }) => {
             onClose={onClose}
             container={() => RootRef.current}
         >
-            <div>
-                <h1>{message}</h1>
+            <div className="error-modal-wrap">
+                <div className="error-modal-inner">
+                    <div className="inner">
+                        <img src={WarningIcon} alt="error icon" />
+                        <h1>{message}</h1>
+                    </div>
+                </div>
             </div>
         </Modal>
     );
