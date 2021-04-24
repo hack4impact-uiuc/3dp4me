@@ -9,9 +9,9 @@ const ErrorModal = ({ message = 'An error occured', isOpen, onClose }) => {
         <Modal
             open={isOpen}
             onClose={onClose}
-            container={() => RootRef.current}
+            // tainer={() => RootRef.current}
         >
-            <div className="error-modal-wrap">
+            <div className="error-modal-wrap" onClick={onClose}>
                 <div className="error-modal-inner">
                     <div className="inner">
                         <img src={WarningIcon} alt="error icon" />
