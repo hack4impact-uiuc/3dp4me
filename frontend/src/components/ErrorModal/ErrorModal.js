@@ -1,6 +1,9 @@
+/* eslint jsx-a11y/click-events-have-key-events: "warn" */
+/* eslint jsx-a11y/no-static-element-interactions: "warn" */
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Modal, RootRef } from '@material-ui/core';
+
 import './ErrorModal.scss';
 import WarningIcon from '../../assets/warning.svg';
 
@@ -9,7 +12,7 @@ const ErrorModal = ({ message = 'An error occured', isOpen, onClose }) => {
         <Modal
             open={isOpen}
             onClose={onClose}
-            // tainer={() => RootRef.current}
+            container={() => RootRef.current}
         >
             <div className="error-modal-wrap" onClick={onClose}>
                 <div className="error-modal-inner">
