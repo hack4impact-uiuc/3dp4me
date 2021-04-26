@@ -79,7 +79,7 @@ const generateFieldSchema = (field) => {
     }
 };
 
-const addCollection = (stepMetadata) => {
+const generateSchemaFromMetadata = (stepMetadata) => {
     let stepSchema = {};
     stepSchema.patientId = { type: String, required: true, unique: true };
     stepSchema.status = {
@@ -169,8 +169,6 @@ router.post(
 
 const getFieldByKey = (object_list, key) => {
     for (object of object_list) {
-        console.log(object.key === key);
-
         if (object.key === key) {
             return object;
         }
@@ -186,14 +184,14 @@ router.put(
         const { stepkey } = req.params;
         const session = await mongoose.startSession();
         step_to_edit = await models.Step.findOne({ key: stepkey });
-        //TODO: rename to camel case
-        let addedFields = [];
 
-        //
+        let addedFields = [];
+        let step;
+
         req.body.fields.forEach((request_field) => {
             // If both fields are the same but fieldtypes are not the same
             const field = getFieldByKey(step_to_edit.fields, request_field.key);
-            console.log(field);
+
             if (field && field.type == request_field.type) {
                 //TODO: add logic for this case
             } else if (
@@ -213,7 +211,7 @@ router.put(
         });
 
         if (
-            req.body.fields.length - addedFields.length <=
+            req.body.fields.length - addedFields.length <
             step_to_edit.fields.length
         ) {
             return res.status(400).json({
@@ -229,22 +227,19 @@ router.put(
             const addedFieldsObject = {};
 
             addedFields.forEach((field) => {
-                addedFieldObject[field.key] = generateFieldSchema(field);
+                addedFieldsObject[field.key] = generateFieldSchema(field);
             });
-            console.log(addedFieldsObject);
-            console.log(collection);
-            console.log(addedFieldsObject);
             schema.add(addedFieldsObject);
 
-            const step = await models.Step.findOneAndUpdate(
+            step = await models.Step.findOneAndUpdate(
                 { key: stepkey },
                 { $set: req.body },
+                { new: true },
             );
         });
 
         // Check if user changed field type
-        // Check whetehr user deleted or added to metadata object
-
+        // Check whether user deleted or added to metadata object
         await step.save(function (err, data) {
             if (err) {
                 res.json(err);
