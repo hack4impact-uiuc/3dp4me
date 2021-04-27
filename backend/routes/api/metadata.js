@@ -169,7 +169,7 @@ router.post(
 
 const getFieldByKey = (object_list, key) => {
     for (object of object_list) {
-        if (object.key === key) {
+        if (object?.key === key) {
             return object;
         }
     }
