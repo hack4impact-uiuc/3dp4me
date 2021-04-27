@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const fieldEnum = {
+    AUDIO: 'Audio',
     STRING: 'String',
     MULTILINE_STRING: 'MultilineString',
     FILE: 'File',
@@ -10,8 +11,10 @@ const fieldEnum = {
     DIVIDER: 'Divider',
     HEADER: 'Header',
     RADIO_BUTTON: 'RadioButton',
-    DROPDOWN: 'Dropdown',
+    MULTI_SELECT: 'MultiSelect',
     AUDIO: 'Audio',
+    SIGNATURE: 'Signature',
+    PHOTO: 'Photo',
 };
 
 const languageSchema = new mongoose.Schema({
@@ -99,4 +102,4 @@ const stepSchema = new mongoose.Schema({
 });
 
 const Step = mongoose.model('steps', stepSchema);
-module.exports = { Step, fieldEnum };
+module.exports = { Step, fieldEnum, questionOptionSchema, validateOptions };
