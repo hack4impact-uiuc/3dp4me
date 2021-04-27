@@ -95,6 +95,7 @@ const stepSchema = new mongoose.Schema({
     },
     readableGroups: { type: [String], required: true },
     writableGroups: { type: [String], required: true },
+    defaultToListView: { type: Boolean, default: true },
 });
 
 const Step = mongoose.model('steps', stepSchema);
