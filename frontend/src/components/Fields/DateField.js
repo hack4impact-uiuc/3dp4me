@@ -2,6 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import PropTypes from 'prop-types';
 import 'react-datepicker/dist/react-datepicker.css';
+import './Fields.scss';
 
 const DateField = ({
     langKey,
@@ -22,7 +23,11 @@ const DateField = ({
                 selected={Date.parse(value)}
                 disabled={isDisabled}
                 locale={langKey}
-                className={!isDisabled ? 'active-input' : 'input-field'}
+                className={
+                    !isDisabled
+                        ? 'active-input datepicker'
+                        : 'input-field datepicker'
+                }
                 onChange={sendChanges}
             />
         </div>

@@ -8,6 +8,7 @@ import { Button, Modal, Typography } from '@material-ui/core';
 import React from 'react';
 import './AudioRecorder.scss';
 import { downloadBlobWithoutSaving } from '../../utils/api';
+import AudioRecordImg from '../../assets/microphone.svg';
 
 /*
  * For whatever reason, this component cannot be written functionally.
@@ -249,34 +250,42 @@ class AudioRecorder extends React.Component {
                     open={this.state.isRecordModalOpen}
                     className="record-modal"
                 >
-                    <div>
-                        <audio
-                            ref="audioSource"
-                            controls="controls"
-                            src={this.state.blobURL || ''}
-                        />
-                        <Button
-                            onClick={this.toggleRecording}
-                            className="btn-toggle-record"
-                        >
-                            {isRecording
-                                ? this.state.lang.components.audio.stop
-                                : this.state.lang.components.audio.start}
-                        </Button>
-                        {isRecording || this.state.blobURL === '' || (
+                    <div className="modal-wrap">
+                        <div className="modal-inner">
+                            <audio
+                                ref="audioSource"
+                                controls="controls"
+                                src={this.state.blobURL || ''}
+                            />
                             <Button
-                                onClick={this.saveRecording}
-                                className="btn-save-recording"
+                                onClick={this.toggleRecording}
+                                className="btn-toggle-record"
                             >
-                                {this.state.lang.components.audio.save}
+                                <img
+                                    src={AudioRecordImg}
+                                    alt="Microphone icon"
+                                />
+                                {isRecording
+                                    ? this.state.lang.components.audio.stop
+                                    : this.state.lang.components.audio.start}
                             </Button>
-                        )}
-                        <Button
-                            onClick={this.discardRecording}
-                            className="btn-discard-recording"
-                        >
-                            {this.state.lang.components.audio.discard}
-                        </Button>
+                            <div className="bottom-butts">
+                                {isRecording || this.state.blobURL === '' || (
+                                    <Button
+                                        onClick={this.saveRecording}
+                                        className="btn-save-recording"
+                                    >
+                                        {this.state.lang.components.audio.save}
+                                    </Button>
+                                )}
+                                <Button
+                                    onClick={this.discardRecording}
+                                    className="btn-discard-recording"
+                                >
+                                    {this.state.lang.components.audio.discard}
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </Modal>
                 <Modal
@@ -284,18 +293,22 @@ class AudioRecorder extends React.Component {
                     onClose={this.closePlaybackModal}
                     className="playback-modal"
                 >
-                    <div>
-                        <audio
-                            ref="audioSource"
-                            controls="controls"
-                            src={this.state.playbackBlobURL || ''}
-                        />
-                        <Button
-                            onClick={this.closePlaybackModal}
-                            className="btn-close-playback"
-                        >
-                            {this.state.lang.components.audio.close}
-                        </Button>
+                    <div className="modal-wrap">
+                        <div className="modal-inner">
+                            <audio
+                                ref="audioSource"
+                                controls="controls"
+                                src={this.state.playbackBlobURL || ''}
+                            />
+                            <div className="bottom-butts">
+                                <Button
+                                    onClick={this.closePlaybackModal}
+                                    className="btn-close-playback"
+                                >
+                                    {this.state.lang.components.audio.close}
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </Modal>
             </div>

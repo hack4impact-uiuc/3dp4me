@@ -107,8 +107,8 @@
             },
             "audio": {
                 "addAnother": "Add Recording",
-                "start": "Start",
-                "stop": "Stop",
+                "start": "Start Recording",
+                "stop": "Stop Recording",
                 "save": "Save",
                 "close": "Close",
                 "discard": "Discard"
