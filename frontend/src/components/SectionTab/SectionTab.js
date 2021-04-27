@@ -8,12 +8,14 @@ import { getAllStepsMetadata } from '../../utils/api';
 import Sidebar from '../Sidebar/Sidebar';
 import StepManagementContent from '../StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
+import CreateSectionModal from '../CreateSectionModal/CreateSectionModal';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const SectionTab = ({ languageData }) => {
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
-    const [modalOpen, setModalOpen] = useState(false);
+    const [fieldModalOpen, setFieldModalOpen] = useState(false);
+    const [sectionModalOpen, setSectionModalOpen] = useState(false);
     const errorWrap = useErrorWrap();
     function UpdateSelectedStep(stepKey) {
         setSelectedStep(stepKey);
@@ -146,15 +148,29 @@ const SectionTab = ({ languageData }) => {
         });
     }; */
 
-    const onModalClose = () => {
-        setModalOpen(false);
+    const onFieldModalClose = () => {
+        setFieldModalOpen(false);
+    };
+
+    const onSectionModalClose = () => {
+        setSectionModalOpen(false);
     };
 
     const generateNewFieldPopup = () => {
         return (
             <CreateFieldModal
-                isOpen={modalOpen}
-                onModalClose={onModalClose}
+                isOpen={fieldModalOpen}
+                onModalClose={onFieldModalClose}
+                languageData={languageData}
+            />
+        );
+    };
+
+    const generateNewSectionPopup = () => {
+        return (
+            <CreateSectionModal
+                isOpen={sectionModalOpen}
+                onModalClose={onSectionModalClose}
                 languageData={languageData}
             />
         );
@@ -171,6 +187,15 @@ const SectionTab = ({ languageData }) => {
                         onUpPressed={onUpPressed}
                         stepMetadata={stepMetadata}
                     />
+                    <ListItem
+                        button
+                        onClick={() => {
+                            setSectionModalOpen(true);
+                        }}
+                    >
+                        Add New Section
+                    </ListItem>
+                    {generateNewSectionPopup()}
                 </div>
                 {GenerateStepManagementContent()}
             </div>
@@ -180,7 +205,7 @@ const SectionTab = ({ languageData }) => {
                     className="sidebar"
                     button
                     onClick={() => {
-                        setModalOpen(true);
+                        setFieldModalOpen(true);
                     }}
                 >
                     Add New Field
