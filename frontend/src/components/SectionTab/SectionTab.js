@@ -121,12 +121,12 @@ const SectionTab = ({ languageData }) => {
         const fetchData = async () => {
             errorWrap(async () => {
                 const res = await getAllStepsMetadata();
-
+                console.log(res);
                 if (res != null) {
                     setStepMetadata(res.result);
                 }
-                if (res.result > 1) {
-                    setSelectedStep(res[0].key);
+                if (res.result.length > 1) {
+                    setSelectedStep(res.result[0].key);
                 }
                 if (!res?.success || !res?.result) return;
 
