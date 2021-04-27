@@ -76,6 +76,15 @@ export const updateStage = async (patientId, stage, updatedStage) => {
     return res.data;
 };
 
+export const updatePatient = async (patientId, updatedData) => {
+    const requestString = `/patients/${patientId}`;
+    const res = await instance.put(requestString, updatedData);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
 export const getAllStepsMetadata = async () => {
     const requestString = '/metadata/steps';
 

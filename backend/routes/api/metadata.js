@@ -155,7 +155,7 @@ router.post(
                     }
                 });
                 await new_step_metadata.save();
-                addCollection(steps);
+                generateSchemaFromMetadata(steps);
             });
 
             res.status(200).json({

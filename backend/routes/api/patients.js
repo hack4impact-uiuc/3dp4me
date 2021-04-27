@@ -65,9 +65,9 @@ router.post(
         const patient = req.body;
         let new_patient = null;
         try {
-            req.body.lastEditedBy = req.user.Username;
+            req.body.lastEditedBy = req.user.name;
             new_patient = new models.Patient(patient);
-            new_patient.save();
+            await new_patient.save();
         } catch (error) {
             console.log(error);
             return res.status(401).json({
@@ -82,6 +82,33 @@ router.post(
             success: true,
             message: 'User successfully created.',
             result: new_patient,
+        });
+    }),
+);
+
+router.put(
+    '/:id',
+    errorWrap(async (req, res) => {
+        const { id } = req.params;
+        const patient = await models.Patient.findOneAndUpdate(
+            { _id: id },
+            { $set: req.body },
+            { new: true },
+        );
+
+        if (patient == null) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Patient with that id not found.',
+            });
+        }
+
+        res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Patient successfully edited.',
+            data: patient,
         });
     }),
 );
@@ -155,11 +182,11 @@ router.delete(
         stepData[fieldKey].splice(index, 1);
 
         stepData.lastEdited = Date.now();
-        stepData.lastEditedBy = req.user.Username;
+        stepData.lastEditedBy = req.user.name;
         collection.findOneAndUpdate({ patientId: id }, { $set: stepData });
 
         patient.lastEdited = Date.now();
-        patient.lastEditedBy = req.user.Username;
+        patient.lastEditedBy = req.user.name;
         patient.save();
 
         res.status(201).json({
@@ -213,11 +240,11 @@ router.post(
                 } else {
                     stepData[fieldKey].push({
                         filename: fileName,
-                        uploadedBy: req.user.Username,
+                        uploadedBy: req.user.name,
                         uploadDate: Date.now(),
                     });
                     stepData.lastEdited = Date.now();
-                    stepData.lastEditedBy = req.user.Username;
+                    stepData.lastEditedBy = req.user.name;
                     collection.findOneAndUpdate(
                         { patientId: id },
                         { $set: stepData },
@@ -225,7 +252,7 @@ router.post(
                     );
 
                     patient.lastEdited = Date.now();
-                    patient.lastEditedBy = req.user.Username;
+                    patient.lastEditedBy = req.user.name;
                     patient.save();
 
                     res.status(201).json({
@@ -233,7 +260,7 @@ router.post(
                         message: 'File successfully uploaded',
                         data: {
                             name: fileName,
-                            uploadedBy: req.user.Username,
+                            uploadedBy: req.user.name,
                             uploadDate: Date.now(),
                             mimetype: file.mimetype,
                             size: file.size,
@@ -277,9 +304,8 @@ router.post(
                     stage,
                 );
                 updatedStage.lastEdited = Date.now();
-                updatedStage.lastEditedBy = req.user.Username;
+                updatedStage.lastEditedBy = req.user.name;
                 delete updatedStage._id;
-
                 const stepData = await collection.findOneAndUpdate(
                     { patientId: id },
                     { $set: updatedStage },
@@ -295,7 +321,7 @@ router.post(
             });
         }
         patient.lastEdited = Date.now();
-        patient.lastEditedBy = req.user.Username;
+        patient.lastEditedBy = req.user.name;
         await patient.save(function (err) {
             if (err) {
                 res.json(err); //TODO: bug here, need to take a look
