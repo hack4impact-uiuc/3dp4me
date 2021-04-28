@@ -12,7 +12,10 @@ const {
     SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
 } = require('../../utils/aws/aws-exports');
 
-const { parseUserSecurityRoles } = require('../../middleware/authentication');
+const {
+    parseUserSecurityRoles,
+    RequireAdmin,
+} = require('../../middleware/authentication');
 
 const getIdentityProvider = () => {
     return new AWS.CognitoIdentityServiceProvider({
@@ -179,6 +182,7 @@ router.put(
 // Deletes user role
 router.delete(
     '/:username/roles/:roleId',
+    RequireAdmin,
     errorWrap(async (req, res) => {
         const { username, roleId } = req.params;
         const userRoles = await getUserRoles(username);
