@@ -2,21 +2,9 @@ import { Button } from '@material-ui/core';
 import React from 'react';
 
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
-import { getAllUsers, removeUserRole } from '../../utils/api';
 import { ACCESS_LEVELS } from '../../utils/constants';
 
 const AccountManagement = ({ languageData }) => {
-    const addRole = async () => {
-        // This is just for testing, feel free to replace this once we have a functioning dashboard
-        console.log(await getAllUsers());
-        console.log(
-            await removeUserRole(
-                'google_107210067228697709799',
-                '606e0a8b02b23d02bc77673e',
-            ),
-        );
-    };
-
     const MOCK_ALL_ROLES = [
         {
             IsHidden: false,
