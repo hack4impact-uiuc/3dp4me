@@ -1,4 +1,3 @@
-import { Button } from '@material-ui/core';
 import React from 'react';
 
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
@@ -47,7 +46,6 @@ const AccountManagement = ({ languageData }) => {
                 userInfo={MOCK_USER_DATA}
                 allRoles={MOCK_ALL_ROLES}
             />
-            <Button onClick={addRole}> TEST BUTTONG </Button>
         </div>
     );
 };
