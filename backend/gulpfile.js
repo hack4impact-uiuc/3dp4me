@@ -5,6 +5,7 @@ const zip = require('gulp-zip');
 const rename = require('gulp-rename');
 const log = require('fancy-log');
 var exec = require('child_process').exec;
+const GulpClient = require('gulp');
 
 const paths = {
     prod_build: '../prod-build',
@@ -73,6 +74,12 @@ function copyNodeJSCodeTask() {
     );
 }
 
+function addEngineToPackage() {
+    return exec(
+        `yarn json -I -f ${paths.prod_build}/package.json -e "this.engines = { 'node': '14.12.0' }"`,
+    );
+}
+
 function zippingTask() {
     log('zipping the code ');
     return src(`${paths.prod_build}/**`, { dot: true })
@@ -85,5 +92,6 @@ exports.default = series(
     createProdBuildFolder,
     parallel(buildReactCodeTask, buildServerCodeTask),
     parallel(copyReactCodeTask, copyNodeJSCodeTask),
+    addEngineToPackage,
     zippingTask,
 );
