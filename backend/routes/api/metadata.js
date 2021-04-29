@@ -2,9 +2,82 @@ const express = require('express');
 const router = express.Router();
 const isValidNumber = require('libphonenumber-js');
 const { errorWrap } = require('../../utils');
-const { models, fileSchema, stepStatusEnum } = require('../../models');
+const {
+    models,
+    fileSchema,
+    stepStatusEnum,
+    validateOptions,
+} = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
+
+const generateFieldSchema = (field) => {
+    switch (field.fieldType) {
+        case fieldEnum.STRING:
+            return {
+                type: String,
+                required: true,
+                default: '',
+            };
+        case fieldEnum.MULTILINE_STRING:
+            return {
+                type: String,
+                required: true,
+                default: '',
+            };
+        case fieldEnum.NUMBER:
+            return {
+                type: Number,
+                required: true,
+                default: 0,
+            };
+        case fieldEnum.DATE:
+            return {
+                type: Date,
+                required: true,
+                default: new Date(),
+            };
+        case fieldEnum.PHONE:
+            return {
+                type: String,
+                required: true,
+                default: '',
+                validate: {
+                    validator: isValidNumber,
+                    message: 'Not a valid phone number',
+                },
+            };
+        case fieldEnum.RADIO_BUTTON:
+            if (field.options == null)
+                throw new Error('Radio button must have options');
+
+            return {
+                type: [models.questionOptionSchema],
+                required: true,
+                default: [],
+                validate: {
+                    validator: validateOptions,
+                    message: 'Index must be unique',
+                },
+            };
+        case fieldEnum.FILE:
+            return {
+                type: [fileSchema],
+                required: true,
+                default: [],
+            };
+        case fieldEnum.AUDIO:
+            return {
+                type: [fileSchema],
+                required: true,
+                default: [],
+            };
+        case fieldEnum.DIVIDER:
+            return null;
+        default:
+            throw new Error(`Unrecognized field type, ${field.type}`);
+    }
+};
 
 const generateSchemaFromMetadata = (stepMetadata) => {
     let stepSchema = {};
@@ -22,86 +95,8 @@ const generateSchemaFromMetadata = (stepMetadata) => {
         default: 'Admin',
     };
     stepMetadata.fields.forEach((field) => {
-        switch (field.fieldType) {
-            case fieldEnum.STRING:
-                stepSchema[field.key] = {
-                    type: String,
-                    required: true,
-                    default: '',
-                };
-                break;
-            case fieldEnum.MULTILINE_STRING:
-                stepSchema[field.key] = {
-                    type: String,
-                    required: true,
-                    default: '',
-                };
-                break;
-            case fieldEnum.NUMBER:
-                stepSchema[field.key] = {
-                    type: Number,
-                    required: true,
-                    default: 0,
-                };
-                break;
-            case fieldEnum.DATE:
-                stepSchema[field.key] = {
-                    type: Date,
-                    required: true,
-                    default: new Date(),
-                };
-                break;
-            case fieldEnum.PHONE:
-                stepSchema[field.key] = {
-                    type: String,
-                    required: true,
-                    default: '',
-                    validate: {
-                        validator: isValidNumber,
-                        message: 'Not a valid phone number',
-                    },
-                };
-                break;
-            case fieldEnum.DROPDOWN:
-                if (field.options == null)
-                    throw new Error('Dropdown must have options');
-
-                stepSchema[field.key] = {
-                    type: Number,
-                    required: true,
-                    default: 0,
-                    enum: field.options,
-                };
-                break;
-            case fieldEnum.RADIO_BUTTON:
-                if (field.options == null)
-                    throw new Error('Radio button must have options');
-                stepSchema[field.key] = {
-                    type: Number,
-                    required: true,
-                    default: 0,
-                    enum: field.options,
-                };
-                break;
-            case fieldEnum.FILE:
-                stepSchema[field.key] = {
-                    type: [fileSchema],
-                    required: true,
-                    default: [],
-                };
-                break;
-            case fieldEnum.AUDIO:
-                stepSchema[field.key] = {
-                    type: [fileSchema],
-                    required: true,
-                    default: [],
-                };
-                break;
-            case fieldEnum.DIVIDER:
-                break;
-            default:
-                throw new Error(`Unrecognized field type, ${field.fieldType}`);
-        }
+        const generatedSchema = generateFieldSchema(field);
+        if (generatedSchema) stepSchema[field.key] = generatedSchema;
     });
     const schema = new mongoose.Schema(stepSchema);
     mongoose.model(stepMetadata.key, schema, stepMetadata.key);
@@ -140,16 +135,12 @@ router.post(
         try {
             await session.withTransaction(async () => {
                 new_step_metadata.fields.forEach((field) => {
-                    if (
-                        field.fieldType == fieldEnum.RADIO_BUTTON ||
-                        field.fieldType == fieldEnum.DROPDOWN
-                    ) {
+                    if (field.fieldType == fieldEnum.RADIO_BUTTON) {
                         if (field.options == null || field.options.length < 1) {
                             return res.status(400).json({
                                 code: 400,
                                 success: false,
-                                message:
-                                    'Dropdowns or radiobuttons require options.',
+                                message: 'Radiobuttons require options.',
                             });
                         }
                     }
@@ -176,16 +167,79 @@ router.post(
     }),
 );
 
+const getFieldByKey = (object_list, key) => {
+    for (object of object_list) {
+        if (object?.key === key) {
+            return object;
+        }
+    }
+
+    return null;
+};
+
 // PUT metadata/steps/:stepkey
 router.put(
     '/steps/:stepkey',
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
-        const step = await models.Step.findOneAndUpdate(
-            { key: stepkey },
-            { $set: req.body },
-        );
+        const session = await mongoose.startSession();
+        step_to_edit = await models.Step.findOne({ key: stepkey });
 
+        let addedFields = [];
+        let step;
+
+        req.body.fields.forEach((request_field) => {
+            // If both fields are the same but fieldtypes are not the same
+            const field = getFieldByKey(step_to_edit.fields, request_field.key);
+
+            if (field && field.type == request_field.type) {
+                //TODO: add logic for this case
+            } else if (
+                !field &&
+                !addedFields.some(
+                    (addedField) => addedField.key === request_field.key,
+                )
+            ) {
+                addedFields.push(request_field);
+            } else {
+                return res.status(400).json({
+                    code: 400,
+                    success: false,
+                    message: 'Invalid request',
+                });
+            }
+        });
+
+        if (
+            req.body.fields.length - addedFields.length <
+            step_to_edit.fields.length
+        ) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Cannot delete fields',
+            });
+        }
+
+        await session.withTransaction(async () => {
+            const schema = await mongoose.model(stepkey).schema;
+
+            const addedFieldsObject = {};
+
+            addedFields.forEach((field) => {
+                addedFieldsObject[field.key] = generateFieldSchema(field);
+            });
+            schema.add(addedFieldsObject);
+
+            step = await models.Step.findOneAndUpdate(
+                { key: stepkey },
+                { $set: req.body },
+                { new: true },
+            );
+        });
+
+        // Check if user changed field type
+        // Check whether user deleted or added to metadata object
         await step.save(function (err, data) {
             if (err) {
                 res.json(err);
