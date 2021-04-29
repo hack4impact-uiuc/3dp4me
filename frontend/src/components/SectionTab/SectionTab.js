@@ -12,6 +12,8 @@ import CreateSectionModal from '../CreateSectionModal/CreateSectionModal';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const SectionTab = ({ languageData }) => {
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [fieldModalOpen, setFieldModalOpen] = useState(false);
@@ -31,7 +33,6 @@ const SectionTab = ({ languageData }) => {
 
     function onDownPressed(stepKey) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
-        console.log(updatedMetadata);
         const foundField = updatedMetadata.find(
             (field) => field.key === stepKey,
         );
@@ -121,7 +122,6 @@ const SectionTab = ({ languageData }) => {
         const fetchData = async () => {
             errorWrap(async () => {
                 const res = await getAllStepsMetadata();
-                console.log(res);
                 if (res != null) {
                     setStepMetadata(res.result);
                 }
@@ -137,16 +137,15 @@ const SectionTab = ({ languageData }) => {
         fetchData();
     }, [setStepMetadata, errorWrap]);
 
-    /* const generateSteps = () => {
+    const generateSteps = () => {
         return stepMetadata.map((element) => {
             return (
                 <div className="sidebar">
                     <ListItem button> {element.displayName[key]} </ListItem>
                 </div>
-                
             );
         });
-    }; */
+    };
 
     const onFieldModalClose = () => {
         setFieldModalOpen(false);
@@ -193,13 +192,13 @@ const SectionTab = ({ languageData }) => {
                             setSectionModalOpen(true);
                         }}
                     >
-                        Add New Section
+                        {lang.components.file.addAnother}
                     </ListItem>
                     {generateNewSectionPopup()}
                 </div>
                 {GenerateStepManagementContent()}
             </div>
-            <span> {/* generateSteps() */}</span>
+            <span> {generateSteps()}</span>
             <div>
                 <ListItem
                     className="sidebar"

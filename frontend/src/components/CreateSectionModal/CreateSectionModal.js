@@ -52,7 +52,6 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
             >
                 <h2 style={{ fontWeight: 'bolder' }}>New Section</h2>
                 <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                    {console.log(lang.components.swal)}
                     <span>Section Title</span>
                     {generateFields()}
                     <span>{lang.components.swal.createField.clearance}</span>
