@@ -10,6 +10,7 @@ const {
 } = require('../../models');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
+const { requireAdmin, isAdmin } = require('../../middleware/authentication');
 
 const generateFieldSchema = (field) => {
     switch (field.fieldType) {
@@ -106,7 +107,16 @@ const generateSchemaFromMetadata = (stepMetadata) => {
 router.get(
     '/steps',
     errorWrap(async (req, res) => {
-        const metaData = await models.Step.find({});
+        let metaData;
+
+        if (isAdmin(req.user)) {
+            metaData = await models.Step.find({});
+        } else {
+            metaData = await models.Step.find({
+                readableGroups: { $in: [req.user._id.toString()] },
+            });
+        }
+
         if (!metaData) {
             res.status(404).json({
                 code: 404,
@@ -127,6 +137,7 @@ router.get(
 // POST metadata/steps
 router.post(
     '/steps',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const steps = req.body;
         const new_step_metadata = new models.Step(steps);
@@ -180,6 +191,7 @@ const getFieldByKey = (object_list, key) => {
 // PUT metadata/steps/:stepkey
 router.put(
     '/steps/:stepkey',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const session = await mongoose.startSession();
@@ -258,6 +270,7 @@ router.put(
 // DELETE metadata/steps/:stepkey
 router.delete(
     '/steps/:stepkey',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const step = await models.Step.deleteOne({ key: stepkey });

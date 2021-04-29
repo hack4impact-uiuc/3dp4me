@@ -4,6 +4,16 @@ const {
     SECURITY_ROLE_ATTRIBUTE_NAME,
 } = require('../utils/aws/aws-exports');
 
+const ACCESS_LEVELS = {
+    GRANTED: 'Granted',
+    REVOKED: 'Revoked',
+    PENDING: 'Pending',
+};
+
+ADMIN_ID = '606e0a4602b23d02bc77673b';
+
+const isAdmin = (user) => user.roles.includes(ADMIN_ID);
+
 const getUser = async (accessToken) => {
     var params = {
         AccessToken: accessToken,
@@ -40,14 +50,25 @@ const parseUserName = (user) => {
     return name.Value;
 };
 
+const parseUserAccess = (user) => {
+    if (!user || !user.UserAttributes) return ACCESS_LEVELS.PENDING;
+
+    const accessLevelString = user.UserAttributes.find(
+        (attribute) => attribute.Name === SECURITY_ACCESS_ATTRIBUTE_NAME,
+    );
+
+    return accessLevelString;
+};
+
 const requireAuthentication = async (req, res, next) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
         const user = await getUser(accessToken);
         user.roles = parseUserSecurityRoles(user);
+        user.accessLevel = parseUserAccess(user);
         user.name = parseUserName(user);
 
-        if (user.roles === []) {
+        if (user.accessLevel != ACCESS_LEVELS.GRANTED) {
             return res.status(403).json({
                 success: false,
                 message:
@@ -80,6 +101,8 @@ const requireRole = (role) => {
         next();
     };
 };
+
+const requireAdmin = requireRole(ADMIN_ID);
 
 module.exports.requireAuthentication = requireAuthentication;
 module.exports.parseUserSecurityRoles = parseUserSecurityRoles;

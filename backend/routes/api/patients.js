@@ -8,10 +8,15 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
+const {
+    requireAuthentication,
+    requireAdmin,
+} = require('../../middleware/authentication');
 
 // GET: Returns all patients
 router.get(
     '/',
+    requireAuthentication,
     errorWrap(async (req, res) => {
         models.Patient.find().then((patientInfo) =>
             res.status(200).json({
@@ -88,6 +93,7 @@ router.post(
 
 router.put(
     '/:id',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { id } = req.params;
         const patient = await models.Patient.findOneAndUpdate(
