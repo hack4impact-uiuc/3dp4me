@@ -58,9 +58,9 @@ const StepManagementContent = ({
 StepManagementContent.propTypes = {
     languageData: LanguageDataType.isRequired,
     fields: FieldsType.isRequired,
-    onDownPressed: PropTypes.any.isRequired,
-    stepMetadata: PropTypes.any,
-    onUpPressed: PropTypes.any.isRequired,
+    onDownPressed: PropTypes.func.isRequired,
+    stepMetadata: PropTypes.object,
+    onUpPressed: PropTypes.func.isRequired,
 };
 
 export default StepManagementContent;
