@@ -47,7 +47,7 @@ const requireAuthentication = async (req, res, next) => {
         user.roles = parseUserSecurityRoles(user);
         user.name = parseUserName(user);
 
-        if (user.roles === []) {
+        if (!user.roles || user.roles.length === 0) {
             return res.status(403).json({
                 success: false,
                 message:
