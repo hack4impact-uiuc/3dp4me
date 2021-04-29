@@ -137,7 +137,7 @@ router.get(
 // POST metadata/steps
 router.post(
     '/steps',
-    requireAdmin,
+    // requireAdmin,
     errorWrap(async (req, res) => {
         const steps = req.body;
         const new_step_metadata = new models.Step(steps);
@@ -191,7 +191,6 @@ const getFieldByKey = (object_list, key) => {
 // PUT metadata/steps/:stepkey
 router.put(
     '/steps/:stepkey',
-    requireAdmin,
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const session = await mongoose.startSession();
@@ -270,7 +269,6 @@ router.put(
 // DELETE metadata/steps/:stepkey
 router.delete(
     '/steps/:stepkey',
-    requireAdmin,
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const step = await models.Step.deleteOne({ key: stepkey });

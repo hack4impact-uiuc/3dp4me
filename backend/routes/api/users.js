@@ -10,6 +10,7 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
     SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
+    ACCESS_LEVEL_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
 
 const {
@@ -179,10 +180,45 @@ router.put(
     }),
 );
 
+// Gives a user an access level
+router.put(
+    '/:username/access/:accessLevel',
+    errorWrap(async (req, res) => {
+        const { username, accessLevel } = req.params;
+        const params = {
+            UserAttributes: [
+                {
+                    Name: ACCESS_LEVEL_ATTRIBUTE_NAME,
+                    Value: accessLevel,
+                },
+            ],
+            UserPoolId: USER_POOL_ID,
+            Username: username,
+        };
+
+        const identityProvider = getIdentityProvider();
+        await identityProvider.adminUpdateUserAttributes(
+            params,
+            (err, data) => {
+                if (err) {
+                    return res.status(500).json({
+                        success: false,
+                        message: err,
+                    });
+                }
+
+                return res.status(200).json({
+                    success: true,
+                    message: 'Access level successfully changed',
+                });
+            },
+        );
+    }),
+);
+
 // Deletes user role
 router.delete(
     '/:username/roles/:roleId',
-    RequireAdmin,
     errorWrap(async (req, res) => {
         const { username, roleId } = req.params;
         const userRoles = await getUserRoles(username);
