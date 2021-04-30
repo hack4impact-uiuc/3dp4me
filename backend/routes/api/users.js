@@ -182,7 +182,6 @@ router.put(
 // Deletes user role
 router.delete(
     '/:username/roles/:roleId',
-    RequireAdmin,
     errorWrap(async (req, res) => {
         const { username, roleId } = req.params;
         const userRoles = await getUserRoles(username);
