@@ -8,10 +8,13 @@ const IN_DEV_ENV =
     !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 const BASE_URL = IN_DEV_ENV
     ? 'http://localhost:8080/api'
-    : 'https://3dp4me.eu-north-1.elasticbeanstalk.com/api';
+    : 'https://3dp4me-software.org/api';
 
 const instance = axios.create({
     baseURL: BASE_URL,
+    validateStatus: () => {
+        return true;
+    },
 });
 
 instance.interceptors.request.use(

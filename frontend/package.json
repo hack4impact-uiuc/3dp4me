@@ -10,7 +10,7 @@
         "@sweetalert/with-react": "^0.1.1",
         "@types/date-fns": "^2.6.0",
         "aws-amplify": "^3.3.3",
-        "axios": "^0.20.0",
+        "axios": "^0.21.1",
         "babel-eslint": "^10.1.0",
         "compose": "^0.1.2",
         "cra-template": "1.0.3",
@@ -34,6 +34,8 @@
         "react-router-dom": "^5.2.0",
         "react-scripts": "3.4.3",
         "sass": "^1.28.0",
+        "semantic-ui-css": "^2.4.1",
+        "semantic-ui-react": "^2.0.3",
         "sweetalert": "^2.1.2"
     },
     "scripts": {

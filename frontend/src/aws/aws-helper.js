@@ -1,7 +1,5 @@
 import { Auth } from 'aws-amplify';
 
-const KEY_GROUPS = 'cognito:groups';
-const KEY_BASIC_USER = '3DP_4ME_USER';
 const DEFAULT_USER = {
     attributes: {
         email: 'noemail',
@@ -9,23 +7,6 @@ const DEFAULT_USER = {
         username: 'Guest',
     },
 };
-
-/**
- * Returns a list of auth role names belong to current user. Roles are written as strings.
- */
-async function getAuthRoleNames() {
-    const user = await Auth.currentAuthenticatedUser();
-    const groups = user.signInUserSession.accessToken.payload[KEY_GROUPS];
-    return groups;
-}
-
-/**
- * Returns true if the user has normal authentication level
- */
-export async function isNormalUser() {
-    const roles = await getAuthRoleNames();
-    return roles.indexOf(KEY_BASIC_USER) > 0;
-}
 
 /**
  * This object contains all keys/tokens needed to perform authenticated actions.
@@ -56,6 +37,12 @@ export async function saveLanguagePreference(langKey) {
     Auth.updateUserAttributes(user, {
         'custom:language': langKey,
     });
+}
+
+export async function signOut() {
+    Auth.signOut()
+        // .then()
+        .catch((error) => console.error(error));
 }
 
 export async function getCurrentSession() {

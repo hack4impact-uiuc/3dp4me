@@ -28,13 +28,26 @@ const parseUserSecurityRoles = (user) => {
     return JSON.parse(securityRolesString.Value);
 };
 
+const parseUserName = (user) => {
+    if (!user || !user.UserAttributes) return '';
+
+    const name = user.UserAttributes.find(
+        (attribute) => attribute.Name === 'name',
+    );
+
+    if (!name) return '';
+
+    return name.Value;
+};
+
 const requireAuthentication = async (req, res, next) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
         const user = await getUser(accessToken);
         user.roles = parseUserSecurityRoles(user);
+        user.name = parseUserName(user);
 
-        if (user.roles === []) {
+        if (!user.roles || user.roles.length === 0) {
             return res.status(403).json({
                 success: false,
                 message:

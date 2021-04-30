@@ -92,6 +92,7 @@ const StepField = ({
                         handleDownload={handleFileDownload}
                         handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}
+                        isDisabled={isDisabled}
                     />
                 );
 

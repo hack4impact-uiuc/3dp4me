@@ -1,6 +1,58 @@
 @import '../../styles/colors.scss';
 
-.record-modal {
+.record-modal,
+.playback-modal {
+    .modal-wrap {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-inner {
+        background-color: white;
+        padding: 28px;
+        border-radius: 4px;
+    }
+    .btn-toggle-record {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        background-color: transparent;
+        border-radius: 2px;
+        border: solid 1px red;
+        color: red;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: 12px;
+        margin-bottom: 28px;
+        img {
+            height: 18px;
+            width: auto;
+            margin-right: 4px;
+        }
+    }
+    .bottom-butts {
+        display: flex;
+        justify-content: flex-end;
+        .btn-save-recording {
+            background-color: $button;
+            color: white;
+            transition: all 0.2s;
+            margin-right: 4px;
+            border-radius: 2px;
+            &:hover {
+                background-color: $buttonHighlight;
+            }
+        }
+        .btn-close-playback {
+            display: block;
+            margin-top: 12px;
+        }
+    }
 }
 
 .playback-modal {

@@ -2,7 +2,8 @@
     "EN": {
         "components": {
             "login": {
-                "authLoading": "Authenticating User"
+                "authLoading": "Authenticating User",
+                "signOut": "Sign Out"
             },
             "navbar": {
                 "dashboard": {
@@ -107,8 +108,8 @@
             },
             "audio": {
                 "addAnother": "Add Recording",
-                "start": "Start",
-                "stop": "Stop",
+                "start": "Start Recording",
+                "stop": "Stop Recording",
                 "save": "Save",
                 "close": "Close",
                 "discard": "Discard"
@@ -254,7 +255,8 @@
     "AR": {
         "components": {
             "login": {
-                "authLoading": "مصادقة المستخدم"
+                "authLoading": "مصادقة المستخدم",
+                "signOut": "Sign Out"
             },
             "navbar": {
                 "dashboard": {
