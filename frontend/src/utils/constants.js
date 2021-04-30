@@ -4,9 +4,16 @@ export const REQUIRED_DASHBOARD_HEADERS = [
     { title: 'lastEdited', sortKey: 'lastEdited' },
     { title: 'status', sortKey: 'status' },
 ];
+
 export const REQUIRED_DASHBOARD_SORT_KEYS = REQUIRED_DASHBOARD_HEADERS.map(
     (header) => header.sortKey,
 );
+
+export const ACCESS_LEVELS = {
+    GRANTED: 'Granted',
+    REVOKED: 'Revoked',
+    PENDING: 'Pending',
+};
 
 export const STEP_STATUS = {
     FINISHED: 'Finished',
