@@ -53,31 +53,27 @@ jobs:
         working-directory: ./backend
         run: yarn lint
 
-#   test:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Check out repository
-#         uses: actions/checkout@v2
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
 
-#       - name: Set up Node
-#         uses: actions/setup-node@v1
-#         with:
-#           node-version: 12
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.12.0
 
-#       - name: Cache dependencies
-#         uses: actions/cache@v2
-#         with:
-#           path: backend/node_modules
-#           key: ${{ runner.os }}-cache
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: backend/node_modules
+          key: ${{ runner.os }}-cache
 
-#       - name: Install dependencies
-#         working-directory: ./backend
-#         run: yarn
+      - name: Install dependencies
+        working-directory: ./backend
+        run: yarn
 
-#       - name: Build application
-#         working-directory: ./backend
-#         run: yarn test
-#         env:
-#           NODE_ENV: ${{ secrets.NODE_ENV }}
-#           PORT: ${{ secrets.PORT }}
-#           DB_URI: ${{ secrets.DB_URI }}
+      - name: Build application
+        working-directory: ./backend
+        run: yarn test
