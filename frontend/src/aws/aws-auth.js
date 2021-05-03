@@ -6,13 +6,14 @@ export const UNDEFINED_AUTH = 'UNDEFINED';
 
 const EVENT_SIGN_IN = 'signIn';
 const EVENT_SIGN_OUT = 'signOut';
+const EVENT_STATE_UPDATE = 'customOAuthState';
 
 /**
  * Sets up a listener that is called every time the authentication level changes
  * @param listener The function to be called when auth changes. Is passed a string indicating auth level.
  */
 export const setAuthListener = (listener) => {
-    Hub.listen('auth', ({ payload: { event } }) => {
+    Hub.listen('auth', ({ payload: { event, data } }) => {
         switch (event) {
             case EVENT_SIGN_IN:
                 listener(AUTHENTICATED);
@@ -21,6 +22,9 @@ export const setAuthListener = (listener) => {
             case EVENT_SIGN_OUT:
                 listener(UNAUTHENTICATED);
                 break;
+
+            case EVENT_STATE_UPDATE:
+                console.log(data);
 
             default:
         }
