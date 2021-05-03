@@ -17,7 +17,6 @@ const getUser = async (accessToken) => {
 };
 
 const parseUserSecurityRoles = (user) => {
-    console.log(user);
     if (!user || !user.UserAttributes) return [];
 
     const securityRolesString = user.UserAttributes.find(
