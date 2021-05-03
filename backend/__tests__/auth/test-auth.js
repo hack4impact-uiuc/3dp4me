@@ -60,4 +60,19 @@ describe('Test authentication ', () => {
             })
             .expect(403, done);
     });
+
+    it('succeeds when given valid user token with proper roles', (done) => {
+        AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
+            const MOCK_ROLE_ID = '606e0a4602b23d02bc77673b';
+            return Promise.resolve(createUserDataWithRoles(MOCK_ROLE_ID));
+        });
+
+        request(server)
+            .get('/api/patients')
+            .set({
+                authorization:
+                    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+            })
+            .expect(200, done);
+    });
 });

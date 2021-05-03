@@ -1,35 +1,20 @@
 module.exports.MOCK_USER = {
-    Username: 'google_213124633943835461786',
-    Attributes: [
-        {
-            Name: 'sub',
-            Value: 'a5f6e6c5-48a0-4106-89a3-fcc62a2f6148',
-        },
+    Username: 'google_110732791859900199290',
+    UserAttributes: [
+        { Name: 'sub', Value: '054a80a4-04eb-4a93-9647-14f676f33949' },
         {
             Name: 'identities',
             Value:
-                '[{"userId":"113124640943890461786","providerName":"Google","providerType":"Google","issuer":null,"primary":true,"dateCreated":1618957958605}]',
+                '[{"userId":"110732791859900199290","providerName":"Google","providerType":"Google","issuer":null,"primary":true,"dateCreated":1617302898061}]',
         },
-        {
-            Name: 'email_verified',
-            Value: 'false',
-        },
-        {
-            Name: 'name',
-            Value: 'Matthew Walowski',
-        },
-        {
-            Name: 'email',
-            Value: 'mattwalowski@gmail.com',
-        },
+        { Name: 'email_verified', Value: 'false' },
+        { Name: 'custom:language', Value: 'EN' },
+        { Name: 'name', Value: 'Matthew Walowski' },
+        { Name: 'email', Value: 'mattwalowski@gmail.com' },
         {
             Name: 'picture',
             Value:
-                'https://lh4.googleusercontent.com/-DJCZsBiGGb4/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnM6lv4n8dbAvpbbKDKx6JPtUqKFw/s96-c/photo.jpg',
+                'https://lh3.googleusercontent.com/a/AATXAJyQEIaUPej-ijfcwWLwCP8CeA5r10tiL1RmPLlj=s96-c',
         },
     ],
-    UserCreateDate: '2021-04-20T22:32:38.639Z',
-    UserLastModifiedDate: '2021-04-20T22:32:38.639Z',
-    Enabled: true,
-    UserStatus: 'EXTERNAL_PROVIDER',
 };
