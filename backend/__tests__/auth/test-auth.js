@@ -2,17 +2,14 @@ const db = require('../utils/db');
 const request = require('supertest');
 const { createUserDataWithRoles } = require('../utils/auth');
 const AWS = require('aws-sdk-mock');
+const { MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
 
 describe('Test authentication ', () => {
     beforeAll(async () => {
         await db.connect();
-        AWS.mock(
-            'CognitoIdentityServiceProvider',
-            'getUser',
-            (params, callback) => {
-                return Promise.reject();
-            },
-        );
+        AWS.mock('CognitoIdentityServiceProvider', 'getUser', () => {
+            return Promise.reject();
+        });
     });
 
     afterAll(async () => await db.closeDatabase());
@@ -41,8 +38,7 @@ describe('Test authentication ', () => {
         request(server)
             .get('/api/patients')
             .set({
-                authorization:
-                    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+                authorization: MOCK_AUTH_TOKEN,
             })
             .expect(401, done);
     });
@@ -55,8 +51,7 @@ describe('Test authentication ', () => {
         request(server)
             .get('/api/patients')
             .set({
-                authorization:
-                    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+                authorization: MOCK_AUTH_TOKEN,
             })
             .expect(403, done);
     });
@@ -70,8 +65,7 @@ describe('Test authentication ', () => {
         request(server)
             .get('/api/patients')
             .set({
-                authorization:
-                    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+                authorization: MOCK_AUTH_TOKEN,
             })
             .expect(200, done);
     });
