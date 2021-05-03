@@ -1,20 +1,17 @@
 const db = require('../utils/db');
 const request = require('supertest');
+const AWS = require('aws-sdk-mock');
+var server = require('../../app');
 const {
-    mockAuthAsDefaultUser,
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
 } = require('../utils/auth');
-const AWS = require('aws-sdk-mock');
-var server = require('../../app');
 
 describe('mock auth', () => {
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.clearDatabase());
-    beforeEach(() => {
-        server = require('../../app');
-    });
+    beforeEach(() => (server = require('../../app')));
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);

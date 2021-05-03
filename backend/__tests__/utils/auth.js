@@ -22,12 +22,23 @@ module.exports.createUserDataWithRoles = (...roles) => {
     return user;
 };
 
+/**
+ * Initializes the auth mocker. Must be called onece before all tests.
+ * @param {Object} AWS The AWS mocker. An instance of this object can be created with `const AWS = require('aws-sdk-mock')`
+ */
 module.exports.initAuthMocker = (AWS) => {
     AWS.mock('CognitoIdentityServiceProvider', 'getUser', () => {
         return Promise.reject();
     });
 };
 
+/**
+ * Mocks the Cognito Identity Service Provider so that whenever the server queries for the current user, a static
+ * user is returned.
+ * @param {Object} AWS The AWS mocker. An instance of this object can be created with `const AWS = require('aws-sdk-mock')`
+ * @param {Object} user This is the user data that will be returned every time. If the parameter is not provided, a default user with
+ *                      sufficient permission to authenticate into the application will be set.
+ */
 module.exports.setCurrentUser = (
     AWS,
     user = this.createUserDataWithRoles(MOCK_ROLE_ID),
