@@ -1,5 +1,6 @@
 module.exports.MOCK_AUTH_TOKEN =
     'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+
 module.exports.MOCK_USER = {
     Username: 'google_110732791859900199290',
     UserAttributes: [
@@ -20,3 +21,5 @@ module.exports.MOCK_USER = {
         },
     ],
 };
+
+module.exports.MOCK_ROLE_ID = '606e0a4602b23d02bc77673b';
