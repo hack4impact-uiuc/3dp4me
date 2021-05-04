@@ -9,7 +9,7 @@ var cors = require('cors');
 const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
-const { initModels } = require('./utils/init-models');
+const { initDB } = require('./utils/init-db');
 const app = express();
 
 app.use(express.static(path.join(__dirname, '../frontend/build')));
@@ -21,21 +21,8 @@ app.use(
     }),
 );
 
-mongoose.connect(process.env.DB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+if (process.env.NODE_ENV != 'test') initDB();
 
-mongoose.connection
-    .once('open', () => {
-        console.log('Connected to the DB');
-        initModels();
-    })
-    .on('error', (error) =>
-        console.log('Error connecting to the database: ', error),
-    );
-
-mongoose.set('useFindAndModify', false);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -53,7 +40,6 @@ app.get('/*', function (req, res, next) {
 
 app.use(requireAuthentication);
 app.use(require('./routes'));
-
 app.use(errorHandler);
 
 process.on('unhandledRejection', function (reason, p) {
