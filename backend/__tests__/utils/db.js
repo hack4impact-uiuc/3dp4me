@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+const patientData = require('../../../scripts/patients.json');
 
 const mongod = new MongoMemoryServer();
 
@@ -17,6 +18,7 @@ module.exports.connect = async () => {
     };
 
     await mongoose.connect(uri, mongooseOpts);
+    this.resetDatabase();
 };
 
 /**
@@ -26,6 +28,15 @@ module.exports.closeDatabase = async () => {
     await mongoose.connection.dropDatabase();
     await mongoose.connection.close();
     await mongod.stop();
+};
+
+/**
+ * Resets the database to it's original state with mock data.
+ */
+module.exports.resetDatabase = async () => {
+    this.clearDatabase();
+    await mongoose.connection.db.collection('Patient').insertMany(patientData);
+    await mongoose.connection.db.collection('Role').insertMany(patientData);
 };
 
 /**
