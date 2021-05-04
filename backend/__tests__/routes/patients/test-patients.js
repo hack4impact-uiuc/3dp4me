@@ -11,15 +11,33 @@ const {
 
 describe('POST /patient', () => {
     afterAll(async () => await db.closeDatabase());
-    afterEach(async () => await db.clearDatabase());
-    beforeEach(() => (server = require('../../app')));
+    afterEach(async () => await db.resetDatabase());
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
         setCurrentUser(AWS);
     });
 
-    it('returns OK with authentication', (done) => {
+    beforeEach(() => {
+        server = require('../../app');
+        // mongoose.connection.db.collection("Patient").insertOne({
+        //     firstName: "Matt",
+        //     fathersName: "Dan",
+        //     grandfathersName: "Gene",
+        //     familyName: "Walowski",
+        //     dateCreated: Date.now(),
+        //     orderId: { type: String, required: false, default: '' },
+        //     lastEdited: { type: Date, required: false, default: new Date() },
+        //     lastEditedBy: { type: String, required: true },
+        //     status: {
+        //         type: overallStatusEnum,
+        //         required: false,
+        //         default: overallStatusEnum.ACTIVE,
+        //     },
+        // })
+    });
+
+    it('returns ', (done) => {
         const names = mongoose.modelNames();
         console.log(names);
         withAuthentication(
