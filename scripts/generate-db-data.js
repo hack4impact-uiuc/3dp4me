@@ -1,13 +1,14 @@
 const faker = require('faker');
 const fs = require('fs');
 const { overallStatusEnum } = require('../backend/models');
+const mongoose = require('mongoose');
 
 const generateData = () => {
     const patients = generatePatients(100);
-    fs.writeFileSync('patients.json', JSON.stringify(patients));
+    fs.writeFileSync('patients.json', JSON.stringify(patients, null, 2));
 
     const roles = generateRoles(15);
-    fs.writeFileSync('roles.json', JSON.stringify(roles));
+    fs.writeFileSync('roles.json', JSON.stringify(roles, null, 2));
 };
 
 const getRandomInt = (max) => {
@@ -25,6 +26,7 @@ const generatePatients = (numPatients) => {
 const generatePatient = () => {
     const patient = {};
     patient.firstName = faker.name.firstName();
+    patient._id = mongoose.Types.ObjectId();
 
     if (getRandomInt(2)) patient.fathersName = faker.name.firstName();
 
@@ -60,6 +62,7 @@ const generateRole = () => {
 
     role.roleName = faker.lorem.word();
     role.isMutable = getRandomInt(2);
+    role._id = mongoose.Types.ObjectId();
     return role;
 };
 
