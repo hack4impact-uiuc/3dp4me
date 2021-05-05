@@ -10,6 +10,8 @@ const {
 } = require('../../utils/auth');
 
 describe('POST /patient', () => {
+    const stepKey = 'patientinfo';
+
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
     beforeAll(async () => {
@@ -18,8 +20,15 @@ describe('POST /patient', () => {
         setCurrentUser(AWS);
     });
 
+    //     Bad patient ID
+    // Bad stepKey
+    // Patient with existing data for this step
+    // Patient without existing data for this step
+    // Check lastEdited and lastEditecBy
+    // Change fields that should never be changed (like _id) should return a bad response
+
     beforeEach(() => {
-        server = require('../../app');
+        server = require('../../../app');
         // mongoose.connection.db.collection("Patient").insertOne({
         //     firstName: "Matt",
         //     fathersName: "Dan",
@@ -37,11 +46,16 @@ describe('POST /patient', () => {
         // })
     });
 
-    it('returns ', (done) => {
-        const names = mongoose.modelNames();
-        console.log(names);
+    it('returns 404 when given bad ID format', (done) => {
         withAuthentication(
-            request(server).get('/api/patients/badid/badstage'),
-        ).expect(200, done);
+            request(server).get(`/api/patients/badid/${stepKey}`),
+        ).expect(404, done);
     });
+
+    // it('returns 404 when given nonexistent ID', (done) => {
+    //     const randID = "6092a9ae9e3769ae75abe0a5";
+    //     withAuthentication(
+    //         request(server).get(`/api/patients/${randID}/${stepKey}`),
+    //     ).expect(404, done);
+    // });
 });

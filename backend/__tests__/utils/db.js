@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const patientData = require('../../../scripts/patients.json');
+const roleData = require('../../../scripts/roles.json');
 
 const mongod = new MongoMemoryServer();
 
@@ -12,13 +13,11 @@ module.exports.connect = async () => {
 
     const mongooseOpts = {
         useNewUrlParser: true,
-        autoReconnect: true,
-        reconnectTries: Number.MAX_VALUE,
-        reconnectInterval: 1000,
+        useUnifiedTopology: true,
     };
 
     await mongoose.connect(uri, mongooseOpts);
-    this.resetDatabase();
+    await this.resetDatabase();
 };
 
 /**
@@ -34,9 +33,9 @@ module.exports.closeDatabase = async () => {
  * Resets the database to it's original state with mock data.
  */
 module.exports.resetDatabase = async () => {
-    this.clearDatabase();
+    await this.clearDatabase();
     await mongoose.connection.db.collection('Patient').insertMany(patientData);
-    await mongoose.connection.db.collection('Role').insertMany(patientData);
+    await mongoose.connection.db.collection('Role').insertMany(roleData);
 };
 
 /**
