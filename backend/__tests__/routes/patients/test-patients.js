@@ -11,6 +11,7 @@ const {
 
 describe('POST /patient', () => {
     const stepKey = 'patientinfo';
+    const patientID = '6092ab8ce348b73cf0963d0b';
 
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
@@ -20,7 +21,6 @@ describe('POST /patient', () => {
         setCurrentUser(AWS);
     });
 
-    //     Bad patient ID
     // Bad stepKey
     // Patient with existing data for this step
     // Patient without existing data for this step
@@ -29,21 +29,6 @@ describe('POST /patient', () => {
 
     beforeEach(() => {
         server = require('../../../app');
-        // mongoose.connection.db.collection("Patient").insertOne({
-        //     firstName: "Matt",
-        //     fathersName: "Dan",
-        //     grandfathersName: "Gene",
-        //     familyName: "Walowski",
-        //     dateCreated: Date.now(),
-        //     orderId: { type: String, required: false, default: '' },
-        //     lastEdited: { type: Date, required: false, default: new Date() },
-        //     lastEditedBy: { type: String, required: true },
-        //     status: {
-        //         type: overallStatusEnum,
-        //         required: false,
-        //         default: overallStatusEnum.ACTIVE,
-        //     },
-        // })
     });
 
     it('returns 404 when given bad ID format', (done) => {
@@ -52,10 +37,16 @@ describe('POST /patient', () => {
         ).expect(404, done);
     });
 
-    // it('returns 404 when given nonexistent ID', (done) => {
-    //     const randID = "6092a9ae9e3769ae75abe0a5";
-    //     withAuthentication(
-    //         request(server).get(`/api/patients/${randID}/${stepKey}`),
-    //     ).expect(404, done);
-    // });
+    it('returns 404 when given nonexistent ID', (done) => {
+        const randID = '6092a9ae9e3769ae75abe0a5';
+        withAuthentication(
+            request(server).get(`/api/patients/${randID}/${stepKey}`),
+        ).expect(404, done);
+    });
+
+    it('returns 404 when given bad stepKey', (done) => {
+        withAuthentication(
+            request(server).get(`/api/patients/${patientID}/badstep`),
+        ).expect(404, done);
+    });
 });
