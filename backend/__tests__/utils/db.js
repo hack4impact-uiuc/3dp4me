@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const patientData = require('../../../scripts/patients.json');
 const roleData = require('../../../scripts/roles.json');
+const stepData = require('../../../scripts/steps.json');
 
 const mongod = new MongoMemoryServer();
 
@@ -36,6 +37,7 @@ module.exports.resetDatabase = async () => {
     await this.clearDatabase();
     await mongoose.connection.db.collection('Patient').insertMany(patientData);
     await mongoose.connection.db.collection('Role').insertMany(roleData);
+    await mongoose.connection.db.collection('steps').insertMany(stepData);
 };
 
 /**

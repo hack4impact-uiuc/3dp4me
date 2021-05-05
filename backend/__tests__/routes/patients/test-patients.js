@@ -21,7 +21,6 @@ describe('POST /patient', () => {
         setCurrentUser(AWS);
     });
 
-    // Bad stepKey
     // Patient with existing data for this step
     // Patient without existing data for this step
     // Check lastEdited and lastEditecBy
