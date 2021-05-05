@@ -33,20 +33,20 @@ describe('POST /patient', () => {
 
     it('returns 404 when given bad ID format', (done) => {
         withAuthentication(
-            request(server).get(`/api/patients/badid/${stepKey}`),
+            request(server).post(`/api/patients/badid/${stepKey}`),
         ).expect(404, done);
     });
 
     it('returns 404 when given nonexistent ID', (done) => {
         const randID = '6092a9ae9e3769ae75abe0a5';
         withAuthentication(
-            request(server).get(`/api/patients/${randID}/${stepKey}`),
+            request(server).post(`/api/patients/${randID}/${stepKey}`),
         ).expect(404, done);
     });
 
     it('returns 404 when given bad stepKey', (done) => {
         withAuthentication(
-            request(server).get(`/api/patients/${patientID}/badstep`),
+            request(server).post(`/api/patients/${patientID}/badstep`),
         ).expect(404, done);
     });
 });
