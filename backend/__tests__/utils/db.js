@@ -12,10 +12,10 @@ const mongod = new MongoMemoryServer();
 
 /**
  * Connect to the in-memory database.
+ * Should only be called once per suite
  */
 module.exports.connect = async () => {
     const uri = await mongod.getUri();
-
     const mongooseOpts = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -24,7 +24,6 @@ module.exports.connect = async () => {
     await mongoose.connect(uri, mongooseOpts);
     await mongoose.connection.db.collection('steps').insertMany(stepData);
     await initModels();
-
     await this.resetDatabase();
 };
 
@@ -45,11 +44,11 @@ module.exports.resetDatabase = async () => {
     await mongoose.connection.db.collection('Patient').insertMany(patientData);
     await mongoose.connection.db.collection('Role').insertMany(roleData);
     await mongoose.connection.db.collection('steps').insertMany(stepData);
+    await mongoose.connection.db.collection('survey').insertMany(surveyData);
+    await mongoose.connection.db.collection('example').insertMany(exampleData);
     await mongoose.connection.db
         .collection('medicalInfo')
         .insertMany(medicalData);
-    await mongoose.connection.db.collection('survey').insertMany(surveyData);
-    await mongoose.connection.db.collection('example').insertMany(exampleData);
 };
 
 /**
