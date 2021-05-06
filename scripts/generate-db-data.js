@@ -178,20 +178,10 @@ const generateExampleInfo = (status) => {
         info.date = faker.date.past();
     if (status == stepStatusEnum.FINISHED || getRandomInt(2))
         info.phone = faker.phone.phoneNumber();
-
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2)) {
-        const numFiles = getRandomInt(5);
-        info.file = [];
-        for (let i = 0; i < numFiles; i++)
-            info.file.push(faker.system.fileName);
-    }
-
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2)) {
-        const numAudioFiles = getRandomInt(5);
-        info.audio = [];
-        for (let i = 0; i < numAudioFiles; i++)
-            info.audio.push(faker.system.fileName);
-    }
+    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+        info.file = generateFiles(getRandomInt(5));
+    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+        info.audio = generateFiles(getRandomInt(5));
 
     const options = ['607086644e7ccf3c7cea23da', '607086644e7ccf3c7cea23dc'];
     const selectedOption = getRandomInt(options.length);
@@ -199,6 +189,20 @@ const generateExampleInfo = (status) => {
         info.radioButton = options[selectedOption];
 
     return info;
+};
+
+const generateFiles = (numFiles) => {
+    files = [];
+    for (let i = 0; i < numFiles; i++) files.push(generateFile());
+    return files;
+};
+
+const generateFile = () => {
+    return {
+        filename: faker.system.fileName(),
+        uploadedBy: faker.name.firstName(),
+        uploadDate: faker.date.past(),
+    };
 };
 
 const generateRoles = (numRoles) => {
