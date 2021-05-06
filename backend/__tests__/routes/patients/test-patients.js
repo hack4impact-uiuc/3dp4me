@@ -89,12 +89,14 @@ describe('POST /patient', () => {
             // "lastEditedBy": "Domingo"
         };
 
+        // Send the request
         const res = await withAuthentication(
             request(server)
                 .post(`/api/patients/${PATIENT_ID_MISSING_DATA}/${STEP_KEY}`)
                 .send(body),
         );
 
+        // Check response
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
@@ -103,8 +105,11 @@ describe('POST /patient', () => {
         const updatedData = await mongoose.connection
             .collection(STEP_KEY)
             .findOne({ patientId: PATIENT_ID_MISSING_DATA });
+
+        // Check that DB is correct
         expect(isSubObject(updatedData, body)).toBe(true);
         expect(updatedData.lastEdited >= startTimestamp).toBe(true);
+        expect(updatedData.patientId).toBe(PATIENT_ID_MISSING_DATA);
         expect(updatedData.lastEditedBy).toBe(
             getCurrentAuthenticatedUserAttribute('name'),
         );
