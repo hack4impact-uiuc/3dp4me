@@ -1,6 +1,6 @@
 const { stepStatusEnum } = require('../../models');
 
-module.exports.POST_FULL_STEP_DATA = {
+module.exports.POST_FINISHED_STEP_DATA = {
     status: stepStatusEnum.FINISHED,
     string: 'helloo',
     multilineString: 'Test looooooooong string',

@@ -30,8 +30,6 @@ describe('POST /patient', () => {
         setCurrentUser(AWS);
     });
 
-    // Patient with existing data for this step
-    // Check lastEdited and lastEditecBy
     // Do various levels of upload (complete, incomplete, etc)
     // Change fields that should never be changed (like _id, lastEdited, lastEditedBy) should return a bad response
 
@@ -67,36 +65,70 @@ describe('POST /patient', () => {
     it('saves data for patient with prior data', async () => {
         await testPostOnPatient(PATIENT_ID_WITH_DATA);
     });
-});
 
-const testPostOnPatient = async (patientID) => {
-    const startTimestamp = Date.now();
-    const body = POST_FULL_STEP_DATA;
-    const expectedResult = {
-        ...body,
-        lastEdited: startTimestamp,
-        patientId: patientID,
-        lastEditedBy: getCurrentAuthenticatedUserAttribute('name'),
+    it('sets defaults on missing fields', async () => {
+        const patientID = PATIENT_ID_MISSING_DATA;
+        const startTimestamp = Date.now();
+        const body = {};
+        const expectedResult = {
+            lastEdited: startTimestamp,
+            patientId: patientID,
+            lastEditedBy: getCurrentAuthenticatedUserAttribute('name'),
+        };
+
+        // Send the request
+        const res = await withAuthentication(
+            request(server)
+                .post(`/api/patients/${patientID}/${STEP_KEY}`)
+                .send(body),
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
+
+        // Check that DB is correct
+        const updatedData = await mongoose.connection
+            .collection(STEP_KEY)
+            .findOne({ patientId: patientID }, { projection: { _id: 0 } });
+
+        console.log(updatedData);
+        expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);
+    });
+
+    const testPostOnPatient = async (patientID) => {
+        const startTimestamp = Date.now();
+        const body = POST_FULL_STEP_DATA;
+        const expectedResult = {
+            ...body,
+            lastEdited: startTimestamp,
+            patientId: patientID,
+            lastEditedBy: getCurrentAuthenticatedUserAttribute('name'),
+        };
+
+        // Send the request
+        const res = await withAuthentication(
+            request(server)
+                .post(`/api/patients/${patientID}/${STEP_KEY}`)
+                .send(body),
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        delete resContent.result._id;
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
+        expectStrictEqualWithTimestampOrdering(
+            expectedResult,
+            resContent.result,
+        );
+
+        // Check that DB is correct
+        const updatedData = await mongoose.connection
+            .collection(STEP_KEY)
+            .findOne({ patientId: patientID }, { projection: { _id: 0 } });
+
+        expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);
     };
-
-    // Send the request
-    const res = await withAuthentication(
-        request(server)
-            .post(`/api/patients/${patientID}/${STEP_KEY}`)
-            .send(body),
-    );
-
-    // Check response
-    const resContent = JSON.parse(res.text);
-    delete resContent.result._id;
-    expect(res.status).toBe(200);
-    expect(resContent.success).toBe(true);
-    expectStrictEqualWithTimestampOrdering(expectedResult, resContent.result);
-
-    // Check that DB is correct
-    const updatedData = await mongoose.connection
-        .collection(STEP_KEY)
-        .findOne({ patientId: patientID }, { projection: { _id: 0 } });
-
-    expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);
-};
+});

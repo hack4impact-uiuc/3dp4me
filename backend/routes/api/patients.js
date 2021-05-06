@@ -307,6 +307,7 @@ router.post(
                 updatedStage.lastEdited = Date.now();
                 updatedStage.lastEditedBy = req.user.name;
                 delete updatedStage._id;
+                console.log(updatedStage);
                 savedData = await collection.findOneAndUpdate(
                     { patientId: id },
                     { $set: updatedStage },

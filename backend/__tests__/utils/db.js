@@ -7,6 +7,7 @@ const medicalData = require('../../../scripts/data/medicalInfo.json');
 const surveyData = require('../../../scripts/data/survey.json');
 const exampleData = require('../../../scripts/data/example.json');
 const { initModels } = require('../../utils/init-models');
+const { models } = require('../../models');
 
 const mongod = new MongoMemoryServer();
 
@@ -22,8 +23,6 @@ module.exports.connect = async () => {
     };
 
     await mongoose.connect(uri, mongooseOpts);
-    await mongoose.connection.db.collection('steps').insertMany(stepData);
-    await initModels();
     await this.resetDatabase();
 };
 
@@ -61,6 +60,7 @@ module.exports.resetDatabase = async () => {
     await mongoose.connection.db
         .collection('medicalInfo')
         .insertMany(convertStringsToMongoIDs(medicalData));
+    await initModels();
 };
 
 /**
@@ -79,12 +79,15 @@ const convertStringsToMongoIDs = (arr) => {
  * Remove all the data for all db collections.
  */
 module.exports.clearDatabase = async () => {
-    const collections = mongoose.connection.collections;
+    const steps = await models.Step.find({});
+    steps.forEach((step) => {
+        console.log(step);
+        delete mongoose.connection.models[step.key];
+    });
 
+    const collections = mongoose.connection.collections;
     for (const key in collections) {
         const collection = collections[key];
         await collection.deleteMany();
     }
-
-    mongoose.connection.models = {};
 };
