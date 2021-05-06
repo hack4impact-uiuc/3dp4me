@@ -40,6 +40,8 @@ module.exports.closeDatabase = async () => {
  * Resets the database to it's original state with mock data.
  */
 module.exports.resetDatabase = async () => {
+    // TODO: We'll need to convert other sub-schema's mongoIDs as well. Is there a better way to do this???
+    // The best way might be to save as a .js file instead...
     await this.clearDatabase();
     await mongoose.connection.db
         .collection('Patient')
