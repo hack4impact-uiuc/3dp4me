@@ -5,15 +5,17 @@ const mongoose = require('mongoose');
 
 const generateData = () => {
     const patients = generatePatients(100);
-    fs.writeFileSync(
-        'scripts/data/patients.json',
-        JSON.stringify(patients, null, 2),
-    );
+    saveDataToFile(patients, 'patients.json');
 
     const roles = generateRoles(15);
-    fs.writeFileSync('scripts/data/roles.json', JSON.stringify(roles, null, 2));
+    saveDataToFile(roles, 'roles.json');
 
     createSteps(patients);
+};
+
+const saveDataToFile = (data, filename) => {
+    const serializedData = JSON.stringify(data, null, 2);
+    fs.writeFileSync(`scripts/data/${filename}`, serializedData);
 };
 
 const getRandomInt = (max) => {
@@ -69,6 +71,14 @@ const createSteps = (users) => {
                 appendGlobalStepData(generateExampleInfo, user._id),
             );
     });
+
+    saveDataToFile(removeNulls(medicalData), 'medicalInfo.json');
+    saveDataToFile(removeNulls(surveyData), 'survey.json');
+    saveDataToFile(removeNulls(exampleData), 'example.json');
+};
+
+const removeNulls = (arr) => {
+    return arr.filter((e) => e !== null);
 };
 
 const appendGlobalStepData = (generateInfo, userID) => {
