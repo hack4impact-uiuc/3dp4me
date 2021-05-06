@@ -12,6 +12,7 @@ const {
 } = require('../../utils/auth');
 const { stepStatusEnum, models } = require('../../../models');
 const { isSubObject } = require('../../utils/utils');
+const { POST_FULL_STEP_DATA } = require('../../mock-data/patients-mock-data');
 
 describe('POST /patient', () => {
     const STEP_KEY = 'example';
@@ -57,37 +58,7 @@ describe('POST /patient', () => {
 
     it('saves data for patient which had no prior data', async () => {
         const startTimestamp = Date.now();
-        const body = {
-            // "_id": "60944e084f4c0d4330cc261d",
-            status: stepStatusEnum.FINISHED,
-            string: 'helloo',
-            multilineString: 'Test looooooooong string',
-            number: 932,
-            date: Date.now(),
-            phone: '123-456-7891',
-            file: [
-                {
-                    filename: 'ears.stp',
-                    uploadedBy: 'Jason',
-                    uploadDate: '2020-10-12T18:20:15.625Z',
-                },
-            ],
-            audio: [
-                {
-                    filename: 'interview.mp3',
-                    uploadedBy: 'Jason',
-                    uploadDate: '2020-10-12T18:20:15.625Z',
-                },
-                {
-                    filename: 'interview2.mp4',
-                    uploadedBy: 'Brian',
-                    uploadDate: '2020-10-14T18:20:15.625Z',
-                },
-            ],
-            // "patientId": "60944e084f4c0d4330cc25ae",
-            // "lastEdited": "2020-09-15T06:10:11.759Z",
-            // "lastEditedBy": "Domingo"
-        };
+        const body = POST_FULL_STEP_DATA;
 
         // Send the request
         const res = await withAuthentication(
