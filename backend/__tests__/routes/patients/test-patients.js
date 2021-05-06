@@ -8,11 +8,12 @@ const {
     setCurrentUser,
     withAuthentication,
 } = require('../../utils/auth');
-const { stepStatusEnum } = require('../../../models');
+const { stepStatusEnum, models } = require('../../../models');
+const { isSubObject } = require('../../utils/utils');
 
 describe('POST /patient', () => {
-    const stepKey = 'example';
-    const patientMissingData = '60944e084f4c0d4330cc258d';
+    const STEP_KEY = 'example';
+    const PATIENT_ID_MISSING_DATA = '60944e084f4c0d4330cc258d';
 
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
@@ -33,20 +34,22 @@ describe('POST /patient', () => {
 
     it('returns 404 when given bad ID format', (done) => {
         withAuthentication(
-            request(server).post(`/api/patients/badid/${stepKey}`),
+            request(server).post(`/api/patients/badid/${STEP_KEY}`),
         ).expect(500, done);
     });
 
     it('returns 404 when given nonexistent ID', (done) => {
         const randID = '6092a9ae9e3769ae75abe0a5';
         withAuthentication(
-            request(server).post(`/api/patients/${randID}/${stepKey}`),
+            request(server).post(`/api/patients/${randID}/${STEP_KEY}`),
         ).expect(404, done);
     });
 
     it('returns 404 when given bad stepKey', (done) => {
         withAuthentication(
-            request(server).post(`/api/patients/${patientMissingData}/badstep`),
+            request(server).post(
+                `/api/patients/${PATIENT_ID_MISSING_DATA}/badstep`,
+            ),
         ).expect(404, done);
     });
 
@@ -84,14 +87,20 @@ describe('POST /patient', () => {
         };
 
         const res = await withAuthentication(
-            request(server).post(
-                `/api/patients/${patientMissingData}/${stepKey}`,
-                body,
-            ),
+            request(server)
+                .post(`/api/patients/${PATIENT_ID_MISSING_DATA}/${STEP_KEY}`)
+                .send(body),
         );
 
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
+        // expect(isSubObject(resContent.result, body)).toBe(true);
+
+        const updatedData = await mongoose.connection
+            .collection(STEP_KEY)
+            .findOne({ patientId: PATIENT_ID_MISSING_DATA });
+        expect(isSubObject(updatedData, body)).toBe(true);
+        console.log(updatedData);
     });
 });

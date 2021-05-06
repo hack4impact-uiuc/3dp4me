@@ -298,6 +298,7 @@ router.post(
         }
 
         const updatedStage = req.body;
+        let savedData = null;
         try {
             await session.withTransaction(async () => {
                 const collection = await mongoose.connection.db.collection(
@@ -306,7 +307,7 @@ router.post(
                 updatedStage.lastEdited = Date.now();
                 updatedStage.lastEditedBy = req.user.name;
                 delete updatedStage._id;
-                const stepData = await collection.findOneAndUpdate(
+                savedData = await collection.findOneAndUpdate(
                     { patientId: id },
                     { $set: updatedStage },
                     { upsert: true, setDefaultsOnInsert: true, new: true },
@@ -329,7 +330,7 @@ router.post(
                 res.status(200).json({
                     success: true,
                     message: 'Patient Stage Successfully Saved',
-                    result: patient,
+                    result: savedData,
                 });
             }
         });
