@@ -41,14 +41,36 @@ module.exports.closeDatabase = async () => {
  */
 module.exports.resetDatabase = async () => {
     await this.clearDatabase();
-    await mongoose.connection.db.collection('Patient').insertMany(patientData);
-    await mongoose.connection.db.collection('Role').insertMany(roleData);
-    await mongoose.connection.db.collection('steps').insertMany(stepData);
-    await mongoose.connection.db.collection('survey').insertMany(surveyData);
-    await mongoose.connection.db.collection('example').insertMany(exampleData);
+    await mongoose.connection.db
+        .collection('Patient')
+        .insertMany(convertStringsToMongoIDs(patientData));
+    await mongoose.connection.db
+        .collection('Role')
+        .insertMany(convertStringsToMongoIDs(roleData));
+    await mongoose.connection.db
+        .collection('steps')
+        .insertMany(convertStringsToMongoIDs(stepData));
+    await mongoose.connection.db
+        .collection('survey')
+        .insertMany(convertStringsToMongoIDs(surveyData));
+    await mongoose.connection.db
+        .collection('example')
+        .insertMany(convertStringsToMongoIDs(exampleData));
     await mongoose.connection.db
         .collection('medicalInfo')
-        .insertMany(medicalData);
+        .insertMany(convertStringsToMongoIDs(medicalData));
+};
+
+/**
+ * Converts a string to a MongoID. Need to call this on all collections before inserting or we'll have issues.
+ * @param {Object} arr The input collection
+ * @returns Modified collection with converted _id fields
+ */
+const convertStringsToMongoIDs = (arr) => {
+    return arr.map((d) => {
+        if (d?._id) return { ...d, _id: mongoose.Types.ObjectId(d._id) };
+        return d;
+    });
 };
 
 /**
