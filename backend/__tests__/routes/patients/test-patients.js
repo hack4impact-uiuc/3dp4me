@@ -7,6 +7,8 @@ const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
+    getCurrentAuthenticatedUser,
+    getCurrentAuthenticatedUserAttribute,
 } = require('../../utils/auth');
 const { stepStatusEnum, models } = require('../../../models');
 const { isSubObject } = require('../../utils/utils');
@@ -54,6 +56,7 @@ describe('POST /patient', () => {
     });
 
     it('saves data for patient which had no prior data', async () => {
+        const startTimestamp = Date.now();
         const body = {
             // "_id": "60944e084f4c0d4330cc261d",
             status: stepStatusEnum.FINISHED,
@@ -101,6 +104,9 @@ describe('POST /patient', () => {
             .collection(STEP_KEY)
             .findOne({ patientId: PATIENT_ID_MISSING_DATA });
         expect(isSubObject(updatedData, body)).toBe(true);
-        console.log(updatedData);
+        expect(updatedData.lastEdited >= startTimestamp).toBe(true);
+        expect(updatedData.lastEditedBy).toBe(
+            getCurrentAuthenticatedUserAttribute('name'),
+        );
     });
 });
