@@ -310,7 +310,12 @@ router.post(
                 savedData = await collection.findOneAndUpdate(
                     { patientId: id },
                     { $set: updatedStage },
-                    { upsert: true, setDefaultsOnInsert: true, new: true },
+                    {
+                        upsert: true,
+                        setDefaultsOnInsert: true,
+                        new: true,
+                        returnOriginal: false,
+                    },
                 );
             });
         } catch (error) {
@@ -330,7 +335,7 @@ router.post(
                 res.status(200).json({
                     success: true,
                     message: 'Patient Stage Successfully Saved',
-                    result: savedData,
+                    result: savedData.value,
                 });
             }
         });

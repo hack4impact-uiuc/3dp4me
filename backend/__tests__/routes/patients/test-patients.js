@@ -11,7 +11,10 @@ const {
     getCurrentAuthenticatedUserAttribute,
 } = require('../../utils/auth');
 const { stepStatusEnum, models } = require('../../../models');
-const { isSubObject } = require('../../utils/utils');
+const {
+    isSubObject,
+    expectStrictEqualWithTimestampOrdering,
+} = require('../../utils/utils');
 const { POST_FULL_STEP_DATA } = require('../../mock-data/patients-mock-data');
 
 describe('POST /patient', () => {
@@ -59,6 +62,12 @@ describe('POST /patient', () => {
     it('saves data for patient which had no prior data', async () => {
         const startTimestamp = Date.now();
         const body = POST_FULL_STEP_DATA;
+        const expectedResult = {
+            ...body,
+            lastEdited: startTimestamp,
+            patientId: PATIENT_ID_MISSING_DATA,
+            lastEditedBy: getCurrentAuthenticatedUserAttribute('name'),
+        };
 
         // Send the request
         const res = await withAuthentication(
@@ -69,20 +78,22 @@ describe('POST /patient', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
+        delete resContent.result._id;
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        // expect(isSubObject(resContent.result, body)).toBe(true);
-
-        const updatedData = await mongoose.connection
-            .collection(STEP_KEY)
-            .findOne({ patientId: PATIENT_ID_MISSING_DATA });
+        expectStrictEqualWithTimestampOrdering(
+            expectedResult,
+            resContent.result,
+        );
 
         // Check that DB is correct
-        expect(isSubObject(updatedData, body)).toBe(true);
-        expect(updatedData.lastEdited >= startTimestamp).toBe(true);
-        expect(updatedData.patientId).toBe(PATIENT_ID_MISSING_DATA);
-        expect(updatedData.lastEditedBy).toBe(
-            getCurrentAuthenticatedUserAttribute('name'),
-        );
+        const updatedData = await mongoose.connection
+            .collection(STEP_KEY)
+            .findOne(
+                { patientId: PATIENT_ID_MISSING_DATA },
+                { projection: { _id: 0 } },
+            );
+
+        expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);
     });
 });
