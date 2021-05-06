@@ -31,24 +31,24 @@ describe('POST /patient', () => {
         server = require('../../../app');
     });
 
-    // it('returns 404 when given bad ID format', (done) => {
-    //     withAuthentication(
-    //         request(server).post(`/api/patients/badid/${stepKey}`),
-    //     ).expect(500, done);
-    // });
+    it('returns 404 when given bad ID format', (done) => {
+        withAuthentication(
+            request(server).post(`/api/patients/badid/${stepKey}`),
+        ).expect(500, done);
+    });
 
-    // it('returns 404 when given nonexistent ID', (done) => {
-    //     const randID = '6092a9ae9e3769ae75abe0a5';
-    //     withAuthentication(
-    //         request(server).post(`/api/patients/${randID}/${stepKey}`),
-    //     ).expect(404, done);
-    // });
+    it('returns 404 when given nonexistent ID', (done) => {
+        const randID = '6092a9ae9e3769ae75abe0a5';
+        withAuthentication(
+            request(server).post(`/api/patients/${randID}/${stepKey}`),
+        ).expect(404, done);
+    });
 
-    // it('returns 404 when given bad stepKey', (done) => {
-    //     withAuthentication(
-    //         request(server).post(`/api/patients/${patientMissingData}/badstep`),
-    //     ).expect(404, done);
-    // });
+    it('returns 404 when given bad stepKey', (done) => {
+        withAuthentication(
+            request(server).post(`/api/patients/${patientMissingData}/badstep`),
+        ).expect(404, done);
+    });
 
     it('saves data for patient which had no prior data', async () => {
         const body = {
@@ -83,15 +83,15 @@ describe('POST /patient', () => {
             // "lastEditedBy": "Domingo"
         };
 
-        const req = await withAuthentication(
+        const res = await withAuthentication(
             request(server).post(
                 `/api/patients/${patientMissingData}/${stepKey}`,
                 body,
             ),
         );
 
-        const res = JSON.parse(req.text);
-        expect(res.code).toBe(200);
-        expect(res.success).toBe(true);
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
     });
 });
