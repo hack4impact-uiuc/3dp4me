@@ -1,5 +1,3 @@
-const _ = require('lodash');
-
 /**
  * Ensures that the two objects are completley equal except for the 'lastEdited' fields. For the
  * 'lastEdited' fields, we expect the second item to have a timestamp later than (or equal to) the first. This is useful
