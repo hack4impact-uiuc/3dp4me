@@ -93,6 +93,7 @@ describe('POST /patient', () => {
             .collection(STEP_KEY)
             .findOne({ patientId: patientID }, { projection: { _id: 0 } });
 
+        // TODO: This should be setting defaults....
         console.log(updatedData);
         expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);
     });

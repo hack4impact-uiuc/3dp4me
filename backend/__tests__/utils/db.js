@@ -81,7 +81,6 @@ const convertStringsToMongoIDs = (arr) => {
 module.exports.clearDatabase = async () => {
     const steps = await models.Step.find({});
     steps.forEach((step) => {
-        console.log(step);
         delete mongoose.connection.models[step.key];
     });
 

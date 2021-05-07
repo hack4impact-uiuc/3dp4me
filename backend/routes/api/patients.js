@@ -307,10 +307,10 @@ router.post(
                 updatedStage.lastEdited = Date.now();
                 updatedStage.lastEditedBy = req.user.name;
                 delete updatedStage._id;
-                console.log(updatedStage);
+                const updatedModel = mongoose.model(stage)(updatedStage);
                 savedData = await collection.findOneAndUpdate(
                     { patientId: id },
-                    { $set: updatedStage },
+                    { $set: updatedModel },
                     {
                         upsert: true,
                         setDefaultsOnInsert: true,
