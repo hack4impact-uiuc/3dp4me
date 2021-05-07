@@ -52,13 +52,9 @@ const generateFieldSchema = (field) => {
                 throw new Error('Radio button must have options');
 
             return {
-                type: [models.questionOptionSchema],
+                type: String,
                 required: true,
-                default: [],
-                validate: {
-                    validator: validateOptions,
-                    message: 'Index must be unique',
-                },
+                default: '',
             };
         case fieldEnum.FILE:
             return {

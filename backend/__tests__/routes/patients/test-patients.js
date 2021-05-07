@@ -9,7 +9,7 @@ const {
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
 } = require('../../utils/auth');
-const { stepStatusEnum, models } = require('../../../models');
+const omitDeep = require('omit-deep-lodash');
 const { expectStrictEqualWithTimestampOrdering } = require('../../utils/utils');
 const {
     POST_FINISHED_STEP_DATA,
@@ -115,7 +115,7 @@ describe('POST /patient', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
-        delete resContent.result._id;
+        resContent.result = omitDeep(resContent.result, '_id');
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
         expectStrictEqualWithTimestampOrdering(
@@ -124,10 +124,11 @@ describe('POST /patient', () => {
         );
 
         // Check that DB is correct
-        const updatedData = await mongoose.connection
+        let updatedData = await mongoose.connection
             .collection(STEP_KEY)
-            .findOne({ patientId: patientID }, { projection: { _id: 0 } });
+            .findOne({ patientId: patientID });
 
+        updatedData = omitDeep(updatedData, '_id');
         expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);
     };
 });

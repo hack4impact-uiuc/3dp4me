@@ -5,7 +5,8 @@ module.exports.POST_FINISHED_STEP_DATA = {
     string: 'helloo',
     multilineString: 'Test looooooooong string',
     number: 932,
-    date: Date.now(),
+    date: new Date().toISOString(),
+    radioButton: '60944e084a4a0d4330cc258d',
     phone: '123-456-7891',
     file: [
         {

@@ -9,15 +9,16 @@ const _ = require('lodash');
  * @param {Object} b The second item to compare. This should contain the upper bound on lastEdited.
  */
 module.exports.expectStrictEqualWithTimestampOrdering = (a, b) => {
-    const aCopy = _.cloneDeep(a);
-    const bCopy = _.cloneDeep(b);
+    // Doing the parsing and stringifying allows us to ignore underlying types.
+    // For example, normally toEqual will fail if we have a Date and String that are actually equivalent
+    let aCopy = JSON.parse(JSON.stringify(a));
+    let bCopy = JSON.parse(JSON.stringify(b));
 
     const bTimestamp = Date.parse(b.lastEdited);
-
     // expect(bTimestamp).toBeGreaterThanOrEqual(a.lastEdited);
 
     delete aCopy.lastEdited;
     delete bCopy.lastEdited;
 
-    expect(aCopy).toStrictEqual(bCopy);
+    expect(bCopy).toStrictEqual(aCopy);
 };
