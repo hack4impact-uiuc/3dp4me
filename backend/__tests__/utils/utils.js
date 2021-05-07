@@ -14,8 +14,9 @@ module.exports.expectStrictEqualWithTimestampOrdering = (a, b) => {
     let aCopy = JSON.parse(JSON.stringify(a));
     let bCopy = JSON.parse(JSON.stringify(b));
 
-    const bTimestamp = Date.parse(b.lastEdited);
-    // expect(bTimestamp).toBeGreaterThanOrEqual(a.lastEdited);
+    const bTimestamp = new Date(bCopy.lastEdited);
+    const aTimestamp = new Date(aCopy.lastEdited);
+    expect(bTimestamp.getTime()).toBeGreaterThanOrEqual(aTimestamp.getTime());
 
     delete aCopy.lastEdited;
     delete bCopy.lastEdited;
