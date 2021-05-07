@@ -35,7 +35,7 @@ const generateFieldSchema = (field) => {
             return {
                 type: Date,
                 required: true,
-                default: new Date(),
+                default: Date.now,
             };
         case fieldEnum.PHONE:
             return {

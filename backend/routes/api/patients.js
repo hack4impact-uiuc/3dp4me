@@ -308,7 +308,6 @@ router.post(
                 updatedStage.lastEditedBy = req.user.name;
                 delete updatedStage._id;
                 let model = mongoose.model(stage);
-                console.log(updatedStage);
                 const updatedModel = new model(updatedStage);
                 savedData = await collection.findOneAndUpdate(
                     { patientId: id },

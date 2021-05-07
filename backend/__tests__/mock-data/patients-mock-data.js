@@ -28,3 +28,15 @@ module.exports.POST_FINISHED_STEP_DATA = {
         },
     ],
 };
+
+module.exports.DEFAULT_STEP_DATA = {
+    status: stepStatusEnum.UNFINISHED,
+    string: '',
+    multilineString: '',
+    number: 0,
+    date: new Date(),
+    radioButton: '',
+    phone: '',
+    file: [],
+    audio: [],
+};
