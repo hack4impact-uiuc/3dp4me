@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const patientData = require('../../../scripts/data/patients.json');
@@ -64,14 +65,17 @@ module.exports.resetDatabase = async () => {
 };
 
 /**
- * Converts a string to a MongoID. Need to call this on all collections before inserting or we'll have issues.
+ * Given an array of objects, converts all _id fields from string to ObjectId no matter how deep.
+ * Need to call this on all collections before inserting or we'll have issues.
  * @param {Object} arr The input collection
  * @returns Modified collection with converted _id fields
  */
 const convertStringsToMongoIDs = (arr) => {
-    return arr.map((d) => {
-        if (d?._id) return { ...d, _id: mongoose.Types.ObjectId(d._id) };
-        return d;
+    return arr.map((obj) => {
+        return _.transform(obj, (r, v, k) => {
+            if (k === '_id') r[k] = mongoose.Types.ObjectId(v);
+            else r[k] = v;
+        });
     });
 };
 
