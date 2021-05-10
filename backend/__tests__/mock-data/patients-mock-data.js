@@ -1,4 +1,5 @@
 const { stepStatusEnum } = require('../../models');
+const mongoose = require('mongoose');
 
 module.exports.POST_FINISHED_STEP_DATA = {
     status: stepStatusEnum.FINISHED,
@@ -39,4 +40,11 @@ module.exports.DEFAULT_STEP_DATA = {
     phone: '',
     file: [],
     audio: [],
+};
+
+module.exports.POST_IMMUTABLE_STEP_DATA = {
+    _id: mongoose.Types.ObjectId(),
+    patientId: mongoose.Types.ObjectId(),
+    lastEdited: new Date('2000-12-02T01:17:55.181Z'),
+    lastEditedBy: 'Tickle Me Elmo',
 };
