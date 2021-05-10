@@ -11,10 +11,14 @@ const {
     getCurrentAuthenticatedUserAttribute,
 } = require('../../utils/auth');
 const omitDeep = require('omit-deep-lodash');
-const { expectStrictEqualWithTimestampOrdering } = require('../../utils/utils');
+const {
+    expectStrictEqualWithTimestampOrdering,
+    areObjectsDisjoint,
+} = require('../../utils/utils');
 const {
     POST_FINISHED_STEP_DATA,
     DEFAULT_STEP_DATA,
+    POST_IMMUTABLE_STEP_DATA,
 } = require('../../mock-data/patients-mock-data');
 
 describe('POST /patient', () => {
@@ -30,7 +34,6 @@ describe('POST /patient', () => {
         setCurrentUser(AWS);
     });
 
-    // Do various levels of upload (complete, incomplete, etc)
     // Change fields that should never be changed (like _id, lastEdited, lastEditedBy) should return a bad response
 
     beforeEach(() => {
@@ -102,6 +105,31 @@ describe('POST /patient', () => {
         expectedResult = _.omit(expectedResult, ['_id', 'date']);
 
         expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);
+    });
+
+    it('ignores modification of immutable fields', async () => {
+        const patientID = PATIENT_ID_WITH_DATA;
+        const body = POST_IMMUTABLE_STEP_DATA;
+
+        // Send the request
+        const res = await withAuthentication(
+            request(server)
+                .post(`/api/patients/${patientID}/${STEP_KEY}`)
+                .send(body),
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
+
+        // Check that DB is correct
+        let updatedData = await mongoose.connection
+            .collection(STEP_KEY)
+            .findOne({ patientId: patientID });
+
+        expect(updatedData).not.toBeNull();
+        expect(areObjectsDisjoint(updatedData, body)).toBeTruthy();
     });
 
     const testPostOnPatient = async (patientID) => {

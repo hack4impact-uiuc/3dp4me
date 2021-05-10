@@ -21,3 +21,18 @@ module.exports.expectStrictEqualWithTimestampOrdering = (a, b) => {
 
     expect(bCopy).toStrictEqual(aCopy);
 };
+
+/**
+ * Checks if two objects are disjoint. Two objects are disjoint if for the same key, they never contain the same value.
+ * { a: 1, b: 2 } and { a: 5, c: 4 } are disjoint. { a: 1, b: 2 } and { a: 3, b: 2 } are not disjoint since b is 2 in both.
+ * @param {Object} a The first object to check
+ * @param {Object} b The second object to check
+ * @returns True if a and b are disjoint, false otherwise
+ */
+module.exports.areObjectsDisjoint = (a, b) => {
+    for (let k of Object.keys(a)) {
+        if (b[k] && a[k] == b[k]) return false;
+    }
+
+    return true;
+};
