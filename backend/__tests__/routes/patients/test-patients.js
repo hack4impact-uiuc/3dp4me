@@ -34,8 +34,6 @@ describe('POST /patient', () => {
         setCurrentUser(AWS);
     });
 
-    // Change fields that should never be changed (like _id, lastEdited, lastEditedBy) should return a bad response
-
     beforeEach(() => {
         server = require('../../../app');
     });
