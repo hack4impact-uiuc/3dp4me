@@ -19,7 +19,9 @@ const Login = () => {
                         className="google-button"
                         type="submit"
                         onClick={() =>
-                            Auth.federatedSignIn({ provider: 'Google' })
+                            Auth.federatedSignIn({
+                                provider: 'Google',
+                            })
                         }
                     >
                         <img src={GoogleLogo} alt="Google logo" />
