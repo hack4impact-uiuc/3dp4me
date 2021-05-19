@@ -6,7 +6,6 @@ export const UNDEFINED_AUTH = 'UNDEFINED';
 
 const EVENT_SIGN_IN = 'signIn';
 const EVENT_SIGN_OUT = 'signOut';
-const EVENT_STATE_UPDATE = 'customOAuthState';
 
 /**
  * Sets up a listener that is called every time the authentication level changes
