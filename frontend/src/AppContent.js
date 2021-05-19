@@ -17,12 +17,6 @@ function AppContent({ languageData, onLanguageChange, username, userEmail }) {
     const [state, dispatch] = useContext(Context);
     const key = languageData.selectedLanguage;
 
-    const f = async () => {
-        console.log(await getCurrentSession());
-        console.log(await getCredentials());
-    };
-    f();
-
     const handleErrorModalClose = () => {
         dispatch({ type: REDUCER_ACTIONS.CLEAR_ERROR });
     };

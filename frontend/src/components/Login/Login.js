@@ -6,10 +6,6 @@ import GoogleLogo from '../../assets/google_logo.svg';
 
 import './Login.scss';
 
-const state = {
-    postAuthRedirectUri: 'http://localhost:3000',
-};
-
 const Login = () => {
     return (
         <div className="wrapper login-body">
@@ -25,7 +21,6 @@ const Login = () => {
                         onClick={() =>
                             Auth.federatedSignIn({
                                 provider: 'Google',
-                                customState: JSON.stringify(state),
                             })
                         }
                     >
