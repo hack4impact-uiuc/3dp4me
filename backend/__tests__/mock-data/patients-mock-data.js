@@ -10,6 +10,18 @@ module.exports.POST_PATIENT = {
     status: overallStatusEnum.FEEDBACK,
 };
 
+module.exports.POST_PATIENT_MINIMAL_REQUEST = {
+    firstName: 'first',
+    familyName: 'family',
+};
+
+module.exports.DEFAULT_PATIENT_DATA = {
+    fathersName: '',
+    grandfathersName: '',
+    orderId: '',
+    status: overallStatusEnum.ACTIVE,
+};
+
 module.exports.POST_FINISHED_STEP_DATA = {
     status: stepStatusEnum.FINISHED,
     string: 'helloo',

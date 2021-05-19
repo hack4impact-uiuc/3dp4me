@@ -16,10 +16,9 @@ const {
     areObjectsDisjoint,
 } = require('../../utils/utils');
 const {
-    POST_FINISHED_STEP_DATA,
-    DEFAULT_STEP_DATA,
-    POST_IMMUTABLE_STEP_DATA,
     POST_PATIENT,
+    POST_PATIENT_MINIMAL_REQUEST,
+    DEFAULT_PATIENT_DATA,
 } = require('../../mock-data/patients-mock-data');
 const { models } = require('../../../models');
 
@@ -70,6 +69,37 @@ describe('POST /patient', () => {
         expect(patientData.dateCreated.getTime()).toBeGreaterThanOrEqual(
             startTimestamp,
         );
+
+        patientData = _.omit(patientData, ['_id', 'dateCreated', '__v']);
+        expectedResult = _.omit(expectedResult, ['_id', 'dateCreated']);
+        expectStrictEqualWithTimestampOrdering(expectedResult, patientData);
+    });
+
+    it('sets defaults on missing fields', async () => {
+        const startTimestamp = Date.now();
+        const body = POST_PATIENT_MINIMAL_REQUEST;
+        let expectedResult = {
+            ...body,
+            ...DEFAULT_PATIENT_DATA,
+            lastEdited: startTimestamp,
+            lastEditedBy: getCurrentAuthenticatedUserAttribute('name'),
+        };
+
+        // Send the request
+        const res = await withAuthentication(
+            request(server).post(`/api/patients/`).send(body),
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(201);
+        expect(resContent.success).toBe(true);
+
+        // Check that DB is correct
+        const patientId = resContent.result._id;
+        let patientData = await models.Patient.findById(patientId).lean();
+
+        expect(patientId).not.toBeNull();
 
         patientData = _.omit(patientData, ['_id', 'dateCreated', '__v']);
         expectedResult = _.omit(expectedResult, ['_id', 'dateCreated']);
