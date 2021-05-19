@@ -74,8 +74,8 @@ router.post(
             await new_patient.save();
         } catch (error) {
             console.log(error);
-            return res.status(401).json({
-                code: 401,
+            return res.status(400).json({
+                code: 400,
                 success: false,
                 message: 'Request is invalid or missing fields.',
             });
