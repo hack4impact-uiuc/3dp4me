@@ -1,5 +1,14 @@
-const { stepStatusEnum } = require('../../models');
+const { stepStatusEnum, overallStatusEnum } = require('../../models');
 const mongoose = require('mongoose');
+
+module.exports.POST_PATIENT = {
+    firstName: 'Matthew',
+    fathersName: 'Dan',
+    grandfathersName: 'Gene',
+    familyName: 'Walowski',
+    orderId: '1234',
+    status: overallStatusEnum.FEEDBACK,
+};
 
 module.exports.POST_FINISHED_STEP_DATA = {
     status: stepStatusEnum.FINISHED,
