@@ -19,6 +19,7 @@ const {
     POST_PATIENT,
     POST_PATIENT_MINIMAL_REQUEST,
     DEFAULT_PATIENT_DATA,
+    POST_IMMUTABLE_PATIENT_DATA,
 } = require('../../mock-data/patients-mock-data');
 const { models } = require('../../../models');
 
@@ -104,5 +105,31 @@ describe('POST /patient', () => {
         patientData = _.omit(patientData, ['_id', 'dateCreated', '__v']);
         expectedResult = _.omit(expectedResult, ['_id', 'dateCreated']);
         expectStrictEqualWithTimestampOrdering(expectedResult, patientData);
+    });
+
+    it('ignores setting of immutable fields', async () => {
+        const body = {
+            ...POST_PATIENT_MINIMAL_REQUEST,
+            ...POST_IMMUTABLE_PATIENT_DATA,
+        };
+
+        // Send the request
+        const res = await withAuthentication(
+            request(server).post(`/api/patients/`).send(body),
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(201);
+        expect(resContent.success).toBe(true);
+
+        // Check that DB is correct
+        const patientId = resContent.result._id;
+        let patientData = await models.Patient.findById(patientId).lean();
+
+        expect(patientData).not.toBeNull();
+        expect(
+            areObjectsDisjoint(patientData, POST_IMMUTABLE_PATIENT_DATA),
+        ).toBeTruthy();
     });
 });

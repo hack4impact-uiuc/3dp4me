@@ -15,6 +15,13 @@ module.exports.POST_PATIENT_MINIMAL_REQUEST = {
     familyName: 'family',
 };
 
+module.exports.POST_IMMUTABLE_PATIENT_DATA = {
+    _id: mongoose.Types.ObjectId(),
+    lastEdited: new Date('2000-12-02T01:17:55.181Z'),
+    lastEditedBy: 'Tickle Me Elmo',
+    __v: 1,
+};
+
 module.exports.DEFAULT_PATIENT_DATA = {
     fathersName: '',
     grandfathersName: '',
@@ -68,4 +75,5 @@ module.exports.POST_IMMUTABLE_STEP_DATA = {
     patientId: mongoose.Types.ObjectId(),
     lastEdited: new Date('2000-12-02T01:17:55.181Z'),
     lastEditedBy: 'Tickle Me Elmo',
+    __v: 1,
 };
