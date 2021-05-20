@@ -38,7 +38,7 @@ describe('POST /patient', () => {
         server = require('../../../app');
     });
 
-    it('returns 404 when given bad ID format', (done) => {
+    it('returns 500 when given bad ID format', (done) => {
         withAuthentication(
             request(server).post(`/api/patients/badid/${STEP_KEY}`),
         ).expect(500, done);
