@@ -6,6 +6,8 @@ const {
     MOCK_ROLE_ID,
 } = require('../mock-data/auth-mock-data');
 
+let currentAuthenticatedUser = null;
+
 /**
  * Creates a user data object with the specified roles. The returned object is similar to what the AWS
  * auth service will return in production.
@@ -14,6 +16,7 @@ const {
  */
 module.exports.createUserDataWithRoles = (...roles) => {
     const user = _.cloneDeep(MOCK_USER);
+    currentAuthenticatedUser = user;
     user.UserAttributes.push({
         Name: SECURITY_ROLE_ATTRIBUTE_NAME,
         Value: JSON.stringify(roles),
@@ -58,4 +61,14 @@ module.exports.withAuthentication = (request) => {
     return request.set({
         authorization: MOCK_AUTH_TOKEN,
     });
+};
+
+module.exports.getCurrentAuthenticatedUser = () => {
+    return currentAuthenticatedUser;
+};
+
+module.exports.getCurrentAuthenticatedUserAttribute = (attribName) => {
+    return currentAuthenticatedUser.UserAttributes.find(
+        (attrib) => attrib.Name === attribName,
+    ).Value;
 };

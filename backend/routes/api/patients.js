@@ -8,6 +8,10 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
+const {
+    removeRequestAttributes,
+    STEP_IMMUTABLE_ATTRIBUTES,
+} = require('../../middleware/requests');
 
 // GET: Returns all patients
 router.get(
@@ -275,6 +279,7 @@ router.post(
 // POST: Updates info for patient at stage
 router.post(
     '/:id/:stage',
+    removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
         const steps = await models.Step.find({ key: stage });
@@ -298,6 +303,7 @@ router.post(
         }
 
         const updatedStage = req.body;
+        let savedData = null;
         try {
             await session.withTransaction(async () => {
                 const collection = await mongoose.connection.db.collection(
@@ -306,10 +312,17 @@ router.post(
                 updatedStage.lastEdited = Date.now();
                 updatedStage.lastEditedBy = req.user.name;
                 delete updatedStage._id;
-                const stepData = await collection.findOneAndUpdate(
+                let model = mongoose.model(stage);
+                const updatedModel = new model(updatedStage);
+                savedData = await collection.findOneAndUpdate(
                     { patientId: id },
-                    { $set: updatedStage },
-                    { upsert: true, setDefaultsOnInsert: true, new: true },
+                    { $set: updatedModel },
+                    {
+                        upsert: true,
+                        setDefaultsOnInsert: true,
+                        new: true,
+                        returnOriginal: false,
+                    },
                 );
             });
         } catch (error) {
@@ -329,7 +342,7 @@ router.post(
                 res.status(200).json({
                     success: true,
                     message: 'Patient Stage Successfully Saved',
-                    result: patient,
+                    result: savedData.value,
                 });
             }
         });
