@@ -7,6 +7,8 @@ const {
     POST_STEP_WITHOUT_OPTIONS,
     POST_STEP_WITH_EMPTY_OPTIONS,
     POST_STEP_WITH_BAD_FIELD,
+    POST_STEP_WITH_DUPLICATE_KEY,
+    POST_STEP_WITH_DUPLICATE_STEP_NUMBER,
 } = require('../../mock-data/steps-mock-data');
 const {
     initAuthMocker,
@@ -64,8 +66,13 @@ describe('POST /steps', () => {
         await postAndExpect(POST_STEP_WITH_BAD_FIELD, 500);
     });
 
-    // TODO: Return 400 if given bad fieldType
+    it('returns 500 if given duplicate stepKey', async () => {
+        await postAndExpect(POST_STEP_WITH_DUPLICATE_KEY, 500);
+    });
+
+    it('returns 500 if given duplicate stepNumber', async () => {
+        await postAndExpect(POST_STEP_WITH_DUPLICATE_STEP_NUMBER, 500);
+    });
+
     // TODO: Return 200 and add step/collection if everything good
-    // TODO: Return 500 if we give a duplicate stepKey
-    // TODO: Return 500 if we give a duplicate stepNumber
 });
