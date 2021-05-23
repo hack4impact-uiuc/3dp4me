@@ -1,4 +1,5 @@
 const db = require('../../utils/db');
+const mongoose = require('mongoose');
 const _ = require('lodash');
 const omitDeep = require('omit-deep-lodash');
 const request = require('supertest');
@@ -88,12 +89,13 @@ describe('POST /steps', () => {
         expect(resContent.success).toBe(true);
 
         // TODO: CHeck response??
-
         // Check that DB is correct
         let step = await models.Step.findOne({ key: body.key }).lean();
         expect(step).not.toBeNull();
         step = omitDeep(step, '_id', '__v');
         expect(step).toStrictEqual(body);
+
+        expect(mongoose.connection.models[body.key]).not.toBe(null);
     });
     // TODO: Return 200 and add step/collection if everything good
     // TODO: Test setting immutable fields
