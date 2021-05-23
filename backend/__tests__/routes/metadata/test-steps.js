@@ -83,20 +83,16 @@ describe('POST /steps', () => {
             request(server).post(`/api/metadata/steps`).send(body),
         );
 
+        // Check response
         expect(res.status).toBe(200);
-
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(true);
 
-        // TODO: CHeck response??
         // Check that DB is correct
         let step = await models.Step.findOne({ key: body.key }).lean();
         expect(step).not.toBeNull();
         step = omitDeep(step, '_id', '__v');
         expect(step).toStrictEqual(body);
-
         expect(mongoose.connection.models[body.key]).not.toBe(null);
     });
-    // TODO: Return 200 and add step/collection if everything good
-    // TODO: Test setting immutable fields
 });
