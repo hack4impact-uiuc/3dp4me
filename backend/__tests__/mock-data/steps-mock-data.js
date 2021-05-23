@@ -67,6 +67,9 @@ module.exports.POST_STEP_WITH_OPTIONS = {
         EN: 'Medical Information',
         AR: 'المعلومات الطبية',
     },
+    readableGroups: [],
+    defaultToListView: true,
+    writableGroups: [],
     stepNumber: 5,
     fields: [
         {
@@ -76,8 +79,11 @@ module.exports.POST_STEP_WITH_OPTIONS = {
                 EN: 'Demographic Info',
                 AR: 'المعلومات الديموغرافية',
             },
+            options: [],
             fieldNumber: 0,
             isVisibleOnDashboard: false,
+            readableGroups: [],
+            writableGroups: [],
         },
         {
             key: 'gender',
@@ -88,9 +94,10 @@ module.exports.POST_STEP_WITH_OPTIONS = {
                 EN: 'Gender',
                 AR: 'جنس تذكير أو تأنيث',
             },
+            readableGroups: [],
+            writableGroups: [],
             options: [
                 {
-                    ID: '41315c06-81b3-46ef-862b-6ad69e5757fb',
                     Index: 0,
                     IsHidden: false,
                     Question: {
@@ -99,7 +106,6 @@ module.exports.POST_STEP_WITH_OPTIONS = {
                     },
                 },
                 {
-                    ID: '1644ef0d-0004-4c85-a9aa-b2ea6206df70',
                     Index: 1,
                     IsHidden: false,
                     Question: {
