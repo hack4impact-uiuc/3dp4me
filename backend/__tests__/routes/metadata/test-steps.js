@@ -5,6 +5,7 @@ const AWS = require('aws-sdk-mock');
 var server = require('../../../app');
 const {
     POST_STEP_WITHOUT_OPTIONS,
+    POST_STEP_WITH_EMPTY_OPTIONS,
 } = require('../../mock-data/steps-mock-data');
 const {
     initAuthMocker,
@@ -38,8 +39,7 @@ describe('POST /steps', () => {
         );
     });
 
-    it('returns 400 if fieldType is readio and no options provided', async () => {
-        const body = POST_STEP_WITHOUT_OPTIONS;
+    const postAndExpect400 = async (body) => {
         const res = await withAuthentication(
             request(server).post(`/api/metadata/steps`).send(body),
         );
@@ -48,9 +48,17 @@ describe('POST /steps', () => {
 
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(false);
+    };
+
+    it('returns 400 if fieldType is readio and no options provided', async () => {
+        await postAndExpect400(POST_STEP_WITHOUT_OPTIONS);
     });
 
-    // TODO: Return 400 if fieldType radio and options are empty (DB shouldn't be modified)
+    it('returns 400 if fieldType is readio and no options provided', async () => {
+        await postAndExpect400(POST_STEP_WITH_EMPTY_OPTIONS);
+    });
+
+    // TODO: Check db??
     // TODO: Return 400 if given bad fieldType
     // TODO: Return 200 and add step/collection if everything good
     // TODO: Return 500 if we give a duplicate stepKey
