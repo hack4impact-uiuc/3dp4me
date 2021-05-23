@@ -6,6 +6,7 @@ var server = require('../../../app');
 const {
     POST_STEP_WITHOUT_OPTIONS,
     POST_STEP_WITH_EMPTY_OPTIONS,
+    POST_STEP_WITH_BAD_FIELD,
 } = require('../../mock-data/steps-mock-data');
 const {
     initAuthMocker,
@@ -39,26 +40,30 @@ describe('POST /steps', () => {
         );
     });
 
-    const postAndExpect400 = async (body) => {
+    const postAndExpect = async (body, status) => {
         const res = await withAuthentication(
             request(server).post(`/api/metadata/steps`).send(body),
         );
 
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(status);
 
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(false);
     };
 
-    it('returns 400 if fieldType is readio and no options provided', async () => {
-        await postAndExpect400(POST_STEP_WITHOUT_OPTIONS);
-    });
-
-    it('returns 400 if fieldType is readio and no options provided', async () => {
-        await postAndExpect400(POST_STEP_WITH_EMPTY_OPTIONS);
-    });
-
     // TODO: Check db??
+    it('returns 400 if fieldType is readio and no options provided', async () => {
+        await postAndExpect(POST_STEP_WITHOUT_OPTIONS, 400);
+    });
+
+    it('returns 400 if fieldType is readio and options empty', async () => {
+        await postAndExpect(POST_STEP_WITH_EMPTY_OPTIONS, 400);
+    });
+
+    it('returns 500 if given bad fieldType', async () => {
+        await postAndExpect(POST_STEP_WITH_BAD_FIELD, 500);
+    });
+
     // TODO: Return 400 if given bad fieldType
     // TODO: Return 200 and add step/collection if everything good
     // TODO: Return 500 if we give a duplicate stepKey

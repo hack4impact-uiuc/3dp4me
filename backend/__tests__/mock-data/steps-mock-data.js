@@ -111,3 +111,24 @@ module.exports.POST_STEP_WITH_OPTIONS = {
         },
     ],
 };
+
+module.exports.POST_STEP_WITH_BAD_FIELD = {
+    key: 'newStep',
+    displayName: {
+        EN: 'Medical Information',
+        AR: 'المعلومات الطبية',
+    },
+    stepNumber: 0,
+    fields: [
+        {
+            key: 'demographicDivider',
+            fieldType: 'badFieldType',
+            displayName: {
+                EN: 'Demographic Info',
+                AR: 'المعلومات الديموغرافية',
+            },
+            fieldNumber: 0,
+            isVisibleOnDashboard: false,
+        },
+    ],
+};
