@@ -124,7 +124,6 @@ router.get(
 router.post(
     '/steps',
     errorWrap(async (req, res) => {
-        console.log('HEREe');
         const steps = req.body;
         const new_step_metadata = new models.Step(steps);
         const session = await mongoose.startSession();

@@ -4,6 +4,9 @@ const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 var server = require('../../../app');
 const {
+    POST_STEP_WITHOUT_OPTIONS,
+} = require('../../mock-data/steps-mock-data');
+const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
@@ -35,16 +38,18 @@ describe('POST /steps', () => {
         );
     });
 
-    // TODO: Return 400 if fieldType radio and options are missing (DB shoudnt be modified)
-    // it('returns 400 if fieldType is readio and no options provided', () => {
-    //     const body =
+    it('returns 400 if fieldType is readio and no options provided', async () => {
+        const body = POST_STEP_WITHOUT_OPTIONS;
+        const res = await withAuthentication(
+            request(server).post(`/api/metadata/steps`).send(body),
+        );
 
-    //     const res = await withAuthentication(
-    //         request(server)
-    //             .post(`/api/steps`)
-    //             .send(body),
-    //     );
-    // })
+        expect(res.status).toBe(400);
+
+        const resContent = JSON.parse(res.text);
+        expect(resContent.success).toBe(false);
+    });
+
     // TODO: Return 400 if fieldType radio and options are empty (DB shouldn't be modified)
     // TODO: Return 400 if given bad fieldType
     // TODO: Return 200 and add step/collection if everything good
