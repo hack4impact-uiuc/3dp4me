@@ -51,7 +51,6 @@ describe('POST /steps', () => {
         );
 
         expect(res.status).toBe(status);
-
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(false);
     };
