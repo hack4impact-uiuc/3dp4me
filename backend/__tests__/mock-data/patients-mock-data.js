@@ -1,5 +1,33 @@
-const { stepStatusEnum } = require('../../models');
+const { stepStatusEnum, overallStatusEnum } = require('../../models');
 const mongoose = require('mongoose');
+
+module.exports.POST_PATIENT = {
+    firstName: 'Matthew',
+    fathersName: 'Dan',
+    grandfathersName: 'Gene',
+    familyName: 'Walowski',
+    orderId: '1234',
+    status: overallStatusEnum.FEEDBACK,
+};
+
+module.exports.POST_PATIENT_MINIMAL_REQUEST = {
+    firstName: 'first',
+    familyName: 'family',
+};
+
+module.exports.POST_IMMUTABLE_PATIENT_DATA = {
+    _id: mongoose.Types.ObjectId(),
+    lastEdited: new Date('2000-12-02T01:17:55.181Z'),
+    lastEditedBy: 'Tickle Me Elmo',
+    __v: 1,
+};
+
+module.exports.DEFAULT_PATIENT_DATA = {
+    fathersName: '',
+    grandfathersName: '',
+    orderId: '',
+    status: overallStatusEnum.ACTIVE,
+};
 
 module.exports.POST_FINISHED_STEP_DATA = {
     status: stepStatusEnum.FINISHED,
@@ -47,4 +75,5 @@ module.exports.POST_IMMUTABLE_STEP_DATA = {
     patientId: mongoose.Types.ObjectId(),
     lastEdited: new Date('2000-12-02T01:17:55.181Z'),
     lastEditedBy: 'Tickle Me Elmo',
+    __v: 1,
 };

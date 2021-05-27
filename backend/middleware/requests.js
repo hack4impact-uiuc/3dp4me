@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const GLOBALLY_IMMUTABLE_ATTRIBUTES = ['_id'];
+const GLOBALLY_IMMUTABLE_ATTRIBUTES = ['_id', '__v'];
 module.exports.STEP_IMMUTABLE_ATTRIBUTES = GLOBALLY_IMMUTABLE_ATTRIBUTES.concat(
     'lastEdited',
     'lastEditedBy',
