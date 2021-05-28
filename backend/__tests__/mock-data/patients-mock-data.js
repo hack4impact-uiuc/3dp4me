@@ -182,3 +182,23 @@ module.exports.GET_PATIENT_WITH_ALL_STEP_DATA = {
         lastEditedBy: 'Berenice'
     },
 };
+
+module.exports.PUT_BAD_PATIENT_DATA = {
+    firstName: 'Mathias',
+    fathersName: 'Daniel',
+    grandfathersName: 'Gene',
+    familyName: 'Wang',
+    orderId: '123456',
+    status: overallStatusEnum.FEEDBACK,
+    dateCreated: Date.now,
+    _id: '0944e084f4c0d4330cc258b'
+}
+
+module.exports.PUT_PATIENT_DATA = {
+    firstName: 'Mathias',
+    fathersName: 'Daniel',
+    grandfathersName: 'Gene',
+    familyName: 'Wang',
+    orderId: '123456',
+    status: overallStatusEnum.FEEDBACK,
+}

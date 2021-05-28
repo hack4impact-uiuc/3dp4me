@@ -19,7 +19,40 @@ const {
     GET_PATIENT_WITH_ALL_STEP_DATA,
     GET_PATIENT_WITH_SOME_STEP_DATA,
     GET_PATIENT_WITHOUT_STEP_DATA,
+    PUT_PATIENT_DATA,
+    PUT_BAD_PATIENT_DATA,
 } = require('../../mock-data/patients-mock-data');
+
+describe('PUT /patients/:id', () => {
+    afterAll(async () => await db.closeDatabase());
+    afterEach(async () => await db.resetDatabase());
+    beforeAll(async () => {
+        await db.connect();
+        initAuthMocker(AWS);
+        setCurrentUser(AWS);
+    });
+
+    beforeEach(() => {
+        server = require('../../../app');
+    });
+
+    it('returns 404 when editing patient that does not exist', (done) => {
+        const randID = '6092a9ae9e3769ae75abe0a5';
+        withAuthentication(request(server).put(`/api/patients/${randID}`, PUT_PATIENT_DATA)).expect(
+            404,
+            done,
+        );
+    });
+    
+    // it('returns 400 when editing non-editable fields', (done) => {
+    //     const patientID = '60944e084f4c0d4330cc258b';
+    //     withAuthentication(request(server).put(`/api/patients/${patientID}`, PUT_BAD_PATIENT_DATA)).expect(
+    //         400,
+    //         done,
+    //     );
+    // });
+
+});
 
 describe('GET /patient/:id', () => {
     afterAll(async () => await db.closeDatabase());
