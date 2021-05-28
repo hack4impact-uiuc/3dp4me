@@ -24,7 +24,6 @@ const {
 } = require('../../mock-data/patients-mock-data');
 
 describe('PUT /patients/:id', () => {
-    afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
     beforeAll(async () => {
         await db.connect();
@@ -44,13 +43,13 @@ describe('PUT /patients/:id', () => {
         );
     });
     
-    // it('returns 400 when editing non-editable fields', (done) => {
-    //     const patientID = '60944e084f4c0d4330cc258b';
-    //     withAuthentication(request(server).put(`/api/patients/${patientID}`, PUT_BAD_PATIENT_DATA)).expect(
-    //         400,
-    //         done,
-    //     );
-    // });
+    it('returns 400 when editing non-editable fields', (done) => {
+        const patientID = '60944e084f4c0d4330cc258b';
+        withAuthentication(request(server).put(`/api/patients/${patientID}`, PUT_BAD_PATIENT_DATA)).expect(
+            400,
+            done,
+        );
+    });
 
 });
 
