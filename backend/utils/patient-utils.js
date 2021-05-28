@@ -1,4 +1,4 @@
-const { models } = require('../../models');
+const { models } = require('../models');
 
 const getStepKeys = async () => {
     const steps = await models.Step.find({});
