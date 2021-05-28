@@ -1,4 +1,15 @@
-[
+[   
+    {
+        "_id": "60944e084f4c0d4330cc2723",
+        "status": "Partial",
+        "numWorkingPeople": 2,
+        "numMilitaryPolice": 3,
+        "numDisabledPeople": 0,
+        "typeOfInsurance": "6070816ada92745444f64c63",
+        "patientId": "60944e084f4c0d4330cc258b",
+        "lastEdited": "2020-07-27T06:48:04.536Z",
+        "lastEditedBy": "Wilber"
+    },
     {
         "_id": "60944e084f4c0d4330cc2603",
         "status": "Partial",
