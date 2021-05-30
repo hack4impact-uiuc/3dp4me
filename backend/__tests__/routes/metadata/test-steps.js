@@ -38,14 +38,15 @@ describe('POST /steps', () => {
         server = require('../../../app');
     });
 
-    it('returns 500 if missing required fields', (done) => {
+    it('returns 400 if missing required fields', (done) => {
         withAuthentication(request(server).post(`/api/metadata/steps`)).expect(
-            500,
+            400,
             done,
         );
     });
 
     const postAndExpect = async (body, status) => {
+        const initDbStats = await mongoose.connection.db.stats();
         const res = await withAuthentication(
             request(server).post(`/api/metadata/steps`).send(body),
         );
@@ -53,27 +54,29 @@ describe('POST /steps', () => {
         expect(res.status).toBe(status);
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(false);
+
+        const finalDbStats = await mongoose.connection.db.stats();
+        expect(finalDbStats).toStrictEqual(initDbStats);
     };
 
-    // TODO: Check db??
     it('returns 400 if fieldType is readio and no options provided', async () => {
         await postAndExpect(POST_STEP_WITHOUT_OPTIONS, 400);
     });
 
-    it('returns 400 if fieldType is readio and options empty', async () => {
+    it('returns 400 if fieldType is radio and options empty', async () => {
         await postAndExpect(POST_STEP_WITH_EMPTY_OPTIONS, 400);
     });
 
-    it('returns 500 if given bad fieldType', async () => {
-        await postAndExpect(POST_STEP_WITH_BAD_FIELD, 500);
+    it('returns 400 if given bad fieldType', async () => {
+        await postAndExpect(POST_STEP_WITH_BAD_FIELD, 400);
     });
 
-    it('returns 500 if given duplicate stepKey', async () => {
-        await postAndExpect(POST_STEP_WITH_DUPLICATE_KEY, 500);
+    it('returns 400 if given duplicate stepKey', async () => {
+        await postAndExpect(POST_STEP_WITH_DUPLICATE_KEY, 400);
     });
 
-    it('returns 500 if given duplicate stepNumber', async () => {
-        await postAndExpect(POST_STEP_WITH_DUPLICATE_STEP_NUMBER, 500);
+    it('returns 400 if given duplicate stepNumber', async () => {
+        await postAndExpect(POST_STEP_WITH_DUPLICATE_STEP_NUMBER, 400);
     });
 
     it('successfully registers a new step when given good request', async () => {

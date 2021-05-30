@@ -126,39 +126,33 @@ router.post(
     errorWrap(async (req, res) => {
         const steps = req.body;
         const new_step_metadata = new models.Step(steps);
-        const session = await mongoose.startSession();
 
         try {
-            await session.withTransaction(async () => {
+            await mongoose.connection.transaction(async (session) => {
                 new_step_metadata.fields.forEach((field) => {
                     if (field.fieldType == fieldEnum.RADIO_BUTTON) {
-                        if (field.options == null || field.options.length < 1) {
-                            return res.status(400).json({
-                                code: 400,
-                                success: false,
-                                message: 'Radiobuttons require options.',
-                            });
-                        }
+                        if (field.options == null || field.options.length < 1)
+                            throw new Error('Radiobuttons require options');
                     }
                 });
-                await new_step_metadata.save();
+
+                await new_step_metadata.save({ session });
                 generateSchemaFromMetadata(steps);
             });
 
-            res.status(200).json({
+            await res.status(200).json({
                 code: 200,
                 success: true,
                 message: 'Step successfully created.',
                 data: new_step_metadata,
             });
         } catch (error) {
-            res.status(500).json({
-                code: 500,
+            console.error(error);
+            res.status(400).json({
+                code: 400,
                 success: false,
                 message: `Step could not be added: ${error}`,
             });
-        } finally {
-            session.endSession();
         }
     }),
 );

@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
+const { MongoMemoryReplSet } = require('mongodb-memory-server');
 const patientData = require('../../../scripts/data/patients.json');
 const roleData = require('../../../scripts/data/roles.json');
 const stepData = require('../../../scripts/data/steps.json');
@@ -10,14 +10,23 @@ const exampleData = require('../../../scripts/data/example.json');
 const { initModels } = require('../../utils/init-models');
 const { models } = require('../../models');
 
-const mongod = new MongoMemoryServer();
+//const mongod = new MongoMemoryServer();
+const replSet = new MongoMemoryReplSet({
+    replSet: { storageEngine: 'wiredTiger' },
+});
 
 /**
  * Connect to the in-memory database.
  * Should only be called once per suite
  */
 module.exports.connect = async () => {
-    const uri = await mongod.getUri();
+    // replSet = new MongoMemoryReplSet({
+    //     replSet: { storageEngine: 'wiredTiger' },
+    // });
+
+    await replSet.waitUntilRunning();
+    const uri = await replSet.getUri();
+
     const mongooseOpts = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -32,8 +41,8 @@ module.exports.connect = async () => {
  */
 module.exports.closeDatabase = async () => {
     await mongoose.connection.dropDatabase();
-    await mongoose.connection.close();
-    await mongod.stop();
+    await mongoose.disconnect();
+    await replSet.stop();
 };
 
 /**
