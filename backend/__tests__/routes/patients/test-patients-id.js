@@ -24,6 +24,7 @@ const {
 } = require('../../mock-data/patients-mock-data');
 
 describe('PUT /patients/:id', () => {
+    afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
 
     // Something weird happens here if I try to close the database after each
@@ -39,27 +40,48 @@ describe('PUT /patients/:id', () => {
 
     it('returns 404 when editing patient that does not exist', (done) => {
         const randID = '6092a9ae9e3769ae75abe0a5';
-        withAuthentication(request(server).put(`/api/patients/${randID}`, PUT_PATIENT_DATA)).expect(
-            404,
-            done,
-        );
+        withAuthentication(
+            request(server).put(`/api/patients/${randID}`, PUT_PATIENT_DATA),
+        ).expect(404, done);
     });
-    
+
     it('does not edit non-editable fields when editing non-editable fields', async () => {
         const patientID = '60944e084f4c0d4330cc258b';
-        const res = await withAuthentication(request(server).put(`/api/patients/${patientID}`, PUT_PATIENT_DATA));
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/patients/${patientID}`)
+                .send(PUT_BAD_PATIENT_DATA),
+        );
+        const resContent = JSON.parse(res.text);
+
+        // Check statuses are correct
+        expect(res.status).toBe(500);
+        expect(resContent.success).toBe(false);
+
+        let updatedData = await mongoose.connection
+            .collection('patients')
+            .findOne({ _id: patientID });
+        console.log(updatedData);
+    });
+
+    it('properly changes patient fields', async () => {
+        const patientID = '60944e084f4c0d4330cc258b';
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/patients/${patientID}`)
+                .send(PUT_PATIENT_DATA),
+        );
         const resContent = JSON.parse(res.text);
 
         // Check statuses are correct
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
 
-        console.log(resContent.result);
-
-        let updatedData = await mongoose.connection.collection('patients').findOne({  });
-        console.log(updatedData)
+        let updatedData = await mongoose.connection
+            .collection('patients')
+            .findOne({ _id: patientID });
+        console.log(updatedData);
     });
-
 });
 
 describe('GET /patient/:id', () => {
