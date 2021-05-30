@@ -25,6 +25,8 @@ const {
 
 describe('PUT /patients/:id', () => {
     afterEach(async () => await db.resetDatabase());
+
+    // Something weird happens here if I try to close the database after each
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
@@ -43,12 +45,19 @@ describe('PUT /patients/:id', () => {
         );
     });
     
-    it('returns 400 when editing non-editable fields', (done) => {
+    it('does not edit non-editable fields when editing non-editable fields', async () => {
         const patientID = '60944e084f4c0d4330cc258b';
-        withAuthentication(request(server).put(`/api/patients/${patientID}`, PUT_BAD_PATIENT_DATA)).expect(
-            400,
-            done,
-        );
+        const res = await withAuthentication(request(server).put(`/api/patients/${patientID}`, PUT_PATIENT_DATA));
+        const resContent = JSON.parse(res.text);
+
+        // Check statuses are correct
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
+
+        console.log(resContent.result);
+
+        let updatedData = await mongoose.connection.collection('patients').findOne({  });
+        console.log(updatedData)
     });
 
 });

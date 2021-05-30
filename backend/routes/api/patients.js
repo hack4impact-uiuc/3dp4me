@@ -112,7 +112,7 @@ router.put(
             code: 200,
             success: true,
             message: 'Patient successfully edited.',
-            data: patient,
+            result: patient,
         });
     }),
 );
