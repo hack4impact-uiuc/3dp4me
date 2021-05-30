@@ -147,7 +147,6 @@ router.post(
                 data: new_step_metadata,
             });
         } catch (error) {
-            console.error(error);
             res.status(400).json({
                 code: 400,
                 success: false,
