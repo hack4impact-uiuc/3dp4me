@@ -34,7 +34,31 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         server = require('../../../app');
     });
 
-    // TODO: Bad patientId
+    const STEP_KEY = 'example';
+    const FIELD_KEY = 'file';
+    const FILE_NAME = 'newfile.txt';
+
+    const expectStatusWithDBUnchanged = async (requestURL, status) => {
+        const initDbStats = await mongoose.connection.db.stats();
+        const res = await withAuthentication(request(server).post(requestURL));
+
+        expect(res.status).toBe(status);
+        const resContent = JSON.parse(res.text);
+        expect(resContent.success).toBe(false);
+
+        const finalDbStats = await mongoose.connection.db.stats();
+        expect(finalDbStats.dataSize).toBe(initDbStats.dataSize);
+    };
+
+    it('returns 404 when given bad patientId', async () => {
+        const BAD_ID = '60944e084f4c0d4300cc25f1';
+        await expectStatusWithDBUnchanged(
+            `/api/patients/${BAD_ID}/files/${STEP_KEY}/${FIELD_KEY}/${FILE_NAME}`,
+            404,
+        );
+    });
+
+    // TODO: Upload for non-file field??
     // TODO: Bad stepKey
     // TODO: Bad fieldKey
     // TODO: Bad fileName
