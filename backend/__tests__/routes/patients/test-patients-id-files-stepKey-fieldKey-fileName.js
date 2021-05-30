@@ -34,6 +34,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         server = require('../../../app');
     });
 
+    const PATIENT_ID_WITH_DATA = '60944e084f4c0d4330cc25ff';
     const STEP_KEY = 'example';
     const FIELD_KEY = 'file';
     const FILE_NAME = 'newfile.txt';
@@ -58,6 +59,13 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         );
     });
 
+    it('returns 404 when given bad stepKey', async () => {
+        const BAD_STEP = 'nonExistent';
+        await expectStatusWithDBUnchanged(
+            `/api/patients/${PATIENT_ID_WITH_DATA}/files/${BAD_STEP}/${FIELD_KEY}/${FILE_NAME}`,
+            404,
+        );
+    });
     // TODO: Upload for non-file field??
     // TODO: Bad stepKey
     // TODO: Bad fieldKey
