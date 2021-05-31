@@ -204,6 +204,7 @@ router.delete(
 router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
+        // TODO during refactoring: We upload file name in form data, is this even needed???
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
         if (patient == null) {
@@ -225,8 +226,6 @@ router.post(
         }
 
         const collection = await mongoose.connection.db.collection(stepKey);
-        console.log(collection);
-
         let stepData = (await collection.findOne({ patientId: id })) || {};
 
         // Set ID in case patient does not have any information for this step yet
