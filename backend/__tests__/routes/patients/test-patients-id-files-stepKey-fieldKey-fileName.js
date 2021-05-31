@@ -146,8 +146,29 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         );
     });
 
-    // TODO: Patient with data for this step
+    it('uploads file for patient with step data', async () => {
+        const startTimestamp = Date.now();
+        const initialPatientData = await mongoose.connection.db
+            .collection(STEP_KEY)
+            .findOne({ patientId: PATIENT_ID_WITH_DATA });
+        const initNumFiles = initialPatientData[FIELD_KEY].length;
 
-    // TODO: Mock S3 putObject
-    // TODO: Check DB
+        await testSuccessfulUploadOnPatient(PATIENT_ID_WITH_DATA);
+        const finalPatientData = await mongoose.connection.db
+            .collection(STEP_KEY)
+            .findOne({ patientId: PATIENT_ID_WITH_DATA });
+        expect(finalPatientData[FIELD_KEY].length).toBe(initNumFiles + 1);
+        expect(finalPatientData[FIELD_KEY][initNumFiles].filename).toBe(
+            FILE_NAME,
+        );
+        expect(finalPatientData[FIELD_KEY][initNumFiles].uploadedBy).toBe(
+            getCurrentAuthenticatedUserAttribute('name'),
+        );
+        expect(
+            finalPatientData[FIELD_KEY][initNumFiles].uploadDate,
+        ).toBeGreaterThanOrEqual(startTimestamp);
+        expect(
+            finalPatientData[FIELD_KEY][initNumFiles].uploadDate,
+        ).toBeLessThanOrEqual(Date.now());
+    });
 });
