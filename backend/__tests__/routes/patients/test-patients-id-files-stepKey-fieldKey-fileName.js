@@ -3,6 +3,7 @@ const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
+const fs = require('fs');
 var server = require('../../../app');
 const {
     initAuthMocker,
@@ -34,14 +35,20 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         server = require('../../../app');
     });
 
-    const PATIENT_ID_WITH_DATA = '60944e084f4c0d4330cc25ff';
+    const PATIENT_ID_WITH_DATA = '60944e084f4c0d4330cc258c';
     const STEP_KEY = 'example';
     const FIELD_KEY = 'file';
     const FILE_NAME = 'newfile.txt';
+    const TEST_FILE = `${__dirname}../../../mock-data/test-file.jpg`;
 
     const expectStatusWithDBUnchanged = async (requestURL, status) => {
         const initDbStats = await mongoose.connection.db.stats();
-        const res = await withAuthentication(request(server).post(requestURL));
+        const res = await withAuthentication(
+            request(server)
+                .post(requestURL)
+                .field('uploadedFileName', FILE_NAME)
+                .attach('uploadedFile', TEST_FILE),
+        );
 
         expect(res.status).toBe(status);
         const resContent = JSON.parse(res.text);
@@ -66,8 +73,16 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
             404,
         );
     });
+
+    it('returns 404 when given bad fieldKey', async () => {
+        // TODO: WHY IS THIS PASSING???
+        const BAD_FIELD = 'nonExistent';
+        await expectStatusWithDBUnchanged(
+            `/api/patients/${PATIENT_ID_WITH_DATA}/files/${STEP_KEY}/${BAD_FIELD}/${FILE_NAME}`,
+            404,
+        );
+    });
     // TODO: Upload for non-file field??
-    // TODO: Bad stepKey
     // TODO: Bad fieldKey
     // TODO: Bad fileName
     // TODO: Patient with no data for this step

@@ -216,6 +216,7 @@ router.post(
         const collectionInfo = await mongoose.connection.db
             .listCollections({ name: stepKey })
             .toArray();
+
         if (collectionInfo.length == 0) {
             return res.status(404).json({
                 success: false,
@@ -224,6 +225,8 @@ router.post(
         }
 
         const collection = await mongoose.connection.db.collection(stepKey);
+        console.log(collection);
+
         let stepData = (await collection.findOne({ patientId: id })) || {};
 
         // Set ID in case patient does not have any information for this step yet
