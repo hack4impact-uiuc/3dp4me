@@ -8,7 +8,7 @@ var AWS = require('aws-sdk');
  * @param credentials The temporary credentials of the end user. Frontend should provide this.
  * @param onUploaded Callback after finished uploading. Params are (err, data).
  */
-const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
+const uploadFile = async (content, remoteFileName, credentials) => {
     let params = {
         Body: content,
         Bucket: S3_INFO.S3_BUCKET_NAME,
@@ -16,7 +16,7 @@ const uploadFile = (content, remoteFileName, credentials, onUploaded) => {
     };
 
     let s3 = getS3(credentials);
-    s3.putObject(params, onUploaded);
+    await s3.putObject(params).promise();
 };
 
 /**

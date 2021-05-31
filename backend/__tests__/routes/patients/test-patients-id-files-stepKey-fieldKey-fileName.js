@@ -10,6 +10,8 @@ const {
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
+    initS3Mocker,
+    getLastUploadedFileParams,
 } = require('../../utils/auth');
 const omitDeep = require('omit-deep-lodash');
 const {
@@ -21,6 +23,7 @@ const {
     DEFAULT_STEP_DATA,
     POST_IMMUTABLE_STEP_DATA,
 } = require('../../mock-data/patients-mock-data');
+const { S3_BUCKET_NAME } = require('../../../utils/aws/aws-exports');
 
 describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
     afterAll(async () => await db.closeDatabase());
@@ -28,6 +31,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
+        initS3Mocker(AWS);
         setCurrentUser(AWS);
     });
 
@@ -94,6 +98,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(true);
 
+        // Check response
         expect(resContent.data.name).toBe(FILE_NAME);
         expect(resContent.data.uploadDate).toBeGreaterThanOrEqual(
             startTimestamp,
@@ -105,6 +110,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         expect(resContent.data.mimetype).toBe('image/jpeg');
         expect(resContent.data.size).toBe(4855);
 
+        // Check DB
         const patientData = await mongoose.connection.db
             .collection(STEP_KEY)
             .findOne({ patientId: patientId });
@@ -113,9 +119,14 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         expect(patientData.lastEditedBy).toBe(
             getCurrentAuthenticatedUserAttribute('name'),
         );
+
+        // Check that AWS was called correctly
+        const params = getLastUploadedFileParams();
+        expect(params.Body.length).toBe(4855);
+        expect(params.Bucket).toBe(S3_BUCKET_NAME);
+        expect(params.Key).toBe(`${patientId}/${STEP_KEY}/file/${FILE_NAME}`);
     };
 
-    // TODO: Patient with no data for this step
     it('uploads file for patient with no step data', async () => {
         const startTimestamp = Date.now();
         await testSuccessfulUploadOnPatient(PATIENT_ID_WITHOUT_DATA);
