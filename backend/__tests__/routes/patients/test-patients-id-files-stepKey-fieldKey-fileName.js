@@ -13,16 +13,6 @@ const {
     initS3Mocker,
     getLastUploadedFileParams,
 } = require('../../utils/auth');
-const omitDeep = require('omit-deep-lodash');
-const {
-    expectStrictEqualWithTimestampOrdering,
-    areObjectsDisjoint,
-} = require('../../utils/utils');
-const {
-    POST_FINISHED_STEP_DATA,
-    DEFAULT_STEP_DATA,
-    POST_IMMUTABLE_STEP_DATA,
-} = require('../../mock-data/patients-mock-data');
 const { S3_BUCKET_NAME } = require('../../../utils/aws/aws-exports');
 
 describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
@@ -78,10 +68,6 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
             404,
         );
     });
-
-    // TODO: Upload for non-file field??
-    // TODO: Bad fieldKey
-    // TODO: Bad fileName
 
     const testSuccessfulUploadOnPatient = async (patientId) => {
         const startTimestamp = Date.now();
