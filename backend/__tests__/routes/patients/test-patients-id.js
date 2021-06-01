@@ -25,7 +25,7 @@ const {
 } = require('../../mock-data/patients-mock-data');
 
 describe('PUT /patients/:id', () => {
-    const STEP_KEY = 'Patient'
+    const STEP_KEY = 'Patient';
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
 
@@ -57,12 +57,14 @@ describe('PUT /patients/:id', () => {
         // Check statuses are correct
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        let collections = await mongoose.connection.db.listCollections().toArray();
+        let collections = await mongoose.connection.db
+            .listCollections()
+            .toArray();
 
         // Query for ids must be done as an ObjectId
         let updatedData = await mongoose.connection
             .collection(STEP_KEY)
-            .findOne({_id: mongoose.Types.ObjectId(patientID)});
+            .findOne({ _id: mongoose.Types.ObjectId(patientID) });
 
         expectStrictEqualWithTimestampOrdering(EXPECTED_PUT_DATA, updatedData);
     });
@@ -79,10 +81,10 @@ describe('PUT /patients/:id', () => {
         // Check statuses are correct
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        
+
         let updatedData = await mongoose.connection
             .collection(STEP_KEY)
-            .findOne({_id: mongoose.Types.ObjectId(patientID)});
+            .findOne({ _id: mongoose.Types.ObjectId(patientID) });
         expectStrictEqualWithTimestampOrdering(EXPECTED_PUT_DATA, updatedData);
     });
 });
