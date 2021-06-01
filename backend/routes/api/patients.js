@@ -92,6 +92,7 @@ router.post(
 
 router.put(
     '/:id',
+    removeRequestAttributes(['_id','__v', 'dateCreated']),
     errorWrap(async (req, res) => {
         const { id } = req.params;
         const patient = await models.Patient.findOneAndUpdate(

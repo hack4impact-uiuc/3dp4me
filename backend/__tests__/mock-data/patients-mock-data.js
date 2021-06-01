@@ -204,3 +204,17 @@ module.exports.PUT_PATIENT_DATA = {
     orderId: '123456',
     status: overallStatusEnum.FEEDBACK,
 };
+
+module.exports.EXPECTED_PUT_DATA = {
+    fathersName: 'Daniel',
+    grandfathersName: 'Gene',
+    orderId: '123456',
+    status: 'Feedback',
+    _id: '60944e084f4c0d4330cc258b',
+    firstName: 'Mathias',
+    grandFathersName: 'Vincent',
+    familyName: 'Wang',
+    dateCreated: '2020-12-02T01:17:55.181Z',
+    lastEdited: '2020-07-12T22:25:28.949Z',
+    lastEditedBy: 'KaceyEbert'
+}

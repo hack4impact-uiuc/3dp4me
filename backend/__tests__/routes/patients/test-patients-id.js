@@ -21,13 +21,14 @@ const {
     GET_PATIENT_WITHOUT_STEP_DATA,
     PUT_PATIENT_DATA,
     PUT_BAD_PATIENT_DATA,
+    EXPECTED_PUT_DATA,
 } = require('../../mock-data/patients-mock-data');
 
 describe('PUT /patients/:id', () => {
+    const STEP_KEY = 'Patient'
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
 
-    // Something weird happens here if I try to close the database after each
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
@@ -53,18 +54,20 @@ describe('PUT /patients/:id', () => {
                 .send(PUT_BAD_PATIENT_DATA),
         );
         const resContent = JSON.parse(res.text);
-
         // Check statuses are correct
-        expect(res.status).toBe(500);
-        expect(resContent.success).toBe(false);
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
+        let collections = await mongoose.connection.db.listCollections().toArray();
 
+        // Query for ids must be done as an ObjectId
         let updatedData = await mongoose.connection
-            .collection('patients')
-            .findOne({ _id: patientID });
-        console.log(updatedData);
+            .collection(STEP_KEY)
+            .findOne({_id: mongoose.Types.ObjectId(patientID)});
+
+        expectStrictEqualWithTimestampOrdering(EXPECTED_PUT_DATA, updatedData);
     });
 
-    it('properly changes patient fields', async () => {
+    it('properly changes valid patient fields', async () => {
         const patientID = '60944e084f4c0d4330cc258b';
         const res = await withAuthentication(
             request(server)
@@ -76,11 +79,11 @@ describe('PUT /patients/:id', () => {
         // Check statuses are correct
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-
+        
         let updatedData = await mongoose.connection
-            .collection('patients')
-            .findOne({ _id: patientID });
-        console.log(updatedData);
+            .collection(STEP_KEY)
+            .findOne({_id: mongoose.Types.ObjectId(patientID)});
+        expectStrictEqualWithTimestampOrdering(EXPECTED_PUT_DATA, updatedData);
     });
 });
 
