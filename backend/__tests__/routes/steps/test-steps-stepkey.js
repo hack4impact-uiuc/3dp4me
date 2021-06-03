@@ -16,7 +16,9 @@ const {
 } = require('../../utils/utils');
 const {
     PUT_STEP_REORDERED_FIELDS,
-    PUT_STEP_REORDERED_FIELDS_EXPECTED
+    PUT_STEP_REORDERED_FIELDS_EXPECTED,
+    PUT_STEP_ADDED_FIELD,
+    PUT_STEP_ADDED_FIELD_EXPECTED
 } = require('../../mock-data/steps-mock-data');
 const { models } = require('../../../models');
 const { Mongoose } = require('mongoose');
@@ -45,7 +47,7 @@ describe('PUT /steps/stepkey', () => {
 
 
     it ('reorder fields in step', async () => {
-        const stepID = '6092c26fe0912601bbc5d85d';
+        
 
         const res = await withAuthentication(
             request(server)
@@ -53,7 +55,6 @@ describe('PUT /steps/stepkey', () => {
                 .send(PUT_STEP_REORDERED_FIELDS)
         );
 
-        console.log(res.text);
 
         // Check response
         const resContent = JSON.parse(res.text);
@@ -67,9 +68,37 @@ describe('PUT /steps/stepkey', () => {
         // Check database
         let updatedData = await mongoose.connection
             .collection('steps')
-            .findOne({_id: mongoose.Types.ObjectId(stepID)});
+            .findOne({ key : STEP_KEY });
         
         expectStrictEqualWithTimestampOrdering(PUT_STEP_REORDERED_FIELDS_EXPECTED, updatedData);
+
+    });
+
+    it ('add a field correctly', async () => {
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/metadata/steps/${STEP_KEY}`)
+                .send(PUT_STEP_ADDED_FIELD)
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(resContent.status).toBe(200);
+        expect(resContent.success).toBe(true);
+        expectStrictEqualWithTimestampOrdering(
+            PUT_STEP_ADDED_FIELD_EXPECTED,
+            resContent.result,
+        );
+
+        // Check database
+        let updatedData = await mongoose.connection
+            .collection('steps')
+            .findOne({ key: STEP_KEY });
+        
+        expectStrictEqualWithTimestampOrdering(
+            PUT_STEP_ADDED_FIELD_EXPECTED,
+            updatedData,
+        );
 
     });
 });
