@@ -7,6 +7,7 @@ var server = require('../../../app');
 
 const { initAuthMocker, setCurrentUser } = require('../../utils/auth');
 const { models } = require('../../../models');
+const { getStepKeys } = require('../../../utils/patient-utils');
 
 describe('getStepKey', () => {
     afterAll(async () => await db.closeDatabase());
@@ -21,16 +22,16 @@ describe('getStepKey', () => {
         server = require('../../../app');
     });
 
-    it('getStepKey with steps.json', () => {
+    it('getStepKey with steps.json', async () => {
         const EXPECTED_RESULTS = ['medicalInfo', 'survey', 'example'];
-        const steps = getStepKeys();
+        const steps = await getStepKeys();
         expect(steps).toStrictEqual(EXPECTED_RESULTS);
     });
 
     it('getStepKey with no steps', async () => {
         await models.Step.deleteMany();
-        const EXPECTED_RESULTS = [];
-        const steps = getStepKeys();
+        const EXPECTED_RESULTS = {};
+        const steps = await getStepKeys();
         expect(steps).toStrictEqual(EXPECTED_RESULTS);
     });
 });
