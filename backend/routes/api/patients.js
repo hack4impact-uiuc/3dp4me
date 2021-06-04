@@ -68,8 +68,8 @@ router.post(
             await new_patient.save();
         } catch (error) {
             console.log(error);
-            return res.status(401).json({
-                code: 401,
+            return res.status(400).json({
+                code: 400,
                 success: false,
                 message: 'Request is invalid or missing fields.',
             });
@@ -86,6 +86,7 @@ router.post(
 
 router.put(
     '/:id',
+    removeRequestAttributes(['_id', '__v', 'dateCreated']),
     errorWrap(async (req, res) => {
         const { id } = req.params;
         const patient = await models.Patient.findOneAndUpdate(
@@ -106,7 +107,7 @@ router.put(
             code: 200,
             success: true,
             message: 'Patient successfully edited.',
-            data: patient,
+            result: patient,
         });
     }),
 );
