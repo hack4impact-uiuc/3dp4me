@@ -137,7 +137,6 @@ router.get(
 // POST metadata/steps
 router.post(
     '/steps',
-    // requireAdmin,
     errorWrap(async (req, res) => {
         const steps = req.body;
         const new_step_metadata = new models.Step(steps);

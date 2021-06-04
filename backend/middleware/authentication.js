@@ -27,9 +27,7 @@ const getUser = async (accessToken) => {
 };
 
 const parseUserSecurityRoles = (user) => {
-    if (!user || !user.UserAttributes) return [];
-
-    const securityRolesString = user.UserAttributes.find(
+    const securityRolesString = user?.UserAttributes?.find(
         (attribute) => attribute.Name === SECURITY_ROLE_ATTRIBUTE_NAME,
     );
 
