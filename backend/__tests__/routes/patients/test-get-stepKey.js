@@ -1,8 +1,6 @@
 const db = require('../../utils/db');
 const _ = require('lodash');
-const request = require('supertest');
 const AWS = require('aws-sdk-mock');
-const mongoose = require('mongoose');
 var server = require('../../../app');
 
 const { initAuthMocker, setCurrentUser } = require('../../utils/auth');
@@ -29,7 +27,7 @@ describe('getStepKey', () => {
     });
 
     it('getStepKey with no steps', async () => {
-        await models.Step.deleteMany();
+        await db.clearDatabase();
         const EXPECTED_RESULTS = [];
         const steps = await getStepKeys();
         expect(steps).toStrictEqual(EXPECTED_RESULTS);
