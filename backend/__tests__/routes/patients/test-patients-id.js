@@ -57,7 +57,7 @@ describe('PUT /patients/:id', () => {
         // Check statuses are correct
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        
+
         // Query for ids must be done as an ObjectId
         let updatedData = await mongoose.connection
             .collection(STEP_KEY)
@@ -78,7 +78,10 @@ describe('PUT /patients/:id', () => {
         // Check statuses are correct
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        expectStrictEqualWithTimestampOrdering(EXPECTED_PUT_DATA, resContent.result)
+        expectStrictEqualWithTimestampOrdering(
+            EXPECTED_PUT_DATA,
+            resContent.result,
+        );
 
         let updatedData = await mongoose.connection
             .collection(STEP_KEY)
