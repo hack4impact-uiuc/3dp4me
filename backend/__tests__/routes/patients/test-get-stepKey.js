@@ -30,7 +30,7 @@ describe('getStepKey', () => {
 
     it('getStepKey with no steps', async () => {
         await models.Step.deleteMany();
-        const EXPECTED_RESULTS = {};
+        const EXPECTED_RESULTS = [];
         const steps = await getStepKeys();
         expect(steps).toStrictEqual(EXPECTED_RESULTS);
     });
