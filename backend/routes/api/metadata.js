@@ -181,6 +181,8 @@ router.put(
         const session = await mongoose.startSession();
         step_to_edit = await models.Step.findOne({ key: stepkey });
 
+        // Return 404 if step_to_edit is null
+
         let addedFields = [];
         let step;
 

@@ -18,7 +18,7 @@ const {
     PUT_STEP_REORDERED_FIELDS,
     PUT_STEP_REORDERED_FIELDS_EXPECTED,
     PUT_STEP_ADDED_FIELD,
-    PUT_STEP_ADDED_FIELD_EXPECTED
+    PUT_STEP_ADDED_FIELD_EXPECTED,
 } = require('../../mock-data/steps-mock-data');
 const { models } = require('../../../models');
 const { Mongoose } = require('mongoose');
@@ -38,47 +38,45 @@ describe('PUT /steps/stepkey', () => {
     });
 
     it('given bad stepkey, return 404', (done) => {
-        const invalidStepKey = "DoesNotExist";
+        const invalidStepKey = 'DoesNotExist';
         withAuthentication(
-            request(server)
-            .put(`/api/metadata/steps/${invalidStepKey}`)
+            request(server).put(`/api/metadata/steps/${invalidStepKey}`),
         ).expect(404, done);
     });
 
-
-    it ('reorder fields in step', async () => {
-        
-
+    it('reorder fields in step', async () => {
         const res = await withAuthentication(
             request(server)
                 .put(`/api/metadata/steps/${STEP_KEY}`)
-                .send(PUT_STEP_REORDERED_FIELDS)
+                .send(PUT_STEP_REORDERED_FIELDS),
         );
-
+        console.log(res);
 
         // Check response
         const resContent = JSON.parse(res.text);
         expect(resContent.status).toBe(200);
         expect(resContent.success).toBe(true);
         expectStrictEqualWithTimestampOrdering(
-            PUT_STEP_REORDERED_FIELDS_EXPECTED, 
+            PUT_STEP_REORDERED_FIELDS_EXPECTED,
             resContent.result,
         );
 
         // Check database
         let updatedData = await mongoose.connection
             .collection('steps')
-            .findOne({ key : STEP_KEY });
-        
-        expectStrictEqualWithTimestampOrdering(PUT_STEP_REORDERED_FIELDS_EXPECTED, updatedData);
+            .findOne({ key: STEP_KEY });
 
+        expectStrictEqualWithTimestampOrdering(
+            PUT_STEP_REORDERED_FIELDS_EXPECTED,
+            updatedData,
+        );
     });
 
-    it ('add a field correctly', async () => {
+    it('add a field correctly', async () => {
         const res = await withAuthentication(
             request(server)
                 .put(`/api/metadata/steps/${STEP_KEY}`)
-                .send(PUT_STEP_ADDED_FIELD)
+                .send(PUT_STEP_ADDED_FIELD),
         );
 
         // Check response
@@ -94,11 +92,10 @@ describe('PUT /steps/stepkey', () => {
         let updatedData = await mongoose.connection
             .collection('steps')
             .findOne({ key: STEP_KEY });
-        
+
         expectStrictEqualWithTimestampOrdering(
             PUT_STEP_ADDED_FIELD_EXPECTED,
             updatedData,
         );
-
     });
 });
