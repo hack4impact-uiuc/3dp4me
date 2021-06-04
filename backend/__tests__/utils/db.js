@@ -40,6 +40,7 @@ module.exports.connect = async () => {
  * Drop database, close the connection and stop mongod.
  */
 module.exports.closeDatabase = async () => {
+    await this.clearDatabase();
     await mongoose.connection.dropDatabase();
     await mongoose.disconnect();
     await replSet.stop();

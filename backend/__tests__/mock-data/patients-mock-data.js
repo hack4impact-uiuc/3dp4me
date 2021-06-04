@@ -183,3 +183,38 @@ module.exports.GET_PATIENT_WITH_ALL_STEP_DATA = {
         lastEditedBy: 'Berenice',
     },
 };
+
+module.exports.PUT_BAD_PATIENT_DATA = {
+    firstName: 'Mathias',
+    fathersName: 'Daniel',
+    grandfathersName: 'Gene',
+    familyName: 'Wang',
+    orderId: '123456',
+    status: overallStatusEnum.FEEDBACK,
+    dateCreated: Date.now(),
+    _id: '0944e084f4c0d4330cc258b',
+    __v: 32,
+};
+
+module.exports.PUT_PATIENT_DATA = {
+    firstName: 'Mathias',
+    fathersName: 'Daniel',
+    grandfathersName: 'Gene',
+    familyName: 'Wang',
+    orderId: '123456',
+    status: overallStatusEnum.FEEDBACK,
+};
+
+module.exports.EXPECTED_PUT_DATA = {
+    fathersName: 'Daniel',
+    grandfathersName: 'Gene',
+    orderId: '123456',
+    status: 'Feedback',
+    _id: '60944e084f4c0d4330cc258b',
+    firstName: 'Mathias',
+    grandFathersName: 'Vincent',
+    familyName: 'Wang',
+    dateCreated: '2020-12-02T01:17:55.181Z',
+    lastEdited: '2020-07-12T22:25:28.949Z',
+    lastEditedBy: 'KaceyEbert'
+}
