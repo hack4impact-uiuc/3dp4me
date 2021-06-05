@@ -70,6 +70,13 @@ module.exports.resetDatabase = async () => {
     );
 };
 
+/**
+ * Takes many vanilla JS objects and uses the specified constructor to create model instances. Then
+ * All of the instances are inserted into the DB.
+ * @param {String} collectionName The collection to insert into
+ * @param {Function} constructor Model constructor
+ * @param {Array} data Array of JS objects
+ */
 const insertManyWithConstructors = async (
     collectionName,
     constructor,

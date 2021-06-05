@@ -95,8 +95,8 @@ describe('GET /patient/:id', () => {
     afterEach(async () => await db.resetDatabase());
     beforeAll(async () => {
         await db.connect();
-        await initAuthMocker(AWS);
-        await setCurrentUser(AWS);
+        initAuthMocker(AWS);
+        setCurrentUser(AWS);
     });
 
     beforeEach(() => {
