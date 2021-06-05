@@ -50,27 +50,20 @@ describe('PUT /steps/stepkey', () => {
                 .send(PUT_STEP_REORDERED_FIELDS),
         );
 
-        console.log(res.text);
-
 
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(resContent.status).toBe(200);
+        expect(resContent.code).toBe(200);
         expect(resContent.success).toBe(true);
-        expectStrictEqualWithTimestampOrdering(
-            PUT_STEP_REORDERED_FIELDS_EXPECTED,
-            resContent.result,
-        );
+        console.log(resContent)
+        expect(resContent.data).toEqual(PUT_STEP_REORDERED_FIELDS_EXPECTED);
 
         // Check database
         let updatedData = await mongoose.connection
             .collection('steps')
             .findOne({ key: STEP_KEY });
 
-        expectStrictEqualWithTimestampOrdering(
-            PUT_STEP_REORDERED_FIELDS_EXPECTED,
-            updatedData,
-        );
+        expect(updatedData).toEqual(PUT_STEP_REORDERED_FIELDS_EXPECTED);
     });
 
     it('add a field correctly', async () => {
@@ -82,22 +75,29 @@ describe('PUT /steps/stepkey', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(resContent.status).toBe(200);
+        expect(resContent.code).toBe(200);
         expect(resContent.success).toBe(true);
-        expectStrictEqualWithTimestampOrdering(
-            PUT_STEP_ADDED_FIELD_EXPECTED,
-            resContent.result,
-        );
+        expect(resContent.data).toEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
 
         // Check database
         let updatedData = await mongoose.connection
             .collection('steps')
             .findOne({ key: STEP_KEY });
 
-        expectStrictEqualWithTimestampOrdering(
-            PUT_STEP_ADDED_FIELD_EXPECTED,
-            updatedData,
+        expect(updatedData).toEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
+    });
+
+    it('correctly rejects duplicate field number and key', async() => {
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/metadata/steps/${STEP_KEY}`)
+                .send(PUT_STEP_ADDED_FIELD),
         );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(resContent.code).toBe(500);
+        expect(resContent.success).toBe(false);
     });
 
 
@@ -110,7 +110,7 @@ describe('PUT /steps/stepkey', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(resContent.status).toBe(400);
+        expect(resContent.code).toBe(400);
         expect(resContent.success).toBe(false);
 
 
