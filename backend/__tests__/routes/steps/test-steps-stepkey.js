@@ -18,10 +18,9 @@ const {
     PUT_STEP_REORDERED_FIELDS,
     PUT_STEP_REORDERED_FIELDS_EXPECTED,
     PUT_STEP_ADDED_FIELD,
-    PUT_STEP_ADDED_FIELD_EXPECTED
+    PUT_STEP_ADDED_FIELD_EXPECTED,
+    PUT_STEP_DELETED_FIELD,
 } = require('../../mock-data/steps-mock-data');
-const { models } = require('../../../models');
-const { Mongoose } = require('mongoose');
 
 describe('PUT /steps/stepkey', () => {
     const STEP_KEY = 'survey';
@@ -54,6 +53,8 @@ describe('PUT /steps/stepkey', () => {
                 .put(`/api/metadata/steps/${STEP_KEY}`)
                 .send(PUT_STEP_REORDERED_FIELDS)
         );
+
+        console.log(res.text);
 
 
         // Check response
@@ -101,4 +102,27 @@ describe('PUT /steps/stepkey', () => {
         );
 
     });
+
+
+    it('returns 400 if deleting fields', async () => {
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/metadata/steps/${STEP_KEY}`)
+                .send(PUT_STEP_DELETED_FIELD)
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(resContent.status).toBe(400);
+        expect(resContent.success).toBe(false);
+
+
+        // Check database
+        let unchangedData = await mongoose.connection
+            .collection('steps')
+            .findOne({ key: STEP_KEY });
+        console.log(unchangedData);
+    });
+
+
 });
