@@ -50,12 +50,11 @@ describe('PUT /steps/stepkey', () => {
                 .send(PUT_STEP_REORDERED_FIELDS),
         );
 
-
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(resContent.code).toBe(200);
+        expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        console.log(resContent)
+        console.log(resContent);
         expect(resContent.data).toEqual(PUT_STEP_REORDERED_FIELDS_EXPECTED);
 
         // Check database
@@ -72,11 +71,13 @@ describe('PUT /steps/stepkey', () => {
                 .put(`/api/metadata/steps/${STEP_KEY}`)
                 .send(PUT_STEP_ADDED_FIELD),
         );
-
+        console.log(res.text);
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(resContent.code).toBe(200);
+        expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
+        console.log(PUT_STEP_ADDED_FIELD_EXPECTED);
+        console.log(resContent.data);
         expect(resContent.data).toEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
 
         // Check database
@@ -87,7 +88,7 @@ describe('PUT /steps/stepkey', () => {
         expect(updatedData).toEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
     });
 
-    it('correctly rejects duplicate field number and key', async() => {
+    it('correctly rejects duplicate field number and key', async () => {
         const res = await withAuthentication(
             request(server)
                 .put(`/api/metadata/steps/${STEP_KEY}`)
@@ -96,23 +97,21 @@ describe('PUT /steps/stepkey', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(resContent.code).toBe(500);
+        expect(res.code).toBe(500);
         expect(resContent.success).toBe(false);
     });
-
 
     it('returns 400 if deleting fields', async () => {
         const res = await withAuthentication(
             request(server)
                 .put(`/api/metadata/steps/${STEP_KEY}`)
-                .send(PUT_STEP_DELETED_FIELD)
+                .send(PUT_STEP_DELETED_FIELD),
         );
 
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(resContent.code).toBe(400);
+        expect(res.code).toBe(400);
         expect(resContent.success).toBe(false);
-
 
         // Check database
         let unchangedData = await mongoose.connection
@@ -120,6 +119,4 @@ describe('PUT /steps/stepkey', () => {
             .findOne({ key: STEP_KEY });
         console.log(unchangedData);
     });
-
-
 });
