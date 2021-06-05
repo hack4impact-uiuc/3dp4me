@@ -21,7 +21,7 @@ const {
 } = require('../../mock-data/patients-mock-data');
 const { models } = require('../../../models');
 
-describe('POST /patient', () => {
+describe('POST /patients', () => {
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
     beforeAll(async () => {

@@ -87,6 +87,8 @@ const stepSchema = new mongoose.Schema({
         AR: { type: String, required: true },
     },
     stepNumber: { type: Number, required: true, unique: true },
+
+    // TODO: Update validators so they don't throw an error on put requests
     fields: {
         type: [fieldSchema],
         required: true,
