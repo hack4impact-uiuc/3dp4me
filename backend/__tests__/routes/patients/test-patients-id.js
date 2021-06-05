@@ -1,9 +1,9 @@
 const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
-const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
 var server = require('../../../app');
+const AWS = require('aws-sdk-mock');
 const {
     initAuthMocker,
     setCurrentUser,
@@ -95,8 +95,8 @@ describe('GET /patient/:id', () => {
     afterEach(async () => await db.resetDatabase());
     beforeAll(async () => {
         await db.connect();
-        initAuthMocker(AWS);
-        setCurrentUser(AWS);
+        await initAuthMocker(AWS);
+        await setCurrentUser(AWS);
     });
 
     beforeEach(() => {

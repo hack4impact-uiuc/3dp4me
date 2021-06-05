@@ -136,6 +136,7 @@ router.post(
                     }
                 });
 
+                const setps = await models.Step.find({}).lean();
                 await new_step_metadata.save({ session });
                 generateSchemaFromMetadata(steps);
             });
