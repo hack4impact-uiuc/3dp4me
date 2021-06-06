@@ -102,8 +102,6 @@ const stepSchema = new mongoose.Schema({
     writableGroups: { type: [String], required: true },
     defaultToListView: { type: Boolean, default: true },
 });
-stepSchema.set('validateBeforeSave', false);
-
 
 const Step = mongoose.model('steps', stepSchema);
 module.exports = { Step, fieldEnum, questionOptionSchema, validateOptions };

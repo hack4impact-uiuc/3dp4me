@@ -238,21 +238,21 @@ router.put(
 
         // Check if user changed field type
         // Check whether user deleted or added to metadata object
-        
-        await step.save(function (err, data) {
-            err = user.validateSync();
-            assert.equal(err, null);
 
-            if (err) {
-                res.json(err);
-            } else {
-                res.status(200).json({
-                    code: 200,
-                    success: true,
-                    message: 'Step successfully edited.',
-                    data: data,
-                });
-            }
+        //TOOO: figure out what session is
+        const data = await step.save({ ...session, validateBeforeSave: false });
+        const error = step.validateSync();
+        if (error == null) {
+            //Success
+        } else {
+            //Error
+        }
+
+        res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Step successfully edited.',
+            data: data,
         });
     }),
 );
