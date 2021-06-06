@@ -51,7 +51,7 @@
     },
     "jest": {
         "testEnvironment": "node",
-        "testTimeout": 10000,
+        "testTimeout": 60000,
         "testPathIgnorePatterns": [
             "/utils",
             "/mock-data"
