@@ -3,7 +3,7 @@ const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
-const fs = require('fs');
+const resolve = require('path').resolve;
 var server = require('../../../app');
 const {
     initAuthMocker,
@@ -34,7 +34,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
     const STEP_KEY = 'example';
     const FIELD_KEY = 'file';
     const FILE_NAME = 'newfile.txt';
-    const TEST_FILE = `${__dirname}../../../mock-data/test-file.jpg`;
+    const TEST_FILE = resolve(`./__tests__/mock-data/test-file.jpg`);
 
     const expectStatusWithDBUnchanged = async (requestURL, status) => {
         const initDbStats = await mongoose.connection.db.stats();
