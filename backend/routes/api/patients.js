@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
+const { getStepKeys } = require('../../utils/patient-utils');
 const { errorWrap } = require('../../utils');
 const { models, overallStatusEnum } = require('../../models');
 const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
@@ -26,13 +27,6 @@ router.get(
         );
     }),
 );
-
-const getStepKeys = async () => {
-    const steps = await models.Step.find({});
-    let stepKeys = [];
-    steps.forEach((element) => stepKeys.push(element.key));
-    return stepKeys;
-};
 
 // GET: Returns everything associated with patient
 router.get(
@@ -92,6 +86,7 @@ router.post(
 
 router.put(
     '/:id',
+    removeRequestAttributes(['_id', '__v', 'dateCreated']),
     errorWrap(async (req, res) => {
         const { id } = req.params;
         const patient = await models.Patient.findOneAndUpdate(
@@ -112,7 +107,7 @@ router.put(
             code: 200,
             success: true,
             message: 'Patient successfully edited.',
-            data: patient,
+            result: patient,
         });
     }),
 );

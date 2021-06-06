@@ -10,19 +10,16 @@ const exampleData = require('../../../scripts/data/example.json');
 const { initModels } = require('../../utils/init-models');
 const { models } = require('../../models');
 
-//const mongod = new MongoMemoryServer();
-const replSet = new MongoMemoryReplSet({
-    replSet: { storageEngine: 'wiredTiger' },
-});
+let replSet = null;
 
 /**
  * Connect to the in-memory database.
  * Should only be called once per suite
  */
 module.exports.connect = async () => {
-    // replSet = new MongoMemoryReplSet({
-    //     replSet: { storageEngine: 'wiredTiger' },
-    // });
+    replSet = new MongoMemoryReplSet({
+        replSet: { storageEngine: 'wiredTiger' },
+    });
 
     await replSet.waitUntilRunning();
     const uri = await replSet.getUri();
@@ -40,6 +37,7 @@ module.exports.connect = async () => {
  * Drop database, close the connection and stop mongod.
  */
 module.exports.closeDatabase = async () => {
+    await this.clearDatabase();
     await mongoose.connection.dropDatabase();
     await mongoose.disconnect();
     await replSet.stop();
@@ -49,43 +47,48 @@ module.exports.closeDatabase = async () => {
  * Resets the database to it's original state with mock data.
  */
 module.exports.resetDatabase = async () => {
-    // TODO: We'll need to convert other sub-schema's mongoIDs as well. Is there a better way to do this???
-    // The best way might be to save as a .js file instead...
     await this.clearDatabase();
-    await mongoose.connection.db
-        .collection('Patient')
-        .insertMany(convertStringsToMongoIDs(patientData));
-    await mongoose.connection.db
-        .collection('Role')
-        .insertMany(convertStringsToMongoIDs(roleData));
-    await mongoose.connection.db
-        .collection('steps')
-        .insertMany(convertStringsToMongoIDs(stepData));
-    await mongoose.connection.db
-        .collection('survey')
-        .insertMany(convertStringsToMongoIDs(surveyData));
-    await mongoose.connection.db
-        .collection('example')
-        .insertMany(convertStringsToMongoIDs(exampleData));
-    await mongoose.connection.db
-        .collection('medicalInfo')
-        .insertMany(convertStringsToMongoIDs(medicalData));
+    await insertManyWithConstructors('Patient', models.Patient, patientData);
+    await insertManyWithConstructors('Role', models.Role, roleData);
+    await insertManyWithConstructors('steps', models.Step, stepData);
+
     await initModels();
+    await insertManyWithConstructors(
+        'survey',
+        mongoose.model('survey'),
+        surveyData,
+    );
+    await insertManyWithConstructors(
+        'example',
+        mongoose.model('example'),
+        exampleData,
+    );
+    await insertManyWithConstructors(
+        'medicalInfo',
+        mongoose.model('medicalInfo'),
+        medicalData,
+    );
 };
 
 /**
- * Given an array of objects, converts all _id fields from string to ObjectId no matter how deep.
- * Need to call this on all collections before inserting or we'll have issues.
- * @param {Object} arr The input collection
- * @returns Modified collection with converted _id fields
+ * Takes many vanilla JS objects and uses the specified constructor to create model instances. Then
+ * All of the instances are inserted into the DB.
+ * @param {String} collectionName The collection to insert into
+ * @param {Function} constructor Model constructor
+ * @param {Array} data Array of JS objects
  */
-const convertStringsToMongoIDs = (arr) => {
-    return arr.map((obj) => {
-        return _.transform(obj, (r, v, k) => {
-            if (k === '_id') r[k] = mongoose.Types.ObjectId(v);
-            else r[k] = v;
-        });
-    });
+const insertManyWithConstructors = async (
+    collectionName,
+    constructor,
+    data,
+) => {
+    await Promise.all(
+        data.map((item) =>
+            mongoose.connection.db
+                .collection(collectionName)
+                .insertOne(new constructor(item)),
+        ),
+    );
 };
 
 /**

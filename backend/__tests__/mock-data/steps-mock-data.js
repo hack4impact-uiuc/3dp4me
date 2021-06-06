@@ -145,7 +145,7 @@ module.exports.POST_STEP_WITH_DUPLICATE_KEY = {
         EN: 'Medical Information',
         AR: 'المعلومات الطبية',
     },
-    stepNumber: 0,
+    stepNumber: 5,
     fields: [
         {
             key: 'demographicDivider',
@@ -160,13 +160,13 @@ module.exports.POST_STEP_WITH_DUPLICATE_KEY = {
     ],
 };
 
-module.exports.POST_STEP_WITH_DUPLICATE_STEP_NUMBE = {
+module.exports.POST_STEP_WITH_DUPLICATE_STEP_NUMBER = {
     key: 'newStep',
     displayName: {
         EN: 'Medical Information',
         AR: 'المعلومات الطبية',
     },
-    stepNumber: 0,
+    stepNumber: '0',
     fields: [
         {
             key: 'demographicDivider',

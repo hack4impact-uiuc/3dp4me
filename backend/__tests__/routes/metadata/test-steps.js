@@ -56,7 +56,7 @@ describe('POST /steps', () => {
         expect(resContent.success).toBe(false);
 
         const finalDbStats = await mongoose.connection.db.stats();
-        expect(finalDbStats).toStrictEqual(initDbStats);
+        expect(finalDbStats.objects).toStrictEqual(initDbStats.objects);
     };
 
     it('returns 400 if fieldType is readio and no options provided', async () => {
