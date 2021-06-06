@@ -32,9 +32,9 @@ module.exports.createUserDataWithRoles = (...roles) => {
  * @param {Object} AWS The AWS mocker. An instance of this object can be created with `const AWS = require('aws-sdk-mock')`
  */
 module.exports.initAuthMocker = (AWS) => {
-    AWSMocker.setSDKInstance(AWS_SDK);
-    Q = require('q');
-    AWS.Promise = Q.Promise;
+    AWS.setSDKInstance(AWS_SDK);
+    //Q = require('q');
+    //AWS.Promise = Q.Promise;
 
     AWS.mock('CognitoIdentityServiceProvider', 'getUser', () => {
         return Promise.reject();
