@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
+const { getStepKeys } = require('../../utils/patient-utils');
 const { errorWrap } = require('../../utils');
 const { models, overallStatusEnum } = require('../../models');
 const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
@@ -26,13 +27,6 @@ router.get(
         );
     }),
 );
-
-const getStepKeys = async () => {
-    const steps = await models.Step.find({});
-    let stepKeys = [];
-    steps.forEach((element) => stepKeys.push(element.key));
-    return stepKeys;
-};
 
 // GET: Returns everything associated with patient
 router.get(
@@ -305,35 +299,23 @@ router.post(
 
         const updatedStage = req.body;
         let savedData = null;
-        try {
-            await session.withTransaction(async () => {
-                const collection = await mongoose.connection.db.collection(
-                    stage,
-                );
-                updatedStage.lastEdited = Date.now();
-                updatedStage.lastEditedBy = req.user.name;
-                delete updatedStage._id;
-                let model = mongoose.model(stage);
-                const updatedModel = new model(updatedStage);
-                savedData = await collection.findOneAndUpdate(
-                    { patientId: id },
-                    { $set: updatedModel },
-                    {
-                        upsert: true,
-                        setDefaultsOnInsert: true,
-                        new: true,
-                        returnOriginal: false,
-                    },
-                );
-            });
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({
-                code: 500,
-                success: false,
-                message: error,
-            });
-        }
+
+        const collection = await mongoose.connection.db.collection(stage);
+        updatedStage.lastEdited = Date.now();
+        updatedStage.lastEditedBy = req.user.name;
+        let model = mongoose.model(stage);
+        const updatedModel = new model(updatedStage);
+        savedData = await collection.findOneAndUpdate(
+            { patientId: id },
+            { $set: updatedModel },
+            {
+                upsert: true,
+                setDefaultsOnInsert: true,
+                new: true,
+                returnOriginal: false,
+            },
+        );
+
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
         await patient.save(function (err) {

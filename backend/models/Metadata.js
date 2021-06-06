@@ -51,11 +51,11 @@ const fieldSchema = new mongoose.Schema({
     },
     options: {
         type: [questionOptionSchema],
-        default: [],
         validate: {
             validator: validateOptions,
             message: 'Index must be unique',
         },
+        required: false,
     },
     isVisibleOnDashboard: { type: Boolean, required: true },
     displayName: {
