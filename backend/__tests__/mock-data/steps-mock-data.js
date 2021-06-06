@@ -2,7 +2,8 @@ const { stepStatusEnum, overallStatusEnum } = require('../../models');
 const mongoose = require('mongoose');
 const { ModuleFilenameHelpers } = require('webpack');
 
-module.exports.PUT_STEP_REORDERED_FIELDS = {
+module.exports.PUT_STEP_REORDERED_FIELDS = [{
+    key: 'survey',
     fields: [
         {
             fieldType: 'Number',
@@ -195,7 +196,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS = {
             options: [],
         },
     ],
-};
+}];
 
 module.exports.POST_STEP_WITHOUT_OPTIONS = {
     key: 'newStep',
@@ -317,10 +318,11 @@ module.exports.POST_STEP_WITH_OPTIONS = {
     ],
 };
 
-module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = {
+module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [{
     _id: '6092c26fe0912601bbc5d85d',
     readableGroups: [],
     writableGroups: [],
+    defaultToListView: true,
     key: 'survey',
     displayName: {
         EN: 'Survey',
@@ -520,9 +522,9 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = {
         },
     ],
     __v: 0,
-};
+}];
 
-module.exports.PUT_STEP_ADDED_FIELD = {
+module.exports.PUT_STEP_ADDED_FIELD = [{
     fields: [
         {
             fieldType: 'Number',
@@ -729,9 +731,10 @@ module.exports.PUT_STEP_ADDED_FIELD = {
             options: [],
         },
     ],
-};
+}];
 
-module.exports.PUT_STEP_DELETED_FIELD = {
+module.exports.PUT_STEP_DELETED_FIELD = [{
+    key: 'survey',
     fields: [
         {
             fieldType: 'Number',
@@ -910,9 +913,10 @@ module.exports.PUT_STEP_DELETED_FIELD = {
             options: [],
         },
     ],
-};
+}];
 
-module.exports.PUT_STEP_DUPLICATE_FIELD = {
+module.exports.PUT_STEP_DUPLICATE_FIELD = [{
+    key: 'survey',
     fields: [
         {
             fieldType: 'Number',
@@ -1119,7 +1123,7 @@ module.exports.PUT_STEP_DUPLICATE_FIELD = {
             options: [],
         },
     ],
-};
+}];
 
 module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = {
     _id: '6092c26fe0912601bbc5d85d',

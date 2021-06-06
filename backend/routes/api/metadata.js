@@ -166,73 +166,75 @@ const getFieldByKey = (object_list, key) => {
     return null;
 };
 
-// PUT metadata/steps/:stepkey
-router.put(
-    '/steps/:stepkey',
-    errorWrap(async (req, res) => {
-        const { stepkey } = req.params;
-        const session = await mongoose.startSession();
-        step_to_edit = await models.Step.findOne({ key: stepkey });
 
-        // Return 404 if step_to_edit is null
-
-        let addedFields = [];
-        let step;
-
-        req.body.fields.forEach((request_field) => {
-            // If both fields are the same but fieldtypes are not the same
-            const field = getFieldByKey(step_to_edit.fields, request_field.key);
-
-            if (field && field.type == request_field.type) {
-                //TODO: add logic for this case
-            } else if (
-                !field &&
-                !addedFields.some(
-                    (addedField) => addedField.key === request_field.key,
-                )
-            ) {
-                addedFields.push(request_field);
-            } else {
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Invalid request',
-                });
-            }
+const putOneStep = async (stepBody, res) => {
+    if (!stepBody.key) {
+        return res.status(400).json({
+            success: false,
+            message: 'No stepkey in steps'
         });
+    }
+    
+    const stepKey = stepBody.key;
+    stepToEdit = await models.Step.findOne({ key: stepKey });
+    // Return 404 if step_to_edit is null
+    if (!stepToEdit) {
+        return res.status(404).json({
+            success: false,
+            message: 'No step with that key'
+        });
+    }
 
-        if (
-            req.body.fields.length - addedFields.length <
-            step_to_edit.fields.length
+    let addedFields = [];
+
+    stepBody.fields.forEach((requestField) => {
+        // If both fields are the same but fieldtypes are not the same
+        const field = getFieldByKey(stepToEdit.fields, requestField.key);
+
+        if (field && field.type == requestField.type) {
+            //TODO: add logic for this case
+        } else if (
+            !field &&
+            !addedFields.some(
+                (addedField) => addedField.key === requestField.key,
+            )
         ) {
+            addedFields.push(requestField);
+        } else {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Cannot delete fields',
+                message: 'Invalid request',
             });
         }
+    });
 
-        await session.withTransaction(async () => {
-            const schema = await mongoose.model(stepkey).schema;
-
-            const addedFieldsObject = {};
-
-            addedFields.forEach((field) => {
-                addedFieldsObject[field.key] = generateFieldSchema(field);
-            });
-            schema.add(addedFieldsObject);
-
-            step = await models.Step.findOneAndUpdate(
-                { key: stepkey },
-                { $set: req.body },
-                { new: true },
-            );
+    if (
+        stepBody.fields.length - addedFields.length <
+        stepToEdit.fields.length
+    ) {
+        return res.status(400).json({
+            code: 400,
+            success: false,
+            message: 'Cannot delete fields',
         });
+    }
 
-        // Check if user changed field type
-        // Check whether user deleted or added to metadata object
+    await mongoose.connection.transaction(async (session) => {
+        const schema = await mongoose.model(stepkey).schema;
 
-        //TOOO: figure out what session is
+        const addedFieldsObject = {};
+
+        addedFields.forEach((field) => {
+            addedFieldsObject[field.key] = generateFieldSchema(field);
+        });
+        schema.add(addedFieldsObject);
+
+        step = await models.Step.findOneAndUpdate(
+            { key: stepkey },
+            { $set: req.body },
+            { new: true },
+        );
         const data = await step.save({ ...session, validateBeforeSave: false });
         const error = step.validateSync();
         if (error == null) {
@@ -241,13 +243,28 @@ router.put(
             //Error
         }
 
-        res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Step successfully edited.',
-            data: data,
-        });
-    }),
+    });
+
+    // Check if user changed field type
+    // Check whether user deleted or added to metadata object
+
+    //TOOO: figure out what session is
+    res.status(200).json({
+        code: 200,
+        success: true,
+        message: 'Step successfully edited.',
+        data: data,
+    });
+}
+
+// PUT metadata/steps/:stepkey
+router.put(
+    '/steps/',
+    errorWrap(async (req, res) => {
+        req.body.forEach(
+            (step) => putOneStep(step, res)
+        );
+    })
 );
 
 // DELETE metadata/steps/:stepkey
