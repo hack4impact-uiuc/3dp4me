@@ -97,7 +97,7 @@ describe('PUT /steps/stepkey', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(res.code).toBe(500);
+        expect(res.status).toBe(500);
         expect(resContent.success).toBe(false);
     });
 

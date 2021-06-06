@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const { stepStatusEnum, overallStatusEnum } = require('../../models');
 const mongoose = require('mongoose');
 const { ModuleFilenameHelpers } = require('webpack');
@@ -193,7 +192,11 @@ module.exports.PUT_STEP_REORDERED_FIELDS = {
             },
             fieldNumber: '6',
             isVisibleOnDashboard: false,
-=======
+            options: [],
+        },
+    ],
+};
+
 module.exports.POST_STEP_WITHOUT_OPTIONS = {
     key: 'newStep',
     displayName: {
@@ -252,13 +255,70 @@ module.exports.POST_STEP_WITH_EMPTY_OPTIONS = {
                 EN: 'Gender',
                 AR: 'جنس تذكير أو تأنيث',
             },
->>>>>>> 22e574780a91338582f24fef5dc2d8787f578c39
             options: [],
         },
     ],
 };
 
-<<<<<<< HEAD
+
+module.exports.POST_STEP_WITH_OPTIONS = {
+    key: 'newStep',
+    displayName: {
+        EN: 'Medical Information',
+        AR: 'المعلومات الطبية',
+    },
+    readableGroups: [],
+    defaultToListView: true,
+    writableGroups: [],
+    stepNumber: 5,
+    fields: [
+        {
+            key: 'demographicDivider',
+            fieldType: 'Divider',
+            displayName: {
+                EN: 'Demographic Info',
+                AR: 'المعلومات الديموغرافية',
+            },
+            options: [],
+            fieldNumber: 0,
+            isVisibleOnDashboard: false,
+            readableGroups: [],
+            writableGroups: [],
+        },
+        {
+            key: 'gender',
+            fieldType: 'RadioButton',
+            fieldNumber: 5,
+            isVisibleOnDashboard: false,
+            displayName: {
+                EN: 'Gender',
+                AR: 'جنس تذكير أو تأنيث',
+            },
+            readableGroups: [],
+            writableGroups: [],
+            options: [
+                {
+                    Index: 0,
+                    IsHidden: false,
+                    Question: {
+                        EN: 'Male',
+                        AR: 'ذكر',
+                    },
+                },
+                {
+                    Index: 1,
+                    IsHidden: false,
+                    Question: {
+                        EN: 'Female',
+                        AR: 'أنثى',
+                    },
+                },
+            ],
+        },
+    ],
+};
+
+
 module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = {
     _id: '6092c26fe0912601bbc5d85d',
     readableGroups: [],
@@ -442,77 +502,23 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = {
                         _id: '6070816ada92745444f64c5d',
                         EN: '30000+ JOD',
                         AR: '30000+ دينار',
-=======
-module.exports.POST_STEP_WITH_OPTIONS = {
-    key: 'newStep',
-    displayName: {
-        EN: 'Medical Information',
-        AR: 'المعلومات الطبية',
-    },
-    readableGroups: [],
-    defaultToListView: true,
-    writableGroups: [],
-    stepNumber: 5,
-    fields: [
-        {
-            key: 'demographicDivider',
-            fieldType: 'Divider',
-            displayName: {
-                EN: 'Demographic Info',
-                AR: 'المعلومات الديموغرافية',
+                    }
+                }]
             },
-            options: [],
-            fieldNumber: 0,
-            isVisibleOnDashboard: false,
-            readableGroups: [],
-            writableGroups: [],
-        },
-        {
-            key: 'gender',
-            fieldType: 'RadioButton',
-            fieldNumber: 5,
-            isVisibleOnDashboard: false,
-            displayName: {
-                EN: 'Gender',
-                AR: 'جنس تذكير أو تأنيث',
-            },
-            readableGroups: [],
-            writableGroups: [],
-            options: [
-                {
-                    Index: 0,
-                    IsHidden: false,
-                    Question: {
-                        EN: 'Male',
-                        AR: 'ذكر',
-                    },
+            {       
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c50',
+                key: 'numWorkingPeople',
+                displayName: {
+                    EN: 'Number of Working People in Household',
+                    AR: 'عدد العاملين في الأسرة',
                 },
-                {
-                    Index: 1,
-                    IsHidden: false,
-                    Question: {
-                        EN: 'Female',
-                        AR: 'أنثى',
->>>>>>> 22e574780a91338582f24fef5dc2d8787f578c39
-                    },
-                },
-            ],
-        },
-<<<<<<< HEAD
-        {
-            fieldType: 'Number',
-            readableGroups: [],
-            writableGroups: [],
-            _id: '6070816ada92745444f64c50',
-            key: 'numWorkingPeople',
-            displayName: {
-                EN: 'Number of Working People in Household',
-                AR: 'عدد العاملين في الأسرة',
+                fieldNumber: 6,
+                isVisibleOnDashboard: false,
+                options: [],
             },
-            fieldNumber: 6,
-            isVisibleOnDashboard: false,
-            options: [],
-        },
     ],
     __v: 0,
 };
@@ -1334,8 +1340,6 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = {
         },
     ],
     __v: 0,
-=======
-    ],
 };
 
 module.exports.POST_STEP_WITH_BAD_FIELD = {
@@ -1399,5 +1403,4 @@ module.exports.POST_STEP_WITH_DUPLICATE_STEP_NUMBER = {
             isVisibleOnDashboard: false,
         },
     ],
->>>>>>> 22e574780a91338582f24fef5dc2d8787f578c39
 };
