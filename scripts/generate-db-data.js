@@ -37,7 +37,7 @@ const generatePatient = () => {
 
     if (getRandomInt(2)) patient.fathersName = faker.name.firstName();
 
-    if (getRandomInt(2)) patient.grandFathersName = faker.name.firstName();
+    if (getRandomInt(2)) patient.grandfathersName = faker.name.firstName();
 
     if (getRandomInt(2)) patient.orderId = faker.random.alphaNumeric();
 
