@@ -166,22 +166,21 @@ const getFieldByKey = (object_list, key) => {
     return null;
 };
 
-
-const putOneStep = async (stepBody, res) => {
+const putOneStep = async (stepBody, res, session) => {
     if (!stepBody.key) {
         return res.status(400).json({
             success: false,
-            message: 'No stepkey in steps'
+            message: 'No stepkey in steps',
         });
     }
-    
+
     const stepKey = stepBody.key;
     stepToEdit = await models.Step.findOne({ key: stepKey });
     // Return 404 if step_to_edit is null
     if (!stepToEdit) {
         return res.status(404).json({
             success: false,
-            message: 'No step with that key'
+            message: 'No step with that key',
         });
     }
 
@@ -220,30 +219,27 @@ const putOneStep = async (stepBody, res) => {
         });
     }
 
-    await mongoose.connection.transaction(async (session) => {
-        const schema = await mongoose.model(stepkey).schema;
+    const schema = await mongoose.model(stepkey).schema;
 
-        const addedFieldsObject = {};
+    const addedFieldsObject = {};
 
-        addedFields.forEach((field) => {
-            addedFieldsObject[field.key] = generateFieldSchema(field);
-        });
-        schema.add(addedFieldsObject);
-
-        step = await models.Step.findOneAndUpdate(
-            { key: stepkey },
-            { $set: req.body },
-            { new: true },
-        );
-        const data = await step.save({ ...session, validateBeforeSave: false });
-        const error = step.validateSync();
-        if (error == null) {
-            //Success
-        } else {
-            //Error
-        }
-
+    addedFields.forEach((field) => {
+        addedFieldsObject[field.key] = generateFieldSchema(field);
     });
+    schema.add(addedFieldsObject);
+
+    step = await models.Step.findOneAndUpdate(
+        { key: stepkey },
+        { $set: req.body },
+        { new: true },
+    );
+    const data = await step.save({ ...session, validateBeforeSave: false });
+    const error = step.validateSync();
+    if (error == null) {
+        //Success
+    } else {
+        //Error
+    }
 
     // Check if user changed field type
     // Check whether user deleted or added to metadata object
@@ -255,16 +251,20 @@ const putOneStep = async (stepBody, res) => {
         message: 'Step successfully edited.',
         data: data,
     });
-}
+};
 
 // PUT metadata/steps/:stepkey
 router.put(
     '/steps/',
     errorWrap(async (req, res) => {
-        req.body.forEach(
-            (step) => putOneStep(step, res)
-        );
-    })
+        try {
+            await mongoose.connection.transaction(async (session) => {
+                for (step of req.body) {
+                    await putOneStep(step, res, session);
+                }
+            });
+        } catch (error) {}
+    }),
 );
 
 // DELETE metadata/steps/:stepkey
