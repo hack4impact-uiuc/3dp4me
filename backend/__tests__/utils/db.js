@@ -56,6 +56,7 @@ module.exports.resetDatabase = async () => {
     await mongoose.connection.db.collection('Role').insertMany(roles);
     await mongoose.connection.db.collection('steps').insertMany(steps);
     await initModels();
+
     constructDynamicData();
     await mongoose.connection.db.collection('survey').insertMany(survey);
     await mongoose.connection.db.collection('example').insertMany(example);
