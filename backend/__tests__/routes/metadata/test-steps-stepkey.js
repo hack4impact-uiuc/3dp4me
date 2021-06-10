@@ -20,6 +20,7 @@ const {
     PUT_STEP_REORDERED_FIELDS_EXPECTED,
     PUT_STEP_ADDED_FIELD,
     PUT_STEP_ADDED_FIELD_EXPECTED,
+    PUT_STEP_DUPLICATE_FIELD,
     PUT_STEP_DELETED_FIELD,
 } = require('../../mock-data/steps-mock-data');
 const { models } = require('../../../models');
@@ -44,6 +45,7 @@ describe('PUT /steps/stepkey', () => {
         withAuthentication(
             request(server).put(`/api/metadata/steps/`, invalidStep),
         ).expect(404, done);
+
     });
 
     it('reorder fields in step', async () => {
@@ -58,7 +60,7 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        console.log(resContent);
+        // console.log(resContent);
         expect(resContent.data).toStrictEqual(PUT_STEP_REORDERED_FIELDS_EXPECTED);
 
         // Check database
@@ -75,13 +77,13 @@ describe('PUT /steps/stepkey', () => {
                 .put(`/api/metadata/steps/`)
                 .send(PUT_STEP_ADDED_FIELD),
         );
-        console.log(res.text);
+        // console.log(res.text);
         // Check response
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        console.log(PUT_STEP_ADDED_FIELD_EXPECTED);
-        console.log(resContent.data);
+        // console.log(PUT_STEP_ADDED_FIELD_EXPECTED);
+        // console.log(resContent.data);
         expect(resContent.data).toEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
 
         // Check database
@@ -97,12 +99,13 @@ describe('PUT /steps/stepkey', () => {
         const res = await withAuthentication(
             request(server)
                 .put(`/api/metadata/steps/`)
-                .send(PUT_STEP_ADDED_FIELD),
+                .send(PUT_STEP_DUPLICATE_FIELD),
         );
 
+        console.log(res.text);
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(res.status).toBe(500);
+        expect(res.status).toBe(400);
         expect(resContent.success).toBe(false);
     });
 
@@ -122,6 +125,6 @@ describe('PUT /steps/stepkey', () => {
         let unchangedData = await mongoose.connection
             .collection('steps')
             .findOne({ key: STEP_KEY });
-        console.log(unchangedData);
+        // console.log(unchangedData);
     });
 });

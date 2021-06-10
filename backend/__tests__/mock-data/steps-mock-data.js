@@ -525,6 +525,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [{
 }];
 
 module.exports.PUT_STEP_ADDED_FIELD = [{
+    key: 'survey',
     fields: [
         {
             fieldType: 'Number',
