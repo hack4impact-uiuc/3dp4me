@@ -39,13 +39,15 @@ describe('PUT /steps/stepkey', () => {
         server = require('../../../app');
     });
 
-    it('given bad stepkey, return 404', (done) => {
+    it('given bad stepkey, return 404', async () => {
         const invalidStep = [{key:'DoesNotExist'}];
+        console.log(invalidStep);
 
-        withAuthentication(
-            request(server).put(`/api/metadata/steps/`, invalidStep),
-        ).expect(404, done);
+        const res = await withAuthentication(
+            request(server).put(`/api/metadata/steps/`).send(invalidStep),
+        );
 
+        expect(res.status).toBe(404);
     });
 
     it('reorder fields in step', async () => {
@@ -55,17 +57,17 @@ describe('PUT /steps/stepkey', () => {
                 .send(PUT_STEP_REORDERED_FIELDS),
         );
 
-        console.log(res);
         // Check response
         const resContent = JSON.parse(res.text);
+        console.log(resContent);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        // console.log(resContent);
         expect(resContent.data).toStrictEqual(PUT_STEP_REORDERED_FIELDS_EXPECTED);
+        
 
         // Check database
         let step = await models.Step.findOne({ key: STEP_KEY }).lean();
-        step = omitDeep(step, '_id', '__v');
+        step = [omitDeep(step, '_id', '__v')];
 
         expect(step).toStrictEqual(
             omitDeep(PUT_STEP_REORDERED_FIELDS_EXPECTED, '_id', '__v'));
@@ -77,19 +79,17 @@ describe('PUT /steps/stepkey', () => {
                 .put(`/api/metadata/steps/`)
                 .send(PUT_STEP_ADDED_FIELD),
         );
-        // console.log(res.text);
+
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(200);        
         expect(resContent.success).toBe(true);
-        // console.log(PUT_STEP_ADDED_FIELD_EXPECTED);
-        // console.log(resContent.data);
         expect(resContent.data).toEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
 
         // Check database
         let step = await models.Step.findOne({ key: STEP_KEY }).lean();
         
-        step = omitDeep(step, '_id', '__v');
+        step = [omitDeep(step, '_id', '__v')];
 
         expect(step).toEqual(
             omitDeep(PUT_STEP_ADDED_FIELD_EXPECTED, '_id','__v')); // _id and __v have different formats

@@ -219,7 +219,7 @@ const putOneStep = async (stepBody, res, session) => {
         });
     }
 
-    const schema = await mongoose.model(stepkey).schema;
+    const schema = await mongoose.model(stepKey).schema;
 
     const addedFieldsObject = {};
 
@@ -229,28 +229,25 @@ const putOneStep = async (stepBody, res, session) => {
     schema.add(addedFieldsObject);
 
     step = await models.Step.findOneAndUpdate(
-        { key: stepkey },
-        { $set: req.body },
+        { key: stepKey },
+        { $set: stepBody },
         { new: true },
     );
     const data = await step.save({ ...session, validateBeforeSave: false });
-    const error = step.validateSync();
-    if (error == null) {
-        //Success
-    } else {
-        //Error
+    const error = schema.validateSync();
+    if (error != null) {
+        return res.status(400).json({
+            code: 400,
+            success: false,
+            message: `Validation error: ${error}`,
+        });
     }
 
     // Check if user changed field type
     // Check whether user deleted or added to metadata object
 
     //TOOO: figure out what session is
-    res.status(200).json({
-        code: 200,
-        success: true,
-        message: 'Step successfully edited.',
-        data: data,
-    });
+    return data;
 };
 
 // PUT metadata/steps/:stepkey
@@ -258,12 +255,27 @@ router.put(
     '/steps/',
     errorWrap(async (req, res) => {
         try {
+            let stepData = [];
             await mongoose.connection.transaction(async (session) => {
                 for (step of req.body) {
-                    await putOneStep(step, res, session);
+                    stepData.push(await putOneStep(step, res, session));
                 }
             });
-        } catch (error) {}
+
+            res.status(200).json({
+                code: 200,
+                success: true,
+                message: 'Step(s) successfully edited.',
+                data: stepData,
+            });
+        } catch (error) {
+            res.status(400).json({
+                code: 400,
+                success: false,
+                message: `Step could not be added: ${error}`,
+            });
+            
+        }
     }),
 );
 

@@ -1126,7 +1126,7 @@ module.exports.PUT_STEP_DUPLICATE_FIELD = [{
     ],
 }];
 
-module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = {
+module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [{
     _id: '6092c26fe0912601bbc5d85d',
     readableGroups: [],
     writableGroups: [],
@@ -1344,7 +1344,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = {
         },
     ],
     __v: 0,
-};
+}];
 
 module.exports.POST_STEP_WITH_BAD_FIELD = {
     key: 'newStep',
