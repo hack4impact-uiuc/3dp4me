@@ -40,8 +40,8 @@ describe('PUT /steps/stepkey', () => {
     });
 
     it('given bad stepkey, return 404', async () => {
-        const invalidStep = [{key:'DoesNotExist'}];
-        console.log(invalidStep);
+        const invalidStep = [{ key: 'DoesNotExist' }];
+        // console.log(invalidStep);
 
         const res = await withAuthentication(
             request(server).put(`/api/metadata/steps/`).send(invalidStep),
@@ -59,18 +59,21 @@ describe('PUT /steps/stepkey', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
-        console.log(resContent);
+        // console.log(resContent);
+        // console.log(resContent);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        expect(resContent.data).toStrictEqual(PUT_STEP_REORDERED_FIELDS_EXPECTED);
-        
+        expect(resContent.data).toStrictEqual(
+            PUT_STEP_REORDERED_FIELDS_EXPECTED,
+        );
 
         // Check database
         let step = await models.Step.findOne({ key: STEP_KEY }).lean();
         step = [omitDeep(step, '_id', '__v')];
 
         expect(step).toStrictEqual(
-            omitDeep(PUT_STEP_REORDERED_FIELDS_EXPECTED, '_id', '__v'));
+            omitDeep(PUT_STEP_REORDERED_FIELDS_EXPECTED, '_id', '__v'),
+        );
     });
 
     it('add a field correctly', async () => {
@@ -82,32 +85,42 @@ describe('PUT /steps/stepkey', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
-        expect(res.status).toBe(200);        
+        expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
         expect(resContent.data).toEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
 
         // Check database
         let step = await models.Step.findOne({ key: STEP_KEY }).lean();
-        
+
         step = [omitDeep(step, '_id', '__v')];
 
-        expect(step).toEqual(
-            omitDeep(PUT_STEP_ADDED_FIELD_EXPECTED, '_id','__v')); // _id and __v have different formats
+        expect(step).toStrictEqual(
+            omitDeep(PUT_STEP_ADDED_FIELD_EXPECTED, '_id', '__v'),
+        ); // _id and __v have different formats
     });
 
     it('correctly rejects duplicate field number and key', async () => {
+        const stepBefore = await models.Step.find({}).lean();
+
         const res = await withAuthentication(
             request(server)
                 .put(`/api/metadata/steps/`)
                 .send(PUT_STEP_DUPLICATE_FIELD),
         );
 
-        console.log(res.text);
+        // console.log(res.text);
         // Check response
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(400);
         expect(resContent.success).toBe(false);
+
+        const stepAfter = await models.Step.find({}).lean();
+
+        // Checks that database is rolled back after failing validation
+        expect(stepBefore).toStrictEqual(stepAfter);
     });
+
+    //TODO: test multiple step changes
 
     it('returns 400 if deleting fields', async () => {
         const res = await withAuthentication(

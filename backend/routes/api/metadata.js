@@ -231,23 +231,15 @@ const putOneStep = async (stepBody, res, session) => {
     step = await models.Step.findOneAndUpdate(
         { key: stepKey },
         { $set: stepBody },
-        { new: true },
+        { new: true, session: session, validateBeforeSave: false },
     );
-    const data = await step.save({ ...session, validateBeforeSave: false });
-    const error = schema.validateSync();
-    if (error != null) {
-        return res.status(400).json({
-            code: 400,
-            success: false,
-            message: `Validation error: ${error}`,
-        });
-    }
+
+    console.log(step);
 
     // Check if user changed field type
     // Check whether user deleted or added to metadata object
 
-    //TOOO: figure out what session is
-    return data;
+    return step;
 };
 
 // PUT metadata/steps/:stepkey
@@ -259,6 +251,20 @@ router.put(
             await mongoose.connection.transaction(async (session) => {
                 for (step of req.body) {
                     stepData.push(await putOneStep(step, res, session));
+                }
+
+                for (step of stepData) {
+                    const error = step.validateSync();
+
+                    console.log(error);
+                    if (error) {
+                        await session.abortTransaction();
+                        return res.status(400).json({
+                            code: 400,
+                            success: false,
+                            message: `Validation error: ${error}`,
+                        });
+                    }
                 }
             });
 
@@ -274,7 +280,6 @@ router.put(
                 success: false,
                 message: `Step could not be added: ${error}`,
             });
-            
         }
     }),
 );

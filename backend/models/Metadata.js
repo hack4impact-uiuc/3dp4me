@@ -22,7 +22,7 @@ const languageSchema = new mongoose.Schema({
     AR: { type: String, required: true },
 });
 
-const validateOptions = async (questionOptionSchema) => {
+const validateOptions = (questionOptionSchema) => {
     var questionIndex = Object.create(null);
     for (var i = 0; i < questionOptionSchema.length; ++i) {
         var value = questionOptionSchema[i];
@@ -66,16 +66,24 @@ const fieldSchema = new mongoose.Schema({
     writableGroups: { type: [String], required: true },
 });
 
-const validateStep = async (fieldSchema) => {
+const validateStep = (fieldSchema) => {
+    console.log(fieldSchema);
     var fieldNumbers = Object.create(null);
     var fieldKeys = Object.create(null);
     for (var i = 0; i < fieldSchema.length; ++i) {
         var value = fieldSchema[i];
         if (value.fieldNumber in fieldNumbers || value.key in fieldKeys) {
+            console.log(fieldNumbers);
+            console.log(value.fieldNumber);
+            console.log(fieldKeys);
+            console.log(value.key);
             return false;
         }
         fieldNumbers[value.fieldNumber] = true;
         fieldKeys[value.key] = true;
+
+        console.log(value.fieldNumber);
+        console.log(value.key);
     }
     return true;
 };
