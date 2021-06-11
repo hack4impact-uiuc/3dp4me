@@ -9,12 +9,8 @@ const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
-    getCurrentAuthenticatedUserAttribute,
 } = require('../../utils/auth');
-const {
-    expectStrictEqualWithTimestampOrdering,
-    areObjectsDisjoint,
-} = require('../../utils/utils');
+
 const {
     PUT_STEP_REORDERED_FIELDS,
     PUT_STEP_REORDERED_FIELDS_EXPECTED,
@@ -22,6 +18,7 @@ const {
     PUT_STEP_ADDED_FIELD_EXPECTED,
     PUT_STEP_DUPLICATE_FIELD,
     PUT_STEP_DELETED_FIELD,
+    PUT_STEP_EDITED_FIELDS,
 } = require('../../mock-data/steps-mock-data');
 const { models } = require('../../../models');
 
@@ -41,7 +38,6 @@ describe('PUT /steps/stepkey', () => {
 
     it('given bad stepkey, return 404', async () => {
         const invalidStep = [{ key: 'DoesNotExist' }];
-        // console.log(invalidStep);
 
         const res = await withAuthentication(
             request(server).put(`/api/metadata/steps/`).send(invalidStep),
@@ -50,7 +46,7 @@ describe('PUT /steps/stepkey', () => {
         expect(res.status).toBe(404);
     });
 
-    it('reorder fields in step', async () => {
+    it('can reorder fields in step', async () => {
         const res = await withAuthentication(
             request(server)
                 .put(`/api/metadata/steps`)
@@ -59,8 +55,6 @@ describe('PUT /steps/stepkey', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
-        // console.log(resContent);
-        // console.log(resContent);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
         expect(resContent.data).toStrictEqual(
@@ -76,7 +70,7 @@ describe('PUT /steps/stepkey', () => {
         );
     });
 
-    it('add a field correctly', async () => {
+    it('can add a field correctly', async () => {
         const res = await withAuthentication(
             request(server)
                 .put(`/api/metadata/steps/`)
@@ -87,7 +81,7 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        expect(resContent.data).toEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
+        expect(resContent.data).toStrictEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
 
         // Check database
         let step = await models.Step.findOne({ key: STEP_KEY }).lean();
@@ -99,6 +93,30 @@ describe('PUT /steps/stepkey', () => {
         ); // _id and __v have different formats
     });
 
+    it('can edit current fields', async () => {
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/metadata/steps`)
+                .send(PUT_STEP_EDITED_FIELDS),
+        );
+
+        console.log(res.text);
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
+        expect(resContent.data).toStrictEqual(PUT_STEP_EDITED_FIELDS);
+
+        // Check database
+        let step = await models.Step.findOne({ key: STEP_KEY }).lean();
+
+        step = [omitDeep(step, '_id', '__v')];
+
+        expect(step).toStrictEqual(
+            omitDeep(PUT_STEP_EDITED_FIELDS, '_id', '__v'),
+        );
+    });
+
     it('correctly rejects duplicate field number and key', async () => {
         const stepBefore = await models.Step.find({}).lean();
 
@@ -108,7 +126,6 @@ describe('PUT /steps/stepkey', () => {
                 .send(PUT_STEP_DUPLICATE_FIELD),
         );
 
-        // console.log(res.text);
         // Check response
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(400);
@@ -123,6 +140,8 @@ describe('PUT /steps/stepkey', () => {
     //TODO: test multiple step changes
 
     it('returns 400 if deleting fields', async () => {
+        const stepBefore = await models.Step.find({}).lean();
+
         const res = await withAuthentication(
             request(server)
                 .put(`/api/metadata/steps/`)
@@ -133,11 +152,12 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(400);
         expect(resContent.success).toBe(false);
+        expect(resContent.message).toBe('Cannot delete fields');
 
         // Check database
-        let unchangedData = await mongoose.connection
-            .collection('steps')
-            .findOne({ key: STEP_KEY });
-        // console.log(unchangedData);
+        const stepAfter = await models.Step.find({}).lean();
+
+        // Check that database reverts properly
+        expect(stepBefore).toStrictEqual(stepAfter);
     });
 });

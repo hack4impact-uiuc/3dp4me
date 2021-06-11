@@ -176,7 +176,8 @@ const putOneStep = async (stepBody, res, session) => {
 
     const stepKey = stepBody.key;
     stepToEdit = await models.Step.findOne({ key: stepKey });
-    // Return 404 if step_to_edit is null
+
+    // Return 404 if stepToEdit cannot be found
     if (!stepToEdit) {
         return res.status(404).json({
             success: false,
@@ -208,6 +209,7 @@ const putOneStep = async (stepBody, res, session) => {
         }
     });
 
+    // Checks that fields were not deleted
     if (
         stepBody.fields.length - addedFields.length <
         stepToEdit.fields.length
@@ -220,7 +222,6 @@ const putOneStep = async (stepBody, res, session) => {
     }
 
     const schema = await mongoose.model(stepKey).schema;
-
     const addedFieldsObject = {};
 
     addedFields.forEach((field) => {
@@ -234,11 +235,7 @@ const putOneStep = async (stepBody, res, session) => {
         { new: true, session: session, validateBeforeSave: false },
     );
 
-    console.log(step);
-
-    // Check if user changed field type
-    // Check whether user deleted or added to metadata object
-
+    //TODO: Check if user changed field type
     return step;
 };
 
@@ -256,7 +253,6 @@ router.put(
                 for (step of stepData) {
                     const error = step.validateSync();
 
-                    console.log(error);
                     if (error) {
                         await session.abortTransaction();
                         return res.status(400).json({
