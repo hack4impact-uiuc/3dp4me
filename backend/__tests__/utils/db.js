@@ -10,12 +10,12 @@ const exampleData = require('../../../scripts/data/example.json');
 const { initModels } = require('../../utils/init-models');
 const { models } = require('../../models');
 
-let patients,
-    roles,
-    steps,
-    survey,
-    example,
-    medicalInfo = null;
+let patients = null;
+let roles = null;
+let steps = null;
+let survey = null;
+let example = null;
+let medicalInfo = null;
 let replSet = new MongoMemoryReplSet({
     replSet: { storageEngine: 'wiredTiger' },
 });
