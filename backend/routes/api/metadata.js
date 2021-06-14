@@ -209,6 +209,8 @@ const putOneStep = async (stepBody, res, session) => {
         }
     });
 
+    // TODO: make sure that change fieldType
+
     // Checks that fields were not deleted
     if (
         stepBody.fields.length - addedFields.length <

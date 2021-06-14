@@ -139,6 +139,8 @@ describe('PUT /steps/stepkey', () => {
 
     //TODO: test multiple step changes
 
+    //TODO: deny fieldType changes
+
     it('returns 400 if deleting fields', async () => {
         const stepBefore = await models.Step.find({}).lean();
 

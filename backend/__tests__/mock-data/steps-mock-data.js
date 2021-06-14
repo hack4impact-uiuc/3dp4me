@@ -737,7 +737,7 @@ module.exports.PUT_STEP_ADDED_FIELD = [
 ];
 
 module.exports.PUT_STEP_EDITED_FIELDS = [
-{
+    {
         key: 'survey',
         _id: '6092c26fe0912601bbc5d85d',
         readableGroups: [],
@@ -755,7 +755,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 readableGroups: [],
                 writableGroups: [],
                 _id: '6070816ada92745444f64c50',
-                key: 'ChangedKey',
+                key: 'numWorkingPeople',
                 displayName: {
                     EN: 'Changed nested Parameters',
                     AR: 'عدد العاملين في الأسرة',
