@@ -191,8 +191,12 @@ const putOneStep = async (stepBody, res, session) => {
         // If both fields are the same but fieldtypes are not the same
         const field = getFieldByKey(stepToEdit.fields, requestField.key);
 
-        if (field && field.type == requestField.type) {
-            //TODO: add logic for this case
+        if (field && field.fieldType !== requestField.fieldType) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Cannot change fieldType',
+            });
         } else if (
             !field &&
             !addedFields.some(
@@ -200,12 +204,6 @@ const putOneStep = async (stepBody, res, session) => {
             )
         ) {
             addedFields.push(requestField);
-        } else {
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Invalid request',
-            });
         }
     });
 

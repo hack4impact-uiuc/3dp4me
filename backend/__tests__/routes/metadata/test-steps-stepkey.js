@@ -19,6 +19,8 @@ const {
     PUT_STEP_DUPLICATE_FIELD,
     PUT_STEP_DELETED_FIELD,
     PUT_STEP_EDITED_FIELDS,
+    PUT_STEP_EDIT_FIELDTYPE,
+    PUT_STEPS_SWAPPED_STEPNUMBER,
 } = require('../../mock-data/steps-mock-data');
 const { models } = require('../../../models');
 
@@ -79,6 +81,7 @@ describe('PUT /steps/stepkey', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
+        console.log(resContent);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
         expect(resContent.data).toStrictEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
@@ -138,8 +141,41 @@ describe('PUT /steps/stepkey', () => {
     });
 
     //TODO: test multiple step changes
+    it('correctly returns 200 when reordering steps', async () => {
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/metadata/steps`)
+                .send(PUT_STEPS_SWAPPED_STEPNUMBER),
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        console.log(resContent);
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
+    });
 
     //TODO: deny fieldType changes
+    it('returns 400 for fieldType edits', async () => {
+        const stepBefore = await models.Step.find({}).lean();
+
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/metadata/steps/`)
+                .send(PUT_STEP_EDIT_FIELDTYPE),
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(400);
+        expect(resContent.success).toBe(false);
+        expect(resContent.message).toBe('Cannot change fieldType');
+
+        const stepAfter = await models.Step.find({}).lean();
+
+        // Check that database is rolled back after aborting transaction
+        expect(stepBefore).toStrictEqual(stepAfter);
+    });
 
     it('returns 400 if deleting fields', async () => {
         const stepBefore = await models.Step.find({}).lean();
