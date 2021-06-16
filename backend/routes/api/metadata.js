@@ -8,6 +8,9 @@ const {
     stepStatusEnum,
     validateOptions,
 } = require('../../models');
+const {
+    removeRequestAttributes,
+} = require('../../middleware/requests');
 const { fieldEnum } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 
@@ -206,9 +209,7 @@ const putOneStep = async (stepBody, res, session) => {
             addedFields.push(requestField);
         }
     });
-
-    // TODO: make sure that change fieldType
-
+    
     // Checks that fields were not deleted
     if (
         stepBody.fields.length - addedFields.length <
@@ -235,13 +236,13 @@ const putOneStep = async (stepBody, res, session) => {
         { new: true, session: session, validateBeforeSave: false },
     );
 
-    //TODO: Check if user changed field type
     return step;
 };
 
 // PUT metadata/steps/:stepkey
 router.put(
     '/steps/',
+    // removeRequestAttributes(['_id', '__v']), // This breaks it for some reason?
     errorWrap(async (req, res) => {
         try {
             let stepData = [];
@@ -249,10 +250,8 @@ router.put(
                 for (step of req.body) {
                     stepData.push(await putOneStep(step, res, session));
                 }
-
                 for (step of stepData) {
                     const error = step.validateSync();
-
                     if (error) {
                         await session.abortTransaction();
                         return res.status(400).json({
@@ -262,13 +261,17 @@ router.put(
                         });
                     }
                 }
-            });
+              
+                console.log(await models.Step.find({}).lean());
 
+            });
+            
+            console.log(await models.Step.find({}).lean());
             res.status(200).json({
                 code: 200,
                 success: true,
                 message: 'Step(s) successfully edited.',
-                data: stepData,
+                result: stepData,
             });
         } catch (error) {
             res.status(400).json({

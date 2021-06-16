@@ -1509,6 +1509,204 @@ module.exports.PUT_STEP_DUPLICATE_FIELD = [
     },
 ];
 
+module.exports.PUT_DUPLICATE_STEPS = [
+    {
+        key: 'survey',
+        stepNumber: 0,
+        fields: [
+            {
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c50',
+                key: 'numWorkingPeople',
+                displayName: {
+                    EN: 'Number of Working People in Household',
+                    AR: 'عدد العاملين في الأسرة',
+                },
+                fieldNumber: 0,
+                isVisibleOnDashboard: false,
+                options: [],
+            },
+            {
+                fieldType: 'RadioButton',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c51',
+                key: 'incomeRange',
+                fieldNumber: 1,
+                isVisibleOnDashboard: false,
+                displayName: {
+                    EN: 'Household Income Range',
+                    AR: 'نطاق دخل الأسرة',
+                },
+                options: [
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c52',
+                        Index: '0',
+                        Question: {
+                            _id: '6070816ada92745444f64c53',
+                            EN: '0 JOD - 4999 JOD',
+                            AR: '0 دينار - 4999 دينار',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c54',
+                        Index: '1',
+                        Question: {
+                            _id: '6070816ada92745444f64c55',
+                            EN: '5000 JOD - 9999 JOD',
+                            AR: '5000 دينار - 9999 دينار',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c56',
+                        Index: '2',
+                        Question: {
+                            _id: '6070816ada92745444f64c57',
+                            EN: '10000 JOD - 14999 JOD',
+                            AR: '10000 دينار - 14999 دينار',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c58',
+                        Index: '3',
+                        Question: {
+                            _id: '6070816ada92745444f64c59',
+                            EN: '15000 JOD - 19999 JOD',
+                            AR: '15000 دينار - 19999 دينار',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c5a',
+                        Index: '4',
+                        Question: {
+                            _id: '6070816ada92745444f64c5b',
+                            EN: '20000 JOD - 29999 JOD',
+                            AR: '20000 دينار - 29999 دينار',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c5c',
+                        Index: '5',
+                        Question: {
+                            _id: '6070816ada92745444f64c5d',
+                            EN: '30000+ JOD',
+                            AR: '30000+ دينار',
+                        },
+                    },
+                ],
+            },
+            {
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c5e',
+                key: 'numberCars',
+                displayName: {
+                    EN: 'Number of Cars in Household',
+                    AR: 'عدد السيارات المنزلية',
+                },
+                fieldNumber: 2,
+                isVisibleOnDashboard: false,
+                options: [],
+            },
+            {
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c5f',
+                key: 'numberRetiredPeople',
+                displayName: {
+                    EN: 'Number of Retired Household Members',
+                    AR: 'عدد أفراد الأسرة المتقاعدين',
+                },
+                fieldNumber: 3,
+                isVisibleOnDashboard: false,
+                options: [],
+            },
+            {
+                fieldType: 'RadioButton',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c60',
+                key: 'typeOfInsurance',
+                fieldNumber: 4,
+                isVisibleOnDashboard: false,
+                displayName: {
+                    EN: 'Type of Insurance',
+                    AR: 'نوع التأمين',
+                },
+                options: [
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c61',
+                        Index: '0',
+                        Question: {
+                            _id: '6070816ada92745444f64c62',
+                            EN: 'Private',
+                            AR: 'خاص',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c63',
+                        Index: '1',
+                        Question: {
+                            _id: '6070816ada92745444f64c64',
+                            EN: 'Government',
+                            AR: 'حكومة',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c65',
+                        Index: '2',
+                        Question: {
+                            _id: '6070816ada92745444f64c66',
+                            EN: 'None',
+                            AR: 'لا أحد',
+                        },
+                    },
+                ],
+            },
+            {
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c67',
+                key: 'numMilitaryPolice',
+                displayName: {
+                    EN: 'Number of Military or Police in Household',
+                    AR: 'عدد أفراد الجيش أو الشرطة في الأسرة',
+                },
+                fieldNumber: 5,
+                isVisibleOnDashboard: false,
+                options: [],
+            },
+            {
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                key: 'numDisabledPeople',
+                displayName: {
+                    EN: 'Number of Disabled People in House',
+                    AR: 'عدد المعوقين بالمنزل',
+                },
+                fieldNumber: 6,
+                isVisibleOnDashboard: false,
+                options: [],
+            },
+        ],
+    },  
+]
+
 module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
     {
         _id: '6092c26fe0912601bbc5d85d',
@@ -1733,7 +1931,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
 
 module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
     {
-        _id: "6092c289e0912601bbc5d85e",
+        defaultToListView: true,
         readableGroups: [],
         writableGroups: [],
         key: "example",
@@ -1741,19 +1939,18 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
             EN: "Example",
             AR: "استطلاع"
         },
-        stepNumber: "0",
+        stepNumber: 0,
         fields: [
             {
                 fieldType: "String",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607086644e7ccf3c7cea23d8",
                 key: "string",
                 displayName: {
                     EN: "String Field",
                     AR: "عدد العاملين في الأسرة"
                 },
-                fieldNumber: "0",
+                fieldNumber: 0,
                 isVisibleOnDashboard: true,
                 options: []
             },
@@ -1761,9 +1958,8 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "RadioButton",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607086644e7ccf3c7cea23d9",
                 key: "radioButton",
-                fieldNumber: "1",
+                fieldNumber: 1,
                 isVisibleOnDashboard: false,
                 displayName: {
                     EN: "Radio Button",
@@ -1772,20 +1968,16 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 options: [
                     {
                         IsHidden: false,
-                        _id: "607086644e7ccf3c7cea23da",
-                        Index: "0",
+                        Index: 0,
                         Question: {
-                            _id: "607086644e7ccf3c7cea23db",
                             EN: "Option 1",
                             AR: " دين دينار"
                         }
                     },
                     {
                         IsHidden: false,
-                        _id: "607086644e7ccf3c7cea23dc",
-                        Index: "1",
+                        Index: 1,
                         Question: {
-                            _id: "607086644e7ccf3c7cea23dd",
                             EN: "Option 2",
                             AR: "دينار"
                         }
@@ -1796,13 +1988,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "MultilineString",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607086644e7ccf3c7cea23de",
                 key: "multilineString",
                 displayName: {
                     EN: "Text Area",
                     AR: "عدد المنزلية"
                 },
-                fieldNumber: "2",
+                fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -1810,13 +2001,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "File",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607086644e7ccf3c7cea23df",
                 key: "file",
                 displayName: {
                     EN: "File Upload",
                     AR: "عدد أفر المتقاعدين"
                 },
-                fieldNumber: "3",
+                fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -1824,9 +2014,8 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Number",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607086644e7ccf3c7cea23e0",
                 key: "number",
-                fieldNumber: "4",
+                fieldNumber: 4,
                 isVisibleOnDashboard: false,
                 displayName: {
                     EN: "Number Field",
@@ -1838,13 +2027,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Date",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607086644e7ccf3c7cea23e1",
                 key: "date",
                 displayName: {
                     EN: "Date Field",
                     AR: "عدد أفراد الجيش أو الشرطة في الأسرة"
                 },
-                fieldNumber: "5",
+                fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -1852,13 +2040,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Phone",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607086644e7ccf3c7cea23e2",
                 key: "phone",
                 displayName: {
                     EN: "Phone Field",
                     AR: "عدد المعوقين بالمنزل"
                 },
-                fieldNumber: "6",
+                fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -1866,13 +2053,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Divider",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607086644e7ccf3c7cea23e3",
                 key: "divider",
                 displayName: {
                     EN: "Divider",
                     AR: "عد بالمنزل"
                 },
-                fieldNumber: "7",
+                fieldNumber: 7,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -1880,21 +2066,19 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Audio",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607086644e7ccf3c7cea23e4",
                 key: "audio",
                 displayName: {
                     EN: "Audio Recording",
                     AR: "عد بالمنزل"
                 },
-                fieldNumber: "8",
+                fieldNumber: 8,
                 isVisibleOnDashboard: false,
                 options: []
             }
         ],
-        __v: "0"
     },
     {
-        _id: "6092c243e0912601bbc5d85c",
+        defaultToListView: true,
         readableGroups: [],
         writableGroups: [],
         key: "medicalInfo",
@@ -1902,19 +2086,18 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
             EN: "Medical Information",
             AR: "المعلومات الطبية"
         },
-        stepNumber: "1",
+        stepNumber: 1,
         fields: [
             {
                 fieldType: "Divider",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607080f7da92745444f64c0a",
                 key: "demographicDivider",
                 displayName: {
                     EN: "Demographic Info",
                     AR: "المعلومات الديموغرافية"
                 },
-                fieldNumber: "0",
+                fieldNumber: 0,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -1922,13 +2105,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "String",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607080f7da92745444f64c0b",
                 key: "address",
                 displayName: {
                     EN: "Address",
                     AR: "تبوك "
                 },
-                fieldNumber: "1",
+                fieldNumber: 1,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -1936,13 +2118,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Phone",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607080f7da92745444f64c0c",
                 key: "homePhone",
                 displayName: {
                     EN: "Home Phone",
                     AR: "هاتف المنزل"
                 },
-                fieldNumber: "2",
+                fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -1950,13 +2131,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Phone",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607080f7da92745444f64c0d",
                 key: "cellPhone",
                 displayName: {
                     EN: "Cellular Phone",
                     AR: "هاتف خلوي"
                 },
-                fieldNumber: "3",
+                fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -1964,13 +2144,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Number",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607080f7da92745444f64c0e",
                 key: "age",
                 displayName: {
                     EN: "Age",
                     AR: "عمر"
                 },
-                fieldNumber: "4",
+                fieldNumber: 4,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -1978,9 +2157,8 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "RadioButton",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607080f7da92745444f64c0f",
                 key: "gender",
-                fieldNumber: "5",
+                fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 displayName: {
                     EN: "Gender",
@@ -1989,30 +2167,24 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 options: [
                     {
                         IsHidden: false,
-                        _id: "607080f7da92745444f64c10",
-                        Index: "0",
+                        Index: 0,
                         Question: {
-                            _id: "607080f7da92745444f64c11",
                             EN: "Male",
                             AR: "ذكر"
                         }
                     },
                     {
                         IsHidden: false,
-                        _id: "607080f7da92745444f64c12",
-                        Index: "1",
+                        Index: 1,
                         Question: {
-                            _id: "607080f7da92745444f64c13",
                             EN: "Female",
                             AR: "أنثى"
                         }
                     },
                     {
                         IsHidden: false,
-                        _id: "607080f7da92745444f64c14",
-                        Index: "2",
+                        Index: 2,
                         Question: {
-                            _id: "607080f7da92745444f64c15",
                             EN: "Other",
                             AR: "آخر"
                         }
@@ -2023,13 +2195,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "String",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607080f7da92745444f64c16",
                 key: "nationalID",
                 displayName: {
                     EN: "National ID",
                     AR: "الهوية الوطنية"
                 },
-                fieldNumber: "6",
+                fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -2037,21 +2208,19 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Number",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "607080f7da92745444f64c17",
                 key: "householdSize",
                 displayName: {
                     EN: "Total Number of People in Household",
                     AR: "إجمالي عدد أفراد الأسرة"
                 },
-                fieldNumber: "7",
+                fieldNumber: 7,
                 isVisibleOnDashboard: false,
                 options: []
             }
         ],
-        __v: "0"
     },
     {
-        _id: "6092c26fe0912601bbc5d85d",
+        defaultToListView: true,
         readableGroups: [],
         writableGroups: [],
         key: "survey",
@@ -2059,19 +2228,18 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
             EN: "Survey",
             AR: "استطلاع"
         },
-        stepNumber: "2",
+        stepNumber: 2,
         fields: [
             {
                 fieldType: "Number",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "6070816ada92745444f64c50",
                 key: "numWorkingPeople",
                 displayName: {
                     EN: "Number of Working People in Household",
                     AR: "عدد العاملين في الأسرة"
                 },
-                fieldNumber: "0",
+                fieldNumber: 0,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -2079,9 +2247,8 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "RadioButton",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "6070816ada92745444f64c51",
                 key: "incomeRange",
-                fieldNumber: "1",
+                fieldNumber: 1,
                 isVisibleOnDashboard: false,
                 displayName: {
                     EN: "Household Income Range",
@@ -2090,60 +2257,48 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 options: [
                     {
                         IsHidden: false,
-                        _id: "6070816ada92745444f64c52",
-                        Index: "0",
+                        Index: 0,
                         Question: {
-                            _id: "6070816ada92745444f64c53",
                             EN: "0 JOD - 4999 JOD",
                             AR: "0 دينار - 4999 دينار"
                         }
                     },
                     {
                         IsHidden: false,
-                        _id: "6070816ada92745444f64c54",
-                        Index: "1",
+                        Index: 1,
                         Question: {
-                            _id: "6070816ada92745444f64c55",
                             EN: "5000 JOD - 9999 JOD",
                             AR: "5000 دينار - 9999 دينار"
                         }
                     },
                     {
                         IsHidden: false,
-                        _id: "6070816ada92745444f64c56",
-                        Index: "2",
+                        Index: 2,
                         Question: {
-                            _id: "6070816ada92745444f64c57",
                             EN: "10000 JOD - 14999 JOD",
                             AR: "10000 دينار - 14999 دينار"
                         }
                     },
                     {
                         IsHidden: false,
-                        _id: "6070816ada92745444f64c58",
-                        Index: "3",
+                        Index: 3,
                         Question: {
-                            _id: "6070816ada92745444f64c59",
                             EN: "15000 JOD - 19999 JOD",
                             AR: "15000 دينار - 19999 دينار"
                         }
                     },
                     {
                         IsHidden: false,
-                        _id: "6070816ada92745444f64c5a",
-                        Index: "4",
+                        Index: 4,
                         Question: {
-                            _id: "6070816ada92745444f64c5b",
                             EN: "20000 JOD - 29999 JOD",
                             AR: "20000 دينار - 29999 دينار"
                         }
                     },
                     {
                         IsHidden: false,
-                        _id: "6070816ada92745444f64c5c",
-                        Index: "5",
+                        Index: 5,
                         Question: {
-                            _id: "6070816ada92745444f64c5d",
                             EN: "30000+ JOD",
                             AR: "30000+ دينار"
                         }
@@ -2154,13 +2309,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Number",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "6070816ada92745444f64c5e",
                 key: "numberCars",
                 displayName: {
                     EN: "Number of Cars in Household",
                     AR: "عدد السيارات المنزلية"
                 },
-                fieldNumber: "2",
+                fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -2168,13 +2322,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Number",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "6070816ada92745444f64c5f",
                 key: "numberRetiredPeople",
                 displayName: {
                     EN: "Number of Retired Household Members",
                     AR: "عدد أفراد الأسرة المتقاعدين"
                 },
-                fieldNumber: "3",
+                fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -2182,9 +2335,8 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "RadioButton",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "6070816ada92745444f64c60",
                 key: "typeOfInsurance",
-                fieldNumber: "4",
+                fieldNumber: 4,
                 isVisibleOnDashboard: false,
                 displayName: {
                     EN: "Type of Insurance",
@@ -2193,30 +2345,24 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 options: [
                     {
                         IsHidden: false,
-                        _id: "6070816ada92745444f64c61",
-                        Index: "0",
+                        Index: 0,
                         Question: {
-                            _id: "6070816ada92745444f64c62",
                             EN: "Private",
                             AR: "خاص"
                         }
                     },
                     {
                         IsHidden: false,
-                        _id: "6070816ada92745444f64c63",
-                        Index: "1",
+                        Index: 1,
                         Question: {
-                            _id: "6070816ada92745444f64c64",
                             EN: "Government",
                             AR: "حكومة"
                         }
                     },
                     {
                         IsHidden: false,
-                        _id: "6070816ada92745444f64c65",
-                        Index: "2",
+                        Index: 2,
                         Question: {
-                            _id: "6070816ada92745444f64c66",
                             EN: "None",
                             AR: "لا أحد"
                         }
@@ -2227,13 +2373,12 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Number",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "6070816ada92745444f64c67",
                 key: "numMilitaryPolice",
                 displayName: {
                     EN: "Number of Military or Police in Household",
                     AR: "عدد أفراد الجيش أو الشرطة في الأسرة"
                 },
-                fieldNumber: "5",
+                fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: []
             },
@@ -2241,18 +2386,16 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: "Number",
                 readableGroups: [],
                 writableGroups: [],
-                _id: "6070816ada92745444f64c68",
                 key: "numDisabledPeople",
                 displayName: {
                     EN: "Number of Disabled People in House",
                     AR: "عدد المعوقين بالمنزل"
                 },
-                fieldNumber: "6",
+                fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: []
             }
         ],
-        __v: "0"
     },
     
 ];

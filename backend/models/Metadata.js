@@ -80,14 +80,27 @@ const validateStep = (fieldSchema) => {
     return true;
 };
 
+const isUniqueStepNumber = async (value) => {
+   console.log(step);
+   const stepCount = await mongoose.connection.db.collection('steps').countDocuments({stepNumber: value});
+   console.log(stepCount == 0);
+   return stepCount == 0;
+}
+
 const stepSchema = new mongoose.Schema({
     key: { type: String, required: true, unique: true },
     displayName: {
         EN: { type: String, required: true },
         AR: { type: String, required: true },
     },
-    stepNumber: { type: Number, required: true, unique: true },
-
+    stepNumber: { 
+        type: Number, 
+        required: true, 
+        validate: {
+            validator: isUniqueStepNumber,
+            message: "StepNumber must be unique",
+        }
+    },
     fields: {
         type: [fieldSchema],
         required: true,
