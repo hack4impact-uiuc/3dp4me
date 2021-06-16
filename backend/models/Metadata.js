@@ -81,10 +81,12 @@ const validateStep = (fieldSchema) => {
 };
 
 const isUniqueStepNumber = async (value) => {
+//    return Promise.resolve(false);
    console.log(step);
+  
    const stepCount = await mongoose.connection.db.collection('steps').countDocuments({stepNumber: value});
-   console.log(stepCount == 0);
-   return stepCount == 0;
+
+   return stepCount == 1;
 }
 
 const stepSchema = new mongoose.Schema({

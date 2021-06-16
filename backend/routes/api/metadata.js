@@ -251,7 +251,8 @@ router.put(
                     stepData.push(await putOneStep(step, res, session));
                 }
                 for (step of stepData) {
-                    const error = step.validateSync();
+                    const error = await step.validate();
+                    
                     if (error) {
                         await session.abortTransaction();
                         return res.status(400).json({
@@ -261,12 +262,8 @@ router.put(
                         });
                     }
                 }
-              
-                console.log(await models.Step.find({}).lean());
 
             });
-            
-            console.log(await models.Step.find({}).lean());
             res.status(200).json({
                 code: 200,
                 success: true,
