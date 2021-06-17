@@ -8,10 +8,8 @@ const {
     stepStatusEnum,
     validateOptions,
 } = require('../../models');
-const {
-    removeRequestAttributes,
-} = require('../../middleware/requests');
-const { fieldEnum } = require('../../models/Metadata');
+const { removeRequestAttributes } = require('../../middleware/requests');
+const { fieldEnum, isUniqueStepNumber } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 
 const generateFieldSchema = (field) => {
@@ -209,7 +207,7 @@ const putOneStep = async (stepBody, res, session) => {
             addedFields.push(requestField);
         }
     });
-    
+
     // Checks that fields were not deleted
     if (
         stepBody.fields.length - addedFields.length <
@@ -251,9 +249,14 @@ router.put(
                     stepData.push(await putOneStep(step, res, session));
                 }
                 for (step of stepData) {
-                    const error = await step.validate();
-                    
-                    if (error) {
+                    let error = step.validateSync();
+                    let isValid = await isUniqueStepNumber(
+                        step.stepNumber,
+                        step.key,
+                        session,
+                    );
+                    console.log(isValid);
+                    if (error || !isValid) {
                         await session.abortTransaction();
                         return res.status(400).json({
                             code: 400,
@@ -262,7 +265,6 @@ router.put(
                         });
                     }
                 }
-
             });
             res.status(200).json({
                 code: 200,
@@ -271,6 +273,7 @@ router.put(
                 result: stepData,
             });
         } catch (error) {
+            console.log(error);
             res.status(400).json({
                 code: 400,
                 success: false,

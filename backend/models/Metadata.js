@@ -80,14 +80,24 @@ const validateStep = (fieldSchema) => {
     return true;
 };
 
-const isUniqueStepNumber = async (value) => {
-//    return Promise.resolve(false);
-   console.log(step);
-  
-   const stepCount = await mongoose.connection.db.collection('steps').countDocuments({stepNumber: value});
+const isUniqueStepNumber = async (value, stepKey, session) => {
+    const step = await mongoose.connection.db
+        .collection('steps')
+        .find({ stepNumber: value }, { session: session })
+        .toArray();
+    console.log(step);
+    if (step.length >= 2) {
+        console.log('false here');
+        return false;
+    } else if (step.length == 0) {
+        return true;
+    }
+    console.log('testing key comparison');
 
-   return stepCount == 1;
-}
+    console.log(step[0].key);
+    console.log(stepKey);
+    return step[0].key === stepKey;
+};
 
 const stepSchema = new mongoose.Schema({
     key: { type: String, required: true, unique: true },
@@ -95,13 +105,13 @@ const stepSchema = new mongoose.Schema({
         EN: { type: String, required: true },
         AR: { type: String, required: true },
     },
-    stepNumber: { 
-        type: Number, 
-        required: true, 
-        validate: {
-            validator: isUniqueStepNumber,
-            message: "StepNumber must be unique",
-        }
+    stepNumber: {
+        type: Number,
+        required: true,
+        // validate: {
+        //     validator: isUniqueStepNumber,
+        //     message: "StepNumber must be unique",
+        // }
     },
     fields: {
         type: [fieldSchema],
@@ -117,5 +127,27 @@ const stepSchema = new mongoose.Schema({
     defaultToListView: { type: Boolean, default: true },
 });
 
+stepSchema.path('stepNumber').validate(async function () {
+    console.log(this);
+
+    return await isUniqueStepNumber(this.stepNumber, this.key);
+});
+// stepSchema.pre('validate', async function(req, res, next) {
+//     console.log(this);
+//     console.log(req);
+//     console.log(res);
+//     if (await isUniqueStepNumber(this.stepNumber, this.key)) {
+//         next();
+//     }
+
+//     next(new Error('Steps must have unique stepNumber'));
+// });
+
 const Step = mongoose.model('steps', stepSchema);
-module.exports = { Step, fieldEnum, questionOptionSchema, validateOptions };
+module.exports = {
+    Step,
+    isUniqueStepNumber,
+    fieldEnum,
+    questionOptionSchema,
+    validateOptions,
+};

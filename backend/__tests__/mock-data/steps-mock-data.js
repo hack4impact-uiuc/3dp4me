@@ -1,6 +1,7 @@
 module.exports.PUT_STEP_REORDERED_FIELDS = [
     {
         key: 'survey',
+        stepNumber: 1,
         fields: [
             {
                 fieldType: 'Number',
@@ -554,9 +555,7 @@ module.exports.PUT_STEP_EDIT_FIELDTYPE = [
                     EN: 'Household Income Range',
                     AR: 'نطاق دخل الأسرة',
                 },
-                options: [
- 
-                ],
+                options: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -631,7 +630,6 @@ module.exports.PUT_STEP_EDIT_FIELDTYPE = [
                             AR: '30000+ دينار',
                         },
                     },
-
                 ],
             },
             {
@@ -1704,8 +1702,8 @@ module.exports.PUT_DUPLICATE_STEPS = [
                 options: [],
             },
         ],
-    },  
-]
+    },
+];
 
 module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
     {
@@ -1934,470 +1932,469 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
         defaultToListView: true,
         readableGroups: [],
         writableGroups: [],
-        key: "example",
+        key: 'example',
         displayName: {
-            EN: "Example",
-            AR: "استطلاع"
+            EN: 'Example',
+            AR: 'استطلاع',
         },
         stepNumber: 0,
         fields: [
             {
-                fieldType: "String",
+                fieldType: 'String',
                 readableGroups: [],
                 writableGroups: [],
-                key: "string",
+                key: 'string',
                 displayName: {
-                    EN: "String Field",
-                    AR: "عدد العاملين في الأسرة"
+                    EN: 'String Field',
+                    AR: 'عدد العاملين في الأسرة',
                 },
                 fieldNumber: 0,
                 isVisibleOnDashboard: true,
-                options: []
+                options: [],
             },
             {
-                fieldType: "RadioButton",
+                fieldType: 'RadioButton',
                 readableGroups: [],
                 writableGroups: [],
-                key: "radioButton",
+                key: 'radioButton',
                 fieldNumber: 1,
                 isVisibleOnDashboard: false,
                 displayName: {
-                    EN: "Radio Button",
-                    AR: "نطاق دخل الأسرة"
+                    EN: 'Radio Button',
+                    AR: 'نطاق دخل الأسرة',
                 },
                 options: [
                     {
                         IsHidden: false,
                         Index: 0,
                         Question: {
-                            EN: "Option 1",
-                            AR: " دين دينار"
-                        }
+                            EN: 'Option 1',
+                            AR: ' دين دينار',
+                        },
                     },
                     {
                         IsHidden: false,
                         Index: 1,
                         Question: {
-                            EN: "Option 2",
-                            AR: "دينار"
-                        }
-                    }
-                ]
+                            EN: 'Option 2',
+                            AR: 'دينار',
+                        },
+                    },
+                ],
             },
             {
-                fieldType: "MultilineString",
+                fieldType: 'MultilineString',
                 readableGroups: [],
                 writableGroups: [],
-                key: "multilineString",
+                key: 'multilineString',
                 displayName: {
-                    EN: "Text Area",
-                    AR: "عدد المنزلية"
+                    EN: 'Text Area',
+                    AR: 'عدد المنزلية',
                 },
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "File",
+                fieldType: 'File',
                 readableGroups: [],
                 writableGroups: [],
-                key: "file",
+                key: 'file',
                 displayName: {
-                    EN: "File Upload",
-                    AR: "عدد أفر المتقاعدين"
+                    EN: 'File Upload',
+                    AR: 'عدد أفر المتقاعدين',
                 },
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "Number",
+                fieldType: 'Number',
                 readableGroups: [],
                 writableGroups: [],
-                key: "number",
+                key: 'number',
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
                 displayName: {
-                    EN: "Number Field",
-                    AR: "نوع التأمين"
+                    EN: 'Number Field',
+                    AR: 'نوع التأمين',
                 },
-                options: []
+                options: [],
             },
             {
-                fieldType: "Date",
+                fieldType: 'Date',
                 readableGroups: [],
                 writableGroups: [],
-                key: "date",
+                key: 'date',
                 displayName: {
-                    EN: "Date Field",
-                    AR: "عدد أفراد الجيش أو الشرطة في الأسرة"
+                    EN: 'Date Field',
+                    AR: 'عدد أفراد الجيش أو الشرطة في الأسرة',
                 },
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "Phone",
+                fieldType: 'Phone',
                 readableGroups: [],
                 writableGroups: [],
-                key: "phone",
+                key: 'phone',
                 displayName: {
-                    EN: "Phone Field",
-                    AR: "عدد المعوقين بالمنزل"
+                    EN: 'Phone Field',
+                    AR: 'عدد المعوقين بالمنزل',
                 },
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "Divider",
+                fieldType: 'Divider',
                 readableGroups: [],
                 writableGroups: [],
-                key: "divider",
+                key: 'divider',
                 displayName: {
-                    EN: "Divider",
-                    AR: "عد بالمنزل"
+                    EN: 'Divider',
+                    AR: 'عد بالمنزل',
                 },
                 fieldNumber: 7,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "Audio",
+                fieldType: 'Audio',
                 readableGroups: [],
                 writableGroups: [],
-                key: "audio",
+                key: 'audio',
                 displayName: {
-                    EN: "Audio Recording",
-                    AR: "عد بالمنزل"
+                    EN: 'Audio Recording',
+                    AR: 'عد بالمنزل',
                 },
                 fieldNumber: 8,
                 isVisibleOnDashboard: false,
-                options: []
-            }
+                options: [],
+            },
         ],
     },
     {
         defaultToListView: true,
         readableGroups: [],
         writableGroups: [],
-        key: "medicalInfo",
+        key: 'medicalInfo',
         displayName: {
-            EN: "Medical Information",
-            AR: "المعلومات الطبية"
+            EN: 'Medical Information',
+            AR: 'المعلومات الطبية',
         },
         stepNumber: 1,
         fields: [
             {
-                fieldType: "Divider",
+                fieldType: 'Divider',
                 readableGroups: [],
                 writableGroups: [],
-                key: "demographicDivider",
+                key: 'demographicDivider',
                 displayName: {
-                    EN: "Demographic Info",
-                    AR: "المعلومات الديموغرافية"
+                    EN: 'Demographic Info',
+                    AR: 'المعلومات الديموغرافية',
                 },
                 fieldNumber: 0,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "String",
+                fieldType: 'String',
                 readableGroups: [],
                 writableGroups: [],
-                key: "address",
+                key: 'address',
                 displayName: {
-                    EN: "Address",
-                    AR: "تبوك "
+                    EN: 'Address',
+                    AR: 'تبوك ',
                 },
                 fieldNumber: 1,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "Phone",
+                fieldType: 'Phone',
                 readableGroups: [],
                 writableGroups: [],
-                key: "homePhone",
+                key: 'homePhone',
                 displayName: {
-                    EN: "Home Phone",
-                    AR: "هاتف المنزل"
+                    EN: 'Home Phone',
+                    AR: 'هاتف المنزل',
                 },
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "Phone",
+                fieldType: 'Phone',
                 readableGroups: [],
                 writableGroups: [],
-                key: "cellPhone",
+                key: 'cellPhone',
                 displayName: {
-                    EN: "Cellular Phone",
-                    AR: "هاتف خلوي"
+                    EN: 'Cellular Phone',
+                    AR: 'هاتف خلوي',
                 },
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "Number",
+                fieldType: 'Number',
                 readableGroups: [],
                 writableGroups: [],
-                key: "age",
+                key: 'age',
                 displayName: {
-                    EN: "Age",
-                    AR: "عمر"
+                    EN: 'Age',
+                    AR: 'عمر',
                 },
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "RadioButton",
+                fieldType: 'RadioButton',
                 readableGroups: [],
                 writableGroups: [],
-                key: "gender",
+                key: 'gender',
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 displayName: {
-                    EN: "Gender",
-                    AR: "جنس تذكير أو تأنيث"
+                    EN: 'Gender',
+                    AR: 'جنس تذكير أو تأنيث',
                 },
                 options: [
                     {
                         IsHidden: false,
                         Index: 0,
                         Question: {
-                            EN: "Male",
-                            AR: "ذكر"
-                        }
+                            EN: 'Male',
+                            AR: 'ذكر',
+                        },
                     },
                     {
                         IsHidden: false,
                         Index: 1,
                         Question: {
-                            EN: "Female",
-                            AR: "أنثى"
-                        }
+                            EN: 'Female',
+                            AR: 'أنثى',
+                        },
                     },
                     {
                         IsHidden: false,
                         Index: 2,
                         Question: {
-                            EN: "Other",
-                            AR: "آخر"
-                        }
-                    }
-                ]
+                            EN: 'Other',
+                            AR: 'آخر',
+                        },
+                    },
+                ],
             },
             {
-                fieldType: "String",
+                fieldType: 'String',
                 readableGroups: [],
                 writableGroups: [],
-                key: "nationalID",
+                key: 'nationalID',
                 displayName: {
-                    EN: "National ID",
-                    AR: "الهوية الوطنية"
+                    EN: 'National ID',
+                    AR: 'الهوية الوطنية',
                 },
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "Number",
+                fieldType: 'Number',
                 readableGroups: [],
                 writableGroups: [],
-                key: "householdSize",
+                key: 'householdSize',
                 displayName: {
-                    EN: "Total Number of People in Household",
-                    AR: "إجمالي عدد أفراد الأسرة"
+                    EN: 'Total Number of People in Household',
+                    AR: 'إجمالي عدد أفراد الأسرة',
                 },
                 fieldNumber: 7,
                 isVisibleOnDashboard: false,
-                options: []
-            }
+                options: [],
+            },
         ],
     },
     {
         defaultToListView: true,
         readableGroups: [],
         writableGroups: [],
-        key: "survey",
+        key: 'survey',
         displayName: {
-            EN: "Survey",
-            AR: "استطلاع"
+            EN: 'Survey',
+            AR: 'استطلاع',
         },
         stepNumber: 2,
         fields: [
             {
-                fieldType: "Number",
+                fieldType: 'Number',
                 readableGroups: [],
                 writableGroups: [],
-                key: "numWorkingPeople",
+                key: 'numWorkingPeople',
                 displayName: {
-                    EN: "Number of Working People in Household",
-                    AR: "عدد العاملين في الأسرة"
+                    EN: 'Number of Working People in Household',
+                    AR: 'عدد العاملين في الأسرة',
                 },
                 fieldNumber: 0,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "RadioButton",
+                fieldType: 'RadioButton',
                 readableGroups: [],
                 writableGroups: [],
-                key: "incomeRange",
+                key: 'incomeRange',
                 fieldNumber: 1,
                 isVisibleOnDashboard: false,
                 displayName: {
-                    EN: "Household Income Range",
-                    AR: "نطاق دخل الأسرة"
+                    EN: 'Household Income Range',
+                    AR: 'نطاق دخل الأسرة',
                 },
                 options: [
                     {
                         IsHidden: false,
                         Index: 0,
                         Question: {
-                            EN: "0 JOD - 4999 JOD",
-                            AR: "0 دينار - 4999 دينار"
-                        }
+                            EN: '0 JOD - 4999 JOD',
+                            AR: '0 دينار - 4999 دينار',
+                        },
                     },
                     {
                         IsHidden: false,
                         Index: 1,
                         Question: {
-                            EN: "5000 JOD - 9999 JOD",
-                            AR: "5000 دينار - 9999 دينار"
-                        }
+                            EN: '5000 JOD - 9999 JOD',
+                            AR: '5000 دينار - 9999 دينار',
+                        },
                     },
                     {
                         IsHidden: false,
                         Index: 2,
                         Question: {
-                            EN: "10000 JOD - 14999 JOD",
-                            AR: "10000 دينار - 14999 دينار"
-                        }
+                            EN: '10000 JOD - 14999 JOD',
+                            AR: '10000 دينار - 14999 دينار',
+                        },
                     },
                     {
                         IsHidden: false,
                         Index: 3,
                         Question: {
-                            EN: "15000 JOD - 19999 JOD",
-                            AR: "15000 دينار - 19999 دينار"
-                        }
+                            EN: '15000 JOD - 19999 JOD',
+                            AR: '15000 دينار - 19999 دينار',
+                        },
                     },
                     {
                         IsHidden: false,
                         Index: 4,
                         Question: {
-                            EN: "20000 JOD - 29999 JOD",
-                            AR: "20000 دينار - 29999 دينار"
-                        }
+                            EN: '20000 JOD - 29999 JOD',
+                            AR: '20000 دينار - 29999 دينار',
+                        },
                     },
                     {
                         IsHidden: false,
                         Index: 5,
                         Question: {
-                            EN: "30000+ JOD",
-                            AR: "30000+ دينار"
-                        }
-                    }
-                ]
+                            EN: '30000+ JOD',
+                            AR: '30000+ دينار',
+                        },
+                    },
+                ],
             },
             {
-                fieldType: "Number",
+                fieldType: 'Number',
                 readableGroups: [],
                 writableGroups: [],
-                key: "numberCars",
+                key: 'numberCars',
                 displayName: {
-                    EN: "Number of Cars in Household",
-                    AR: "عدد السيارات المنزلية"
+                    EN: 'Number of Cars in Household',
+                    AR: 'عدد السيارات المنزلية',
                 },
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "Number",
+                fieldType: 'Number',
                 readableGroups: [],
                 writableGroups: [],
-                key: "numberRetiredPeople",
+                key: 'numberRetiredPeople',
                 displayName: {
-                    EN: "Number of Retired Household Members",
-                    AR: "عدد أفراد الأسرة المتقاعدين"
+                    EN: 'Number of Retired Household Members',
+                    AR: 'عدد أفراد الأسرة المتقاعدين',
                 },
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "RadioButton",
+                fieldType: 'RadioButton',
                 readableGroups: [],
                 writableGroups: [],
-                key: "typeOfInsurance",
+                key: 'typeOfInsurance',
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
                 displayName: {
-                    EN: "Type of Insurance",
-                    AR: "نوع التأمين"
+                    EN: 'Type of Insurance',
+                    AR: 'نوع التأمين',
                 },
                 options: [
                     {
                         IsHidden: false,
                         Index: 0,
                         Question: {
-                            EN: "Private",
-                            AR: "خاص"
-                        }
+                            EN: 'Private',
+                            AR: 'خاص',
+                        },
                     },
                     {
                         IsHidden: false,
                         Index: 1,
                         Question: {
-                            EN: "Government",
-                            AR: "حكومة"
-                        }
+                            EN: 'Government',
+                            AR: 'حكومة',
+                        },
                     },
                     {
                         IsHidden: false,
                         Index: 2,
                         Question: {
-                            EN: "None",
-                            AR: "لا أحد"
-                        }
-                    }
-                ]
+                            EN: 'None',
+                            AR: 'لا أحد',
+                        },
+                    },
+                ],
             },
             {
-                fieldType: "Number",
+                fieldType: 'Number',
                 readableGroups: [],
                 writableGroups: [],
-                key: "numMilitaryPolice",
+                key: 'numMilitaryPolice',
                 displayName: {
-                    EN: "Number of Military or Police in Household",
-                    AR: "عدد أفراد الجيش أو الشرطة في الأسرة"
+                    EN: 'Number of Military or Police in Household',
+                    AR: 'عدد أفراد الجيش أو الشرطة في الأسرة',
                 },
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
-                options: []
+                options: [],
             },
             {
-                fieldType: "Number",
+                fieldType: 'Number',
                 readableGroups: [],
                 writableGroups: [],
-                key: "numDisabledPeople",
+                key: 'numDisabledPeople',
                 displayName: {
-                    EN: "Number of Disabled People in House",
-                    AR: "عدد المعوقين بالمنزل"
+                    EN: 'Number of Disabled People in House',
+                    AR: 'عدد المعوقين بالمنزل',
                 },
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
-                options: []
-            }
+                options: [],
+            },
         ],
     },
-    
 ];
 
 module.exports.POST_STEP_WITH_BAD_FIELD = {
@@ -2448,7 +2445,7 @@ module.exports.POST_STEP_WITH_DUPLICATE_STEP_NUMBER = {
         EN: 'Medical Information',
         AR: 'المعلومات الطبية',
     },
-    stepNumber: '0',
+    stepNumber: 0,
     fields: [
         {
             key: 'demographicDivider',
