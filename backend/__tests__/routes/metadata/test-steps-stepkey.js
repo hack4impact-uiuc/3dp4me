@@ -150,20 +150,22 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        expect(omitDeep(resContent.result, '_id', '__v')).toStrictEqual(PUT_STEPS_SWAPPED_STEPNUMBER);
+        expect(omitDeep(resContent.result, '_id', '__v')).toStrictEqual(
+            PUT_STEPS_SWAPPED_STEPNUMBER,
+        );
 
         // Check database
         let steps = await models.Step.find({}).lean();
 
         // Sort incoming data by stepNumber
-        steps.sort((a, b) =>  a.stepNumber - b.stepNumber);
-        steps = omitDeep(steps, '_id', '__v')
+        steps.sort((a, b) => a.stepNumber - b.stepNumber);
+        steps = omitDeep(steps, '_id', '__v');
         expect(steps).toStrictEqual(PUT_STEPS_SWAPPED_STEPNUMBER);
     });
 
     it('returns 400 for request with duplicate stepKey or stepNumber', async () => {
         const stepsBefore = await models.Step.find({}).lean();
-        
+
         const res = await withAuthentication(
             request(server)
                 .put(`/api/metadata/steps`)
@@ -176,8 +178,8 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         console.log(resContent);
         expect(res.status).toBe(400);
-        expect(resContent.success).toBe(false)
-        
+        expect(resContent.success).toBe(false);
+
         // TODO minor bug where the error says that you can
 
         expect(stepsBefore).toStrictEqual(stepsAfter);
