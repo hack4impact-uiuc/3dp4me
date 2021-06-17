@@ -176,11 +176,8 @@ describe('PUT /steps/stepkey', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
-        console.log(resContent);
         expect(res.status).toBe(400);
         expect(resContent.success).toBe(false);
-
-        // TODO minor bug where the error says that you can
 
         expect(stepsBefore).toStrictEqual(stepsAfter);
     });

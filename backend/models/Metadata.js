@@ -85,17 +85,13 @@ const isUniqueStepNumber = async (value, stepKey, session) => {
         .collection('steps')
         .find({ stepNumber: value }, { session: session })
         .toArray();
-    console.log(step);
+
     if (step.length >= 2) {
-        console.log('false here');
         return false;
     } else if (step.length == 0) {
         return true;
     }
-    console.log('testing key comparison');
 
-    console.log(step[0].key);
-    console.log(stepKey);
     return step[0].key === stepKey;
 };
 
@@ -108,10 +104,6 @@ const stepSchema = new mongoose.Schema({
     stepNumber: {
         type: Number,
         required: true,
-        // validate: {
-        //     validator: isUniqueStepNumber,
-        //     message: "StepNumber must be unique",
-        // }
     },
     fields: {
         type: [fieldSchema],
@@ -128,20 +120,8 @@ const stepSchema = new mongoose.Schema({
 });
 
 stepSchema.path('stepNumber').validate(async function () {
-    console.log(this);
-
     return await isUniqueStepNumber(this.stepNumber, this.key);
 });
-// stepSchema.pre('validate', async function(req, res, next) {
-//     console.log(this);
-//     console.log(req);
-//     console.log(res);
-//     if (await isUniqueStepNumber(this.stepNumber, this.key)) {
-//         next();
-//     }
-
-//     next(new Error('Steps must have unique stepNumber'));
-// });
 
 const Step = mongoose.model('steps', stepSchema);
 module.exports = {
