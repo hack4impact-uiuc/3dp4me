@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const isValidNumber = require('libphonenumber-js');
 const { errorWrap } = require('../../utils');
+const { getFieldByKey } = require('../../utils/step-utils');
 const {
     models,
     fileSchema,
@@ -155,16 +156,6 @@ router.post(
         }
     }),
 );
-
-const getFieldByKey = (object_list, key) => {
-    for (object of object_list) {
-        if (object?.key === key) {
-            return object;
-        }
-    }
-
-    return null;
-};
 
 // PUT metadata/steps/:stepkey
 router.put(
