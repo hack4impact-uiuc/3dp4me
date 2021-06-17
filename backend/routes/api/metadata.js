@@ -249,20 +249,29 @@ router.put(
                     stepData.push(await putOneStep(step, res, session));
                 }
                 for (step of stepData) {
+                    // Run synchronous tests and async tests separately
                     let error = step.validateSync();
                     let isValid = await isUniqueStepNumber(
                         step.stepNumber,
                         step.key,
                         session,
                     );
-                    console.log(isValid);
+
                     if (error || !isValid) {
                         await session.abortTransaction();
-                        return res.status(400).json({
-                            code: 400,
-                            success: false,
-                            message: `Validation error: ${error}`,
-                        });
+                        if (error) {
+                            return res.status(400).json({
+                                code: 400,
+                                success: false,
+                                message: `Validation error: ${error}`,
+                            });
+                        } else {
+                            return res.status(400).json({
+                                code: 400,
+                                success: false,
+                                message: `Validation error: Does not have unique stepNumber`,
+                            });
+                        }
                     }
                 }
             });

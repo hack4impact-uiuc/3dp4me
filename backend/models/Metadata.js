@@ -80,6 +80,7 @@ const validateStep = (fieldSchema) => {
     return true;
 };
 
+// Take in session from transaction to check database
 const isUniqueStepNumber = async (value, stepKey, session) => {
     const step = await mongoose.connection.db
         .collection('steps')
@@ -119,6 +120,7 @@ const stepSchema = new mongoose.Schema({
     defaultToListView: { type: Boolean, default: true },
 });
 
+// Add validator to run during other that change stepNumber
 stepSchema.path('stepNumber').validate(async function () {
     return await isUniqueStepNumber(this.stepNumber, this.key);
 });
