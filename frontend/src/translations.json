@@ -52,6 +52,13 @@
                     "feedback": "Feedback Saved"
                 }
             },
+            "accountManagement": {
+                "access": {
+                    "notAssigned": "Not Assigned",
+                    "revoked": "Revoked",
+                    "active": "Active"
+                }
+            },
             "stepTabs": {
                 "patientInfo": "Medical Info",
                 "earScan": "Ear Scan",

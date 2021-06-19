@@ -1,6 +1,6 @@
 import { Button } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
-import { addUserRole, getAllUsers, removeUserRole } from '../../utils/api';
+import { getAllUsers, removeUserRole } from '../../utils/api';
 import MainUserTable from '../../components/Table/MainUserTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
@@ -9,17 +9,6 @@ const AccountManagement = ({ languageData }) => {
     const errorWrap = useErrorWrap();
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
-
-    const addRole = async () => {
-        // This is just for testing, feel free to replace this once we have a functioning dashboard
-        console.log(await getAllUsers());
-        console.log(
-            await removeUserRole(
-                'google_107210067228697709799',
-                '606e0a8b02b23d02bc77673e',
-            ),
-        );
-    };
 
     useEffect(() => {
         const fetchData = async () => {

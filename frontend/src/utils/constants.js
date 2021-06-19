@@ -34,10 +34,9 @@ export const FIELD_TYPES = {
     AUDIO: 'Audio',
 };
 
-export const USER_STATUS = {
-    // need to update
-    FEEDBACK: 'Feedback',
-    ARCHIVE: 'Archive',
+export const ACCESS_STATUS = {
+    NOTASSIGNED: 'Not Assigned',
+    REVOKED: 'Revoked',
     ACTIVE: 'Active',
 };
 

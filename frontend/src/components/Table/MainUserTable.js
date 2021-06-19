@@ -13,8 +13,6 @@ import { Link } from 'react-router-dom';
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-
-import { resolveObjPath } from '../../utils/object';
 import useSortableData from '../../hooks/useSortableData';
 import finishedIcon from '../../assets/check.svg';
 import partiallyIcon from '../../assets/half-circle.svg';
@@ -24,7 +22,7 @@ import {
     LanguageDataType,
     TableHeaderType,
 } from '../../utils/custom-proptypes';
-import { USER_STATUS } from '../../utils/constants';
+import { ACCESS_STATUS } from '../../utils/constants';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -41,7 +39,7 @@ const StyledTableRow = withStyles(() => ({
     },
 }))(TableRow);
 
-const MainUserTable = ({ languageData, users, headers, rowIds }) => {
+const MainUserTable = ({ languageData, users, headers }) => {
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
@@ -52,52 +50,19 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
     );
 
     const statusStyle = {
-        Finished: (
-            <div>
-                <img
-                    alt="complete"
-                    style={{ marginRight: '6px' }}
-                    width="16px"
-                    src={finishedIcon}
-                />
-                {lang.components.bottombar.finished}
-            </div>
-        ),
-        'Partially Complete': (
-            <div style={{ color: '#ff9d00' }}>
-                <img
-                    alt="partial"
-                    style={{ marginRight: '6px' }}
-                    width="16px"
-                    src={partiallyIcon}
-                />{' '}
-                {lang.components.bottombar.partial}
-            </div>
-        ),
-        Unfinished: (
-            <div style={{ color: 'red' }}>
-                <img
-                    alt="incomplete"
-                    style={{ marginRight: '6px' }}
-                    width="16px"
-                    src={unfinishedIcon}
-                />{' '}
-                {lang.components.bottombar.unfinished}
-            </div>
-        ),
-        [USER_STATUS.ACTIVE]: (
+        [ACCESS_STATUS.ACTIVE]: (
             <div style={{ color: '#65d991' }}>
-                {lang.components.bottombar.active}
+                {lang.components.accountManagement.access.active}
             </div>
         ),
-        [USER_STATUS.ARCHIVE]: (
-            <div style={{ color: 'black' }}>
-                <b>{lang.components.bottombar.archived}</b>
+        [ACCESS_STATUS.NOTASSIGNED]: (
+            <div style={{ color: 'red' }}>
+                <b>{lang.components.accountManagement.access.notAssigned}</b>
             </div>
         ),
-        [USER_STATUS.FEEDBACK]: (
-            <div style={{ color: '#5395f8' }}>
-                {lang.components.bottombar.feedback}
+        [ACCESS_STATUS.REVOKED]: (
+            <div style={{ color: 'red' }}>
+                {lang.components.accountManagement.access.revoked}
             </div>
         ),
     };
@@ -106,8 +71,8 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
         const attr = user.Attributes.find(
             (attribute) => attribute.Name === atr,
         );
-        if (attr == undefined) return 'Not assigned';
-        if (attr.Value === 'GRANTED') return statusStyle[USER_STATUS.ACTIVE];
+        if (attr == undefined) return statusStyle[ACCESS_STATUS.NOTASSIGNED];
+        if (attr.Value === 'GRANTED') return statusStyle[ACCESS_STATUS.ACTIVE];
         return attr.Value;
     };
 
@@ -115,13 +80,11 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
         const attr = user.Attributes.find(
             (attribute) => attribute.Name === atr,
         );
-        if (attr == undefined) return 'Not assigned';
+        if (attr == undefined) return 'Not Assigned';
         const at = attr.Value;
         const att = at.toString();
         return att;
     };
-
-    console.log(items);
     return (
         <div className="table-container">
             <TableContainer className="table-container" component={Paper}>
@@ -209,7 +172,6 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
 MainUserTable.propTypes = {
     languageData: LanguageDataType.isRequired,
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
-    rowIds: PropTypes.arrayOf(PropTypes.string),
     users: PropTypes.arrayOf(PropTypes.object),
 };
 
