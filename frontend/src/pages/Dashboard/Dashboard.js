@@ -288,7 +288,6 @@ const Dashboard = ({ languageData }) => {
             );
         });
     }
-
     return (
         <div className="dashboard">
             <Snackbar

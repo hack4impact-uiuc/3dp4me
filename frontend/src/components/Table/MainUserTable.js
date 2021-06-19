@@ -46,10 +46,10 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
     const lang = languageData.translations[key];
 
     const UNSORTED_DATA = users;
-    /** , requestSort, sortConfig } = useSortableData(
+    const { items, requestSort, sortConfig } = useSortableData(
         users,
         UNSORTED_DATA,
-    );**/
+    );
 
     const statusStyle = {
         Finished: (
@@ -102,6 +102,26 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
         ),
     };
 
+    const getInfo = (user, atr) => {
+        const attr = user.Attributes.find(
+            (attribute) => attribute.Name === atr,
+        );
+        if (attr == undefined) return 'Not assigned';
+        if (attr.Value === 'GRANTED') return statusStyle[USER_STATUS.ACTIVE];
+        return attr.Value;
+    };
+
+    const getRoles = (user, atr) => {
+        const attr = user.Attributes.find(
+            (attribute) => attribute.Name === atr,
+        );
+        if (attr == undefined) return 'Not assigned';
+        const at = attr.Value;
+        const att = at.toString();
+        return att;
+    };
+
+    console.log(items);
     return (
         <div className="table-container">
             <TableContainer className="table-container" component={Paper}>
@@ -112,7 +132,7 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
                                 <StyledTableCell
                                     onClick={() => requestSort(header.sortKey)}
                                     className="header"
-                                    key={header.title}
+                                    key={header}
                                     align={key === 'AR' ? 'right' : 'left'}
                                 >
                                     <div
@@ -122,7 +142,7 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
                                                 : 'cell-align'
                                         }
                                     >
-                                        {header.title}
+                                        {header}
                                         {sortConfig !== null &&
                                         sortConfig.key === header.sortKey &&
                                         sortConfig.direction === 'ascending' ? (
@@ -150,50 +170,23 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
                     <TableBody className="table-body">
                         {items.map((user) => (
                             <StyledTableRow key={user._id}>
-                                {rowIds.map((id) => (
-                                    <StyledTableCell
-                                        className={
-                                            key === 'AR' ? 'cell-rtl' : 'cell'
-                                        }
-                                        key={user._id + id}
-                                        align={key === 'AR' ? 'right' : 'left'}
-                                    >
-                                        {id === 'status' ? (
-                                            <>
-                                                {Object.values(
-                                                    USER_STATUS,
-                                                ).includes(
-                                                    resolveObjPath(user, id),
-                                                ) ? (
-                                                    <b>
-                                                        {
-                                                            statusStyle[
-                                                                resolveObjPath(
-                                                                    user,
-                                                                    id,
-                                                                )
-                                                            ]
-                                                        }
-                                                    </b>
-                                                ) : (
-                                                    statusStyle[
-                                                        resolveObjPath(user, id)
-                                                    ]
-                                                )}
-                                            </>
-                                        ) : (
-                                            resolveObjPath(user, id)
-                                        )}
-                                    </StyledTableCell>
-                                ))}
+                                <StyledTableCell>
+                                    {getInfo(user, 'name')}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                    {getInfo(user, 'email')}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                    {getRoles(user, 'custom:security_roles')}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                    {getInfo(user, 'custom:access')}
+                                </StyledTableCell>
                                 <StyledTableCell
                                     className="cell"
                                     align="center"
                                 >
-                                    <Link
-                                        className="table-view-link"
-                                        to={`/patient-info/${user._id}`}
-                                    >
+                                    <Link className="table-view-link">
                                         <IconButton>
                                             <img
                                                 alt="status icon"
@@ -201,7 +194,7 @@ const MainUserTable = ({ languageData, users, headers, rowIds }) => {
                                                 src={Eyecon}
                                             />
                                         </IconButton>{' '}
-                                        {lang.components.table.view}
+                                        {lang.components.table.edit}
                                     </Link>
                                 </StyledTableCell>
                             </StyledTableRow>

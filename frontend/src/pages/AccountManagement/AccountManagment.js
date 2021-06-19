@@ -1,10 +1,14 @@
 import { Button } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { addUserRole, getAllUsers, removeUserRole } from '../../utils/api';
-import MainUserTable from '../../components/Table/MainTable';
+import MainUserTable from '../../components/Table/MainUserTable';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const AccountManagement = ({ languageData }) => {
-    const [userMetaData, setUserMetaData] = useState(getAllUsers());
+    const [userMetaData, setUserMetaData] = useState([]);
+    const errorWrap = useErrorWrap();
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     const addRole = async () => {
         // This is just for testing, feel free to replace this once we have a functioning dashboard
@@ -17,22 +21,27 @@ const AccountManagement = ({ languageData }) => {
         );
     };
 
+    useEffect(() => {
+        const fetchData = async () => {
+            errorWrap(async () => {
+                const res = await getAllUsers();
+                setUserMetaData(res.result.Users);
+            });
+        };
+        fetchData();
+    }, [setUserMetaData, errorWrap]);
+
     function generateMainUserTable() {
-        console.log(userMetaData);
         const headings = ['Name', 'Email', 'Role', 'Access'];
         if (getAllUsers() == null) return null;
-        ///return getAllUsers().map((element) => {
 
         return (
             <MainUserTable
                 headers={headings}
+                rowIds={['Name', 'Email', 'Role', 'Access']}
                 /**rowIds={generateRowIds(element.key, element.fields)}**/
-                languageData={
-                    languageData
-                } /**
-                    patients={
-                        searchQuery.length === 0 ? patients : filteredPatients
-                    }**/
+                languageData={languageData}
+                users={userMetaData}
             />
         );
         //});
@@ -40,10 +49,31 @@ const AccountManagement = ({ languageData }) => {
 
     return (
         <div>
-            <div className="dashboard">
-                <Button onClick={addRole}> TEST BUTTONG </Button>
+            <div className="dashboard"></div>
+            <div className="patient-list">
+                <div className="header">
+                    <div className="section">
+                        <h2
+                            className={
+                                key === 'AR'
+                                    ? 'patient-list-title-ar'
+                                    : 'patient-list-title'
+                            }
+                        >
+                            {'User Database'}
+                        </h2>
+
+                        <Button
+                            className="create-patient-button"
+                            /* need to make modal to add account
+                            onClick={addAccount}*/
+                        >
+                            {lang.components.button.addAccount}
+                        </Button>
+                    </div>
+                </div>
+                {generateMainUserTable()}
             </div>
-            {generateMainUserTable()}
         </div>
     );
 };

@@ -50,7 +50,8 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
         patients,
         UNSORTED_DATA,
     );
-
+    console.log('patients');
+    console.log(items);
     const statusStyle = {
         Finished: (
             <div>
@@ -101,7 +102,8 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
             </div>
         ),
     };
-
+    console.log('lololo');
+    console.log(rowIds);
     return (
         <div className="table-container">
             <TableContainer className="table-container" component={Paper}>

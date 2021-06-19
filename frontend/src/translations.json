@@ -64,7 +64,8 @@
             "table": {
                 "loading": "Loading",
                 "noPatientsFound": "Sorry! No matching patients",
-                "view": "View"
+                "view": "View",
+                "edit": "Edit"
             },
             "dropdown": {
                 "newest": "Newest",
@@ -79,6 +80,7 @@
             "button": {
                 "createPatient": "Create Patient",
                 "createField": "Create Field",
+                "addAccount": "Add Account",
                 "upload": "Upload File",
                 "save": "Save",
                 "edit": "Edit Step",
