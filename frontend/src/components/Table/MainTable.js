@@ -50,6 +50,7 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
         patients,
         UNSORTED_DATA,
     );
+
     const statusStyle = {
         Finished: (
             <div>
@@ -100,6 +101,7 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
             </div>
         ),
     };
+
     return (
         <div className="table-container">
             <TableContainer className="table-container" component={Paper}>
