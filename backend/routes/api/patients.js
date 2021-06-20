@@ -297,7 +297,6 @@ router.post(
             });
         }
 
-        const collection = await mongoose.connection.db.collection(stage);
         let model = mongoose.model(stage);
         let patientStepData = await model.findOne({ patientId: id });
         if (!patientStepData) {
@@ -305,7 +304,6 @@ router.post(
             patientStepData.lastEdited = Date.now();
             patientStepData.lastEditedBy = req.user.name;
             patientStepData.patientId = id;
-            let model = mongoose.model(stage);
             const newStepDataModel = new model(patientStepData);
             patientStepData = await newStepDataModel.save();
         } else {
