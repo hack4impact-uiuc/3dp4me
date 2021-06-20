@@ -309,10 +309,10 @@ router.post(
             const newStepDataModel = new model(patientStepData);
             patientStepData = await newStepDataModel.save();
         } else {
-            _.assign(patientStepData, [req.body]);
+            patientStepData = _.assign(patientStepData, req.body);
             patientStepData.lastEdited = Date.now();
             patientStepData.lastEditedBy = req.user.name;
-            await patientStepData.save();
+            patientStepData = await patientStepData.save();
         }
 
         patient.lastEdited = Date.now();

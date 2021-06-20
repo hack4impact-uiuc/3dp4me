@@ -16,31 +16,26 @@ const generateFieldSchema = (field) => {
         case fieldEnum.STRING:
             return {
                 type: String,
-                required: true,
                 default: '',
             };
         case fieldEnum.MULTILINE_STRING:
             return {
                 type: String,
-                required: true,
                 default: '',
             };
         case fieldEnum.NUMBER:
             return {
                 type: Number,
-                required: true,
                 default: 0,
             };
         case fieldEnum.DATE:
             return {
                 type: Date,
-                required: true,
                 default: Date.now,
             };
         case fieldEnum.PHONE:
             return {
                 type: String,
-                required: true,
                 default: '',
                 validate: {
                     validator: isValidNumber,
@@ -53,19 +48,16 @@ const generateFieldSchema = (field) => {
 
             return {
                 type: String,
-                required: true,
                 default: '',
             };
         case fieldEnum.FILE:
             return {
                 type: [fileSchema],
-                required: true,
                 default: [],
             };
         case fieldEnum.AUDIO:
             return {
                 type: [fileSchema],
-                required: true,
                 default: [],
             };
         case fieldEnum.DIVIDER:
