@@ -91,7 +91,6 @@ Files.propTypes = {
     handleDownload: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
     handleUpload: PropTypes.func.isRequired,
-    isDisabled: PropTypes.bool.isRequired,
     files: PropTypes.arrayOf(
         PropTypes.shape({
             filename: PropTypes.string.isRequired,
