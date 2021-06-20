@@ -6,7 +6,7 @@ const rename = require('gulp-rename');
 const log = require('fancy-log');
 var exec = require('child_process').exec;
 const GulpClient = require('gulp');
-
+const NODE_ENV = 'production';
 const paths = {
     prod_build: '../prod-build',
     server_file_name: 'server.bundle.js',
@@ -69,7 +69,7 @@ function copyNodeJSCodeTask() {
         .pipe(rename('www'))
         .pipe(dest(`${paths.server_source_dest}`));
     src(['build/index.js.map']).pipe(dest(`${paths.server_source_dest}`));
-    return src(['package.json', '.env', '.npmrc']).pipe(
+    return src(['package.json', `${NODE_ENV}.env`, '.npmrc']).pipe(
         dest(`${paths.prod_build}`),
     );
 }
