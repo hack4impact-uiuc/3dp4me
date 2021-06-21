@@ -1,6 +1,6 @@
 name: backend
 
-on: push
+on: pull_request
 
 jobs:
   format:
@@ -55,6 +55,10 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    env:
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      S3_REGION: ${{ secrets.S3_BUCKET_NAME }}
+      COGNITO_REGION: ${{ secrets.COGNITO_REGION }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
