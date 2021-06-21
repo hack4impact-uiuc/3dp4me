@@ -37,7 +37,7 @@ app.get('/*', function (req, res, next) {
         );
 });
 
-//app.use(requireAuthentication);
+app.use(requireAuthentication);
 app.use(require('./routes'));
 app.use(errorHandler);
 
