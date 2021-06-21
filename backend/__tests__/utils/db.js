@@ -10,17 +10,21 @@ const exampleData = require('../../../scripts/data/example.json');
 const { initModels } = require('../../utils/init-models');
 const { models } = require('../../models');
 
-let replSet = null;
+let patients = null;
+let roles = null;
+let steps = null;
+let survey = null;
+let example = null;
+let medicalInfo = null;
+let replSet = new MongoMemoryReplSet({
+    replSet: { storageEngine: 'wiredTiger' },
+});
 
 /**
  * Connect to the in-memory database.
  * Should only be called once per suite
  */
 module.exports.connect = async () => {
-    replSet = new MongoMemoryReplSet({
-        replSet: { storageEngine: 'wiredTiger' },
-    });
-
     await replSet.waitUntilRunning();
     const uri = await replSet.getUri();
 
@@ -39,8 +43,6 @@ module.exports.connect = async () => {
 module.exports.closeDatabase = async () => {
     await this.clearDatabase();
     await mongoose.connection.dropDatabase();
-    await mongoose.disconnect();
-    await replSet.stop();
 };
 
 /**
@@ -48,47 +50,38 @@ module.exports.closeDatabase = async () => {
  */
 module.exports.resetDatabase = async () => {
     await this.clearDatabase();
-    await insertManyWithConstructors('Patient', models.Patient, patientData);
-    await insertManyWithConstructors('Role', models.Role, roleData);
-    await insertManyWithConstructors('steps', models.Step, stepData);
-
+    constructStaticData();
+    await mongoose.connection.db.collection('Patient').insertMany(patients);
+    await mongoose.connection.db.collection('Role').insertMany(roles);
+    await mongoose.connection.db.collection('steps').insertMany(steps);
     await initModels();
-    await insertManyWithConstructors(
-        'survey',
-        mongoose.model('survey'),
-        surveyData,
-    );
-    await insertManyWithConstructors(
-        'example',
-        mongoose.model('example'),
-        exampleData,
-    );
-    await insertManyWithConstructors(
-        'medicalInfo',
-        mongoose.model('medicalInfo'),
-        medicalData,
-    );
+
+    constructDynamicData();
+    await mongoose.connection.db.collection('survey').insertMany(survey);
+    await mongoose.connection.db.collection('example').insertMany(example);
+    await mongoose.connection.db
+        .collection('medicalInfo')
+        .insertMany(medicalInfo);
 };
 
-/**
- * Takes many vanilla JS objects and uses the specified constructor to create model instances. Then
- * All of the instances are inserted into the DB.
- * @param {String} collectionName The collection to insert into
- * @param {Function} constructor Model constructor
- * @param {Array} data Array of JS objects
- */
-const insertManyWithConstructors = async (
-    collectionName,
-    constructor,
-    data,
-) => {
-    await Promise.all(
-        data.map((item) =>
-            mongoose.connection.db
-                .collection(collectionName)
-                .insertOne(new constructor(item)),
-        ),
-    );
+const constructStaticData = () => {
+    if (patients) return;
+
+    patients = constructAll(patientData, models.Patient);
+    roles = constructAll(roleData, models.Role);
+    steps = constructAll(stepData, models.Step);
+};
+
+const constructDynamicData = () => {
+    if (survey) return;
+
+    survey = constructAll(surveyData, mongoose.model('survey'));
+    example = constructAll(exampleData, mongoose.model('example'));
+    medicalInfo = constructAll(medicalData, mongoose.model('medicalInfo'));
+};
+
+const constructAll = (data, constructor) => {
+    return data.map((item) => new constructor(item));
 };
 
 /**

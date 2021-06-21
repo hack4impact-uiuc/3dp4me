@@ -44,13 +44,14 @@
         "dev": "nodemon ./bin/www",
         "build": "webpack ./bin/www",
         "start": "node ./bin/www",
-        "test": "jest --runInBand",
+        "test": "jest --runInBand --forceExit",
         "lint": "eslint --fix \"./**/*.{js,jsx}\" -c .eslintrc.json",
         "format": "prettier --write \"./**/*.{js,jsx,json,md}\"",
         "format:check": "prettier --check \"./**/*.{js,jsx,json,md}\""
     },
     "jest": {
         "testEnvironment": "node",
+        "testTimeout": 3600000,
         "testPathIgnorePatterns": [
             "/utils",
             "/mock-data"
