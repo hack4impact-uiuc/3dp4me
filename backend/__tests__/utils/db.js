@@ -16,7 +16,6 @@ let steps = null;
 let survey = null;
 let example = null;
 let medicalInfo = null;
-
 let replSet = new MongoMemoryReplSet({
     replSet: { storageEngine: 'wiredTiger' },
 });
