@@ -35,8 +35,6 @@ jobs:
         run: yarn format:check
 
   lint:
-    needs: check
-    if: needs.check.outputs.run_jobs == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -62,8 +60,6 @@ jobs:
         run: yarn lint
 
   test:
-    needs: check
-    if: needs.check.outputs.run_jobs == 'true'
     runs-on: ubuntu-latest
     env:
       S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
