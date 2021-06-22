@@ -174,7 +174,7 @@ const putOneStep = async (stepBody, res, session) => {
             message: 'No stepkey in steps',
         });
     }
-	stepBody = removeAttributesFrom(stepBody, ['_id', '__v'])
+    stepBody = removeAttributesFrom(stepBody, ['_id', '__v']);
 
     const stepKey = stepBody.key;
     stepToEdit = await models.Step.findOne({ key: stepKey });
@@ -241,7 +241,6 @@ const putOneStep = async (stepBody, res, session) => {
 // PUT metadata/steps/:stepkey
 router.put(
     '/steps/',
-    
     errorWrap(async (req, res) => {
         try {
             let stepData = [];
