@@ -38,4 +38,9 @@ describe('Test getFieldByKey', () => {
         const field = getFieldByKey(survey.fields, 'doesNotExist');
         expect(field).toBeNull();
     });
+
+    it('returns null when null is placed into fields', async () => {
+        const field = getFieldByKey(null, 'doesNotExist');
+        expect(field).toBeNull();
+    });
 });
