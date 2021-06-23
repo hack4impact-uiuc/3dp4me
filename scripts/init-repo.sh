@@ -7,4 +7,5 @@ git update-index --skip-worktree 'frontend/development.env'
 git update-index --skip-worktree 'frontend/production.env'
 
 touch .git/info/sparse-checkout
-echo "/*\n!*.env" >> .git/info/sparse-checkout
+echo "/*" > .git/info/sparse-checkout
+echo "!*.env" >> .git/info/sparse-checkout
