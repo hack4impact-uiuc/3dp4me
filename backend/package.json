@@ -12,6 +12,7 @@
         "babel-eslint": "^10.1.0",
         "body-parser": "^1.19.0",
         "cors": "^2.8.5",
+        "cross-env": "^7.0.3",
         "del": "^6.0.0",
         "dotenv": "^8.2.0",
         "eslint": "^7.18.0",
@@ -42,8 +43,8 @@
     },
     "scripts": {
         "dev": "nodemon ./bin/www",
-        "build": "webpack ./bin/www",
-        "start": "node ./bin/www",
+        "build": "cross-env NODE_ENV=production webpack ./bin/www",
+        "start": "cross-env NODE_ENV=development node ./bin/www",
         "test": "jest --runInBand --forceExit",
         "lint": "eslint --fix \"./**/*.{js,jsx}\" -c .eslintrc.json",
         "format": "prettier --write \"./**/*.{js,jsx,json,md}\"",
@@ -51,7 +52,7 @@
     },
     "jest": {
         "testEnvironment": "node",
-        "testTimeout": 3600000,
+        "testTimeout": 60000,
         "testPathIgnorePatterns": [
             "/utils",
             "/mock-data"
