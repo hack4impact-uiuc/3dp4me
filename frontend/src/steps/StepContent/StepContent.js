@@ -132,21 +132,23 @@ const StepContent = ({
         // if displaying a single question per page, only return the right numbered question
         return metaData.fields.map((field) => {
             const stepField = (
-                <StepField
-                    displayName={field.displayName[key]}
-                    metadata={field}
-                    value={updatedData ? updatedData[field.key] : null}
-                    key={field.key}
-                    langKey={key}
-                    isDisabled={!edit}
-                    patientId={patientId}
-                    stepKey={metaData.key}
-                    handleSimpleUpdate={handleSimpleUpdate}
-                    handleFileDownload={handleFileDownload}
-                    handleFileUpload={handleFileUpload}
-                    handleFileDelete={handleFileDelete}
-                    languageData={languageData}
-                />
+                <div className="step-field">
+                    <StepField
+                        displayName={field.displayName[key]}
+                        metadata={field}
+                        value={updatedData ? updatedData[field.key] : null}
+                        key={field.key}
+                        langKey={key}
+                        isDisabled={!edit}
+                        patientId={patientId}
+                        stepKey={metaData.key}
+                        handleSimpleUpdate={handleSimpleUpdate}
+                        handleFileDownload={handleFileDownload}
+                        handleFileUpload={handleFileUpload}
+                        handleFileDelete={handleFileDelete}
+                        languageData={languageData}
+                    />
+                </div>
             );
 
             if (singleQuestionFormat) {

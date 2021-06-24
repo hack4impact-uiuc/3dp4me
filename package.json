@@ -17,6 +17,7 @@
         "prettier": "^2.2.1"
     },
     "scripts": {
+        "check-sensitive-files": "sh ./check-sensitive-files.sh",
         "format": "prettier --write '{client/**/*.{js,jsx,css,scss,json,md},api/**/*.{js,jsx,json,md}}'",
         "gen-db": "node scripts/generate-db-data.js"
     },
@@ -30,7 +31,7 @@
     "homepage": "https://github.com/hack4impact-uiuc/3dp4me#readme",
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "yarn check-sensitive-files && lint-staged"
         }
     },
     "lint-staged": {

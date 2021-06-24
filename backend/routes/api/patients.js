@@ -199,6 +199,7 @@ router.delete(
 router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
+        // TODO during refactoring: We upload file name in form data, is this even needed???
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
         if (patient == null) {
@@ -211,6 +212,7 @@ router.post(
         const collectionInfo = await mongoose.connection.db
             .listCollections({ name: stepKey })
             .toArray();
+
         if (collectionInfo.length == 0) {
             return res.status(404).json({
                 success: false,
@@ -226,48 +228,43 @@ router.post(
         if (!stepData || !stepData[fieldKey]) stepData[fieldKey] = [];
 
         let file = req.files.uploadedFile;
-        uploadFile(
+        await uploadFile(
             file.data,
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
             {
                 accessKeyId: ACCESS_KEY_ID,
                 secretAccessKey: SECRET_ACCESS_KEY,
             },
-            await async function (err, data) {
-                if (err) {
-                    res.json(err);
-                } else {
-                    stepData[fieldKey].push({
-                        filename: fileName,
-                        uploadedBy: req.user.name,
-                        uploadDate: Date.now(),
-                    });
-                    stepData.lastEdited = Date.now();
-                    stepData.lastEditedBy = req.user.name;
-                    collection.findOneAndUpdate(
-                        { patientId: id },
-                        { $set: stepData },
-                        { upsert: true },
-                    );
-
-                    patient.lastEdited = Date.now();
-                    patient.lastEditedBy = req.user.name;
-                    patient.save();
-
-                    res.status(201).json({
-                        success: true,
-                        message: 'File successfully uploaded',
-                        data: {
-                            name: fileName,
-                            uploadedBy: req.user.name,
-                            uploadDate: Date.now(),
-                            mimetype: file.mimetype,
-                            size: file.size,
-                        },
-                    });
-                }
-            },
         );
+
+        stepData[fieldKey].push({
+            filename: fileName,
+            uploadedBy: req.user.name,
+            uploadDate: Date.now(),
+        });
+        stepData.lastEdited = Date.now();
+        stepData.lastEditedBy = req.user.name;
+        collection.findOneAndUpdate(
+            { patientId: id },
+            { $set: stepData },
+            { upsert: true },
+        );
+
+        patient.lastEdited = Date.now();
+        patient.lastEditedBy = req.user.name;
+        patient.save();
+
+        res.status(201).json({
+            success: true,
+            message: 'File successfully uploaded',
+            data: {
+                name: fileName,
+                uploadedBy: req.user.name,
+                uploadDate: Date.now(),
+                mimetype: file.mimetype,
+                size: file.size,
+            },
+        });
     }),
 );
 
