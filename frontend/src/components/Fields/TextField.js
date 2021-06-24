@@ -6,9 +6,9 @@ const TextField = ({
     displayName,
     type = '',
     isDisabled,
-    fieldId,
+    fieldId = '',
     value = '',
-    onChange,
+    onChange = () => {},
 }) => {
     const sendChanges = (e) => {
         onChange(fieldId, e.target.value);
@@ -31,10 +31,10 @@ const TextField = ({
 TextField.propTypes = {
     displayName: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
-    fieldId: PropTypes.string.isRequired,
+    fieldId: PropTypes.string,
     value: PropTypes.string,
     type: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
 };
 
 export default TextField;

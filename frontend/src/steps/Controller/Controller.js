@@ -12,8 +12,8 @@ import {
     Button,
 } from '@material-ui/core';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import reactSwal from '@sweetalert/with-react';
 import { useParams } from 'react-router-dom';
+import swal from 'sweetalert';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import StepContent from '../StepContent/StepContent';
@@ -22,6 +22,7 @@ import ManagePatientModal from '../../components/ManagePatientModal/ManagePatien
 import {
     getAllStepsMetadata,
     getPatientById,
+    updatePatient,
     updateStage,
 } from '../../utils/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
@@ -40,20 +41,15 @@ const Controller = ({ languageData }) => {
     const [selectedStep, setSelectedStep] = useState(null);
     const [stepMetaData, setStepMetaData] = useState(null);
     const [patientData, setPatientData] = useState(null);
+    const [isManagePatientModalOpen, setManagePatientModalOpen] = useState(
+        false,
+    );
 
     const params = useParams();
     const { patientId } = params;
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
-
-    const managePatient = () => {
-        reactSwal({
-            className: 'controller-manage-patient-swal',
-            buttons: {},
-            content: <ManagePatientModal languageData={languageData} />,
-        });
-    };
 
     const handleNotePanel = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -66,6 +62,32 @@ const Controller = ({ languageData }) => {
             await updateStage(patientId, stepKey, stepData);
             setPatientData(newPatientData);
         });
+    };
+
+    const onPatientDataSaved = async (newPatientData) => {
+        const patientDataCopy = _.cloneDeep(patientData);
+        Object.assign(patientDataCopy, newPatientData);
+        await errorWrap(async () => {
+            await updatePatient(patientId, patientDataCopy);
+            setPatientData(patientDataCopy);
+            swal(lang.components.swal.managePatient.successMsg, '', 'success');
+        });
+
+        setManagePatientModalOpen(false);
+    };
+
+    /**
+     * Gets the current patient model data. (Removes all of the step data)
+     */
+    const getCurrentPatientModelData = () => {
+        return {
+            firstName: patientData?.firstName,
+            familyName: patientData?.familyName,
+            fathersName: patientData?.fathersName,
+            grandfathersName: patientData?.grandfathersName,
+            orderId: patientData?.orderId,
+            status: patientData?.status,
+        };
     };
 
     const onStepChange = (newStep) => {
@@ -173,6 +195,13 @@ const Controller = ({ languageData }) => {
     return (
         <LoadWrapper loading={loading}>
             <div className="root">
+                <ManagePatientModal
+                    languageData={languageData}
+                    onDataSave={onPatientDataSaved}
+                    patientData={getCurrentPatientModelData()}
+                    isOpen={isManagePatientModalOpen}
+                    onClose={() => setManagePatientModalOpen(false)}
+                />
                 <ThemeProvider theme={key === 'AR' ? theme : null}>
                     <Drawer
                         className={key === 'EN' ? 'drawer' : 'drawer-rtl'}
@@ -223,7 +252,9 @@ const Controller = ({ languageData }) => {
                                 }}
                             >
                                 <Button
-                                    onClick={managePatient}
+                                    onClick={() =>
+                                        setManagePatientModalOpen(true)
+                                    }
                                     className="manage-patient-button"
                                 >
                                     {lang.components.button.managePatient}

@@ -1,3 +1,7 @@
+.section-management-container {
+    display: flex;
+    flex-direction: row;
+}
 .sidebar {
     max-width: 240px;
     border: 1px solid #483d8b;
@@ -12,4 +16,8 @@
     transition: 0.8s ease;
     position: relative;
     top: 50px;
+    padding: 30px;
+    background: #ccc;
+    width: 100px;
+    cursor: move;
 }

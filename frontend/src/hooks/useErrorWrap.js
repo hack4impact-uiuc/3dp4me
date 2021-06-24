@@ -13,7 +13,7 @@ export const useErrorWrap = () => {
                 console.error(error);
                 dispatch({
                     type: REDUCER_ACTIONS.SET_ERROR,
-                    error: error.toString(),
+                    error: error.message,
                 });
             }
         },

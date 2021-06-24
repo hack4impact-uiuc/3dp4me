@@ -5,6 +5,10 @@ export const LanguageDataType = PropTypes.shape({
     selectedLanuage: PropTypes.string,
 });
 
+export const FieldsType = PropTypes.shape({
+    fields: PropTypes.array.isRequired,
+});
+
 export const TableHeaderType = PropTypes.shape({
     title: PropTypes.string.isRequired,
     sortKey: PropTypes.string.isRequired,

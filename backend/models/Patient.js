@@ -11,9 +11,9 @@ const patientSchema = new mongoose.Schema({
     fathersName: { type: String, required: false, default: '' },
     grandfathersName: { type: String, required: false, default: '' },
     familyName: { type: String, required: true },
-    dateCreated: { type: Date, required: false, default: new Date() },
+    dateCreated: { type: Date, required: false, default: Date.now },
     orderId: { type: String, required: false, default: '' },
-    lastEdited: { type: Date, required: false, default: new Date() },
+    lastEdited: { type: Date, required: false, default: Date.now },
     lastEditedBy: { type: String, required: true },
     status: {
         type: overallStatusEnum,
