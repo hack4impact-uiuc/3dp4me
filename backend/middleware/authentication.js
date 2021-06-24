@@ -89,5 +89,7 @@ const requireRole = (role) => {
 
 const requireAdmin = requireRole(ADMIN_ID);
 
+module.exports.requireRole = requireRole;
+module.exports.requireAdmin = requireAdmin;
 module.exports.requireAuthentication = requireAuthentication;
 module.exports.parseUserSecurityRoles = parseUserSecurityRoles;
