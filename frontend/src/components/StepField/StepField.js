@@ -128,7 +128,18 @@ const StepField = ({
                         <Divider className="patient-divider" />
                     </div>
                 );
-            case 'Header':
+            case FIELD_TYPES.TABLE:
+                return (
+                    <TableField
+                        displayName={displayName}
+                        isDisabled={isDisabled}
+                        type="text"
+                        onChange={handleSimpleUpdate}
+                        fieldId={metadata.key}
+                        value={value}
+                    />
+                );
+            case FIELD_TYPES.HEADER:
                 return <h3>{displayName}</h3>;
             default:
                 return null;

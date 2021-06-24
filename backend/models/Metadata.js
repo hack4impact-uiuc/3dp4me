@@ -15,6 +15,7 @@ const fieldEnum = {
     AUDIO: 'Audio',
     SIGNATURE: 'Signature',
     PHOTO: 'Photo',
+    TABLE: 'Table',
 };
 
 const languageSchema = new mongoose.Schema({
