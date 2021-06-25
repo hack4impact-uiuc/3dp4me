@@ -105,6 +105,49 @@ const Controller = ({ languageData }) => {
                 res = await getPatientById(patientId);
                 const data = res.result;
 
+                // TODO: REMOVE THIS
+                metaData[0].fields = metaData[0].fields.concat([
+                    {
+                        key: 'apptDivider',
+                        fieldType: 'Divider',
+                        displayName: {
+                            EN: 'Appointments',
+                            AR: 'تبوك ',
+                        },
+                        fieldNumber: 29,
+                        isVisibleOnDashboard: false,
+                    },
+                    {
+                        key: 'appointments',
+                        fieldType: 'FieldGroup',
+                        displayName: {
+                            EN: 'Appointments',
+                            AR: 'تبوك ',
+                        },
+                        fieldNumber: 30,
+                        isVisibleOnDashboard: false,
+                        subFields: [
+                            {
+                                key: 'apptDate',
+                                fieldType: 'Date',
+                                displayName: {
+                                    EN: 'Appointment Date',
+                                    AR: 'تبوك ',
+                                },
+                                fieldNumber: 0,
+                            },
+                            {
+                                key: 'apptClinic',
+                                fieldType: 'String',
+                                displayName: {
+                                    EN: 'Clinic',
+                                    AR: 'تبوك ',
+                                },
+                                fieldNumber: 1,
+                            },
+                        ],
+                    },
+                ]);
                 metaData = metaData.sort((a, b) => a.stepNumber - b.stepNumber);
                 metaData.forEach((stepData) => {
                     stepData.fields = stepData.fields.sort(
