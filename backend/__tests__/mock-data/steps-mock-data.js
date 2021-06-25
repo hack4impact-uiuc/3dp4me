@@ -119,6 +119,49 @@ module.exports.POST_STEP_WITH_OPTIONS = {
                 },
             ],
         },
+        {
+            key: 'appointments',
+            fieldType: 'FieldGroup',
+            displayName: {
+                EN: 'Appointments',
+                AR: 'تبوك ',
+            },
+            readableGroups: [],
+            writableGroups: [],
+            options: [],
+            fieldNumber: 6,
+            isVisibleOnDashboard: false,
+            subFields: [
+                {
+                    key: 'apptDate',
+                    fieldType: 'Date',
+                    displayName: {
+                        EN: 'Appointment Date',
+                        AR: 'تبوك ',
+                    },
+                    subFields: [],
+                    readableGroups: [],
+                    writableGroups: [],
+                    options: [],
+                    isVisibleOnDashboard: false,
+                    fieldNumber: 0,
+                },
+                {
+                    key: 'apptClinic',
+                    fieldType: 'String',
+                    displayName: {
+                        EN: 'Clinic',
+                        AR: 'تبوك ',
+                    },
+                    subFields: [],
+                    readableGroups: [],
+                    writableGroups: [],
+                    options: [],
+                    isVisibleOnDashboard: false,
+                    fieldNumber: 1,
+                },
+            ],
+        },
     ],
 };
 

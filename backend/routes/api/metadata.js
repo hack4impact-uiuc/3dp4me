@@ -73,7 +73,7 @@ const generateFieldSchema = (field) => {
                 throw new Error('Field groups must have sub fields');
 
             return {
-                type: [generateSchemaFromMetadata(fields.subFields)],
+                type: [generateFieldsFromMetadata(field.subFields)],
                 required: true,
                 default: [],
             };

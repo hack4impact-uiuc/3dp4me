@@ -19,12 +19,7 @@ const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
-    getCurrentAuthenticatedUserAttribute,
 } = require('../../utils/auth');
-const {
-    expectStrictEqualWithTimestampOrdering,
-    areObjectsDisjoint,
-} = require('../../utils/utils');
 const { models } = require('../../../models');
 
 describe('POST /steps', () => {
@@ -99,6 +94,7 @@ describe('POST /steps', () => {
         );
 
         // Check response
+        console.log(res.text);
         expect(res.status).toBe(200);
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(true);
