@@ -40,7 +40,6 @@ const StepContent = ({
         const dataCopy = _.cloneDeep(updatedData);
         _.set(dataCopy, fieldKey, value);
         setUpdatedData(dataCopy);
-        console.log(dataCopy);
     };
 
     const handleFileDelete = async (fieldKey, file) => {

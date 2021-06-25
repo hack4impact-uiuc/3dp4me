@@ -1,8 +1,25 @@
 @import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .datepicker {
     padding: 18.5px 14px;
     font-size: 1em;
     border: solid 1px $controllerBorder;
     border-radius: 3px;
+}
+
+.field-button {
+    background-color: $button;
+    color: white;
+    padding: 0 24px 0 24px;
+    height: 38px;
+    width: auto;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.2s;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+    &:hover {
+        background-color: $buttonHighlight;
+    }
 }

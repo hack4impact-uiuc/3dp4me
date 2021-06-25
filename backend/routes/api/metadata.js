@@ -68,6 +68,15 @@ const generateFieldSchema = (field) => {
                 required: true,
                 default: [],
             };
+        case fieldEnum.FIELD_GROUP:
+            if (!field?.subFields?.length)
+                throw new Error('Field groups must have sub fields');
+
+            return {
+                type: [generateSchemaFromMetadata(fields.subFields)],
+                required: true,
+                default: [],
+            };
         case fieldEnum.DIVIDER:
             return null;
         default:
@@ -90,12 +99,18 @@ const generateSchemaFromMetadata = (stepMetadata) => {
         required: true,
         default: 'Admin',
     };
-    stepMetadata.fields.forEach((field) => {
-        const generatedSchema = generateFieldSchema(field);
-        if (generatedSchema) stepSchema[field.key] = generatedSchema;
-    });
+    generateFieldsFromMetadata(stepMetadata.fields, stepSchema);
     const schema = new mongoose.Schema(stepSchema);
     mongoose.model(stepMetadata.key, schema, stepMetadata.key);
+};
+
+const generateFieldsFromMetadata = (fieldsMetadata, schema = {}) => {
+    fieldsMetadata.forEach((field) => {
+        const generatedSchema = generateFieldSchema(field);
+        if (generatedSchema) schema[field.key] = generatedSchema;
+    });
+
+    return schema;
 };
 
 // GET metadata/steps
