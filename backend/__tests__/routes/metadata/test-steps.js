@@ -13,6 +13,7 @@ const {
     POST_STEP_WITH_DUPLICATE_STEP_NUMBER,
     POST_STEP_WITH_OPTIONS,
     POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS,
+    POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS,
 } = require('../../mock-data/steps-mock-data');
 const {
     initAuthMocker,
@@ -82,6 +83,13 @@ describe('POST /steps', () => {
 
     it('returns 400 if given stepGroup without subFields', async () => {
         await postAndExpect(POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS, 400);
+    });
+
+    it('returns 400 if given stepGroup with empty subFields', async () => {
+        await postAndExpect(
+            POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS,
+            400,
+        );
     });
 
     it('successfully registers a new step when given good request', async () => {

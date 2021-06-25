@@ -205,3 +205,25 @@ module.exports.POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS = {
         },
     ],
 };
+
+module.exports.POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS = {
+    key: 'newStep',
+    displayName: {
+        EN: 'Medical Information',
+        AR: 'المعلومات الطبية',
+    },
+    stepNumber: 10,
+    fields: [
+        {
+            key: 'demographicDivider',
+            fieldType: fieldEnum.FIELD_GROUP,
+            displayName: {
+                EN: 'Field group',
+                AR: 'االديموغرافية',
+            },
+            fieldNumber: 0,
+            isVisibleOnDashboard: false,
+            subFields: [],
+        },
+    ],
+};
