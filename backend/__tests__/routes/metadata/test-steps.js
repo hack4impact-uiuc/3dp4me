@@ -28,6 +28,7 @@ const {
     PUT_STEP_EDIT_FIELDTYPE,
     PUT_STEPS_SWAPPED_STEPNUMBER,
     PUT_DUPLICATE_STEPS,
+    PUT_STEP_SUBFIELD_MISSING_FIELDS,
 } = require('../../mock-data/steps-mock-data');
 const {
     initAuthMocker,
@@ -238,6 +239,26 @@ describe('PUT /steps/stepkey', () => {
             request(server)
                 .put(`/api/metadata/steps/`)
                 .send(PUT_STEP_DUPLICATE_FIELD),
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(400);
+        expect(resContent.success).toBe(false);
+
+        const stepAfter = await models.Step.find({}).lean();
+
+        // Checks that database is rolled back after failing validation
+        expect(stepBefore).toStrictEqual(stepAfter);
+    });
+
+    it('correctly rejects subfields that are missing fields', async () => {
+        const stepBefore = await models.Step.find({}).lean();
+
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/metadata/steps/`)
+                .send(PUT_STEP_SUBFIELD_MISSING_FIELDS),
         );
 
         // Check response
