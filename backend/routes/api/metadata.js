@@ -48,7 +48,7 @@ const generateFieldSchema = (field) => {
                 },
             };
         case fieldEnum.RADIO_BUTTON:
-            if (field.options == null)
+            if (!field?.options?.length)
                 throw new Error('Radio button must have options');
 
             return {
@@ -144,13 +144,6 @@ router.post(
 
         try {
             await mongoose.connection.transaction(async (session) => {
-                new_step_metadata.fields.forEach((field) => {
-                    if (field.fieldType == fieldEnum.RADIO_BUTTON) {
-                        if (field.options == null || field.options.length < 1)
-                            throw new Error('Radiobuttons require options');
-                    }
-                });
-
                 await new_step_metadata.save({ session });
                 generateSchemaFromMetadata(steps);
             });

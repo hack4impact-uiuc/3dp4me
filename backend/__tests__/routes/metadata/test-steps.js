@@ -14,6 +14,10 @@ const {
     POST_STEP_WITH_OPTIONS,
     POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS,
     POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS,
+    POST_SUB_FIELD_WITHOUT_OPTIONS,
+    POST_SUB_FIELD_WITH_EMPTY_OPTIONS,
+    POST_STEP_WITH_BAD_SUB_FIELD,
+    POST_STEP_WITH_DUPLICATE_SUB_FIELDKEY,
 } = require('../../mock-data/steps-mock-data');
 const {
     initAuthMocker,
@@ -80,6 +84,22 @@ describe('POST /steps', () => {
         await postAndExpect(POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS, 400);
     });
 
+    it('returns 400 if subFieldType is radio and no options provided', async () => {
+        await postAndExpect(POST_SUB_FIELD_WITHOUT_OPTIONS, 400);
+    });
+
+    it('returns 400 if subFieldType is radio and options empty', async () => {
+        await postAndExpect(POST_SUB_FIELD_WITH_EMPTY_OPTIONS, 400);
+    });
+
+    it('returns 400 if given bad subFieldType', async () => {
+        await postAndExpect(POST_STEP_WITH_BAD_SUB_FIELD, 400);
+    });
+
+    it('returns 400 if given duplicate subFieldKey', async () => {
+        await postAndExpect(POST_STEP_WITH_DUPLICATE_SUB_FIELDKEY, 400);
+    });
+
     it('returns 400 if given stepGroup with empty subFields', async () => {
         await postAndExpect(
             POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS,
@@ -94,7 +114,6 @@ describe('POST /steps', () => {
         );
 
         // Check response
-        console.log(res.text);
         expect(res.status).toBe(200);
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(true);
