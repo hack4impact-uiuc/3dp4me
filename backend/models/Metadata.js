@@ -58,13 +58,21 @@ const fieldSchema = new mongoose.Schema({
         },
         required: false,
     },
-    isVisibleOnDashboard: { type: Boolean, required: true },
+    isVisibleOnDashboard: { type: Boolean, required: true, default: false },
     displayName: {
         EN: { type: String, required: true },
         AR: { type: String, required: true },
     },
-    readableGroups: { type: [String], required: true },
-    writableGroups: { type: [String], required: true },
+    readableGroups: { type: [String], required: true, default: [] },
+    writableGroups: { type: [String], required: true, default: [] },
+});
+
+fieldSchema.add({
+    // Yes, this is a recursive schema. Yes, I am ashamed of what I have done
+    subFields: {
+        type: [fieldSchema],
+        required: false,
+    },
 });
 
 const validateStep = async (fieldSchema) => {
