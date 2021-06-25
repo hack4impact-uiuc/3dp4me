@@ -1,3 +1,5 @@
+const { fieldEnum } = require('../../models/Metadata');
+
 module.exports.POST_STEP_WITHOUT_OPTIONS = {
     key: 'newStep',
     displayName: {
@@ -82,6 +84,7 @@ module.exports.POST_STEP_WITH_OPTIONS = {
             options: [],
             fieldNumber: 0,
             isVisibleOnDashboard: false,
+            subFields: [],
             readableGroups: [],
             writableGroups: [],
         },
@@ -94,6 +97,7 @@ module.exports.POST_STEP_WITH_OPTIONS = {
                 EN: 'Gender',
                 AR: 'جنس تذكير أو تأنيث',
             },
+            subFields: [],
             readableGroups: [],
             writableGroups: [],
             options: [
@@ -174,6 +178,27 @@ module.exports.POST_STEP_WITH_DUPLICATE_STEP_NUMBER = {
             displayName: {
                 EN: 'Demographic Info',
                 AR: 'المعلومات الديموغرافية',
+            },
+            fieldNumber: 0,
+            isVisibleOnDashboard: false,
+        },
+    ],
+};
+
+module.exports.POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS = {
+    key: 'newStep',
+    displayName: {
+        EN: 'Medical Information',
+        AR: 'المعلومات الطبية',
+    },
+    stepNumber: 10,
+    fields: [
+        {
+            key: 'demographicDivider',
+            fieldType: fieldEnum.FIELD_GROUP,
+            displayName: {
+                EN: 'Field group',
+                AR: 'االديموغرافية',
             },
             fieldNumber: 0,
             isVisibleOnDashboard: false,
