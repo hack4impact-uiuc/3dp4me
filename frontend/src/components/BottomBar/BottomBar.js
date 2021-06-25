@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
+
 import { formatDate } from '../../utils/date';
 import './BottomBar.scss';
 import check from '../../assets/check.svg';

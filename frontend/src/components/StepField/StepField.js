@@ -1,6 +1,9 @@
+/* eslint import/no-cycle: "off" */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Divider } from '@material-ui/core';
+
 import AudioRecorder from '../AudioRecorder/AudioRecorder';
 import TextField from '../Fields/TextField';
 import Notes from '../Notes/Notes';

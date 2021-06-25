@@ -1,7 +1,10 @@
+/* eslint import/no-cycle: "off" */
+// Unfortunately, there has to be an import cycle, because this is by nature, recursive
 import React from 'react';
-import StepField from '../StepField/StepField';
 import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
+
+import StepField from '../StepField/StepField';
 import './Fields.scss';
 
 const FieldGroup = ({
@@ -27,20 +30,6 @@ const FieldGroup = ({
 
     const getNumFields = () => {
         return value?.length ?? 0;
-    };
-
-    const generateAllGroups = () => {
-        const numFieldGroups = getNumFields();
-        const groups = [];
-
-        for (let i = 0; i < numFieldGroups; ++i) {
-            groups.push(
-                <h3>{`${metadata?.displayName[langKey]} ${i + 1}`}</h3>,
-            );
-            groups.push(generateSingleGroup(i));
-        }
-
-        return groups;
     };
 
     const onSimpleUpdate = (k, v, i) => {
@@ -97,6 +86,20 @@ const FieldGroup = ({
         });
     };
 
+    const generateAllGroups = () => {
+        const numFieldGroups = getNumFields();
+        const groups = [];
+
+        for (let i = 0; i < numFieldGroups; i += 1) {
+            groups.push(
+                <h3>{`${metadata?.displayName[langKey]} ${i + 1}`}</h3>,
+            );
+            groups.push(generateSingleGroup(i));
+        }
+
+        return groups;
+    };
+
     return (
         <div className="field-container">
             {generateAllGroups()}
@@ -108,12 +111,16 @@ const FieldGroup = ({
 };
 
 FieldGroup.propTypes = {
-    displayName: PropTypes.string.isRequired,
+    handleSimpleUpdate: PropTypes.func.isRequired,
+    handleFileUpload: PropTypes.func.isRequired,
+    handleFileDownload: PropTypes.func.isRequired,
+    handleFileDelete: PropTypes.func.isRequired,
+    stepKey: PropTypes.string,
+    langKey: PropTypes.string,
+    value: PropTypes.object,
+    patientId: PropTypes.string,
+    metadata: PropTypes.object,
     isDisabled: PropTypes.bool.isRequired,
-    fieldId: PropTypes.string,
-    value: PropTypes.string,
-    type: PropTypes.string,
-    onChange: PropTypes.func,
 };
 
 export default FieldGroup;
