@@ -390,6 +390,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 fieldNumber: 1,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -404,6 +405,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -418,6 +420,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -427,6 +430,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 key: 'typeOfInsurance',
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
+                subFields: [],
                 displayName: {
                     EN: 'Type of Insurance',
                     AR: 'نوع التأمين',
@@ -477,6 +481,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -490,6 +495,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                     EN: 'Household Income Range',
                     AR: 'نطاق دخل الأسرة',
                 },
+                subFields: [],
                 options: [
                     {
                         IsHidden: false,
@@ -566,6 +572,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 fieldNumber: 7,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
         __v: 0,
@@ -978,6 +985,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 fieldNumber: 0,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -991,6 +999,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                     EN: 'Household Income Range',
                     AR: 'نطاق دخل الأسرة',
                 },
+                subFields: [],
                 options: [
                     {
                         IsHidden: false,
@@ -1067,6 +1076,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -1081,6 +1091,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -1090,6 +1101,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 key: 'typeOfInsurance',
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
+                subFields: [],
                 displayName: {
                     EN: 'Type of Insurance',
                     AR: 'نوع التأمين',
@@ -1140,6 +1152,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -1154,6 +1167,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
         __v: 0,
@@ -1778,6 +1792,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 0,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -1787,6 +1802,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 key: 'incomeRange',
                 fieldNumber: 1,
                 isVisibleOnDashboard: false,
+                subFields: [],
                 displayName: {
                     EN: 'Household Income Range',
                     AR: 'نطاق دخل الأسرة',
@@ -1867,6 +1883,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -1881,6 +1898,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -1890,6 +1908,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 key: 'typeOfInsurance',
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
+                subFields: [],
                 displayName: {
                     EN: 'Type of Insurance',
                     AR: 'نوع التأمين',
@@ -1940,6 +1959,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -1954,6 +1974,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -1968,6 +1989,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 7,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
         __v: 0,
@@ -1998,6 +2020,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 0,
                 isVisibleOnDashboard: true,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -2010,6 +2033,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                     EN: 'Radio Button',
                     AR: 'نطاق دخل الأسرة',
                 },
+                subFields: [],
                 options: [
                     {
                         IsHidden: false,
@@ -2033,6 +2057,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: 'MultilineString',
                 readableGroups: [],
                 writableGroups: [],
+                subFields: [],
                 key: 'multilineString',
                 displayName: {
                     EN: 'Text Area',
@@ -2053,6 +2078,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 },
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
+                subFields: [],
                 options: [],
             },
             {
@@ -2067,6 +2093,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                     AR: 'نوع التأمين',
                 },
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Date',
@@ -2080,6 +2107,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Phone',
@@ -2093,6 +2121,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Divider',
@@ -2106,6 +2135,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 7,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Audio',
@@ -2119,6 +2149,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 8,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
     },
@@ -2145,6 +2176,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 0,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'String',
@@ -2158,8 +2190,10 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 1,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
+                subFields: [],
                 fieldType: 'Phone',
                 readableGroups: [],
                 writableGroups: [],
@@ -2171,6 +2205,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Phone',
@@ -2184,6 +2219,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -2197,6 +2233,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -2209,6 +2246,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                     EN: 'Gender',
                     AR: 'جنس تذكير أو تأنيث',
                 },
+                subFields: [],
                 options: [
                     {
                         IsHidden: false,
@@ -2248,6 +2286,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -2261,6 +2300,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 7,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
     },
@@ -2287,6 +2327,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 0,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -2299,6 +2340,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                     EN: 'Household Income Range',
                     AR: 'نطاق دخل الأسرة',
                 },
+                subFields: [],
                 options: [
                     {
                         IsHidden: false,
@@ -2362,6 +2404,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -2375,11 +2418,13 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
                 readableGroups: [],
                 writableGroups: [],
+                subFields: [],
                 key: 'typeOfInsurance',
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
@@ -2426,6 +2471,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -2439,6 +2485,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
     },
