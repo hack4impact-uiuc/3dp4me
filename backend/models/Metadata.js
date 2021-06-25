@@ -23,7 +23,7 @@ const languageSchema = new mongoose.Schema({
     AR: { type: String, required: true },
 });
 
-const validateOptions = async (questionOptionSchema) => {
+const validateOptions = (questionOptionSchema) => {
     var questionIndex = Object.create(null);
     for (var i = 0; i < questionOptionSchema.length; ++i) {
         var value = questionOptionSchema[i];
@@ -75,7 +75,7 @@ fieldSchema.add({
     },
 });
 
-const validateStep = async (fieldSchema) => {
+const validateStep = (fieldSchema) => {
     var fieldNumbers = Object.create(null);
     var fieldKeys = Object.create(null);
     for (var i = 0; i < fieldSchema.length; ++i) {
@@ -89,13 +89,32 @@ const validateStep = async (fieldSchema) => {
     return true;
 };
 
+// Take in session from transaction to check database
+const isUniqueStepNumber = async (value, stepKey, session) => {
+    const step = await mongoose.connection.db
+        .collection('steps')
+        .find({ stepNumber: value }, { session: session })
+        .toArray();
+
+    if (step.length >= 2) {
+        return false;
+    } else if (step.length == 0) {
+        return true;
+    }
+
+    return step[0].key === stepKey;
+};
+
 const stepSchema = new mongoose.Schema({
     key: { type: String, required: true, unique: true },
     displayName: {
         EN: { type: String, required: true },
         AR: { type: String, required: true },
     },
-    stepNumber: { type: Number, required: true, unique: true },
+    stepNumber: {
+        type: Number,
+        required: true,
+    },
     fields: {
         type: [fieldSchema],
         required: true,
@@ -110,5 +129,16 @@ const stepSchema = new mongoose.Schema({
     defaultToListView: { type: Boolean, default: true },
 });
 
+// Add validator to run during other that change stepNumber
+stepSchema.path('stepNumber').validate(async function () {
+    return await isUniqueStepNumber(this.stepNumber, this.key);
+});
+
 const Step = mongoose.model('steps', stepSchema);
-module.exports = { Step, fieldEnum, questionOptionSchema, validateOptions };
+module.exports = {
+    Step,
+    isUniqueStepNumber,
+    fieldEnum,
+    questionOptionSchema,
+    validateOptions,
+};
