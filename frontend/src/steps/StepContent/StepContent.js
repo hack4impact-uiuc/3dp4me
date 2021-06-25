@@ -72,7 +72,6 @@ const StepContent = ({
                 file,
             );
 
-            console.log(res);
             const newFile = {
                 filename: res.data.name,
                 uploadedBy: res.data.uploadedBy,

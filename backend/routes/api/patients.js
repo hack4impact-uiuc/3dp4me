@@ -304,13 +304,10 @@ router.post(
             const newStepDataModel = new model(patientStepData);
             patientStepData = await newStepDataModel.save();
         } else {
-            console.log('HERE');
             patientStepData = _.assign(patientStepData, req.body);
             patientStepData.lastEdited = Date.now();
             patientStepData.lastEditedBy = req.user.name;
-            console.log(patientStepData);
             patientStepData = await patientStepData.save();
-            console.log('HERE2');
         }
 
         patient.lastEdited = Date.now();
