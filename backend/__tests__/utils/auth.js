@@ -1,6 +1,9 @@
 const _ = require('lodash');
 const AWS_SDK = require('aws-sdk');
-const { SECURITY_ROLE_ATTRIBUTE_NAME } = require('../../utils/aws/aws-exports');
+const {
+    SECURITY_ROLE_ATTRIBUTE_NAME,
+    SECURITY_ACCESS_ATTRIBUTE_NAME,
+} = require('../../utils/aws/aws-exports');
 const {
     MOCK_USER,
     MOCK_AUTH_TOKEN,
@@ -16,12 +19,17 @@ let lastUploadedFileParams = null;
  * @param  {...String} roles Roles to add
  * @returns The user data
  */
-module.exports.createUserDataWithRoles = (...roles) => {
+module.exports.createUserDataWithRolesAndAccess = (access, ...roles) => {
     const user = _.cloneDeep(MOCK_USER);
     currentAuthenticatedUser = user;
     user.UserAttributes.push({
         Name: SECURITY_ROLE_ATTRIBUTE_NAME,
         Value: JSON.stringify(roles),
+    });
+
+    user.UserAttributes.push({
+        Name: SECURITY_ACCESS_ATTRIBUTE_NAME,
+        Value: access,
     });
 
     return user;
@@ -58,7 +66,7 @@ module.exports.initS3Mocker = (AWS) => {
  */
 module.exports.setCurrentUser = (
     AWS,
-    user = this.createUserDataWithRoles(MOCK_ROLE_ID),
+    user = this.createUserDataWithRolesAndAccess(MOCK_ROLE_ID),
 ) => {
     AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
         return Promise.resolve(user);

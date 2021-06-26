@@ -2,9 +2,10 @@ var AWS = require('aws-sdk');
 const {
     COGNITO_REGION,
     SECURITY_ROLE_ATTRIBUTE_NAME,
+    SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../utils/aws/aws-exports');
 
-const ACCESS_LEVELS = {
+module.exports.ACCESS_LEVELS = {
     GRANTED: 'Granted',
     REVOKED: 'Revoked',
     PENDING: 'Pending',
@@ -37,11 +38,11 @@ const parseUserSecurityRoles = (user) => {
 };
 
 const parseUserAccess = (user) => {
-    if (!user || !user.UserAttributes) return ACCESS_LEVELS.PENDING;
-
-    const accessLevelString = user.UserAttributes.find(
+    const accessLevelString = user?.UserAttributes?.find(
         (attribute) => attribute.Name === SECURITY_ACCESS_ATTRIBUTE_NAME,
-    );
+    )?.Value;
+
+    if (!accessLevelString) return this.ACCESS_LEVELS.PENDING;
 
     return accessLevelString;
 };
@@ -53,7 +54,7 @@ const requireAuthentication = async (req, res, next) => {
         user.roles = parseUserSecurityRoles(user);
         user.accessLevel = parseUserAccess(user);
 
-        if (user.accessLevel != ACCESS_LEVELS.GRANTED) {
+        if (user.accessLevel != this.ACCESS_LEVELS.GRANTED) {
             return res.status(403).json({
                 success: false,
                 message:

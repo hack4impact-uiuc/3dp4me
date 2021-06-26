@@ -45,7 +45,7 @@ describe('Test authentication ', () => {
 
     it('fails when given valid user token but improper roles', (done) => {
         AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
-            return Promise.resolve(createUserDataWithRoles());
+            return Promise.resolve(createUserDataWithRolesAndAccess());
         });
 
         request(server)
@@ -59,7 +59,9 @@ describe('Test authentication ', () => {
     it('succeeds when given valid user token with proper roles', (done) => {
         AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
             const MOCK_ROLE_ID = '606e0a4602b23d02bc77673b';
-            return Promise.resolve(createUserDataWithRoles(MOCK_ROLE_ID));
+            return Promise.resolve(
+                createUserDataWithRolesAndAccess(MOCK_ROLE_ID),
+            );
         });
 
         request(server)

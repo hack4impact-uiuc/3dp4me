@@ -18,12 +18,14 @@ const {
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
+    createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const {
     expectStrictEqualWithTimestampOrdering,
     areObjectsDisjoint,
 } = require('../../utils/utils');
 const { models } = require('../../../models');
+const { ACCESS_LEVELS } = require('../../../middleware/authentication');
 
 describe('POST /steps', () => {
     afterAll(async () => await db.closeDatabase());
@@ -31,7 +33,13 @@ describe('POST /steps', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(AWS);
+        setCurrentUser(
+            AWS,
+            createUserDataWithRolesAndAccess(
+                ACCESS_LEVELS.GRANTED,
+                '606e0a4602b23d02bc77673b',
+            ),
+        );
     });
 
     beforeEach(() => {
