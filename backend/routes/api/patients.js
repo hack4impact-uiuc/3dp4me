@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
+const _ = require('lodash');
 const { getStepKeys } = require('../../utils/patient-utils');
 const { errorWrap } = require('../../utils');
 const { models, overallStatusEnum } = require('../../models');
@@ -199,6 +200,7 @@ router.delete(
 router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
+        // TODO during refactoring: We upload file name in form data, is this even needed???
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
         if (patient == null) {
@@ -211,6 +213,7 @@ router.post(
         const collectionInfo = await mongoose.connection.db
             .listCollections({ name: stepKey })
             .toArray();
+
         if (collectionInfo.length == 0) {
             return res.status(404).json({
                 success: false,
@@ -226,48 +229,43 @@ router.post(
         if (!stepData || !stepData[fieldKey]) stepData[fieldKey] = [];
 
         let file = req.files.uploadedFile;
-        uploadFile(
+        await uploadFile(
             file.data,
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
             {
                 accessKeyId: ACCESS_KEY_ID,
                 secretAccessKey: SECRET_ACCESS_KEY,
             },
-            await async function (err, data) {
-                if (err) {
-                    res.json(err);
-                } else {
-                    stepData[fieldKey].push({
-                        filename: fileName,
-                        uploadedBy: req.user.name,
-                        uploadDate: Date.now(),
-                    });
-                    stepData.lastEdited = Date.now();
-                    stepData.lastEditedBy = req.user.name;
-                    collection.findOneAndUpdate(
-                        { patientId: id },
-                        { $set: stepData },
-                        { upsert: true },
-                    );
-
-                    patient.lastEdited = Date.now();
-                    patient.lastEditedBy = req.user.name;
-                    patient.save();
-
-                    res.status(201).json({
-                        success: true,
-                        message: 'File successfully uploaded',
-                        data: {
-                            name: fileName,
-                            uploadedBy: req.user.name,
-                            uploadDate: Date.now(),
-                            mimetype: file.mimetype,
-                            size: file.size,
-                        },
-                    });
-                }
-            },
         );
+
+        stepData[fieldKey].push({
+            filename: fileName,
+            uploadedBy: req.user.name,
+            uploadDate: Date.now(),
+        });
+        stepData.lastEdited = Date.now();
+        stepData.lastEditedBy = req.user.name;
+        collection.findOneAndUpdate(
+            { patientId: id },
+            { $set: stepData },
+            { upsert: true },
+        );
+
+        patient.lastEdited = Date.now();
+        patient.lastEditedBy = req.user.name;
+        patient.save();
+
+        res.status(201).json({
+            success: true,
+            message: 'File successfully uploaded',
+            data: {
+                name: fileName,
+                uploadedBy: req.user.name,
+                uploadDate: Date.now(),
+                mimetype: file.mimetype,
+                size: file.size,
+            },
+        });
     }),
 );
 
@@ -278,7 +276,6 @@ router.post(
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
         const steps = await models.Step.find({ key: stage });
-        const session = await mongoose.startSession();
 
         if (steps.length == 0) {
             return res.status(404).json({
@@ -297,49 +294,29 @@ router.post(
             });
         }
 
-        const updatedStage = req.body;
-        let savedData = null;
-        try {
-            await session.withTransaction(async () => {
-                const collection = await mongoose.connection.db.collection(
-                    stage,
-                );
-                updatedStage.lastEdited = Date.now();
-                updatedStage.lastEditedBy = req.user.name;
-                delete updatedStage._id;
-                let model = mongoose.model(stage);
-                const updatedModel = new model(updatedStage);
-                savedData = await collection.findOneAndUpdate(
-                    { patientId: id },
-                    { $set: updatedModel },
-                    {
-                        upsert: true,
-                        setDefaultsOnInsert: true,
-                        new: true,
-                        returnOriginal: false,
-                    },
-                );
-            });
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({
-                code: 500,
-                success: false,
-                message: error,
-            });
+        let model = mongoose.model(stage);
+        let patientStepData = await model.findOne({ patientId: id });
+        if (!patientStepData) {
+            patientStepData = req.body;
+            patientStepData.lastEdited = Date.now();
+            patientStepData.lastEditedBy = req.user.name;
+            patientStepData.patientId = id;
+            const newStepDataModel = new model(patientStepData);
+            patientStepData = await newStepDataModel.save();
+        } else {
+            patientStepData = _.assign(patientStepData, req.body);
+            patientStepData.lastEdited = Date.now();
+            patientStepData.lastEditedBy = req.user.name;
+            patientStepData = await patientStepData.save();
         }
+
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
-        await patient.save(function (err) {
-            if (err) {
-                res.json(err); //TODO: bug here, need to take a look
-            } else {
-                res.status(200).json({
-                    success: true,
-                    message: 'Patient Stage Successfully Saved',
-                    result: savedData.value,
-                });
-            }
+        await patient.save();
+        res.status(200).json({
+            success: true,
+            message: 'Patient Stage Successfully Saved',
+            result: patientStepData,
         });
     }),
 );

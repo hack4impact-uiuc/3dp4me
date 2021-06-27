@@ -99,12 +99,11 @@ module.exports.GET_PATIENT_WITH_SOME_STEP_DATA = {
     firstName: 'Natalia',
     _id: '60944e084f4c0d4330cc25ee',
     fathersName: 'Aurelio',
-    grandFathersName: 'Marlin',
+    grandfathersName: 'Marlin',
     familyName: 'Oberbrunner',
     dateCreated: '2020-09-05T11:28:44.920Z',
     lastEdited: '2020-10-21T10:45:29.001Z',
     lastEditedBy: 'KatarinaSchneider',
-    grandfathersName: '',
     orderId: '',
     status: 'Active',
     example: null,
@@ -127,14 +126,13 @@ module.exports.GET_PATIENT_WITH_SOME_STEP_DATA = {
 
 module.exports.GET_PATIENT_WITH_ALL_STEP_DATA = {
     fathersName: '',
-    grandfathersName: '',
     dateCreated: '2020-12-02T01:17:55.181Z',
     orderId: 't',
     lastEdited: '2020-07-12T22:25:28.949Z',
     status: 'Active',
     _id: '60944e084f4c0d4330cc258b',
     firstName: 'Delores',
-    grandFathersName: 'Vincent',
+    grandfathersName: 'Vincent',
     familyName: 'Bernier',
     lastEditedBy: 'KaceyEbert',
     medicalInfo: {
@@ -157,6 +155,9 @@ module.exports.GET_PATIENT_WITH_ALL_STEP_DATA = {
         numWorkingPeople: 2,
         numMilitaryPolice: 3,
         numDisabledPeople: 0,
+        incomeRange: '',
+        numberCars: 0,
+        numberRetiredPeople: 0,
         typeOfInsurance: '6070816ada92745444f64c63',
         patientId: '60944e084f4c0d4330cc258b',
         lastEdited: '2020-07-27T06:48:04.536Z',
@@ -164,6 +165,7 @@ module.exports.GET_PATIENT_WITH_ALL_STEP_DATA = {
     },
     example: {
         _id: '60944e084f4c0d4330cc25fe',
+        audio: [],
         multilineString:
             'Quo enim optio voluptatem quibusdam voluptatem non adipisci nihil. Voluptatum maxime consequatur porro et. Modi et debitis aspernatur eius aut laboriosam amet amet harum. Qui eum autem assumenda fugit dignissimos est. Eveniet consequuntur sed sapiente aut autem.\n' +
             ' \rDebitis commodi veritatis fuga animi vel. Corporis minus cupiditate occaecati natus eum dolores non error. Quam reprehenderit iusto officia unde perferendis est. Perferendis ut non eius.\n' +
@@ -172,11 +174,15 @@ module.exports.GET_PATIENT_WITH_ALL_STEP_DATA = {
         date: '2020-10-09T13:06:34.732Z',
         file: [
             {
+                _id: '60bb01b66ec8910a0c943c4e',
                 filename: 'utilisation_modular.ssf',
                 uploadDate: '2020-08-05T03:32:21.664Z',
                 uploadedBy: 'Robb',
             },
         ],
+        phone: '',
+        status: 'Unfinished',
+        string: '',
         radioButton: '607086644e7ccf3c7cea23dc',
         patientId: '60944e084f4c0d4330cc258b',
         lastEdited: '2020-11-02T16:13:05.393Z',
@@ -212,7 +218,6 @@ module.exports.EXPECTED_PUT_DATA = {
     status: 'Feedback',
     _id: '60944e084f4c0d4330cc258b',
     firstName: 'Mathias',
-    grandFathersName: 'Vincent',
     familyName: 'Wang',
     dateCreated: '2020-12-02T01:17:55.181Z',
     lastEdited: '2020-07-12T22:25:28.949Z',

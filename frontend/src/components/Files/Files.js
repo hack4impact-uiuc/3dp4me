@@ -16,7 +16,6 @@ const Files = ({
     handleDownload,
     handleDelete,
     handleUpload,
-    isDisabled,
 }) => {
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
@@ -48,7 +47,7 @@ const Files = ({
                     className="file-close-button"
                     type="button"
                     onClick={() => {
-                        if (!isDisabled) handleDelete(fieldKey, file);
+                        handleDelete(fieldKey, file);
                     }}
                 >
                     <CloseIcon />
@@ -70,10 +69,8 @@ const Files = ({
                         className="upload-file-input"
                         type="file"
                         onChange={(e) => {
-                            if (!isDisabled)
-                                handleUpload(fieldKey, e.target.files[0]);
+                            handleUpload(fieldKey, e.target.files[0]);
                         }}
-                        disabled={isDisabled}
                     />
                     <Button className="file-button" component="span">
                         <AddIcon />
@@ -94,7 +91,6 @@ Files.propTypes = {
     handleDownload: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
     handleUpload: PropTypes.func.isRequired,
-    isDisabled: PropTypes.bool.isRequired,
     files: PropTypes.arrayOf(
         PropTypes.shape({
             filename: PropTypes.string.isRequired,
