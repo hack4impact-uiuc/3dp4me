@@ -2,7 +2,6 @@ const db = require('../../utils/db');
 const _ = require('lodash');
 const AWS = require('aws-sdk-mock');
 var server = require('../../../app');
-
 const { initAuthMocker, setCurrentUser } = require('../../utils/auth');
 const { getStepKeys } = require('../../../utils/patient-utils');
 
