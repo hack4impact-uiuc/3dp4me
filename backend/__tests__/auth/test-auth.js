@@ -3,6 +3,7 @@ const request = require('supertest');
 const { createUserDataWithRolesAndAccess } = require('../utils/auth');
 const AWS = require('aws-sdk-mock');
 const { MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
+const { ACCESS_LEVELS } = require('../../middleware/authentication');
 
 describe('Test authentication ', () => {
     beforeAll(async () => {
@@ -60,7 +61,10 @@ describe('Test authentication ', () => {
         AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
             const MOCK_ROLE_ID = '606e0a4602b23d02bc77673b';
             return Promise.resolve(
-                createUserDataWithRolesAndAccess(MOCK_ROLE_ID),
+                createUserDataWithRolesAndAccess(
+                    ACCESS_LEVELS.GRANTED,
+                    MOCK_ROLE_ID,
+                ),
             );
         });
 
