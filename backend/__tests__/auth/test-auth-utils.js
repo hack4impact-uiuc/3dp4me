@@ -6,7 +6,9 @@ const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
+	createUserDataWithRolesAndAccess
 } = require('../utils/auth');
+const { ACCESS_LEVELS } = require('../../middleware/authentication');
 
 describe('mock auth', () => {
     afterAll(async () => await db.closeDatabase());
@@ -15,7 +17,13 @@ describe('mock auth', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(AWS);
+        setCurrentUser(
+			AWS,
+			createUserDataWithRolesAndAccess(
+                ACCESS_LEVELS.GRANTED,
+                '606e0a4602b23d02bc77673b',
+            ),
+		);
     });
 
     it('returns OK with authentication', (done) => {

@@ -1,4 +1,4 @@
-console.log(process.env);
+require('dotenv').config({ path: `${process.env.NODE_ENV}.env` });
 
 exports.S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;
 exports.S3_REGION = process.env.S3_REGION;

@@ -10,7 +10,6 @@ const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
 const { initDB } = require('./utils/init-db');
 const app = express();
-console.log(process.env);
 
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 app.use(cors());

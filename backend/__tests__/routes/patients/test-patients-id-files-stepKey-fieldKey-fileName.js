@@ -87,7 +87,6 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
                 .field('uploadedFileName', FILE_NAME)
                 .attach('uploadedFile', TEST_FILE),
         );
-		console.log(res.text);
 
         expect(res.status).toBe(201);
         const resContent = JSON.parse(res.text);

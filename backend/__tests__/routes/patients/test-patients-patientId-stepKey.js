@@ -148,7 +148,6 @@ describe('POST /patient', () => {
             lastEditedBy: getCurrentAuthenticatedUserAttribute('name'),
         };
 
-		console.log(body);
         // Send the request
         const res = await withAuthentication(
             request(server)
