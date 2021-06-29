@@ -8,7 +8,7 @@ const {
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
-	createUserDataWithRolesAndAccess,
+    createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const {
     expectStrictEqualWithTimestampOrdering,
@@ -30,12 +30,12 @@ describe('POST /patients', () => {
         await db.connect();
         initAuthMocker(AWS);
         setCurrentUser(
-			AWS,
-			createUserDataWithRolesAndAccess(
+            AWS,
+            createUserDataWithRolesAndAccess(
                 ACCESS_LEVELS.GRANTED,
                 '606e0a4602b23d02bc77673b',
-            ),	
-		);
+            ),
+        );
     });
 
     beforeEach(() => {

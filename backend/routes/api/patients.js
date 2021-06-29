@@ -22,7 +22,6 @@ const {
 // GET: Returns all patients
 router.get(
     '/',
-    requireAuthentication,
     errorWrap(async (req, res) => {
         models.Patient.find().then((patientInfo) =>
             res.status(200).json({
@@ -69,7 +68,7 @@ router.post(
         const patient = req.body;
         let new_patient = null;
         try {
-			// Should this be set to username instead? Currently set to the name value
+            // Should this be set to username instead? Currently set to the name value
             req.body.lastEditedBy = req.user.UserAttributes[4].Value;
             new_patient = new models.Patient(patient);
             await new_patient.save();
@@ -209,7 +208,7 @@ router.post(
         // TODO during refactoring: We upload file name in form data, is this even needed???
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
-		const name = req.user.UserAttributes[4].Value;
+        const name = req.user.UserAttributes[4].Value;
         if (patient == null) {
             return res.status(404).json({
                 success: false,
@@ -282,7 +281,7 @@ router.post(
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-		const name = req.user.UserAttributes[4].Value;
+        const name = req.user.UserAttributes[4].Value;
         const steps = await models.Step.find({ key: stage });
 
         if (steps.length == 0) {
