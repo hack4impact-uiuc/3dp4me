@@ -49,10 +49,8 @@ const parseUserAccess = (user) => {
 
 const requireAuthentication = async (req, res, next) => {
     try {
-        console.log(req.headers.authorization);
         const accessToken = req.headers.authorization.split(' ')[1];
         const user = await getUser(accessToken);
-        console.log(user);
         user.roles = parseUserSecurityRoles(user);
         user.accessLevel = parseUserAccess(user);
 
