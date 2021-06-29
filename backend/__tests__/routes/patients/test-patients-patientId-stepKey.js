@@ -9,6 +9,7 @@ const {
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
+	createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const omitDeep = require('omit-deep-lodash');
 const {
@@ -20,6 +21,7 @@ const {
     DEFAULT_STEP_DATA,
     POST_IMMUTABLE_STEP_DATA,
 } = require('../../mock-data/patients-mock-data');
+const { ACCESS_LEVELS } = require('../../../middleware/authentication');
 
 describe('POST /patient', () => {
     const STEP_KEY = 'example';
@@ -31,7 +33,13 @@ describe('POST /patient', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(AWS);
+        setCurrentUser(
+			AWS,
+			createUserDataWithRolesAndAccess(
+                ACCESS_LEVELS.GRANTED,
+                '606e0a4602b23d02bc77673b',
+            ),
+		);
     });
 
     beforeEach(() => {
@@ -140,6 +148,7 @@ describe('POST /patient', () => {
             lastEditedBy: getCurrentAuthenticatedUserAttribute('name'),
         };
 
+		console.log(body);
         // Send the request
         const res = await withAuthentication(
             request(server)

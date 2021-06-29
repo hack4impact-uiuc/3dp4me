@@ -12,8 +12,10 @@ const {
     getCurrentAuthenticatedUserAttribute,
     initS3Mocker,
     getLastUploadedFileParams,
+	createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const { S3_BUCKET_NAME } = require('../../../utils/aws/aws-exports');
+const { ACCESS_LEVELS } = require('../../../middleware/authentication');
 
 describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
     afterAll(async () => await db.closeDatabase());
@@ -22,7 +24,13 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         await db.connect();
         initAuthMocker(AWS);
         initS3Mocker(AWS);
-        setCurrentUser(AWS);
+        setCurrentUser(
+			AWS,
+			createUserDataWithRolesAndAccess(
+                ACCESS_LEVELS.GRANTED,
+                '606e0a4602b23d02bc77673b',
+            ),
+		);
     });
 
     beforeEach(() => {
@@ -79,6 +87,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
                 .field('uploadedFileName', FILE_NAME)
                 .attach('uploadedFile', TEST_FILE),
         );
+		console.log(res.text);
 
         expect(res.status).toBe(201);
         const resContent = JSON.parse(res.text);

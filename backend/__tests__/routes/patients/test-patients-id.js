@@ -9,6 +9,7 @@ const {
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
+	createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const omitDeep = require('omit-deep-lodash');
 const {
@@ -23,6 +24,7 @@ const {
     PUT_BAD_PATIENT_DATA,
     EXPECTED_PUT_DATA,
 } = require('../../mock-data/patients-mock-data');
+const { ACCESS_LEVELS } = require('../../../middleware/authentication');
 
 describe('PUT /patients/:id', () => {
     const STEP_KEY = 'Patient';
@@ -32,7 +34,13 @@ describe('PUT /patients/:id', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(AWS);
+        setCurrentUser(
+			AWS,
+			createUserDataWithRolesAndAccess(
+                ACCESS_LEVELS.GRANTED,
+                '606e0a4602b23d02bc77673b',
+            ),
+		);
     });
 
     beforeEach(() => {
@@ -96,7 +104,13 @@ describe('GET /patient/:id', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(AWS);
+        setCurrentUser(
+			AWS,
+			createUserDataWithRolesAndAccess(
+                ACCESS_LEVELS.GRANTED,
+                '606e0a4602b23d02bc77673b',
+            ),
+		);
     });
 
     beforeEach(() => {

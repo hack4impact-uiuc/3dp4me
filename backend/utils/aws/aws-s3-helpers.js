@@ -9,6 +9,8 @@ var AWS = require('aws-sdk');
  * @param onUploaded Callback after finished uploading. Params are (err, data).
  */
 const uploadFile = async (content, remoteFileName, credentials) => {
+	console.log(S3_INFO);
+	console.log(S3_INFO.S3_BUCKET_NAME);
     let params = {
         Body: content,
         Bucket: S3_INFO.S3_BUCKET_NAME,

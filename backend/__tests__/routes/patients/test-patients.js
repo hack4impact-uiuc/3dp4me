@@ -8,6 +8,7 @@ const {
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
+	createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const {
     expectStrictEqualWithTimestampOrdering,
@@ -20,6 +21,7 @@ const {
     POST_IMMUTABLE_PATIENT_DATA,
 } = require('../../mock-data/patients-mock-data');
 const { models } = require('../../../models');
+const { ACCESS_LEVELS } = require('../../../middleware/authentication');
 
 describe('POST /patients', () => {
     afterAll(async () => await db.closeDatabase());
@@ -27,7 +29,13 @@ describe('POST /patients', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(AWS);
+        setCurrentUser(
+			AWS,
+			createUserDataWithRolesAndAccess(
+                ACCESS_LEVELS.GRANTED,
+                '606e0a4602b23d02bc77673b',
+            ),	
+		);
     });
 
     beforeEach(() => {

@@ -1,6 +1,6 @@
 const db = require('../utils/db');
 const request = require('supertest');
-const { createUserDataWithRoles } = require('../utils/auth');
+const { createUserDataWithRolesAndAccess } = require('../utils/auth');
 const AWS = require('aws-sdk-mock');
 const { MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
 

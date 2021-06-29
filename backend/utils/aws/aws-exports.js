@@ -1,3 +1,5 @@
+console.log(process.env);
+
 exports.S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;
 exports.S3_REGION = process.env.S3_REGION;
 exports.COGNITO_REGION = process.env.COGNITO_REGION;

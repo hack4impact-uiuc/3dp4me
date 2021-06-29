@@ -2,8 +2,9 @@ const db = require('../../utils/db');
 const _ = require('lodash');
 const AWS = require('aws-sdk-mock');
 var server = require('../../../app');
-const { initAuthMocker, setCurrentUser } = require('../../utils/auth');
+const { initAuthMocker, setCurrentUser, createUserDataWithRolesAndAccess } = require('../../utils/auth');
 const { getStepKeys } = require('../../../utils/patient-utils');
+const { ACCESS_LEVELS } = require('../../../middleware/authentication');
 
 describe('getStepKey', () => {
     afterAll(async () => await db.closeDatabase());
@@ -11,7 +12,13 @@ describe('getStepKey', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(AWS);
+        setCurrentUser(
+			AWS,
+			createUserDataWithRolesAndAccess(
+                ACCESS_LEVELS.GRANTED,
+                '606e0a4602b23d02bc77673b',
+            ),
+		);
     });
 
     beforeEach(() => {
