@@ -1,4 +1,5 @@
 const db = require('../utils/db');
+require('../../app.js')
 const request = require('supertest');
 const { createUserDataWithRolesAndAccess } = require('../utils/auth');
 const AWS = require('aws-sdk-mock');

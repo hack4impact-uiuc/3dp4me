@@ -1,3 +1,4 @@
+require('../../../app.js');
 const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
