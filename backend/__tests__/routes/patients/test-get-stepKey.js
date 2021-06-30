@@ -8,7 +8,10 @@ const {
     createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const { getStepKeys } = require('../../../utils/patient-utils');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../../../middleware/authentication');
+const {
+    ACCESS_LEVELS,
+    ADMIN_ID,
+} = require('../../../middleware/authentication');
 
 describe('getStepKey', () => {
     afterAll(async () => await db.closeDatabase());
@@ -18,10 +21,7 @@ describe('getStepKey', () => {
         initAuthMocker(AWS);
         setCurrentUser(
             AWS,
-            createUserDataWithRolesAndAccess(
-                ACCESS_LEVELS.GRANTED,
-                ADMIN_ID,
-            ),
+            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
         );
     });
 

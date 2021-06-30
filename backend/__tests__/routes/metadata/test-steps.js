@@ -25,7 +25,10 @@ const {
     areObjectsDisjoint,
 } = require('../../utils/utils');
 const { models } = require('../../../models');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../../../middleware/authentication');
+const {
+    ACCESS_LEVELS,
+    ADMIN_ID,
+} = require('../../../middleware/authentication');
 
 describe('POST /steps', () => {
     afterAll(async () => await db.closeDatabase());
@@ -35,10 +38,7 @@ describe('POST /steps', () => {
         initAuthMocker(AWS);
         setCurrentUser(
             AWS,
-            createUserDataWithRolesAndAccess(
-                ACCESS_LEVELS.GRANTED,
-                ADMIN_ID,
-            ),
+            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
         );
     });
 

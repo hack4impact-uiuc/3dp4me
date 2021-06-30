@@ -21,7 +21,10 @@ const {
     POST_IMMUTABLE_PATIENT_DATA,
 } = require('../../mock-data/patients-mock-data');
 const { models } = require('../../../models');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../../../middleware/authentication');
+const {
+    ACCESS_LEVELS,
+    ADMIN_ID,
+} = require('../../../middleware/authentication');
 
 describe('POST /patients', () => {
     afterAll(async () => await db.closeDatabase());
@@ -31,10 +34,7 @@ describe('POST /patients', () => {
         initAuthMocker(AWS);
         setCurrentUser(
             AWS,
-            createUserDataWithRolesAndAccess(
-                ACCESS_LEVELS.GRANTED,
-                ADMIN_ID,
-            ),
+            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
         );
     });
 

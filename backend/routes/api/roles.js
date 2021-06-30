@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models/index');
-const {
-    requireAdmin,
-} = require('../../middleware/authentication');
+const { requireAdmin } = require('../../middleware/authentication');
 
 // Get all roles
 router.get(

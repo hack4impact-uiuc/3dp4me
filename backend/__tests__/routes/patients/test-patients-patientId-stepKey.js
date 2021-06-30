@@ -21,7 +21,10 @@ const {
     DEFAULT_STEP_DATA,
     POST_IMMUTABLE_STEP_DATA,
 } = require('../../mock-data/patients-mock-data');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../../../middleware/authentication');
+const {
+    ACCESS_LEVELS,
+    ADMIN_ID,
+} = require('../../../middleware/authentication');
 
 describe('POST /patient', () => {
     const STEP_KEY = 'example';
@@ -35,10 +38,7 @@ describe('POST /patient', () => {
         initAuthMocker(AWS);
         setCurrentUser(
             AWS,
-            createUserDataWithRolesAndAccess(
-                ACCESS_LEVELS.GRANTED,
-                ADMIN_ID,
-            ),
+            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
         );
     });
 

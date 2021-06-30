@@ -10,9 +10,7 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
-const {
-    requireAdmin,
-} = require('../../middleware/authentication');
+const { requireAdmin } = require('../../middleware/authentication');
 const {
     removeRequestAttributes,
     STEP_IMMUTABLE_ATTRIBUTES,

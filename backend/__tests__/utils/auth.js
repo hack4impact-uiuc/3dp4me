@@ -67,7 +67,10 @@ module.exports.initS3Mocker = (AWS) => {
  */
 module.exports.setCurrentUser = (
     AWS,
-    user = this.createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, MOCK_ROLE_ID),
+    user = this.createUserDataWithRolesAndAccess(
+        ACCESS_LEVELS.GRANTED,
+        MOCK_ROLE_ID,
+    ),
 ) => {
     AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
         return Promise.resolve(user);

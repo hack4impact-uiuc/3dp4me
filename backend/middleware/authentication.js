@@ -46,21 +46,21 @@ const parseUserAccess = (user) => {
 };
 
 const parseUserName = (user) => {
-	const userNameString = user?.UserAttributes?.find(
-		(attribute) => attribute.Name === 'name',
-	)?.Value;
+    const userNameString = user?.UserAttributes?.find(
+        (attribute) => attribute.Name === 'name',
+    )?.Value;
 
-	if (!userNameString) return '';
-	
-	return userNameString;
-}
+    if (!userNameString) return '';
+
+    return userNameString;
+};
 
 const requireAuthentication = async (req, res, next) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
         const user = await getUser(accessToken);
         user.roles = parseUserSecurityRoles(user);
-		user.name = parseUserName(user);
+        user.name = parseUserName(user);
         user.accessLevel = parseUserAccess(user);
 
         if (user.accessLevel != this.ACCESS_LEVELS.GRANTED) {

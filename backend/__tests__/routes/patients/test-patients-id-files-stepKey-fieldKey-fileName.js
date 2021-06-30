@@ -16,7 +16,10 @@ const {
     createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const { S3_BUCKET_NAME } = require('../../../utils/aws/aws-exports');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../../../middleware/authentication');
+const {
+    ACCESS_LEVELS,
+    ADMIN_ID,
+} = require('../../../middleware/authentication');
 
 describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
     afterAll(async () => await db.closeDatabase());
@@ -27,10 +30,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         initS3Mocker(AWS);
         setCurrentUser(
             AWS,
-            createUserDataWithRolesAndAccess(
-                ACCESS_LEVELS.GRANTED,
-                ADMIN_ID,
-            ),
+            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
         );
     });
 
