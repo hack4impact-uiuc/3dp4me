@@ -11,9 +11,7 @@ module.exports.ACCESS_LEVELS = {
     PENDING: 'Pending',
 };
 
-ADMIN_ID = '606e0a4602b23d02bc77673b';
-
-const isAdmin = (user) => user.roles.includes(ADMIN_ID);
+const ADMIN_ID = '606e0a4602b23d02bc77673b';
 
 const getUser = async (accessToken) => {
     var params = {
@@ -47,11 +45,22 @@ const parseUserAccess = (user) => {
     return accessLevelString;
 };
 
+const parseUserName = (user) => {
+	const userNameString = user?.UserAttributes?.find(
+		(attribute) => attribute.Name === 'name',
+	)?.Value;
+
+	if (!userNameString) return '';
+	
+	return userNameString;
+}
+
 const requireAuthentication = async (req, res, next) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
         const user = await getUser(accessToken);
         user.roles = parseUserSecurityRoles(user);
+		user.name = parseUserName(user);
         user.accessLevel = parseUserAccess(user);
 
         if (user.accessLevel != this.ACCESS_LEVELS.GRANTED) {
@@ -90,6 +99,7 @@ const requireRole = (role) => {
 
 const requireAdmin = requireRole(ADMIN_ID);
 
+module.exports.ADMIN_ID = ADMIN_ID;
 module.exports.requireRole = requireRole;
 module.exports.requireAdmin = requireAdmin;
 module.exports.requireAuthentication = requireAuthentication;

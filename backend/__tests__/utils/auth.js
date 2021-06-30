@@ -9,6 +9,7 @@ const {
     MOCK_AUTH_TOKEN,
     MOCK_ROLE_ID,
 } = require('../mock-data/auth-mock-data');
+const { ACCESS_LEVELS } = require('../../middleware/authentication');
 
 let currentAuthenticatedUser = null;
 let lastUploadedFileParams = null;
@@ -66,7 +67,7 @@ module.exports.initS3Mocker = (AWS) => {
  */
 module.exports.setCurrentUser = (
     AWS,
-    user = this.createUserDataWithRolesAndAccess(MOCK_ROLE_ID),
+    user = this.createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, MOCK_ROLE_ID),
 ) => {
     AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
         return Promise.resolve(user);

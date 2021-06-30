@@ -11,7 +11,6 @@ const {
     SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
 const {
-    requireAuthentication,
     requireAdmin,
 } = require('../../middleware/authentication');
 const {
@@ -68,8 +67,7 @@ router.post(
         const patient = req.body;
         let new_patient = null;
         try {
-            // Should this be set to username instead? Currently set to the name value
-            req.body.lastEditedBy = req.user.UserAttributes[4].Value;
+            req.body.lastEditedBy = req.user.name;
             new_patient = new models.Patient(patient);
             await new_patient.save();
         } catch (error) {
@@ -208,7 +206,6 @@ router.post(
         // TODO during refactoring: We upload file name in form data, is this even needed???
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
-        const name = req.user.UserAttributes[4].Value;
         if (patient == null) {
             return res.status(404).json({
                 success: false,
@@ -246,11 +243,11 @@ router.post(
 
         stepData[fieldKey].push({
             filename: fileName,
-            uploadedBy: name,
+            uploadedBy: req.user.name,
             uploadDate: Date.now(),
         });
         stepData.lastEdited = Date.now();
-        stepData.lastEditedBy = name;
+        stepData.lastEditedBy = req.user.name;
         collection.findOneAndUpdate(
             { patientId: id },
             { $set: stepData },
@@ -258,7 +255,7 @@ router.post(
         );
 
         patient.lastEdited = Date.now();
-        patient.lastEditedBy = name;
+        patient.lastEditedBy = req.user.name;
         patient.save();
 
         res.status(201).json({
@@ -266,7 +263,7 @@ router.post(
             message: 'File successfully uploaded',
             data: {
                 name: fileName,
-                uploadedBy: name,
+                uploadedBy: req.user.name,
                 uploadDate: Date.now(),
                 mimetype: file.mimetype,
                 size: file.size,
@@ -281,7 +278,6 @@ router.post(
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const { id, stage } = req.params;
-        const name = req.user.UserAttributes[4].Value;
         const steps = await models.Step.find({ key: stage });
 
         if (steps.length == 0) {
@@ -306,19 +302,19 @@ router.post(
         if (!patientStepData) {
             patientStepData = req.body;
             patientStepData.lastEdited = Date.now();
-            patientStepData.lastEditedBy = name;
+            patientStepData.lastEditedBy = req.user.name;
             patientStepData.patientId = id;
             const newStepDataModel = new model(patientStepData);
             patientStepData = await newStepDataModel.save();
         } else {
             patientStepData = _.assign(patientStepData, req.body);
             patientStepData.lastEdited = Date.now();
-            patientStepData.lastEditedBy = name;
+            patientStepData.lastEditedBy = req.user.name;
             patientStepData = await patientStepData.save();
         }
 
         patient.lastEdited = Date.now();
-        patient.lastEditedBy = name;
+        patient.lastEditedBy = req.user.name;
         await patient.save();
         res.status(200).json({
             success: true,

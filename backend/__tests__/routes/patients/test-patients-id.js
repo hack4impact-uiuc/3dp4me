@@ -24,7 +24,7 @@ const {
     PUT_BAD_PATIENT_DATA,
     EXPECTED_PUT_DATA,
 } = require('../../mock-data/patients-mock-data');
-const { ACCESS_LEVELS } = require('../../../middleware/authentication');
+const { ACCESS_LEVELS, ADMIN_ID } = require('../../../middleware/authentication');
 
 describe('PUT /patients/:id', () => {
     const STEP_KEY = 'Patient';
@@ -38,7 +38,7 @@ describe('PUT /patients/:id', () => {
             AWS,
             createUserDataWithRolesAndAccess(
                 ACCESS_LEVELS.GRANTED,
-                '606e0a4602b23d02bc77673b',
+                ADMIN_ID,
             ),
         );
     });

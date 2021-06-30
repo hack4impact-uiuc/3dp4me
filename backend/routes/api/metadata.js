@@ -176,7 +176,6 @@ router.put(
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const stepPermissions = await models.Step.findOneAndUpdate(
-            { writableGroups: { $in: [req.user._id.toString()] } },
             { key: stepkey },
             { $set: req.body },
         );
