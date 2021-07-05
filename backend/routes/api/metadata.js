@@ -158,17 +158,6 @@ router.post(
     }),
 );
 
-
-const getFieldByKey = (object_list, key) => {
-    for (object of object_list) {
-        if (object?.key === key) {
-            return object;
-        }
-    }
-
-    return null;
-};
-
 const putOneStep = async (stepBody, res, session) => {
     if (!stepBody?.key) {
         return res.status(400).json({
