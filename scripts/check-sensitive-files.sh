@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ROOT_DIR="$(pwd)/"
 LIST=$(git diff --cached --name-only --diff-filter=ACRM)

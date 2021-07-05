@@ -29,5 +29,3 @@ module.exports.removeRequestAttributes = (attributes) => {
 module.exports.removeAttributesFrom = (obj, attributes) => {
     return _.omit(obj, attributes);
 };
-
-module.exports.removeAttributesFrom = removeAttributesFrom;

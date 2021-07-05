@@ -72,7 +72,7 @@ fieldSchema.add({
     subFields: {
         type: [fieldSchema],
         required: false,
-    }
+    },
 });
 
 const validateStep = (fieldSchema) => {
