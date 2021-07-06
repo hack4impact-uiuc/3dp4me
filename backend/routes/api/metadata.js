@@ -17,31 +17,26 @@ const generateFieldSchema = (field) => {
         case fieldEnum.STRING:
             return {
                 type: String,
-                required: true,
                 default: '',
             };
         case fieldEnum.MULTILINE_STRING:
             return {
                 type: String,
-                required: true,
                 default: '',
             };
         case fieldEnum.NUMBER:
             return {
                 type: Number,
-                required: true,
                 default: 0,
             };
         case fieldEnum.DATE:
             return {
                 type: Date,
-                required: true,
                 default: Date.now,
             };
         case fieldEnum.PHONE:
             return {
                 type: String,
-                required: true,
                 default: '',
                 validate: {
                     validator: isValidNumber,
@@ -49,23 +44,29 @@ const generateFieldSchema = (field) => {
                 },
             };
         case fieldEnum.RADIO_BUTTON:
-            if (field.options == null)
+            if (!field?.options?.length)
                 throw new Error('Radio button must have options');
 
             return {
                 type: String,
-                required: true,
                 default: '',
             };
         case fieldEnum.FILE:
             return {
                 type: [fileSchema],
-                required: true,
                 default: [],
             };
         case fieldEnum.AUDIO:
             return {
                 type: [fileSchema],
+                default: [],
+            };
+        case fieldEnum.FIELD_GROUP:
+            if (!field?.subFields?.length)
+                throw new Error('Field groups must have sub fields');
+
+            return {
+                type: [generateFieldsFromMetadata(field.subFields)],
                 required: true,
                 default: [],
             };
@@ -91,12 +92,18 @@ const generateSchemaFromMetadata = (stepMetadata) => {
         required: true,
         default: 'Admin',
     };
-    stepMetadata.fields.forEach((field) => {
-        const generatedSchema = generateFieldSchema(field);
-        if (generatedSchema) stepSchema[field.key] = generatedSchema;
-    });
+    generateFieldsFromMetadata(stepMetadata.fields, stepSchema);
     const schema = new mongoose.Schema(stepSchema);
     mongoose.model(stepMetadata.key, schema, stepMetadata.key);
+};
+
+const generateFieldsFromMetadata = (fieldsMetadata, schema = {}) => {
+    fieldsMetadata.forEach((field) => {
+        const generatedSchema = generateFieldSchema(field);
+        if (generatedSchema) schema[field.key] = generatedSchema;
+    });
+
+    return schema;
 };
 
 // GET metadata/steps
@@ -130,13 +137,6 @@ router.post(
 
         try {
             await mongoose.connection.transaction(async (session) => {
-                new_step_metadata.fields.forEach((field) => {
-                    if (field.fieldType == fieldEnum.RADIO_BUTTON) {
-                        if (field.options == null || field.options.length < 1)
-                            throw new Error('Radiobuttons require options');
-                    }
-                });
-
                 await new_step_metadata.save({ session });
                 generateSchemaFromMetadata(steps);
             });

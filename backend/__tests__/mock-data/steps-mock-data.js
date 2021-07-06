@@ -1,3 +1,5 @@
+const { fieldEnum } = require('../../models/Metadata');
+
 module.exports.PUT_STEP_REORDERED_FIELDS = [
     {
         key: 'survey',
@@ -281,6 +283,7 @@ module.exports.POST_STEP_WITH_OPTIONS = {
             options: [],
             fieldNumber: 0,
             isVisibleOnDashboard: false,
+            subFields: [],
             readableGroups: [],
             writableGroups: [],
         },
@@ -293,6 +296,7 @@ module.exports.POST_STEP_WITH_OPTIONS = {
                 EN: 'Gender',
                 AR: 'جنس تذكير أو تأنيث',
             },
+            subFields: [],
             readableGroups: [],
             writableGroups: [],
             options: [
@@ -311,6 +315,49 @@ module.exports.POST_STEP_WITH_OPTIONS = {
                         EN: 'Female',
                         AR: 'أنثى',
                     },
+                },
+            ],
+        },
+        {
+            key: 'appointments',
+            fieldType: 'FieldGroup',
+            displayName: {
+                EN: 'Appointments',
+                AR: 'تبوك ',
+            },
+            readableGroups: [],
+            writableGroups: [],
+            options: [],
+            fieldNumber: 6,
+            isVisibleOnDashboard: false,
+            subFields: [
+                {
+                    key: 'apptDate',
+                    fieldType: 'Date',
+                    displayName: {
+                        EN: 'Appointment Date',
+                        AR: 'تبوك ',
+                    },
+                    subFields: [],
+                    readableGroups: [],
+                    writableGroups: [],
+                    options: [],
+                    isVisibleOnDashboard: false,
+                    fieldNumber: 0,
+                },
+                {
+                    key: 'apptClinic',
+                    fieldType: 'String',
+                    displayName: {
+                        EN: 'Clinic',
+                        AR: 'تبوك ',
+                    },
+                    subFields: [],
+                    readableGroups: [],
+                    writableGroups: [],
+                    options: [],
+                    isVisibleOnDashboard: false,
+                    fieldNumber: 1,
                 },
             ],
         },
@@ -343,6 +390,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 fieldNumber: 1,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -357,6 +405,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -371,6 +420,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -380,6 +430,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 key: 'typeOfInsurance',
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
+                subFields: [],
                 displayName: {
                     EN: 'Type of Insurance',
                     AR: 'نوع التأمين',
@@ -430,6 +481,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -443,6 +495,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                     EN: 'Household Income Range',
                     AR: 'نطاق دخل الأسرة',
                 },
+                subFields: [],
                 options: [
                     {
                         IsHidden: false,
@@ -519,12 +572,229 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 fieldNumber: 7,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
         __v: 0,
     },
 ];
 
+module.exports.PUT_STEP_SUBFIELD_MISSING_FIELDS = [
+    {
+        key: 'survey',
+        fields: [
+            {
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c50',
+                key: 'numWorkingPeople',
+                displayName: {
+                    EN: 'Number of Working People in Household',
+                    AR: 'عدد العاملين في الأسرة',
+                },
+                fieldNumber: 0,
+                isVisibleOnDashboard: false,
+                options: [],
+            },
+            {
+                fieldType: 'RadioButton',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c51',
+                key: 'incomeRange',
+                fieldNumber: 1,
+                isVisibleOnDashboard: false,
+                displayName: {
+                    EN: 'Household Income Range',
+                    AR: 'نطاق دخل الأسرة',
+                },
+                options: [
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c52',
+                        Index: '0',
+                        Question: {
+                            _id: '6070816ada92745444f64c53',
+                            EN: '0 JOD - 4999 JOD',
+                            AR: '0 دينار - 4999 دينار',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c54',
+                        Index: '1',
+                        Question: {
+                            _id: '6070816ada92745444f64c55',
+                            EN: '5000 JOD - 9999 JOD',
+                            AR: '5000 دينار - 9999 دينار',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c56',
+                        Index: '2',
+                        Question: {
+                            _id: '6070816ada92745444f64c57',
+                            EN: '10000 JOD - 14999 JOD',
+                            AR: '10000 دينار - 14999 دينار',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c58',
+                        Index: '3',
+                        Question: {
+                            _id: '6070816ada92745444f64c59',
+                            EN: '15000 JOD - 19999 JOD',
+                            AR: '15000 دينار - 19999 دينار',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c5a',
+                        Index: '4',
+                        Question: {
+                            _id: '6070816ada92745444f64c5b',
+                            EN: '20000 JOD - 29999 JOD',
+                            AR: '20000 دينار - 29999 دينار',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c5c',
+                        Index: '5',
+                        Question: {
+                            _id: '6070816ada92745444f64c5d',
+                            EN: '30000+ JOD',
+                            AR: '30000+ دينار',
+                        },
+                    },
+                ],
+            },
+            {
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c5e',
+                key: 'numberCars',
+                displayName: {
+                    EN: 'Number of Cars in Household',
+                    AR: 'عدد السيارات المنزلية',
+                },
+                fieldNumber: 2,
+                isVisibleOnDashboard: false,
+                options: [],
+            },
+            {
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c5f',
+                key: 'numberRetiredPeople',
+                displayName: {
+                    EN: 'Number of Retired Household Members',
+                    AR: 'عدد أفراد الأسرة المتقاعدين',
+                },
+                fieldNumber: 3,
+                isVisibleOnDashboard: false,
+                options: [],
+            },
+            {
+                fieldType: 'RadioButton',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c60',
+                key: 'typeOfInsurance',
+                fieldNumber: 4,
+                isVisibleOnDashboard: false,
+                displayName: {
+                    EN: 'Type of Insurance',
+                    AR: 'نوع التأمين',
+                },
+                options: [
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c61',
+                        Index: '0',
+                        Question: {
+                            _id: '6070816ada92745444f64c62',
+                            EN: 'Private',
+                            AR: 'خاص',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c63',
+                        Index: '1',
+                        Question: {
+                            _id: '6070816ada92745444f64c64',
+                            EN: 'Government',
+                            AR: 'حكومة',
+                        },
+                    },
+                    {
+                        IsHidden: false,
+                        _id: '6070816ada92745444f64c65',
+                        Index: '2',
+                        Question: {
+                            _id: '6070816ada92745444f64c66',
+                            EN: 'None',
+                            AR: 'لا أحد',
+                        },
+                    },
+                ],
+            },
+            {
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c67',
+                key: 'numMilitaryPolice',
+                displayName: {
+                    EN: 'Number of Military or Police in Household',
+                    AR: 'عدد أفراد الجيش أو الشرطة في الأسرة',
+                },
+                fieldNumber: 5,
+                isVisibleOnDashboard: false,
+                options: [],
+            },
+            {
+                fieldType: 'Number',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c68',
+                key: 'numDisabledPeople',
+                displayName: {
+                    EN: 'Number of Disabled People in House',
+                    AR: 'عدد المعوقين بالمنزل',
+                },
+                fieldNumber: 6,
+                isVisibleOnDashboard: false,
+                options: [],
+            },
+            {
+                fieldType: 'FieldGroup',
+                readableGroups: [],
+                writableGroups: [],
+                _id: '6070816ada92745444f64c68',
+                key: 'newField',
+                displayName: {
+                    EN: 'Number of Disabled People in House',
+                    AR: 'عدد المعوقين بالمنزل',
+                },
+                fieldNumber: 7,
+                isVisibleOnDashboard: false,
+                options: [],
+                subFields: [
+                    {
+                        fieldType: 'Number',
+                    },
+                ],
+            },
+        ],
+    },
+];
 module.exports.PUT_STEP_EDIT_FIELDTYPE = [
     {
         key: 'survey',
@@ -931,6 +1201,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 fieldNumber: 0,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -944,6 +1215,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                     EN: 'Household Income Range',
                     AR: 'نطاق دخل الأسرة',
                 },
+                subFields: [],
                 options: [
                     {
                         IsHidden: false,
@@ -1020,6 +1292,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -1034,6 +1307,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -1043,6 +1317,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 key: 'typeOfInsurance',
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
+                subFields: [],
                 displayName: {
                     EN: 'Type of Insurance',
                     AR: 'نوع التأمين',
@@ -1093,6 +1368,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -1107,6 +1383,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
         __v: 0,
@@ -1731,6 +2008,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 0,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -1740,6 +2018,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 key: 'incomeRange',
                 fieldNumber: 1,
                 isVisibleOnDashboard: false,
+                subFields: [],
                 displayName: {
                     EN: 'Household Income Range',
                     AR: 'نطاق دخل الأسرة',
@@ -1820,6 +2099,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -1834,6 +2114,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -1843,6 +2124,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 key: 'typeOfInsurance',
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
+                subFields: [],
                 displayName: {
                     EN: 'Type of Insurance',
                     AR: 'نوع التأمين',
@@ -1893,6 +2175,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -1907,6 +2190,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -1921,6 +2205,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 fieldNumber: 7,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
         __v: 0,
@@ -1951,6 +2236,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 0,
                 isVisibleOnDashboard: true,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -1963,6 +2249,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                     EN: 'Radio Button',
                     AR: 'نطاق دخل الأسرة',
                 },
+                subFields: [],
                 options: [
                     {
                         IsHidden: false,
@@ -1986,6 +2273,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldType: 'MultilineString',
                 readableGroups: [],
                 writableGroups: [],
+                subFields: [],
                 key: 'multilineString',
                 displayName: {
                     EN: 'Text Area',
@@ -2006,6 +2294,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 },
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
+                subFields: [],
                 options: [],
             },
             {
@@ -2020,6 +2309,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                     AR: 'نوع التأمين',
                 },
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Date',
@@ -2033,6 +2323,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Phone',
@@ -2046,6 +2337,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Divider',
@@ -2059,6 +2351,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 7,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Audio',
@@ -2072,6 +2365,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 8,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
     },
@@ -2098,6 +2392,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 0,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'String',
@@ -2111,8 +2406,10 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 1,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
+                subFields: [],
                 fieldType: 'Phone',
                 readableGroups: [],
                 writableGroups: [],
@@ -2124,6 +2421,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Phone',
@@ -2137,6 +2435,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -2150,6 +2449,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -2162,6 +2462,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                     EN: 'Gender',
                     AR: 'جنس تذكير أو تأنيث',
                 },
+                subFields: [],
                 options: [
                     {
                         IsHidden: false,
@@ -2201,6 +2502,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -2214,6 +2516,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 7,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
     },
@@ -2240,6 +2543,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 0,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
@@ -2252,6 +2556,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                     EN: 'Household Income Range',
                     AR: 'نطاق دخل الأسرة',
                 },
+                subFields: [],
                 options: [
                     {
                         IsHidden: false,
@@ -2315,6 +2620,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 2,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -2328,11 +2634,13 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 3,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'RadioButton',
                 readableGroups: [],
                 writableGroups: [],
+                subFields: [],
                 key: 'typeOfInsurance',
                 fieldNumber: 4,
                 isVisibleOnDashboard: false,
@@ -2379,6 +2687,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 5,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
             {
                 fieldType: 'Number',
@@ -2392,6 +2701,7 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
                 fieldNumber: 6,
                 isVisibleOnDashboard: false,
                 options: [],
+                subFields: [],
             },
         ],
     },
@@ -2456,6 +2766,158 @@ module.exports.POST_STEP_WITH_DUPLICATE_STEP_NUMBER = {
             },
             fieldNumber: 0,
             isVisibleOnDashboard: false,
+        },
+    ],
+};
+
+module.exports.POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS = {
+    key: 'newStep',
+    displayName: {
+        EN: 'Medical Information',
+        AR: 'المعلومات الطبية',
+    },
+    stepNumber: 10,
+    fields: [
+        {
+            key: 'demographicDivider',
+            fieldType: fieldEnum.FIELD_GROUP,
+            displayName: {
+                EN: 'Field group',
+                AR: 'االديموغرافية',
+            },
+            fieldNumber: 0,
+            isVisibleOnDashboard: false,
+        },
+    ],
+};
+
+module.exports.POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS = {
+    key: 'newStep',
+    displayName: {
+        EN: 'Medical Information',
+        AR: 'المعلومات الطبية',
+    },
+    stepNumber: 10,
+    fields: [
+        {
+            key: 'demographicDivider',
+            fieldType: fieldEnum.FIELD_GROUP,
+            displayName: {
+                EN: 'Field group',
+                AR: 'االديموغرافية',
+            },
+            fieldNumber: 0,
+            isVisibleOnDashboard: false,
+            subFields: [],
+        },
+    ],
+};
+
+module.exports.POST_SUB_FIELD_WITHOUT_OPTIONS = {
+    key: 'newStep',
+    displayName: {
+        EN: 'Medical Information',
+        AR: 'المعلومات الطبية',
+    },
+    stepNumber: 10,
+    fields: [
+        {
+            key: 'demographicDivider',
+            fieldType: fieldEnum.FIELD_GROUP,
+            displayName: {
+                EN: 'Field group',
+                AR: 'االديموغرافية',
+            },
+            fieldNumber: 0,
+            isVisibleOnDashboard: false,
+            subFields: this.POST_STEP_WITHOUT_OPTIONS.fields,
+        },
+    ],
+};
+
+module.exports.POST_SUB_FIELD_WITH_EMPTY_OPTIONS = {
+    key: 'newStep',
+    displayName: {
+        EN: 'Medical Information',
+        AR: 'المعلومات الطبية',
+    },
+    stepNumber: 10,
+    fields: [
+        {
+            key: 'demographicDivider',
+            fieldType: fieldEnum.FIELD_GROUP,
+            displayName: {
+                EN: 'Field group',
+                AR: 'االديموغرافية',
+            },
+            fieldNumber: 0,
+            isVisibleOnDashboard: false,
+            subFields: this.POST_STEP_WITH_EMPTY_OPTIONS.fields,
+        },
+    ],
+};
+
+module.exports.POST_STEP_WITH_BAD_SUB_FIELD = {
+    key: 'newStep',
+    displayName: {
+        EN: 'Medical Information',
+        AR: 'المعلومات الطبية',
+    },
+    stepNumber: 10,
+    fields: [
+        {
+            key: 'demographicDivider',
+            fieldType: fieldEnum.FIELD_GROUP,
+            displayName: {
+                EN: 'Field group',
+                AR: 'االديموغرافية',
+            },
+            fieldNumber: 0,
+            isVisibleOnDashboard: false,
+            subFields: this.POST_STEP_WITH_BAD_FIELD.fields,
+        },
+    ],
+};
+
+module.exports.POST_STEP_WITH_DUPLICATE_SUB_FIELDKEY = {
+    key: 'newStep',
+    displayName: {
+        EN: 'Medical Information',
+        AR: 'المعلومات الطبية',
+    },
+    stepNumber: 10,
+    fields: [
+        {
+            key: 'demographicDivider',
+            fieldType: fieldEnum.FIELD_GROUP,
+            displayName: {
+                EN: 'Field group',
+                AR: 'االديموغرافية',
+            },
+            fieldNumber: 0,
+            isVisibleOnDashboard: false,
+            subFields: [
+                {
+                    key: 'demographicDivider',
+                    fieldType: 'duplicate',
+                    displayName: {
+                        EN: 'Field group',
+                        AR: 'االديموغرافية',
+                    },
+                    fieldNumber: 0,
+                    isVisibleOnDashboard: false,
+                },
+                {
+                    key: 'demographicDivider',
+                    fieldType: 'duplicate',
+                    displayName: {
+                        EN: 'Field group',
+                        AR: 'االديموغرافية',
+                    },
+                    fieldNumber: 1,
+                    isVisibleOnDashboard: false,
+                },
+            ],
         },
     ],
 };

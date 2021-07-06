@@ -1,9 +1,8 @@
 require('express-async-errors');
-require('dotenv').config();
+require('dotenv').config({ path: `${process.env.NODE_ENV}.env` });
 require('./utils/aws/aws-setup');
-const path = require('path');
-const mongoose = require('mongoose');
 const express = require('express');
+const path = require('path');
 const fileUpload = require('express-fileupload');
 var cors = require('cors');
 const bodyParser = require('body-parser');

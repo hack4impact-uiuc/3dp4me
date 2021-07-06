@@ -15,7 +15,7 @@ module.exports.STEP_IMMUTABLE_ATTRIBUTES = GLOBALLY_IMMUTABLE_ATTRIBUTES.concat(
  */
 module.exports.removeRequestAttributes = (attributes) => {
     return (req, res, next) => {
-        req.body = removeAttributesFrom(req.body, attributes);
+        req.body = this.removeAttributesFrom(req.body, attributes);
         next();
     };
 };
@@ -26,7 +26,7 @@ module.exports.removeRequestAttributes = (attributes) => {
  * @param {Array} attributes String array of attributes to remove
  * @returns
  */
-const removeAttributesFrom = (obj, attributes) => {
+module.exports.removeAttributesFrom = (obj, attributes) => {
     return _.omit(obj, attributes);
 };
 

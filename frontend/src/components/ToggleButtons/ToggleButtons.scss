@@ -25,7 +25,7 @@
         border-radius: 0;
         .toggle-button {
             border-radius: 0;
-            width: $controllerButtonWidth;
+            min-width: $controllerButtonWidth;
             color: #5f5f5f;
             font-size: 12px;
             border-color: $controllerBorder;

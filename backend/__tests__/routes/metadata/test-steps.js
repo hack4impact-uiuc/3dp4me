@@ -12,6 +12,12 @@ const {
     POST_STEP_WITH_DUPLICATE_KEY,
     POST_STEP_WITH_DUPLICATE_STEP_NUMBER,
     POST_STEP_WITH_OPTIONS,
+    POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS,
+    POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS,
+    POST_SUB_FIELD_WITHOUT_OPTIONS,
+    POST_SUB_FIELD_WITH_EMPTY_OPTIONS,
+    POST_STEP_WITH_BAD_SUB_FIELD,
+    POST_STEP_WITH_DUPLICATE_SUB_FIELDKEY,
     PUT_STEP_REORDERED_FIELDS,
     PUT_STEP_REORDERED_FIELDS_EXPECTED,
     PUT_STEP_ADDED_FIELD,
@@ -22,17 +28,13 @@ const {
     PUT_STEP_EDIT_FIELDTYPE,
     PUT_STEPS_SWAPPED_STEPNUMBER,
     PUT_DUPLICATE_STEPS,
+    PUT_STEP_SUBFIELD_MISSING_FIELDS,
 } = require('../../mock-data/steps-mock-data');
 const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
-    getCurrentAuthenticatedUserAttribute,
 } = require('../../utils/auth');
-const {
-    expectStrictEqualWithTimestampOrdering,
-    areObjectsDisjoint,
-} = require('../../utils/utils');
 const { models } = require('../../../models');
 
 describe('POST /steps', () => {
@@ -87,6 +89,33 @@ describe('POST /steps', () => {
 
     it('returns 400 if given duplicate stepNumber', async () => {
         await postAndExpect(POST_STEP_WITH_DUPLICATE_STEP_NUMBER, 400);
+    });
+
+    it('returns 400 if given stepGroup without subFields', async () => {
+        await postAndExpect(POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS, 400);
+    });
+
+    it('returns 400 if subFieldType is radio and no options provided', async () => {
+        await postAndExpect(POST_SUB_FIELD_WITHOUT_OPTIONS, 400);
+    });
+
+    it('returns 400 if subFieldType is radio and options empty', async () => {
+        await postAndExpect(POST_SUB_FIELD_WITH_EMPTY_OPTIONS, 400);
+    });
+
+    it('returns 400 if given bad subFieldType', async () => {
+        await postAndExpect(POST_STEP_WITH_BAD_SUB_FIELD, 400);
+    });
+
+    it('returns 400 if given duplicate subFieldKey', async () => {
+        await postAndExpect(POST_STEP_WITH_DUPLICATE_SUB_FIELDKEY, 400);
+    });
+
+    it('returns 400 if given stepGroup with empty subFields', async () => {
+        await postAndExpect(
+            POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS,
+            400,
+        );
     });
 
     it('successfully registers a new step when given good request', async () => {
@@ -210,6 +239,26 @@ describe('PUT /steps/stepkey', () => {
             request(server)
                 .put(`/api/metadata/steps/`)
                 .send(PUT_STEP_DUPLICATE_FIELD),
+        );
+
+        // Check response
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(400);
+        expect(resContent.success).toBe(false);
+
+        const stepAfter = await models.Step.find({}).lean();
+
+        // Checks that database is rolled back after failing validation
+        expect(stepBefore).toStrictEqual(stepAfter);
+    });
+
+    it('correctly rejects subfields that are missing fields', async () => {
+        const stepBefore = await models.Step.find({}).lean();
+
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/metadata/steps/`)
+                .send(PUT_STEP_SUBFIELD_MISSING_FIELDS),
         );
 
         // Check response
