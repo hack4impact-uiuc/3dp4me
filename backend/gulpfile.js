@@ -5,7 +5,8 @@ const zip = require('gulp-zip');
 const rename = require('gulp-rename');
 const log = require('fancy-log');
 var exec = require('child_process').exec;
-
+const GulpClient = require('gulp');
+const NODE_ENV = 'production';
 const paths = {
     prod_build: '../prod-build',
     server_file_name: 'server.bundle.js',
@@ -68,12 +69,20 @@ function copyNodeJSCodeTask() {
         .pipe(rename('www'))
         .pipe(dest(`${paths.server_source_dest}`));
     src(['build/index.js.map']).pipe(dest(`${paths.server_source_dest}`));
-    return src(['package.json', './.env']).pipe(dest(`${paths.prod_build}`));
+    return src(['package.json', `${NODE_ENV}.env`, '.npmrc']).pipe(
+        dest(`${paths.prod_build}`),
+    );
+}
+
+function addEngineToPackage() {
+    return exec(
+        `yarn json -I -f ${paths.prod_build}/package.json -e "this.engines = { 'node': '14.12.0' }"`,
+    );
 }
 
 function zippingTask() {
     log('zipping the code ');
-    return src(`${paths.prod_build}/**`)
+    return src(`${paths.prod_build}/**`, { dot: true })
         .pipe(zip(`${paths.zipped_file_name}`))
         .pipe(dest(`${paths.prod_build}`));
 }
@@ -83,5 +92,6 @@ exports.default = series(
     createProdBuildFolder,
     parallel(buildReactCodeTask, buildServerCodeTask),
     parallel(copyReactCodeTask, copyNodeJSCodeTask),
+    addEngineToPackage,
     zippingTask,
 );

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const fieldEnum = {
+    AUDIO: 'Audio',
     STRING: 'String',
     MULTILINE_STRING: 'MultilineString',
     FILE: 'File',
@@ -10,8 +11,10 @@ const fieldEnum = {
     DIVIDER: 'Divider',
     HEADER: 'Header',
     RADIO_BUTTON: 'RadioButton',
-    DROPDOWN: 'Dropdown',
+    MULTI_SELECT: 'MultiSelect',
     AUDIO: 'Audio',
+    SIGNATURE: 'Signature',
+    PHOTO: 'Photo',
 };
 
 const languageSchema = new mongoose.Schema({
@@ -48,11 +51,11 @@ const fieldSchema = new mongoose.Schema({
     },
     options: {
         type: [questionOptionSchema],
-        default: [],
         validate: {
             validator: validateOptions,
             message: 'Index must be unique',
         },
+        required: false,
     },
     isVisibleOnDashboard: { type: Boolean, required: true },
     displayName: {
@@ -95,7 +98,8 @@ const stepSchema = new mongoose.Schema({
     },
     readableGroups: { type: [String], required: true },
     writableGroups: { type: [String], required: true },
+    defaultToListView: { type: Boolean, default: true },
 });
 
 const Step = mongoose.model('steps', stepSchema);
-module.exports = { Step, fieldEnum };
+module.exports = { Step, fieldEnum, questionOptionSchema, validateOptions };

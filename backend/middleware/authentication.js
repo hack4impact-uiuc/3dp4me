@@ -17,15 +17,23 @@ const getUser = async (accessToken) => {
 };
 
 const parseUserSecurityRoles = (user) => {
-    if (!user || !user.UserAttributes) return [];
-
-    const securityRolesString = user.UserAttributes.find(
+    const securityRolesString = user?.UserAttributes?.find(
         (attribute) => attribute.Name === SECURITY_ROLE_ATTRIBUTE_NAME,
     );
 
-    if (!securityRolesString) return [];
+    if (!securityRolesString?.Value) return [];
 
     return JSON.parse(securityRolesString.Value);
+};
+
+const parseUserName = (user) => {
+    const name = user?.UserAttributes?.find(
+        (attribute) => attribute.Name === 'name',
+    );
+
+    if (!name?.Value) return '';
+
+    return name.Value;
 };
 
 const requireAuthentication = async (req, res, next) => {
@@ -33,8 +41,9 @@ const requireAuthentication = async (req, res, next) => {
         const accessToken = req.headers.authorization.split(' ')[1];
         const user = await getUser(accessToken);
         user.roles = parseUserSecurityRoles(user);
+        user.name = parseUserName(user);
 
-        if (user.roles === []) {
+        if (!user.roles || user.roles.length === 0) {
             return res.status(403).json({
                 success: false,
                 message:

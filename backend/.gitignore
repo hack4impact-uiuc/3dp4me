@@ -1,9 +1,9 @@
 build/
+*.env
 
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
-/utils/aws/aws-exports.js
 ### Node ###
 # Logs
 logs

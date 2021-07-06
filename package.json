@@ -17,7 +17,9 @@
         "prettier": "^2.2.1"
     },
     "scripts": {
-        "format": "prettier --write '{client/**/*.{js,jsx,css,scss,json,md},api/**/*.{js,jsx,json,md}}'"
+        "check-sensitive-files": "sh ./check-sensitive-files.sh",
+        "format": "prettier --write '{client/**/*.{js,jsx,css,scss,json,md},api/**/*.{js,jsx,json,md}}'",
+        "gen-db": "node scripts/generate-db-data.js"
     },
     "repository": {
         "type": "git",
@@ -29,7 +31,7 @@
     "homepage": "https://github.com/hack4impact-uiuc/3dp4me#readme",
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "yarn check-sensitive-files && lint-staged"
         }
     },
     "lint-staged": {
@@ -44,11 +46,16 @@
         ]
     },
     "dependencies": {
-        "date-fns": "^2.21.1",
+        "faker": "^5.5.3",
+        "fs": "^0.0.1-security",
         "libphonenumber-js": "^1.9.16",
+        "mongoose": "^5.12.7",
         "react-audio-player": "^0.14.0",
+        "react-beautiful-dnd": "^13.1.0",
         "react-datepicker": "^3.8.0",
+        "react-draggable": "^4.4.3",
         "react-flexbox-grid": "^2.1.2",
-        "react-native-web": "^0.15.0"
+        "react-native-web": "^0.15.0",
+        "react-sortable-hoc": "^2.0.0"
     }
 }

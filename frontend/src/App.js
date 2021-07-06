@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Amplify, Auth } from 'aws-amplify';
 import { registerLocale } from 'react-datepicker';
 import { enUS, arSA } from 'date-fns/locale';
-
 import Store from './store/Store';
 import AppContent from './AppContent';
 import { awsconfig } from './aws/aws-exports';
@@ -35,7 +34,7 @@ function App() {
     useEffect(() => {
         const getUserInfo = async () => {
             const userInfo = await getCurrentUserInfo();
-            setUsername(userInfo.username);
+            setUsername(userInfo.attributes.name);
             setUserEmail(userInfo.email);
 
             if (

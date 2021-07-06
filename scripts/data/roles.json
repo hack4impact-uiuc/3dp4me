@@ -1,0 +1,77 @@
+[
+    {
+        "roleName": "aut",
+        "isMutable": 0,
+        "_id": "60944e084f4c0d4330cc25ef"
+    },
+    {
+        "roleName": "quos",
+        "isMutable": 0,
+        "_id": "60944e084f4c0d4330cc25f0"
+    },
+    {
+        "roleName": "ad",
+        "isMutable": 1,
+        "_id": "60944e084f4c0d4330cc25f1"
+    },
+    {
+        "roleName": "impedit",
+        "isMutable": 1,
+        "_id": "60944e084f4c0d4330cc25f2"
+    },
+    {
+        "roleDescription": "Voluptas amet ipsam nulla exercitationem quis. Eos aliquam autem totam non id odit dolores cupiditate. Dolore sit quo.",
+        "roleName": "omnis",
+        "isMutable": 1,
+        "_id": "60944e084f4c0d4330cc25f3"
+    },
+    {
+        "roleDescription": "Eaque architecto officia voluptates et illum. Voluptate qui fugiat rerum doloribus error.",
+        "roleName": "totam",
+        "isMutable": 0,
+        "_id": "60944e084f4c0d4330cc25f4"
+    },
+    {
+        "roleDescription": "Est vitae aut asperiores perferendis quo et delectus et. Quis magni voluptatem quaerat sit ab. Cupiditate eveniet laboriosam reiciendis consectetur est animi. Reiciendis et voluptatibus consectetur non velit rerum repudiandae.",
+        "roleName": "saepe",
+        "isMutable": 1,
+        "_id": "60944e084f4c0d4330cc25f5"
+    },
+    {
+        "roleName": "illum",
+        "isMutable": 0,
+        "_id": "60944e084f4c0d4330cc25f6"
+    },
+    {
+        "roleName": "odit",
+        "isMutable": 0,
+        "_id": "60944e084f4c0d4330cc25f7"
+    },
+    {
+        "roleName": "consequatur",
+        "isMutable": 1,
+        "_id": "60944e084f4c0d4330cc25f8"
+    },
+    {
+        "roleDescription": "Minus repudiandae distinctio ullam ea sapiente deserunt amet sit. Omnis accusamus ex tempora similique voluptatum ipsa quos. Sed tenetur rerum voluptate sed autem.",
+        "roleName": "occaecati",
+        "isMutable": 0,
+        "_id": "60944e084f4c0d4330cc25f9"
+    },
+    {
+        "roleDescription": "Voluptate rem quaerat distinctio est optio fugit assumenda laborum provident. Laudantium quia et possimus. Temporibus qui in assumenda autem non sunt et quaerat. Autem eaque architecto dolor quaerat delectus nihil. Ullam non ipsum tenetur repellat aut.",
+        "roleName": "at",
+        "isMutable": 1,
+        "_id": "60944e084f4c0d4330cc25fa"
+    },
+    {
+        "roleName": "unde",
+        "isMutable": 0,
+        "_id": "60944e084f4c0d4330cc25fc"
+    },
+    {
+        "roleName": "voluptatem",
+        "isMutable": 0,
+        "_id": "60944e084f4c0d4330cc25fd"
+    }
+]

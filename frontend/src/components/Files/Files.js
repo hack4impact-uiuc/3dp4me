@@ -46,7 +46,9 @@ const Files = ({
                 <button
                     className="file-close-button"
                     type="button"
-                    onClick={() => handleDelete(fieldKey, file)}
+                    onClick={() => {
+                        handleDelete(fieldKey, file);
+                    }}
                 >
                     <CloseIcon />
                 </button>

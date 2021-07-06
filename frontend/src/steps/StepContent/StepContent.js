@@ -132,21 +132,23 @@ const StepContent = ({
         // if displaying a single question per page, only return the right numbered question
         return metaData.fields.map((field) => {
             const stepField = (
-                <StepField
-                    displayName={field.displayName[key]}
-                    metadata={field}
-                    value={updatedData ? updatedData[field.key] : null}
-                    key={field.key}
-                    langKey={key}
-                    isDisabled={!edit}
-                    patientId={patientId}
-                    stepKey={metaData.key}
-                    handleSimpleUpdate={handleSimpleUpdate}
-                    handleFileDownload={handleFileDownload}
-                    handleFileUpload={handleFileUpload}
-                    handleFileDelete={handleFileDelete}
-                    languageData={languageData}
-                />
+                <div className="step-field">
+                    <StepField
+                        displayName={field.displayName[key]}
+                        metadata={field}
+                        value={updatedData ? updatedData[field.key] : null}
+                        key={field.key}
+                        langKey={key}
+                        isDisabled={!edit}
+                        patientId={patientId}
+                        stepKey={metaData.key}
+                        handleSimpleUpdate={handleSimpleUpdate}
+                        handleFileDownload={handleFileDownload}
+                        handleFileUpload={handleFileUpload}
+                        handleFileDelete={handleFileDelete}
+                        languageData={languageData}
+                    />
+                </div>
             );
 
             if (singleQuestionFormat) {
@@ -158,40 +160,35 @@ const StepContent = ({
                         if (currentQuestion !== metaData.fields.length - 1)
                             setCurrentQuestion(currentQuestion + 1);
                         return null;
-                    } else {
-                        return (
-                            <div>
-                                {stepField}
-                                <Button
-                                    onClick={() => {
-                                        if (currentQuestion !== 0)
-                                            setCurrentQuestion(
-                                                currentQuestion - 1,
-                                            );
-                                    }}
-                                >
-                                    {lang.components.button.previous}
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        if (
-                                            currentQuestion !==
-                                            metaData.fields.length - 1
-                                        )
-                                            setCurrentQuestion(
-                                                currentQuestion + 1,
-                                            );
-                                    }}
-                                >
-                                    {lang.components.button.next}
-                                </Button>
-                            </div>
-                        );
                     }
-                } else return null;
-            } else {
-                return <div>{stepField}</div>;
+                    return (
+                        <div>
+                            {stepField}
+                            <Button
+                                onClick={() => {
+                                    if (currentQuestion !== 0)
+                                        setCurrentQuestion(currentQuestion - 1);
+                                }}
+                            >
+                                {lang.components.button.previous}
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    if (
+                                        currentQuestion !==
+                                        metaData.fields.length - 1
+                                    )
+                                        setCurrentQuestion(currentQuestion + 1);
+                                }}
+                            >
+                                {lang.components.button.next}
+                            </Button>
+                        </div>
+                    );
+                }
+                return null;
             }
+            return <div>{stepField}</div>;
         });
     };
 
@@ -227,7 +224,7 @@ const StepContent = ({
                 <MenuItem value={false}>
                     {lang.components.selectQuestionFormat.allQuestions}
                 </MenuItem>
-                <MenuItem value={true}>
+                <MenuItem value>
                     {lang.components.selectQuestionFormat.singleQuestion}
                 </MenuItem>
             </Select>

@@ -1,0 +1,32 @@
+.error-modal-wrap {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    .error-modal-inner {
+        background-color: white;
+        border-radius: 4px;
+        padding: 36px 24px;
+        max-width: 400px;
+        min-width: 200px;
+        .inner {
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: nowrap;
+            justify-content: center;
+            img {
+                height: 20px;
+                width: auto;
+                margin-right: 8px;
+            }
+            h1 {
+                margin: 0;
+                font-size: 18px;
+                color: red;
+                font-weight: normal;
+            }
+        }
+    }
+}
