@@ -48,12 +48,14 @@ const EditRoleModal = ({
             <div className="edit-role-modal-wrapper">
                 <h2>{lang.accountManagement.editAccount}</h2>
                 <TextField
+                    className="text-field"
                     displayName={lang.accountManagement.username}
                     type="text"
                     isDisabled
                     value={userData?.userName}
                 />
                 <TextField
+                    className="text-field"
                     displayName={lang.accountManagement.email}
                     type="text"
                     isDisabled
