@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import {
     Modal,
@@ -23,9 +23,12 @@ const EditRoleModal = ({
     allRoles,
 }) => {
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
-
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
+
+    useEffect(() => {
+        setUserData(_.cloneDeep(userInfo));
+    }, [userInfo]);
 
     const onRolesChange = (id, roles) => {
         setUserData({ ...userData, roles });

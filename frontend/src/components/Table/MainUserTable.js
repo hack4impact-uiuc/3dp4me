@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -22,7 +22,7 @@ import {
     LanguageDataType,
     TableHeaderType,
 } from '../../utils/custom-proptypes';
-import { ACCESS_STATUS } from '../../utils/constants';
+import { ACCESS_LEVELS } from '../../utils/constants';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -39,10 +39,9 @@ const StyledTableRow = withStyles(() => ({
     },
 }))(TableRow);
 
-const MainUserTable = ({ languageData, users, headers }) => {
+const MainUserTable = ({ languageData, users, headers, onUserSelected }) => {
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
-
     const UNSORTED_DATA = users;
     const { items, requestSort, sortConfig } = useSortableData(
         users,
@@ -50,41 +49,59 @@ const MainUserTable = ({ languageData, users, headers }) => {
     );
 
     const statusStyle = {
-        [ACCESS_STATUS.ACTIVE]: (
+        [ACCESS_LEVELS.GRANTED]: (
             <div style={{ color: '#65d991' }}>
-                {lang.components.accountManagement.access.active}
+                {lang.accountManagement.Approved}
             </div>
         ),
-        [ACCESS_STATUS.NOTASSIGNED]: (
+        [ACCESS_LEVELS.PENDING]: (
             <div style={{ color: 'red' }}>
-                <b>{lang.components.accountManagement.access.notAssigned}</b>
+                <b>{lang.accountManagement.Pending}</b>
             </div>
         ),
-        [ACCESS_STATUS.REVOKED]: (
-            <div style={{ color: 'red' }}>
-                {lang.components.accountManagement.access.revoked}
-            </div>
+        [ACCESS_LEVELS.REVOKED]: (
+            <div style={{ color: 'red' }}>{lang.accountManagement.Revoked}</div>
         ),
     };
 
     const getInfo = (user, atr) => {
-        const attr = user.Attributes.find(
-            (attribute) => attribute.Name === atr,
-        );
-        if (attr == undefined) return statusStyle[ACCESS_STATUS.NOTASSIGNED];
-        if (attr.Value === 'GRANTED') return statusStyle[ACCESS_STATUS.ACTIVE];
-        return attr.Value;
+        return user?.Attributes?.find((attribute) => attribute.Name === atr)
+            ?.Value;
     };
 
-    const getRoles = (user, atr) => {
-        const attr = user.Attributes.find(
-            (attribute) => attribute.Name === atr,
-        );
-        if (attr == undefined) return 'Not Assigned';
-        const at = attr.Value;
-        const att = at.toString();
-        return att;
+    const getAccessLevelValue = (user) => {
+        return getInfo(user, 'custom:access') || ACCESS_LEVELS.PENDING;
     };
+
+    const getAccessLevel = (user) => {
+        const access = getAccessLevelValue(user);
+        return statusStyle[access];
+    };
+
+    const getName = (user) => {
+        return getInfo(user, 'name') || user.Username;
+    };
+
+    const getRolesValue = (user) => {
+        return getInfo(user, 'custom:security_roles') || [];
+    };
+
+    const getRoles = (user) => {
+        const roles = getRolesValue(user);
+        if (roles.length == 0) return 'Not Assigned';
+
+        return roles.toString();
+    };
+
+    const onSelected = (item) => {
+        onUserSelected({
+            userName: getName(item),
+            userEmail: getInfo(item, 'email'),
+            roles: getRolesValue(item),
+            accessLevel: getAccessLevelValue(item),
+        });
+    };
+
     return (
         <div className="table-container">
             <TableContainer className="table-container" component={Paper}>
@@ -134,31 +151,31 @@ const MainUserTable = ({ languageData, users, headers }) => {
                         {items.map((user) => (
                             <StyledTableRow key={user._id}>
                                 <StyledTableCell>
-                                    {getInfo(user, 'name')}
+                                    {getName(user)}
                                 </StyledTableCell>
                                 <StyledTableCell>
                                     {getInfo(user, 'email')}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                    {getRoles(user, 'custom:security_roles')}
+                                    {getRoles(user)}
                                 </StyledTableCell>
                                 <StyledTableCell>
-                                    {getInfo(user, 'custom:access')}
+                                    {getAccessLevel(user)}
                                 </StyledTableCell>
                                 <StyledTableCell
                                     className="cell"
                                     align="center"
                                 >
-                                    <Link className="table-view-link">
-                                        <IconButton>
-                                            <img
-                                                alt="status icon"
-                                                width="18px"
-                                                src={Eyecon}
-                                            />
-                                        </IconButton>{' '}
-                                        {lang.components.table.edit}
-                                    </Link>
+                                    <IconButton
+                                        onClick={() => onSelected(user)}
+                                    >
+                                        <img
+                                            alt="status icon"
+                                            width="18px"
+                                            src={Eyecon}
+                                        />
+                                    </IconButton>{' '}
+                                    {lang.components.table.edit}
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}
