@@ -24,7 +24,7 @@ const {
 describe('POST /patient', () => {
     const STEP_KEY = 'example';
     const PATIENT_ID_MISSING_DATA = '60944e084f4c0d4330cc258d';
-    const PATIENT_ID_WITH_DATA = '60944e084f4c0d4330cc258d';
+    const PATIENT_ID_WITH_DATA = '60944e084f4c0d4330cc2594';
 
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
@@ -99,8 +99,8 @@ describe('POST /patient', () => {
         expect(updatedData.date.getTime()).toBeGreaterThanOrEqual(
             startTimestamp,
         );
-        updatedData = _.omit(updatedData, ['_id', 'date']);
-        expectedResult = _.omit(expectedResult, ['_id', 'date']);
+        updatedData = _.omit(updatedData, ['_id', 'date', '__v']);
+        expectedResult = _.omit(expectedResult, ['_id', 'date', '__v']);
 
         expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);
     });
@@ -149,7 +149,7 @@ describe('POST /patient', () => {
 
         // Check response
         const resContent = JSON.parse(res.text);
-        resContent.result = omitDeep(resContent.result, '_id');
+        resContent.result = omitDeep(resContent.result, '_id', '__v');
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
         expectStrictEqualWithTimestampOrdering(
@@ -162,7 +162,7 @@ describe('POST /patient', () => {
             .collection(STEP_KEY)
             .findOne({ patientId: patientID });
 
-        updatedData = omitDeep(updatedData, '_id');
+        updatedData = omitDeep(updatedData, '_id', '__v');
         expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);
     };
 });

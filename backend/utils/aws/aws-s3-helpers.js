@@ -1,4 +1,4 @@
-const S3_INFO = require('./aws-exports.js');
+const { S3_BUCKET_NAME, S3_REGION } = require('./aws-exports.js');
 var AWS = require('aws-sdk');
 
 /**
@@ -11,7 +11,7 @@ var AWS = require('aws-sdk');
 const uploadFile = async (content, remoteFileName, credentials) => {
     let params = {
         Body: content,
-        Bucket: S3_INFO.S3_BUCKET_NAME,
+        Bucket: S3_BUCKET_NAME,
         Key: remoteFileName,
     };
 
@@ -27,7 +27,7 @@ const uploadFile = async (content, remoteFileName, credentials) => {
  */
 const downloadFile = (objectKey, credentials) => {
     let params = {
-        Bucket: S3_INFO.S3_BUCKET_NAME,
+        Bucket: S3_BUCKET_NAME,
         Key: objectKey,
     };
 
@@ -42,7 +42,7 @@ function getS3(credentials) {
         accessKeyId: credentials.accessKeyId,
         secretAccessKey: credentials.secretAccessKey,
         sessionToken: credentials.sessionToken,
-        region: S3_INFO.S3_REGION,
+        region: S3_REGION,
     });
 
     return s3;

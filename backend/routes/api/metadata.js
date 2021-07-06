@@ -9,7 +9,8 @@ const {
     stepStatusEnum,
     validateOptions,
 } = require('../../models');
-const { fieldEnum } = require('../../models/Metadata');
+const { removeAttributesFrom } = require('../../middleware/requests');
+const { fieldEnum, isUniqueStepNumber } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 
 const generateFieldSchema = (field) => {
@@ -17,31 +18,26 @@ const generateFieldSchema = (field) => {
         case fieldEnum.STRING:
             return {
                 type: String,
-                required: true,
                 default: '',
             };
         case fieldEnum.MULTILINE_STRING:
             return {
                 type: String,
-                required: true,
                 default: '',
             };
         case fieldEnum.NUMBER:
             return {
                 type: Number,
-                required: true,
                 default: 0,
             };
         case fieldEnum.DATE:
             return {
                 type: Date,
-                required: true,
                 default: Date.now,
             };
         case fieldEnum.PHONE:
             return {
                 type: String,
-                required: true,
                 default: '',
                 validate: {
                     validator: isValidNumber,
@@ -49,23 +45,29 @@ const generateFieldSchema = (field) => {
                 },
             };
         case fieldEnum.RADIO_BUTTON:
-            if (field.options == null)
+            if (!field?.options?.length)
                 throw new Error('Radio button must have options');
 
             return {
                 type: String,
-                required: true,
                 default: '',
             };
         case fieldEnum.FILE:
             return {
                 type: [fileSchema],
-                required: true,
                 default: [],
             };
         case fieldEnum.AUDIO:
             return {
                 type: [fileSchema],
+                default: [],
+            };
+        case fieldEnum.FIELD_GROUP:
+            if (!field?.subFields?.length)
+                throw new Error('Field groups must have sub fields');
+
+            return {
+                type: [generateFieldsFromMetadata(field.subFields)],
                 required: true,
                 default: [],
             };
@@ -91,12 +93,18 @@ const generateSchemaFromMetadata = (stepMetadata) => {
         required: true,
         default: 'Admin',
     };
-    stepMetadata.fields.forEach((field) => {
-        const generatedSchema = generateFieldSchema(field);
-        if (generatedSchema) stepSchema[field.key] = generatedSchema;
-    });
+    generateFieldsFromMetadata(stepMetadata.fields, stepSchema);
     const schema = new mongoose.Schema(stepSchema);
     mongoose.model(stepMetadata.key, schema, stepMetadata.key);
+};
+
+const generateFieldsFromMetadata = (fieldsMetadata, schema = {}) => {
+    fieldsMetadata.forEach((field) => {
+        const generatedSchema = generateFieldSchema(field);
+        if (generatedSchema) schema[field.key] = generatedSchema;
+    });
+
+    return schema;
 };
 
 // GET metadata/steps
@@ -130,13 +138,6 @@ router.post(
 
         try {
             await mongoose.connection.transaction(async (session) => {
-                new_step_metadata.fields.forEach((field) => {
-                    if (field.fieldType == fieldEnum.RADIO_BUTTON) {
-                        if (field.options == null || field.options.length < 1)
-                            throw new Error('Radiobuttons require options');
-                    }
-                });
-
                 await new_step_metadata.save({ session });
                 generateSchemaFromMetadata(steps);
             });
@@ -157,81 +158,139 @@ router.post(
     }),
 );
 
-// PUT metadata/steps/:stepkey
-router.put(
-    '/steps/:stepkey',
-    errorWrap(async (req, res) => {
-        const { stepkey } = req.params;
-        const session = await mongoose.startSession();
-        step_to_edit = await models.Step.findOne({ key: stepkey });
 
-        let addedFields = [];
-        let step;
+const getFieldByKey = (object_list, key) => {
+    for (object of object_list) {
+        if (object?.key === key) {
+            return object;
+        }
+    }
 
-        req.body.fields.forEach((request_field) => {
-            // If both fields are the same but fieldtypes are not the same
-            const field = getFieldByKey(step_to_edit.fields, request_field.key);
+    return null;
+};
 
-            if (field && field.type == request_field.type) {
-                //TODO: add logic for this case
-            } else if (
-                !field &&
-                !addedFields.some(
-                    (addedField) => addedField.key === request_field.key,
-                )
-            ) {
-                addedFields.push(request_field);
-            } else {
-                return res.status(400).json({
-                    code: 400,
-                    success: false,
-                    message: 'Invalid request',
-                });
-            }
+const putOneStep = async (stepBody, res, session) => {
+    if (!stepBody?.key) {
+        return res.status(400).json({
+            success: false,
+            message: 'No stepkey in steps',
         });
+    }
+    stepBody = removeAttributesFrom(stepBody, ['_id', '__v']);
 
-        if (
-            req.body.fields.length - addedFields.length <
-            step_to_edit.fields.length
-        ) {
+    const stepKey = stepBody.key;
+    stepToEdit = await models.Step.findOne({ key: stepKey });
+
+    // Return 404 if stepToEdit cannot be found
+    if (!stepToEdit) {
+        return res.status(404).json({
+            success: false,
+            message: 'No step with that key',
+        });
+    }
+
+    let addedFields = [];
+
+    stepBody.fields.forEach((requestField) => {
+        // If both fields are the same but fieldtypes are not the same
+        const field = getFieldByKey(stepToEdit.fields, requestField.key);
+
+        if (field && field.fieldType !== requestField.fieldType) {
             return res.status(400).json({
                 code: 400,
                 success: false,
-                message: 'Cannot delete fields',
+                message: 'Cannot change fieldType',
+            });
+        } else if (
+            !field &&
+            !addedFields.some(
+                (addedField) => addedField.key === requestField.key,
+            )
+        ) {
+            addedFields.push(requestField);
+        }
+    });
+
+    // Checks that fields were not deleted
+    if (
+        stepBody.fields.length - addedFields.length <
+        stepToEdit.fields.length
+    ) {
+        return res.status(400).json({
+            code: 400,
+            success: false,
+            message: 'Cannot delete fields',
+        });
+    }
+
+    const schema = await mongoose.model(stepKey).schema;
+    const addedFieldsObject = {};
+
+    addedFields.forEach((field) => {
+        addedFieldsObject[field.key] = generateFieldSchema(field);
+    });
+    schema.add(addedFieldsObject);
+
+    step = await models.Step.findOneAndUpdate(
+        { key: stepKey },
+        { $set: stepBody },
+        { new: true, session: session, validateBeforeSave: false },
+    );
+
+    return step;
+};
+
+// PUT metadata/steps/:stepkey
+router.put(
+    '/steps/',
+    errorWrap(async (req, res) => {
+        try {
+            let stepData = [];
+            await mongoose.connection.transaction(async (session) => {
+                for (step of req.body) {
+                    stepData.push(await putOneStep(step, res, session));
+                }
+                for (step of stepData) {
+                    // Run synchronous tests and async tests separately
+                    let error = step.validateSync();
+                    let isValid = await isUniqueStepNumber(
+                        step.stepNumber,
+                        step.key,
+                        session,
+                    );
+
+                    if (error || !isValid) {
+                        await session.abortTransaction();
+                        if (error) {
+                            return res.status(400).json({
+                                code: 400,
+                                success: false,
+                                message: `Validation error: ${error}`,
+                            });
+                        } else {
+                            return res.status(400).json({
+                                code: 400,
+                                success: false,
+                                message: `Validation error: Does not have unique stepNumber`,
+                            });
+                        }
+                    }
+                }
+            });
+            res.status(200).json({
+                code: 200,
+                success: true,
+                message: 'Step(s) successfully edited.',
+                result: stepData,
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                code: 400,
+                success: false,
+                message: `Step could not be added: ${error}`,
             });
         }
-
-        await session.withTransaction(async () => {
-            const schema = await mongoose.model(stepkey).schema;
-
-            const addedFieldsObject = {};
-
-            addedFields.forEach((field) => {
-                addedFieldsObject[field.key] = generateFieldSchema(field);
-            });
-            schema.add(addedFieldsObject);
-
-            step = await models.Step.findOneAndUpdate(
-                { key: stepkey },
-                { $set: req.body },
-                { new: true },
-            );
-        });
-
-        // Check if user changed field type
-        // Check whether user deleted or added to metadata object
-        await step.save(function (err, data) {
-            if (err) {
-                res.json(err);
-            } else {
-                res.status(200).json({
-                    code: 200,
-                    sucess: true,
-                    message: 'Step successfully edited.',
-                    data: data,
-                });
-            }
-        });
     }),
 );
 

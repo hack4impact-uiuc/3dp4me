@@ -1,3 +1,5 @@
+/* eslint import/no-cycle: "off" */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Divider } from '@material-ui/core';
@@ -10,6 +12,7 @@ import { FIELD_TYPES } from '../../utils/constants';
 import RadioButtonField from '../Fields/RadioButtonField';
 import DateField from '../Fields/DateField';
 import PhoneField from '../Fields/PhoneField';
+import FieldGroup from '../Fields/FieldGroup';
 
 const StepField = ({
     metadata,
@@ -128,7 +131,25 @@ const StepField = ({
                         <Divider className="patient-divider" />
                     </div>
                 );
-            case 'Header':
+            case FIELD_TYPES.FIELD_GROUP:
+                return (
+                    <FieldGroup
+                        metadata={metadata}
+                        langKey={langKey}
+                        languageData={languageData}
+                        patientId={patientId}
+                        displayName={displayName}
+                        stepKey={stepKey}
+                        isDisabled={isDisabled}
+                        handleSimpleUpdate={handleSimpleUpdate}
+                        handleFileDownload={handleFileDownload}
+                        handleFileUpload={handleFileUpload}
+                        handleFileDelete={handleFileDelete}
+                        fieldId={metadata.key}
+                        value={value}
+                    />
+                );
+            case FIELD_TYPES.HEADER:
                 return <h3>{displayName}</h3>;
             default:
                 return null;
