@@ -46,7 +46,7 @@ const AccountManagement = ({ languageData }) => {
                 (user) => user.Username === username,
             );
 
-            userToUpdate.Attributes.filter(
+            userToUpdate.Attributes = userToUpdate.Attributes.filter(
                 (attrib) =>
                     attrib.Name !== updatedAccess.Name &&
                     attrib.Name !== updatedRoles.Name,

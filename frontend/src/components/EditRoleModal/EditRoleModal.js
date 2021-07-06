@@ -14,7 +14,7 @@ import TextField from '../Fields/TextField';
 import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
-import { addUserRole, setUserAccess } from '../../utils/api';
+import { addUserRole, removeUserRole, setUserAccess } from '../../utils/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const EditRoleModal = ({
@@ -43,15 +43,34 @@ const EditRoleModal = ({
     };
 
     const onSave = async () => {
-        await Promise.resolve(
-            userData.roles.map((r) =>
-                errorWrap(async () => addUserRole(userData.userName, r)),
-            ),
-        );
+        // Update users roles
+        for (let i = 0; i < allRoles.length; i += 1) {
+            const role = allRoles[i];
+
+            // If user has role
+            if (userData.roles.find((r) => r === role._id)) {
+                // If user didn't have role before, make request to backend
+                if (!userInfo.roles.find((r) => r === role._id)) {
+                    await errorWrap(async () =>
+                        addUserRole(userData.userName, role._id),
+                    );
+                }
+            } else {
+                // If user did have role before, make request to backend
+                if (userInfo.roles.find((r) => r === role._id)) {
+                    await errorWrap(async () =>
+                        removeUserRole(userData.userName, role._id),
+                    );
+                }
+            }
+        }
+
+        // Update user access level
         await errorWrap(async () =>
             setUserAccess(userData.userName, userData.accessLevel),
         );
 
+        // Close modal and update local data
         onClose();
         onUserEdited(userData.userName, userData.accessLevel, userData.roles);
     };
