@@ -1,3 +1,8 @@
+// Disabled because we need the role updates to happen sequentially
+/* eslint-disable no-await-in-loop */
+// More readabe without this
+/* eslint-disable no-lonely-if */
+
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import {
@@ -135,6 +140,7 @@ const EditRoleModal = ({
 EditRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    onUserEdited: PropTypes.func.isRequired,
     allRoles: PropTypes.arrayOf(PropTypes.string),
     languageData: LanguageDataType.isRequired,
     userInfo: PropTypes.shape({

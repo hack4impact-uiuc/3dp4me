@@ -37,6 +37,7 @@ TextField.propTypes = {
     fieldId: PropTypes.string,
     value: PropTypes.string,
     type: PropTypes.string,
+    className: PropTypes.string,
     onChange: PropTypes.func,
 };
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
+
 import { getAllRoles, getAllUsers } from '../../utils/api';
 import MainUserTable from '../../components/Table/MainUserTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
-import _, { filter } from 'lodash';
 
 const AccountManagement = ({ languageData }) => {
     const [userMetaData, setUserMetaData] = useState([]);
@@ -34,14 +35,14 @@ const AccountManagement = ({ languageData }) => {
     };
 
     const onUserEdited = (username, accessLevel, roles) => {
-        setUserMetaData((userMetaData) => {
+        setUserMetaData((metaData) => {
             const updatedAccess = { Name: 'custom:access', Value: accessLevel };
             const updatedRoles = {
                 Name: 'custom:security_roles',
                 Value: JSON.stringify(roles),
             };
 
-            const updatedUsers = _.cloneDeep(userMetaData);
+            const updatedUsers = _.cloneDeep(metaData);
             const userToUpdate = updatedUsers.find(
                 (user) => user.Username === username,
             );
@@ -89,7 +90,7 @@ const AccountManagement = ({ languageData }) => {
 
     return (
         <div>
-            <div className="dashboard"></div>
+            <div className="dashboard" />
             <div className="patient-list">
                 <div className="header">
                     <div className="section">
@@ -100,7 +101,7 @@ const AccountManagement = ({ languageData }) => {
                                     : 'patient-list-title'
                             }
                         >
-                            {'User Database'}
+                            User Database
                         </h2>
                     </div>
                 </div>

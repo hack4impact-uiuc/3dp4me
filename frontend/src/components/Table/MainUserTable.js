@@ -8,15 +8,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
-import { IconButton, Button } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { IconButton } from '@material-ui/core';
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+
 import useSortableData from '../../hooks/useSortableData';
-import finishedIcon from '../../assets/check.svg';
-import partiallyIcon from '../../assets/half-circle.svg';
-import unfinishedIcon from '../../assets/exclamation.svg';
 import Eyecon from '../../assets/view.svg';
 import {
     LanguageDataType,
@@ -97,7 +94,7 @@ const MainUserTable = ({
 
     const getRoles = (user) => {
         let roles = getRolesValue(user);
-        if (roles.length == 0) return 'Not Assigned';
+        if (roles.length === 0) return 'Not Assigned';
 
         roles = roles.map((r) => {
             for (let i = 0; i < roleData.length; i += 1) {
@@ -206,7 +203,19 @@ const MainUserTable = ({
 MainUserTable.propTypes = {
     languageData: LanguageDataType.isRequired,
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
+    onUserSelected: PropTypes.func.isRequired,
     users: PropTypes.arrayOf(PropTypes.object),
+
+    // roleData is in this format so that it is consumable by multiselect
+    roleData: PropTypes.arrayOf(
+        PropTypes.shape({
+            _id: PropTypes.string,
+            Question: PropTypes.shape({
+                EN: PropTypes.string,
+                AR: PropTypes.AR,
+            }),
+        }),
+    ),
 };
 
 export default MainUserTable;
