@@ -57,16 +57,18 @@ const MainUserTable = ({
     const statusStyle = {
         [ACCESS_LEVELS.GRANTED]: (
             <div style={{ color: '#65d991' }}>
-                {lang.accountManagement.Approved}
+                <b>{lang.accountManagement.Approved}</b>
             </div>
         ),
         [ACCESS_LEVELS.PENDING]: (
-            <div style={{ color: 'red' }}>
+            <div style={{ color: 'black' }}>
                 <b>{lang.accountManagement.Pending}</b>
             </div>
         ),
         [ACCESS_LEVELS.REVOKED]: (
-            <div style={{ color: 'red' }}>{lang.accountManagement.Revoked}</div>
+            <div style={{ color: 'red' }}>
+                <b>{lang.accountManagement.Revoked}</b>
+            </div>
         ),
     };
 

@@ -14,6 +14,8 @@ import TextField from '../Fields/TextField';
 import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
+import { addUserRole, setUserAccess } from '../../utils/api';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const EditRoleModal = ({
     languageData,
@@ -23,6 +25,7 @@ const EditRoleModal = ({
     allRoles,
 }) => {
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
+    const errorWrap = useErrorWrap();
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
@@ -38,9 +41,17 @@ const EditRoleModal = ({
         setUserData({ ...userData, accessLevel: event.target.value });
     };
 
-    const onSave = (event) => {
-        // TODO: Make post requests and callback to parent
-        console.log(event);
+    const onSave = async () => {
+        await Promise.resolve(
+            userData.roles.map((r) =>
+                errorWrap(async () => addUserRole(userData.userName, r)),
+            ),
+        );
+        await errorWrap(async () =>
+            setUserAccess(userData.userName, userData.accessLevel),
+        );
+
+        onClose();
     };
 
     return (

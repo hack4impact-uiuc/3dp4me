@@ -201,3 +201,12 @@ export const getAllUsers = async () => {
 
     return res.data;
 };
+
+export const setUserAccess = async (username, access) => {
+    const requestString = `/users/${username}/access/${access}`;
+    const res = await instance.put(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};

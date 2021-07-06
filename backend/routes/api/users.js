@@ -10,6 +10,7 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
     SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
+    ACCESS_LEVEL_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
 const { parseUserSecurityRoles } = require('../../middleware/authentication');
 
