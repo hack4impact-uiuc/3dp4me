@@ -38,7 +38,7 @@ const StepContent = ({
 
     const handleSimpleUpdate = (fieldKey, value) => {
         const dataCopy = _.cloneDeep(updatedData);
-        dataCopy[fieldKey] = value;
+        _.set(dataCopy, fieldKey, value);
         setUpdatedData(dataCopy);
     };
 
@@ -72,7 +72,6 @@ const StepContent = ({
                 file,
             );
 
-            console.log(res);
             const newFile = {
                 filename: res.data.name,
                 uploadedBy: res.data.uploadedBy,
