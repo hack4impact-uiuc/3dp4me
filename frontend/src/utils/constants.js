@@ -39,6 +39,7 @@ export const FIELD_TYPES = {
     RADIO_BUTTON: 'RadioButton',
     DROPDOWN: 'Dropdown',
     AUDIO: 'Audio',
+    FIELD_GROUP: 'FieldGroup',
 };
 
 export const ACCESS_STATUS = {
