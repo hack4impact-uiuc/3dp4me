@@ -21,6 +21,7 @@ const EditRoleModal = ({
     languageData,
     isOpen,
     onClose,
+    onUserEdited,
     userInfo,
     allRoles,
 }) => {
@@ -52,6 +53,7 @@ const EditRoleModal = ({
         );
 
         onClose();
+        onUserEdited(userData.userName, userData.accessLevel, userData.roles);
     };
 
     return (
