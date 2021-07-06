@@ -795,7 +795,6 @@ module.exports.PUT_STEP_SUBFIELD_MISSING_FIELDS = [
         ],
     },
 ];
-
 module.exports.PUT_STEP_EDIT_FIELDTYPE = [
     {
         key: 'survey',
