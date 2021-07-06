@@ -39,7 +39,13 @@ const StyledTableRow = withStyles(() => ({
     },
 }))(TableRow);
 
-const MainUserTable = ({ languageData, users, headers, onUserSelected }) => {
+const MainUserTable = ({
+    languageData,
+    users,
+    roleData,
+    headers,
+    onUserSelected,
+}) => {
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
     const UNSORTED_DATA = users;
@@ -83,14 +89,23 @@ const MainUserTable = ({ languageData, users, headers, onUserSelected }) => {
     };
 
     const getRolesValue = (user) => {
-        return getInfo(user, 'custom:security_roles') || [];
+        const info = getInfo(user, 'custom:security_roles');
+        return info ? JSON.parse(info) : [];
     };
 
     const getRoles = (user) => {
-        const roles = getRolesValue(user);
+        let roles = getRolesValue(user);
         if (roles.length == 0) return 'Not Assigned';
 
-        return roles.toString();
+        roles = roles.map((r) => {
+            for (let i = 0; i < roleData.length; i += 1) {
+                if (r === roleData[i]._id) return roleData[i]?.Question[key];
+            }
+
+            return 'Unrecognized role';
+        });
+
+        return roles.join(', ');
     };
 
     const onSelected = (item) => {

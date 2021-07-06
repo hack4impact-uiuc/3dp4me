@@ -5,7 +5,10 @@ const roleSchema = new mongoose.Schema({
         EN: { type: String, required: true },
         AR: { type: String, required: true },
     },
-    roleDescription: { type: String, required: false, default: '' },
+    roleDescription: {
+        EN: { type: String, required: true, default: '' },
+        AR: { type: String, required: true, default: '' },
+    },
     isHidden: { type: Boolean, required: false, default: true },
     isMutable: { type: Boolean, required: false, default: true },
 });

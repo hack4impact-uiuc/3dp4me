@@ -1,52 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { getAllUsers, removeUserRole } from '../../utils/api';
+import { getAllRoles, getAllUsers } from '../../utils/api';
 import MainUserTable from '../../components/Table/MainUserTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
-import { ACCESS_LEVELS } from '../../utils/constants';
 
 const AccountManagement = ({ languageData }) => {
     const [userMetaData, setUserMetaData] = useState([]);
+    const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const errorWrap = useErrorWrap();
     const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
-
-    const MOCK_ALL_ROLES = [
-        {
-            IsHidden: false,
-            _id: '0',
-            Question: {
-                EN: 'Admin',
-                AR: 'Admin',
-            },
-        },
-        {
-            IsHidden: false,
-            _id: '1',
-            Question: {
-                EN: 'Volunteer',
-                AR: 'Volunteer',
-            },
-        },
-        {
-            IsHidden: false,
-            _id: '2',
-            Question: {
-                EN: '3D Printer',
-                AR: '3D Printer',
-            },
-        },
-    ];
 
     useEffect(() => {
         const fetchData = async () => {
-            errorWrap(async () => {
-                const res = await getAllUsers();
-                setUserMetaData(res.result.Users);
-            });
+            const userRes = await getAllUsers();
+            setUserMetaData(userRes.result.Users);
+
+            const rolesRes = await getAllRoles();
+            const roles = rolesRes.result.map((r) => ({
+                _id: r?._id,
+                IsHidden: r?.isHidden,
+                Question: r?.roleName,
+            }));
+
+            setRolesData(roles);
         };
-        fetchData();
+        errorWrap(fetchData);
     }, [setUserMetaData, errorWrap]);
 
     const onUserSelected = (user) => {
@@ -63,6 +42,7 @@ const AccountManagement = ({ languageData }) => {
                 rowIds={['Name', 'Email', 'Role', 'Access']}
                 languageData={languageData}
                 users={userMetaData}
+                roleData={rolesData}
                 onUserSelected={onUserSelected}
             />
         );
@@ -74,7 +54,7 @@ const AccountManagement = ({ languageData }) => {
                 languageData={languageData}
                 isOpen={selectedUser !== null}
                 userInfo={selectedUser}
-                allRoles={MOCK_ALL_ROLES}
+                allRoles={rolesData}
                 onClose={() => setSelectedUser(null)}
             />
         );
