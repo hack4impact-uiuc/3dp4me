@@ -44,7 +44,7 @@ const EditRoleModal = ({
     };
 
     return (
-        <Modal open={isOpen} onClose={onClose}>
+        <Modal open={isOpen} onClose={onClose} className="edit-role-modal">
             <div className="edit-role-modal-wrapper">
                 <h2>{lang.accountManagement.editAccount}</h2>
                 <TextField
@@ -86,10 +86,10 @@ const EditRoleModal = ({
                     </Select>
                 </FormControl>
                 <div>
-                    <Button onClick={onSave}>
+                    <Button className="save-user-button" onClick={onSave}>
                         {lang.accountManagement.Save}
                     </Button>
-                    <Button onClick={onClose}>
+                    <Button className="discard-user-button" onClick={onClose}>
                         {lang.accountManagement.Discard}
                     </Button>
                 </div>
