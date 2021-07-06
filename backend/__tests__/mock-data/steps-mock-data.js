@@ -2770,6 +2770,21 @@ module.exports.POST_STEP_WITH_DUPLICATE_STEP_NUMBER = {
     ],
 };
 
+module.exports.GET_FIELD_BY_KEY_EXPECTED = {
+    displayName: {
+        EN: 'Number of Working People in Household',
+        AR: 'عدد العاملين في الأسرة',
+    },
+    fieldType: 'Number',
+    readableGroups: [],
+    writableGroups: [],
+    key: 'numWorkingPeople',
+    fieldNumber: 0,
+    isVisibleOnDashboard: false,
+    options: [],
+    subFields: [],
+};
+
 module.exports.POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS = {
     key: 'newStep',
     displayName: {
