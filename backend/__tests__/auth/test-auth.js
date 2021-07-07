@@ -1,22 +1,32 @@
 const db = require('../utils/db');
 require('../../app.js');
 const request = require('supertest');
-const { createUserDataWithRolesAndAccess } = require('../utils/auth');
+const {
+    withAuthentication,
+    createUserDataWithRolesAndAccess,
+    initAuthMocker,
+    setCurrentUser,
+} = require('../utils/auth');
 const AWS = require('aws-sdk-mock');
 const { MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
-const { ACCESS_LEVELS } = require('../../middleware/authentication');
+const { ACCESS_LEVELS, ADMIN_ID } = require('../../middleware/authentication');
+const {
+    PUT_PATIENT_DATA,
+    EXPECTED_PUT_DATA,
+} = require('../mock-data/patients-mock-data');
+const { expectStrictEqualWithTimestampOrdering } = require('../utils/utils');
+const mongoose = require('mongoose');
 
 describe('Test authentication ', () => {
+    afterAll(async () => await db.closeDatabase());
+    afterEach(async () => await db.resetDatabase());
+
     beforeAll(async () => {
         await db.connect();
-        AWS.mock('CognitoIdentityServiceProvider', 'getUser', () => {
-            return Promise.reject();
-        });
+        initAuthMocker(AWS);
     });
 
-    afterAll(async () => await db.closeDatabase());
     beforeEach(() => (server = require('../../app')));
-    afterEach(async () => await db.clearDatabase());
 
     it('fails when given no auth header', (done) => {
         request(server).get('/api/patients').expect(401, done);
@@ -76,4 +86,38 @@ describe('Test authentication ', () => {
             })
             .expect(200, done);
     });
+
+    it('succeeds when hitting requireAdmin endpoint', async () => {
+        const STEP_KEY = 'Patient';
+        setCurrentUser(
+            AWS,
+            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
+        );
+
+        const patientID = '60944e084f4c0d4330cc258b';
+        const res = await withAuthentication(
+            request(server)
+                .put(`/api/patients/${patientID}`)
+                .send(PUT_PATIENT_DATA),
+        );
+
+        const resContent = JSON.parse(res.text);
+
+        // Check statuses are correct
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
+        expectStrictEqualWithTimestampOrdering(
+            EXPECTED_PUT_DATA,
+            resContent.result,
+        );
+
+        let updatedData = await mongoose.connection
+            .collection(STEP_KEY)
+            .findOne({ _id: mongoose.Types.ObjectId(patientID) });
+        expectStrictEqualWithTimestampOrdering(EXPECTED_PUT_DATA, updatedData);
+    });
+
+    it('does not return parts not readableBy user', async () => {});
+
+    it('does write to parts not writableBy user', async () => {});
 });

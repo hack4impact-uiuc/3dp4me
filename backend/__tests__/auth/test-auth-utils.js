@@ -19,10 +19,7 @@ describe('mock auth', () => {
         initAuthMocker(AWS);
         setCurrentUser(
             AWS,
-            createUserDataWithRolesAndAccess(
-                ACCESS_LEVELS.GRANTED,
-                '606e0a4602b23d02bc77673b',
-            ),
+            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
         );
     });
 
