@@ -1,9 +1,10 @@
-import './StepManagementContent.css';
+import './StepManagementContent.scss';
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
-
+import RadioButtonField from '../Fields/RadioButtonField';
 import { LanguageDataType, FieldsType } from '../../utils/custom-proptypes';
+import { FIELD_TYPES } from '../../utils/constants';
 
 const StepManagementContent = ({
     languageData,
@@ -14,45 +15,87 @@ const StepManagementContent = ({
 }) => {
     const key = languageData.selectedLanguage;
 
-    function generateButtonInfo() {
-        return stepMetadata.map((element) =>
-            fields.map((field) => {
+    const formatRoles = (array) => {
+        if (!array?.length) return 'Admin';
+
+        // TODO: Display role names
+        return array;
+    };
+
+    const renderBottomSection = (field) => {
+        switch (field?.fieldType) {
+            case FIELD_TYPES.RADIO_BUTTON:
                 return (
-                    <div className="ui card">
-                        <div className="content">
+                    <div className="bottom-container">
+                        <RadioButtonField
+                            fieldId={field?.key}
+                            langKey={key}
+                            options={field?.options}
+                            isDisabled={true}
+                        />
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
+    function generateButtonInfo() {
+        return stepMetadata?.fields?.map((field) => {
+            return (
+                <div className="step-field-container">
+                    <div className="content">
+                        <div className="info">
                             <div className="header">
                                 {field.displayName[key]}
                             </div>
                             <div className="description">
                                 Field Type: {field.fieldType}
                             </div>
-                            <button type="button">
+                            <div className="description">
+                                Readable Roles:{' '}
+                                {formatRoles(field.readableGroups)}
+                            </div>
+                            <div className="description">
+                                Writable Roles:{' '}
+                                {formatRoles(field.writableGroups)}
+                            </div>
+                        </div>
+
+                        <div className="buttons">
+                            <div className="edit-field-button">
                                 <i className="pencil alternate icon" />
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    onDownPressed(element.key, field.key)
-                                }
-                            >
-                                <i className="chevron down icon" />
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    onUpPressed(element.key, field.key)
-                                }
-                            >
-                                <i className="chevron up icon" />
-                            </button>
+                            </div>
+
+                            <div className="reorder-buttons">
+                                <div
+                                    onClick={() =>
+                                        onUpPressed(stepMetadata.key, field.key)
+                                    }
+                                >
+                                    <i className="chevron up icon" />
+                                </div>
+                                <div
+                                    onClick={() =>
+                                        onDownPressed(
+                                            stepMetadata.key,
+                                            field.key,
+                                        )
+                                    }
+                                >
+                                    <i className="chevron down icon" />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                );
-            }),
-        );
+
+                    {renderBottomSection(field)}
+                </div>
+            );
+        });
     }
 
-    return <div>{generateButtonInfo()}</div>;
+    return <div className="content-container">{generateButtonInfo()}</div>;
 };
 
 StepManagementContent.propTypes = {

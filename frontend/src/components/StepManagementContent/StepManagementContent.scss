@@ -1,0 +1,50 @@
+.content-container {
+    width: 100%;
+
+    .header {
+        font-weight: 700;
+    }
+
+    .step-field-container {
+        background-color: #f6f6f6;
+        border: #f6f6f6 solid 1px;
+        border-radius: 10px;
+        margin: 7px;
+        padding: 1px;
+
+        .content {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 9px;
+
+            .info {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .buttons {
+                align-self: flex-end;
+                display: flex;
+                flex-direction: row;
+
+                .edit-field-button {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .reorder-buttons {
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
+        }
+
+        .bottom-container {
+            background-color: white;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding-inline-start: 10px;
+        }
+    }
+}

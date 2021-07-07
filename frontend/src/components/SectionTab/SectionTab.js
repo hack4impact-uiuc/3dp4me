@@ -1,4 +1,4 @@
-import './SectionTab.css';
+import './SectionTab.scss';
 import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
@@ -102,20 +102,20 @@ const SectionTab = ({ languageData }) => {
     }
 
     function GenerateStepManagementContent() {
-        return stepMetadata.map((element) => {
-            if (selectedStep !== element.key) {
-                return null;
-            }
-            return (
-                <StepManagementContent
-                    languageData={languageData}
-                    fields={element.fields}
-                    onDownPressed={onCardDownPressed}
-                    onUpPressed={onCardUpPressed}
-                    stepMetadata={stepMetadata}
-                />
-            );
-        });
+        const selectedStepMetadata = stepMetadata.find(
+            (step) => step.key === selectedStep,
+        );
+        if (!selectedStepMetadata) return null;
+
+        return (
+            <StepManagementContent
+                languageData={languageData}
+                fields={selectedStepMetadata.fields}
+                onDownPressed={onCardDownPressed}
+                onUpPressed={onCardUpPressed}
+                stepMetadata={selectedStepMetadata}
+            />
+        );
     }
 
     useEffect(() => {
@@ -131,16 +131,6 @@ const SectionTab = ({ languageData }) => {
         };
         fetchData();
     }, [setStepMetadata, errorWrap]);
-
-    const generateSteps = () => {
-        return stepMetadata.map((element) => {
-            return (
-                <div className="sidebar">
-                    <ListItem button> {element.displayName[key]} </ListItem>
-                </div>
-            );
-        });
-    };
 
     const onFieldModalClose = () => {
         setFieldModalOpen(false);
@@ -173,7 +163,7 @@ const SectionTab = ({ languageData }) => {
     return (
         <div>
             <div className="dashboard section-management-container">
-                <div>
+                <div className="sidebar-container">
                     <Sidebar
                         languageData={languageData}
                         onClick={UpdateSelectedStep}
@@ -191,9 +181,10 @@ const SectionTab = ({ languageData }) => {
                     </ListItem>
                     {generateNewSectionPopup()}
                 </div>
-                {GenerateStepManagementContent()}
+                <div className="step-management-content-container">
+                    {GenerateStepManagementContent()}
+                </div>
             </div>
-            <span> {generateSteps()}</span>
             <div>
                 <ListItem
                     className="sidebar"

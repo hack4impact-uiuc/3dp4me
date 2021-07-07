@@ -1,0 +1,28 @@
+@import '../../styles/variables.scss';
+@import '../../styles/colors.scss';
+
+.sidebar-button-container {
+    .button {
+        display: inline-block;
+        color: $dashboardManagementSidebarText;
+        background-color: $dashboardManagementSidebarBackground;
+        height: $navHeight;
+        line-height: $navHeight;
+        font-weight: 600;
+
+        &:hover {
+            background-color: $dashboardButtonHighlight;
+            color: white;
+        }
+    }
+
+    .main-button {
+        padding-left: 10px;
+        min-width: $drawerWidth;
+    }
+
+    .order-button {
+        min-width: $verticalMovementWidth;
+        text-align: center;
+    }
+}

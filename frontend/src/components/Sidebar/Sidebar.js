@@ -1,4 +1,4 @@
-import './Sidebar.css';
+import './Sidebar.scss';
 import React from 'react';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
@@ -18,22 +18,25 @@ const Sidebar = ({
 
     return stepMetadata.map((element) => {
         return (
-            <div>
-                <button
-                    type="button"
+            <div className="sidebar-button-container">
+                <div
+                    className="button main-button"
                     onClick={() => onButtonClick(element.key)}
                 >
                     {element.displayName[key]}
-                </button>
-                <button
-                    type="button"
+                </div>
+                <div
+                    className="button order-button"
                     onClick={() => onDownPressed(element.key)}
                 >
                     <i className="chevron down icon" />
-                </button>
-                <button type="button" onClick={() => onUpPressed(element.key)}>
+                </div>
+                <div
+                    className="button order-button"
+                    onClick={() => onUpPressed(element.key)}
+                >
                     <i className="chevron up icon" />
-                </button>
+                </div>
             </div>
         );
     });

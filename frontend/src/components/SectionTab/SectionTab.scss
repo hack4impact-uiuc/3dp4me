@@ -1,7 +1,14 @@
+@import '../../styles/variables.scss';
+
 .section-management-container {
     display: flex;
     flex-direction: row;
 }
+
+.step-management-content-container {
+    flex: 1;
+}
+
 .sidebar {
     max-width: 240px;
     border: 1px solid #483d8b;
@@ -20,4 +27,8 @@
     background: #ccc;
     width: 100px;
     cursor: move;
+}
+
+.sidebar-container {
+    height: 100%;
 }
