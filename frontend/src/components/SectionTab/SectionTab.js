@@ -185,7 +185,7 @@ const SectionTab = ({ languageData }) => {
                     {GenerateStepManagementContent()}
                 </div>
             </div>
-            <div>
+            {/* <div>
                 <ListItem
                     className="sidebar"
                     button
@@ -196,7 +196,7 @@ const SectionTab = ({ languageData }) => {
                     Add New Field
                 </ListItem>
             </div>
-            {generateNewFieldPopup()}
+            {generateNewFieldPopup()} */}
         </div>
     );
 };

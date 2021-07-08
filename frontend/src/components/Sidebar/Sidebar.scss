@@ -1,28 +1,46 @@
 @import '../../styles/variables.scss';
 @import '../../styles/colors.scss';
 
-.sidebar-button-container {
-    .button {
-        display: inline-block;
-        color: $dashboardManagementSidebarText;
+.sidebar {
+    flex-shrink: 0;
+    padding: 0;
+    width: $drawerWidth + 2 * $verticalMovementWidth;
+
+    .sidebar-container {
+        margin-top: $navHeight;
+        padding: 0;
         background-color: $dashboardManagementSidebarBackground;
-        height: $navHeight;
-        line-height: $navHeight;
-        font-weight: 600;
 
-        &:hover {
-            background-color: $dashboardButtonHighlight;
-            color: white;
+        .sidebar-button-container {
+            overflow: 'auto';
+            // padding: 20px;
+            display: flex;
+            height: $navHeight;
+            justify-content: space-between;
+
+            .button {
+                display: inline-block;
+                color: $dashboardManagementSidebarText;
+                background-color: $dashboardManagementSidebarBackground;
+                height: $navHeight;
+                line-height: $navHeight;
+                font-weight: 600;
+
+                &:hover {
+                    background-color: $dashboardButtonHighlight;
+                    color: white;
+                }
+            }
+
+            .main-button {
+                padding-left: 10px;
+                min-width: $drawerWidth;
+            }
+
+            .order-button {
+                min-width: $verticalMovementWidth;
+                text-align: center;
+            }
         }
-    }
-
-    .main-button {
-        padding-left: 10px;
-        min-width: $drawerWidth;
-    }
-
-    .order-button {
-        min-width: $verticalMovementWidth;
-        text-align: center;
     }
 }
