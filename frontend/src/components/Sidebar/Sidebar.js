@@ -2,6 +2,7 @@ import './Sidebar.scss';
 import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { Button } from '@material-ui/core';
 
 const Sidebar = ({
     languageData,
@@ -45,7 +46,10 @@ const Sidebar = ({
 
     return (
         <Drawer className="sidebar" variant="permanent">
-            <div className="sidebar-container">{generateButtons()}</div>
+            <div className="sidebar-container">
+                {generateButtons()}
+                <Button className="edit-steps-button">Edit Steps</Button>
+            </div>
         </Drawer>
     );
 };

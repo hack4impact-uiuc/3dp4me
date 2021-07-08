@@ -2,6 +2,7 @@
 @import '../../styles/colors.scss';
 
 .sidebar {
+    display: flex;
     flex-shrink: 0;
     padding: 0;
     width: $drawerWidth + 2 * $verticalMovementWidth;
@@ -40,6 +41,25 @@
             .order-button {
                 min-width: $verticalMovementWidth;
                 text-align: center;
+            }
+        }
+
+        .edit-steps-button {
+            background-color: $button;
+            color: white;
+            padding: 0 24px 0 24px;
+            height: 38px;
+            width: 95%;
+            margin-inline-start: 2.5%;
+            position: absolute;
+            bottom: 1%;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+            &:hover {
+                background-color: $buttonHighlight;
             }
         }
     }
