@@ -7,10 +7,11 @@ import { Button } from '@material-ui/core';
 const Sidebar = ({
     languageData,
     onClick,
+    onAddField,
+    onAddStep,
     stepMetadata,
     onDownPressed,
     onUpPressed,
-    onEditSteps,
     isEditing,
 }) => {
     const key = languageData.selectedLanguage;
@@ -19,10 +20,26 @@ const Sidebar = ({
         onClick(stepKey);
     }
 
+    const generateBottomButton = () => {
+        if (!isEditing) return null;
+
+        return (
+            <Button className="edit-steps-button" onClick={onAddStep}>
+                Add Step
+            </Button>
+        );
+    };
+
     const generateReorderButtons = (stepKey) => {
         if (!isEditing) return null;
 
         return [
+            <div
+                className="button order-button"
+                onClick={() => onAddField(stepKey)}
+            >
+                <i className="plus icon" />
+            </div>,
             <div
                 className="button order-button"
                 onClick={() => onDownPressed(stepKey)}
@@ -63,9 +80,7 @@ const Sidebar = ({
         >
             <div className="sidebar-container">
                 {generateButtons()}
-                <Button className="edit-steps-button" onClick={onEditSteps}>
-                    Edit Steps
-                </Button>
+                {generateBottomButton()}
             </div>
         </Drawer>
     );

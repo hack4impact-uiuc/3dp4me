@@ -8,10 +8,12 @@ import { FIELD_TYPES } from '../../utils/constants';
 
 const StepManagementContent = ({
     languageData,
-    fields,
     onDownPressed,
     onUpPressed,
+    onEditField,
+    onAddField,
     stepMetadata,
+    isEditing,
 }) => {
     const key = languageData.selectedLanguage;
 
@@ -40,6 +42,36 @@ const StepManagementContent = ({
         }
     };
 
+    const renderEditButtons = (field) => {
+        if (!isEditing) return null;
+
+        return (
+            <div className="buttons">
+                <div
+                    className="edit-field-button"
+                    onClick={() => onEditField(stepMetadata.key, field.key)}
+                >
+                    <i className="pencil alternate icon" />
+                </div>
+
+                <div className="reorder-buttons">
+                    <div
+                        onClick={() => onUpPressed(stepMetadata.key, field.key)}
+                    >
+                        <i className="chevron up icon" />
+                    </div>
+                    <div
+                        onClick={() =>
+                            onDownPressed(stepMetadata.key, field.key)
+                        }
+                    >
+                        <i className="chevron down icon" />
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     function generateButtonInfo() {
         return stepMetadata?.fields?.map((field) => {
             return (
@@ -62,31 +94,7 @@ const StepManagementContent = ({
                             </div>
                         </div>
 
-                        <div className="buttons">
-                            <div className="edit-field-button">
-                                <i className="pencil alternate icon" />
-                            </div>
-
-                            <div className="reorder-buttons">
-                                <div
-                                    onClick={() =>
-                                        onUpPressed(stepMetadata.key, field.key)
-                                    }
-                                >
-                                    <i className="chevron up icon" />
-                                </div>
-                                <div
-                                    onClick={() =>
-                                        onDownPressed(
-                                            stepMetadata.key,
-                                            field.key,
-                                        )
-                                    }
-                                >
-                                    <i className="chevron down icon" />
-                                </div>
-                            </div>
-                        </div>
+                        {renderEditButtons(field)}
                     </div>
 
                     {renderBottomSection(field)}

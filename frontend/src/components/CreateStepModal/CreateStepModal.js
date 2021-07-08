@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
-const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
+const CreateStepModal = ({ languageData, isOpen, onModalClose }) => {
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
@@ -76,10 +76,10 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
     );
 };
 
-CreateFieldModal.propTypes = {
+CreateStepModal.propTypes = {
     languageData: LanguageDataType.isRequired,
     isOpen: PropTypes.bool.isRequired,
     onModalClose: PropTypes.func.isRequired,
 };
 
-export default CreateFieldModal;
+export default CreateStepModal;

@@ -1,6 +1,9 @@
+@import '../../styles/variables.scss';
+
 .content-container {
     margin: 10px;
     width: 97%;
+    margin-bottom: $navHeight + 20px;
 
     .header {
         font-weight: 700;

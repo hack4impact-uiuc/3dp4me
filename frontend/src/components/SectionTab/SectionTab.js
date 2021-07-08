@@ -2,13 +2,13 @@ import './SectionTab.scss';
 import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
-
+import BottomBar from '../BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { getAllStepsMetadata } from '../../utils/api';
 import Sidebar from '../Sidebar/Sidebar';
 import StepManagementContent from '../StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
-import CreateSectionModal from '../CreateSectionModal/CreateSectionModal';
+import CreateStepModal from '../CreateStepModal/CreateStepModal';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const SectionTab = ({ languageData }) => {
@@ -16,10 +16,34 @@ const SectionTab = ({ languageData }) => {
     const lang = languageData.translations[key];
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
-    const [isEditingSteps, setIsEditingSteps] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     const [fieldModalOpen, setFieldModalOpen] = useState(false);
-    const [sectionModalOpen, setSectionModalOpen] = useState(false);
+    const [stepModalOpen, setStepModalOpen] = useState(false);
     const errorWrap = useErrorWrap();
+
+    const onAddStep = () => {
+        setStepModalOpen(true);
+    };
+
+    const onAddField = (stepKey) => {
+        setFieldModalOpen(true);
+    };
+
+    const onEditField = () => {
+        //setFieldModalOpen(true);
+        //TODO
+    };
+
+    const onSaveChanges = () => {
+        // TODO: Send changes to backend
+        setIsEditing(false);
+    };
+
+    const onDiscardChanges = () => {
+        // TODO: Delete changes here
+        setIsEditing(false);
+    };
+
     function UpdateSelectedStep(stepKey) {
         setSelectedStep(stepKey);
     }
@@ -110,11 +134,12 @@ const SectionTab = ({ languageData }) => {
 
         return (
             <StepManagementContent
+                isEditing={isEditing}
                 languageData={languageData}
-                fields={selectedStepMetadata.fields}
                 onDownPressed={onCardDownPressed}
                 onUpPressed={onCardUpPressed}
                 stepMetadata={selectedStepMetadata}
+                onEditField={onEditField}
             />
         );
     }
@@ -137,8 +162,8 @@ const SectionTab = ({ languageData }) => {
         setFieldModalOpen(false);
     };
 
-    const onSectionModalClose = () => {
-        setSectionModalOpen(false);
+    const onStepModalClose = () => {
+        setStepModalOpen(false);
     };
 
     const generateNewFieldPopup = () => {
@@ -151,11 +176,11 @@ const SectionTab = ({ languageData }) => {
         );
     };
 
-    const generateNewSectionPopup = () => {
+    const generateNewStepPopup = () => {
         return (
-            <CreateSectionModal
-                isOpen={sectionModalOpen}
-                onModalClose={onSectionModalClose}
+            <CreateStepModal
+                isOpen={stepModalOpen}
+                onModalClose={onStepModalClose}
                 languageData={languageData}
             />
         );
@@ -170,24 +195,35 @@ const SectionTab = ({ languageData }) => {
                         onClick={UpdateSelectedStep}
                         onDownPressed={onDownPressed}
                         onUpPressed={onUpPressed}
+                        onAddStep={onAddStep}
+                        onAddField={onAddField}
                         stepMetadata={stepMetadata}
-                        onEditSteps={() => setIsEditingSteps(true)}
-                        isEditing={isEditingSteps}
+                        onEditSteps={() => setIsEditing(true)}
+                        isEditing={isEditing}
                     />
                     <ListItem
                         button
                         onClick={() => {
-                            setSectionModalOpen(true);
+                            setStepModalOpen(true);
                         }}
                     >
                         {lang.components.file.addAnother}
                     </ListItem>
-                    {generateNewSectionPopup()}
                 </div>
                 <div className="step-management-content-container">
                     {GenerateStepManagementContent()}
                 </div>
             </div>
+            <BottomBar
+                languageData={languageData}
+                edit={isEditing}
+                setEdit={setIsEditing}
+                onSave={onSaveChanges}
+                onDiscard={onDiscardChanges}
+            />
+
+            {generateNewStepPopup()}
+            {generateNewFieldPopup()}
         </div>
     );
 };

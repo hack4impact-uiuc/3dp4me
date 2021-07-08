@@ -11,6 +11,7 @@ import {
     MenuItem,
 } from '@material-ui/core';
 
+import { STEP_STATUS } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
 import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
 import StepField from '../../components/StepField/StepField';
@@ -198,7 +199,7 @@ const StepContent = ({
                 lastEdited={stepData?.lastEdited}
                 onDiscard={discardData}
                 onSave={saveData}
-                status={updatedData?.status}
+                status={updatedData?.status || STEP_STATUS.UNFINISHED}
                 onStatusChange={handleSimpleUpdate}
                 edit={edit}
                 setEdit={setEdit}
