@@ -13,6 +13,7 @@ const Sidebar = ({
     onDownPressed,
     onUpPressed,
     isEditing,
+    selectedStep,
 }) => {
     const key = languageData.selectedLanguage;
 
@@ -35,19 +36,25 @@ const Sidebar = ({
 
         return [
             <div
-                className="button order-button"
+                className={`button order-button ${
+                    stepKey === selectedStep ? 'selected' : 'unselected'
+                }`}
                 onClick={() => onAddField(stepKey)}
             >
                 <i className="plus icon" />
             </div>,
             <div
-                className="button order-button"
+                className={`button order-button ${
+                    stepKey === selectedStep ? 'selected' : 'unselected'
+                }`}
                 onClick={() => onDownPressed(stepKey)}
             >
                 <i className="chevron down icon" />
             </div>,
             <div
-                className="button order-button"
+                className={`button order-button ${
+                    stepKey === selectedStep ? 'selected' : 'unselected'
+                }`}
                 onClick={() => onUpPressed(stepKey)}
             >
                 <i className="chevron up icon" />
@@ -60,7 +67,11 @@ const Sidebar = ({
             return (
                 <div className="sidebar-button-container">
                     <div
-                        className="button main-button"
+                        className={`button main-button ${
+                            element.key === selectedStep
+                                ? 'selected'
+                                : 'unselected'
+                        }`}
                         onClick={() => onButtonClick(element.key)}
                     >
                         {element.displayName[key]}

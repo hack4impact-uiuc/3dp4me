@@ -48,6 +48,11 @@
                 min-width: $verticalMovementWidth;
                 text-align: center;
             }
+
+            .selected {
+                background-color: #5253a1;
+                color: white;
+            }
         }
 
         .edit-steps-button {

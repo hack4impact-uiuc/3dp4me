@@ -209,6 +209,7 @@ const SectionTab = ({ languageData }) => {
                         stepMetadata={stepMetadata}
                         onEditSteps={() => setIsEditing(true)}
                         isEditing={isEditing}
+                        selectedStep={selectedStep}
                     />
                     <ListItem
                         button
