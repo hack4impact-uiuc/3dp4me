@@ -18,6 +18,7 @@ const BottomBar = ({
     lastEdited,
     lastEditedBy,
     status = null,
+    style = null,
     onStatusChange,
     onSave,
     onDiscard,
@@ -88,10 +89,7 @@ const BottomBar = ({
             }}
         >
             <Toolbar className="bottom-toolbar">
-                <div
-                    className="editor-section"
-                    style={{ flexGrow: 1, color: 'black' }}
-                >
+                <div className="editor-section" style={style?.editorSection}>
                     {`${
                         lang.components.bottombar.lastEditedBy
                     } ${lastEditedBy} ${

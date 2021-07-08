@@ -10,6 +10,15 @@ import StepManagementContent from '../StepManagementContent/StepManagementConten
 import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
 import CreateStepModal from '../CreateStepModal/CreateStepModal';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
+import {
+    drawerWidth,
+    verticalMovementWidth,
+} from '../../styles/variables.scss';
+
+const expandedSidebarWidth = `${
+    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+}px`;
+const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = ({ languageData }) => {
     const key = languageData.selectedLanguage;
@@ -213,14 +222,24 @@ const SectionTab = ({ languageData }) => {
                 <div className="step-management-content-container">
                     {GenerateStepManagementContent()}
                 </div>
+
+                <BottomBar
+                    languageData={languageData}
+                    edit={isEditing}
+                    setEdit={setIsEditing}
+                    onSave={onSaveChanges}
+                    onDiscard={onDiscardChanges}
+                    style={{
+                        editorSection: {
+                            marginLeft: `${
+                                isEditing
+                                    ? expandedSidebarWidth
+                                    : retractedSidebarWidth
+                            }`,
+                        },
+                    }}
+                />
             </div>
-            <BottomBar
-                languageData={languageData}
-                edit={isEditing}
-                setEdit={setIsEditing}
-                onSave={onSaveChanges}
-                onDiscard={onDiscardChanges}
-            />
 
             {generateNewStepPopup()}
             {generateNewFieldPopup()}
