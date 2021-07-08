@@ -10,12 +10,33 @@ const Sidebar = ({
     stepMetadata,
     onDownPressed,
     onUpPressed,
+    onEditSteps,
+    isEditing,
 }) => {
     const key = languageData.selectedLanguage;
 
     function onButtonClick(stepKey) {
         onClick(stepKey);
     }
+
+    const generateReorderButtons = (stepKey) => {
+        if (!isEditing) return null;
+
+        return [
+            <div
+                className="button order-button"
+                onClick={() => onDownPressed(stepKey)}
+            >
+                <i className="chevron down icon" />
+            </div>,
+            <div
+                className="button order-button"
+                onClick={() => onUpPressed(stepKey)}
+            >
+                <i className="chevron up icon" />
+            </div>,
+        ];
+    };
 
     const generateButtons = () => {
         return stepMetadata.map((element) => {
@@ -27,28 +48,24 @@ const Sidebar = ({
                     >
                         {element.displayName[key]}
                     </div>
-                    <div
-                        className="button order-button"
-                        onClick={() => onDownPressed(element.key)}
-                    >
-                        <i className="chevron down icon" />
-                    </div>
-                    <div
-                        className="button order-button"
-                        onClick={() => onUpPressed(element.key)}
-                    >
-                        <i className="chevron up icon" />
-                    </div>
+                    {generateReorderButtons(element.key)}
                 </div>
             );
         });
     };
 
     return (
-        <Drawer className="sidebar" variant="permanent">
+        <Drawer
+            className={`sidebar ${
+                isEditing ? 'sidebar-expanded' : 'sidebar-retracted'
+            }`}
+            variant="permanent"
+        >
             <div className="sidebar-container">
                 {generateButtons()}
-                <Button className="edit-steps-button">Edit Steps</Button>
+                <Button className="edit-steps-button" onClick={onEditSteps}>
+                    Edit Steps
+                </Button>
             </div>
         </Drawer>
     );

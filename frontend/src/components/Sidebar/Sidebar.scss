@@ -1,11 +1,18 @@
 @import '../../styles/variables.scss';
 @import '../../styles/colors.scss';
 
+.sidebar-retracted {
+    width: $drawerWidth;
+}
+
+.sidebar-expanded {
+    width: $drawerWidth + 2 * $verticalMovementWidth;
+}
+
 .sidebar {
     display: flex;
     flex-shrink: 0;
     padding: 0;
-    width: $drawerWidth + 2 * $verticalMovementWidth;
 
     .sidebar-container {
         margin-top: $navHeight;
@@ -14,7 +21,6 @@
 
         .sidebar-button-container {
             overflow: 'auto';
-            // padding: 20px;
             display: flex;
             height: $navHeight;
             justify-content: space-between;

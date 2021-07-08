@@ -16,6 +16,7 @@ const SectionTab = ({ languageData }) => {
     const lang = languageData.translations[key];
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
+    const [isEditingSteps, setIsEditingSteps] = useState(false);
     const [fieldModalOpen, setFieldModalOpen] = useState(false);
     const [sectionModalOpen, setSectionModalOpen] = useState(false);
     const errorWrap = useErrorWrap();
@@ -170,6 +171,8 @@ const SectionTab = ({ languageData }) => {
                         onDownPressed={onDownPressed}
                         onUpPressed={onUpPressed}
                         stepMetadata={stepMetadata}
+                        onEditSteps={() => setIsEditingSteps(true)}
+                        isEditing={isEditingSteps}
                     />
                     <ListItem
                         button
@@ -185,18 +188,6 @@ const SectionTab = ({ languageData }) => {
                     {GenerateStepManagementContent()}
                 </div>
             </div>
-            {/* <div>
-                <ListItem
-                    className="sidebar"
-                    button
-                    onClick={() => {
-                        setFieldModalOpen(true);
-                    }}
-                >
-                    Add New Field
-                </ListItem>
-            </div>
-            {generateNewFieldPopup()} */}
         </div>
     );
 };
