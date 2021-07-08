@@ -28,18 +28,35 @@
             }
 
             .buttons {
-                align-self: flex-end;
+                align-self: flex-start;
                 display: flex;
                 flex-direction: row;
 
                 .edit-field-button {
                     display: flex;
                     align-items: center;
+                    font-size: 1.4em;
+                    &:hover {
+                        color: gray;
+                    }
                 }
 
                 .reorder-buttons {
                     display: flex;
                     flex-direction: column;
+                    font-size: 1em;
+                }
+
+                .up-button {
+                    &:hover {
+                        color: gray;
+                    }
+                }
+
+                .down-button {
+                    &:hover {
+                        color: gray;
+                    }
                 }
             }
         }

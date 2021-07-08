@@ -1,3 +1,4 @@
+import './CreateStepModal.scss';
 import React from 'react';
 import { Button, TextField, Modal } from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -11,27 +12,22 @@ const CreateStepModal = ({ languageData, isOpen, onModalClose }) => {
 
     const generateFields = () => {
         return (
-            <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                    <Grid>
-                        <Row>
-                            <Col style={{ padding: 10 }}>
-                                <div
-                                    style={{
-                                        fontSize: '12px',
-                                        textAlign: 'left',
-                                    }}
-                                />
-                                <TextField
-                                    size="small"
-                                    fullWidth
-                                    style={{ padding: 10 }}
-                                    variant="outlined"
-                                />
-                            </Col>
-                        </Row>
-                    </Grid>
-                </div>
+            <div className="create-step-modal-field-container">
+                <span>Section Title</span>
+
+                <p className="create-step-modal-subheading">English</p>
+                <TextField
+                    className="create-step-modal-field"
+                    size="small"
+                    variant="outlined"
+                />
+
+                <p className="create-step-modal-subheading">Arabic</p>
+                <TextField
+                    className="create-step-modal-field"
+                    size="small"
+                    variant="outlined"
+                />
             </div>
         );
     };
@@ -39,35 +35,21 @@ const CreateStepModal = ({ languageData, isOpen, onModalClose }) => {
     return (
         <Modal
             open={isOpen}
-            style={{ background: 'white', padding: '24px 100px 24px 24px' }}
+            onClose={onModalClose}
+            className="create-step-modal"
         >
-            <div
-                style={{
-                    marginRight: '10px',
-                    fontFamily: 'Ubuntu',
-                    margin: '0px !important',
-                    textAlign: 'left',
-                    padding: '24px 24px 48px 24px',
-                }}
-            >
-                <h2 style={{ fontWeight: 'bolder' }}>New Section</h2>
-                <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                    <span>Section Title</span>
-                    {generateFields()}
-                    <span>{lang.components.swal.createField.clearance}</span>
-                </div>
+            <div className="create-step-modal-wrapper">
+                <h2 className="create-step-modal-title">New Section</h2>
+                <div className="create-step-modal-text">{generateFields()}</div>
 
-                <div
-                    style={{
-                        display: 'flex',
-                        float: 'right',
-                        paddingBottom: '10px',
-                    }}
-                >
-                    <Button onClick={onModalClose}>
+                <div>
+                    <Button onClick={onModalClose} className="save-step-button">
                         {lang.components.swal.createField.buttons.save}
                     </Button>
-                    <Button onClick={onModalClose}>
+                    <Button
+                        onClick={onModalClose}
+                        className="discard-step-button"
+                    >
                         {lang.components.swal.createField.buttons.discard}
                     </Button>
                 </div>
