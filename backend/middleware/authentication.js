@@ -36,12 +36,22 @@ const parseUserName = (user) => {
     return name.Value;
 };
 
+const parseUserEmail = (user) => {
+    const name = user?.UserAttributes?.find(
+        (attribute) => attribute.Name === 'email',
+    );
+
+    if (!name?.Value) return '';
+
+    return name.Value;
+};
+
 const requireAuthentication = async (req, res, next) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];
         const user = await getUser(accessToken);
         user.roles = parseUserSecurityRoles(user);
-        user.name = parseUserName(user);
+        user.name = parseUserName(user) || parseUserEmail(user);
 
         if (!user.roles || user.roles.length === 0) {
             return res.status(403).json({
