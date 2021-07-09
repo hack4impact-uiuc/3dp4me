@@ -76,9 +76,18 @@ const generateFieldSchema = (field) => {
                 throw new Error('Signatures must have a default document');
 
             return {
-                signatureURL: {
-                    type: String,
-                },
+                signatureData: [
+                    [
+                        {
+                            x: { type: Number, required: true },
+                            y: { type: Number, required: true },
+                            time: { type: Number, required: true },
+                            color: { type: String, required: true },
+                        },
+                    ],
+                ],
+                signatureCanvasWidth: { type: Number, required: true },
+                signatureCanvasHeight: { type: Number, required: true },
                 documentURL: {
                     type: String,
                 },
