@@ -1,3 +1,4 @@
+import './CreateFieldModal.scss';
 import React, { useState } from 'react';
 import {
     Button,
@@ -6,12 +7,18 @@ import {
     MenuItem,
     Checkbox,
     Modal,
+    NativeSelect,
+    withStyles,
+    InputBase,
+    FormControl,
+    InputLabel,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { FIELD_TYPES } from '../../utils/constants';
+import LanguageInput from '../LanguageInput/LanguageInput';
 
 const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
@@ -19,6 +26,35 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
 
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
+
+    const BootstrapInput = withStyles((theme) => ({
+        root: {
+            'label + &': {
+                marginTop: theme.spacing(3),
+            },
+        },
+        input: {
+            borderRadius: 4,
+            position: 'relative',
+            backgroundColor: '#dedffb',
+            border: '1px solid #ced4da',
+            fontSize: 16,
+            padding: '10px 26px 10px 12px',
+            transition: theme.transitions.create([
+                'border-color',
+                'box-shadow',
+            ]),
+            // Use the system font instead of the default Roboto font.
+            '&:focus': {
+                borderRadius: 4,
+                borderColor: '#80bdff',
+                boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+            },
+            selected: {
+                backgroundColor: '#dedffb',
+            },
+        },
+    }))(InputBase);
 
     const handleFieldTypeSelect = (e) => {
         setFieldType(e.target.value);
@@ -35,53 +71,23 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
         const choices = [];
         for (let i = 0; i < numChoices; i += 1) {
             choices.push(
-                <Grid>
-                    <Row>
-                        <Col style={{ padding: 10 }}>
-                            <div
-                                style={{ fontSize: '12px', textAlign: 'left' }}
-                            >
-                                <span>
-                                    {lang.components.swal.createField
-                                        .arabicChoice +
-                                        (i + 1)}
-                                </span>
-                            </div>
-                            <TextField
-                                size="small"
-                                id="createDOB"
-                                fullWidth
-                                style={{ padding: 10 }}
-                                variant="outlined"
-                            />
-                        </Col>
-                        <Col style={{ padding: 10 }}>
-                            <div
-                                style={{ fontSize: '12px', textAlign: 'left' }}
-                            >
-                                <span>
-                                    {lang.components.swal.createField
-                                        .englishChoice +
-                                        (i + 1)}
-                                </span>
-                            </div>
-                            <TextField
-                                size="small"
-                                fullWidth
-                                style={{ padding: 10 }}
-                                variant="outlined"
-                            />
-                        </Col>
-                        <Col>
-                            <Button onClick={removeChoice}>
-                                {
-                                    lang.components.swal.createField.buttons
-                                        .removeChoice
-                                }
-                            </Button>
-                        </Col>
-                    </Row>
-                </Grid>,
+                <div>
+                    <span>
+                        {lang.components.swal.createField.arabicChoice +
+                            (i + 1)}
+                    </span>
+                    <LanguageInput
+                        onDelete={() => {
+                            /*TODO:*/
+                        }}
+                        onUpPressed={() => {
+                            /*TODO:*/
+                        }}
+                        onDownPressed={() => {
+                            /*TODO:*/
+                        }}
+                    />
+                </div>,
             );
         }
         return <div>{choices}</div>;
@@ -98,52 +104,7 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
             return (
                 <div style={{ fontSize: '17px', textAlign: 'left' }}>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <Grid>
-                            <Row>
-                                <Col style={{ padding: 10 }}>
-                                    <div
-                                        style={{
-                                            fontSize: '12px',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span>
-                                            {
-                                                lang.components.swal.createField
-                                                    .arabic
-                                            }
-                                        </span>
-                                    </div>
-                                    <TextField
-                                        size="small"
-                                        fullWidth
-                                        style={{ padding: 10 }}
-                                        variant="outlined"
-                                    />
-                                </Col>
-                                <Col style={{ padding: 10 }}>
-                                    <div
-                                        style={{
-                                            fontSize: '12px',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span>
-                                            {
-                                                lang.components.swal.createField
-                                                    .english
-                                            }
-                                        </span>
-                                    </div>
-                                    <TextField
-                                        size="small"
-                                        fullWidth
-                                        style={{ padding: 10 }}
-                                        variant="outlined"
-                                    />
-                                </Col>
-                            </Row>
-                        </Grid>
+                        <LanguageInput />
                     </div>
                 </div>
             );
@@ -154,65 +115,12 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
         ) {
             return (
                 <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <Grid>
-                            <Row>
-                                <Col style={{ padding: 10 }}>
-                                    <div
-                                        style={{
-                                            fontSize: '12px',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span>
-                                            {
-                                                lang.components.swal.createField
-                                                    .arabic
-                                            }
-                                        </span>
-                                    </div>
-                                    <TextField
-                                        size="small"
-                                        fullWidth
-                                        style={{ padding: 10 }}
-                                        variant="outlined"
-                                    />
-                                </Col>
-                                <Col style={{ padding: 10 }}>
-                                    <div
-                                        style={{
-                                            fontSize: '12px',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span>
-                                            {
-                                                lang.components.swal.createField
-                                                    .english
-                                            }
-                                        </span>
-                                    </div>
-                                    <TextField
-                                        size="small"
-                                        fullWidth
-                                        style={{ padding: 10 }}
-                                        variant="outlined"
-                                    />
-                                </Col>
-                            </Row>
-                        </Grid>
-                    </div>
+                    <span>Question</span>
+                    <LanguageInput />
                     {generateChoices()}
-                    <Grid>
-                        <Row style={{ contentAlign: 'center' }}>
-                            <Button onClick={incrementChoices}>
-                                {
-                                    lang.components.swal.createField.buttons
-                                        .addChoice
-                                }
-                            </Button>
-                        </Row>
-                    </Grid>
+                    <Button onClick={incrementChoices}>
+                        {lang.components.swal.createField.buttons.addChoice}
+                    </Button>
                 </div>
             );
         }
@@ -335,64 +243,93 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
     return (
         <Modal
             open={isOpen}
-            style={{ background: 'white', padding: '24px 100px 24px 24px' }}
+            onClose={onModalClose}
+            className="create-field-modal"
         >
-            <div
-                style={{
-                    marginRight: '10px',
-                    fontFamily: 'Ubuntu',
-                    margin: '0px !important',
-                    textAlign: 'left',
-                    padding: '24px 24px 48px 24px',
-                }}
-            >
-                <h2 style={{ fontWeight: 'bolder' }}>
+            <div className="create-field-modal-wrapper">
+                <span className="create-field-title1">
                     {lang.components.swal.createField.title}
-                </h2>
-                <h2 style={{ fontWeight: 'normal' }}>
+                </span>
+                <span className="create-field-title2">
                     {lang.components.swal.createField.title2}
-                </h2>
-                <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                    <span>{lang.components.swal.createField.fieldType}</span>
+                </span>
+                <div className="create-field-title3">
                     <div style={{ padding: 10 }}>
-                        <Select
-                            onChange={handleFieldTypeSelect}
-                            MenuProps={{
-                                style: { zIndex: 35001 },
-                            }}
-                            defaultValue="String"
-                        >
-                            <MenuItem value={FIELD_TYPES.STRING}>
-                                {FIELD_TYPES.STRING}
-                            </MenuItem>
-                            <MenuItem value={FIELD_TYPES.MULTILINE_STRING}>
-                                {FIELD_TYPES.MULTILINE_STRING}
-                            </MenuItem>
-                            <MenuItem value={FIELD_TYPES.FILE}>
-                                {FIELD_TYPES.FILE}
-                            </MenuItem>
-                            <MenuItem value={FIELD_TYPES.NUMBER}>
-                                {FIELD_TYPES.NUMBER}
-                            </MenuItem>
-                            <MenuItem value={FIELD_TYPES.DATE}>
-                                {FIELD_TYPES.DATE}
-                            </MenuItem>
-                            <MenuItem value={FIELD_TYPES.PHONE}>
-                                {FIELD_TYPES.PHONE}
-                            </MenuItem>
-                            <MenuItem value={FIELD_TYPES.DIVIDER}>
-                                {FIELD_TYPES.DIVIDER}
-                            </MenuItem>
-                            <MenuItem value={FIELD_TYPES.HEADER}>
-                                {FIELD_TYPES.HEADER}
-                            </MenuItem>
-                            <MenuItem value={FIELD_TYPES.RADIO_BUTTON}>
-                                {FIELD_TYPES.RADIO_BUTTON}
-                            </MenuItem>
-                            <MenuItem value={FIELD_TYPES.DROPDOWN}>
-                                {FIELD_TYPES.DROPDOWN}
-                            </MenuItem>
-                        </Select>
+                        <FormControl>
+                            <InputLabel htmlFor="create-field-type-dropdown">
+                                {lang.components.swal.createField.fieldType}
+                            </InputLabel>
+                            <NativeSelect
+                                id="create-field-type-dropdown"
+                                onChange={handleFieldTypeSelect}
+                                MenuProps={{
+                                    style: { zIndex: 35001 },
+                                }}
+                                defaultValue={fieldType}
+                                input={<BootstrapInput />}
+                            >
+                                <option
+                                    value={FIELD_TYPES.STRING}
+                                    className="create-field-option"
+                                >
+                                    {FIELD_TYPES.STRING}
+                                </option>
+                                <option
+                                    value={FIELD_TYPES.MULTILINE_STRING}
+                                    className="create-field-option"
+                                >
+                                    {FIELD_TYPES.MULTILINE_STRING}
+                                </option>
+                                <option
+                                    value={FIELD_TYPES.FILE}
+                                    className="create-field-option"
+                                >
+                                    {FIELD_TYPES.FILE}
+                                </option>
+                                <option
+                                    value={FIELD_TYPES.NUMBER}
+                                    className="create-field-option"
+                                >
+                                    {FIELD_TYPES.NUMBER}
+                                </option>
+                                <option
+                                    value={FIELD_TYPES.DATE}
+                                    className="create-field-option"
+                                >
+                                    {FIELD_TYPES.DATE}
+                                </option>
+                                <option
+                                    value={FIELD_TYPES.PHONE}
+                                    className="create-field-option"
+                                >
+                                    {FIELD_TYPES.PHONE}
+                                </option>
+                                <option
+                                    value={FIELD_TYPES.DIVIDER}
+                                    className="create-field-option"
+                                >
+                                    {FIELD_TYPES.DIVIDER}
+                                </option>
+                                <option
+                                    value={FIELD_TYPES.HEADER}
+                                    className="create-field-option"
+                                >
+                                    {FIELD_TYPES.HEADER}
+                                </option>
+                                <option
+                                    value={FIELD_TYPES.RADIO_BUTTON}
+                                    className="create-field-option"
+                                >
+                                    {FIELD_TYPES.RADIO_BUTTON}
+                                </option>
+                                <option
+                                    value={FIELD_TYPES.DROPDOWN}
+                                    className="create-field-option"
+                                >
+                                    {FIELD_TYPES.DROPDOWN}
+                                </option>
+                            </NativeSelect>
+                        </FormControl>
                     </div>
                     <span>{lang.components.swal.createField.clearance}</span>
                     <div style={{ padding: 10 }}>
@@ -411,17 +348,15 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                         </Select>
                     </div>
                     <div style={{ padding: 10 }}>
-                        <Checkbox
-                            size="small"
-                            fullWidth
-                            style={{ padding: 10 }}
-                        />
+                        <Checkbox size="medium" />
                         <span>
                             {lang.components.swal.createField.showOnDashBoard}
                         </span>
                     </div>
                 </div>
-                <span>{lang.components.swal.createField.field} </span>
+                <span className="create-field-title3">
+                    {lang.components.swal.createField.field}{' '}
+                </span>
                 {generateFields()}
                 <div
                     style={{
@@ -430,10 +365,16 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                         paddingBottom: '10px',
                     }}
                 >
-                    <Button onClick={onModalClose}>
+                    <Button
+                        onClick={onModalClose}
+                        className="save-field-button"
+                    >
                         {lang.components.swal.createField.buttons.save}
                     </Button>
-                    <Button onClick={onModalClose}>
+                    <Button
+                        onClick={onModalClose}
+                        className="discard-field-button"
+                    >
                         {lang.components.swal.createField.buttons.discard}
                     </Button>
                 </div>

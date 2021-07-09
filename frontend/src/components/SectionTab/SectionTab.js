@@ -26,7 +26,7 @@ const SectionTab = ({ languageData }) => {
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
-    const [fieldModalOpen, setFieldModalOpen] = useState(false);
+    const [fieldModalOpen, setFieldModalOpen] = useState(true);
     const [stepModalOpen, setStepModalOpen] = useState(false);
     const errorWrap = useErrorWrap();
 

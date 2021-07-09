@@ -1,0 +1,62 @@
+@import '../../styles/colors.scss';
+
+.language-input-container {
+    background-color: $secondary;
+    border-radius: 5px;
+    display: flex;
+
+    .vertical-center {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .field-up-button {
+        padding: 10px;
+        font-size: 1em;
+        &:hover {
+            color: gray;
+        }
+    }
+
+    .field-down-button {
+        padding: 10px;
+        font-size: 1em;
+        &:hover {
+            color: gray;
+        }
+    }
+
+    .remove-field-button {
+        display: flex;
+        font-size: 1em;
+        color: #ff837a;
+        padding: 10px;
+        justify-content: center;
+        &:hover {
+            color: #ffb0ab;
+        }
+    }
+
+    .language-col {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .language-title {
+        display: inline-flex;
+        align-items: center;
+        font-weight: 700;
+        font-size: 0.9em;
+        margin-inline-start: 10px;
+        height: 100%;
+    }
+
+    .language-input {
+        padding: 10px;
+    }
+
+    .lang-input {
+        width: 300px;
+        background-color: white;
+    }
+}
