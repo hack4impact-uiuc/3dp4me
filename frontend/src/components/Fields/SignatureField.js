@@ -30,6 +30,7 @@ const SignatureField = ({
             value.signatureCanvasWidth,
             value.signatureCanvasHeight,
         );
+        console.log(data);
         signaturePad.fromData(data);
     }, [value, isModalOpen]);
 
@@ -100,7 +101,6 @@ const SignatureField = ({
                     src={value?.documentURL || documentURL}
                 />
             ) : null}
-            {value?.signatureData ? <canvas /> : null}
             <Modal open={isModalOpen} className="signature-modal">
                 <div>
                     <SignaturePadWrapper
@@ -133,14 +133,7 @@ const SignatureField = ({
             {/* if our we have a non-null image url we should 
             show an image and pass our imageURL state to it*/}
             <div className="sig-container">
-                {signatureURL ? (
-                    <img
-                        className="signature"
-                        src={signatureURL}
-                        alt="my signature"
-                    />
-                ) : null}
-
+                {value?.signatureData && !isModalOpen ? <canvas /> : null}
                 <view className="sig-ctl-container">
                     <Button
                         className="sig-ctl-button doc-btn"
