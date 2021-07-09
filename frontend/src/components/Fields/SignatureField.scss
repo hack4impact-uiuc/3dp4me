@@ -4,47 +4,55 @@
     display: block;
     border: 1px solid black;
     border-radius: 5px;
-    width: 300px;
+    width: 100%;
 }
 
 .sig-document {
     width: 40em;
 }
 
-.sig-ctl-container {
-    .sig-ctl-button {
-        background-color: $button;
-        color: white;
-        padding: 0 24px 0 24px;
-        height: 38px;
-        width: auto;
-        font-size: 12px;
-        font-weight: bold;
-        transition: all 0.2s;
-        border-radius: 2px;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
-        margin: 5px;
-    }
+.sig-container {
+    $sigContainerWidth: 350px;
+    width: $sigContainerWidth;
 
-    .doc-btn {
-        &:hover {
-            background-color: $buttonHighlight;
-        }
+    .sig-ctl-container {
+        display: flex;
+        flex-direction: row;
 
-        &:disabled {
-            background-color: $buttonHighlight;
+        .sig-ctl-button {
+            background-color: $button;
+            width: $sigContainerWidth / 2;
             color: white;
+            padding: 0 24px 0 24px;
+            height: 38px;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+            margin: 5px;
         }
-    }
 
-    .sign-btn {
-        &:hover {
-            background-color: $buttonHighlight;
+        .doc-btn {
+            &:hover {
+                background-color: $buttonHighlight;
+            }
+
+            &:disabled {
+                background-color: $buttonHighlight;
+                color: white;
+            }
         }
 
-        &:disabled {
-            background-color: $buttonHighlight;
-            color: white;
+        .sign-btn {
+            &:hover {
+                background-color: $buttonHighlight;
+            }
+
+            &:disabled {
+                background-color: $buttonHighlight;
+                color: white;
+            }
         }
     }
 }

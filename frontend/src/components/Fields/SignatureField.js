@@ -78,28 +78,31 @@ const SignatureField = ({
             </Modal>
             {/* if our we have a non-null image url we should 
             show an image and pass our imageURL state to it*/}
-            {value?.signatureURL ? (
-                <img
-                    className="signature"
-                    src={value?.signatureURL}
-                    alt="my signature"
-                />
-            ) : null}
-            <div className="sig-ctl-container">
-                <Button
-                    className="sig-ctl-button doc-btn"
-                    disabled={isDisabled}
-                    onClick={onToggleDocument}
-                >
-                    {isDocumentVisible ? 'Hide Document' : 'View Document'}
-                </Button>
-                <Button
-                    className="sig-ctl-button sign-btn"
-                    disabled={isDisabled}
-                    onClick={() => setIsModalOpen(true)}
-                >
-                    Sign
-                </Button>
+            <div className="sig-container">
+                {value?.signatureURL ? (
+                    <img
+                        className="signature"
+                        src={value?.signatureURL}
+                        alt="my signature"
+                    />
+                ) : null}
+
+                <view className="sig-ctl-container">
+                    <Button
+                        className="sig-ctl-button doc-btn"
+                        disabled={isDisabled}
+                        onClick={onToggleDocument}
+                    >
+                        {isDocumentVisible ? 'Hide Document' : 'View Document'}
+                    </Button>
+                    <Button
+                        className="sig-ctl-button sign-btn"
+                        disabled={isDisabled}
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        Sign
+                    </Button>
+                </view>
             </div>
         </div>
     );
