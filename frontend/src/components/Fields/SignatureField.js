@@ -1,10 +1,13 @@
+/* eslint-disable no-use-before-define */
+
 import './SignatureField.scss';
 import React, { useState, useRef, useEffect } from 'react';
 import SignaturePadWrapper from 'react-signature-canvas';
 import SignaturePad from 'signature_pad';
-import { Modal, Button, TextField as Text } from '@material-ui/core';
+import { Modal, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+
 import { LanguageDataType } from '../../utils/custom-proptypes';
 
 const SignatureField = ({
@@ -70,8 +73,6 @@ const SignatureField = ({
             return pointGroup;
         });
 
-        // canvas.width, canvas.height
-
         return formattedData;
     };
 
@@ -100,6 +101,7 @@ const SignatureField = ({
             <h3>{displayName}</h3>
             {isDocumentVisible ? (
                 <img
+                    alt="document"
                     className="sig-document"
                     src={value?.documentURL || documentURL}
                 />
@@ -163,10 +165,15 @@ const SignatureField = ({
 SignatureField.propTypes = {
     displayName: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
+    documentURL: PropTypes.string.isRequired,
     fieldId: PropTypes.string,
-    value: PropTypes.string,
+    value: PropTypes.shape({
+        signatureData: PropTypes.array,
+        signatureCanvasWidth: PropTypes.number,
+        signatureCanvasHeight: PropTypes.number,
+        documentURL: PropTypes.string,
+    }),
     languageData: LanguageDataType.isRequired,
-    type: PropTypes.string,
     onChange: PropTypes.func,
 };
 

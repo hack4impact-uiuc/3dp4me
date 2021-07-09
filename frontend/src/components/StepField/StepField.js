@@ -191,6 +191,9 @@ StepField.propTypes = {
         key: PropTypes.string.isRequired,
         fieldType: PropTypes.string.isRequired,
         options: PropTypes.arrayOf(PropTypes.string),
+        additionalData: PropTypes.shape({
+            defaultDocumentURL: PropTypes.string,
+        }),
     }),
 };
 
