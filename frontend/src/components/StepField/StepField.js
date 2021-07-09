@@ -13,6 +13,7 @@ import RadioButtonField from '../Fields/RadioButtonField';
 import DateField from '../Fields/DateField';
 import PhoneField from '../Fields/PhoneField';
 import FieldGroup from '../Fields/FieldGroup';
+import SignatureField from '../Fields/SignatureField';
 
 const StepField = ({
     metadata,
@@ -147,6 +148,21 @@ const StepField = ({
                         handleFileDelete={handleFileDelete}
                         fieldId={metadata.key}
                         value={value}
+                    />
+                );
+            case FIELD_TYPES.SIGNATURE:
+                return (
+                    <SignatureField
+                        langKey={langKey}
+                        languageData={languageData}
+                        displayName={displayName}
+                        isDisabled={isDisabled}
+                        onChange={handleSimpleUpdate}
+                        fieldId={metadata.key}
+                        value={value}
+                        documentURL={
+                            metadata?.additionalData?.defaultDocumentURL
+                        }
                     />
                 );
             case FIELD_TYPES.HEADER:

@@ -12269,6 +12269,14 @@ react-scripts@3.4.3:
   optionalDependencies:
     fsevents "2.1.2"
 
+react-signature-canvas@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-signature-canvas/-/react-signature-canvas-1.0.3.tgz#1eebe3395a206ff37015f5b557e5c0274587064b"
+  integrity sha512-6KBZFWLgjbnV80hh0sYW4ZKLJkojktP+de+xrnBGjB6HBK2dOoYH3rVxjtCvpMhjM/e4cqgAoQVz3lYdKCgWxw==
+  dependencies:
+    signature_pad "^2.3.2"
+    trim-canvas "^0.1.0"
+
 react-transition-group@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-1.2.1.tgz#e11f72b257f921b213229a774df46612346c7ca6"
@@ -12298,6 +12306,11 @@ react@^16.13.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
+
+reactjs-popup@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/reactjs-popup/-/reactjs-popup-2.0.5.tgz#588a74966bb126699429d739948e3448d7771eac"
+  integrity sha512-b5hv9a6aGsHEHXFAgPO5s1Jw1eSkopueyUVxQewGdLgqk2eW0IVXZrPRpHR629YcgIpC2oxtX8OOZ8a7bQJbxA==
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
@@ -13091,6 +13104,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.3.tgz#a1410c2edd8f077b08b4e253c8eacfcaf057461c"
   integrity sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
 
+signature_pad@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/signature_pad/-/signature_pad-2.3.2.tgz#ca7230021c89cedeead27b33d8d16ff254e5f04a"
+  integrity sha512-peYXLxOsIY6MES2TrRLDiNg2T++8gGbpP2yaC+6Ohtxr+a2dzoaqWosWDY9sWqTAAk6E/TyQO+LJw9zQwyu5kA==
+
 simple-assign@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/simple-assign/-/simple-assign-0.1.0.tgz#17fd3066a5f3d7738f50321bb0f14ca281cc4baa"
@@ -13855,6 +13873,11 @@ tr46@^1.0.1:
   integrity sha1-qLE/1r/SSJUZZ0zN5VujaTtwbQk=
   dependencies:
     punycode "^2.1.0"
+
+trim-canvas@^0.1.0:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/trim-canvas/-/trim-canvas-0.1.2.tgz#620457f5fecf564b521d35c5fcd4da58304d6e45"
+  integrity sha1-YgRX9f7PVktSHTXF/NTaWDBNbkU=
 
 ts-pnp@1.1.6:
   version "1.1.6"

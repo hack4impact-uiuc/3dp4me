@@ -71,6 +71,18 @@ const generateFieldSchema = (field) => {
                 required: true,
                 default: [],
             };
+        case fieldEnum.SIGNATURE:
+            if (!field?.additionalData?.defaultDocumentURL)
+                throw new Error('Signatures must have a default document');
+
+            return {
+                signatureURL: {
+                    type: String,
+                },
+                documentURL: {
+                    type: String,
+                },
+            };
         case fieldEnum.DIVIDER:
             return null;
         default:

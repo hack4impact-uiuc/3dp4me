@@ -1,0 +1,101 @@
+@import '../../styles/colors.scss';
+
+.signature {
+    display: block;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.sig-document {
+    width: 40em;
+}
+
+.sig-ctl-container {
+    .sig-ctl-button {
+        background-color: $button;
+        color: white;
+        padding: 0 24px 0 24px;
+        height: 38px;
+        width: auto;
+        font-size: 12px;
+        font-weight: bold;
+        transition: all 0.2s;
+        border-radius: 2px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+        margin: 5px;
+    }
+
+    .doc-btn {
+        &:hover {
+            background-color: $buttonHighlight;
+        }
+
+        &:disabled {
+            background-color: $buttonHighlight;
+            color: white;
+        }
+    }
+
+    .sign-btn {
+        &:hover {
+            background-color: $buttonHighlight;
+        }
+
+        &:disabled {
+            background-color: $buttonHighlight;
+            color: white;
+        }
+    }
+}
+
+.signature-modal {
+    background-color: white;
+
+    .signature-canvas {
+        border: 1px solid black;
+        background-color: white;
+        width: 100%;
+        min-height: 500px;
+    }
+
+    .signature-button {
+        background-color: $button;
+        color: white;
+        padding: 0 24px 0 24px;
+        height: 38px;
+        width: auto;
+        font-size: 12px;
+        font-weight: bold;
+        transition: all 0.2s;
+        border-radius: 2px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+        margin: 5px;
+    }
+
+    .save-signature {
+        &:hover {
+            background-color: $buttonHighlight;
+        }
+    }
+
+    .clear-signature {
+        background-color: white;
+        color: #5f5f5f;
+        padding: 6px 24px 6px 24px;
+        &:hover {
+            color: black;
+            background-color: white;
+        }
+    }
+
+    .close-signature {
+        background-color: white;
+        color: #5f5f5f;
+        padding: 6px 24px 6px 24px;
+        &:hover {
+            color: black;
+            background-color: white;
+        }
+    }
+}
