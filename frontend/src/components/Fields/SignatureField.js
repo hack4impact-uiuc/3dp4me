@@ -5,19 +5,23 @@ import SignaturePad from 'signature_pad';
 import { Modal, Button, TextField as Text } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { LanguageDataType } from '../../utils/custom-proptypes';
 
 const SignatureField = ({
     displayName,
     isDisabled,
     documentURL,
+    languageData,
     fieldId = '',
     value = '',
     onChange = () => {},
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDocumentVisible, setIsDocumentVisible] = useState(false);
-    const [signatureURL, setSignatureURL] = useState(null);
     const sigCanvas = useRef({});
+
+    const key = languageData.selectedLanguage;
+    const lang = languageData.translations[key];
 
     useEffect(() => {
         if (!value?.signatureData || isModalOpen) return;
@@ -30,7 +34,7 @@ const SignatureField = ({
             value.signatureCanvasWidth,
             value.signatureCanvasHeight,
         );
-        console.log(data);
+
         signaturePad.fromData(data);
     }, [value, isModalOpen]);
 
@@ -47,17 +51,16 @@ const SignatureField = ({
         const formattedData = data.map((points) => {
             const pointGroup = { color: 'black' };
             let formattedPoints = points.map((point) => _.omit(point, 'color'));
-            // TODO: Handle no points
-            let firstTimestamp =
+            const firstTimestamp =
                 formattedPoints.length > 0 ? formattedPoints[0].time : 0;
 
             formattedPoints = formattedPoints.map((point) => {
-                let newPoint = {};
+                const newPoint = {};
                 newPoint.x = (point.x / originalCanvasWidth) * canvas.width;
                 newPoint.y = (point.y / originalCanvasHeight) * canvas.height;
 
-                let scaleFactor = canvas.width / originalCanvasWidth;
-                let deltaT = point.time - firstTimestamp;
+                const scaleFactor = canvas.width / originalCanvasWidth;
+                const deltaT = point.time - firstTimestamp;
                 newPoint.time = firstTimestamp + deltaT * scaleFactor;
 
                 return newPoint;
@@ -114,24 +117,24 @@ const SignatureField = ({
                         className="signature-button save-signature"
                         onClick={save}
                     >
-                        Save
+                        {lang.components.signature.save}
                     </Button>
                     <Button
                         className="signature-button clear-signature"
                         onClick={clear}
                     >
-                        Clear
+                        {lang.components.signature.clear}
                     </Button>
                     <Button
                         className="signature-button close-signature"
                         onClick={() => setIsModalOpen(false)}
                     >
-                        Close
+                        {lang.components.signature.close}
                     </Button>
                 </div>
             </Modal>
             {/* if our we have a non-null image url we should 
-            show an image and pass our imageURL state to it*/}
+            show an image and pass our imageURL state to it */}
             <div className="sig-container">
                 {value?.signatureData && !isModalOpen ? <canvas /> : null}
                 <view className="sig-ctl-container">
@@ -140,14 +143,16 @@ const SignatureField = ({
                         disabled={isDisabled}
                         onClick={onToggleDocument}
                     >
-                        {isDocumentVisible ? 'Hide Document' : 'View Document'}
+                        {isDocumentVisible
+                            ? lang.components.signature.hideDoc
+                            : lang.components.signature.viewDoc}
                     </Button>
                     <Button
                         className="sig-ctl-button sign-btn"
                         disabled={isDisabled}
                         onClick={() => setIsModalOpen(true)}
                     >
-                        Sign
+                        {lang.components.signature.sign}
                     </Button>
                 </view>
             </div>
@@ -160,6 +165,7 @@ SignatureField.propTypes = {
     isDisabled: PropTypes.bool.isRequired,
     fieldId: PropTypes.string,
     value: PropTypes.string,
+    languageData: LanguageDataType.isRequired,
     type: PropTypes.string,
     onChange: PropTypes.func,
 };
