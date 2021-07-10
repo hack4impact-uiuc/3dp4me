@@ -88,7 +88,8 @@ const SignatureField = ({
         onChange(`${fieldId}.signatureData`, sigCanvas.current.toData());
         onChange(`${fieldId}.signatureCanvasWidth`, canvas.width);
         onChange(`${fieldId}.signatureCanvasHeight`, canvas.height);
-        onChange(`${fieldId}.documentURL`, documentURL);
+        onChange(`${fieldId}.documentURL.EN`, documentURL.EN);
+        onChange(`${fieldId}.documentURL.AR`, documentURL.AR);
         setIsModalOpen(false);
     };
 
@@ -96,16 +97,29 @@ const SignatureField = ({
         setIsDocumentVisible((visible) => !visible);
     };
 
-    return (
-        <div className="signature-container">
-            <h3>{displayName}</h3>
-            {isDocumentVisible ? (
+    const renderDocuments = () => {
+        if (!isDocumentVisible) return;
+
+        return (
+            <div>
                 <img
                     alt="document"
                     className="sig-document"
-                    src={value?.documentURL || documentURL}
+                    src={value?.documentURL?.EN || documentURL?.EN}
                 />
-            ) : null}
+                <img
+                    alt="document"
+                    className="sig-document"
+                    src={value?.documentURL?.AR || documentURL?.AR}
+                />
+            </div>
+        );
+    };
+
+    return (
+        <div className="signature-container">
+            <h3>{displayName}</h3>
+            {renderDocuments()}
             <Modal open={isModalOpen} className="signature-modal">
                 <div>
                     <SignaturePadWrapper
@@ -165,13 +179,19 @@ const SignatureField = ({
 SignatureField.propTypes = {
     displayName: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
-    documentURL: PropTypes.string.isRequired,
+    documentURL: PropTypes.shape({
+        EN: PropTypes.string,
+        AR: PropTypes.string,
+    }).isRequired,
     fieldId: PropTypes.string,
     value: PropTypes.shape({
         signatureData: PropTypes.array,
         signatureCanvasWidth: PropTypes.number,
         signatureCanvasHeight: PropTypes.number,
-        documentURL: PropTypes.string,
+        documentURL: PropTypes.shape({
+            EN: PropTypes.string,
+            AR: PropTypes.string,
+        }),
     }),
     languageData: LanguageDataType.isRequired,
     onChange: PropTypes.func,
