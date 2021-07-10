@@ -98,7 +98,7 @@ const SignatureField = ({
     };
 
     const renderDocuments = () => {
-        if (!isDocumentVisible) return;
+        if (!isDocumentVisible) return null;
 
         return (
             <div>
