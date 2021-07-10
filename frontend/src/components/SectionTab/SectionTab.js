@@ -14,6 +14,7 @@ import {
     drawerWidth,
     verticalMovementWidth,
 } from '../../styles/variables.scss';
+import { resolveMixedObjPath } from '../../utils/object';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -58,11 +59,24 @@ const SectionTab = ({ languageData }) => {
     }
 
     function SortMetadata(stepMetaData) {
-        const data = stepMetaData.sort((a, b) => a.stepNumber - b.stepNumber);
+        const data = stepMetaData?.sort(
+            (a, b) => a?.stepNumber - b?.stepNumber,
+        );
         data.forEach((stepData) => {
-            stepData.fields.sort((a, b) => a.fieldNumber - b.fieldNumber);
+            stepData.fields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
+            SortSubFields(stepData?.fields);
         });
+
         return data;
+    }
+
+    function SortSubFields(fields) {
+        if (!fields) return;
+
+        fields.forEach((field) => {
+            field.subFields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
+            SortSubFields(field?.subFields?.subFields);
+        });
     }
 
     function onDownPressed(stepKey) {
@@ -81,18 +95,16 @@ const SectionTab = ({ languageData }) => {
         }
     }
 
-    function onCardDownPressed(stepKey, fieldKey) {
+    function onCardDownPressed(stepKey, fieldRoot, fieldNumber) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
         const foundStep = updatedMetadata.find(
             (field) => field.key === stepKey,
         );
-        const foundField = foundStep.fields.find(
-            (field) => field.key === fieldKey,
-        );
-        const afterField = foundStep.fields.find(
-            (field) => field.fieldNumber === foundField.fieldNumber + 1,
-        );
-        if (foundField.fieldNumber !== updatedMetadata.length - 1) {
+        const root = resolveMixedObjPath(foundStep, fieldRoot);
+        const foundField = root.find((f) => f.fieldNumber === fieldNumber);
+        const afterField = root.find((f) => f.fieldNumber === fieldNumber + 1);
+
+        if (foundField && afterField) {
             foundField.fieldNumber += 1;
             afterField.fieldNumber -= 1;
             const sortedMetadata = SortMetadata(updatedMetadata);
@@ -108,7 +120,8 @@ const SectionTab = ({ languageData }) => {
         const beforeField = updatedMetadata.find(
             (field) => field.stepNumber === foundField.stepNumber - 1,
         );
-        if (foundField.stepNumber !== 0) {
+
+        if (foundField && beforeField) {
             foundField.stepNumber -= 1;
             beforeField.stepNumber += 1;
             const sortedMetadata = SortMetadata(updatedMetadata);
@@ -116,17 +129,14 @@ const SectionTab = ({ languageData }) => {
         }
     }
 
-    function onCardUpPressed(stepKey, fieldKey) {
+    function onCardUpPressed(stepKey, fieldRoot, fieldNumber) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
         const foundStep = updatedMetadata.find(
             (field) => field.key === stepKey,
         );
-        const foundField = foundStep.fields.find(
-            (field) => field.key === fieldKey,
-        );
-        const beforeField = foundStep.fields.find(
-            (field) => field.fieldNumber === foundField.fieldNumber - 1,
-        );
+        const root = resolveMixedObjPath(foundStep, fieldRoot);
+        const foundField = root.find((f) => f.fieldNumber === fieldNumber);
+        const beforeField = root.find((f) => f.fieldNumber === fieldNumber - 1);
         if (foundField.fieldNumber !== 0) {
             foundField.fieldNumber -= 1;
             beforeField.fieldNumber += 1;

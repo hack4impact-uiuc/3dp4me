@@ -42,28 +42,42 @@ const StepManagementContent = ({
         }
     };
 
-    const renderEditButtons = (field) => {
+    const renderEditButtons = (field, fieldRoot, fieldNumber) => {
         if (!isEditing) return null;
+
+        // This is just some notation we defined to allow us to specify array fields... see resolveMixedObjPath
+        //const key = `${fieldPath}[x['key']==='${field.key}']`;
+        //const root = `${fieldRoot}[x['fieldNumber']===${fieldNumber}].subFields`;
 
         return (
             <div className="buttons">
                 <div
                     className="edit-field-button"
-                    onClick={() => onEditField(stepMetadata.key, field.key)}
+                    onClick={() => onEditField(stepMetadata.key, key)}
                 >
                     <i className="pencil alternate icon" />
                 </div>
 
                 <div className="reorder-buttons">
                     <div
-                        onClick={() => onUpPressed(stepMetadata.key, field.key)}
+                        onClick={() =>
+                            onUpPressed(
+                                stepMetadata.key,
+                                fieldRoot,
+                                fieldNumber,
+                            )
+                        }
                         className="up-button"
                     >
                         <i className="chevron up icon" />
                     </div>
                     <div
                         onClick={() =>
-                            onDownPressed(stepMetadata.key, field.key)
+                            onDownPressed(
+                                stepMetadata.key,
+                                fieldRoot,
+                                fieldNumber,
+                            )
                         }
                         className="down-button"
                     >
@@ -74,17 +88,18 @@ const StepManagementContent = ({
         );
     };
 
-    function generateSubfieldInfo(field) {
+    function generateSubfieldInfo(field, fieldRoot, fieldNumber) {
         if (!field?.subFields?.length) return null;
 
+        const root = `${fieldRoot}[x['fieldNumber']===${fieldNumber}].subFields`;
         return (
             <div className="subfield-container">
-                {generateButtonInfo(field.subFields)}
+                {generateButtonInfo(field.subFields, root)}
             </div>
         );
     }
 
-    function generateButtonInfo(fields) {
+    function generateButtonInfo(fields, fieldRoot) {
         if (!fields) return null;
 
         return fields.map((field) => {
@@ -107,10 +122,14 @@ const StepManagementContent = ({
                                 {formatRoles(field.writableGroups)}
                             </div>
 
-                            {generateSubfieldInfo(field)}
+                            {generateSubfieldInfo(
+                                field,
+                                fieldRoot,
+                                field.fieldNumber,
+                            )}
                         </div>
 
-                        {renderEditButtons(field)}
+                        {renderEditButtons(field, fieldRoot, field.fieldNumber)}
                     </div>
 
                     {renderBottomSection(field)}
@@ -121,7 +140,7 @@ const StepManagementContent = ({
 
     return (
         <div className="content-container">
-            {generateButtonInfo(stepMetadata?.fields)}
+            {generateButtonInfo(stepMetadata?.fields, 'fields')}
         </div>
     );
 };
