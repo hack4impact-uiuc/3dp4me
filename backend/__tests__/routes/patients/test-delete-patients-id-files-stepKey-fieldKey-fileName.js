@@ -14,8 +14,8 @@ const {
 
 describe('DELETE /patients/:id/files/:stepKey/:fieldKey/:fileName #214', () => {
     const STEP_KEY = 'example';
-    const PATIENT_ID_MISSING_DATA = '60944e084f4c0d4330cc258d';
-    const PATIENT_ID_WITH_DATA = '60944e084f4c0d4330cc258d';
+    const FIELD_KEY = 'file';
+    const PATIENT_ID_WITH_ONE_FILE = '60944e084f4c0d4330cc258b';
 
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
@@ -49,29 +49,75 @@ describe('DELETE /patients/:id/files/:stepKey/:fieldKey/:fileName #214', () => {
     it('returns 404 when given bad stepKey', (done) => {
         withAuthentication(
             request(server).delete(
-                `/api/patients/${PATIENT_ID_MISSING_DATA}/badstep/file/filename`,
+                `/api/patients/${PATIENT_ID_WITH_ONE_FILE}/badstep/file/filename`,
             ),
         ).expect(404, done);
     });
 
-    it('delete one file from step 2', async () => {
-        const STEP_KEY = 'example';
-        const FIELD_KEY = 'file';
-        const PATIENT_ID = '60944e084f4c0d4330cc258b';
+    it('returns 404 when given nonexistent file', (done) => {
+        withAuthentication(
+            request(server).delete(
+                `/api/patients/${PATIENT_ID_WITH_ONE_FILE}/${STEP_KEY}/file/badfilename`,
+            ),
+        ).expect(404, done);
+    });
+
+    it('delete file from step with one file', async () => {
+        const startTimestamp = Date.now();
         const FILE_NAME = 'utilisation_modular.ssf';
-        const url = `api/patients/${PATIENT_ID}/files/${STEP_KEY}/${FIELD_KEY}/${FILE_NAME}`;
-        console.log(url);
+        const original_step = await mongoose.connection.db
+            .collection(STEP_KEY)
+            .findOne({ patientId: PATIENT_ID_WITH_ONE_FILE });
+        const expected_file_output = original_step.file;
+        expected_file_output.shift();
 
         const res = await withAuthentication(
             request(server).delete(
-                `/api/patients/${PATIENT_ID}/files/${STEP_KEY}/${FIELD_KEY}/${FILE_NAME}`,
+                `/api/patients/${PATIENT_ID_WITH_ONE_FILE}/files/${STEP_KEY}/${FIELD_KEY}/${FILE_NAME}`,
             ),
         );
         expect(res.status).toBe(200);
 
-        const step = await mongoose.connection.db
-            .collection('example')
-            .findOne({ patientId: PATIENT_ID });
-        expect(step.file).toStrictEqual([]);
+        const modified_step = await mongoose.connection.db
+            .collection(STEP_KEY)
+            .findOne({ patientId: PATIENT_ID_WITH_ONE_FILE });
+
+        expect(modified_step.file).toStrictEqual(expected_file_output);
+        expect(modified_step.lastEditedBy).toBe(
+            getCurrentAuthenticatedUserAttribute('name'),
+        );
+        expect(modified_step.lastEdited).toBeGreaterThanOrEqual(startTimestamp);
+        expect(modified_step.lastEdited).toBeLessThanOrEqual(Date.now());
+    });
+
+    it('delete file from step with more than one file', async () => {
+        const startTimestamp = Date.now();
+        const FILE_NAME = 'intelligent_encompassing.cpio';
+        const PATIENT_ID_WITH_MANY_FILES = '60944e084f4c0d4330cc258c';
+        const original_step = await mongoose.connection.db
+            .collection(STEP_KEY)
+            .findOne({ patientId: PATIENT_ID_WITH_MANY_FILES });
+        const expected_file_output = original_step.file;
+        expected_file_output.shift();
+
+        const res = await withAuthentication(
+            request(server).delete(
+                `/api/patients/${PATIENT_ID_WITH_MANY_FILES}/files/${STEP_KEY}/${FIELD_KEY}/${FILE_NAME}`,
+            ),
+        );
+        expect(res.status).toBe(200);
+
+        const modified_step = await mongoose.connection.db
+            .collection(STEP_KEY)
+            .findOne({ patientId: PATIENT_ID_WITH_MANY_FILES });
+
+        expect(modified_step.file).toStrictEqual(expected_file_output);
+        expect(modified_step.lastEditedBy).toBe(
+            getCurrentAuthenticatedUserAttribute('name'),
+        );
+        expect(modified_step.lastEdited).toBeGreaterThanOrEqual(startTimestamp);
+        expect(modified_step.lastEdited).toBeLessThanOrEqual(Date.now());
     });
 });
+
+//helper function/modularization
