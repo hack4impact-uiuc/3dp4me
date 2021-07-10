@@ -12,6 +12,7 @@
     .step-field-container {
         background-color: #f6f6f6;
         border: #f6f6f6 solid 1px;
+        width: 100%;
         border-radius: 10px;
         margin: 7px;
         padding: 1px;
@@ -20,11 +21,22 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
+            width: 100%;
             padding: 9px;
 
             .info {
+                width: 100%;
                 display: flex;
                 flex-direction: column;
+
+                .subfield-container {
+                    display: flex;
+                    flex-direction: row;
+                    background: rgba(255, 255, 255, 1);
+                    margin-top: 10px;
+                    padding: 10px;
+                    border-radius: 10px;
+                }
             }
 
             .buttons {

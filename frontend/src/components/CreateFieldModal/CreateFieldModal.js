@@ -94,150 +94,67 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
     };
 
     const generateFields = () => {
-        if (
-            fieldType === FIELD_TYPES.STRING ||
-            fieldType === FIELD_TYPES.MULTILINE_STRING ||
-            fieldType === FIELD_TYPES.DATE ||
-            fieldType === FIELD_TYPES.PHONE ||
-            fieldType === FIELD_TYPES.NUMBER
-        ) {
-            return (
-                <div style={{ fontSize: '17px', textAlign: 'left' }}>
+        let inputTitle = 'Quesetion';
+        switch (fieldType) {
+            case FIELD_TYPES.STRING:
+            case FIELD_TYPES.MULTILINE_STRING:
+            case FIELD_TYPES.DATE:
+            case FIELD_TYPES.PHONE:
+            case FIELD_TYPES.NUMBER:
+            case FIELD_TYPES.FILE:
+            case FIELD_TYPES.AUDIO:
+                return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                        <span>Question</span>
                         <LanguageInput />
                     </div>
-                </div>
-            );
-        }
-        if (
-            fieldType === FIELD_TYPES.RADIO_BUTTON ||
-            fieldType === FIELD_TYPES.DROPDOWN
-        ) {
-            return (
-                <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                    <span>Question</span>
-                    <LanguageInput />
-                    {generateChoices()}
-                    <Button onClick={incrementChoices}>
-                        {lang.components.swal.createField.buttons.addChoice}
-                    </Button>
-                </div>
-            );
-        }
-        if (fieldType === FIELD_TYPES.FILE) {
-            // Need to update this to allow for collection of a file
-            return null;
-        }
-        if (fieldType === FIELD_TYPES.DIVIDER) {
-            return (
-                <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                );
+            case FIELD_TYPES.RADIO_BUTTON:
+            case FIELD_TYPES.DROPDOWN:
+                return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <Grid>
-                            <Row>
-                                <Col style={{ padding: 10 }}>
-                                    <div
-                                        style={{
-                                            fontSize: '12px',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span>
-                                            {
-                                                lang.components.swal.createField
-                                                    .arabicDividerName
-                                            }
-                                        </span>
-                                    </div>
-                                    <TextField
-                                        size="small"
-                                        fullWidth
-                                        style={{ padding: 10 }}
-                                        variant="outlined"
-                                    />
-                                </Col>
-                                <Col style={{ padding: 10 }}>
-                                    <div
-                                        style={{
-                                            fontSize: '12px',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span>
-                                            {
-                                                lang.components.swal.createField
-                                                    .englishDividerName
-                                            }
-                                        </span>
-                                    </div>
-                                    <TextField
-                                        size="small"
-                                        fullWidth
-                                        style={{ padding: 10 }}
-                                        variant="outlined"
-                                    />
-                                </Col>
-                            </Row>
-                        </Grid>
+                        <span>Question</span>
+                        <LanguageInput />
+                        {generateChoices()}
+                        <Button onClick={incrementChoices}>
+                            {lang.components.swal.createField.buttons.addChoice}
+                        </Button>
                     </div>
-                </div>
-            );
-        }
-        if (fieldType === FIELD_TYPES.HEADER) {
-            return (
-                <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                );
+            case FIELD_TYPES.DIVIDER:
+                return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <Grid>
-                            <Row>
-                                <Col style={{ padding: 10 }}>
-                                    <div
-                                        style={{
-                                            fontSize: '12px',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span>
-                                            {
-                                                lang.components.swal.createField
-                                                    .arabicHeaderName
-                                            }
-                                        </span>
-                                    </div>
-                                    <TextField
-                                        size="small"
-                                        fullWidth
-                                        style={{ padding: 10 }}
-                                        variant="outlined"
-                                    />
-                                </Col>
-                                <Col style={{ padding: 10 }}>
-                                    <div
-                                        style={{
-                                            fontSize: '12px',
-                                            textAlign: 'left',
-                                        }}
-                                    >
-                                        <span>
-                                            {
-                                                lang.components.swal.createField
-                                                    .englishHeaderName
-                                            }
-                                        </span>
-                                    </div>
-                                    <TextField
-                                        size="small"
-                                        fullWidth
-                                        style={{ padding: 10 }}
-                                        variant="outlined"
-                                    />
-                                </Col>
-                            </Row>
-                        </Grid>
+                        <span>Divider Title</span>
+                        <LanguageInput />
                     </div>
-                </div>
+                );
+            case FIELD_TYPES.HEADER:
+                return (
+                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                        <span>Header Title</span>
+                        <LanguageInput />
+                    </div>
+                );
+            // case FIELD_TYPES.FIELD_GROUP:
+            //     return (
+            //        <div>Add Field</div>
+            //     )
+            default:
+                return <p>This field is not yet supported</p>;
+        }
+    };
+
+    const generateFieldDropdownOptions = () => {
+        const options = [];
+        for (const [key, value] of Object.entries(FIELD_TYPES)) {
+            options.push(
+                <option value={value} className="create-field-option">
+                    {value}
+                </option>,
             );
         }
 
-        return null;
+        return options;
     };
 
     return (
@@ -268,66 +185,7 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                                 defaultValue={fieldType}
                                 input={<BootstrapInput />}
                             >
-                                <option
-                                    value={FIELD_TYPES.STRING}
-                                    className="create-field-option"
-                                >
-                                    {FIELD_TYPES.STRING}
-                                </option>
-                                <option
-                                    value={FIELD_TYPES.MULTILINE_STRING}
-                                    className="create-field-option"
-                                >
-                                    {FIELD_TYPES.MULTILINE_STRING}
-                                </option>
-                                <option
-                                    value={FIELD_TYPES.FILE}
-                                    className="create-field-option"
-                                >
-                                    {FIELD_TYPES.FILE}
-                                </option>
-                                <option
-                                    value={FIELD_TYPES.NUMBER}
-                                    className="create-field-option"
-                                >
-                                    {FIELD_TYPES.NUMBER}
-                                </option>
-                                <option
-                                    value={FIELD_TYPES.DATE}
-                                    className="create-field-option"
-                                >
-                                    {FIELD_TYPES.DATE}
-                                </option>
-                                <option
-                                    value={FIELD_TYPES.PHONE}
-                                    className="create-field-option"
-                                >
-                                    {FIELD_TYPES.PHONE}
-                                </option>
-                                <option
-                                    value={FIELD_TYPES.DIVIDER}
-                                    className="create-field-option"
-                                >
-                                    {FIELD_TYPES.DIVIDER}
-                                </option>
-                                <option
-                                    value={FIELD_TYPES.HEADER}
-                                    className="create-field-option"
-                                >
-                                    {FIELD_TYPES.HEADER}
-                                </option>
-                                <option
-                                    value={FIELD_TYPES.RADIO_BUTTON}
-                                    className="create-field-option"
-                                >
-                                    {FIELD_TYPES.RADIO_BUTTON}
-                                </option>
-                                <option
-                                    value={FIELD_TYPES.DROPDOWN}
-                                    className="create-field-option"
-                                >
-                                    {FIELD_TYPES.DROPDOWN}
-                                </option>
+                                {generateFieldDropdownOptions()}
                             </NativeSelect>
                         </FormControl>
                     </div>

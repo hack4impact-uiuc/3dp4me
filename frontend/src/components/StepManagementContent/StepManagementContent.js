@@ -74,8 +74,20 @@ const StepManagementContent = ({
         );
     };
 
-    function generateButtonInfo() {
-        return stepMetadata?.fields?.map((field) => {
+    function generateSubfieldInfo(field) {
+        if (!field?.subFields?.length) return null;
+
+        return (
+            <div className="subfield-container">
+                {generateButtonInfo(field.subFields)}
+            </div>
+        );
+    }
+
+    function generateButtonInfo(fields) {
+        if (!fields) return null;
+
+        return fields.map((field) => {
             return (
                 <div className="step-field-container">
                     <div className="content">
@@ -94,6 +106,8 @@ const StepManagementContent = ({
                                 Writable Roles:{' '}
                                 {formatRoles(field.writableGroups)}
                             </div>
+
+                            {generateSubfieldInfo(field)}
                         </div>
 
                         {renderEditButtons(field)}
@@ -105,7 +119,11 @@ const StepManagementContent = ({
         });
     }
 
-    return <div className="content-container">{generateButtonInfo()}</div>;
+    return (
+        <div className="content-container">
+            {generateButtonInfo(stepMetadata?.fields)}
+        </div>
+    );
 };
 
 StepManagementContent.propTypes = {
