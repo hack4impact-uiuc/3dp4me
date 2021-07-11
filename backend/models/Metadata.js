@@ -65,6 +65,10 @@ const fieldSchema = new mongoose.Schema({
     },
     readableGroups: { type: [String], required: true, default: [] },
     writableGroups: { type: [String], required: true, default: [] },
+
+    // This field is for any additional data that doesn't fit in this schema. Try to avoid using this if possible.
+    // If you must use this, add asserts to generateFieldSchema to make sure this has the proper data
+    additionalData: { type: mongoose.Schema.Types.Mixed, required: false },
 });
 
 fieldSchema.add({

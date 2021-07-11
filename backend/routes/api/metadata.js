@@ -3,6 +3,7 @@ const router = express.Router();
 const isValidNumber = require('libphonenumber-js');
 const { errorWrap } = require('../../utils');
 const { getFieldByKey } = require('../../utils/step-utils');
+const { signatureSchema } = require('../../models/StepSchemaSubmodel');
 const {
     models,
     fileSchema,
@@ -71,6 +72,14 @@ const generateFieldSchema = (field) => {
                 required: true,
                 default: [],
             };
+        case fieldEnum.SIGNATURE:
+            const defaultURL = field?.additionalData?.defaultDocumentURL;
+            if (!defaultURL?.EN || !defaultURL?.AR)
+                throw new Error(
+                    'Signatures must have a default document for both English and Arabic',
+                );
+
+            return { type: signatureSchema };
         case fieldEnum.DIVIDER:
             return null;
         default:
