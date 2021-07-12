@@ -5,6 +5,14 @@
                 "authLoading": "Authenticating User",
                 "signOut": "Sign Out"
             },
+            "signature": {
+                "save": "Save",
+                "clear": "Clear",
+                "close": "Close",
+                "sign": "Sign",
+                "hideDoc": "Hide document",
+                "viewDoc": "Show document"
+            },
             "navbar": {
                 "dashboard": {
                     "navTitle": "Dashboard"
@@ -76,6 +84,9 @@
             "selectQuestionFormat": {
                 "allQuestions": "All Questions",
                 "singleQuestion": "Single Question"
+            },
+            "fieldGroup": {
+                "add": "Add"
             },
             "button": {
                 "createPatient": "Create Patient",
@@ -258,6 +269,14 @@
                 "authLoading": "مصادقة المستخدم",
                 "signOut": "Sign Out"
             },
+            "signature": {
+                "save": "يحفظ",
+                "clear": "صافي",
+                "close": "يغلق",
+                "sign": "لافتة",
+                "hideDoc": "إخفاء المستند",
+                "viewDoc": "عرض المستند"
+            },
             "navbar": {
                 "dashboard": {
                     "navTitle": "\u0644\u0648\u062d\u0629 \u0627\u0644\u0642\u064a\u0627\u062f\u0629"
@@ -329,6 +348,9 @@
             "selectQuestionFormat": {
                 "allQuestions": "All Questions",
                 "singleQuestion": "Single Question"
+            },
+            "fieldGroup": {
+                "add": "يضيف"
             },
             "button": {
                 "createPatient": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",

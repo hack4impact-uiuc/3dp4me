@@ -17,7 +17,8 @@
         "prettier": "^2.2.1"
     },
     "scripts": {
-        "check-sensitive-files": "sh ./check-sensitive-files.sh",
+        "init-repo": "chmod +x ./scripts/init-repo && ./scripts/init-repo.sh",
+        "check-sensitive-files": "chmod +x ./scripts/check-sensitive-files.sh && ./scripts/check-sensitive-files.sh",
         "format": "prettier --write '{client/**/*.{js,jsx,css,scss,json,md},api/**/*.{js,jsx,json,md}}'",
         "gen-db": "node scripts/generate-db-data.js"
     },

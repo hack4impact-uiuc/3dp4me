@@ -25,6 +25,7 @@ import {
     TableHeaderType,
 } from '../../utils/custom-proptypes';
 import { PATIENT_STATUS } from '../../utils/constants';
+import { formatDate } from '../../utils/date';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -100,6 +101,14 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                 {lang.components.bottombar.feedback}
             </div>
         ),
+    };
+
+    const getPatientField = (patient, fieldKey) => {
+        const rawData = resolveObjPath(patient, fieldKey);
+        if (fieldKey === 'lastEdited')
+            return formatDate(new Date(rawData), key);
+
+        return rawData;
     };
 
     return (
@@ -185,7 +194,7 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                                                 )}
                                             </>
                                         ) : (
-                                            resolveObjPath(patient, id)
+                                            getPatientField(patient, id)
                                         )}
                                     </StyledTableCell>
                                 ))}

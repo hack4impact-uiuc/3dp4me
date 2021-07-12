@@ -58,6 +58,16 @@ const parseUserName = (user) => {
     return userNameString;
 };
 
+const parseUserEmail = (user) => {
+    const name = user?.UserAttributes?.find(
+        (attribute) => attribute.Name === 'email',
+    );
+
+    if (!name?.Value) return '';
+
+    return name.Value;
+};
+
 const requireAuthentication = async (req, res, next) => {
     try {
         const accessToken = req.headers.authorization.split(' ')[1];

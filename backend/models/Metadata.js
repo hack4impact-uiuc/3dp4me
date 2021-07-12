@@ -15,6 +15,7 @@ const fieldEnum = {
     AUDIO: 'Audio',
     SIGNATURE: 'Signature',
     PHOTO: 'Photo',
+    FIELD_GROUP: 'FieldGroup',
 };
 
 const languageSchema = new mongoose.Schema({
@@ -22,7 +23,7 @@ const languageSchema = new mongoose.Schema({
     AR: { type: String, required: true },
 });
 
-const validateOptions = async (questionOptionSchema) => {
+const validateOptions = (questionOptionSchema) => {
     var questionIndex = Object.create(null);
     for (var i = 0; i < questionOptionSchema.length; ++i) {
         var value = questionOptionSchema[i];
@@ -57,16 +58,28 @@ const fieldSchema = new mongoose.Schema({
         },
         required: false,
     },
-    isVisibleOnDashboard: { type: Boolean, required: true },
+    isVisibleOnDashboard: { type: Boolean, required: true, default: false },
     displayName: {
         EN: { type: String, required: true },
         AR: { type: String, required: true },
     },
-    readableGroups: { type: [String], required: true },
-    writableGroups: { type: [String], required: true },
+    readableGroups: { type: [String], required: true, default: [] },
+    writableGroups: { type: [String], required: true, default: [] },
+
+    // This field is for any additional data that doesn't fit in this schema. Try to avoid using this if possible.
+    // If you must use this, add asserts to generateFieldSchema to make sure this has the proper data
+    additionalData: { type: mongoose.Schema.Types.Mixed, required: false },
 });
 
-const validateStep = async (fieldSchema) => {
+fieldSchema.add({
+    // Yes, this is a recursive schema. Yes, I am ashamed of what I have done
+    subFields: {
+        type: [fieldSchema],
+        required: false,
+    },
+});
+
+const validateStep = (fieldSchema) => {
     var fieldNumbers = Object.create(null);
     var fieldKeys = Object.create(null);
     for (var i = 0; i < fieldSchema.length; ++i) {
@@ -80,13 +93,32 @@ const validateStep = async (fieldSchema) => {
     return true;
 };
 
+// Take in session from transaction to check database
+const isUniqueStepNumber = async (value, stepKey, session) => {
+    const step = await mongoose.connection.db
+        .collection('steps')
+        .find({ stepNumber: value }, { session: session })
+        .toArray();
+
+    if (step.length >= 2) {
+        return false;
+    } else if (step.length == 0) {
+        return true;
+    }
+
+    return step[0].key === stepKey;
+};
+
 const stepSchema = new mongoose.Schema({
     key: { type: String, required: true, unique: true },
     displayName: {
         EN: { type: String, required: true },
         AR: { type: String, required: true },
     },
-    stepNumber: { type: Number, required: true, unique: true },
+    stepNumber: {
+        type: Number,
+        required: true,
+    },
     fields: {
         type: [fieldSchema],
         required: true,
@@ -101,5 +133,16 @@ const stepSchema = new mongoose.Schema({
     defaultToListView: { type: Boolean, default: true },
 });
 
+// Add validator to run during other that change stepNumber
+stepSchema.path('stepNumber').validate(async function () {
+    return await isUniqueStepNumber(this.stepNumber, this.key);
+});
+
 const Step = mongoose.model('steps', stepSchema);
-module.exports = { Step, fieldEnum, questionOptionSchema, validateOptions };
+module.exports = {
+    Step,
+    isUniqueStepNumber,
+    fieldEnum,
+    questionOptionSchema,
+    validateOptions,
+};

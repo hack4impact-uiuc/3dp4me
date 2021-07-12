@@ -39,6 +39,8 @@ export const FIELD_TYPES = {
     RADIO_BUTTON: 'RadioButton',
     DROPDOWN: 'Dropdown',
     AUDIO: 'Audio',
+    FIELD_GROUP: 'FieldGroup',
+    SIGNATURE: 'Signature',
 };
 
 export const REDUCER_ACTIONS = {
