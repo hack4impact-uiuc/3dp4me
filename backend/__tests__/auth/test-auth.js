@@ -117,7 +117,23 @@ describe('Test authentication ', () => {
         expectStrictEqualWithTimestampOrdering(EXPECTED_PUT_DATA, updatedData);
     });
 
-    it('does not return parts not readableBy user', async () => {});
+    it('does not return parts not readableBy user', async () => {
+		const MOCK_USER_ID = '606e0a4602b23d02bc77673a'; 
+		setCurrentUser(
+            AWS,
+            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, MOCK_USER_ID),
+        );
+
+		const res = await withAuthentication(
+			request(server)
+				.get(`/api/metadata/steps`)
+		);
+
+		console.log(res.text);
+		const resContent = JSON.parse(res.text);
+
+		
+	});
 
     it('does write to parts not writableBy user', async () => {});
 });

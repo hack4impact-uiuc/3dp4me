@@ -362,7 +362,7 @@
     },
     {
         "_id": "6092c289e0912601bbc5d85e",
-        "readableGroups": [],
+        "readableGroups": ["606e0a4602b23d02bc77673a"],
         "writableGroups": [],
         "key": "example",
         "displayName": {
@@ -373,7 +373,7 @@
         "fields": [
             {
                 "fieldType": "String",
-                "readableGroups": [],
+                "readableGroups": ["606e0a4602b23d02bc77673a"],
                 "writableGroups": [],
                 "_id": "607086644e7ccf3c7cea23d8",
                 "key": "string",

@@ -100,9 +100,19 @@ router.get(
         if (isAdmin(req.user)) {
             metaData = await models.Step.find({});
         } else {
-            metaData = await models.Step.find({
-                readableGroups: { $in: [req.user._id.toString()] },
-            });
+			const roles = [req.user.roles.toString()];
+            metaData = await models.Step.find(
+					{ readableGroups: { $in: [req.user.roles.toString()] }},
+            );
+
+			// Iterate over fields and remove fields that do not have matching permissions
+			metaData.map(
+				step => {
+					step.fields = step.fields.filter(field => {
+						field.readableGroups.some(role => roles.includes(role))
+					});
+				}
+			);
         }
 
         if (!metaData) {

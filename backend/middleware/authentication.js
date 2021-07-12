@@ -1,3 +1,4 @@
+const { LexModelBuildingService } = require('aws-sdk');
 var AWS = require('aws-sdk');
 const {
     COGNITO_REGION,
@@ -12,6 +13,8 @@ module.exports.ACCESS_LEVELS = {
 };
 
 const ADMIN_ID = '606e0a4602b23d02bc77673b';
+
+const isAdmin = (user) => user.roles.includes(ADMIN_ID);
 
 const getUser = async (accessToken) => {
     var params = {
@@ -99,6 +102,7 @@ const requireRole = (role) => {
 
 const requireAdmin = requireRole(ADMIN_ID);
 
+module.exports.isAdmin = isAdmin;
 module.exports.ADMIN_ID = ADMIN_ID;
 module.exports.requireRole = requireRole;
 module.exports.requireAdmin = requireAdmin;
