@@ -33,6 +33,8 @@
         "node": "^14.12.0",
         "omit-deep-lodash": "^1.1.5",
         "prettier": "^2.2.1",
+        "rate-limiter-flexible": "^2.2.3",
+        "redis": "^3.1.2",
         "superagent-defaults": "^0.1.14",
         "supertest": "^6.1.3",
         "webpack": "^5.30.0",
