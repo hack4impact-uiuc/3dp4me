@@ -11,6 +11,7 @@ import { getPatientName } from '../../utils/utils';
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
     REQUIRED_DASHBOARD_HEADERS,
+    REQUIRED_DASHBOARD_METADATAS,
 } from '../../utils/constants';
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
@@ -271,6 +272,18 @@ const Dashboard = ({ languageData }) => {
         });
 
         return rowIDs;
+    }
+
+    function generateRowMetadatas(stepKey, fields) {
+        if (fields == null) return [];
+
+        const metadatas = _.cloneDeep(REQUIRED_DASHBOARD_METADATAS);
+        fields.forEach((field) => {
+            console.log(field.fieldType);
+            metadatas.push(field.fieldType);
+        });
+
+        return metadatas;
     }
 
     function generateMainTable() {

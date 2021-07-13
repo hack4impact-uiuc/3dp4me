@@ -1,3 +1,26 @@
+export const FIELD_TYPES = {
+    STRING: 'String',
+    MULTILINE_STRING: 'MultilineString',
+    FILE: 'File',
+    NUMBER: 'Number',
+    DATE: 'Date',
+    PHONE: 'Phone',
+    DIVIDER: 'Divider',
+    HEADER: 'Header',
+    RADIO_BUTTON: 'RadioButton',
+    DROPDOWN: 'Dropdown',
+    AUDIO: 'Audio',
+    FIELD_GROUP: 'FieldGroup',
+    SIGNATURE: 'Signature',
+};
+
+export const REQUIRED_DASHBOARD_METADATAS = [
+    FIELD_TYPES.STRING,
+    FIELD_TYPES.STRING,
+    FIELD_TYPES.DATE,
+    //FIELD_TYPES.DATE, Status
+];
+
 export const REQUIRED_DASHBOARD_HEADERS = [
     { title: 'firstName', sortKey: 'firstName' },
     { title: 'familyName', sortKey: 'familyName' },
@@ -25,22 +48,6 @@ export const PATIENT_STATUS = {
     FEEDBACK: 'Feedback',
     ARCHIVE: 'Archive',
     ACTIVE: 'Active',
-};
-
-export const FIELD_TYPES = {
-    STRING: 'String',
-    MULTILINE_STRING: 'MultilineString',
-    FILE: 'File',
-    NUMBER: 'Number',
-    DATE: 'Date',
-    PHONE: 'Phone',
-    DIVIDER: 'Divider',
-    HEADER: 'Header',
-    RADIO_BUTTON: 'RadioButton',
-    DROPDOWN: 'Dropdown',
-    AUDIO: 'Audio',
-    FIELD_GROUP: 'FieldGroup',
-    SIGNATURE: 'Signature',
 };
 
 export const REDUCER_ACTIONS = {
