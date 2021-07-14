@@ -11,7 +11,6 @@ import { getPatientName } from '../../utils/utils';
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
     REQUIRED_DASHBOARD_HEADERS,
-    REQUIRED_DASHBOARD_METADATAS,
 } from '../../utils/constants';
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';

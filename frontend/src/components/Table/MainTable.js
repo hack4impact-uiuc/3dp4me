@@ -13,6 +13,9 @@ import { Link } from 'react-router-dom';
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
+
 import { resolveObjPath } from '../../utils/object';
 import useSortableData from '../../hooks/useSortableData';
 import finishedIcon from '../../assets/check.svg';
@@ -29,8 +32,6 @@ import {
     SIGNATURE_STATUS,
 } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -129,11 +130,12 @@ const MainTable = ({ languageData, patients, headers, rowData }) => {
                 return rawData;
             case FIELD_TYPES.DATE:
                 return formatDate(new Date(rawData), key);
-            case FIELD_TYPES.SIGNATURE:
+            case FIELD_TYPES.SIGNATURE: {
                 const status = rawData?.signatureData?.length
                     ? SIGNATURE_STATUS.SIGNED
                     : SIGNATURE_STATUS.UNSIGNED;
                 return signatureStyles[status];
+            }
             default:
                 return rawData;
         }
@@ -260,7 +262,7 @@ const MainTable = ({ languageData, patients, headers, rowData }) => {
 MainTable.propTypes = {
     languageData: LanguageDataType.isRequired,
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
-    rowIds: PropTypes.arrayOf(
+    rowData: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string,
             dataType: PropTypes.string,

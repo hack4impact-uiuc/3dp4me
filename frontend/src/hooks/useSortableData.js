@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { resolveObjPath } from '../utils/object';
 
 const useSortableData = (items, UNSORTED_DATA, config = null) => {
