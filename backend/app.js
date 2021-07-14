@@ -10,7 +10,6 @@ const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
 const { initDB } = require('./utils/init-db');
-const rateLimiter = require('./middleware/rateLimiter');
 const app = express();
 
 app.use(helmet());
