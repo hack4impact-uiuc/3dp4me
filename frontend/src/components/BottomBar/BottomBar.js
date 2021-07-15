@@ -7,10 +7,7 @@ import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
 import halfCircle from '../../assets/half-circle.svg';
-import {
-    BoolGetterSetterType,
-    LanguageDataType,
-} from '../../utils/custom-proptypes';
+import { BoolGetterSetterType } from '../../utils/custom-proptypes';
 import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
@@ -18,7 +15,8 @@ const BottomBar = ({
     edit,
     lastEdited,
     lastEditedBy,
-    status = STEP_STATUS.UNFINISHED,
+    status = null,
+    style = null,
     onStatusChange,
     onSave,
     onDiscard,
@@ -38,6 +36,46 @@ const BottomBar = ({
         ),
     };
 
+    const renderStatusSelector = () => {
+        if (!status) return null;
+
+        return (
+            <Select
+                className="status-selector"
+                MenuProps={{ disableScrollLock: true }}
+                onClick={(e) => onStatusChange('status', e.target.value)}
+                defaultValue={status}
+            >
+                <MenuItem disabled value="default">
+                    {translations.components.bottombar.default}
+                </MenuItem>
+                <MenuItem value={STEP_STATUS.UNFINISHED}>
+                    {translations.components.bottombar.unfinished}
+                </MenuItem>
+                <MenuItem value={STEP_STATUS.PARTIALLY_FINISHED}>
+                    {translations.components.bottombar.partial}
+                </MenuItem>
+                <MenuItem value={STEP_STATUS.FINISHED}>
+                    {translations.components.bottombar.finished}
+                </MenuItem>
+            </Select>
+        );
+    };
+
+    const renderStatus = () => {
+        if (!status) return null;
+
+        return (
+            <div
+                className={`status ${status}`}
+                style={{ display: 'flex', alignItems: 'center' }}
+            >
+                {statusIcons[status]}{' '}
+                {translations.components.bottombar[status]}
+            </div>
+        );
+    };
+
     return (
         <AppBar
             className="bottom-bar-wrapper"
@@ -49,10 +87,7 @@ const BottomBar = ({
             }}
         >
             <Toolbar className="bottom-toolbar">
-                <div
-                    className="editor-section"
-                    style={{ flexGrow: 1, color: 'black' }}
-                >
+                <div className="editor-section" style={style?.editorSection}>
                     {`${
                         translations.components.bottombar.lastEditedBy
                     } ${lastEditedBy} ${
@@ -63,41 +98,7 @@ const BottomBar = ({
                     <div>
                         {selectedLang !== LANGUAGES.AR ? (
                             <div>
-                                <Select
-                                    className="status-selector"
-                                    MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) =>
-                                        onStatusChange('status', e.target.value)
-                                    }
-                                    defaultValue={status}
-                                >
-                                    <MenuItem disabled value="default">
-                                        {
-                                            translations.components.bottombar
-                                                .default
-                                        }
-                                    </MenuItem>
-                                    <MenuItem value={STEP_STATUS.UNFINISHED}>
-                                        {
-                                            translations.components.bottombar
-                                                .unfinished
-                                        }
-                                    </MenuItem>
-                                    <MenuItem
-                                        value={STEP_STATUS.PARTIALLY_FINISHED}
-                                    >
-                                        {
-                                            translations.components.bottombar
-                                                .partial
-                                        }
-                                    </MenuItem>
-                                    <MenuItem value={STEP_STATUS.FINISHED}>
-                                        {
-                                            translations.components.bottombar
-                                                .finished
-                                        }
-                                    </MenuItem>
-                                </Select>
+                                {renderStatusSelector()}
                                 <Button
                                     className="save-button"
                                     onClick={onSave}
@@ -175,13 +176,7 @@ const BottomBar = ({
                     </div>
                 ) : (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div
-                            className={`status ${status}`}
-                            style={{ display: 'flex', alignItems: 'center' }}
-                        >
-                            {statusIcons[status]}{' '}
-                            {translations.components.bottombar[status]}
-                        </div>
+                        {renderStatus()}
                         <Button
                             className="edit-button"
                             onClick={() => setEdit(true)}
@@ -196,7 +191,7 @@ const BottomBar = ({
 };
 
 BottomBar.propTypes = {
-    languageData: LanguageDataType.isRequired,
+    style: PropTypes.object,
     edit: PropTypes.bool.isRequired,
     lastEdited: PropTypes.string.isRequired,
     lastEditedBy: PropTypes.string.isRequired,

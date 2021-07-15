@@ -47,37 +47,8 @@ const EditRoleModal = ({
         setUserData({ ...userData, accessLevel: event.target.value });
     };
 
-    const onSave = async () => {
-        // Update users roles
-        for (let i = 0; i < allRoles.length; i += 1) {
-            const role = allRoles[i];
-
-            // If user has role
-            if (userData.roles.find((r) => r === role._id)) {
-                // If user didn't have role before, make request to backend
-                if (!userInfo.roles.find((r) => r === role._id)) {
-                    await errorWrap(async () =>
-                        addUserRole(userData.userName, role._id),
-                    );
-                }
-            } else {
-                // If user did have role before, make request to backend
-                if (userInfo.roles.find((r) => r === role._id)) {
-                    await errorWrap(async () =>
-                        removeUserRole(userData.userName, role._id),
-                    );
-                }
-            }
-        }
-
-        // Update user access level
-        await errorWrap(async () =>
-            setUserAccess(userData.userName, userData.accessLevel),
-        );
-
-        // Close modal and update local data
-        onClose();
-        onUserEdited(userData.userName, userData.accessLevel, userData.roles);
+    const onSave = () => {
+        // TODO: Make post requests and callback to parent
     };
 
     return (

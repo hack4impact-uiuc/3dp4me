@@ -1,0 +1,14 @@
+@import '../../styles/variables.scss';
+
+.section-management-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.step-management-content-container {
+    flex: 1;
+}
+
+.sidebar-container {
+    height: 100%;
+}
