@@ -35,7 +35,7 @@ const EditRoleModal = ({
         setUserData({ ...userData, accessLevel: event.target.value });
     };
 
-    const onSave = (event) => {
+    const onSave = () => {
         // TODO: Make post requests and callback to parent
     };
 
