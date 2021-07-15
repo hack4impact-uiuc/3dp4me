@@ -24,8 +24,9 @@ import {
     LanguageDataType,
     TableHeaderType,
 } from '../../utils/custom-proptypes';
-import { PATIENT_STATUS } from '../../utils/constants';
+import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -42,9 +43,8 @@ const StyledTableRow = withStyles(() => ({
     },
 }))(TableRow);
 
-const MainTable = ({ languageData, patients, headers, rowIds }) => {
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
+const MainTable = ({ patients, headers, rowIds }) => {
+    const [translations, selectedLang] = useTranslations();
 
     const UNSORTED_DATA = patients;
     const { items, requestSort, sortConfig } = useSortableData(
@@ -61,7 +61,7 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                     width="16px"
                     src={finishedIcon}
                 />
-                {lang.components.bottombar.finished}
+                {translations.components.bottombar.finished}
             </div>
         ),
         'Partially Complete': (
@@ -72,7 +72,7 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                     width="16px"
                     src={partiallyIcon}
                 />{' '}
-                {lang.components.bottombar.partial}
+                {translations.components.bottombar.partial}
             </div>
         ),
         Unfinished: (
@@ -83,22 +83,22 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                     width="16px"
                     src={unfinishedIcon}
                 />{' '}
-                {lang.components.bottombar.unfinished}
+                {translations.components.bottombar.unfinished}
             </div>
         ),
         [PATIENT_STATUS.ACTIVE]: (
             <div style={{ color: '#65d991' }}>
-                {lang.components.bottombar.active}
+                {translations.components.bottombar.active}
             </div>
         ),
         [PATIENT_STATUS.ARCHIVE]: (
             <div style={{ color: 'black' }}>
-                <b>{lang.components.bottombar.archived}</b>
+                <b>{translations.components.bottombar.archived}</b>
             </div>
         ),
         [PATIENT_STATUS.FEEDBACK]: (
             <div style={{ color: '#5395f8' }}>
-                {lang.components.bottombar.feedback}
+                {translations.components.bottombar.feedback}
             </div>
         ),
     };
@@ -106,7 +106,7 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
     const getPatientField = (patient, fieldKey) => {
         const rawData = resolveObjPath(patient, fieldKey);
         if (fieldKey === 'lastEdited')
-            return formatDate(new Date(rawData), key);
+            return formatDate(new Date(rawData), selectedLang);
 
         return rawData;
     };
@@ -122,11 +122,15 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                                     onClick={() => requestSort(header.sortKey)}
                                     className="header"
                                     key={header.title}
-                                    align={key === 'AR' ? 'right' : 'left'}
+                                    align={
+                                        selectedLang === LANGUAGES.AR
+                                            ? 'right'
+                                            : 'left'
+                                    }
                                 >
                                     <div
                                         className={
-                                            key === 'AR'
+                                            selectedLang === LANGUAGES.AR
                                                 ? 'cell-align-rtl'
                                                 : 'cell-align'
                                         }
@@ -162,10 +166,16 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                                 {rowIds.map((id) => (
                                     <StyledTableCell
                                         className={
-                                            key === 'AR' ? 'cell-rtl' : 'cell'
+                                            selectedLang === LANGUAGES.AR
+                                                ? 'cell-rtl'
+                                                : 'cell'
                                         }
                                         key={patient._id + id}
-                                        align={key === 'AR' ? 'right' : 'left'}
+                                        align={
+                                            selectedLang === LANGUAGES.AR
+                                                ? 'right'
+                                                : 'left'
+                                        }
                                     >
                                         {id === 'status' ? (
                                             <>
@@ -213,7 +223,7 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
                                                 src={Eyecon}
                                             />
                                         </IconButton>{' '}
-                                        {lang.components.table.view}
+                                        {translations.components.table.view}
                                     </Link>
                                 </StyledTableCell>
                             </StyledTableRow>
@@ -226,7 +236,6 @@ const MainTable = ({ languageData, patients, headers, rowIds }) => {
 };
 
 MainTable.propTypes = {
-    languageData: LanguageDataType.isRequired,
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
     rowIds: PropTypes.arrayOf(PropTypes.string),
     patients: PropTypes.arrayOf(PropTypes.object),

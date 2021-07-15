@@ -7,9 +7,9 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const Files = ({
-    languageData,
     title,
     files,
     fieldKey,
@@ -17,8 +17,7 @@ const Files = ({
     handleDelete,
     handleUpload,
 }) => {
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
+    const [translations, selectedLang] = useTranslations();
 
     const RenderExistingFiles = () => {
         if (files == null) return null;
@@ -75,7 +74,7 @@ const Files = ({
                     <Button className="file-button" component="span">
                         <AddIcon />
                         <Typography align="left">
-                            <b>{lang.components.file.addAnother}</b>
+                            <b>{translations.components.file.addAnother}</b>
                         </Typography>
                     </Button>
                 </label>
@@ -85,7 +84,6 @@ const Files = ({
 };
 
 Files.propTypes = {
-    languageData: LanguageDataType.isRequired,
     title: PropTypes.string.isRequired,
     fieldKey: PropTypes.string.isRequired,
     handleDownload: PropTypes.func.isRequired,

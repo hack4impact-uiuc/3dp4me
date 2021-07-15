@@ -2,15 +2,10 @@ import './Sidebar.css';
 import React from 'react';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { useTranslations } from '../../hooks/useTranslations';
 
-const Sidebar = ({
-    languageData,
-    onClick,
-    stepMetadata,
-    onDownPressed,
-    onUpPressed,
-}) => {
-    const key = languageData.selectedLanguage;
+const Sidebar = ({ onClick, stepMetadata, onDownPressed, onUpPressed }) => {
+    const selectedLang = useTranslations()[1];
 
     function onButtonClick(stepKey) {
         onClick(stepKey);
@@ -23,7 +18,7 @@ const Sidebar = ({
                     type="button"
                     onClick={() => onButtonClick(element.key)}
                 >
-                    {element.displayName[key]}
+                    {element.displayName[selectedLang]}
                 </button>
                 <button
                     type="button"
@@ -39,8 +34,6 @@ const Sidebar = ({
     });
 };
 
-Sidebar.propTypes = {
-    languageData: LanguageDataType.isRequired,
-};
+Sidebar.propTypes = {};
 
 export default Sidebar;

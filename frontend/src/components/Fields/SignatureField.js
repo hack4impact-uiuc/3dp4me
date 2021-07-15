@@ -9,22 +9,20 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const SignatureField = ({
     displayName,
     isDisabled,
     documentURL,
-    languageData,
     fieldId = '',
     value = '',
     onChange = () => {},
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDocumentVisible, setIsDocumentVisible] = useState(false);
+    const translations = useTranslations()[0];
     const sigCanvas = useRef({});
-
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     useEffect(() => {
         if (!value?.signatureData || isModalOpen) return;
@@ -133,19 +131,19 @@ const SignatureField = ({
                         className="signature-button save-signature"
                         onClick={save}
                     >
-                        {lang.components.signature.save}
+                        {translations.components.signature.save}
                     </Button>
                     <Button
                         className="signature-button clear-signature"
                         onClick={clear}
                     >
-                        {lang.components.signature.clear}
+                        {translations.components.signature.clear}
                     </Button>
                     <Button
                         className="signature-button close-signature"
                         onClick={() => setIsModalOpen(false)}
                     >
-                        {lang.components.signature.close}
+                        {translations.components.signature.close}
                     </Button>
                 </div>
             </Modal>
@@ -160,15 +158,15 @@ const SignatureField = ({
                         onClick={onToggleDocument}
                     >
                         {isDocumentVisible
-                            ? lang.components.signature.hideDoc
-                            : lang.components.signature.viewDoc}
+                            ? translations.components.signature.hideDoc
+                            : translations.components.signature.viewDoc}
                     </Button>
                     <Button
                         className="sig-ctl-button sign-btn"
                         disabled={isDisabled}
                         onClick={() => setIsModalOpen(true)}
                     >
-                        {lang.components.signature.sign}
+                        {translations.components.signature.sign}
                     </Button>
                 </view>
             </div>
@@ -193,7 +191,6 @@ SignatureField.propTypes = {
             AR: PropTypes.string,
         }),
     }),
-    languageData: LanguageDataType.isRequired,
     onChange: PropTypes.func,
 };
 

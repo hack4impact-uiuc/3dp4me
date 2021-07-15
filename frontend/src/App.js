@@ -35,8 +35,8 @@ function App() {
     useEffect(() => {
         const getUserInfo = async () => {
             const userInfo = await getCurrentUserInfo();
-            setUsername(userInfo.attributes.name);
-            setUserEmail(userInfo.email);
+            setUsername(userInfo?.attributes?.name);
+            setUserEmail(userInfo?.email);
 
             if (
                 userInfo.attributes &&

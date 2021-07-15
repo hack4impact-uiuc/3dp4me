@@ -5,12 +5,12 @@ import MuiAlert from '@material-ui/lab/Alert';
 import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
-
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { getPatientName } from '../../utils/utils';
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
     REQUIRED_DASHBOARD_HEADERS,
+    LANGUAGES,
 } from '../../utils/constants';
 import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
@@ -21,10 +21,9 @@ import {
     postNewPatient,
 } from '../../utils/api';
 import './Dashboard.scss';
-import { LanguageDataType } from '../../utils/custom-proptypes';
+import { useTranslations } from '../../hooks/useTranslations';
 
 // TODO: Expand these as needed
-
 const useStyles = makeStyles(() => ({
     swalEditButton: {
         backgroundColor: '#5395F8',
@@ -56,7 +55,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const Dashboard = ({ languageData }) => {
+const Dashboard = () => {
     const classes = useStyles();
 
     const [patients, setPatients] = useState([]);
@@ -66,8 +65,7 @@ const Dashboard = ({ languageData }) => {
     const [filteredPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
     const errorWrap = useErrorWrap();
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
+    const [translations, selectedLang] = useTranslations();
 
     const createPatientHelper = async (edit) => {
         const patient = {};
@@ -91,8 +89,8 @@ const Dashboard = ({ languageData }) => {
         } finally {
             swal({
                 title: res?.success
-                    ? lang.components.swal.createPatient.successMsg
-                    : lang.components.swal.createPatient.failMsg,
+                    ? translations.components.swal.createPatient.successMsg
+                    : translations.components.swal.createPatient.failMsg,
                 icon: res?.success ? 'success' : 'warning',
             });
         }
@@ -111,11 +109,14 @@ const Dashboard = ({ languageData }) => {
                     }}
                 >
                     <h2 style={{ fontWeight: 'bolder' }}>
-                        {lang.components.swal.createPatient.title}
+                        {translations.components.swal.createPatient.title}
                     </h2>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>
-                            {lang.components.swal.createPatient.firstName}
+                            {
+                                translations.components.swal.createPatient
+                                    .firstName
+                            }
                         </span>
                         <TextField
                             size="small"
@@ -125,7 +126,10 @@ const Dashboard = ({ languageData }) => {
                             variant="outlined"
                         />
                         <span>
-                            {lang.components.swal.createPatient.middleName}
+                            {
+                                translations.components.swal.createPatient
+                                    .middleName
+                            }
                         </span>
                         <div style={{ display: 'flex' }}>
                             <TextField
@@ -144,7 +148,10 @@ const Dashboard = ({ languageData }) => {
                             />
                         </div>
                         <span>
-                            {lang.components.swal.createPatient.lastName}
+                            {
+                                translations.components.swal.createPatient
+                                    .lastName
+                            }
                         </span>
                         <TextField
                             size="small"
@@ -165,13 +172,19 @@ const Dashboard = ({ languageData }) => {
                             className={classes.swalEditButton}
                             onClick={() => createPatientHelper(true)}
                         >
-                            {lang.components.swal.createPatient.buttons.edit}
+                            {
+                                translations.components.swal.createPatient
+                                    .buttons.edit
+                            }
                         </Button>
                         <Button
                             className={classes.swalCloseButton}
                             onClick={() => createPatientHelper(false)}
                         >
-                            {lang.components.swal.createPatient.buttons.noEdit}
+                            {
+                                translations.components.swal.createPatient
+                                    .buttons.noEdit
+                            }
                         </Button>
                     </div>
                 </div>
@@ -237,12 +250,12 @@ const Dashboard = ({ languageData }) => {
     }, [setStep, setStepsMetaData, errorWrap]);
 
     function generatePageHeader() {
-        if (stepsMetaData == null) return lang.components.table.loading;
+        if (stepsMetaData == null) return translations.components.table.loading;
 
         return stepsMetaData.map((element) => {
             if (step !== element.key) return null;
 
-            return <h>{element.displayName[key]}</h>;
+            return <h>{element.displayName[selectedLang]}</h>;
         });
     }
 
@@ -253,7 +266,7 @@ const Dashboard = ({ languageData }) => {
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 headers.push({
-                    title: field.displayName[key],
+                    title: field.displayName[selectedLang],
                     sortKey: `${step}.${field.key}`,
                 });
         });
@@ -283,7 +296,6 @@ const Dashboard = ({ languageData }) => {
                 <MainTable
                     headers={generateHeaders(element.fields)}
                     rowIds={generateRowIds(element.key, element.fields)}
-                    languageData={languageData}
                     patients={
                         searchQuery.length === 0 ? patients : filteredPatients
                     }
@@ -305,12 +317,11 @@ const Dashboard = ({ languageData }) => {
                     elevation={6}
                     variant="filled"
                 >
-                    {lang.components.table.noPatientsFound}
+                    {translations.components.table.noPatientsFound}
                 </MuiAlert>
             </Snackbar>
             <div className="tabs">
                 <ToggleButtons
-                    languageData={languageData}
                     step={step}
                     metaData={stepsMetaData}
                     handleStep={handleStep}
@@ -321,7 +332,7 @@ const Dashboard = ({ languageData }) => {
                     <div className="section">
                         <h2
                             className={
-                                key === 'AR'
+                                selectedLang === LANGUAGES.AR
                                     ? 'patient-list-title-ar'
                                     : 'patient-list-title'
                             }
@@ -344,13 +355,15 @@ const Dashboard = ({ languageData }) => {
                             value={searchQuery}
                             size="small"
                             variant="outlined"
-                            placeholder={lang.components.search.placeholder}
+                            placeholder={
+                                translations.components.search.placeholder
+                            }
                         />
                         <Button
                             className="create-patient-button"
                             onClick={createPatient}
                         >
-                            {lang.components.button.createPatient}
+                            {translations.components.button.createPatient}
                         </Button>
                     </div>
                 </div>
@@ -360,8 +373,6 @@ const Dashboard = ({ languageData }) => {
     );
 };
 
-Dashboard.propTypes = {
-    languageData: LanguageDataType.isRequired,
-};
+Dashboard.propTypes = {};
 
 export default Dashboard;

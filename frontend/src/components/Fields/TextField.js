@@ -13,6 +13,7 @@ const TextField = ({
     const sendChanges = (e) => {
         onChange(fieldId, e.target.value);
     };
+
     return (
         <div>
             <h3>{displayName}</h3>

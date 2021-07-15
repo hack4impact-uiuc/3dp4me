@@ -46,6 +46,12 @@ export const FIELD_TYPES = {
 export const REDUCER_ACTIONS = {
     SET_ERROR: 'SET_ERROR',
     CLEAR_ERROR: 'CLEAR_ERROR',
+    SET_LANGUAGE: 'SET_LANGUAGE',
+};
+
+export const LANGUAGES = {
+    EN: 'EN',
+    AR: 'AR',
 };
 
 export const PATIENT_KEY_STATUS = 'status';

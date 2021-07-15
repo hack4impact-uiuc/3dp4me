@@ -6,6 +6,7 @@ import { Button } from '@material-ui/core';
 
 import StepField from '../StepField/StepField';
 import './Fields.scss';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const FieldGroup = ({
     isDisabled,
@@ -13,13 +14,13 @@ const FieldGroup = ({
     handleFileDownload,
     handleFileUpload,
     handleFileDelete,
-    languageData,
     value = {},
-    langKey = 'EN',
     stepKey = '',
     patientId = '',
     metadata = {},
 }) => {
+    const [translations, selectedLang] = useTranslations();
+
     const getKeyBase = (index) => {
         return `${metadata.key}.${index}`;
     };
@@ -58,11 +59,10 @@ const FieldGroup = ({
                 <div key={`${getCompleteSubFieldKey(field.key)}.${index}`}>
                     <div className="step-field">
                         <StepField
-                            displayName={field.displayName[langKey]}
+                            displayName={field.displayName[selectedLang]}
                             metadata={field}
                             value={value ? value[index][field.key] : null}
                             key={field.key}
-                            langKey={langKey}
                             isDisabled={isDisabled}
                             patientId={patientId}
                             stepKey={stepKey}
@@ -78,7 +78,6 @@ const FieldGroup = ({
                             handleFileDelete={(k, v) =>
                                 onFileDelete(k, v, index)
                             }
-                            languageData={languageData}
                         />
                     </div>
                 </div>
@@ -92,7 +91,7 @@ const FieldGroup = ({
 
         for (let i = 0; i < numFieldGroups; i += 1) {
             groups.push(
-                <h3>{`${metadata?.displayName[langKey]} ${i + 1}`}</h3>,
+                <h3>{`${metadata?.displayName[selectedLang]} ${i + 1}`}</h3>,
             );
             groups.push(generateSingleGroup(i));
         }
@@ -104,7 +103,7 @@ const FieldGroup = ({
         <div className="field-container">
             {generateAllGroups()}
             <Button className="field-group-button" onClick={onAddGroup}>
-                {`${languageData.translations[langKey].components.fieldGroup.add} ${metadata?.displayName[langKey]}`}
+                {`${translations[selectedLang].components.fieldGroup.add} ${metadata?.displayName[selectedLang]}`}
             </Button>
         </div>
     );
@@ -116,7 +115,6 @@ FieldGroup.propTypes = {
     handleFileDownload: PropTypes.func.isRequired,
     handleFileDelete: PropTypes.func.isRequired,
     stepKey: PropTypes.string,
-    langKey: PropTypes.string,
     value: PropTypes.object,
     patientId: PropTypes.string,
     metadata: PropTypes.object,

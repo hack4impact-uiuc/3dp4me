@@ -1,16 +1,18 @@
 import { FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const RadioButtonField = ({
     fieldId,
     title,
-    langKey,
     value = '',
     options,
     isDisabled,
     onChange,
 }) => {
+    const selectedLang = useTranslations()[1];
+
     const generateQuestions = () => {
         return options.map((option) => {
             if (option.IsHidden && value?.toString() !== option._id.toString())
@@ -21,7 +23,7 @@ const RadioButtonField = ({
                     key={option._id}
                     value={option._id}
                     control={<Radio />}
-                    label={option.Question[langKey]}
+                    label={option.Question[selectedLang]}
                     disabled={isDisabled}
                 />
             );
@@ -45,7 +47,6 @@ const RadioButtonField = ({
 RadioButtonField.propTypes = {
     fieldId: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    langKey: PropTypes.string.isRequired,
     value: PropTypes.string,
     isDisabled: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,

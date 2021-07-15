@@ -7,43 +7,50 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
 
-import { STEP_STATUS } from '../../utils/constants';
+import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ToggleButtons.scss';
+import { useTranslations } from '../../hooks/useTranslations';
 
-const ToggleButtons = ({
-    languageData,
-    handleStep,
-    metaData,
-    patientData,
-    step,
-}) => {
+const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const key = languageData.selectedLanguage;
+    const selectedLang = useTranslations()[1];
 
     const statusIcons = {
         [STEP_STATUS.UNFINISHED]: (
             <img
                 alt="incomplete"
                 src={ExclamationIcon}
-                className={`${key === 'AR' ? 'status-icon-ar' : 'status-icon'}`}
+                className={`${
+                    selectedLang === LANGUAGES.AR
+                        ? 'status-icon-ar'
+                        : 'status-icon'
+                }`}
             />
         ),
         [STEP_STATUS.PARTIALLY_FINISHED]: (
             <img
                 alt="partial"
                 src={HalfCircleIcon}
-                className={`${key === 'AR' ? 'status-icon-ar' : 'status-icon'}`}
+                className={`${
+                    selectedLang === LANGUAGES.AR
+                        ? 'status-icon-ar'
+                        : 'status-icon'
+                }`}
             />
         ),
         [STEP_STATUS.FINISHED]: (
             <img
                 alt="complete"
                 src={CheckIcon}
-                className={`${key === 'AR' ? 'status-icon-ar' : 'status-icon'}`}
+                className={`${
+                    selectedLang === LANGUAGES.AR
+                        ? 'status-icon-ar'
+                        : 'status-icon'
+                }`}
             />
         ),
     };
@@ -77,7 +84,7 @@ const ToggleButtons = ({
                     value={element.key}
                 >
                     {patientData ? statusIcons[status] : null}{' '}
-                    <b>{element.displayName[key]}</b>
+                    <b>{element.displayName[selectedLang]}</b>
                 </ToggleButton>
             );
         });
@@ -94,7 +101,7 @@ const ToggleButtons = ({
                             {patientData && patientData[element.key]?.status
                                 ? statusIcons[patientData[element.key].status]
                                 : null}{' '}
-                            <b>{element.displayName[key]}</b>
+                            <b>{element.displayName[selectedLang]}</b>
                         </div>
                     ) : null}
                 </div>
@@ -111,7 +118,9 @@ const ToggleButtons = ({
                     {patientData && patientData[element.key]?.status
                         ? statusIcons[patientData[element.key].status]
                         : null}{' '}
-                    <b className="selector-text">{element.displayName[key]}</b>
+                    <b className="selector-text">
+                        {element.displayName[selectedLang]}
+                    </b>
                 </MenuItem>
             );
         });
@@ -153,7 +162,6 @@ const ToggleButtons = ({
 };
 
 ToggleButtons.propTypes = {
-    languageData: LanguageDataType.isRequired,
     handleStep: PropTypes.func.isRequired,
     step: PropTypes.string.isRequired,
     metaData: PropTypes.object.isRequired,

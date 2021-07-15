@@ -14,12 +14,11 @@ import DateField from '../Fields/DateField';
 import PhoneField from '../Fields/PhoneField';
 import FieldGroup from '../Fields/FieldGroup';
 import SignatureField from '../Fields/SignatureField';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const StepField = ({
     metadata,
     value,
-    langKey,
-    languageData,
     patientId = '',
     displayName,
     stepKey,
@@ -29,6 +28,8 @@ const StepField = ({
     handleFileUpload = () => {},
     handleFileDelete = () => {},
 }) => {
+    const [translations, selectedLang] = useTranslations();
+
     const generateField = () => {
         switch (metadata.fieldType) {
             case FIELD_TYPES.STRING:
@@ -80,7 +81,6 @@ const StepField = ({
                     <DateField
                         displayName={displayName}
                         isDisabled={isDisabled}
-                        langKey={langKey}
                         onChange={handleSimpleUpdate}
                         fieldId={metadata.key}
                         value={value}
@@ -89,7 +89,6 @@ const StepField = ({
             case FIELD_TYPES.FILE:
                 return (
                     <Files
-                        languageData={languageData}
                         title={displayName}
                         files={value}
                         fieldKey={metadata.key}
@@ -105,7 +104,6 @@ const StepField = ({
                         fieldId={metadata.key}
                         isDisabled={isDisabled}
                         title={displayName}
-                        langKey={langKey}
                         value={value}
                         options={metadata.options}
                         onChange={handleSimpleUpdate}
@@ -115,9 +113,9 @@ const StepField = ({
             case FIELD_TYPES.AUDIO:
                 return (
                     <AudioRecorder
-                        languageData={languageData}
                         handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}
+                        selectedLanguage={selectedLang}
                         patientId={patientId}
                         fieldKey={metadata.key}
                         stepKey={stepKey}
@@ -136,8 +134,6 @@ const StepField = ({
                 return (
                     <FieldGroup
                         metadata={metadata}
-                        langKey={langKey}
-                        languageData={languageData}
                         patientId={patientId}
                         displayName={displayName}
                         stepKey={stepKey}
@@ -153,8 +149,6 @@ const StepField = ({
             case FIELD_TYPES.SIGNATURE:
                 return (
                     <SignatureField
-                        langKey={langKey}
-                        languageData={languageData}
                         displayName={displayName}
                         isDisabled={isDisabled}
                         onChange={handleSimpleUpdate}
@@ -177,7 +171,6 @@ const StepField = ({
 
 StepField.propTypes = {
     value: PropTypes.any.isRequired,
-    languageData: PropTypes.object.isRequired,
     isDisabled: PropTypes.bool,
     patientId: PropTypes.string,
     handleSimpleUpdate: PropTypes.func,
@@ -186,7 +179,6 @@ StepField.propTypes = {
     handleFileDelete: PropTypes.func,
     displayName: PropTypes.string,
     stepKey: PropTypes.string,
-    langKey: PropTypes.string,
     metadata: PropTypes.shape({
         key: PropTypes.string.isRequired,
         fieldType: PropTypes.string.isRequired,

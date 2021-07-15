@@ -1,11 +1,12 @@
 import React, { createContext, useReducer } from 'react';
 import PropTypes from 'prop-types';
-
 import Reducer from './Reducer';
+import { LANGUAGES } from '../utils/constants';
 
 const initialState = {
     error: '',
     isErrorVisible: false,
+    language: LANGUAGES.EN,
 };
 
 const Store = ({ children }) => {

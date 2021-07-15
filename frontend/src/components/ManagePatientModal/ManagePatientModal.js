@@ -13,21 +13,14 @@ import PropTypes from 'prop-types';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ManagePatientModal.scss';
-import { PATIENT_STATUS } from '../../utils/constants';
+import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
+import { useTranslations } from '../../hooks/useTranslations';
 
-const ManagePatientModal = ({
-    languageData,
-    patientData,
-    isOpen,
-    onClose,
-    onDataSave,
-}) => {
+const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
+    const [translations, selectedLang] = useTranslations();
     const [updatedPatientData, setUpdatedPatientData] = useState(
         _.cloneDeep(patientData),
     );
-
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     const onFieldUpdate = (e) => {
         e.persist();
@@ -41,11 +34,13 @@ const ManagePatientModal = ({
         <Modal open={isOpen} onClose={onClose}>
             <div
                 className={`controller-manage-patient-wrapper ${
-                    key === 'AR' ? 'controller-manage-patient-wrapper-ar' : ''
+                    selectedLang === LANGUAGES.AR
+                        ? 'controller-manage-patient-wrapper-ar'
+                        : ''
                 }`}
             >
                 <div className="manage-patient-header">
-                    <h2>{lang.components.swal.managePatient.title}</h2>
+                    <h2>{translations.components.swal.managePatient.title}</h2>
                     <Button onClick={onClose}>
                         <CloseIcon />
                     </Button>
@@ -53,27 +48,41 @@ const ManagePatientModal = ({
 
                 <div className="profile-information-wrapper">
                     <h3>
-                        {lang.components.swal.managePatient.profileInformation}
+                        {
+                            translations.components.swal.managePatient
+                                .profileInformation
+                        }
                     </h3>
-                    <p>{lang.components.swal.managePatient.firstName}</p>
+                    <p>
+                        {translations.components.swal.managePatient.firstName}
+                    </p>
                     <TextField
                         value={updatedPatientData?.firstName}
                         name="firstName"
                         onChange={onFieldUpdate}
                     />
-                    <p>{lang.components.swal.managePatient.fatherName}</p>
+                    <p>
+                        {translations.components.swal.managePatient.fatherName}
+                    </p>
                     <TextField
                         value={updatedPatientData?.fathersName}
                         name="fathersName"
                         onChange={onFieldUpdate}
                     />
-                    <p>{lang.components.swal.managePatient.grandfatherName}</p>
+                    <p>
+                        {
+                            translations.components.swal.managePatient
+                                .grandfatherName
+                        }
+                    </p>
                     <TextField
                         value={updatedPatientData?.grandfathersName}
                         name="grandfathersName"
                         onChange={onFieldUpdate}
                     />
-                    <p>{lang.components.swal.managePatient.familyName}</p>
+                    <p>
+                        {translations.components.swal.managePatient.familyName}
+                    </p>
                     <TextField
                         value={updatedPatientData?.familyName}
                         name="familyName"
@@ -82,10 +91,16 @@ const ManagePatientModal = ({
                 </div>
                 <div className="profile-management-wrapper">
                     <h3>
-                        {lang.components.swal.managePatient.profileManagement}
+                        {
+                            translations.components.swal.managePatient
+                                .profileManagement
+                        }
                     </h3>
                     <p>
-                        {lang.components.swal.managePatient.archiveInformation}
+                        {
+                            translations.components.swal.managePatient
+                                .archiveInformation
+                        }
                     </p>
                     <div className="profile-management-radio-button-group">
                         <div>
@@ -98,24 +113,24 @@ const ManagePatientModal = ({
                                     value={PATIENT_STATUS.ACTIVE}
                                     control={<Radio />}
                                     label={
-                                        lang.components.swal.managePatient
-                                            .active
+                                        translations.components.swal
+                                            .managePatient.active
                                     }
                                 />
                                 <FormControlLabel
                                     value={PATIENT_STATUS.FEEDBACK}
                                     control={<Radio />}
                                     label={
-                                        lang.components.swal.managePatient
-                                            .feedback
+                                        translations.components.swal
+                                            .managePatient.feedback
                                     }
                                 />
                                 <FormControlLabel
                                     value={PATIENT_STATUS.ARCHIVE}
                                     control={<Radio />}
                                     label={
-                                        lang.components.swal.managePatient
-                                            .archive
+                                        translations.components.swal
+                                            .managePatient.archive
                                     }
                                 />
                             </RadioGroup>
@@ -130,10 +145,13 @@ const ManagePatientModal = ({
                             onDataSave(updatedPatientData);
                         }}
                     >
-                        {lang.components.swal.managePatient.buttons.save}
+                        {
+                            translations.components.swal.managePatient.buttons
+                                .save
+                        }
                     </Button>
                 </div>
-                <p>{lang.components.swal.managePatient.orderId}</p>
+                <p>{translations.components.swal.managePatient.orderId}</p>
                 <TextField
                     value={updatedPatientData?.orderId}
                     name="orderId"
@@ -145,7 +163,6 @@ const ManagePatientModal = ({
 };
 
 ManagePatientModal.propTypes = {
-    languageData: LanguageDataType.isRequired,
     patientData: PropTypes.object.isRequired,
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,

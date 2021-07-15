@@ -18,9 +18,9 @@ import BottomBar from '../../components/BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { FIELD_TYPES } from '../../utils/constants';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const StepContent = ({
-    languageData,
     patientId,
     metaData,
     loading,
@@ -31,14 +31,12 @@ const StepContent = ({
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
+    const [translations, selectedLang] = useTranslations();
     const errorWrap = useErrorWrap();
 
     useEffect(() => {
         setUpdatedData(_.cloneDeep(stepData));
     }, [stepData]);
-
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     const handleSimpleUpdate = (fieldKey, value) => {
         setUpdatedData((data) => {
@@ -95,7 +93,11 @@ const StepContent = ({
     const saveData = () => {
         onDataSaved(metaData.key, updatedData);
         setEdit(false);
-        swal(lang.components.bottombar.savedMessage.patientInfo, '', 'success');
+        swal(
+            translations.components.bottombar.savedMessage.patientInfo,
+            '',
+            'success',
+        );
     };
 
     const handleQuestionFormatSelect = (e) => {
@@ -104,20 +106,21 @@ const StepContent = ({
 
     const discardData = () => {
         swal({
-            title: lang.components.button.discard.question,
-            text: lang.components.button.discard.warningMessage,
+            title: translations.components.button.discard.question,
+            text: translations.components.button.discard.warningMessage,
             icon: 'warning',
             dangerMode: true,
             buttons: [
-                lang.components.button.discard.cancelButton,
-                lang.components.button.discard.confirmButton,
+                translations.components.button.discard.cancelButton,
+                translations.components.button.discard.confirmButton,
             ],
         }).then((isDeleteConfirmed) => {
             if (isDeleteConfirmed) {
                 swal({
-                    title: lang.components.button.discard.success,
+                    title: translations.components.button.discard.success,
                     icon: 'success',
-                    buttons: lang.components.button.discard.confirmButton,
+                    buttons:
+                        translations.components.button.discard.confirmButton,
                 });
                 // TODO: Nonexistent values don't get reset.
                 setUpdatedData(_.cloneDeep(stepData));
@@ -129,7 +132,7 @@ const StepContent = ({
     const generateHeader = () => {
         if (metaData == null || metaData.displayName == null) return null;
 
-        return <h1>{metaData.displayName[key]}</h1>;
+        return <h1>{metaData.displayName[selectedLang]}</h1>;
     };
 
     const genereateFields = () => {
@@ -139,11 +142,11 @@ const StepContent = ({
             const stepField = (
                 <div className="step-field">
                     <StepField
-                        displayName={field.displayName[key]}
+                        displayName={field.displayName[selectedLang]}
                         metadata={field}
                         value={updatedData ? updatedData[field.key] : null}
                         key={field.key}
-                        langKey={key}
+                        langKey={selectedLang}
                         isDisabled={!edit}
                         patientId={patientId}
                         stepKey={metaData.key}
@@ -151,7 +154,6 @@ const StepContent = ({
                         handleFileDownload={handleFileDownload}
                         handleFileUpload={handleFileUpload}
                         handleFileDelete={handleFileDelete}
-                        languageData={languageData}
                     />
                 </div>
             );
@@ -175,7 +177,7 @@ const StepContent = ({
                                         setCurrentQuestion(currentQuestion - 1);
                                 }}
                             >
-                                {lang.components.button.previous}
+                                {translations.components.button.previous}
                             </Button>
                             <Button
                                 onClick={() => {
@@ -186,7 +188,7 @@ const StepContent = ({
                                         setCurrentQuestion(currentQuestion + 1);
                                 }}
                             >
-                                {lang.components.button.next}
+                                {translations.components.button.next}
                             </Button>
                         </div>
                     );
@@ -208,7 +210,6 @@ const StepContent = ({
                 onStatusChange={handleSimpleUpdate}
                 edit={edit}
                 setEdit={setEdit}
-                languageData={languageData}
             />
         );
     };
@@ -227,17 +228,20 @@ const StepContent = ({
                 onChange={handleQuestionFormatSelect}
             >
                 <MenuItem value={false}>
-                    {lang.components.selectQuestionFormat.allQuestions}
+                    {translations.components.selectQuestionFormat.allQuestions}
                 </MenuItem>
                 <MenuItem value>
-                    {lang.components.selectQuestionFormat.singleQuestion}
+                    {
+                        translations.components.selectQuestionFormat
+                            .singleQuestion
+                    }
                 </MenuItem>
             </Select>
-            <p>{`${lang.components.step.lastEditedBy} ${
+            <p>{`${translations.components.step.lastEditedBy} ${
                 stepData?.lastEditedBy
-            } ${lang.components.step.on} ${formatDate(
+            } ${translations.components.step.on} ${formatDate(
                 new Date(stepData?.lastEdited),
-                key,
+                selectedLang,
             )}`}</p>
             {genereateFields()}
             {generateFooter()}
@@ -246,7 +250,6 @@ const StepContent = ({
 };
 
 StepContent.propTypes = {
-    languageData: LanguageDataType.isRequired,
     patientId: PropTypes.string.isRequired,
     metaData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,

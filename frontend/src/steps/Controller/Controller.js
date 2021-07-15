@@ -28,12 +28,15 @@ import {
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import { getPatientName } from '../../utils/utils';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { useTranslations } from '../../hooks/useTranslations';
+import { LANGUAGES } from '../../utils/constants';
 
 const theme = createMuiTheme({
     direction: 'rtl',
 });
 
-const Controller = ({ languageData }) => {
+const Controller = () => {
+    const [translations, selectedLang] = useTranslations();
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
     const errorWrap = useErrorWrap();
@@ -47,9 +50,6 @@ const Controller = ({ languageData }) => {
 
     const params = useParams();
     const { patientId } = params;
-
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     const handleNotePanel = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
@@ -70,7 +70,11 @@ const Controller = ({ languageData }) => {
         await errorWrap(async () => {
             await updatePatient(patientId, patientDataCopy);
             setPatientData(patientDataCopy);
-            swal(lang.components.swal.managePatient.successMsg, '', 'success');
+            swal(
+                translations.components.swal.managePatient.successMsg,
+                '',
+                'success',
+            );
         });
 
         setManagePatientModalOpen(false);
@@ -136,12 +140,15 @@ const Controller = ({ languageData }) => {
         if (patientData == null) return null;
 
         return (
-            <div className={`steps ${key === 'AR' ? 'steps-ar' : ''}`}>
+            <div
+                className={`steps ${
+                    selectedLang === LANGUAGES.AR ? 'steps-ar' : ''
+                }`}
+            >
                 {stepMetaData.map((step) => {
                     if (step.key === selectedStep) {
                         return (
                             <StepContent
-                                languageData={languageData}
                                 patientId={patientId}
                                 onDataSaved={onStepSaved}
                                 metaData={stepMetaData.find(
@@ -180,7 +187,7 @@ const Controller = ({ languageData }) => {
                                     <ExpandMoreIcon className="expand-icon" />
                                 }
                             >
-                                {metaData.displayName[key]}
+                                {metaData.displayName[selectedLang]}
                             </AccordionSummary>
                             <AccordionDetails>
                                 {patientData[metaData.key].notes}
@@ -196,15 +203,20 @@ const Controller = ({ languageData }) => {
         <LoadWrapper loading={loading}>
             <div className="root">
                 <ManagePatientModal
-                    languageData={languageData}
                     onDataSave={onPatientDataSaved}
                     patientData={getCurrentPatientModelData()}
                     isOpen={isManagePatientModalOpen}
                     onClose={() => setManagePatientModalOpen(false)}
                 />
-                <ThemeProvider theme={key === 'AR' ? theme : null}>
+                <ThemeProvider
+                    theme={selectedLang === LANGUAGES.AR ? theme : null}
+                >
                     <Drawer
-                        className={key === 'EN' ? 'drawer' : 'drawer-rtl'}
+                        className={
+                            selectedLang === LANGUAGES.EN
+                                ? 'drawer'
+                                : 'drawer-rtl'
+                        }
                         variant="permanent"
                         classes={{
                             paper: 'drawer-paper',
@@ -215,7 +227,7 @@ const Controller = ({ languageData }) => {
                             <div>
                                 <div className="drawer-text-section">
                                     <span className="drawer-text-label">
-                                        {lang.components.sidebar.name}
+                                        {translations.components.sidebar.name}
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
@@ -224,7 +236,10 @@ const Controller = ({ languageData }) => {
                                 </div>
                                 <div className="drawer-text-section">
                                     <span className="drawer-text-label">
-                                        {lang.components.sidebar.orderID}
+                                        {
+                                            translations.components.sidebar
+                                                .orderID
+                                        }
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
@@ -233,7 +248,7 @@ const Controller = ({ languageData }) => {
                                 </div>
                                 <div className="drawer-text-section">
                                     <span className="drawer-text-label">
-                                        {lang.components.sidebar.status}
+                                        {translations.components.sidebar.status}
                                     </span>{' '}
                                     <br />
                                     <span className="drawer-text">
@@ -241,7 +256,7 @@ const Controller = ({ languageData }) => {
                                     </span>
                                 </div>
                                 <span className="drawer-text-label">
-                                    {lang.components.notes.title}
+                                    {translations.components.notes.title}
                                 </span>
                                 {generateNoteSidebar()}
                             </div>
@@ -257,7 +272,10 @@ const Controller = ({ languageData }) => {
                                     }
                                     className="manage-patient-button"
                                 >
-                                    {lang.components.button.managePatient}
+                                    {
+                                        translations.components.button
+                                            .managePatient
+                                    }
                                 </Button>
                             </div>
                         </div>
@@ -266,11 +284,12 @@ const Controller = ({ languageData }) => {
 
                 <div
                     className={`controller-content ${
-                        key === 'AR' ? 'controller-content-ar' : ''
+                        selectedLang === LANGUAGES.AR
+                            ? 'controller-content-ar'
+                            : ''
                     }`}
                 >
                     <ToggleButtons
-                        languageData={languageData}
                         step={selectedStep}
                         patientData={patientData}
                         metaData={stepMetaData}
@@ -281,10 +300,6 @@ const Controller = ({ languageData }) => {
             </div>
         </LoadWrapper>
     );
-};
-
-Controller.propTypes = {
-    languageData: LanguageDataType.isRequired,
 };
 
 export default Controller;

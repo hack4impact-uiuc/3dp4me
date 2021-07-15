@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Menu from '@material-ui/core/Menu';
 import { Button, makeStyles } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
@@ -8,6 +8,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { saveLanguagePreference, signOut } from '../../aws/aws-helper';
+import { useTranslations } from '../../hooks/useTranslations';
+import { LANGUAGES, REDUCER_ACTIONS } from '../../utils/constants';
+import { Context } from '../../store/Store';
 
 const useStyles = makeStyles({
     menuWrapper: {
@@ -33,7 +36,6 @@ const useStyles = makeStyles({
 });
 
 const AccountDropdown = ({
-    languageData,
     setLang,
     anchorEl,
     handleClose,
@@ -41,13 +43,16 @@ const AccountDropdown = ({
     userEmail = '',
 }) => {
     const styles = useStyles();
-
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
+    const dispatch = useContext(Context)[1];
+    const [translations, selectedLang] = useTranslations();
 
     const handleLanguageSelect = (e) => {
         setLang(e.target.value);
         saveLanguagePreference(e.target.value);
+        dispatch({
+            type: REDUCER_ACTIONS.SET_LANGUAGE,
+            language: e.target.value,
+        });
     };
 
     return (
@@ -71,15 +76,18 @@ const AccountDropdown = ({
                             variant="outlined"
                             className={styles.languageSelector}
                         >
-                            <Select value={key} onChange={handleLanguageSelect}>
-                                <MenuItem value="EN">EN</MenuItem>
-                                <MenuItem value="AR">AR</MenuItem>
+                            <Select
+                                value={selectedLang}
+                                onChange={handleLanguageSelect}
+                            >
+                                <MenuItem value={LANGUAGES.EN}>EN</MenuItem>
+                                <MenuItem value={LANGUAGES.AR}>AR</MenuItem>
                             </Select>
                         </FormControl>
                     </div>
                     <div className={styles.signOutButton}>
                         <Button onClick={signOut}>
-                            {lang.components.login.signOut}
+                            {translations.components.login.signOut}
                         </Button>
                     </div>
                 </div>
@@ -89,7 +97,6 @@ const AccountDropdown = ({
 };
 
 AccountDropdown.propTypes = {
-    languageData: LanguageDataType.isRequired,
     handleClose: PropTypes.func.isRequired,
     setLang: PropTypes.func.isRequired,
     username: PropTypes.string,

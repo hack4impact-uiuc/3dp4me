@@ -13,10 +13,12 @@ import { LanguageDataType } from '../../utils/custom-proptypes';
 import archive from '../../assets/archive.svg';
 import { getAllPatients } from '../../utils/api';
 import {
+    LANGUAGES,
     REQUIRED_DASHBOARD_HEADERS,
     REQUIRED_DASHBOARD_SORT_KEYS,
 } from '../../utils/constants';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const useStyles = makeStyles(() => ({
     swalEditButton: {
@@ -40,16 +42,14 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const Patients = ({ languageData }) => {
+const Patients = () => {
+    const [translations, selectedLang] = useTranslations();
     const classes = useStyles();
     const [allPatients, setAllPatients] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterPatients, setFilteredPatients] = useState([]);
     const [noPatient, setNoPatient] = useState(false);
     const errorWrap = useErrorWrap();
-
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     const doesPatientMatchQuery = (patient, query) => {
         if (
@@ -92,8 +92,8 @@ const Patients = ({ languageData }) => {
             const dob = document.getElementById('createDOB').value;
             const createId = document.getElementById('createId').value;
             swal(
-                lang.components.swal.createPatient.successMsg,
-                `${lang.components.swal.createPatient.firstName}: ${name}\n${lang.components.swal.createPatient.dob}: ${dob}\n${lang.components.swal.createPatient.id}: ${createId}`,
+                translations.components.swal.createPatient.successMsg,
+                `${translations.components.swal.createPatient.firstName}: ${name}\n${translations.components.swal.createPatient.dob}: ${dob}\n${translations.components.swal.createPatient.id}: ${createId}`,
                 'success',
             );
         }
@@ -114,11 +114,14 @@ const Patients = ({ languageData }) => {
                     }}
                 >
                     <h2 style={{ fontWeight: 'bolder' }}>
-                        {lang.components.swal.createPatient.title}
+                        {translations.components.swal.createPatient.title}
                     </h2>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>
-                            {lang.components.swal.createPatient.firstName}
+                            {
+                                translations.components.swal.createPatient
+                                    .firstName
+                            }
                         </span>
                         <TextField
                             size="small"
@@ -128,7 +131,10 @@ const Patients = ({ languageData }) => {
                             variant="outlined"
                         />
                         <span>
-                            {lang.components.swal.createPatient.middleName}
+                            {
+                                translations.components.swal.createPatient
+                                    .middleName
+                            }
                         </span>
                         <div style={{ display: 'flex' }}>
                             <TextField
@@ -147,7 +153,10 @@ const Patients = ({ languageData }) => {
                             />
                         </div>
                         <span>
-                            {lang.components.swal.createPatient.lastName}
+                            {
+                                translations.components.swal.createPatient
+                                    .lastName
+                            }
                         </span>
                         <TextField
                             size="small"
@@ -158,7 +167,9 @@ const Patients = ({ languageData }) => {
                         />
                     </div>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>{lang.components.swal.createPatient.dob} </span>
+                        <span>
+                            {translations.components.swal.createPatient.dob}{' '}
+                        </span>
                         <TextField
                             size="small"
                             id="createDOB"
@@ -168,7 +179,9 @@ const Patients = ({ languageData }) => {
                         />
                     </div>
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>{lang.components.swal.createPatient.id} </span>
+                        <span>
+                            {translations.components.swal.createPatient.id}{' '}
+                        </span>
                         <TextField
                             size="small"
                             id="createId"
@@ -189,12 +202,18 @@ const Patients = ({ languageData }) => {
                             className={classes.swalEditButton}
                             onClick={() => createPatientHelper(true, autoId)}
                         >
-                            {lang.components.swal.createPatient.buttons.edit}
+                            {
+                                translations.components.swal.createPatient
+                                    .buttons.edit
+                            }
                         </Button>
                         <Button
                             onClick={() => createPatientHelper(false, autoId)}
                         >
-                            {lang.components.swal.createPatient.buttons.noEdit}
+                            {
+                                translations.components.swal.createPatient
+                                    .buttons.noEdit
+                            }
                         </Button>
                     </div>
                 </div>
@@ -226,19 +245,19 @@ const Patients = ({ languageData }) => {
                         elevation={6}
                         variant="filled"
                     >
-                        {lang.components.table.noPatientsFound}
+                        {translations.components.table.noPatientsFound}
                     </MuiAlert>
                 </Snackbar>
                 <div className="header">
                     <div className="section">
                         <h2
                             className={
-                                key === 'AR'
+                                selectedLang === LANGUAGES.AR
                                     ? 'all-patients-header-text-ar'
                                     : 'all-patients-header-text'
                             }
                         >
-                            {lang.components.navbar.patients.pageTitle}
+                            {translations.components.navbar.patients.pageTitle}
                         </h2>
                         <div
                             style={{
@@ -269,14 +288,16 @@ const Patients = ({ languageData }) => {
                             value={searchQuery}
                             size="small"
                             variant="outlined"
-                            placeholder={lang.components.search.placeholder}
+                            placeholder={
+                                translations.components.search.placeholder
+                            }
                         />
 
                         <Button
                             className="create-patient-button"
                             onClick={createPatient}
                         >
-                            {lang.components.button.createPatient}
+                            {translations.components.button.createPatient}
                         </Button>
                     </div>
                 </div>
@@ -284,7 +305,6 @@ const Patients = ({ languageData }) => {
             <MainTable
                 headers={REQUIRED_DASHBOARD_HEADERS}
                 rowIds={REQUIRED_DASHBOARD_SORT_KEYS}
-                languageData={languageData}
                 patients={
                     searchQuery.length === 0 ? allPatients : filterPatients
                 }
@@ -292,10 +312,6 @@ const Patients = ({ languageData }) => {
             )
         </div>
     );
-};
-
-Patients.propTypes = {
-    languageData: LanguageDataType.isRequired,
 };
 
 export default Patients;
