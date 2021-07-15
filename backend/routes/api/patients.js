@@ -10,7 +10,7 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
-const { requireAdmin } = require('../../middleware/authentication');
+const { isAdmin } = require('../../middleware/authentication');
 const {
     removeRequestAttributes,
     STEP_IMMUTABLE_ATTRIBUTES,
@@ -87,7 +87,6 @@ router.post(
 
 router.put(
     '/:id',
-    requireAdmin,
     removeRequestAttributes(['_id', '__v', 'dateCreated']),
     errorWrap(async (req, res) => {
         const { id } = req.params;
@@ -275,8 +274,39 @@ router.post(
     '/:id/:stage',
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
+        console.log(req.user.roles);
+        roles = [req.user.roles.toString()];
         const { id, stage } = req.params;
-        const steps = await models.Step.find({ key: stage });
+        let steps = null;
+        if (isAdmin(req.user)) {
+            steps = await models.Step.find({ key: stage });
+        } else {
+            steps = await models.Step.find({
+                $and: [
+                    { key: stage },
+                    { writableGroups: { $in: [req.user.roles.toString()] } },
+                ],
+            });
+            let writableFields = [];
+
+            steps.map((step) => {
+                step.fields = step.fields.filter((field) => {
+                    return field.readableGroups.some((role) =>
+                        roles.includes(role),
+                    );
+                });
+            });
+
+            steps.forEach((step) => {
+                writableFields.push(step.fields.key);
+            });
+
+            for (const [key, value] of Object.entries(req.body)) {
+                if (!writableFields.includes(key)) {
+                    delete req.body[key];
+                }
+            }
+        }
 
         if (steps.length == 0) {
             return res.status(404).json({
@@ -299,15 +329,23 @@ router.post(
         let patientStepData = await model.findOne({ patientId: id });
         if (!patientStepData) {
             patientStepData = req.body;
-            patientStepData.lastEdited = Date.now();
-            patientStepData.lastEditedBy = req.user.name;
+
+            if (Object.keys(req.body) != 0) {
+                patientStepData.lastEdited = Date.now();
+                patientStepData.lastEditedBy = req.user.name;
+            }
+
             patientStepData.patientId = id;
             const newStepDataModel = new model(patientStepData);
             patientStepData = await newStepDataModel.save();
         } else {
             patientStepData = _.assign(patientStepData, req.body);
-            patientStepData.lastEdited = Date.now();
-            patientStepData.lastEditedBy = req.user.name;
+
+            if (Object.keys(req.body) != 0) {
+                patientStepData.lastEdited = Date.now();
+                patientStepData.lastEditedBy = req.user.name;
+            }
+
             patientStepData = await patientStepData.save();
         }
 

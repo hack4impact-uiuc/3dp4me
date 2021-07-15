@@ -10,7 +10,10 @@ const {
     stepStatusEnum,
     validateOptions,
 } = require('../../models');
-const { removeAttributesFrom } = require('../../middleware/requests');
+const {
+    removeAttributesFrom,
+    removeRequestAttributes,
+} = require('../../middleware/requests');
 const { fieldEnum, isUniqueStepNumber } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 const { requireAdmin, isAdmin } = require('../../middleware/authentication');
@@ -126,19 +129,19 @@ router.get(
         if (isAdmin(req.user)) {
             metaData = await models.Step.find({});
         } else {
-			const roles = [req.user.roles.toString()];
-            metaData = await models.Step.find(
-					{ readableGroups: { $in: [req.user.roles.toString()] }},
-            );
+            const roles = [req.user.roles.toString()];
+            metaData = await models.Step.find({
+                readableGroups: { $in: [req.user.roles.toString()] },
+            });
 
-			// Iterate over fields and remove fields that do not have matching permissions
-			metaData.map(
-				step => {
-					step.fields = step.fields.filter(field => {
-						field.readableGroups.some(role => roles.includes(role))
-					});
-				}
-			);
+            // Iterate over fields and remove fields that do not have matching permissions
+            metaData.map((step) => {
+                step.fields = step.fields.filter((field) => {
+                    return field.readableGroups.some((role) =>
+                        roles.includes(role),
+                    );
+                });
+            });
         }
 
         if (!metaData) {
@@ -259,10 +262,10 @@ const putOneStep = async (stepBody, res, session) => {
     return step;
 };
 
-// PUT metadata/steps/:stepkey
+// PUT metadata/steps
 router.put(
     '/steps/',
-	requireAdmin,
+    requireAdmin,
     errorWrap(async (req, res) => {
         try {
             let stepData = [];

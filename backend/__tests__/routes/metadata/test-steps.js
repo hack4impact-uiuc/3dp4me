@@ -34,6 +34,7 @@ const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
+    getCurrentAuthenticatedUserAttribute,
     createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const { models } = require('../../../models');
@@ -153,7 +154,10 @@ describe('PUT /steps/stepkey', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(AWS);
+        setCurrentUser(
+            AWS,
+            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
+        );
     });
 
     beforeEach(() => {

@@ -1,6 +1,7 @@
 const db = require('../utils/db');
 require('../../app.js');
 const request = require('supertest');
+const omitDeep = require('omit-deep-lodash');
 const {
     withAuthentication,
     createUserDataWithRolesAndAccess,
@@ -13,6 +14,8 @@ const { ACCESS_LEVELS, ADMIN_ID } = require('../../middleware/authentication');
 const {
     PUT_PATIENT_DATA,
     EXPECTED_PUT_DATA,
+    EXPECTED_GET_RESTRICTED_DATA,
+    POST_FINISHED_STEP_DATA,
 } = require('../mock-data/patients-mock-data');
 const { expectStrictEqualWithTimestampOrdering } = require('../utils/utils');
 const mongoose = require('mongoose');
@@ -118,22 +121,54 @@ describe('Test authentication ', () => {
     });
 
     it('does not return parts not readableBy user', async () => {
-		const MOCK_USER_ID = '606e0a4602b23d02bc77673a'; 
-		setCurrentUser(
+        const MOCK_USER_ID = '606e0a4602b23d02bc77673a';
+        setCurrentUser(
             AWS,
-            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, MOCK_USER_ID),
+            createUserDataWithRolesAndAccess(
+                ACCESS_LEVELS.GRANTED,
+                MOCK_USER_ID,
+            ),
         );
 
-		const res = await withAuthentication(
-			request(server)
-				.get(`/api/metadata/steps`)
-		);
+        const res = await withAuthentication(
+            request(server).get(`/api/metadata/steps`),
+        );
 
-		console.log(res.text);
-		const resContent = JSON.parse(res.text);
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
+        expect(omitDeep(resContent.result, '__v')).toStrictEqual([
+            EXPECTED_GET_RESTRICTED_DATA,
+        ]);
+    });
 
-		
-	});
+    it('does write to parts not writableBy user', async () => {
+        const MOCK_USER_ID = '606e0a4602b23d02bc77673c';
+        const PATIENT_ID = '60944e084f4c0d4330cc2594';
+        const STEP_KEY = 'example';
+        const model = mongoose.model(STEP_KEY);
+        setCurrentUser(
+            AWS,
+            createUserDataWithRolesAndAccess(
+                ACCESS_LEVELS.GRANTED,
+                MOCK_USER_ID,
+            ),
+        );
 
-    it('does write to parts not writableBy user', async () => {});
+        const dataBefore = await model
+            .findOne({ patientId: PATIENT_ID })
+            .lean();
+
+        const res = await withAuthentication(
+            request(server)
+                .post(`/api/patients/${PATIENT_ID}/${STEP_KEY}`)
+                .send(POST_FINISHED_STEP_DATA),
+        );
+
+        const resContent = JSON.parse(res.text);
+        expect(res.status).toBe(200);
+        expect(resContent.success).toBe(true);
+        const dataAfter = await model.findOne({ patientId: PATIENT_ID }).lean();
+        expect(dataBefore).toStrictEqual(dataAfter);
+    });
 });

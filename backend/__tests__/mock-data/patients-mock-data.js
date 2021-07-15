@@ -223,3 +223,38 @@ module.exports.EXPECTED_PUT_DATA = {
     lastEdited: '2020-07-12T22:25:28.949Z',
     lastEditedBy: 'KaceyEbert',
 };
+
+module.exports.EXPECTED_GET_RESTRICTED_DATA = {
+      displayName: {
+        EN: "Example",
+        AR: "استطلاع"
+      },
+      readableGroups: [
+        "606e0a4602b23d02bc77673a"
+      ],
+	  
+      writableGroups: ["606e0a4602b23d02bc77673c"],
+      defaultToListView: true,
+      _id: "6092c289e0912601bbc5d85e",
+      key: "example",
+      stepNumber: 2,
+      fields: [
+        {
+          displayName: {
+            EN: "String Field",
+            AR: "عدد العاملين في الأسرة"
+          },
+          fieldType: "String",
+          readableGroups: [
+            "606e0a4602b23d02bc77673a"
+          ],
+          writableGroups: [],
+          _id: "607086644e7ccf3c7cea23d8",
+          key: "string",
+          fieldNumber: 0,
+          isVisibleOnDashboard: true,
+          options: [],
+		  subFields: [],
+        }
+      ],
+};
