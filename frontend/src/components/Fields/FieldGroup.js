@@ -103,7 +103,7 @@ const FieldGroup = ({
         <div className="field-container">
             {generateAllGroups()}
             <Button className="field-group-button" onClick={onAddGroup}>
-                {`${translations[selectedLang].components.fieldGroup.add} ${metadata?.displayName[selectedLang]}`}
+                {`${translations.components.fieldGroup.add} ${metadata?.displayName[selectedLang]}`}
             </Button>
         </div>
     );

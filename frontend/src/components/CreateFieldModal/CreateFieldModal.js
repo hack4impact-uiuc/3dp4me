@@ -17,13 +17,12 @@ import PropTypes from 'prop-types';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
+import { useTranslations } from '../../hooks/useTranslations';
 
-const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
+const CreateFieldModal = ({ isOpen, onModalClose }) => {
+    const translations = useTranslations()[0];
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
     const [numChoices, setNumChoices] = useState(1);
-
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     const BootstrapInput = withStyles((theme) => ({
         root: {
@@ -72,7 +71,7 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
             choices.push(
                 <div>
                     <span>
-                        {lang.components.swal.createField.arabicChoice +
+                        {translations.components.swal.createField.arabicChoice +
                             (i + 1)}
                     </span>
                     <LanguageInput
@@ -115,7 +114,10 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                         <LanguageInput />
                         {generateChoices()}
                         <Button onClick={incrementChoices}>
-                            {lang.components.swal.createField.buttons.addChoice}
+                            {
+                                translations.components.swal.createField.buttons
+                                    .addChoice
+                            }
                         </Button>
                     </div>
                 );
@@ -163,16 +165,19 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
         >
             <div className="create-field-modal-wrapper">
                 <span className="create-field-title1">
-                    {lang.components.swal.createField.title}
+                    {translations.components.swal.createField.title}
                 </span>
                 <span className="create-field-title2">
-                    {lang.components.swal.createField.title2}
+                    {translations.components.swal.createField.title2}
                 </span>
                 <div className="create-field-title3">
                     <div style={{ padding: 10 }}>
                         <FormControl>
                             <InputLabel htmlFor="create-field-type-dropdown">
-                                {lang.components.swal.createField.fieldType}
+                                {
+                                    translations.components.swal.createField
+                                        .fieldType
+                                }
                             </InputLabel>
                             <NativeSelect
                                 id="create-field-type-dropdown"
@@ -187,7 +192,9 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                             </NativeSelect>
                         </FormControl>
                     </div>
-                    <span>{lang.components.swal.createField.clearance}</span>
+                    <span>
+                        {translations.components.swal.createField.clearance}
+                    </span>
                     <div style={{ padding: 10 }}>
                         <Select
                             id="demo-simple-select"
@@ -206,12 +213,15 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                     <div style={{ padding: 10 }}>
                         <Checkbox size="medium" />
                         <span>
-                            {lang.components.swal.createField.showOnDashBoard}
+                            {
+                                translations.components.swal.createField
+                                    .showOnDashBoard
+                            }
                         </span>
                     </div>
                 </div>
                 <span className="create-field-title3">
-                    {lang.components.swal.createField.field}{' '}
+                    {translations.components.swal.createField.field}{' '}
                 </span>
                 {generateFields()}
                 <div
@@ -225,13 +235,16 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                         onClick={onModalClose}
                         className="save-field-button"
                     >
-                        {lang.components.swal.createField.buttons.save}
+                        {translations.components.swal.createField.buttons.save}
                     </Button>
                     <Button
                         onClick={onModalClose}
                         className="discard-field-button"
                     >
-                        {lang.components.swal.createField.buttons.discard}
+                        {
+                            translations.components.swal.createField.buttons
+                                .discard
+                        }
                     </Button>
                 </div>
             </div>
@@ -240,7 +253,6 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
 };
 
 CreateFieldModal.propTypes = {
-    languageData: LanguageDataType.isRequired,
     isOpen: PropTypes.bool.isRequired,
     onModalClose: PropTypes.func.isRequired,
 };

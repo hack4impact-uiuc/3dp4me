@@ -8,7 +8,6 @@ import { LanguageDataType } from '../../utils/custom-proptypes';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const Sidebar = ({
-    languageData,
     onClick,
     onAddField,
     onAddStep,
@@ -18,7 +17,7 @@ const Sidebar = ({
     isEditing,
     selectedStep,
 }) => {
-    const key = languageData.selectedLanguage;
+    const selectedLang = useTranslations()[1];
 
     function onButtonClick(stepKey) {
         onClick(stepKey);
@@ -77,7 +76,7 @@ const Sidebar = ({
                         }`}
                         onClick={() => onButtonClick(element.key)}
                     >
-                        {element.displayName[key]}
+                        {element.displayName[selectedLang]}
                     </div>
                     {generateReorderButtons(element.key)}
                 </div>
@@ -101,7 +100,6 @@ const Sidebar = ({
 };
 
 Sidebar.propTypes = {
-    languageData: LanguageDataType.isRequired,
     onClick: PropTypes.func.isRequired,
     onAddField: PropTypes.func.isRequired,
     onUpPressed: PropTypes.func.isRequired,

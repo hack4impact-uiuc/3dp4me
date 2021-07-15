@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-
+import { LANGUAGES } from '../../utils/constants';
 import { getAllRoles, getAllUsers } from '../../utils/api';
 import MainUserTable from '../../components/Table/MainUserTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
+import { useTranslations } from '../../hooks/useTranslations';
 
-const AccountManagement = ({ languageData }) => {
+const AccountManagement = () => {
+    const [translations, selectedLang] = useTranslations();
     const [userMetaData, setUserMetaData] = useState([]);
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const errorWrap = useErrorWrap();
-    const key = languageData.selectedLanguage;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -67,7 +68,6 @@ const AccountManagement = ({ languageData }) => {
             <MainUserTable
                 headers={headings}
                 rowIds={['Name', 'Email', 'Role', 'Access']}
-                languageData={languageData}
                 users={userMetaData}
                 roleData={rolesData}
                 onUserSelected={onUserSelected}
@@ -78,7 +78,6 @@ const AccountManagement = ({ languageData }) => {
     const generateUserEditModal = () => {
         return (
             <EditRoleModal
-                languageData={languageData}
                 isOpen={selectedUser !== null}
                 userInfo={selectedUser}
                 allRoles={rolesData}
@@ -96,7 +95,7 @@ const AccountManagement = ({ languageData }) => {
                     <div className="section">
                         <h2
                             className={
-                                key === 'AR'
+                                selectedLang === LANGUAGES.AR
                                     ? 'patient-list-title-ar'
                                     : 'patient-list-title'
                             }

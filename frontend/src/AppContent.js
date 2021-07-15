@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Dashboard from './pages/Dashboard/Dashboard';
@@ -9,12 +9,34 @@ import Navbar from './components/Navbar/Navbar';
 import SectionTab from './components/SectionTab/SectionTab';
 import Controller from './steps/Controller/Controller';
 import ErrorModal from './components/ErrorModal/ErrorModal';
-import { REDUCER_ACTIONS } from './utils/constants';
+import { REDUCER_ACTIONS, LANGUAGES } from './utils/constants';
 import { Context } from './store/Store';
+import { useTranslations } from './hooks/useTranslations';
+import { getCurrentUserInfo } from './aws/aws-helper';
 
-function AppContent({ languageData, onLanguageChange, username, userEmail }) {
+function AppContent({ username, userEmail }) {
     const [state, dispatch] = useContext(Context);
-    const key = languageData.selectedLanguage;
+    const selectedLang = useTranslations()[1];
+
+    useEffect(() => {
+        const setLanguage = async () => {
+            const userInfo = await getCurrentUserInfo();
+
+            if (
+                userInfo.attributes &&
+                Object.values(LANGUAGES).includes(
+                    userInfo.attributes['custom:language'],
+                )
+            ) {
+                dispatch({
+                    type: REDUCER_ACTIONS.SET_LANGUAGE,
+                    language: userInfo.attributes['custom:language'],
+                });
+            }
+        };
+
+        setLanguage();
+    });
 
     const handleErrorModalClose = () => {
         dispatch({ type: REDUCER_ACTIONS.CLEAR_ERROR });
@@ -22,14 +44,9 @@ function AppContent({ languageData, onLanguageChange, username, userEmail }) {
 
     const renderAppContent = () => {
         return (
-            <div dir={key === 'AR' ? 'rtl' : 'ltr'}>
+            <div dir={selectedLang === LANGUAGES.AR ? 'rtl' : 'ltr'}>
                 <Router>
-                    <Navbar
-                        languageData={languageData}
-                        setSelectedLang={onLanguageChange}
-                        username={username}
-                        userEmail={userEmail}
-                    />
+                    <Navbar username={username} userEmail={userEmail} />
 
                     <ErrorModal
                         message={state.error}
@@ -37,27 +54,29 @@ function AppContent({ languageData, onLanguageChange, username, userEmail }) {
                         onClose={handleErrorModalClose}
                     />
 
-                    <div className={`${key === 'AR' ? 'flip' : ''} content`}>
+                    <div
+                        className={`${
+                            selectedLang === LANGUAGES.AR ? 'flip' : ''
+                        } content`}
+                    >
                         <Switch>
                             <Route exact path="/">
-                                <Dashboard languageData={languageData} />
+                                <Dashboard />
                             </Route>
                             <Route exact path="/account">
-                                <AccountManagement
-                                    languageData={languageData}
-                                />
+                                <AccountManagement />
                             </Route>
                             <Route exact path="/metrics">
-                                <Metrics languageData={languageData} />
+                                <Metrics />
                             </Route>
                             <Route exact path="/patients">
-                                <Patients languageData={languageData} />
+                                <Patients />
                             </Route>
                             <Route exact path="/patient-info/:patientId">
-                                <Controller languageData={languageData} />
+                                <Controller />
                             </Route>
                             <Route exact path="/section-tab">
-                                <SectionTab languageData={languageData} />
+                                <SectionTab />
                             </Route>
                         </Switch>
                     </div>

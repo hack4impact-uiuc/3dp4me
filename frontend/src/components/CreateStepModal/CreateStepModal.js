@@ -4,10 +4,10 @@ import { Button, TextField, Modal } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
+import { useTranslations } from '../../hooks/useTranslations';
 
-const CreateStepModal = ({ languageData, isOpen, onModalClose }) => {
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
+const CreateStepModal = ({ isOpen, onModalClose }) => {
+    const translations = useTranslations()[0];
 
     const generateFields = () => {
         return (
@@ -43,13 +43,16 @@ const CreateStepModal = ({ languageData, isOpen, onModalClose }) => {
 
                 <div>
                     <Button onClick={onModalClose} className="save-step-button">
-                        {lang.components.swal.createField.buttons.save}
+                        {translations.components.swal.createField.buttons.save}
                     </Button>
                     <Button
                         onClick={onModalClose}
                         className="discard-step-button"
                     >
-                        {lang.components.swal.createField.buttons.discard}
+                        {
+                            translations.components.swal.createField.buttons
+                                .discard
+                        }
                     </Button>
                 </div>
             </div>
@@ -58,7 +61,6 @@ const CreateStepModal = ({ languageData, isOpen, onModalClose }) => {
 };
 
 CreateStepModal.propTypes = {
-    languageData: LanguageDataType.isRequired,
     isOpen: PropTypes.bool.isRequired,
     onModalClose: PropTypes.func.isRequired,
 };

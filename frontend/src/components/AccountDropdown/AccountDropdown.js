@@ -36,7 +36,6 @@ const useStyles = makeStyles({
 });
 
 const AccountDropdown = ({
-    setLang,
     anchorEl,
     handleClose,
     username = '',
@@ -47,7 +46,6 @@ const AccountDropdown = ({
     const [translations, selectedLang] = useTranslations();
 
     const handleLanguageSelect = (e) => {
-        setLang(e.target.value);
         saveLanguagePreference(e.target.value);
         dispatch({
             type: REDUCER_ACTIONS.SET_LANGUAGE,

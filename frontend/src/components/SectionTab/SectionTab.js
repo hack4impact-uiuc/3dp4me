@@ -16,15 +16,15 @@ import {
     verticalMovementWidth,
 } from '../../styles/variables.scss';
 import { resolveMixedObjPath } from '../../utils/object';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
 }px`;
 const retractedSidebarWidth = drawerWidth;
 
-const SectionTab = ({ languageData }) => {
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
+const SectionTab = () => {
+    const translations = useTranslations()[0];
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
@@ -155,7 +155,6 @@ const SectionTab = ({ languageData }) => {
         return (
             <StepManagementContent
                 isEditing={isEditing}
-                languageData={languageData}
                 onDownPressed={onCardDownPressed}
                 onUpPressed={onCardUpPressed}
                 stepMetadata={selectedStepMetadata}
@@ -191,7 +190,6 @@ const SectionTab = ({ languageData }) => {
             <CreateFieldModal
                 isOpen={fieldModalOpen}
                 onModalClose={onFieldModalClose}
-                languageData={languageData}
             />
         );
     };
@@ -201,7 +199,6 @@ const SectionTab = ({ languageData }) => {
             <CreateStepModal
                 isOpen={stepModalOpen}
                 onModalClose={onStepModalClose}
-                languageData={languageData}
             />
         );
     };
@@ -211,7 +208,6 @@ const SectionTab = ({ languageData }) => {
             <div className="dashboard section-management-container">
                 <div className="sidebar-container">
                     <Sidebar
-                        languageData={languageData}
                         onClick={UpdateSelectedStep}
                         onDownPressed={onDownPressed}
                         onUpPressed={onUpPressed}
@@ -228,7 +224,7 @@ const SectionTab = ({ languageData }) => {
                             setStepModalOpen(true);
                         }}
                     >
-                        {lang.components.file.addAnother}
+                        {translations.components.file.addAnother}
                     </ListItem>
                 </div>
                 <div className="step-management-content-container">
@@ -236,7 +232,6 @@ const SectionTab = ({ languageData }) => {
                 </div>
 
                 <BottomBar
-                    languageData={languageData}
                     edit={isEditing}
                     setEdit={setIsEditing}
                     onSave={onSaveChanges}
@@ -259,8 +254,6 @@ const SectionTab = ({ languageData }) => {
     );
 };
 
-SectionTab.propTypes = {
-    languageData: LanguageDataType.isRequired,
-};
+SectionTab.propTypes = {};
 
 export default SectionTab;

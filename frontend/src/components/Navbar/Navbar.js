@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Navbar = ({ setSelectedLang, username, userEmail }) => {
+const Navbar = ({ username, userEmail }) => {
     const [translations, selectedLang] = useTranslations();
     const classes = useStyles();
     const [active, setActive] = useState('dashboard');
@@ -108,7 +108,6 @@ const Navbar = ({ setSelectedLang, username, userEmail }) => {
                     <AccountDropdown
                         anchorEl={anchorEl}
                         handleClose={handleAccountClose}
-                        setLang={setSelectedLang}
                         username={username}
                         userEmail={userEmail}
                     />
