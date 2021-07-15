@@ -14,7 +14,6 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';

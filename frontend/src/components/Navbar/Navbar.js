@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 
 import Logo from '../../assets/3dp4me_logo.png';
 import AccountDropdown from '../AccountDropdown/AccountDropdown';
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import './Navbar.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
@@ -118,7 +117,6 @@ const Navbar = ({ username, userEmail }) => {
 };
 
 Navbar.propTypes = {
-    setSelectedLang: PropTypes.func.isRequired,
     username: PropTypes.string.isRequired,
     userEmail: PropTypes.string.isRequired,
 };

@@ -8,7 +8,6 @@ import { Modal, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const SignatureField = ({

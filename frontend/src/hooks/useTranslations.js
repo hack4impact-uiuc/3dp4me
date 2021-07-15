@@ -1,5 +1,6 @@
-import translations from '../translations.json';
 import { useContext } from 'react';
+
+import translations from '../translations.json';
 import { Context } from '../store/Store';
 
 export const useTranslations = () => {

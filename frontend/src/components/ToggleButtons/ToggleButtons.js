@@ -11,7 +11,6 @@ import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ToggleButtons.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 

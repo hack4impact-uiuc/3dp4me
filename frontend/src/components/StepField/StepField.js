@@ -28,7 +28,7 @@ const StepField = ({
     handleFileUpload = () => {},
     handleFileDelete = () => {},
 }) => {
-    const [translations, selectedLang] = useTranslations();
+    const selectedLang = useTranslations()[1];
 
     const generateField = () => {
         switch (metadata.fieldType) {

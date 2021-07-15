@@ -20,10 +20,7 @@ import finishedIcon from '../../assets/check.svg';
 import partiallyIcon from '../../assets/half-circle.svg';
 import unfinishedIcon from '../../assets/exclamation.svg';
 import Eyecon from '../../assets/view.svg';
-import {
-    LanguageDataType,
-    TableHeaderType,
-} from '../../utils/custom-proptypes';
+import { TableHeaderType } from '../../utils/custom-proptypes';
 import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
 import { useTranslations } from '../../hooks/useTranslations';

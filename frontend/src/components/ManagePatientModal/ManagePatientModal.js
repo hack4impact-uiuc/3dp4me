@@ -11,7 +11,6 @@ import _ from 'lodash';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import './ManagePatientModal.scss';
 import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';

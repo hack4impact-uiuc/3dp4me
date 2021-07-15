@@ -6,7 +6,6 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const Files = ({
@@ -17,7 +16,7 @@ const Files = ({
     handleDelete,
     handleUpload,
 }) => {
-    const [translations, selectedLang] = useTranslations();
+    const translations = useTranslations()[0];
 
     const RenderExistingFiles = () => {
         if (files == null) return null;

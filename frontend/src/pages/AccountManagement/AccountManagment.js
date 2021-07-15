@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
+
 import { LANGUAGES } from '../../utils/constants';
 import { getAllRoles, getAllUsers } from '../../utils/api';
 import MainUserTable from '../../components/Table/MainUserTable';
@@ -8,7 +9,7 @@ import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const AccountManagement = () => {
-    const [translations, selectedLang] = useTranslations();
+    const selectedLang = useTranslations()[1];
     const [userMetaData, setUserMetaData] = useState([]);
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);

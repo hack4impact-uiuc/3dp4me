@@ -4,7 +4,7 @@ import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
 
 import RadioButtonField from '../Fields/RadioButtonField';
-import { LanguageDataType, FieldsType } from '../../utils/custom-proptypes';
+import { FieldsType } from '../../utils/custom-proptypes';
 import { FIELD_TYPES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 

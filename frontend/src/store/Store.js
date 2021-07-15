@@ -1,7 +1,9 @@
 import React, { createContext, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import Reducer from './Reducer';
+
 import { LANGUAGES } from '../utils/constants';
+
+import Reducer from './Reducer';
 
 const initialState = {
     error: '',

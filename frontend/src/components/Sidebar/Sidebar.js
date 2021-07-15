@@ -4,7 +4,6 @@ import Drawer from '@material-ui/core/Drawer';
 import { Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const Sidebar = ({

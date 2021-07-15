@@ -9,7 +9,6 @@ import reactSwal from '@sweetalert/with-react';
 import { getPatientName } from '../../utils/utils';
 import MainTable from '../../components/Table/MainTable';
 import search from '../../assets/search.svg';
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import archive from '../../assets/archive.svg';
 import { getAllPatients } from '../../utils/api';
 import {

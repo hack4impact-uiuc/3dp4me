@@ -18,19 +18,11 @@ import TextField from '../Fields/TextField';
 import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
-import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 
-const EditRoleModal = ({
-    isOpen,
-    onClose,
-    onUserEdited,
-    userInfo,
-    allRoles,
-}) => {
+const EditRoleModal = ({ isOpen, onClose, userInfo, allRoles }) => {
     const [translations, selectedLang] = useTranslations();
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
-    const errorWrap = useErrorWrap();
 
     useEffect(() => {
         setUserData(_.cloneDeep(userInfo));
@@ -110,7 +102,6 @@ const EditRoleModal = ({
 EditRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    onUserEdited: PropTypes.func.isRequired,
     allRoles: PropTypes.arrayOf(PropTypes.string),
     userInfo: PropTypes.shape({
         username: PropTypes.string,

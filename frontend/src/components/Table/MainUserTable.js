@@ -12,12 +12,10 @@ import { IconButton } from '@material-ui/core';
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+
 import useSortableData from '../../hooks/useSortableData';
 import Eyecon from '../../assets/view.svg';
-import {
-    LanguageDataType,
-    TableHeaderType,
-} from '../../utils/custom-proptypes';
+import { TableHeaderType } from '../../utils/custom-proptypes';
 import { ACCESS_LEVELS, LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 

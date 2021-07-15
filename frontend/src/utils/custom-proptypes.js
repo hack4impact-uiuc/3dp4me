@@ -1,10 +1,5 @@
 import PropTypes from 'prop-types';
 
-export const LanguageDataType = PropTypes.shape({
-    translations: PropTypes.object,
-    selectedLanuage: PropTypes.string,
-});
-
 export const FieldsType = PropTypes.shape({
     fields: PropTypes.array.isRequired,
 });

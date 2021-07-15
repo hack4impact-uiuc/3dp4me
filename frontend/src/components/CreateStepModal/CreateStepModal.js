@@ -3,7 +3,6 @@ import React from 'react';
 import { Button, TextField, Modal } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const CreateStepModal = ({ isOpen, onModalClose }) => {

@@ -6,7 +6,6 @@ import Select from '@material-ui/core/Select';
 import PropTypes from 'prop-types';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import { saveLanguagePreference, signOut } from '../../aws/aws-helper';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES, REDUCER_ACTIONS } from '../../utils/constants';
@@ -96,7 +95,6 @@ const AccountDropdown = ({
 
 AccountDropdown.propTypes = {
     handleClose: PropTypes.func.isRequired,
-    setLang: PropTypes.func.isRequired,
     username: PropTypes.string,
     userEmail: PropTypes.string,
     anchorEl: PropTypes.elementType,
