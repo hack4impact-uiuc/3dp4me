@@ -17,8 +17,8 @@ import {
 import { getCurrentUserInfo } from './aws/aws-helper';
 
 Amplify.configure(awsconfig);
-registerLocale('EN', enUS);
-registerLocale('AR', arSA);
+registerLocale(LANGUAGES.EN, enUS);
+registerLocale(LANGUAGES.AR, arSA);
 
 function App() {
     const [authLevel, setAuthLevel] = useState(UNDEFINED_AUTH);
