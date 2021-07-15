@@ -8,6 +8,7 @@ const TextField = ({
     isDisabled,
     fieldId = '',
     value = '',
+    className = '',
     onChange = () => {},
 }) => {
     const sendChanges = (e) => {
@@ -20,7 +21,9 @@ const TextField = ({
             <Text
                 type={type}
                 disabled={isDisabled}
-                className={!isDisabled ? 'active-input' : 'input-field'}
+                className={`${
+                    !isDisabled ? 'active-input' : 'input-field'
+                } ${className}`}
                 variant="outlined"
                 onChange={sendChanges}
                 value={value}
@@ -35,6 +38,7 @@ TextField.propTypes = {
     fieldId: PropTypes.string,
     value: PropTypes.string,
     type: PropTypes.string,
+    className: PropTypes.string,
     onChange: PropTypes.func,
 };
 
