@@ -11,13 +11,12 @@ import {
     MenuItem,
 } from '@material-ui/core';
 
-import { STEP_STATUS } from '../../utils/constants';
+import { STEP_STATUS, FIELD_TYPES } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
 import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
 import StepField from '../../components/StepField/StepField';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
-import { FIELD_TYPES } from '../../utils/constants';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const StepContent = ({

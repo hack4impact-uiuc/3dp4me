@@ -1,5 +1,6 @@
 import './LanguageInput.scss';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 
 const LanguageInput = ({ onUpPressed, onDownPressed, onDelete, fieldKey }) => {
@@ -72,6 +73,13 @@ const LanguageInput = ({ onUpPressed, onDownPressed, onDelete, fieldKey }) => {
             {generateDeleteButton()}
         </div>
     );
+};
+
+LanguageInput.propTypes = {
+    onUpPressed: PropTypes.func.isRequired,
+    onDownPressed: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    fieldKey: PropTypes.string.isRequired,
 };
 
 export default LanguageInput;

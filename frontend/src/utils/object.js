@@ -16,8 +16,8 @@ export function resolveObjPath(obj, path) {
 /**
  * Same as resolveObjPath except it can work with arrays in the path
  * In order to work with arrays, a condition must be provided in the brackets of array fields.
- * The string, 'x', will always be the place holder for the item to check.
- * So if we want the 'field' with a key==='val', then the path should be "field[x['key']==='val']"".
+ * So if we want the 'field' with a key==='val', then the path should be "field[key==='val']"".
+ * Note that this only compares the stringified value for 'key'
  */
 export function resolveMixedObjPath(obj, path) {
     if (!obj) return null;
@@ -38,11 +38,16 @@ export function resolveMixedObjPath(obj, path) {
         // Name of the array
         const arrayName = s.shift();
 
-        // Condition that must be matched inside the brackets
+        // Extract the keyname and value from the condition
         let condition = s.join('[');
         condition = condition.substr(0, condition.length - 1);
+        const conditionArray = condition.split('===');
+        const keyName = conditionArray[0];
+        const value = conditionArray[1];
 
-        nextObj = obj[arrayName]?.find((x) => eval(condition));
+        nextObj = obj[arrayName]?.find(
+            (item) => item[keyName]?.toString() === value,
+        );
     }
 
     return resolveMixedObjPath(nextObj, remainingPath);

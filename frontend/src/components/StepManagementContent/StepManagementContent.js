@@ -2,6 +2,7 @@ import './StepManagementContent.scss';
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
+
 import RadioButtonField from '../Fields/RadioButtonField';
 import { LanguageDataType, FieldsType } from '../../utils/custom-proptypes';
 import { FIELD_TYPES } from '../../utils/constants';
@@ -11,7 +12,6 @@ const StepManagementContent = ({
     onDownPressed,
     onUpPressed,
     onEditField,
-    onAddField,
     stepMetadata,
     isEditing,
 }) => {
@@ -33,7 +33,7 @@ const StepManagementContent = ({
                             fieldId={field?.key}
                             langKey={key}
                             options={field?.options}
-                            isDisabled={true}
+                            isDisabled
                         />
                     </div>
                 );
@@ -44,10 +44,6 @@ const StepManagementContent = ({
 
     const renderEditButtons = (field, fieldRoot, fieldNumber) => {
         if (!isEditing) return null;
-
-        // This is just some notation we defined to allow us to specify array fields... see resolveMixedObjPath
-        //const key = `${fieldPath}[x['key']==='${field.key}']`;
-        //const root = `${fieldRoot}[x['fieldNumber']===${fieldNumber}].subFields`;
 
         return (
             <div className="buttons">
@@ -91,7 +87,7 @@ const StepManagementContent = ({
     function generateSubfieldInfo(field, fieldRoot, fieldNumber) {
         if (!field?.subFields?.length) return null;
 
-        const root = `${fieldRoot}[x['fieldNumber']===${fieldNumber}].subFields`;
+        const root = `${fieldRoot}[fieldNumber===${fieldNumber}].subFields`;
         return (
             <div className="subfield-container">
                 {generateButtonInfo(field.subFields, root)}
@@ -148,7 +144,9 @@ const StepManagementContent = ({
 StepManagementContent.propTypes = {
     languageData: LanguageDataType.isRequired,
     fields: FieldsType.isRequired,
+    isEditing: PropTypes.bool.isRequired,
     onDownPressed: PropTypes.func.isRequired,
+    onEditField: PropTypes.func.isRequired,
     stepMetadata: PropTypes.object,
     onUpPressed: PropTypes.func.isRequired,
 };

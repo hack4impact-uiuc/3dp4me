@@ -37,7 +37,6 @@ const EditRoleModal = ({
 
     const onSave = (event) => {
         // TODO: Make post requests and callback to parent
-        console.log(event);
     };
 
     return (

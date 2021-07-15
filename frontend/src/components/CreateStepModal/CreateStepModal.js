@@ -2,7 +2,6 @@ import './CreateStepModal.scss';
 import React from 'react';
 import { Button, TextField, Modal } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 

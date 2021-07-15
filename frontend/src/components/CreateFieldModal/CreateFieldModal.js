@@ -2,7 +2,6 @@ import './CreateFieldModal.scss';
 import React, { useState } from 'react';
 import {
     Button,
-    TextField,
     Select,
     MenuItem,
     Checkbox,
@@ -14,7 +13,6 @@ import {
     InputLabel,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { Grid, Row, Col } from 'react-flexbox-grid';
 
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { FIELD_TYPES } from '../../utils/constants';
@@ -63,9 +61,10 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
     const incrementChoices = () => {
         setNumChoices(numChoices + 1);
     };
-    const removeChoice = () => {
-        setNumChoices(numChoices - 1);
-    };
+
+    // const removeChoice = () => {
+    //     setNumChoices(numChoices - 1);
+    // };
 
     const generateChoices = () => {
         const choices = [];
@@ -78,13 +77,13 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
                     </span>
                     <LanguageInput
                         onDelete={() => {
-                            /*TODO:*/
+                            /* TODO: */
                         }}
                         onUpPressed={() => {
-                            /*TODO:*/
+                            /* TODO: */
                         }}
                         onDownPressed={() => {
-                            /*TODO:*/
+                            /* TODO: */
                         }}
                     />
                 </div>,
@@ -94,7 +93,6 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
     };
 
     const generateFields = () => {
-        let inputTitle = 'Quesetion';
         switch (fieldType) {
             case FIELD_TYPES.STRING:
             case FIELD_TYPES.MULTILINE_STRING:
@@ -146,13 +144,13 @@ const CreateFieldModal = ({ languageData, isOpen, onModalClose }) => {
 
     const generateFieldDropdownOptions = () => {
         const options = [];
-        for (const [key, value] of Object.entries(FIELD_TYPES)) {
+        Object.values(FIELD_TYPES).forEach((value) => {
             options.push(
                 <option value={value} className="create-field-option">
                     {value}
                 </option>,
             );
-        }
+        });
 
         return options;
     };

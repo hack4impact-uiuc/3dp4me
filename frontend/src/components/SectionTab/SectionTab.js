@@ -2,6 +2,7 @@ import './SectionTab.scss';
 import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
+
 import BottomBar from '../BottomBar/BottomBar';
 import { LanguageDataType } from '../../utils/custom-proptypes';
 import { getAllStepsMetadata } from '../../utils/api';
@@ -35,13 +36,13 @@ const SectionTab = ({ languageData }) => {
         setStepModalOpen(true);
     };
 
-    const onAddField = (stepKey) => {
+    const onAddField = () => {
         setFieldModalOpen(true);
     };
 
     const onEditField = () => {
-        //setFieldModalOpen(true);
-        //TODO
+        // setFieldModalOpen(true);
+        // TODO
     };
 
     const onSaveChanges = () => {

@@ -1,8 +1,10 @@
 import './Sidebar.scss';
 import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import { Button } from '@material-ui/core';
+import PropTypes from 'prop-types';
+
+import { LanguageDataType } from '../../utils/custom-proptypes';
 
 const Sidebar = ({
     languageData,
@@ -99,6 +101,14 @@ const Sidebar = ({
 
 Sidebar.propTypes = {
     languageData: LanguageDataType.isRequired,
+    onClick: PropTypes.func.isRequired,
+    onAddField: PropTypes.func.isRequired,
+    onUpPressed: PropTypes.func.isRequired,
+    onDownPressed: PropTypes.func.isRequired,
+    onAddStep: PropTypes.func.isRequired,
+    stepMetadata: PropTypes.object,
+    isEditing: PropTypes.bool.isRequired,
+    selectedStep: PropTypes.string.isRequired,
 };
 
 export default Sidebar;

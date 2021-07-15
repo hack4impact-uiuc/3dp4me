@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
+
 import { formatDate } from '../../utils/date';
 import './BottomBar.scss';
 import check from '../../assets/check.svg';
@@ -176,6 +177,7 @@ const BottomBar = ({
 
 BottomBar.propTypes = {
     languageData: LanguageDataType.isRequired,
+    style: PropTypes.object,
     edit: PropTypes.bool.isRequired,
     lastEdited: PropTypes.string.isRequired,
     lastEditedBy: PropTypes.string.isRequired,
