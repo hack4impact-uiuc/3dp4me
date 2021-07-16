@@ -93,5 +93,3 @@ describe('PUT /patients/:id #235', () => {
         return result;
     };
 });
-
-//helper function/modularization
