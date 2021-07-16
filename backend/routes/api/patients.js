@@ -13,14 +13,8 @@ const {
 const {
     removeRequestAttributes,
     STEP_IMMUTABLE_ATTRIBUTES,
+    PATIENT_IMMUTABLE_ATTRIBUTES,
 } = require('../../middleware/requests');
-const IMMUTABLE_PATIENT_FIELDS = [
-    '_id',
-    '__v',
-    'dateCreated',
-    'lastEdited',
-    'lastEditedBy',
-];
 
 // GET: Returns all patients
 router.get(
@@ -67,7 +61,7 @@ router.get(
 // POST: new patient
 router.post(
     '/',
-    removeRequestAttributes(IMMUTABLE_PATIENT_FIELDS),
+    removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const patient = req.body;
         let new_patient = null;
@@ -95,7 +89,7 @@ router.post(
 
 router.put(
     '/:id',
-    removeRequestAttributes(IMMUTABLE_PATIENT_FIELDS),
+    removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const { id } = req.params;
         const patient = await models.Patient.findOneAndUpdate(

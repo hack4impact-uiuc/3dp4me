@@ -11,7 +11,7 @@ const {
     withAuthentication,
 } = require('../../utils/auth');
 
-describe('PUT /patients/:id #235', () => {
+describe('PUT /patients/:id', () => {
     const PATIENT_ID = '60944e084f4c0d4330cc258b';
     const COLLECTION_NAME = 'Patient';
 
