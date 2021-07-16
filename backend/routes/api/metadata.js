@@ -262,7 +262,7 @@ const putOneStep = async (stepBody, res, session) => {
     return step;
 };
 
-// PUT metadata/steps
+
 router.put(
     '/steps/',
     requireAdmin,

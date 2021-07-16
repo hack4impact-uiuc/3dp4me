@@ -189,7 +189,7 @@ router.delete(
         patient.lastEditedBy = req.user.name;
         patient.save();
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
             message: 'File successfully removed',
         });
