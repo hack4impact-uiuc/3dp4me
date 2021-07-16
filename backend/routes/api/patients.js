@@ -151,15 +151,15 @@ router.delete(
             });
         }
 
-        const collection = await mongoose.connection.db.collection(stepKey);
-        if (collection == null) {
+        const model = await mongoose.model(stepKey);
+        if (model == null) {
             return res.status(404).json({
                 success: false,
                 message: `Step with key ${stepKey} not found`,
             });
         }
 
-        const stepData = await collection.findOne({ patientId: id });
+        const stepData = await model.findOne({ patientId: id });
         if (stepData == null) {
             return res.status(404).json({
                 success: false,
@@ -183,7 +183,7 @@ router.delete(
 
         stepData.lastEdited = Date.now();
         stepData.lastEditedBy = req.user.name;
-        collection.findOneAndUpdate({ patientId: id }, { $set: stepData });
+        await stepData.save();
 
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
@@ -221,8 +221,9 @@ router.post(
             });
         }
 
-        const collection = await mongoose.connection.db.collection(stepKey);
-        let stepData = (await collection.findOne({ patientId: id })) || {};
+        const model = await mongoose.model(stepKey);
+        let stepData =
+            (await model.findOne({ patientId: id })) || new model({});
 
         // Set ID in case patient does not have any information for this step yet
         stepData.patientId = id;
@@ -245,11 +246,7 @@ router.post(
         });
         stepData.lastEdited = Date.now();
         stepData.lastEditedBy = req.user.name;
-        collection.findOneAndUpdate(
-            { patientId: id },
-            { $set: stepData },
-            { upsert: true },
-        );
+        stepData.save();
 
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
