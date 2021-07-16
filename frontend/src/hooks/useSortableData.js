@@ -9,15 +9,9 @@ const useSortableData = (items, UNSORTED_DATA, config = null) => {
         const aVal = resolveObjPath(a, key);
         const bVal = resolveObjPath(b, key);
 
-        if (!aVal && !bVal) return 0;
+        if ((!aVal && bVal) || aVal > bVal) return -1;
 
-        if (!aVal && bVal) return -1;
-
-        if (aVal && !bVal) return 1;
-
-        if (aVal > bVal) return -1;
-
-        if (aVal < bVal) return 1;
+        if ((aVal && !bVal) || aVal < bVal) return 1;
 
         return 0;
     };
