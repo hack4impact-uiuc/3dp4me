@@ -83,7 +83,7 @@ describe('POST /patient', () => {
             ...DEFAULT_STEP_DATA,
             patientId: patientID,
             lastEdited: startTimestamp,
-            lastEditedBy: getCurrentAuthenticatedUserAttribute('name'),
+            lastEditedBy: 'Admin',
         };
 
         // Send the request

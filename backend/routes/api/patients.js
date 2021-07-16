@@ -274,7 +274,6 @@ router.post(
     '/:id/:stage',
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
-        console.log(req.user.roles);
         roles = [req.user.roles.toString()];
         const { id, stage } = req.params;
         let steps = null;
@@ -284,7 +283,7 @@ router.post(
             steps = await models.Step.find({
                 $and: [
                     { key: stage },
-                    { writableGroups: { $in: [req.user.roles.toString()] } },
+                    { writableGroups: { $in: [req.user.roles.toString()] } }, // Check this is correct req.user.roles is an array
                 ],
             });
             let writableFields = [];
@@ -329,7 +328,6 @@ router.post(
         let patientStepData = await model.findOne({ patientId: id });
         if (!patientStepData) {
             patientStepData = req.body;
-
             if (Object.keys(req.body) != 0) {
                 patientStepData.lastEdited = Date.now();
                 patientStepData.lastEditedBy = req.user.name;
@@ -345,10 +343,11 @@ router.post(
                 patientStepData.lastEdited = Date.now();
                 patientStepData.lastEditedBy = req.user.name;
             }
-
+            console.log(patientStepData.lastEdited.getTime());
             patientStepData = await patientStepData.save();
         }
 
+        // Doesn't update if step was not changed
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
         await patient.save();

@@ -100,7 +100,7 @@ const generateSchemaFromMetadata = (stepMetadata) => {
         enum: Object.values(stepStatusEnum),
         default: stepStatusEnum.UNFINISHED,
     };
-    stepSchema.lastEdited = { type: Date, required: true, default: new Date() };
+    stepSchema.lastEdited = { type: Date, required: true, default: Date.now };
     stepSchema.lastEditedBy = {
         type: String,
         required: true,
