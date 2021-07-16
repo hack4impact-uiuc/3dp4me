@@ -343,7 +343,6 @@ router.post(
                 patientStepData.lastEdited = Date.now();
                 patientStepData.lastEditedBy = req.user.name;
             }
-            console.log(patientStepData.lastEdited.getTime());
             patientStepData = await patientStepData.save();
         }
 

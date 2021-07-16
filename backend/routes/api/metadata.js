@@ -262,7 +262,6 @@ const putOneStep = async (stepBody, res, session) => {
     return step;
 };
 
-
 router.put(
     '/steps/',
     requireAdmin,
