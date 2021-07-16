@@ -203,6 +203,8 @@ router.post(
         // TODO during refactoring: We upload file name in form data, is this even needed???
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
+
+        console.log(patient);
         if (patient == null) {
             return res.status(404).json({
                 success: false,
@@ -224,6 +226,7 @@ router.post(
         const model = await mongoose.model(stepKey);
         let stepData =
             (await model.findOne({ patientId: id })) || new model({});
+        //console.log(stepData)
 
         // Set ID in case patient does not have any information for this step yet
         stepData.patientId = id;
@@ -246,11 +249,11 @@ router.post(
         });
         stepData.lastEdited = Date.now();
         stepData.lastEditedBy = req.user.name;
-        stepData.save();
+        await stepData.save();
 
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
-        patient.save();
+        await patient.save();
 
         res.status(201).json({
             success: true,
