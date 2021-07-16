@@ -1,4 +1,5 @@
 const express = require('express');
+const encrypt = require('mongoose-encryption');
 const router = express.Router();
 const isValidNumber = require('libphonenumber-js');
 const { errorWrap } = require('../../utils');
@@ -104,6 +105,12 @@ const generateSchemaFromMetadata = (stepMetadata) => {
     };
     generateFieldsFromMetadata(stepMetadata.fields, stepSchema);
     const schema = new mongoose.Schema(stepSchema);
+
+    schema.plugin(encrypt, {
+        encryptionKey: process.env.ENCRYPTION_KEY,
+        signingKey: process.env.SIGNING_KEY,
+        excludeFromEncryption: ['patientId'],
+    });
     mongoose.model(stepMetadata.key, schema, stepMetadata.key);
 };
 

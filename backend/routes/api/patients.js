@@ -44,8 +44,8 @@ router.get(
 
         let stepKeys = await getStepKeys();
         for (const stepKey of stepKeys) {
-            const collection = await mongoose.connection.db.collection(stepKey);
-            const stepData = await collection.findOne({ patientId: id });
+            let model = mongoose.model(stepKey);
+            const stepData = await model.findOne({ patientId: id });
             patientData.set(stepKey, stepData, { strict: false });
         }
 
