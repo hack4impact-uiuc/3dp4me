@@ -90,12 +90,7 @@ router.put(
     removeRequestAttributes(['_id', '__v', 'dateCreated']),
     errorWrap(async (req, res) => {
         const { id } = req.params;
-        const patient = await models.Patient.findOneAndUpdate(
-            { _id: id },
-            { $set: req.body },
-            { new: true },
-        );
-
+        const patient = await models.Patient.findById(id);
         if (patient == null) {
             return res.status(404).json({
                 code: 404,
@@ -104,11 +99,16 @@ router.put(
             });
         }
 
+        _.assign(patient, req.body);
+        patient.lastEdited = Date.now();
+        patient.lastEditedBy = req.user.name;
+        const savedPatient = await patient.save();
+
         res.status(200).json({
             code: 200,
             success: true,
             message: 'Patient successfully edited.',
-            result: patient,
+            result: savedPatient,
         });
     }),
 );
