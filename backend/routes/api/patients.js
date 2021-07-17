@@ -204,7 +204,6 @@ router.post(
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
 
-        console.log(patient);
         if (patient == null) {
             return res.status(404).json({
                 success: false,
@@ -226,7 +225,6 @@ router.post(
         const model = await mongoose.model(stepKey);
         let stepData =
             (await model.findOne({ patientId: id })) || new model({});
-        //console.log(stepData)
 
         // Set ID in case patient does not have any information for this step yet
         stepData.patientId = id;
