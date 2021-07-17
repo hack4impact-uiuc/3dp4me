@@ -255,22 +255,26 @@ const Dashboard = ({ languageData }) => {
                 headers.push({
                     title: field.displayName[key],
                     sortKey: `${step}.${field.key}`,
+                    fieldType: field.fieldType,
                 });
         });
 
         return headers;
     }
 
-    function generateRowIds(stepKey, fields) {
+    function generateRowData(stepKey, fields) {
         if (fields == null) return [];
 
-        const rowIDs = _.cloneDeep(REQUIRED_DASHBOARD_SORT_KEYS);
+        const rowData = _.cloneDeep(REQUIRED_DASHBOARD_SORT_KEYS);
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
-                rowIDs.push(`${stepKey}.${field.key}`);
+                rowData.push({
+                    id: `${stepKey}.${field?.key}`,
+                    dataType: field?.fieldType,
+                });
         });
 
-        return rowIDs;
+        return rowData;
     }
 
     function generateMainTable() {
@@ -282,7 +286,7 @@ const Dashboard = ({ languageData }) => {
             return (
                 <MainTable
                     headers={generateHeaders(element.fields)}
-                    rowIds={generateRowIds(element.key, element.fields)}
+                    rowData={generateRowData(element.key, element.fields)}
                     languageData={languageData}
                     patients={
                         searchQuery.length === 0 ? patients : filteredPatients
