@@ -1386,7 +1386,7 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
                 subFields: [],
             },
         ],
-        __v: 0,
+        __v: 1,
     },
 ];
 
@@ -2208,7 +2208,7 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
                 subFields: [],
             },
         ],
-        __v: 0,
+        __v: 1,
     },
 ];
 
