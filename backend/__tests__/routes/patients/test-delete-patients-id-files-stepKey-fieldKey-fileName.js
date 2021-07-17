@@ -1,10 +1,9 @@
+var server = require('../../../app');
 const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
-
-var server = require('../../../app');
 const {
     initAuthMocker,
     setCurrentUser,

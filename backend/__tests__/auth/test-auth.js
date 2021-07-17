@@ -73,11 +73,10 @@ describe('Test authentication ', () => {
 
     it('succeeds when given valid user token with proper roles', (done) => {
         AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
-            const MOCK_ROLE_ID = '606e0a4602b23d02bc77673b';
             return Promise.resolve(
                 createUserDataWithRolesAndAccess(
                     ACCESS_LEVELS.GRANTED,
-                    MOCK_ROLE_ID,
+                    ADMIN_ID,
                 ),
             );
         });
@@ -121,12 +120,12 @@ describe('Test authentication ', () => {
     });
 
     it('does not return parts not readableBy user', async () => {
-        const MOCK_USER_ID = '606e0a4602b23d02bc77673a';
+        const MOCK_ROLE_ID = '606e0a4602b23d02bc77673a';
         setCurrentUser(
             AWS,
             createUserDataWithRolesAndAccess(
                 ACCESS_LEVELS.GRANTED,
-                MOCK_USER_ID,
+                MOCK_ROLE_ID,
             ),
         );
 
@@ -143,7 +142,7 @@ describe('Test authentication ', () => {
     });
 
     it('does write to parts not writableBy user', async () => {
-        const MOCK_USER_ID = '606e0a4602b23d02bc77673c';
+        const MOCK_ROLE_ID = '606e0a4602b23d02bc77673c';
         const PATIENT_ID = '60944e084f4c0d4330cc2594';
         const STEP_KEY = 'example';
         const model = mongoose.model(STEP_KEY);
@@ -151,7 +150,7 @@ describe('Test authentication ', () => {
             AWS,
             createUserDataWithRolesAndAccess(
                 ACCESS_LEVELS.GRANTED,
-                MOCK_USER_ID,
+                MOCK_ROLE_ID,
             ),
         );
 
@@ -171,4 +170,6 @@ describe('Test authentication ', () => {
         const dataAfter = await model.findOne({ patientId: PATIENT_ID }).lean();
         expect(dataBefore).toStrictEqual(dataAfter);
     });
+
+    it('all fields and steps writable by admin', async () => {});
 });

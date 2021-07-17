@@ -4,12 +4,8 @@ const {
     SECURITY_ROLE_ATTRIBUTE_NAME,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
-const {
-    MOCK_USER,
-    MOCK_AUTH_TOKEN,
-    MOCK_ROLE_ID,
-} = require('../mock-data/auth-mock-data');
-const { ACCESS_LEVELS } = require('../../middleware/authentication');
+const { MOCK_USER, MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
+const { ACCESS_LEVELS, ADMIN_ID } = require('../../middleware/authentication');
 
 let currentAuthenticatedUser = null;
 let lastUploadedFileParams = null;
@@ -69,7 +65,7 @@ module.exports.setCurrentUser = (
     AWS,
     user = this.createUserDataWithRolesAndAccess(
         ACCESS_LEVELS.GRANTED,
-        MOCK_ROLE_ID,
+        ADMIN_ID,
     ),
 ) => {
     AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {

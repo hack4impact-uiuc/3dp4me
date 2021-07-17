@@ -1,10 +1,10 @@
+var server = require('../../../app');
 const db = require('../../utils/db');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 const omitDeep = require('omit-deep-lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
-var server = require('../../../app');
 const {
     POST_STEP_WITHOUT_OPTIONS,
     POST_STEP_WITH_EMPTY_OPTIONS,
@@ -34,14 +34,8 @@ const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
-    getCurrentAuthenticatedUserAttribute,
-    createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const { models } = require('../../../models');
-const {
-    ACCESS_LEVELS,
-    ADMIN_ID,
-} = require('../../../middleware/authentication');
 
 describe('POST /steps', () => {
     afterAll(async () => await db.closeDatabase());
@@ -49,10 +43,7 @@ describe('POST /steps', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(
-            AWS,
-            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
-        );
+        setCurrentUser(AWS);
     });
 
     beforeEach(() => {
@@ -154,10 +145,7 @@ describe('PUT /steps/stepkey', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(
-            AWS,
-            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
-        );
+        setCurrentUser(AWS);
     });
 
     beforeEach(() => {

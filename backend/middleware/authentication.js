@@ -12,7 +12,8 @@ module.exports.ACCESS_LEVELS = {
     PENDING: 'Pending',
 };
 
-const ADMIN_ID = '606e0a4602b23d02bc77673b';
+const ADMIN_ID = process.env.ADMIN_ID;
+console.log(process.env);
 
 const isAdmin = (user) => user.roles.includes(ADMIN_ID);
 
@@ -76,7 +77,7 @@ const requireAuthentication = async (req, res, next) => {
         user.name = parseUserName(user) || parseUserEmail(user);
         user.accessLevel = parseUserAccess(user);
 
-        if (user.accessLevel != this.ACCESS_LEVELS.GRANTED) {
+        if (user.accessLevel !== this.ACCESS_LEVELS.GRANTED) {
             return res.status(403).json({
                 success: false,
                 message:
@@ -96,6 +97,8 @@ const requireAuthentication = async (req, res, next) => {
 };
 
 const requireRole = (role) => {
+    console.log(role);
+    console.log(ADMIN_ID);
     return async (req, res, next) => {
         if (!req.user) await requireAuthentication();
         if (!req.user.roles.includes(role)) {

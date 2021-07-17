@@ -1,14 +1,13 @@
+var server = require('../../../app');
 const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
-var server = require('../../../app');
 const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
-    createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const {
     expectStrictEqualWithTimestampOrdering,
@@ -21,10 +20,6 @@ const {
     POST_IMMUTABLE_PATIENT_DATA,
 } = require('../../mock-data/patients-mock-data');
 const { models } = require('../../../models');
-const {
-    ACCESS_LEVELS,
-    ADMIN_ID,
-} = require('../../../middleware/authentication');
 
 describe('POST /patients', () => {
     afterAll(async () => await db.closeDatabase());
@@ -32,10 +27,7 @@ describe('POST /patients', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(
-            AWS,
-            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
-        );
+        setCurrentUser(AWS);
     });
 
     beforeEach(() => {

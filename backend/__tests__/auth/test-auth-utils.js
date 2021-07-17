@@ -17,10 +17,7 @@ describe('mock auth', () => {
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
-        setCurrentUser(
-            AWS,
-            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
-        );
+        setCurrentUser(AWS);
     });
 
     it('returns OK with authentication', (done) => {

@@ -1,11 +1,10 @@
-require('../../../app.js');
+var server = require('../../../app');
 const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
 const resolve = require('path').resolve;
-var server = require('../../../app');
 const {
     initAuthMocker,
     setCurrentUser,
@@ -13,13 +12,8 @@ const {
     getCurrentAuthenticatedUserAttribute,
     initS3Mocker,
     getLastUploadedFileParams,
-    createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const { S3_BUCKET_NAME } = require('../../../utils/aws/aws-exports');
-const {
-    ACCESS_LEVELS,
-    ADMIN_ID,
-} = require('../../../middleware/authentication');
 
 describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
     afterAll(async () => await db.closeDatabase());
@@ -28,10 +22,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         await db.connect();
         initAuthMocker(AWS);
         initS3Mocker(AWS);
-        setCurrentUser(
-            AWS,
-            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
-        );
+        setCurrentUser(AWS);
     });
 
     beforeEach(() => {
