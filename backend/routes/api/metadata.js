@@ -239,7 +239,7 @@ const putOneStep = async (stepBody, res, session) => {
 
     step = await models.Step.findOne({ key: stepKey }).session(session);
     _.assign(step, stepBody);
-    step.save({ session: session, validateBeforeSave: false });
+    await step.save({ session: session, validateBeforeSave: false });
 
     return step;
 };
