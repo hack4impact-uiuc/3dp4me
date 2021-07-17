@@ -575,7 +575,7 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
                 subFields: [],
             },
         ],
-        __v: 0,
+        __v: 1,
     },
 ];
 

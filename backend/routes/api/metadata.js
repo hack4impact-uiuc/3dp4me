@@ -1,5 +1,6 @@
 const express = require('express');
 const encrypt = require('mongoose-encryption');
+const _ = require('lodash');
 const router = express.Router();
 const isValidNumber = require('libphonenumber-js');
 const { errorWrap } = require('../../utils');
@@ -184,7 +185,7 @@ const putOneStep = async (stepBody, res, session) => {
     stepBody = removeAttributesFrom(stepBody, ['_id', '__v']);
 
     const stepKey = stepBody.key;
-    stepToEdit = await models.Step.findOne({ key: stepKey });
+    stepToEdit = await models.Step.findOne({ key: stepKey }).session(session);
 
     // Return 404 if stepToEdit cannot be found
     if (!stepToEdit) {
@@ -236,11 +237,9 @@ const putOneStep = async (stepBody, res, session) => {
     });
     schema.add(addedFieldsObject);
 
-    step = await models.Step.findOneAndUpdate(
-        { key: stepKey },
-        { $set: stepBody },
-        { new: true, session: session, validateBeforeSave: false },
-    );
+    step = await models.Step.findOne({ key: stepKey }).session(session);
+    _.assign(step, stepBody);
+    step.save({ session: session, validateBeforeSave: false });
 
     return step;
 };

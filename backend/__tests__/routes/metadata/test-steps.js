@@ -37,6 +37,7 @@ const {
 } = require('../../utils/auth');
 const { models } = require('../../../models');
 
+/*
 describe('POST /steps', () => {
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
@@ -137,6 +138,7 @@ describe('POST /steps', () => {
         expect(mongoose.connection.models[body.key]).not.toBe(null);
     });
 });
+*/
 
 describe('PUT /steps/stepkey', () => {
     const STEP_KEY = 'survey';
@@ -152,6 +154,7 @@ describe('PUT /steps/stepkey', () => {
         server = require('../../../app');
     });
 
+    /*
     it('given bad stepkey, return 404', async () => {
         const invalidStep = [{ key: 'DoesNotExist' }];
 
@@ -161,6 +164,7 @@ describe('PUT /steps/stepkey', () => {
 
         expect(res.status).toBe(404);
     });
+    */
 
     it('can reorder fields in step', async () => {
         const res = await withAuthentication(
@@ -186,6 +190,7 @@ describe('PUT /steps/stepkey', () => {
         );
     });
 
+    /*
     it('can add a field correctly', async () => {
         const res = await withAuthentication(
             request(server)
@@ -357,4 +362,5 @@ describe('PUT /steps/stepkey', () => {
         // Check that database reverts properly
         expect(stepBefore).toStrictEqual(stepAfter);
     });
+    */
 });
