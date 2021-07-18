@@ -59,11 +59,16 @@ describe('PUT /patients/:id', () => {
         expect(resContent.success).toBe(true);
 
         // Query for ids must be done as an ObjectId
-        let updatedData = await mongoose.connection
-            .collection(STEP_KEY)
+        let updatedData = await mongoose
+            .model(STEP_KEY)
             .findOne({ _id: mongoose.Types.ObjectId(patientID) });
+        updatedData = updatedData.toObject();
+        updatedData._id = updatedData._id.toString();
 
-        expectStrictEqualWithTimestampOrdering(EXPECTED_PUT_DATA, updatedData);
+        expectStrictEqualWithTimestampOrdering(
+            EXPECTED_PUT_DATA,
+            omitDeep(updatedData, '__v'),
+        );
     });
 
     it('properly changes valid patient fields', async () => {
@@ -80,13 +85,18 @@ describe('PUT /patients/:id', () => {
         expect(resContent.success).toBe(true);
         expectStrictEqualWithTimestampOrdering(
             EXPECTED_PUT_DATA,
-            resContent.result,
+            omitDeep(resContent.result, '__v'),
         );
 
-        let updatedData = await mongoose.connection
-            .collection(STEP_KEY)
+        let updatedData = await mongoose
+            .model(STEP_KEY)
             .findOne({ _id: mongoose.Types.ObjectId(patientID) });
-        expectStrictEqualWithTimestampOrdering(EXPECTED_PUT_DATA, updatedData);
+        updatedData = updatedData.toObject();
+        updatedData._id = updatedData._id.toString();
+        expectStrictEqualWithTimestampOrdering(
+            EXPECTED_PUT_DATA,
+            omitDeep(updatedData, '__v'),
+        );
     });
 });
 
@@ -124,7 +134,7 @@ describe('GET /patient/:id', () => {
         // Check responses
         expectStrictEqualWithTimestampOrdering(
             GET_PATIENT_WITHOUT_STEP_DATA,
-            resContent.result,
+            omitDeep(resContent.result, '__v'),
         );
     });
 
@@ -142,7 +152,7 @@ describe('GET /patient/:id', () => {
         // Check responses
         expectStrictEqualWithTimestampOrdering(
             GET_PATIENT_WITH_SOME_STEP_DATA,
-            resContent.result,
+            omitDeep(resContent.result, '__v'),
         );
     });
 
@@ -160,7 +170,7 @@ describe('GET /patient/:id', () => {
         //Check responses
         expectStrictEqualWithTimestampOrdering(
             GET_PATIENT_WITH_ALL_STEP_DATA,
-            resContent.result,
+            omitDeep(resContent.result, '__v'),
         );
     });
 
@@ -194,7 +204,7 @@ describe('GET /patient/:id', () => {
         // Check responses
         expectStrictEqualWithTimestampOrdering(
             GET_PATIENT_WITHOUT_STEP_DATA,
-            resContent.result,
+            omitDeep(resContent.result, '__v'),
         );
     });
 
@@ -224,7 +234,7 @@ describe('GET /patient/:id', () => {
         // Check responses
         expectStrictEqualWithTimestampOrdering(
             GET_PATIENT_WITH_SOME_STEP_DATA,
-            resContent.result,
+            omitDeep(resContent.result, '__v'),
         );
     });
 });
