@@ -43,76 +43,46 @@ describe('DELETE /roles/:roleid', () => {
         ).expect(404, done);
     });
 
-    // it('returns 404 when given bad stepKey', (done) => {
-    //     withAuthentication(
-    //         request(server).delete(
-    //             `/api/patients/${PATIENT_ID_WITH_ONE_FILE}/badstep/file/filename`,
-    //         ),
-    //     ).expect(404, done);
-    // });
+    it('returns 404 when given nonexistent ID', (done) => {
+        const randID = '6092a9ae9e3769ae75abe0a5';
+        withAuthentication(
+            request(server).delete(`/api/patients/${randID}`),
+        ).expect(404, done);
+    });
 
-    // it('returns 404 when given nonexistent file', (done) => {
-    //     withAuthentication(
-    //         request(server).delete(
-    //             `/api/patients/${PATIENT_ID_WITH_ONE_FILE}/${STEP_KEY}/file/badfilename`,
-    //         ),
-    //     ).expect(404, done);
-    // });
+    it('delete mutable role', async () => {
+        const roleId = '60944e084f4c0d4330cc25f1';
+        const res = await withAuthentication(
+            request(server).delete(`/api/patients/${randID}`),
+        );
 
-    // it('delete file from step with one file', async () => {
-    //     const startTimestamp = Date.now();
-    //     const FILE_NAME = 'utilisation_modular.ssf';
-    //     const original_step = await mongoose.connection.db
-    //         .collection(STEP_KEY)
-    //         .findOne({ patientId: PATIENT_ID_WITH_ONE_FILE });
-    //     const expected_file_output = original_step.file;
-    //     expected_file_output.shift();
+        expect(res.status).toBe(200);
 
-    //     const res = await withAuthentication(
-    //         request(server).delete(
-    //             `/api/patients/${PATIENT_ID_WITH_ONE_FILE}/files/${STEP_KEY}/${FIELD_KEY}/${FILE_NAME}`,
-    //         ),
-    //     );
-    //     expect(res.status).toBe(200);
+        const actualResult = await mongoose
+            .model('Role')
+            .findOne({ _id: mongoose.Types.ObjectId(roleId) });
+        const expectedResult = {};
 
-    //     const modified_step = await mongoose.connection.db
-    //         .collection(STEP_KEY)
-    //         .findOne({ patientId: PATIENT_ID_WITH_ONE_FILE });
+        expect(actualResult).toBe(expectedResult);
+    });
 
-    //     expect(modified_step.file).toStrictEqual(expected_file_output);
-    //     expect(modified_step.lastEditedBy).toBe(
-    //         getCurrentAuthenticatedUserAttribute('name'),
-    //     );
-    //     expect(modified_step.lastEdited).toBeGreaterThanOrEqual(startTimestamp);
-    //     expect(modified_step.lastEdited).toBeLessThanOrEqual(Date.now());
-    // });
+    it('does not delete immutable role', async () => {
+        const roleId = '60944e084f4c0d4330cc25ef';
 
-    // it('delete file from step with more than one file', async () => {
-    //     const startTimestamp = Date.now();
-    //     const FILE_NAME = 'intelligent_encompassing.cpio';
-    //     const PATIENT_ID_WITH_MANY_FILES = '60944e084f4c0d4330cc258c';
-    //     const original_step = await mongoose.connection.db
-    //         .collection(STEP_KEY)
-    //         .findOne({ patientId: PATIENT_ID_WITH_MANY_FILES });
-    //     const expected_file_output = original_step.file;
-    //     expected_file_output.shift();
+        const actualResult = await mongoose
+            .model('Role')
+            .findOne({ _id: mongoose.Types.ObjectId(roleId) });
 
-    //     const res = await withAuthentication(
-    //         request(server).delete(
-    //             `/api/patients/${PATIENT_ID_WITH_MANY_FILES}/files/${STEP_KEY}/${FIELD_KEY}/${FILE_NAME}`,
-    //         ),
-    //     );
-    //     expect(res.status).toBe(200);
+        withAuthentication(
+            request(server).delete(`/api/patients/${randID}`),
+        ).expect(404, done);
 
-    //     const modified_step = await mongoose.connection.db
-    //         .collection(STEP_KEY)
-    //         .findOne({ patientId: PATIENT_ID_WITH_MANY_FILES });
+        expect(res.status).toBe(200);
 
-    //     expect(modified_step.file).toStrictEqual(expected_file_output);
-    //     expect(modified_step.lastEditedBy).toBe(
-    //         getCurrentAuthenticatedUserAttribute('name'),
-    //     );
-    //     expect(modified_step.lastEdited).toBeGreaterThanOrEqual(startTimestamp);
-    //     expect(modified_step.lastEdited).toBeLessThanOrEqual(Date.now());
-    // });
+        const expectedResult = await mongoose
+            .model('Role')
+            .findOne({ _id: mongoose.Types.ObjectId(roleId) });
+
+        expect(actualResult).toBe(expectedResult);
+    });
 });
