@@ -119,5 +119,3 @@ describe('DELETE /patients/:id/files/:stepKey/:fieldKey/:fileName #214', () => {
         expect(modified_step.lastEdited).toBeLessThanOrEqual(Date.now());
     });
 });
-
-//helper function/modularization
