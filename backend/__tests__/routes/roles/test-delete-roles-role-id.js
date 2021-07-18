@@ -13,9 +13,7 @@ const {
 } = require('../../utils/auth');
 
 describe('DELETE /roles/:roleid', () => {
-    // const STEP_KEY = 'example';
-    // const FIELD_KEY = 'file';
-    // const PATIENT_ID_WITH_ONE_FILE = '60944e084f4c0d4330cc258b';
+    const COLLECTION_NAME = 'Role';
 
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
@@ -29,9 +27,9 @@ describe('DELETE /roles/:roleid', () => {
         server = require('../../../app');
     });
 
-    it('returns 404 when given bad ID format', (done) => {
+    it('returns 500 when given bad ID format', (done) => {
         withAuthentication(request(server).delete(`/api/roles/badid`)).expect(
-            404,
+            500,
             done,
         );
     });
@@ -39,50 +37,46 @@ describe('DELETE /roles/:roleid', () => {
     it('returns 404 when given nonexistent ID', (done) => {
         const randID = '6092a9ae9e3769ae75abe0a5';
         withAuthentication(
-            request(server).delete(`/api/patients/${randID}`),
-        ).expect(404, done);
-    });
-
-    it('returns 404 when given nonexistent ID', (done) => {
-        const randID = '6092a9ae9e3769ae75abe0a5';
-        withAuthentication(
-            request(server).delete(`/api/patients/${randID}`),
-        ).expect(404, done);
+            request(server).delete(`/api/roles/${randID}`),
+        ).expect(400, done); //should these be a 404?
     });
 
     it('delete mutable role', async () => {
-        const roleId = '60944e084f4c0d4330cc25f1';
+        const mutableRoleId = '60944e084f4c0d4330cc25f1';
         const res = await withAuthentication(
-            request(server).delete(`/api/patients/${randID}`),
+            request(server).delete(`/api/roles/${mutableRoleId}`),
         );
 
         expect(res.status).toBe(200);
 
         const actualResult = await mongoose
-            .model('Role')
-            .findOne({ _id: mongoose.Types.ObjectId(roleId) });
-        const expectedResult = {};
+            .model(COLLECTION_NAME)
+            .findOne({ _id: mongoose.Types.ObjectId(mutableRoleId) });
+
+        const expectedResult = null;
 
         expect(actualResult).toBe(expectedResult);
     });
 
     it('does not delete immutable role', async () => {
-        const roleId = '60944e084f4c0d4330cc25ef';
+        const immutableRoleId = '60944e084f4c0d4330cc25ef';
 
-        const actualResult = await mongoose
-            .model('Role')
-            .findOne({ _id: mongoose.Types.ObjectId(roleId) });
+        let expectedResult = await mongoose
+            .model(COLLECTION_NAME)
+            .findOne({ _id: mongoose.Types.ObjectId(immutableRoleId) });
+        expectedResult = expectedResult.toObject();
 
-        withAuthentication(
-            request(server).delete(`/api/patients/${randID}`),
-        ).expect(404, done);
+        const res = await withAuthentication(
+            request(server).delete(`/api/roles/${immutableRoleId}`),
+        );
 
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(400);
 
-        const expectedResult = await mongoose
-            .model('Role')
-            .findOne({ _id: mongoose.Types.ObjectId(roleId) });
+        let actualResult = await mongoose
+            .model(COLLECTION_NAME)
+            .findOne({ _id: mongoose.Types.ObjectId(immutableRoleId) });
+        actualResult = actualResult.toObject();
 
-        expect(actualResult).toBe(expectedResult);
+        expect(actualResult).toStrictEqual(expectedResult);
     });
 });
