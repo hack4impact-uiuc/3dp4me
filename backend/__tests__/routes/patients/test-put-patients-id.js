@@ -62,6 +62,9 @@ describe('PUT /patients/:id', () => {
         expect(res.status).toBe(200);
 
         const actualResult = await getPatientFromDB();
+
+        console.log(actualResult);
+
         expect(actualResult).toStrictEqual(expectedResult);
     });
 
@@ -87,9 +90,8 @@ describe('PUT /patients/:id', () => {
     });
 
     const getPatientFromDB = async () => {
-        const result = await mongoose.connection.db
-            .collection(COLLECTION_NAME)
-            .findOne({ _id: mongoose.Types.ObjectId(PATIENT_ID) });
+        let result = await mongoose.model(COLLECTION_NAME).findById(PATIENT_ID);
+        result = result.toObject();
         return result;
     };
 });
