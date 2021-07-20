@@ -38,7 +38,7 @@ describe('DELETE /roles/:roleid', () => {
         const randID = '6092a9ae9e3769ae75abe0a5';
         withAuthentication(
             request(server).delete(`/api/roles/${randID}`),
-        ).expect(400, done); //should these be a 404?
+        ).expect(404, done);
     });
 
     it('delete mutable role', async () => {
@@ -48,10 +48,12 @@ describe('DELETE /roles/:roleid', () => {
         );
 
         expect(res.status).toBe(200);
+        const resContent = JSON.parse(res.text);
+        expect(resContent.success).toBe(true);
 
         const actualResult = await mongoose
             .model(COLLECTION_NAME)
-            .findOne({ _id: mongoose.Types.ObjectId(mutableRoleId) });
+            .findById(mutableRoleId);
 
         const expectedResult = null;
 
@@ -63,7 +65,7 @@ describe('DELETE /roles/:roleid', () => {
 
         let expectedResult = await mongoose
             .model(COLLECTION_NAME)
-            .findOne({ _id: mongoose.Types.ObjectId(immutableRoleId) });
+            .findById(immutableRoleId);
         expectedResult = expectedResult.toObject();
 
         const res = await withAuthentication(
@@ -71,10 +73,12 @@ describe('DELETE /roles/:roleid', () => {
         );
 
         expect(res.status).toBe(400);
+        const resContent = JSON.parse(res.text);
+        expect(resContent.success).toBe(false);
 
         let actualResult = await mongoose
             .model(COLLECTION_NAME)
-            .findOne({ _id: mongoose.Types.ObjectId(immutableRoleId) });
+            .findById(immutableRoleId);
         actualResult = actualResult.toObject();
 
         expect(actualResult).toStrictEqual(expectedResult);
