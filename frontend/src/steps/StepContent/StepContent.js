@@ -168,7 +168,7 @@ const StepContent = ({
                         return null;
                     }
                     return (
-                        <div>
+                        <div key={`field-${stepData?.key}-${field.key}`}>
                             {stepField}
                             <Button
                                 onClick={() => {
@@ -194,7 +194,12 @@ const StepContent = ({
                 }
                 return null;
             }
-            return <div>{stepField}</div>;
+            return (
+                <div key={`field-${stepData?.key}-${field.key}`}>
+                    {' '}
+                    {stepField}{' '}
+                </div>
+            );
         });
     };
 

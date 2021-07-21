@@ -1,10 +1,10 @@
+var server = require('../../../app');
 const db = require('../../utils/db');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 const omitDeep = require('omit-deep-lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
-var server = require('../../../app');
 const {
     POST_STEP_WITHOUT_OPTIONS,
     POST_STEP_WITH_EMPTY_OPTIONS,

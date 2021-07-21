@@ -44,7 +44,7 @@ const Controller = () => {
     const [loading, setLoading] = useState(true);
     const errorWrap = useErrorWrap();
 
-    const [selectedStep, setSelectedStep] = useState(null);
+    const [selectedStep, setSelectedStep] = useState('');
     const [stepMetaData, setStepMetaData] = useState(null);
     const [patientData, setPatientData] = useState(null);
     const [isManagePatientModalOpen, setManagePatientModalOpen] = useState(
@@ -152,6 +152,7 @@ const Controller = () => {
                     if (step.key === selectedStep) {
                         return (
                             <StepContent
+                                key={step.key}
                                 patientId={patientId}
                                 onDataSaved={onStepSaved}
                                 metaData={stepMetaData.find(

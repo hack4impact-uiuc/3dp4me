@@ -13,6 +13,7 @@ const {
 const {
     removeRequestAttributes,
     STEP_IMMUTABLE_ATTRIBUTES,
+    PATIENT_IMMUTABLE_ATTRIBUTES,
 } = require('../../middleware/requests');
 
 // GET: Returns all patients
@@ -44,8 +45,8 @@ router.get(
 
         let stepKeys = await getStepKeys();
         for (const stepKey of stepKeys) {
-            const collection = await mongoose.connection.db.collection(stepKey);
-            const stepData = await collection.findOne({ patientId: id });
+            let model = mongoose.model(stepKey);
+            const stepData = await model.findOne({ patientId: id });
             patientData.set(stepKey, stepData, { strict: false });
         }
 
@@ -60,6 +61,7 @@ router.get(
 // POST: new patient
 router.post(
     '/',
+    removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const patient = req.body;
         let new_patient = null;
@@ -87,15 +89,10 @@ router.post(
 
 router.put(
     '/:id',
-    removeRequestAttributes(['_id', '__v', 'dateCreated']),
+    removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const { id } = req.params;
-        const patient = await models.Patient.findOneAndUpdate(
-            { _id: id },
-            { $set: req.body },
-            { new: true },
-        );
-
+        const patient = await models.Patient.findById(id);
         if (patient == null) {
             return res.status(404).json({
                 code: 404,
@@ -104,11 +101,16 @@ router.put(
             });
         }
 
+        _.assign(patient, req.body);
+        patient.lastEdited = Date.now();
+        patient.lastEditedBy = req.user.name;
+        const savedPatient = await patient.save();
+
         res.status(200).json({
             code: 200,
             success: true,
             message: 'Patient successfully edited.',
-            result: patient,
+            result: savedPatient,
         });
     }),
 );
@@ -151,15 +153,15 @@ router.delete(
             });
         }
 
-        const collection = await mongoose.connection.db.collection(stepKey);
-        if (collection == null) {
+        const model = await mongoose.model(stepKey);
+        if (model == null) {
             return res.status(404).json({
                 success: false,
                 message: `Step with key ${stepKey} not found`,
             });
         }
 
-        const stepData = await collection.findOne({ patientId: id });
+        const stepData = await model.findOne({ patientId: id });
         if (stepData == null) {
             return res.status(404).json({
                 success: false,
@@ -183,7 +185,7 @@ router.delete(
 
         stepData.lastEdited = Date.now();
         stepData.lastEditedBy = req.user.name;
-        collection.findOneAndUpdate({ patientId: id }, { $set: stepData });
+        await stepData.save();
 
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
@@ -203,6 +205,7 @@ router.post(
         // TODO during refactoring: We upload file name in form data, is this even needed???
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
+
         if (patient == null) {
             return res.status(404).json({
                 success: false,
@@ -221,8 +224,9 @@ router.post(
             });
         }
 
-        const collection = await mongoose.connection.db.collection(stepKey);
-        let stepData = (await collection.findOne({ patientId: id })) || {};
+        const model = await mongoose.model(stepKey);
+        let stepData =
+            (await model.findOne({ patientId: id })) || new model({});
 
         // Set ID in case patient does not have any information for this step yet
         stepData.patientId = id;
@@ -245,15 +249,11 @@ router.post(
         });
         stepData.lastEdited = Date.now();
         stepData.lastEditedBy = req.user.name;
-        collection.findOneAndUpdate(
-            { patientId: id },
-            { $set: stepData },
-            { upsert: true },
-        );
+        await stepData.save();
 
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
-        patient.save();
+        await patient.save();
 
         res.status(201).json({
             success: true,

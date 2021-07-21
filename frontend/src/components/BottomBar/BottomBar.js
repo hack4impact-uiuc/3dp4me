@@ -7,7 +7,6 @@ import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
 import halfCircle from '../../assets/half-circle.svg';
-import { BoolGetterSetterType } from '../../utils/custom-proptypes';
 import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
@@ -76,10 +75,21 @@ const BottomBar = ({
         );
     };
 
+    const getLastEditedString = () => {
+        if (!lastEdited || !lastEditedBy) return '';
+
+        return `${
+            translations.components.bottombar.lastEditedBy
+        } ${lastEditedBy} ${translations.components.bottombar.on} ${formatDate(
+            new Date(lastEdited),
+            selectedLang,
+        )}`;
+    };
+
     return (
         <AppBar
             className="bottom-bar-wrapper"
-            color="white"
+            color="inherit"
             style={{
                 top: 'auto',
                 bottom: '0',
@@ -88,11 +98,7 @@ const BottomBar = ({
         >
             <Toolbar className="bottom-toolbar">
                 <div className="editor-section" style={style?.editorSection}>
-                    {`${
-                        translations.components.bottombar.lastEditedBy
-                    } ${lastEditedBy} ${
-                        translations.components.bottombar.on
-                    } ${formatDate(new Date(lastEdited), selectedLang)}`}
+                    {getLastEditedString()}
                 </div>
                 {edit ? (
                     <div>
@@ -193,12 +199,12 @@ const BottomBar = ({
 BottomBar.propTypes = {
     style: PropTypes.object,
     edit: PropTypes.bool.isRequired,
-    lastEdited: PropTypes.string.isRequired,
-    lastEditedBy: PropTypes.string.isRequired,
+    lastEdited: PropTypes.string,
+    lastEditedBy: PropTypes.string,
     status: PropTypes.string,
     onStatusChange: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    onDiscard: BoolGetterSetterType.isRequired,
+    onDiscard: PropTypes.func.isRequired,
     setEdit: PropTypes.func.isRequired,
 };
 

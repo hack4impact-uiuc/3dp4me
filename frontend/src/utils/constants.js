@@ -1,13 +1,39 @@
+export const FIELD_TYPES = {
+    STRING: 'String',
+    MULTILINE_STRING: 'MultilineString',
+    FILE: 'File',
+    NUMBER: 'Number',
+    DATE: 'Date',
+    PHONE: 'Phone',
+    DIVIDER: 'Divider',
+    HEADER: 'Header',
+    RADIO_BUTTON: 'RadioButton',
+    DROPDOWN: 'Dropdown',
+    AUDIO: 'Audio',
+    FIELD_GROUP: 'FieldGroup',
+    SIGNATURE: 'Signature',
+
+    // This is a special field only used on the frontend
+    STATUS: 'Status',
+};
+
 export const REQUIRED_DASHBOARD_HEADERS = [
-    { title: 'firstName', sortKey: 'firstName' },
-    { title: 'familyName', sortKey: 'familyName' },
-    { title: 'lastEdited', sortKey: 'lastEdited' },
-    { title: 'status', sortKey: 'status' },
+    { title: 'firstName', sortKey: 'firstName', fieldType: FIELD_TYPES.STRING },
+    {
+        title: 'familyName',
+        sortKey: 'familyName',
+        fieldType: FIELD_TYPES.STRING,
+    },
+    { title: 'lastEdited', sortKey: 'lastEdited', fieldType: FIELD_TYPES.DATE },
+    { title: 'status', sortKey: 'status', fieldType: FIELD_TYPES.STATUS },
 ];
 
-export const REQUIRED_DASHBOARD_SORT_KEYS = REQUIRED_DASHBOARD_HEADERS.map(
-    (header) => header.sortKey,
-);
+export const REQUIRED_DASHBOARD_SORT_KEYS = [
+    { id: 'firstName', fieldType: FIELD_TYPES.STRING },
+    { id: 'familyName', fieldType: FIELD_TYPES.STRING },
+    { id: 'lastEdited', fieldType: FIELD_TYPES.DATE },
+    { id: 'status', fieldType: FIELD_TYPES.STATUS },
+];
 
 export const ACCESS_LEVELS = {
     GRANTED: 'Granted',
@@ -27,22 +53,6 @@ export const PATIENT_STATUS = {
     ACTIVE: 'Active',
 };
 
-export const FIELD_TYPES = {
-    STRING: 'String',
-    MULTILINE_STRING: 'MultilineString',
-    FILE: 'File',
-    NUMBER: 'Number',
-    DATE: 'Date',
-    PHONE: 'Phone',
-    DIVIDER: 'Divider',
-    HEADER: 'Header',
-    RADIO_BUTTON: 'RadioButton',
-    DROPDOWN: 'Dropdown',
-    AUDIO: 'Audio',
-    FIELD_GROUP: 'FieldGroup',
-    SIGNATURE: 'Signature',
-};
-
 export const REDUCER_ACTIONS = {
     SET_ERROR: 'SET_ERROR',
     CLEAR_ERROR: 'CLEAR_ERROR',
@@ -52,6 +62,11 @@ export const REDUCER_ACTIONS = {
 export const LANGUAGES = {
     EN: 'EN',
     AR: 'AR',
+};
+
+export const SIGNATURE_STATUS = {
+    SIGNED: 'SIGNED',
+    UNSIGNED: 'UNSIGNED',
 };
 
 export const PATIENT_KEY_STATUS = 'status';

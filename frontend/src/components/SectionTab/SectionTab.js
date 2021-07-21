@@ -1,5 +1,5 @@
 import './SectionTab.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 
@@ -31,6 +31,31 @@ const SectionTab = () => {
     const [stepModalOpen, setStepModalOpen] = useState(false);
     const errorWrap = useErrorWrap();
 
+    const SortMetadata = useCallback(
+        (stepMetaData) => {
+            const data = stepMetaData?.sort(
+                (a, b) => a?.stepNumber - b?.stepNumber,
+            );
+
+            data.forEach((stepData) => {
+                stepData.fields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
+                SortSubFields(stepData?.fields);
+            });
+
+            return data;
+        },
+        [SortSubFields],
+    );
+
+    const SortSubFields = useCallback((fields) => {
+        if (!fields) return;
+
+        fields.forEach((field) => {
+            field.subFields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
+            SortSubFields(field?.subFields?.subFields);
+        });
+    }, []);
+
     const onAddStep = () => {
         setStepModalOpen(true);
     };
@@ -56,27 +81,6 @@ const SectionTab = () => {
 
     function UpdateSelectedStep(stepKey) {
         setSelectedStep(stepKey);
-    }
-
-    function SortMetadata(stepMetaData) {
-        const data = stepMetaData?.sort(
-            (a, b) => a?.stepNumber - b?.stepNumber,
-        );
-        data.forEach((stepData) => {
-            stepData.fields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
-            SortSubFields(stepData?.fields);
-        });
-
-        return data;
-    }
-
-    function SortSubFields(fields) {
-        if (!fields) return;
-
-        fields.forEach((field) => {
-            field.subFields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
-            SortSubFields(field?.subFields?.subFields);
-        });
     }
 
     function onDownPressed(stepKey) {
@@ -174,7 +178,7 @@ const SectionTab = () => {
             });
         };
         fetchData();
-    }, [setStepMetadata, errorWrap]);
+    }, [setStepMetadata, errorWrap, SortMetadata]);
 
     const onFieldModalClose = () => {
         setFieldModalOpen(false);

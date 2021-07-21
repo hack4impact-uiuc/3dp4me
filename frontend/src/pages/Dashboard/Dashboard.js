@@ -269,22 +269,26 @@ const Dashboard = () => {
                 headers.push({
                     title: field.displayName[selectedLang],
                     sortKey: `${step}.${field.key}`,
+                    fieldType: field.fieldType,
                 });
         });
 
         return headers;
     }
 
-    function generateRowIds(stepKey, fields) {
+    function generateRowData(stepKey, fields) {
         if (fields == null) return [];
 
-        const rowIDs = _.cloneDeep(REQUIRED_DASHBOARD_SORT_KEYS);
+        const rowData = _.cloneDeep(REQUIRED_DASHBOARD_SORT_KEYS);
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
-                rowIDs.push(`${stepKey}.${field.key}`);
+                rowData.push({
+                    id: `${stepKey}.${field?.key}`,
+                    dataType: field?.fieldType,
+                });
         });
 
-        return rowIDs;
+        return rowData;
     }
 
     function generateMainTable() {

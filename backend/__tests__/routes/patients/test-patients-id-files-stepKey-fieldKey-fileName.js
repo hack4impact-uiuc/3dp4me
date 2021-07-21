@@ -97,11 +97,15 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         expect(resContent.data.size).toBe(4855);
 
         // Check DB
-        const patientData = await mongoose.connection.db
-            .collection(STEP_KEY)
+        const patientData = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: patientId });
-        expect(patientData.lastEdited).toBeGreaterThanOrEqual(startTimestamp);
-        expect(patientData.lastEdited).toBeLessThanOrEqual(Date.now());
+        expect(patientData.lastEdited.getTime()).toBeGreaterThanOrEqual(
+            startTimestamp,
+        );
+        expect(patientData.lastEdited.getTime()).toBeLessThanOrEqual(
+            Date.now(),
+        );
         expect(patientData.lastEditedBy).toBe(
             getCurrentAuthenticatedUserAttribute('name'),
         );
@@ -116,32 +120,32 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
     it('uploads file for patient with no step data', async () => {
         const startTimestamp = Date.now();
         await testSuccessfulUploadOnPatient(PATIENT_ID_WITHOUT_DATA);
-        const patientData = await mongoose.connection.db
-            .collection(STEP_KEY)
+        const patientData = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: PATIENT_ID_WITHOUT_DATA });
         expect(patientData[FIELD_KEY].length).toBe(1);
         expect(patientData[FIELD_KEY][0].filename).toBe(FILE_NAME);
         expect(patientData[FIELD_KEY][0].uploadedBy).toBe(
             getCurrentAuthenticatedUserAttribute('name'),
         );
-        expect(patientData[FIELD_KEY][0].uploadDate).toBeGreaterThanOrEqual(
-            startTimestamp,
-        );
-        expect(patientData[FIELD_KEY][0].uploadDate).toBeLessThanOrEqual(
-            Date.now(),
-        );
+        expect(
+            patientData[FIELD_KEY][0].uploadDate.getTime(),
+        ).toBeGreaterThanOrEqual(startTimestamp);
+        expect(
+            patientData[FIELD_KEY][0].uploadDate.getTime(),
+        ).toBeLessThanOrEqual(Date.now());
     });
 
     it('uploads file for patient with step data', async () => {
         const startTimestamp = Date.now();
-        const initialPatientData = await mongoose.connection.db
-            .collection(STEP_KEY)
+        const initialPatientData = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: PATIENT_ID_WITH_DATA });
         const initNumFiles = initialPatientData[FIELD_KEY].length;
 
         await testSuccessfulUploadOnPatient(PATIENT_ID_WITH_DATA);
-        const finalPatientData = await mongoose.connection.db
-            .collection(STEP_KEY)
+        const finalPatientData = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: PATIENT_ID_WITH_DATA });
         expect(finalPatientData[FIELD_KEY].length).toBe(initNumFiles + 1);
         expect(finalPatientData[FIELD_KEY][initNumFiles].filename).toBe(
@@ -151,10 +155,10 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
             getCurrentAuthenticatedUserAttribute('name'),
         );
         expect(
-            finalPatientData[FIELD_KEY][initNumFiles].uploadDate,
+            finalPatientData[FIELD_KEY][initNumFiles].uploadDate.getTime(),
         ).toBeGreaterThanOrEqual(startTimestamp);
         expect(
-            finalPatientData[FIELD_KEY][initNumFiles].uploadDate,
+            finalPatientData[FIELD_KEY][initNumFiles].uploadDate.getTime(),
         ).toBeLessThanOrEqual(Date.now());
     });
 });

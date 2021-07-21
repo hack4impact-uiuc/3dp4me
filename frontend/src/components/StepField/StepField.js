@@ -170,7 +170,7 @@ const StepField = ({
 };
 
 StepField.propTypes = {
-    value: PropTypes.any.isRequired,
+    value: PropTypes.any,
     isDisabled: PropTypes.bool,
     patientId: PropTypes.string,
     handleSimpleUpdate: PropTypes.func,
@@ -182,9 +182,22 @@ StepField.propTypes = {
     metadata: PropTypes.shape({
         key: PropTypes.string.isRequired,
         fieldType: PropTypes.string.isRequired,
-        options: PropTypes.arrayOf(PropTypes.string),
+        options: PropTypes.arrayOf(
+            PropTypes.shape({
+                Index: PropTypes.number,
+                IsHidden: PropTypes.bool,
+                Question: PropTypes.shape({
+                    _id: PropTypes.string,
+                    EN: PropTypes.string,
+                    AR: PropTypes.string,
+                }),
+            }),
+        ),
         additionalData: PropTypes.shape({
-            defaultDocumentURL: PropTypes.string,
+            defaultDocumentURL: PropTypes.shape({
+                AR: PropTypes.string,
+                EN: PropTypes.string,
+            }),
         }),
     }),
 };

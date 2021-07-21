@@ -13,6 +13,8 @@ import { Link } from 'react-router-dom';
 import './MainTable.scss';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { resolveObjPath } from '../../utils/object';
 import useSortableData from '../../hooks/useSortableData';
@@ -21,7 +23,11 @@ import partiallyIcon from '../../assets/half-circle.svg';
 import unfinishedIcon from '../../assets/exclamation.svg';
 import Eyecon from '../../assets/view.svg';
 import { TableHeaderType } from '../../utils/custom-proptypes';
-import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
+import {
+    LANGUAGES,
+    PATIENT_STATUS,
+    SIGNATURE_STATUS,
+} from '../../utils/constants';
 import { formatDate } from '../../utils/date';
 import { useTranslations } from '../../hooks/useTranslations';
 
@@ -100,12 +106,36 @@ const MainTable = ({ patients, headers, rowIds }) => {
         ),
     };
 
-    const getPatientField = (patient, fieldKey) => {
-        const rawData = resolveObjPath(patient, fieldKey);
-        if (fieldKey === 'lastEdited')
-            return formatDate(new Date(rawData), selectedLang);
+    const signatureStyles = {
+        [SIGNATURE_STATUS.SIGNED]: (
+            <div style={{ color: '#65d991' }}>
+                <CheckIcon />
+            </div>
+        ),
+        [SIGNATURE_STATUS.UNSIGNED]: (
+            <div style={{ color: 'red' }}>
+                <CloseIcon />
+            </div>
+        ),
+    };
 
-        return rawData;
+    const getPatientField = (patient, fieldKey, fieldType) => {
+        const rawData = resolveObjPath(patient, fieldKey);
+        switch (fieldType) {
+            case FIELD_TYPES.STRING:
+            case FIELD_TYPES.NUMBER:
+                return rawData;
+            case FIELD_TYPES.DATE:
+                return formatDate(new Date(rawData), key);
+            case FIELD_TYPES.SIGNATURE: {
+                const status = rawData?.signatureData?.length
+                    ? SIGNATURE_STATUS.SIGNED
+                    : SIGNATURE_STATUS.UNSIGNED;
+                return signatureStyles[status];
+            }
+            default:
+                return rawData;
+        }
     };
 
     return (
@@ -160,7 +190,7 @@ const MainTable = ({ patients, headers, rowIds }) => {
                     <TableBody className="table-body">
                         {items.map((patient) => (
                             <StyledTableRow key={patient._id}>
-                                {rowIds.map((id) => (
+                                {rowData.map(({ id, dataType }) => (
                                     <StyledTableCell
                                         className={
                                             selectedLang === LANGUAGES.AR
@@ -201,7 +231,11 @@ const MainTable = ({ patients, headers, rowIds }) => {
                                                 )}
                                             </>
                                         ) : (
-                                            getPatientField(patient, id)
+                                            getPatientField(
+                                                patient,
+                                                id,
+                                                dataType,
+                                            )
                                         )}
                                     </StyledTableCell>
                                 ))}
@@ -234,7 +268,12 @@ const MainTable = ({ patients, headers, rowIds }) => {
 
 MainTable.propTypes = {
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
-    rowIds: PropTypes.arrayOf(PropTypes.string),
+    rowData: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string,
+            dataType: PropTypes.string,
+        }),
+    ),
     patients: PropTypes.arrayOf(PropTypes.object),
 };
 

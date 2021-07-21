@@ -150,7 +150,7 @@ const SignatureField = ({
             show an image and pass our imageURL state to it */}
             <div className="sig-container">
                 {value?.signatureData && !isModalOpen ? <canvas /> : null}
-                <view className="sig-ctl-container">
+                <div className="sig-ctl-container">
                     <Button
                         className="sig-ctl-button doc-btn"
                         disabled={isDisabled}
@@ -167,7 +167,7 @@ const SignatureField = ({
                     >
                         {translations.components.signature.sign}
                     </Button>
-                </view>
+                </div>
             </div>
         </div>
     );

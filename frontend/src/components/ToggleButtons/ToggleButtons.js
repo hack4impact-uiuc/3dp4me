@@ -77,6 +77,7 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
             return (
                 <ToggleButton
                     disableRipple
+                    key={`${element.key}-tb`}
                     className={`toggle-button ${
                         step === element.key ? 'active' : ''
                     }`}
@@ -94,7 +95,10 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
 
         return metaData.map((element) => {
             return (
-                <div className="toggle-button-selector">
+                <div
+                    className="toggle-button-selector"
+                    key={`${element.key}-label`}
+                >
                     {step === element.key ? (
                         <div className="current-step-label">
                             {patientData && patientData[element.key]?.status
@@ -113,7 +117,10 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
 
         return metaData.map((element) => {
             return (
-                <MenuItem onClick={(e) => handleCloseSelector(e, element.key)}>
+                <MenuItem
+                    key={`${element.key}-mi`}
+                    onClick={(e) => handleCloseSelector(e, element.key)}
+                >
                     {patientData && patientData[element.key]?.status
                         ? statusIcons[patientData[element.key].status]
                         : null}{' '}
@@ -163,8 +170,8 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
 ToggleButtons.propTypes = {
     handleStep: PropTypes.func.isRequired,
     step: PropTypes.string.isRequired,
-    metaData: PropTypes.object.isRequired,
-    patientData: PropTypes.object.isRequired,
+    metaData: PropTypes.arrayOf(PropTypes.object),
+    patientData: PropTypes.object,
 };
 
 export default ToggleButtons;

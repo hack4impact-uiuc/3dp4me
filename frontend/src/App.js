@@ -29,7 +29,7 @@ function App() {
         const getUserInfo = async () => {
             const userInfo = await getCurrentUserInfo();
             setUsername(userInfo?.attributes?.name);
-            setUserEmail(userInfo?.email);
+            setUserEmail(userInfo?.attributes?.email);
         };
 
         Auth.currentAuthenticatedUser()

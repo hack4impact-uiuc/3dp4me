@@ -9,16 +9,6 @@ export const TableHeaderType = PropTypes.shape({
     sortKey: PropTypes.string.isRequired,
 });
 
-export const BoolGetterSetterType = PropTypes.shape({
-    state: PropTypes.bool.isRequired,
-    setState: PropTypes.func.isRequired,
-});
-
-export const StringGetterSetterType = PropTypes.shape({
-    state: PropTypes.string.isRequired,
-    setState: PropTypes.func.isRequired,
-});
-
 export const fieldType = PropTypes.shape({
     state: PropTypes.string.isRequired,
 });
