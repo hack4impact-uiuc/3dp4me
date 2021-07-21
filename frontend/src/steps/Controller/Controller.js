@@ -30,8 +30,12 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
 
-const theme = createMuiTheme({
+const arTheme = createMuiTheme({
     direction: 'rtl',
+});
+
+const enTheme = createMuiTheme({
+    direction: 'ltr',
 });
 
 const Controller = () => {
@@ -208,7 +212,7 @@ const Controller = () => {
                     onClose={() => setManagePatientModalOpen(false)}
                 />
                 <ThemeProvider
-                    theme={selectedLang === LANGUAGES.AR ? theme : null}
+                    theme={selectedLang === LANGUAGES.AR ? arTheme : enTheme}
                 >
                     <Drawer
                         className={
