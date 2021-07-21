@@ -58,7 +58,7 @@ const AccountDropdown = ({
                 id="account-dropdown-menu"
                 anchorEl={anchorEl}
                 getContentAnchorEl={null}
-                anchorOrigin={{ vertical: 'bottom' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
