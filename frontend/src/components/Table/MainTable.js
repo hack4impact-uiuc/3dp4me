@@ -122,7 +122,6 @@ const MainTable = ({ patients, headers, rowData }) => {
 
     const getPatientField = (patient, fieldKey, fieldType) => {
         const rawData = resolveObjPath(patient, fieldKey);
-        console.log(`${rawData} ${fieldType}`);
         switch (fieldType) {
             case FIELD_TYPES.STRING:
             case FIELD_TYPES.NUMBER:
