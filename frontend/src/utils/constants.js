@@ -29,10 +29,10 @@ export const REQUIRED_DASHBOARD_HEADERS = [
 ];
 
 export const REQUIRED_DASHBOARD_SORT_KEYS = [
-    { id: 'firstName', fieldType: FIELD_TYPES.STRING },
-    { id: 'familyName', fieldType: FIELD_TYPES.STRING },
-    { id: 'lastEdited', fieldType: FIELD_TYPES.DATE },
-    { id: 'status', fieldType: FIELD_TYPES.STATUS },
+    { id: 'firstName', dataType: FIELD_TYPES.STRING },
+    { id: 'familyName', dataType: FIELD_TYPES.STRING },
+    { id: 'lastEdited', dataType: FIELD_TYPES.DATE },
+    { id: 'status', dataType: FIELD_TYPES.STATUS },
 ];
 
 export const ACCESS_LEVELS = {
