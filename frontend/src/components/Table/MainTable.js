@@ -140,9 +140,9 @@ const MainTable = ({ patients, headers, rowData }) => {
     };
 
     const renderTableBody = () => {
-        if (!patients || !rowData) return null;
+        if (!items || !rowData) return null;
 
-        return patients.map((patient) => (
+        return items.map((patient) => (
             <StyledTableRow key={patient._id}>
                 {rowData.map(({ id, dataType }) => (
                     <StyledTableCell
