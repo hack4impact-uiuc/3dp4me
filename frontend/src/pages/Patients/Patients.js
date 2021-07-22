@@ -303,7 +303,7 @@ const Patients = () => {
             </div>
             <MainTable
                 headers={REQUIRED_DASHBOARD_HEADERS}
-                rowIds={REQUIRED_DASHBOARD_SORT_KEYS}
+                rowData={REQUIRED_DASHBOARD_SORT_KEYS}
                 patients={
                     searchQuery.length === 0 ? allPatients : filterPatients
                 }

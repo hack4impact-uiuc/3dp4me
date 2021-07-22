@@ -139,6 +139,55 @@ const MainTable = ({ patients, headers, rowData }) => {
         }
     };
 
+    const renderTableBody = () => {
+        if (!patients || !rowData) return null;
+
+        return patients.map((patient) => (
+            <StyledTableRow key={patient._id}>
+                {rowData.map(({ id, dataType }) => (
+                    <StyledTableCell
+                        className={
+                            selectedLang === LANGUAGES.AR ? 'cell-rtl' : 'cell'
+                        }
+                        key={patient._id + id}
+                        align={selectedLang === LANGUAGES.AR ? 'right' : 'left'}
+                    >
+                        {id === 'status' ? (
+                            <>
+                                {Object.values(PATIENT_STATUS).includes(
+                                    resolveObjPath(patient, id),
+                                ) ? (
+                                    <b>
+                                        {
+                                            statusStyle[
+                                                resolveObjPath(patient, id)
+                                            ]
+                                        }
+                                    </b>
+                                ) : (
+                                    statusStyle[resolveObjPath(patient, id)]
+                                )}
+                            </>
+                        ) : (
+                            getPatientField(patient, id, dataType)
+                        )}
+                    </StyledTableCell>
+                ))}
+                <StyledTableCell className="cell" align="center">
+                    <Link
+                        className="table-view-link"
+                        to={`/patient-info/${patient._id}`}
+                    >
+                        <IconButton>
+                            <img alt="status icon" width="18px" src={Eyecon} />
+                        </IconButton>{' '}
+                        {translations.components.table.view}
+                    </Link>
+                </StyledTableCell>
+            </StyledTableRow>
+        ));
+    };
+
     return (
         <div className="table-container">
             <TableContainer className="table-container" component={Paper}>
@@ -189,77 +238,7 @@ const MainTable = ({ patients, headers, rowData }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody className="table-body">
-                        {items.map((patient) => (
-                            <StyledTableRow key={patient._id}>
-                                {rowData.map(({ id, dataType }) => (
-                                    <StyledTableCell
-                                        className={
-                                            selectedLang === LANGUAGES.AR
-                                                ? 'cell-rtl'
-                                                : 'cell'
-                                        }
-                                        key={patient._id + id}
-                                        align={
-                                            selectedLang === LANGUAGES.AR
-                                                ? 'right'
-                                                : 'left'
-                                        }
-                                    >
-                                        {id === 'status' ? (
-                                            <>
-                                                {Object.values(
-                                                    PATIENT_STATUS,
-                                                ).includes(
-                                                    resolveObjPath(patient, id),
-                                                ) ? (
-                                                    <b>
-                                                        {
-                                                            statusStyle[
-                                                                resolveObjPath(
-                                                                    patient,
-                                                                    id,
-                                                                )
-                                                            ]
-                                                        }
-                                                    </b>
-                                                ) : (
-                                                    statusStyle[
-                                                        resolveObjPath(
-                                                            patient,
-                                                            id,
-                                                        )
-                                                    ]
-                                                )}
-                                            </>
-                                        ) : (
-                                            getPatientField(
-                                                patient,
-                                                id,
-                                                dataType,
-                                            )
-                                        )}
-                                    </StyledTableCell>
-                                ))}
-                                <StyledTableCell
-                                    className="cell"
-                                    align="center"
-                                >
-                                    <Link
-                                        className="table-view-link"
-                                        to={`/patient-info/${patient._id}`}
-                                    >
-                                        <IconButton>
-                                            <img
-                                                alt="status icon"
-                                                width="18px"
-                                                src={Eyecon}
-                                            />
-                                        </IconButton>{' '}
-                                        {translations.components.table.view}
-                                    </Link>
-                                </StyledTableCell>
-                            </StyledTableRow>
-                        ))}
+                        {renderTableBody()}
                     </TableBody>
                 </Table>
             </TableContainer>

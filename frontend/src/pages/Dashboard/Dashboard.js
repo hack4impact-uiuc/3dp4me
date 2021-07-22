@@ -256,7 +256,11 @@ const Dashboard = () => {
         return stepsMetaData.map((element) => {
             if (step !== element.key) return null;
 
-            return <h>{element.displayName[selectedLang]}</h>;
+            return (
+                <p key={`header-${element.key}`}>
+                    {element.displayName[selectedLang]}
+                </p>
+            );
         });
     }
 
@@ -299,6 +303,7 @@ const Dashboard = () => {
 
             return (
                 <MainTable
+                    key={`table-${element.key}`}
                     headers={generateHeaders(element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
                     patients={
