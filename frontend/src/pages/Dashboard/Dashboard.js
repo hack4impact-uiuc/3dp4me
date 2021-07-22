@@ -300,7 +300,7 @@ const Dashboard = () => {
             return (
                 <MainTable
                     headers={generateHeaders(element.fields)}
-                    rowIds={generateRowIds(element.key, element.fields)}
+                    rowData={generateRowData(element.key, element.fields)}
                     patients={
                         searchQuery.length === 0 ? patients : filteredPatients
                     }

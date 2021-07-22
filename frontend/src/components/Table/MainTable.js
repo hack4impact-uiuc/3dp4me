@@ -24,6 +24,7 @@ import unfinishedIcon from '../../assets/exclamation.svg';
 import Eyecon from '../../assets/view.svg';
 import { TableHeaderType } from '../../utils/custom-proptypes';
 import {
+    FIELD_TYPES,
     LANGUAGES,
     PATIENT_STATUS,
     SIGNATURE_STATUS,
@@ -46,7 +47,7 @@ const StyledTableRow = withStyles(() => ({
     },
 }))(TableRow);
 
-const MainTable = ({ patients, headers, rowIds }) => {
+const MainTable = ({ patients, headers, rowData }) => {
     const [translations, selectedLang] = useTranslations();
 
     const UNSORTED_DATA = patients;
@@ -126,7 +127,7 @@ const MainTable = ({ patients, headers, rowIds }) => {
             case FIELD_TYPES.NUMBER:
                 return rawData;
             case FIELD_TYPES.DATE:
-                return formatDate(new Date(rawData), key);
+                return formatDate(new Date(rawData), selectedLang);
             case FIELD_TYPES.SIGNATURE: {
                 const status = rawData?.signatureData?.length
                     ? SIGNATURE_STATUS.SIGNED
