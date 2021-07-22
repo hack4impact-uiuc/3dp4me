@@ -84,6 +84,10 @@ jobs:
         working-directory: ./backend
         run: yarn
 
+      - name: Run gulpfile
+        working-directory: ./backend
+        run: yarn gulp
+
       - name: Run tests
         working-directory: ./backend
         run: yarn test
