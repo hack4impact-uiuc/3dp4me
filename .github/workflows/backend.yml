@@ -74,14 +74,24 @@ jobs:
         with:
           node-version: 14.12.0
 
-      - name: Cache dependencies
+      - name: Cache backend dependencies
         uses: actions/cache@v2
         with:
           path: backend/node_modules
           key: ${{ runner.os }}-cache
 
-      - name: Install dependencies
+      - name: Cache frontend dependencies
+        uses: actions/cache@v2
+        with:
+          path: client/node_modules
+          key: ${{ runner.os }}-cache
+
+      - name: Install backend dependencies
         working-directory: ./backend
+        run: yarn
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
         run: yarn
 
       - name: Run gulpfile
