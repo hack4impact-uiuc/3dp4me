@@ -7,392 +7,389 @@ const { errorWrap } = require('../../utils');
 const { models, overallStatusEnum } = require('../../models');
 const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
 const {
-	ACCESS_KEY_ID,
-	SECRET_ACCESS_KEY,
+    ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
 const { isAdmin } = require('../../middleware/authentication');
 const {
-	removeRequestAttributes,
-	STEP_IMMUTABLE_ATTRIBUTES,
+    removeRequestAttributes,
+    STEP_IMMUTABLE_ATTRIBUTES,
 } = require('../../middleware/requests');
 
 // GET: Returns all patients
 router.get(
-	'/',
-	errorWrap(async (req, res) => {
-		models.Patient.find().then((patientInfo) =>
-			res.status(200).json({
-				code: 200,
-				success: true,
-				result: patientInfo,
-			}),
-		);
-	}),
+    '/',
+    errorWrap(async (req, res) => {
+        models.Patient.find().then((patientInfo) =>
+            res.status(200).json({
+                code: 200,
+                success: true,
+                result: patientInfo,
+            }),
+        );
+    }),
 );
 
 // GET: Returns everything associated with patient
 router.get(
-	'/:id',
-	errorWrap(async (req, res) => {
-		const { id } = req.params;
-		roles = [req.user.roles]
-		let patientData = await models.Patient.findById(id);
-		if (!patientData)
-			return res.status(404).json({
-				code: 404,
-				message: `Patient with id ${id} not found`,
-				success: false,
-			});
+    '/:id',
+    errorWrap(async (req, res) => {
+        const { id } = req.params;
+        roles = [req.user.roles];
+        let patientData = await models.Patient.findById(id);
+        if (!patientData)
+            return res.status(404).json({
+                code: 404,
+                message: `Patient with id ${id} not found`,
+                success: false,
+            });
 
-		let stepKeys = await getStepKeys();
-		for (const stepKey of stepKeys) {
+        let stepKeys = await getStepKeys();
+        for (const stepKey of stepKeys) {
+            if (isAdmin(req.user)) {
+                steps = await models.Step.find({});
+            } else {
+                steps = await models.Step.find({
+                    $and: [
+                        { key: stepKey },
+                        { readableGroups: { $in: [req.user.roles] } },
+                    ],
+                });
+            }
 
-			if (isAdmin(req.user)) {
-				steps = await models.Step.find({})
-			} else {
-				steps = await models.Step.find({
-					$and: [
-						{ key: stepKey },
-						{ readableGroups: { $in: [req.user.roles] } }
-					]
-				});
-			}
+            let readableFields = [];
 
-			let readableFields = [];
+            steps.map((step) => {
+                step.fields = step.fields.filter((field) => {
+                    return field.readableGroups.some((role) =>
+                        roles.includes(role),
+                    );
+                });
+            });
 
-			steps.map((step) => {
-				step.fields = step.fields.filter((field) => {
-					return field.readableGroups.some((role) =>
-						roles.includes(role),
-					);
-				});
-			});
+            steps.forEach((step) => {
+                readableFields.push(step.fields.key);
+            });
 
-			steps.forEach((step) => {
-				readableFields.push(step.fields.key);
-			});
+            const collection = await mongoose.connection.db.collection(stepKey);
+            const stepData = await collection.findOne({ patientId: id });
+            if (!isAdmin(req.user))
+                for (const [key, value] of Object.entries(stepData)) {
+                    if (!readableFields.includes(key)) {
+                        delete stepData[key];
+                    }
+                }
 
-			const collection = await mongoose.connection.db.collection(stepKey);
-			const stepData = await collection.findOne({ patientId: id });
-			if (!isAdmin(req.user))
-				for (const [key, value] of Object.entries(stepData)) {
-					if (!readableFields.includes(key)) {
-						delete stepData[key];
-					}
-				}
+            patientData.set(stepKey, stepData, { strict: false });
+            console.log(patientData);
+        }
 
-			patientData.set(stepKey, stepData, { strict: false });
-			console.log(patientData)
-
-
-		}
-
-		res.status(200).json({
-			code: 200,
-			success: true,
-			result: patientData,
-		});
-	}),
+        res.status(200).json({
+            code: 200,
+            success: true,
+            result: patientData,
+        });
+    }),
 );
 
 // POST: new patient
 router.post(
-	'/',
-	errorWrap(async (req, res) => {
-		const patient = req.body;
-		let new_patient = null;
-		try {
-			req.body.lastEditedBy = req.user.name;
-			new_patient = new models.Patient(patient);
-			await new_patient.save();
-		} catch (error) {
-			return res.status(400).json({
-				code: 400,
-				success: false,
-				message: 'Request is invalid or missing fields.',
-			});
-		}
+    '/',
+    errorWrap(async (req, res) => {
+        const patient = req.body;
+        let new_patient = null;
+        try {
+            req.body.lastEditedBy = req.user.name;
+            new_patient = new models.Patient(patient);
+            await new_patient.save();
+        } catch (error) {
+            return res.status(400).json({
+                code: 400,
+                success: false,
+                message: 'Request is invalid or missing fields.',
+            });
+        }
 
-		res.status(201).json({
-			code: 201,
-			success: true,
-			message: 'User successfully created.',
-			result: new_patient,
-		});
-	}),
+        res.status(201).json({
+            code: 201,
+            success: true,
+            message: 'User successfully created.',
+            result: new_patient,
+        });
+    }),
 );
 
 router.put(
-	'/:id',
-	removeRequestAttributes(['_id', '__v', 'dateCreated']),
-	errorWrap(async (req, res) => {
-		const { id } = req.params;
-		const patient = await models.Patient.findOneAndUpdate(
-			{ _id: id },
-			{ $set: req.body },
-			{ new: true },
-		);
+    '/:id',
+    removeRequestAttributes(['_id', '__v', 'dateCreated']),
+    errorWrap(async (req, res) => {
+        const { id } = req.params;
+        const patient = await models.Patient.findOneAndUpdate(
+            { _id: id },
+            { $set: req.body },
+            { new: true },
+        );
 
-		if (patient == null) {
-			return res.status(404).json({
-				code: 404,
-				success: false,
-				message: 'Patient with that id not found.',
-			});
-		}
+        if (patient == null) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Patient with that id not found.',
+            });
+        }
 
-		res.status(200).json({
-			code: 200,
-			success: true,
-			message: 'Patient successfully edited.',
-			result: patient,
-		});
-	}),
+        res.status(200).json({
+            code: 200,
+            success: true,
+            message: 'Patient successfully edited.',
+            result: patient,
+        });
+    }),
 );
 
 // GET: Download a file
 router.get(
-	'/:id/files/:stepKey/:fieldKey/:fileName',
-	errorWrap(async (req, res) => {
-		const { id, stepKey, fieldKey, fileName } = req.params;
-		var s3Stream = downloadFile(
-			`${id}/${stepKey}/${fieldKey}/${fileName}`,
-			{
-				accessKeyId: ACCESS_KEY_ID,
-				secretAccessKey: SECRET_ACCESS_KEY,
-			},
-		).createReadStream();
+    '/:id/files/:stepKey/:fieldKey/:fileName',
+    errorWrap(async (req, res) => {
+        const { id, stepKey, fieldKey, fileName } = req.params;
+        var s3Stream = downloadFile(
+            `${id}/${stepKey}/${fieldKey}/${fileName}`,
+            {
+                accessKeyId: ACCESS_KEY_ID,
+                secretAccessKey: SECRET_ACCESS_KEY,
+            },
+        ).createReadStream();
 
-		s3Stream
-			.on('error', function (err) {
-				res.json('S3 Error:' + err);
-			})
-			.on('close', function () {
-				res.end();
-			});
-		s3Stream.pipe(res);
-	}),
+        s3Stream
+            .on('error', function (err) {
+                res.json('S3 Error:' + err);
+            })
+            .on('close', function () {
+                res.end();
+            });
+        s3Stream.pipe(res);
+    }),
 );
 
 // Delete: Delete a file
 router.delete(
-	'/:id/files/:stepKey/:fieldKey/:fileName',
-	errorWrap(async (req, res) => {
-		const { id, stepKey, fieldKey, fileName } = req.params;
+    '/:id/files/:stepKey/:fieldKey/:fileName',
+    errorWrap(async (req, res) => {
+        const { id, stepKey, fieldKey, fileName } = req.params;
 
-		const patient = await models.Patient.findById(id);
-		if (patient == null) {
-			return res.status(404).json({
-				success: false,
-				message: `Patient with id ${id} not found`,
-			});
-		}
+        const patient = await models.Patient.findById(id);
+        if (patient == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Patient with id ${id} not found`,
+            });
+        }
 
-		const collection = await mongoose.connection.db.collection(stepKey);
-		if (collection == null) {
-			return res.status(404).json({
-				success: false,
-				message: `Step with key ${stepKey} not found`,
-			});
-		}
+        const collection = await mongoose.connection.db.collection(stepKey);
+        if (collection == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Step with key ${stepKey} not found`,
+            });
+        }
 
-		const stepData = await collection.findOne({ patientId: id });
-		if (stepData == null) {
-			return res.status(404).json({
-				success: false,
-				message: `Patient does not have any data on record for this step`,
-			});
-		}
+        const stepData = await collection.findOne({ patientId: id });
+        if (stepData == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Patient does not have any data on record for this step`,
+            });
+        }
 
-		const index = stepData[fieldKey].findIndex(
-			(x) => x.filename == fileName,
-		);
+        const index = stepData[fieldKey].findIndex(
+            (x) => x.filename == fileName,
+        );
 
-		if (index == -1) {
-			return res.status(404).json({
-				success: false,
-				message: `File ${fileName} does not exist`,
-			});
-		}
+        if (index == -1) {
+            return res.status(404).json({
+                success: false,
+                message: `File ${fileName} does not exist`,
+            });
+        }
 
-		// TODO: Remove this file from AWS as well once we have a "do you want to remove this" on the frontend
-		stepData[fieldKey].splice(index, 1);
+        // TODO: Remove this file from AWS as well once we have a "do you want to remove this" on the frontend
+        stepData[fieldKey].splice(index, 1);
 
-		stepData.lastEdited = Date.now();
-		stepData.lastEditedBy = req.user.name;
-		collection.findOneAndUpdate({ patientId: id }, { $set: stepData });
+        stepData.lastEdited = Date.now();
+        stepData.lastEditedBy = req.user.name;
+        collection.findOneAndUpdate({ patientId: id }, { $set: stepData });
 
-		patient.lastEdited = Date.now();
-		patient.lastEditedBy = req.user.name;
-		patient.save();
+        patient.lastEdited = Date.now();
+        patient.lastEditedBy = req.user.name;
+        patient.save();
 
-		res.status(200).json({
-			success: true,
-			message: 'File successfully removed',
-		});
-	}),
+        res.status(200).json({
+            success: true,
+            message: 'File successfully removed',
+        });
+    }),
 );
 
 // POST: upload individual files
 router.post(
-	'/:id/files/:stepKey/:fieldKey/:fileName',
-	errorWrap(async (req, res) => {
-		// TODO during refactoring: We upload file name in form data, is this even needed???
-		const { id, stepKey, fieldKey, fileName } = req.params;
-		const patient = await models.Patient.findById(id);
-		if (patient == null) {
-			return res.status(404).json({
-				success: false,
-				message: `Cannot find patient with id ${id}`,
-			});
-		}
+    '/:id/files/:stepKey/:fieldKey/:fileName',
+    errorWrap(async (req, res) => {
+        // TODO during refactoring: We upload file name in form data, is this even needed???
+        const { id, stepKey, fieldKey, fileName } = req.params;
+        const patient = await models.Patient.findById(id);
+        if (patient == null) {
+            return res.status(404).json({
+                success: false,
+                message: `Cannot find patient with id ${id}`,
+            });
+        }
 
-		const collectionInfo = await mongoose.connection.db
-			.listCollections({ name: stepKey })
-			.toArray();
+        const collectionInfo = await mongoose.connection.db
+            .listCollections({ name: stepKey })
+            .toArray();
 
-		if (collectionInfo.length == 0) {
-			return res.status(404).json({
-				success: false,
-				message: `Step with key ${stepKey} not found`,
-			});
-		}
+        if (collectionInfo.length == 0) {
+            return res.status(404).json({
+                success: false,
+                message: `Step with key ${stepKey} not found`,
+            });
+        }
 
-		const collection = await mongoose.connection.db.collection(stepKey);
-		let stepData = (await collection.findOne({ patientId: id })) || {};
+        const collection = await mongoose.connection.db.collection(stepKey);
+        let stepData = (await collection.findOne({ patientId: id })) || {};
 
-		// Set ID in case patient does not have any information for this step yet
-		stepData.patientId = id;
-		if (!stepData || !stepData[fieldKey]) stepData[fieldKey] = [];
+        // Set ID in case patient does not have any information for this step yet
+        stepData.patientId = id;
+        if (!stepData || !stepData[fieldKey]) stepData[fieldKey] = [];
 
-		let file = req.files.uploadedFile;
-		await uploadFile(
-			file.data,
-			`${id}/${stepKey}/${fieldKey}/${fileName}`,
-			{
-				accessKeyId: ACCESS_KEY_ID,
-				secretAccessKey: SECRET_ACCESS_KEY,
-			},
-		);
+        let file = req.files.uploadedFile;
+        await uploadFile(
+            file.data,
+            `${id}/${stepKey}/${fieldKey}/${fileName}`,
+            {
+                accessKeyId: ACCESS_KEY_ID,
+                secretAccessKey: SECRET_ACCESS_KEY,
+            },
+        );
 
-		stepData[fieldKey].push({
-			filename: fileName,
-			uploadedBy: req.user.name,
-			uploadDate: Date.now(),
-		});
-		stepData.lastEdited = Date.now();
-		stepData.lastEditedBy = req.user.name;
-		collection.findOneAndUpdate(
-			{ patientId: id },
-			{ $set: stepData },
-			{ upsert: true },
-		);
+        stepData[fieldKey].push({
+            filename: fileName,
+            uploadedBy: req.user.name,
+            uploadDate: Date.now(),
+        });
+        stepData.lastEdited = Date.now();
+        stepData.lastEditedBy = req.user.name;
+        collection.findOneAndUpdate(
+            { patientId: id },
+            { $set: stepData },
+            { upsert: true },
+        );
 
-		patient.lastEdited = Date.now();
-		patient.lastEditedBy = req.user.name;
-		patient.save();
+        patient.lastEdited = Date.now();
+        patient.lastEditedBy = req.user.name;
+        patient.save();
 
-		res.status(201).json({
-			success: true,
-			message: 'File successfully uploaded',
-			data: {
-				name: fileName,
-				uploadedBy: req.user.name,
-				uploadDate: Date.now(),
-				mimetype: file.mimetype,
-				size: file.size,
-			},
-		});
-	}),
+        res.status(201).json({
+            success: true,
+            message: 'File successfully uploaded',
+            data: {
+                name: fileName,
+                uploadedBy: req.user.name,
+                uploadDate: Date.now(),
+                mimetype: file.mimetype,
+                size: file.size,
+            },
+        });
+    }),
 );
 
 // POST: Updates info for patient at stage
 router.post(
-	'/:id/:stage',
-	removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
-	errorWrap(async (req, res) => {
-		roles = [req.user.roles.toString()];
-		const { id, stage } = req.params;
-		let steps = null;
-		if (isAdmin(req.user)) {
-			steps = await models.Step.find({ key: stage });
-		} else {
-			steps = await models.Step.find({
-				$and: [
-					{ key: stage },
-					{ writableGroups: { $in: [req.user.roles.toString()] } }, // Check this is correct req.user.roles is an array
-				],
-			});
-			let writableFields = [];
+    '/:id/:stage',
+    removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
+    errorWrap(async (req, res) => {
+        roles = [req.user.roles.toString()];
+        const { id, stage } = req.params;
+        let steps = null;
+        if (isAdmin(req.user)) {
+            steps = await models.Step.find({ key: stage });
+        } else {
+            steps = await models.Step.find({
+                $and: [
+                    { key: stage },
+                    { writableGroups: { $in: [req.user.roles.toString()] } }, // Check this is correct req.user.roles is an array
+                ],
+            });
+            let writableFields = [];
 
-			steps.map((step) => {
-				step.fields = step.fields.filter((field) => {
-					return field.writableGroups.some((role) =>
-						roles.includes(role),
-					);
-				});
-			});
+            steps.map((step) => {
+                step.fields = step.fields.filter((field) => {
+                    return field.writableGroups.some((role) =>
+                        roles.includes(role),
+                    );
+                });
+            });
 
-			steps.forEach((step) => {
-				writableFields.push(step.fields.key);
-			});
+            steps.forEach((step) => {
+                writableFields.push(step.fields.key);
+            });
 
-			for (const [key, value] of Object.entries(req.body)) {
-				if (!writableFields.includes(key)) {
-					delete req.body[key];
-				}
-			}
-		}
+            for (const [key, value] of Object.entries(req.body)) {
+                if (!writableFields.includes(key)) {
+                    delete req.body[key];
+                }
+            }
+        }
 
-		if (steps.length == 0) {
-			return res.status(404).json({
-				code: 404,
-				success: false,
-				message: 'Stage not found.',
-			});
-		}
+        if (steps.length == 0) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Stage not found.',
+            });
+        }
 
-		const patient = await models.Patient.findById(id);
-		if (!patient) {
-			return res.status(404).json({
-				code: 404,
-				success: false,
-				message: 'Patient not found.',
-			});
-		}
+        const patient = await models.Patient.findById(id);
+        if (!patient) {
+            return res.status(404).json({
+                code: 404,
+                success: false,
+                message: 'Patient not found.',
+            });
+        }
 
-		let model = mongoose.model(stage);
-		let patientStepData = await model.findOne({ patientId: id });
-		if (!patientStepData) {
-			patientStepData = req.body;
-			if (Object.keys(req.body) != 0) {
-				patientStepData.lastEdited = Date.now();
-				patientStepData.lastEditedBy = req.user.name;
-			}
+        let model = mongoose.model(stage);
+        let patientStepData = await model.findOne({ patientId: id });
+        if (!patientStepData) {
+            patientStepData = req.body;
+            if (Object.keys(req.body) != 0) {
+                patientStepData.lastEdited = Date.now();
+                patientStepData.lastEditedBy = req.user.name;
+            }
 
-			patientStepData.patientId = id;
-			const newStepDataModel = new model(patientStepData);
-			patientStepData = await newStepDataModel.save();
-		} else {
-			patientStepData = _.assign(patientStepData, req.body);
+            patientStepData.patientId = id;
+            const newStepDataModel = new model(patientStepData);
+            patientStepData = await newStepDataModel.save();
+        } else {
+            patientStepData = _.assign(patientStepData, req.body);
 
-			if (Object.keys(req.body) != 0) {
-				patientStepData.lastEdited = Date.now();
-				patientStepData.lastEditedBy = req.user.name;
-			}
-			patientStepData = await patientStepData.save();
-		}
+            if (Object.keys(req.body) != 0) {
+                patientStepData.lastEdited = Date.now();
+                patientStepData.lastEditedBy = req.user.name;
+            }
+            patientStepData = await patientStepData.save();
+        }
 
-		// Doesn't update if step was not changed
-		patient.lastEdited = Date.now();
-		patient.lastEditedBy = req.user.name;
-		await patient.save();
-		res.status(200).json({
-			success: true,
-			message: 'Patient Stage Successfully Saved',
-			result: patientStepData,
-		});
-	}),
+        // Doesn't update if step was not changed
+        patient.lastEdited = Date.now();
+        patient.lastEditedBy = req.user.name;
+        await patient.save();
+        res.status(200).json({
+            success: true,
+            message: 'Patient Stage Successfully Saved',
+            result: patientStepData,
+        });
+    }),
 );
 
 module.exports = router;
