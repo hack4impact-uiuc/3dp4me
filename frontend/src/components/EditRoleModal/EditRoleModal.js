@@ -2,7 +2,6 @@
 /* eslint-disable no-await-in-loop */
 // More readabe without this
 /* eslint-disable no-lonely-if */
-
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import {
@@ -12,15 +11,24 @@ import {
     Select,
     Button,
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 
+import { useErrorWrap } from '../../hooks/useErrorWrap';
+import PropTypes from 'prop-types';
 import TextField from '../Fields/TextField';
 import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
+import { removeUserRole, setUserAccess, addUserRole } from '../../utils/api';
 
-const EditRoleModal = ({ isOpen, onClose, userInfo, allRoles }) => {
+const EditRoleModal = ({
+    isOpen,
+    onUserEdited,
+    onClose,
+    userInfo,
+    allRoles,
+}) => {
+    const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
 
