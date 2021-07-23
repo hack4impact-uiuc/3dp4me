@@ -10,7 +10,10 @@ const LoadWrapper = ({ loading, children }) => {
 
 LoadWrapper.propTypes = {
     loading: PropTypes.bool.isRequired,
-    children: PropTypes.elementType,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node,
+    ]).isRequired,
 };
 
 export default LoadWrapper;

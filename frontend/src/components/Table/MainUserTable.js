@@ -15,11 +15,9 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 
 import useSortableData from '../../hooks/useSortableData';
 import Eyecon from '../../assets/view.svg';
-import {
-    LanguageDataType,
-    TableHeaderType,
-} from '../../utils/custom-proptypes';
-import { ACCESS_LEVELS } from '../../utils/constants';
+import { TableHeaderType } from '../../utils/custom-proptypes';
+import { ACCESS_LEVELS, LANGUAGES } from '../../utils/constants';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -36,15 +34,8 @@ const StyledTableRow = withStyles(() => ({
     },
 }))(TableRow);
 
-const MainUserTable = ({
-    languageData,
-    users,
-    roleData,
-    headers,
-    onUserSelected,
-}) => {
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
+const MainUserTable = ({ users, roleData, headers, onUserSelected }) => {
+    const [translations, selectedLang] = useTranslations();
     const UNSORTED_DATA = users;
     const { items, requestSort, sortConfig } = useSortableData(
         users,
@@ -54,17 +45,17 @@ const MainUserTable = ({
     const statusStyle = {
         [ACCESS_LEVELS.GRANTED]: (
             <div style={{ color: '#65d991' }}>
-                <b>{lang.accountManagement.Approved}</b>
+                <b>{translations.accountManagement.Approved}</b>
             </div>
         ),
         [ACCESS_LEVELS.PENDING]: (
             <div style={{ color: 'black' }}>
-                <b>{lang.accountManagement.Pending}</b>
+                <b>{translations.accountManagement.Pending}</b>
             </div>
         ),
         [ACCESS_LEVELS.REVOKED]: (
             <div style={{ color: 'red' }}>
-                <b>{lang.accountManagement.Revoked}</b>
+                <b>{translations.accountManagement.Revoked}</b>
             </div>
         ),
     };
@@ -98,7 +89,8 @@ const MainUserTable = ({
 
         roles = roles.map((r) => {
             for (let i = 0; i < roleData.length; i += 1) {
-                if (r === roleData[i]._id) return roleData[i]?.Question[key];
+                if (r === roleData[i]._id)
+                    return roleData[i]?.Question[selectedLang];
             }
 
             return 'Unrecognized role';
@@ -127,11 +119,15 @@ const MainUserTable = ({
                                     onClick={() => requestSort(header.sortKey)}
                                     className="header"
                                     key={header}
-                                    align={key === 'AR' ? 'right' : 'left'}
+                                    align={
+                                        selectedLang === LANGUAGES.AR
+                                            ? 'right'
+                                            : 'left'
+                                    }
                                 >
                                     <div
                                         className={
-                                            key === 'AR'
+                                            selectedLang === LANGUAGES.AR
                                                 ? 'cell-align-rtl'
                                                 : 'cell-align'
                                         }
@@ -189,7 +185,7 @@ const MainUserTable = ({
                                             src={Eyecon}
                                         />
                                     </IconButton>{' '}
-                                    {lang.components.table.edit}
+                                    {translations.components.table.edit}
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}
@@ -201,7 +197,6 @@ const MainUserTable = ({
 };
 
 MainUserTable.propTypes = {
-    languageData: LanguageDataType.isRequired,
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
     onUserSelected: PropTypes.func.isRequired,
     users: PropTypes.arrayOf(PropTypes.object),

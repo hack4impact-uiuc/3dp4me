@@ -4,19 +4,18 @@ import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
 
 import RadioButtonField from '../Fields/RadioButtonField';
-import { LanguageDataType, FieldsType } from '../../utils/custom-proptypes';
+import { FieldsType } from '../../utils/custom-proptypes';
 import { FIELD_TYPES } from '../../utils/constants';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const StepManagementContent = ({
-    languageData,
     onDownPressed,
     onUpPressed,
     onEditField,
     stepMetadata,
     isEditing,
 }) => {
-    const key = languageData.selectedLanguage;
-
+    const selectedLang = useTranslations()[1];
     const formatRoles = (array) => {
         if (!array?.length) return 'Admin';
 
@@ -31,7 +30,7 @@ const StepManagementContent = ({
                     <div className="bottom-container">
                         <RadioButtonField
                             fieldId={field?.key}
-                            langKey={key}
+                            langKey={selectedLang}
                             options={field?.options}
                             isDisabled
                         />
@@ -49,7 +48,7 @@ const StepManagementContent = ({
             <div className="buttons">
                 <div
                     className="edit-field-button"
-                    onClick={() => onEditField(stepMetadata.key, key)}
+                    onClick={() => onEditField(stepMetadata.key, selectedLang)}
                 >
                     <i className="pencil alternate icon" />
                 </div>
@@ -104,7 +103,7 @@ const StepManagementContent = ({
                     <div className="content">
                         <div className="info">
                             <div className="header">
-                                {field.displayName[key]}
+                                {field.displayName[selectedLang]}
                             </div>
                             <div className="description">
                                 Field Type: {field.fieldType}
@@ -142,7 +141,6 @@ const StepManagementContent = ({
 };
 
 StepManagementContent.propTypes = {
-    languageData: LanguageDataType.isRequired,
     fields: FieldsType.isRequired,
     isEditing: PropTypes.bool.isRequired,
     onDownPressed: PropTypes.func.isRequired,

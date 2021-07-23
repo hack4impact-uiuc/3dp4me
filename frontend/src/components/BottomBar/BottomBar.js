@@ -7,14 +7,10 @@ import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
 import halfCircle from '../../assets/half-circle.svg';
-import {
-    BoolGetterSetterType,
-    LanguageDataType,
-} from '../../utils/custom-proptypes';
-import { STEP_STATUS } from '../../utils/constants';
+import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const BottomBar = ({
-    languageData,
     edit,
     lastEdited,
     lastEditedBy,
@@ -25,8 +21,7 @@ const BottomBar = ({
     onDiscard,
     setEdit,
 }) => {
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
+    const [translations, selectedLang] = useTranslations();
 
     const statusIcons = {
         [STEP_STATUS.FINISHED]: (
@@ -51,16 +46,16 @@ const BottomBar = ({
                 defaultValue={status}
             >
                 <MenuItem disabled value="default">
-                    {lang.components.bottombar.default}
+                    {translations.components.bottombar.default}
                 </MenuItem>
                 <MenuItem value={STEP_STATUS.UNFINISHED}>
-                    {lang.components.bottombar.unfinished}
+                    {translations.components.bottombar.unfinished}
                 </MenuItem>
                 <MenuItem value={STEP_STATUS.PARTIALLY_FINISHED}>
-                    {lang.components.bottombar.partial}
+                    {translations.components.bottombar.partial}
                 </MenuItem>
                 <MenuItem value={STEP_STATUS.FINISHED}>
-                    {lang.components.bottombar.finished}
+                    {translations.components.bottombar.finished}
                 </MenuItem>
             </Select>
         );
@@ -74,15 +69,27 @@ const BottomBar = ({
                 className={`status ${status}`}
                 style={{ display: 'flex', alignItems: 'center' }}
             >
-                {statusIcons[status]} {lang.components.bottombar[status]}
+                {statusIcons[status]}{' '}
+                {translations.components.bottombar[status]}
             </div>
         );
+    };
+
+    const getLastEditedString = () => {
+        if (!lastEdited || !lastEditedBy) return '';
+
+        return `${
+            translations.components.bottombar.lastEditedBy
+        } ${lastEditedBy} ${translations.components.bottombar.on} ${formatDate(
+            new Date(lastEdited),
+            selectedLang,
+        )}`;
     };
 
     return (
         <AppBar
             className="bottom-bar-wrapper"
-            color="white"
+            color="inherit"
             style={{
                 top: 'auto',
                 bottom: '0',
@@ -91,29 +98,28 @@ const BottomBar = ({
         >
             <Toolbar className="bottom-toolbar">
                 <div className="editor-section" style={style?.editorSection}>
-                    {`${
-                        lang.components.bottombar.lastEditedBy
-                    } ${lastEditedBy} ${
-                        lang.components.bottombar.on
-                    } ${formatDate(new Date(lastEdited), key)}`}
+                    {getLastEditedString()}
                 </div>
                 {edit ? (
                     <div>
-                        {key !== 'AR' ? (
+                        {selectedLang !== LANGUAGES.AR ? (
                             <div>
                                 {renderStatusSelector()}
                                 <Button
                                     className="save-button"
                                     onClick={onSave}
                                 >
-                                    {lang.components.button.save}
+                                    {translations.components.button.save}
                                 </Button>
                                 <Button
                                     className="discard-button"
                                     onClick={onDiscard}
                                 >
                                     <b>
-                                        {lang.components.button.discard.title}
+                                        {
+                                            translations.components.button
+                                                .discard.title
+                                        }
                                     </b>
                                 </Button>
                             </div>
@@ -128,32 +134,47 @@ const BottomBar = ({
                                     defaultValue={status}
                                 >
                                     <MenuItem disabled value="default">
-                                        {lang.components.bottombar.default}
+                                        {
+                                            translations.components.bottombar
+                                                .default
+                                        }
                                     </MenuItem>
                                     <MenuItem value={STEP_STATUS.UNFINISHED}>
-                                        {lang.components.bottombar.unfinished}
+                                        {
+                                            translations.components.bottombar
+                                                .unfinished
+                                        }
                                     </MenuItem>
                                     <MenuItem
                                         value={STEP_STATUS.PARTIALLY_FINISHED}
                                     >
-                                        {lang.components.bottombar.partial}
+                                        {
+                                            translations.components.bottombar
+                                                .partial
+                                        }
                                     </MenuItem>
                                     <MenuItem value={STEP_STATUS.FINISHED}>
-                                        {lang.components.bottombar.finished}
+                                        {
+                                            translations.components.bottombar
+                                                .finished
+                                        }
                                     </MenuItem>
                                 </Select>
                                 <Button
                                     className="save-button-ar"
                                     onClick={onSave}
                                 >
-                                    {lang.components.button.save}
+                                    {translations.components.button.save}
                                 </Button>
                                 <Button
                                     className="discard-button"
                                     onClick={onDiscard}
                                 >
                                     <b>
-                                        {lang.components.button.discard.title}
+                                        {
+                                            translations.components.button
+                                                .discard.title
+                                        }
                                     </b>
                                 </Button>
                             </div>
@@ -166,7 +187,7 @@ const BottomBar = ({
                             className="edit-button"
                             onClick={() => setEdit(true)}
                         >
-                            {lang.components.button.edit}
+                            {translations.components.button.edit}
                         </Button>
                     </div>
                 )}
@@ -176,15 +197,14 @@ const BottomBar = ({
 };
 
 BottomBar.propTypes = {
-    languageData: LanguageDataType.isRequired,
     style: PropTypes.object,
     edit: PropTypes.bool.isRequired,
-    lastEdited: PropTypes.string.isRequired,
-    lastEditedBy: PropTypes.string.isRequired,
+    lastEdited: PropTypes.string,
+    lastEditedBy: PropTypes.string,
     status: PropTypes.string,
     onStatusChange: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-    onDiscard: BoolGetterSetterType.isRequired,
+    onDiscard: PropTypes.func.isRequired,
     setEdit: PropTypes.func.isRequired,
 };
 

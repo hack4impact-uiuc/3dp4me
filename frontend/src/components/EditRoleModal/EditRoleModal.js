@@ -14,26 +14,15 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import TextField from '../Fields/TextField';
 import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
-import { addUserRole, removeUserRole, setUserAccess } from '../../utils/api';
-import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { useTranslations } from '../../hooks/useTranslations';
 
-const EditRoleModal = ({
-    languageData,
-    isOpen,
-    onClose,
-    onUserEdited,
-    userInfo,
-    allRoles,
-}) => {
+const EditRoleModal = ({ isOpen, onClose, userInfo, allRoles }) => {
+    const [translations, selectedLang] = useTranslations();
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
-    const errorWrap = useErrorWrap();
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     useEffect(() => {
         setUserData(_.cloneDeep(userInfo));
@@ -83,53 +72,55 @@ const EditRoleModal = ({
     return (
         <Modal open={isOpen} onClose={onClose} className="edit-role-modal">
             <div className="edit-role-modal-wrapper">
-                <h2>{lang.accountManagement.editAccount}</h2>
+                <h2>{translations.accountManagement.editAccount}</h2>
                 <TextField
                     className="text-field"
-                    displayName={lang.accountManagement.username}
+                    displayName={translations.accountManagement.username}
                     type="text"
                     isDisabled
                     value={userData?.userName}
                 />
                 <TextField
                     className="text-field"
-                    displayName={lang.accountManagement.email}
+                    displayName={translations.accountManagement.email}
                     type="text"
                     isDisabled
                     value={userData?.userEmail}
                 />
                 <MultiSelectField
                     title="Roles"
-                    langKey={key}
+                    langKey={selectedLang}
                     options={allRoles}
                     selectedOptions={userData?.roles}
                     onChange={onRolesChange}
                     isDisabled={false}
                 />
                 <FormControl>
-                    <InputLabel>{lang.accountManagement.access}</InputLabel>
+                    <InputLabel>
+                        {translations.accountManagement.access}
+                    </InputLabel>
                     <Select
                         native
                         value={userData?.accessLevel}
                         onChange={onAccessChange}
                     >
                         <option value={ACCESS_LEVELS.GRANTED}>
-                            {lang.accountManagement.Approved}
+                            {translations.accountManagement.Approved}
                         </option>
                         <option value={ACCESS_LEVELS.REVOKED}>
-                            {lang.accountManagement.Revoked}
+                            {translations.accountManagement.Revoked}
                         </option>
                         <option value={ACCESS_LEVELS.PENDING}>
-                            {lang.accountManagement.Pending}
+                            {translations.accountManagement.Pending}
                         </option>
                     </Select>
                 </FormControl>
                 <div>
                     <Button className="save-user-button" onClick={onSave}>
-                        {lang.accountManagement.Save}
+                        {translations.accountManagement.Save}
                     </Button>
                     <Button className="discard-user-button" onClick={onClose}>
-                        {lang.accountManagement.Discard}
+                        {translations.accountManagement.Discard}
                     </Button>
                 </div>
             </div>
@@ -140,9 +131,7 @@ const EditRoleModal = ({
 EditRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    onUserEdited: PropTypes.func.isRequired,
     allRoles: PropTypes.arrayOf(PropTypes.string),
-    languageData: LanguageDataType.isRequired,
     userInfo: PropTypes.shape({
         username: PropTypes.string,
         userEmail: PropTypes.string,
