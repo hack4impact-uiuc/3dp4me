@@ -1,0 +1,77 @@
+@import '../../styles/variables.scss';
+@import '../../styles/colors.scss';
+
+.sidebar-retracted {
+    width: $drawerWidth;
+}
+
+.sidebar-expanded {
+    width: $drawerWidth + 3 * $verticalMovementWidth;
+}
+
+.sidebar {
+    display: flex;
+    flex-shrink: 0;
+    padding: 0;
+
+    .sidebar-container {
+        margin-top: $navHeight;
+        padding: 0;
+        background-color: $dashboardManagementSidebarBackground;
+
+        .sidebar-button-container {
+            overflow: 'auto';
+            display: flex;
+            height: $navHeight;
+            justify-content: space-between;
+
+            .button {
+                display: inline-block;
+                color: $dashboardManagementSidebarText;
+                background-color: $dashboardManagementSidebarBackground;
+                height: $navHeight;
+                line-height: $navHeight;
+                font-weight: 600;
+
+                &:hover {
+                    background-color: $dashboardButtonHighlight;
+                    color: white;
+                }
+            }
+
+            .main-button {
+                padding-left: 10px;
+                min-width: $drawerWidth;
+            }
+
+            .order-button {
+                min-width: $verticalMovementWidth;
+                text-align: center;
+            }
+
+            .selected {
+                background-color: #5253a1;
+                color: white;
+            }
+        }
+
+        .edit-steps-button {
+            background-color: $button;
+            color: white;
+            padding: 0 24px 0 24px;
+            height: 38px;
+            width: 95%;
+            margin-inline-start: 2.5%;
+            position: absolute;
+            bottom: 1%;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+            &:hover {
+                background-color: $buttonHighlight;
+            }
+        }
+    }
+}

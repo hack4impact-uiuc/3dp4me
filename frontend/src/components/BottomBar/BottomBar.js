@@ -18,7 +18,8 @@ const BottomBar = ({
     edit,
     lastEdited,
     lastEditedBy,
-    status = STEP_STATUS.UNFINISHED,
+    status = null,
+    style = null,
     onStatusChange,
     onSave,
     onDiscard,
@@ -38,6 +39,46 @@ const BottomBar = ({
             <img alt="partial" src={halfCircle} className="status-icon" />
         ),
     };
+
+    const renderStatusSelector = () => {
+        if (!status) return null;
+
+        return (
+            <Select
+                className="status-selector"
+                MenuProps={{ disableScrollLock: true }}
+                onClick={(e) => onStatusChange('status', e.target.value)}
+                defaultValue={status}
+            >
+                <MenuItem disabled value="default">
+                    {lang.components.bottombar.default}
+                </MenuItem>
+                <MenuItem value={STEP_STATUS.UNFINISHED}>
+                    {lang.components.bottombar.unfinished}
+                </MenuItem>
+                <MenuItem value={STEP_STATUS.PARTIALLY_FINISHED}>
+                    {lang.components.bottombar.partial}
+                </MenuItem>
+                <MenuItem value={STEP_STATUS.FINISHED}>
+                    {lang.components.bottombar.finished}
+                </MenuItem>
+            </Select>
+        );
+    };
+
+    const renderStatus = () => {
+        if (!status) return null;
+
+        return (
+            <div
+                className={`status ${status}`}
+                style={{ display: 'flex', alignItems: 'center' }}
+            >
+                {statusIcons[status]} {lang.components.bottombar[status]}
+            </div>
+        );
+    };
+
     return (
         <AppBar
             className="bottom-bar-wrapper"
@@ -49,10 +90,7 @@ const BottomBar = ({
             }}
         >
             <Toolbar className="bottom-toolbar">
-                <div
-                    className="editor-section"
-                    style={{ flexGrow: 1, color: 'black' }}
-                >
+                <div className="editor-section" style={style?.editorSection}>
                     {`${
                         lang.components.bottombar.lastEditedBy
                     } ${lastEditedBy} ${
@@ -63,29 +101,7 @@ const BottomBar = ({
                     <div>
                         {key !== 'AR' ? (
                             <div>
-                                <Select
-                                    className="status-selector"
-                                    MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) =>
-                                        onStatusChange('status', e.target.value)
-                                    }
-                                    defaultValue={status}
-                                >
-                                    <MenuItem disabled value="default">
-                                        {lang.components.bottombar.default}
-                                    </MenuItem>
-                                    <MenuItem value={STEP_STATUS.UNFINISHED}>
-                                        {lang.components.bottombar.unfinished}
-                                    </MenuItem>
-                                    <MenuItem
-                                        value={STEP_STATUS.PARTIALLY_FINISHED}
-                                    >
-                                        {lang.components.bottombar.partial}
-                                    </MenuItem>
-                                    <MenuItem value={STEP_STATUS.FINISHED}>
-                                        {lang.components.bottombar.finished}
-                                    </MenuItem>
-                                </Select>
+                                {renderStatusSelector()}
                                 <Button
                                     className="save-button"
                                     onClick={onSave}
@@ -145,13 +161,7 @@ const BottomBar = ({
                     </div>
                 ) : (
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div
-                            className={`status ${status}`}
-                            style={{ display: 'flex', alignItems: 'center' }}
-                        >
-                            {statusIcons[status]}{' '}
-                            {lang.components.bottombar[status]}
-                        </div>
+                        {renderStatus()}
                         <Button
                             className="edit-button"
                             onClick={() => setEdit(true)}
@@ -167,6 +177,7 @@ const BottomBar = ({
 
 BottomBar.propTypes = {
     languageData: LanguageDataType.isRequired,
+    style: PropTypes.object,
     edit: PropTypes.bool.isRequired,
     lastEdited: PropTypes.string.isRequired,
     lastEditedBy: PropTypes.string.isRequired,
