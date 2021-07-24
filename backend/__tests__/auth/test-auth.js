@@ -1,3 +1,4 @@
+var server = require('../../app');
 const db = require('../utils/db');
 const request = require('supertest');
 const { createUserDataWithRoles } = require('../utils/auth');

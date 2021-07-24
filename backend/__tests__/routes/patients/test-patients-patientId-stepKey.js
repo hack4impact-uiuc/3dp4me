@@ -91,9 +91,11 @@ describe('POST /patient', () => {
         expect(resContent.success).toBe(true);
 
         // Check that DB is correct
-        let updatedData = await mongoose.connection
-            .collection(STEP_KEY)
+        let updatedData = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: patientID });
+        updatedData = updatedData.toObject();
+        updatedData._id = updatedData._id.toString();
 
         expect(updatedData._id).not.toBeNull();
         expect(updatedData.date.getTime()).toBeGreaterThanOrEqual(
@@ -122,9 +124,11 @@ describe('POST /patient', () => {
         expect(resContent.success).toBe(true);
 
         // Check that DB is correct
-        let updatedData = await mongoose.connection
-            .collection(STEP_KEY)
+        let updatedData = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: patientID });
+        updatedData = updatedData.toObject();
+        updatedData._id = updatedData._id.toString();
 
         expect(updatedData).not.toBeNull();
         expect(areObjectsDisjoint(updatedData, body)).toBeTruthy();
@@ -158,9 +162,11 @@ describe('POST /patient', () => {
         );
 
         // Check that DB is correct
-        let updatedData = await mongoose.connection
-            .collection(STEP_KEY)
+        let updatedData = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: patientID });
+        updatedData = updatedData.toObject();
+        updatedData._id = updatedData._id.toString();
 
         updatedData = omitDeep(updatedData, '_id', '__v');
         expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);

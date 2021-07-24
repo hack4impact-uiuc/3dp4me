@@ -51,17 +51,22 @@ module.exports.closeDatabase = async () => {
 module.exports.resetDatabase = async () => {
     await this.clearDatabase();
     constructStaticData();
-    await mongoose.connection.db.collection('Patient').insertMany(patients);
-    await mongoose.connection.db.collection('Role').insertMany(roles);
-    await mongoose.connection.db.collection('steps').insertMany(steps);
+    await saveMany(patients);
+    await saveMany(roles);
+    await saveMany(steps);
     await initModels();
 
     constructDynamicData();
-    await mongoose.connection.db.collection('survey').insertMany(survey);
-    await mongoose.connection.db.collection('example').insertMany(example);
-    await mongoose.connection.db
-        .collection('medicalInfo')
-        .insertMany(medicalInfo);
+    await saveMany(survey);
+    await saveMany(example);
+    await saveMany(medicalInfo);
+};
+
+const saveMany = async (models) => {
+    for (let i = 0; i < models.length; i++) {
+        models[i].isNew = true;
+        await models[i].save();
+    }
 };
 
 const constructStaticData = () => {
