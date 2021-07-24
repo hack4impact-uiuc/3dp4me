@@ -43,6 +43,7 @@ describe('PUT /patients/:id', () => {
 
     it('updates mutable fields when given existent id', async () => {
         const initialResponse = await getPatientFromDB();
+        const timeBeforeReq = Date.now();
 
         const body = {
             ...initialResponse,
@@ -53,20 +54,27 @@ describe('PUT /patients/:id', () => {
             status: 'Inactive',
         };
 
-        const expectedResult = body;
-
         const res = await withAuthentication(
             request(server).put(`/api/patients/${PATIENT_ID}`).send(body),
         );
 
         expect(res.status).toBe(200);
 
-        const actualResult = await getPatientFromDB();
+        let expectedResult = _.omit(body, 'lastEdited');
+        expectedResult.lastEditedBy = 'Matthew Walowski';
+
+        let actualResult = await getPatientFromDB();
+        const timeAfterReq = actualResult.lastEdited.getTime();
+        actualResult = _.omit(actualResult, 'lastEdited');
+
         expect(actualResult).toStrictEqual(expectedResult);
+        expect(timeAfterReq).toBeGreaterThanOrEqual(timeBeforeReq);
     });
 
     it('does not update removed/restricted attributes when given existent id', async () => {
-        const expectedResult = await getPatientFromDB();
+        let expectedResult = await getPatientFromDB();
+        expectedResult.lastEditedBy = 'Matthew Walowski';
+        const timeBeforeReq = Date.now();
 
         const body = {
             ...expectedResult,
@@ -82,8 +90,14 @@ describe('PUT /patients/:id', () => {
 
         expect(res.status).toBe(200);
 
-        const actualResult = await getPatientFromDB();
+        let actualResult = await getPatientFromDB();
+        const timeAfterReq = actualResult.lastEdited.getTime();
+
+        actualResult = _.omit(actualResult, 'lastEdited');
+        expectedResult = _.omit(expectedResult, 'lastEdited');
+
         expect(actualResult).toStrictEqual(expectedResult);
+        expect(timeAfterReq).toBeGreaterThanOrEqual(timeBeforeReq);
     });
 
     const getPatientFromDB = async () => {
