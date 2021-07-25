@@ -19,10 +19,19 @@ import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
+import { addUserRole, removeUserRole, setUserAccess } from '../../utils/api';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
-const EditRoleModal = ({ isOpen, onClose, userInfo, allRoles }) => {
+const EditRoleModal = ({
+    isOpen,
+    onClose,
+    userInfo,
+    allRoles,
+    onUserEdited,
+}) => {
     const [translations, selectedLang] = useTranslations();
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
+    const errorWrap = useErrorWrap();
 
     useEffect(() => {
         setUserData(_.cloneDeep(userInfo));
@@ -36,8 +45,37 @@ const EditRoleModal = ({ isOpen, onClose, userInfo, allRoles }) => {
         setUserData({ ...userData, accessLevel: event.target.value });
     };
 
-    const onSave = () => {
-        // TODO: Make post requests and callback to parent
+    const onSave = async () => {
+        // Update users roles
+        for (let i = 0; i < allRoles.length; i += 1) {
+            const role = allRoles[i];
+
+            // If user has role
+            if (userData.roles.find((r) => r === role._id)) {
+                // If user didn't have role before, make request to backend
+                if (!userInfo.roles.find((r) => r === role._id)) {
+                    await errorWrap(async () =>
+                        addUserRole(userData.userName, role._id),
+                    );
+                }
+            } else {
+                // If user did have role before, make request to backend
+                if (userInfo.roles.find((r) => r === role._id)) {
+                    await errorWrap(async () =>
+                        removeUserRole(userData.userName, role._id),
+                    );
+                }
+            }
+        }
+
+        // Update user access level
+        await errorWrap(async () =>
+            setUserAccess(userData.userName, userData.accessLevel),
+        );
+
+        // Close modal and update local data
+        onClose();
+        onUserEdited(userData.userName, userData.accessLevel, userData.roles);
     };
 
     return (
@@ -102,6 +140,7 @@ const EditRoleModal = ({ isOpen, onClose, userInfo, allRoles }) => {
 EditRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    onUserEdited: PropTypes.func.isRequired,
     allRoles: PropTypes.arrayOf(PropTypes.string),
     userInfo: PropTypes.shape({
         username: PropTypes.string,
