@@ -27,10 +27,12 @@ const EditRoleModal = ({
     onClose,
     userInfo,
     allRoles,
+    onUserEdited,
 }) => {
     const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
+    const errorWrap = useErrorWrap();
 
     useEffect(() => {
         setUserData(_.cloneDeep(userInfo));

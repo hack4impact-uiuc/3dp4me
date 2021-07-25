@@ -1,12 +1,8 @@
 let server = require('../../app');
 const db = require('../utils/db');
-const _ = require('lodash');
 const AWS = require('aws-sdk-mock');
 const request = require('supertest');
-const omitDeep = require('omit-deep-lodash');
 const { initAuthMocker, setCurrentUser } = require('../utils/auth');
-const { getFieldByKey } = require('../../utils/step-utils');
-const { models } = require('../../models');
 
 describe('Get statically served files', () => {
     afterAll(async () => await db.closeDatabase());

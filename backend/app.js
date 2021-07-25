@@ -13,10 +13,10 @@ const {
     setResponseHeaders,
     configureHelment,
 } = require('./middleware/responses');
+
 const app = express();
 
 app.use(configureHelment());
-
 app.use(setResponseHeaders);
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 app.use(cors());
