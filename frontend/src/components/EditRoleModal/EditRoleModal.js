@@ -11,9 +11,9 @@ import {
     Select,
     Button,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
-import PropTypes from 'prop-types';
 import TextField from '../Fields/TextField';
 import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
@@ -139,6 +139,7 @@ const EditRoleModal = ({
 EditRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    onUserEdited: PropTypes.func.isRequired,
     allRoles: PropTypes.arrayOf(PropTypes.string),
     userInfo: PropTypes.shape({
         username: PropTypes.string,
