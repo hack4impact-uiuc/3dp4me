@@ -36,7 +36,7 @@ function AppContent({ username, userEmail }) {
         };
 
         setLanguage();
-    });
+    }, []);
 
     const handleErrorModalClose = () => {
         dispatch({ type: REDUCER_ACTIONS.CLEAR_ERROR });
