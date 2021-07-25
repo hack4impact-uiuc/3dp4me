@@ -6,7 +6,7 @@ import { enUS, arSA } from 'date-fns/locale';
 import Store from './store/Store';
 import AppContent from './AppContent';
 import { awsconfig } from './aws/aws-exports';
-import translations from './translations.json';
+import { LANGUAGES } from './utils/constants';
 import Login from './components/Login/Login';
 import {
     UNDEFINED_AUTH,
@@ -17,32 +17,19 @@ import {
 import { getCurrentUserInfo } from './aws/aws-helper';
 
 Amplify.configure(awsconfig);
-registerLocale('EN', enUS);
-registerLocale('AR', arSA);
+registerLocale(LANGUAGES.EN, enUS);
+registerLocale(LANGUAGES.AR, arSA);
 
 function App() {
-    const [selectedLang, setSelectedLang] = useState('EN');
     const [authLevel, setAuthLevel] = useState(UNDEFINED_AUTH);
     const [username, setUsername] = useState('');
     const [userEmail, setUserEmail] = useState('');
 
-    // Data is the raw JSON for EN and AR. Key is the currently selected selectedLanguage.
-    const languageData = {
-        translations,
-        selectedLanguage: selectedLang,
-    };
-
     useEffect(() => {
         const getUserInfo = async () => {
             const userInfo = await getCurrentUserInfo();
-            setUsername(userInfo.attributes.name);
-            setUserEmail(userInfo.email);
-
-            if (
-                userInfo.attributes &&
-                ['EN', 'AR'].includes(userInfo.attributes['custom:language'])
-            )
-                setSelectedLang(userInfo.attributes['custom:language']);
+            setUsername(userInfo?.attributes?.name);
+            setUserEmail(userInfo?.attributes?.email);
         };
 
         Auth.currentAuthenticatedUser()
@@ -58,20 +45,14 @@ function App() {
 
     setAuthListener((newAuthLevel) => setAuthLevel(newAuthLevel));
 
-    if (authLevel === UNDEFINED_AUTH)
-        return <p>{translations[selectedLang].components.login.authLoading}</p>;
+    if (authLevel === UNDEFINED_AUTH) return <p>Authenticating User</p>;
 
     if (authLevel === UNAUTHENTICATED) return <Login />;
 
     if (authLevel === AUTHENTICATED)
         return (
             <Store>
-                <AppContent
-                    languageData={languageData}
-                    onLanguageChange={setSelectedLang}
-                    username={username}
-                    userEmail={userEmail}
-                />
+                <AppContent username={username} userEmail={userEmail} />
             </Store>
         );
 }

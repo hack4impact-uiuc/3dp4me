@@ -22,12 +22,10 @@
                     "pageTitle": "All Patients"
                 },
                 "metrics": {
-                    "navTitle": "Metrics",
-                    "pageTitle": ""
+                    "navTitle": "Metrics"
                 },
                 "accountManagement": {
-                    "navTitle": "Account Management",
-                    "pageTitle": ""
+                    "navTitle": "Account Management"
                 }
             },
             "step": {
@@ -37,11 +35,9 @@
             "sidebar": {
                 "name": "Name",
                 "orderID": "Order ID",
-                "dob": "DOB",
                 "status": "Patient Status"
             },
             "bottombar": {
-                "status": "Status",
                 "unfinished": "Not Complete",
                 "partial": "Partially Complete",
                 "finished": "Complete",
@@ -52,34 +48,13 @@
                 "lastEditedBy": "Last edited by",
                 "on": "on",
                 "savedMessage": {
-                    "patientInfo": "Patient Info Saved",
-                    "earScan": "Ear Scan Saved",
-                    "model": "CAD Model Saved",
-                    "print": "3D Printing Saved",
-                    "processing": "Post Processing Saved",
-                    "delivery": "Delivery Saved",
-                    "feedback": "Feedback Saved"
+                    "patientInfo": "Patient Info Saved"
                 }
-            },
-            "stepTabs": {
-                "patientInfo": "Medical Info",
-                "earScan": "Ear Scan",
-                "CADModeling": "CAD Modeling",
-                "print": "3D Print",
-                "processing": "Processing",
-                "delivery": "Delivery",
-                "feedback": "Feedback"
             },
             "table": {
                 "loading": "Loading",
                 "noPatientsFound": "Sorry! No matching patients",
                 "view": "View"
-            },
-            "dropdown": {
-                "newest": "Newest",
-                "oldest": "Oldest",
-                "serial": "Serial",
-                "status": "Status"
             },
             "selectQuestionFormat": {
                 "allQuestions": "All Questions",
@@ -90,8 +65,6 @@
             },
             "button": {
                 "createPatient": "Create Patient",
-                "createField": "Create Field",
-                "upload": "Upload File",
                 "save": "Save",
                 "edit": "Edit Step",
                 "next": "Next",
@@ -113,14 +86,12 @@
                 "title": "Notes"
             },
             "file": {
-                "download": "Download",
-                "title": "Files",
                 "addAnother": "Add Another"
             },
             "audio": {
-                "addAnother": "Add Recording",
                 "start": "Start Recording",
                 "stop": "Stop Recording",
+                "addAnother": "Add Another",
                 "save": "Save",
                 "close": "Close",
                 "discard": "Discard"
@@ -147,18 +118,10 @@
                     "fatherName": "Father Name",
                     "grandfatherName": "Grandfather Name",
                     "familyName": "Family Name",
-                    "dob": "DOB",
                     "profileManagement": "Profile Management",
                     "archiveInformation": "Archiving a patient will take them off of the dashboard view",
-                    "active": "Active",
-                    "feedback": "Feedback",
-                    "archive": "Archive",
-                    "deleteInformation": "Deleting a patient will remove them from the platform forever!",
                     "successMsg": "Updated Patient",
-                    "confirmDeleteMsg": "Confirm Delete Patient",
-                    "deleteSuccessMsg": "Patient Deleted",
                     "buttons": {
-                        "delete": "Delete Patient",
                         "save": "Save"
                     },
                     "orderId": "Order Id"
@@ -170,31 +133,12 @@
                     "clearance": "Clearance Level",
                     "showOnDashBoard": "Show on Dashboard",
                     "field": "Field",
-                    "arabic": "Arabic Question",
-                    "arabicChoice": "Arabic Choice #",
-                    "arabicDividerName": "Arabic Divider Name",
-                    "arabicHeaderName": "Arabic Header Name",
-                    "english": "English Question",
-                    "englishChoice": "English Choice #",
-                    "englishDividerName": "English Divider Name",
-                    "englishHeaderName": "English Header Name",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard",
-                        "addChoice": "+",
-                        "removeChoice": "x"
+                        "discard": "Discard"
                     }
                 }
             }
-        },
-        "pages": {
-            "patientInfoTitle": "Medical Information",
-            "earScanTitle": "Ear Scan",
-            "CADModelingTitle": "CAD Modeling",
-            "printingTitle": "3D Printing",
-            "postProcessingTitle": "Post Processing",
-            "deliveryTitle": "Delivery",
-            "feedbackTitle": "Feedback"
         },
         "accountManagement": {
             "editAccount": "Edit Account",
@@ -206,61 +150,6 @@
             "Pending": "Pending",
             "Save": "Save",
             "Discard": "Discard"
-        },
-        "patientView": {
-            "patientInfo": {
-                "title": "Medical Information",
-                "patientSection": "Patient",
-                "name": "Name",
-                "dob": "DOB",
-                "ssn": "Jordan SSN",
-                "address": "Address",
-                "phone": "Phone",
-                "emergencySection": "Emergency Contact",
-                "relationship": "Relationship",
-                "informationSection": "Information",
-                "deliverySection": "Delivery Method",
-                "delivery": "Delivery",
-                "handDelivery": "Hand Delivery",
-                "pickup": "Pick up"
-            },
-            "earScan": {
-                "title": "Ear Scan",
-                "fileHeaderLeft": "Left Ear Scan",
-                "fileHeaderRight": "Right Ear Scan"
-            },
-            "CADModeling": {
-                "title": "CAD Model",
-                "fileHeaderLeft": "Left Ear CAD",
-                "fileHeaderRight": "Right Ear CAD"
-            },
-            "printing": {
-                "title": "3D Printing",
-                "fileHeader": "3D Printing File"
-            },
-            "postProcessing": {
-                "title": "Post Processing",
-                "fileHeader": ""
-            },
-            "delivery": {
-                "title": "Delivery",
-                "address": "Address",
-                "addressLabel": "To be ",
-                "notReady": "Not ready to be delivered",
-                "ready": "Ready to be delivered",
-                "out": "Out for delivery",
-                "handDelivered": "Hand Delivered",
-                "pickup": "Pick up",
-                "status": "Status"
-            },
-            "feedback": {
-                "title": "Feedback",
-                "initial": "Initial Feedback",
-                "sixMonth": "6 Month Feedback",
-                "oneYear": "1 Year Feedback",
-                "twoYear": "2 Year Feedback",
-                "collected": "Collected on: "
-            }
         }
     },
     "AR": {

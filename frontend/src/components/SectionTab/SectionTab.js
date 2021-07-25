@@ -1,10 +1,9 @@
 import './SectionTab.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 
 import BottomBar from '../BottomBar/BottomBar';
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import { getAllStepsMetadata } from '../../utils/api';
 import Sidebar from '../Sidebar/Sidebar';
 import StepManagementContent from '../StepManagementContent/StepManagementContent';
@@ -16,21 +15,46 @@ import {
     verticalMovementWidth,
 } from '../../styles/variables.scss';
 import { resolveMixedObjPath } from '../../utils/object';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
 }px`;
 const retractedSidebarWidth = drawerWidth;
 
-const SectionTab = ({ languageData }) => {
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
+const SectionTab = () => {
+    const translations = useTranslations()[0];
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [fieldModalOpen, setFieldModalOpen] = useState(true);
     const [stepModalOpen, setStepModalOpen] = useState(false);
     const errorWrap = useErrorWrap();
+
+    const SortMetadata = useCallback(
+        (stepMetaData) => {
+            const data = stepMetaData?.sort(
+                (a, b) => a?.stepNumber - b?.stepNumber,
+            );
+
+            data.forEach((stepData) => {
+                stepData.fields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
+                SortSubFields(stepData?.fields);
+            });
+
+            return data;
+        },
+        [SortSubFields],
+    );
+
+    const SortSubFields = useCallback((fields) => {
+        if (!fields) return;
+
+        fields.forEach((field) => {
+            field.subFields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
+            SortSubFields(field?.subFields?.subFields);
+        });
+    }, []);
 
     const onAddStep = () => {
         setStepModalOpen(true);
@@ -57,27 +81,6 @@ const SectionTab = ({ languageData }) => {
 
     function UpdateSelectedStep(stepKey) {
         setSelectedStep(stepKey);
-    }
-
-    function SortMetadata(stepMetaData) {
-        const data = stepMetaData?.sort(
-            (a, b) => a?.stepNumber - b?.stepNumber,
-        );
-        data.forEach((stepData) => {
-            stepData.fields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
-            SortSubFields(stepData?.fields);
-        });
-
-        return data;
-    }
-
-    function SortSubFields(fields) {
-        if (!fields) return;
-
-        fields.forEach((field) => {
-            field.subFields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
-            SortSubFields(field?.subFields?.subFields);
-        });
     }
 
     function onDownPressed(stepKey) {
@@ -155,7 +158,6 @@ const SectionTab = ({ languageData }) => {
         return (
             <StepManagementContent
                 isEditing={isEditing}
-                languageData={languageData}
                 onDownPressed={onCardDownPressed}
                 onUpPressed={onCardUpPressed}
                 stepMetadata={selectedStepMetadata}
@@ -176,7 +178,7 @@ const SectionTab = ({ languageData }) => {
             });
         };
         fetchData();
-    }, [setStepMetadata, errorWrap]);
+    }, [setStepMetadata, errorWrap, SortMetadata]);
 
     const onFieldModalClose = () => {
         setFieldModalOpen(false);
@@ -191,7 +193,6 @@ const SectionTab = ({ languageData }) => {
             <CreateFieldModal
                 isOpen={fieldModalOpen}
                 onModalClose={onFieldModalClose}
-                languageData={languageData}
             />
         );
     };
@@ -201,7 +202,6 @@ const SectionTab = ({ languageData }) => {
             <CreateStepModal
                 isOpen={stepModalOpen}
                 onModalClose={onStepModalClose}
-                languageData={languageData}
             />
         );
     };
@@ -211,7 +211,6 @@ const SectionTab = ({ languageData }) => {
             <div className="dashboard section-management-container">
                 <div className="sidebar-container">
                     <Sidebar
-                        languageData={languageData}
                         onClick={UpdateSelectedStep}
                         onDownPressed={onDownPressed}
                         onUpPressed={onUpPressed}
@@ -228,7 +227,7 @@ const SectionTab = ({ languageData }) => {
                             setStepModalOpen(true);
                         }}
                     >
-                        {lang.components.file.addAnother}
+                        {translations.components.file.addAnother}
                     </ListItem>
                 </div>
                 <div className="step-management-content-container">
@@ -236,7 +235,6 @@ const SectionTab = ({ languageData }) => {
                 </div>
 
                 <BottomBar
-                    languageData={languageData}
                     edit={isEditing}
                     setEdit={setIsEditing}
                     onSave={onSaveChanges}
@@ -259,8 +257,6 @@ const SectionTab = ({ languageData }) => {
     );
 };
 
-SectionTab.propTypes = {
-    languageData: LanguageDataType.isRequired,
-};
+SectionTab.propTypes = {};
 
 export default SectionTab;
