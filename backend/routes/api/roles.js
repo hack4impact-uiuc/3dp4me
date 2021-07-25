@@ -71,7 +71,7 @@ router.delete(
         const { roleId } = req.params;
         const role = await models.Role.findById(roleId);
         if (role == null) {
-            return res.status(400).json({
+            return res.status(404).json({
                 success: false,
                 message: `Role with ID "${roleId}" does not exist`,
             });
