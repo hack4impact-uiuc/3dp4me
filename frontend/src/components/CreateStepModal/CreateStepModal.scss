@@ -1,0 +1,69 @@
+@import '../../styles/colors.scss';
+
+.create-step-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .create-step-modal-wrapper {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 8px;
+        min-width: 40%;
+        padding: 10px;
+
+        .create-step-modal-field-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .create-step-modal-title {
+            font-weight: 700;
+        }
+
+        .discard-step-button {
+            margin-top: 20px;
+            background-color: white;
+            color: #5f5f5f;
+            font-size: 12px;
+            padding: 6px 24px 6px 24px;
+            transition: all 0.2s;
+            &:hover {
+                color: black;
+                background-color: white;
+            }
+        }
+
+        .create-step-modal-text {
+            font-size: 1.3em;
+            text-align: left;
+        }
+
+        .save-step-button {
+            margin-top: 20px;
+            background-color: $button;
+            color: white;
+            padding: 0 24px 0 24px;
+            height: 38px;
+            width: auto;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+            &:hover {
+                background-color: $buttonHighlight;
+            }
+        }
+
+        .create-step-modal-field {
+            margin-bottom: 20px;
+        }
+
+        .create-step-modal-subheading {
+            font-size: 0.9em;
+        }
+    }
+}
