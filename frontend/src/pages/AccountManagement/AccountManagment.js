@@ -9,7 +9,8 @@ import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const AccountManagement = () => {
-    const selectedLang = useTranslations()[1];MetaData, setUserMetaData] = useState([]);
+    const selectedLang = useTranslations()[1];
+    const [userMetaData, setUserMetaData] = useState([]);
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const errorWrap = useErrorWrap();

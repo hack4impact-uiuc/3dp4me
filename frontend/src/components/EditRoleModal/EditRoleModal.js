@@ -25,7 +25,6 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 const EditRoleModal = ({
     isOpen,
     onClose,
-    onUserEdited,
     userInfo,
     allRoles,
     onUserEdited,
@@ -33,7 +32,7 @@ const EditRoleModal = ({
     const [translations, selectedLang] = useTranslations();
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
     const errorWrap = useErrorWrap();
-  
+
     useEffect(() => {
         setUserData(_.cloneDeep(userInfo));
     }, [userInfo]);
