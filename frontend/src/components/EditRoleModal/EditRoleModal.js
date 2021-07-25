@@ -25,6 +25,7 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 const EditRoleModal = ({
     isOpen,
     onClose,
+    onUserEdited,
     userInfo,
     allRoles,
     onUserEdited,

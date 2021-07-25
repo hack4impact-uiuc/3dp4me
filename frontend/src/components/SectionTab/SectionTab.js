@@ -83,15 +83,6 @@ const SectionTab = () => {
         setSelectedStep(stepKey);
     }
 
-    function SortSubFields(fields) {
-        if (!fields) return;
-
-        fields.forEach((field) => {
-            field.subFields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
-            SortSubFields(field?.subFields?.subFields);
-        });
-    }
-
     function onDownPressed(stepKey) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
         const foundField = updatedMetadata.find(
