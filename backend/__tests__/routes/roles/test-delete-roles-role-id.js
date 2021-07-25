@@ -9,7 +9,6 @@ const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
-    getCurrentAuthenticatedUserAttribute,
 } = require('../../utils/auth');
 
 describe('DELETE /roles/:roleid', () => {
@@ -42,7 +41,7 @@ describe('DELETE /roles/:roleid', () => {
     });
 
     it('delete mutable role', async () => {
-        const mutableRoleId = '60944e084f4c0d4330cc25f1';
+        const mutableRoleId = '60f9b995230a5996ba7c1af6';
         const res = await withAuthentication(
             request(server).delete(`/api/roles/${mutableRoleId}`),
         );
@@ -61,7 +60,7 @@ describe('DELETE /roles/:roleid', () => {
     });
 
     it('does not delete immutable role', async () => {
-        const immutableRoleId = '60944e084f4c0d4330cc25ef';
+        const immutableRoleId = '60f9b995230a5996ba7c1af5';
 
         let expectedResult = await mongoose
             .model(COLLECTION_NAME)
