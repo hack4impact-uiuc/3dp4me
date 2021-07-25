@@ -10,9 +10,11 @@ const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
 const { initDB } = require('./utils/init-db');
+const { setResponseHeaders } = require('./middleware/responses');
 const app = express();
 
 app.use(helmet());
+app.use(setResponseHeaders);
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 app.use(cors());
 
