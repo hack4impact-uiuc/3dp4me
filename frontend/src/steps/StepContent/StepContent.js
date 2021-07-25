@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import './StepContent.scss';
@@ -33,13 +33,19 @@ const StepContent = ({
     const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
     const errorWrap = useErrorWrap();
 
+    useEffect(() => {
+        setUpdatedData(_.cloneDeep(stepData));
+    }, [stepData]);
+
     const key = languageData.selectedLanguage;
     const lang = languageData.translations[key];
 
     const handleSimpleUpdate = (fieldKey, value) => {
-        const dataCopy = _.cloneDeep(updatedData);
-        _.set(dataCopy, fieldKey, value);
-        setUpdatedData(dataCopy);
+        setUpdatedData((data) => {
+            const dataCopy = _.cloneDeep(data);
+            _.set(dataCopy, fieldKey, value);
+            return dataCopy;
+        });
     };
 
     const handleFileDelete = async (fieldKey, file) => {

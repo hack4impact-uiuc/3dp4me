@@ -5,6 +5,14 @@
                 "authLoading": "Authenticating User",
                 "signOut": "Sign Out"
             },
+            "signature": {
+                "save": "Save",
+                "clear": "Clear",
+                "close": "Close",
+                "sign": "Sign",
+                "hideDoc": "Hide document",
+                "viewDoc": "Show document"
+            },
             "navbar": {
                 "dashboard": {
                     "navTitle": "Dashboard"
@@ -260,6 +268,14 @@
             "login": {
                 "authLoading": "مصادقة المستخدم",
                 "signOut": "Sign Out"
+            },
+            "signature": {
+                "save": "يحفظ",
+                "clear": "صافي",
+                "close": "يغلق",
+                "sign": "لافتة",
+                "hideDoc": "إخفاء المستند",
+                "viewDoc": "عرض المستند"
             },
             "navbar": {
                 "dashboard": {

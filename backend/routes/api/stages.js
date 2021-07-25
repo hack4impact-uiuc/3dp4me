@@ -22,7 +22,7 @@ router.get(
             });
         }
 
-        const collection = await mongoose.connection.db.collection(stage);
+        const model = await mongoose.model(stage);
 
         // TODO: Replace with an aggregation command that gets all patient data then $lookup on patientId for stage
         let patients = await models.Patient.find({
@@ -30,7 +30,7 @@ router.get(
         });
 
         for (let i = 0; i < patients.length; i++) {
-            const stepInfo = await collection.findOne({
+            const stepInfo = await model.findOne({
                 patientId: patients[i]._id.toString(),
             });
 

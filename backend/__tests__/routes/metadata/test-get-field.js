@@ -1,7 +1,7 @@
+let server = require('../../../app');
 const db = require('../../utils/db');
 const _ = require('lodash');
 const AWS = require('aws-sdk-mock');
-
 const omitDeep = require('omit-deep-lodash');
 const { initAuthMocker, setCurrentUser } = require('../../utils/auth');
 const { getFieldByKey } = require('../../../utils/step-utils');
