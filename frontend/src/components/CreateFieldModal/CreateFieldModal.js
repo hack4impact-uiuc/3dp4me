@@ -60,10 +60,6 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
         setNumChoices(numChoices + 1);
     };
 
-    // const removeChoice = () => {
-    //     setNumChoices(numChoices - 1);
-    // };
-
     const generateChoices = () => {
         const choices = [];
         for (let i = 0; i < numChoices; i += 1) {
