@@ -34,6 +34,7 @@ const EditRoleModal = ({
 
     useEffect(() => {
         setUserData(_.cloneDeep(userInfo));
+        console.log(userInfo);
     }, [userInfo]);
 
     const onRolesChange = (id, roles) => {
@@ -54,14 +55,14 @@ const EditRoleModal = ({
                 // If user didn't have role before, make request to backend
                 if (!userInfo.roles.find((r) => r === role._id)) {
                     await errorWrap(async () =>
-                        addUserRole(userData.userName, role._id),
+                        addUserRole(userData.userId, role._id),
                     );
                 }
             } else {
                 // If user did have role before, make request to backend
                 if (userInfo.roles.find((r) => r === role._id)) {
                     await errorWrap(async () =>
-                        removeUserRole(userData.userName, role._id),
+                        removeUserRole(userData.userId, role._id),
                     );
                 }
             }
@@ -69,12 +70,12 @@ const EditRoleModal = ({
 
         // Update user access level
         await errorWrap(async () =>
-            setUserAccess(userData.userName, userData.accessLevel),
+            setUserAccess(userData.userId, userData.accessLevel),
         );
 
         // Close modal and update local data
         onClose();
-        onUserEdited(userData.userName, userData.accessLevel, userData.roles);
+        onUserEdited(userData.userId, userData.accessLevel, userData.roles);
     };
 
     return (
@@ -142,7 +143,8 @@ EditRoleModal.propTypes = {
     onUserEdited: PropTypes.func.isRequired,
     allRoles: PropTypes.arrayOf(PropTypes.string),
     userInfo: PropTypes.shape({
-        username: PropTypes.string,
+        userId: PropTypes.string,
+        userName: PropTypes.string,
         userEmail: PropTypes.string,
         roles: PropTypes.arrayOf(PropTypes.String),
     }),
