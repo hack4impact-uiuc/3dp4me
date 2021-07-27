@@ -15,15 +15,15 @@ const TextField = ({
         onChange(fieldId, e.target.value);
     };
 
+    const inputClassName = !isDisabled ? 'active-input' : 'input-field';
+
     return (
         <div>
             <h3>{displayName}</h3>
             <Text
                 type={type}
                 disabled={isDisabled}
-                className={`${
-                    !isDisabled ? 'active-input' : 'input-field'
-                } ${className}`}
+                className={`${inputClassName} ${className}`}
                 variant="outlined"
                 onChange={sendChanges}
                 value={value}
