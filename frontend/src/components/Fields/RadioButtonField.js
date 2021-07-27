@@ -14,10 +14,13 @@ const RadioButtonField = ({
 }) => {
     const selectedLang = useTranslations()[1];
 
+    const shouldHideOption = (option) => {
+        return option.IsHidden && value?.toString() !== option._id.toString();
+    };
+
     const generateQuestions = () => {
         return options.map((option) => {
-            if (option.IsHidden && value?.toString() !== option._id.toString())
-                return null;
+            if (shouldHideOption(option)) return null;
 
             return (
                 <FormControlLabel
@@ -62,7 +65,5 @@ RadioButtonField.propTypes = {
         }),
     ),
 };
-
-// TODO: Proptypes
 
 export default RadioButtonField;
