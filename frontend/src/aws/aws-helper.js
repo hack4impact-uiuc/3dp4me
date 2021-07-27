@@ -1,5 +1,7 @@
 import { Auth } from 'aws-amplify';
+import { LANGUAGE_ATTRIBUTE_KEY } from '../utils/constants';
 
+// Used as a placeholder while fetching real data
 const DEFAULT_USER = {
     attributes: {
         email: 'noemail',
@@ -7,16 +9,6 @@ const DEFAULT_USER = {
         username: 'Guest',
     },
 };
-
-/**
- * This object contains all keys/tokens needed to perform authenticated actions.
- * Send this to the backend whenever doing authenticated operations.
- */
-export async function getCredentials() {
-    const credentials = await Auth.currentCredentials();
-    const creds = Auth.essentialCredentials(credentials);
-    return creds;
-}
 
 /**
  * Returns some info about the current signed in user
@@ -35,7 +27,7 @@ export async function getCurrentUserInfo() {
 export async function saveLanguagePreference(langKey) {
     const user = await Auth.currentAuthenticatedUser();
     Auth.updateUserAttributes(user, {
-        'custom:language': langKey,
+        LANGUAGE_ATTRIBUTE_KEY: langKey,
     });
 }
 

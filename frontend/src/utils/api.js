@@ -17,21 +17,34 @@ const instance = axios.create({
     },
 });
 
-instance.interceptors.request.use(
-    async (config) => {
-        const configCopy = config;
-        const {
-            accessToken: { jwtToken },
-        } = await getCurrentSession();
-        if (jwtToken) {
-            configCopy.headers.Authorization = `Bearer ${jwtToken}`;
-        }
-        return configCopy;
-    },
-    (error) => {
-        return Promise.reject(error);
-    },
-);
+let cachedJWTToken = null;
+
+const updateCachedJWTToken = async () => {
+    const {
+        accessToken: { jwtToken },
+    } = await getCurrentSession();
+    cachedJWTToken = jwtToken;
+};
+
+const addAuthHeader = async (config) => {
+    const updatedConfig = config;
+
+    // Grab the JWT token
+    if (!cachedJWTToken) await updateCachedJWTToken();
+
+    if (cachedJWTToken)
+        updatedConfig.headers.Authorization = `Bearer ${cachedJWTToken}`;
+
+    return updatedConfig;
+};
+
+const onRequestError = (error) => {
+    // Set token to null so that we refetch token again on next request
+    cachedJWTToken = null;
+    return Promise.reject(error);
+};
+
+instance.interceptors.request.use(addAuthHeader, onRequestError);
 
 export const getAllPatients = async () => {
     const requestString = '/patients';
