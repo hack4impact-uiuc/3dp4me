@@ -8,11 +8,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const MultiSelectField = ({
-    fieldId = '',
     title,
     langKey,
     options,
     selectedOptions,
+    fieldId = '',
     isDisabled = true,
     onChange = () => {},
 }) => {
