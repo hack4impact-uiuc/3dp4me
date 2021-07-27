@@ -37,7 +37,7 @@ function AppContent({ username, userEmail }) {
         };
 
         setLanguage();
-    }, []);
+    }, [dispatch]);
 
     const isLanguageValid = (language) => {
         return Object.values(LANGUAGES).includes(language);

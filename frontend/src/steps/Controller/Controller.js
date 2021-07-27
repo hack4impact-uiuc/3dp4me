@@ -183,6 +183,7 @@ const Controller = () => {
 
                     return (
                         <Accordion
+                            key={`notes-${metaData?.key}`}
                             expanded={expanded === metaData.key}
                             onChange={handleNotePanel(metaData.key)}
                         >

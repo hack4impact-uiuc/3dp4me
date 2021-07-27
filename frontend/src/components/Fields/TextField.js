@@ -36,10 +36,10 @@ TextField.propTypes = {
     displayName: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
     fieldId: PropTypes.string,
-    value: PropTypes.string,
     type: PropTypes.string,
     className: PropTypes.string,
     onChange: PropTypes.func,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default TextField;

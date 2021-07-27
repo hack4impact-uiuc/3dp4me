@@ -27,7 +27,7 @@ export async function getCurrentUserInfo() {
 export async function saveLanguagePreference(langKey) {
     const user = await Auth.currentAuthenticatedUser();
     Auth.updateUserAttributes(user, {
-        LANGUAGE_ATTRIBUTE_KEY: langKey,
+        [LANGUAGE_ATTRIBUTE_KEY]: langKey,
     });
 }
 
