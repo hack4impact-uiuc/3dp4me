@@ -34,7 +34,6 @@ const EditRoleModal = ({
 
     useEffect(() => {
         setUserData(_.cloneDeep(userInfo));
-        console.log(userInfo);
     }, [userInfo]);
 
     const onRolesChange = (id, roles) => {
@@ -78,6 +77,26 @@ const EditRoleModal = ({
         onUserEdited(userData.userId, userData.accessLevel, userData.roles);
     };
 
+    const renderAccessDropdown = () => {
+        return (
+            <Select
+                native
+                value={userData?.accessLevel}
+                onChange={onAccessChange}
+            >
+                <option value={ACCESS_LEVELS.GRANTED}>
+                    {translations.accountManagement.Approved}
+                </option>
+                <option value={ACCESS_LEVELS.REVOKED}>
+                    {translations.accountManagement.Revoked}
+                </option>
+                <option value={ACCESS_LEVELS.PENDING}>
+                    {translations.accountManagement.Pending}
+                </option>
+            </Select>
+        );
+    };
+
     return (
         <Modal open={isOpen} onClose={onClose} className="edit-role-modal">
             <div className="edit-role-modal-wrapper">
@@ -108,21 +127,7 @@ const EditRoleModal = ({
                     <InputLabel>
                         {translations.accountManagement.access}
                     </InputLabel>
-                    <Select
-                        native
-                        value={userData?.accessLevel}
-                        onChange={onAccessChange}
-                    >
-                        <option value={ACCESS_LEVELS.GRANTED}>
-                            {translations.accountManagement.Approved}
-                        </option>
-                        <option value={ACCESS_LEVELS.REVOKED}>
-                            {translations.accountManagement.Revoked}
-                        </option>
-                        <option value={ACCESS_LEVELS.PENDING}>
-                            {translations.accountManagement.Pending}
-                        </option>
-                    </Select>
+                    {renderAccessDropdown()}
                 </FormControl>
                 <div>
                     <Button className="save-user-button" onClick={onSave}>
