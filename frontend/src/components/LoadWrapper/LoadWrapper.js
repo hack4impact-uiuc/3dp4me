@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * Wraps a component. While loading is true, nothing is returned. Once loading is
+ * false, all children are rendered
+ */
 const LoadWrapper = ({ loading, children }) => {
     if (loading) {
         return <></>;
