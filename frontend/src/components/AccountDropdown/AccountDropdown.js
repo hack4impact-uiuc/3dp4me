@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Menu from '@material-ui/core/Menu';
-import { Button, makeStyles } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import PropTypes from 'prop-types';
