@@ -1,3 +1,5 @@
+export const LANGUAGE_ATTRIBUTE_KEY = 'custom:language';
+
 export const FIELD_TYPES = {
     STRING: 'String',
     MULTILINE_STRING: 'MultilineString',

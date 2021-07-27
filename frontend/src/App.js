@@ -32,6 +32,11 @@ function App() {
             setUserEmail(userInfo?.attributes?.email);
         };
 
+        updateAuthLevel();
+        getUserInfo();
+    }, []);
+
+    const updateAuthLevel = () => {
         Auth.currentAuthenticatedUser()
             .then(() => {
                 setAuthLevel(AUTHENTICATED);
@@ -39,10 +44,9 @@ function App() {
             .catch(() => {
                 setAuthLevel(UNAUTHENTICATED);
             });
+    };
 
-        getUserInfo();
-    }, []);
-
+    // We get the auth level at startup, then set a listener to get notified when it changes.
     setAuthListener((newAuthLevel) => setAuthLevel(newAuthLevel));
 
     if (authLevel === UNDEFINED_AUTH) return <p>Authenticating User</p>;

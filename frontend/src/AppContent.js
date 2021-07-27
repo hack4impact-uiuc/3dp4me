@@ -9,7 +9,11 @@ import Navbar from './components/Navbar/Navbar';
 import SectionTab from './components/SectionTab/SectionTab';
 import Controller from './steps/Controller/Controller';
 import ErrorModal from './components/ErrorModal/ErrorModal';
-import { REDUCER_ACTIONS, LANGUAGES } from './utils/constants';
+import {
+    REDUCER_ACTIONS,
+    LANGUAGES,
+    LANGUAGE_ATTRIBUTE_KEY,
+} from './utils/constants';
 import { Context } from './store/Store';
 import { useTranslations } from './hooks/useTranslations';
 import { getCurrentUserInfo } from './aws/aws-helper';
@@ -21,22 +25,23 @@ function AppContent({ username, userEmail }) {
     useEffect(() => {
         const setLanguage = async () => {
             const userInfo = await getCurrentUserInfo();
+            if (!userInfo?.attributes) return;
 
-            if (
-                userInfo.attributes &&
-                Object.values(LANGUAGES).includes(
-                    userInfo.attributes['custom:language'],
-                )
-            ) {
+            const language = userInfo.attributes[LANGUAGE_ATTRIBUTE_KEY];
+            if (isLanguageValid(language)) {
                 dispatch({
                     type: REDUCER_ACTIONS.SET_LANGUAGE,
-                    language: userInfo.attributes['custom:language'],
+                    language: language,
                 });
             }
         };
 
         setLanguage();
     }, []);
+
+    const isLanguageValid = (language) => {
+        return Object.values(LANGUAGES).includes(language);
+    };
 
     const handleErrorModalClose = () => {
         dispatch({ type: REDUCER_ACTIONS.CLEAR_ERROR });
@@ -48,6 +53,7 @@ function AppContent({ username, userEmail }) {
                 <Router>
                     <Navbar username={username} userEmail={userEmail} />
 
+                    {/* Global error popup */}
                     <ErrorModal
                         message={state.error}
                         isOpen={state.isErrorVisible}
