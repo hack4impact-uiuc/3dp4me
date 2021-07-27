@@ -16,6 +16,10 @@ const DateField = ({
         onChange(fieldId, date.toString());
     };
 
+    const className = isDisabled
+        ? 'input-field datepicker'
+        : 'active-input datepicker';
+
     return (
         <div>
             <h3>{displayName}</h3>
@@ -23,11 +27,7 @@ const DateField = ({
                 selected={Date.parse(value)}
                 disabled={isDisabled}
                 locale={langKey}
-                className={
-                    !isDisabled
-                        ? 'active-input datepicker'
-                        : 'input-field datepicker'
-                }
+                className={className}
                 onChange={sendChanges}
             />
         </div>
