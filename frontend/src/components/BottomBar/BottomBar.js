@@ -151,14 +151,14 @@ const BottomBar = ({
 
 BottomBar.propTypes = {
     style: PropTypes.object,
-    edit: PropTypes.bool.isRequired,
+    isEditing: PropTypes.bool.isRequired,
     lastEdited: PropTypes.string,
     lastEditedBy: PropTypes.string,
     status: PropTypes.string,
     onStatusChange: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     onDiscard: PropTypes.func.isRequired,
-    setEdit: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
 };
 
 export default BottomBar;
