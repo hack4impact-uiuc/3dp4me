@@ -14,9 +14,9 @@ const FieldGroup = ({
     handleFileDownload,
     handleFileUpload,
     handleFileDelete,
-    value = {},
     stepKey = '',
     patientId = '',
+    value = {},
     metadata = {},
 }) => {
     const [translations, selectedLang] = useTranslations();
