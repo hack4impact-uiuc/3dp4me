@@ -12,3 +12,14 @@ export const TableHeaderType = PropTypes.shape({
 export const fieldType = PropTypes.shape({
     state: PropTypes.string.isRequired,
 });
+
+export const FieldOptionsType = PropTypes.arrayOf(
+    PropTypes.shape({
+        IsHidden: PropTypes.bool.isRequired,
+        _id: PropTypes.string.isRequired,
+        Question: PropTypes.shape({
+            EN: PropTypes.string.isRequired,
+            AR: PropTypes.string.isRequired,
+        }),
+    }),
+);

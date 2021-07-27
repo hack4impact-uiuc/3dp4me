@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FieldOptionsType } from '../../utils/custom-proptypes';
 
 const MultiSelectField = ({
     title,
@@ -69,16 +70,7 @@ MultiSelectField.propTypes = {
     isDisabled: PropTypes.bool,
     onChange: PropTypes.func,
     selectedOptions: PropTypes.arrayOf(PropTypes.string),
-    options: PropTypes.arrayOf(
-        PropTypes.shape({
-            IsHidden: PropTypes.bool.isRequired,
-            _id: PropTypes.string.isRequired,
-            Question: PropTypes.shape({
-                EN: PropTypes.string.isRequired,
-                AR: PropTypes.string.isRequired,
-            }),
-        }),
-    ),
+    options: FieldOptionsType,
 };
 
 export default MultiSelectField;

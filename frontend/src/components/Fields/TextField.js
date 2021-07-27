@@ -11,11 +11,11 @@ const TextField = ({
     className = '',
     onChange = () => {},
 }) => {
+    const inputClassName = !isDisabled ? 'active-input' : 'input-field';
+
     const sendChanges = (e) => {
         onChange(fieldId, e.target.value);
     };
-
-    const inputClassName = !isDisabled ? 'active-input' : 'input-field';
 
     return (
         <div>
