@@ -235,8 +235,8 @@ const SectionTab = () => {
                 </div>
 
                 <BottomBar
-                    edit={isEditing}
-                    setEdit={setIsEditing}
+                    eisEditing={isEditing}
+                    onEdit={() => setIsEditing(true)}
                     onSave={onSaveChanges}
                     onDiscard={onDiscardChanges}
                     style={{

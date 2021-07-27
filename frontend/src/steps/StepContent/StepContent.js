@@ -212,8 +212,8 @@ const StepContent = ({
                 onSave={saveData}
                 status={updatedData?.status || STEP_STATUS.UNFINISHED}
                 onStatusChange={handleSimpleUpdate}
-                edit={edit}
-                setEdit={setEdit}
+                isEditing={edit}
+                onEdit={() => setEdit(true)}
             />
         );
     };

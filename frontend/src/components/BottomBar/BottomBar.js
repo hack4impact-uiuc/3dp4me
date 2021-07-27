@@ -11,15 +11,15 @@ import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const BottomBar = ({
-    edit,
+    isEditing,
     lastEdited,
     lastEditedBy,
-    status = null,
-    style = null,
     onStatusChange,
     onSave,
     onDiscard,
-    setEdit,
+    onEdit,
+    status = null,
+    style = null,
 }) => {
     const [translations, selectedLang] = useTranslations();
 
@@ -35,6 +35,9 @@ const BottomBar = ({
         ),
     };
 
+    /**
+     * Renders the dropdown for step status. If status is null, then this isn't rendered at all.
+     */
     const renderStatusSelector = () => {
         if (!status) return null;
         const className =
@@ -62,6 +65,9 @@ const BottomBar = ({
         );
     };
 
+    /**
+     * Renders the status icon and text
+     */
     const renderStatus = () => {
         if (!status) return null;
 
@@ -76,6 +82,9 @@ const BottomBar = ({
         );
     };
 
+    /**
+     * Renders the discard and save buttons side by side
+     */
     const renderDiscardAndSaveButtons = () => {
         const saveBtnClassName =
             selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button';
@@ -90,8 +99,11 @@ const BottomBar = ({
         ];
     };
 
+    /**
+     * Renders all of the controls for the bottom bar (status selector, save, discard)
+     */
     const renderToolbarControls = () => {
-        if (edit) {
+        if (isEditing) {
             return (
                 <div>
                     {renderStatusSelector()}
@@ -103,7 +115,7 @@ const BottomBar = ({
         return (
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 {renderStatus()}
-                <Button className="edit-button" onClick={() => setEdit(true)}>
+                <Button className="edit-button" onClick={() => onEdit()}>
                     {translations.components.button.edit}
                 </Button>
             </div>
@@ -113,12 +125,8 @@ const BottomBar = ({
     const getLastEditedString = () => {
         if (!lastEdited || !lastEditedBy) return '';
 
-        return `${
-            translations.components.bottombar.lastEditedBy
-        } ${lastEditedBy} ${translations.components.bottombar.on} ${formatDate(
-            new Date(lastEdited),
-            selectedLang,
-        )}`;
+        const lastEditedDate = formatDate(new Date(lastEdited), selectedLang);
+        return `${translations.components.bottombar.lastEditedBy} ${lastEditedBy} ${translations.components.bottombar.on} ${lastEditedDate}`;
     };
 
     return (
