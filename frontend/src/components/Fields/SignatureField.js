@@ -172,6 +172,7 @@ const SignatureField = ({
                 </div>
             </Modal>
             <div className="sig-container">
+                {renderCanvas()}
                 <div className="sig-ctl-container">
                     <Button
                         className="sig-ctl-button doc-btn"
