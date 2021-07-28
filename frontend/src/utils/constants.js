@@ -1,3 +1,9 @@
+export const SORT_DIRECTIONS = {
+    AESC: 'ascending',
+    DESC: 'descending',
+    NONE: 'none',
+};
+
 export const COGNITO_ATTRIBUTES = {
     LANGUAGE: 'custom:language',
     ROLES: 'custom:security_roles',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyledTableCell } from '../components/Table/MainTable.style';
-import { LANGUAGES } from './constants';
+import { LANGUAGES, SORT_DIRECTIONS } from './constants';
 import { fieldToJSX } from './fields';
 import { resolveObjPath } from './object';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -9,12 +9,6 @@ import { Link } from 'react-router-dom';
 import { IconButton } from '@material-ui/core';
 import Eyecon from '../assets/view.svg';
 import translations from '../translations.json';
-
-const SORT_DIRECTIONS = {
-    AESC: 'ascending',
-    DESC: 'descending',
-    NONE: 'none',
-};
 
 /**
  * Given item data, a field key, and a field type, this function finds

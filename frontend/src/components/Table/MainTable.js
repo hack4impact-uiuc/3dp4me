@@ -19,18 +19,13 @@ const MainTable = ({
     renderHeader,
     renderTableRow,
 }) => {
-    const [translations, selectedLang] = useTranslations();
-
-    const UNSORTED_DATA = data;
-    const { items, requestSort, sortConfig } = useSortableData(
-        data,
-        UNSORTED_DATA,
-    );
+    const selectedLang = useTranslations()[1];
+    const { sortedData, requestSort, sortConfig } = useSortableData(data);
 
     const renderTableBody = () => {
-        if (!items || !rowData) return null;
+        if (!sortedData || !rowData) return null;
 
-        return items.map((patient) => (
+        return sortedData.map((patient) => (
             <StyledTableRow key={patient._id}>
                 {renderTableRow(rowData, patient, selectedLang)}
             </StyledTableRow>
@@ -62,13 +57,15 @@ const MainTable = ({
 
 MainTable.propTypes = {
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
+    renderHeader: PropTypes.func.isRequired,
+    renderTableRow: PropTypes.func.isRequired,
+    data: PropTypes.arrayOf(PropTypes.object),
     rowData: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string,
             dataType: PropTypes.string,
         }),
-    ),
-    patients: PropTypes.arrayOf(PropTypes.object),
+    ).isRequired,
 };
 
 export default MainTable;

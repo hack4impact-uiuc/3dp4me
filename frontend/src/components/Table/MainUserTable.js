@@ -36,11 +36,8 @@ const StyledTableRow = withStyles(() => ({
 
 const MainUserTable = ({ users, roleData, headers, onUserSelected }) => {
     const [translations, selectedLang] = useTranslations();
-    const UNSORTED_DATA = users;
-    const { items, requestSort, sortConfig } = useSortableData(
-        users,
-        UNSORTED_DATA,
-    );
+    const { sortedData, requestSort, sortConfig } = useSortableData(users);
+    const items = sortedData;
 
     const statusStyle = {
         [ACCESS_LEVELS.GRANTED]: (
