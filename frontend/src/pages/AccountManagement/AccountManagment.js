@@ -3,7 +3,6 @@ import _ from 'lodash';
 
 import { ACCESS_LEVELS, FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import { getAllRoles, getAllUsers } from '../../utils/api';
-import MainUserTable from '../../components/Table/MainUserTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { useTranslations } from '../../hooks/useTranslations';

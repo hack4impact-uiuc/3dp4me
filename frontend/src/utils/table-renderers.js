@@ -153,6 +153,10 @@ export const patientTableHeaderRenderer = (
     return headerCells;
 };
 
+/**
+ * Renders a single row of user data. Uses the default render and adds a column
+ * at the end that links to user editing modal
+ */
 export const userTableRowRenderer = (
     rowData,
     user,
@@ -162,44 +166,13 @@ export const userTableRowRenderer = (
     // Construct the base row
     let row = defaultTableRowRenderer(rowData, user, selectedLang);
 
-    // items.map((user) => (
-    //     <StyledTableRow key={user._id}>
-    //         <StyledTableCell>
-    //             {getName(user)}
-    //         </StyledTableCell>
-    //         <StyledTableCell>
-    //             {getInfo(user, 'email')}
-    //         </StyledTableCell>
-    //         <StyledTableCell>
-    //             {getRoles(user)}
-    //         </StyledTableCell>
-    //         <StyledTableCell>
-    //             {getAccessLevel(user)}
-    //         </StyledTableCell>
-    //         <StyledTableCell
-    //             className="cell"
-    //             align="center"
-    //         >
-    //             <IconButton
-    //                 onClick={() => onSelected(user)}
-    //             >
-    //                 <img
-    //                     alt="status icon"
-    //                     width="18px"
-    //                     src={Eyecon}
-    //                 />
-    //             </IconButton>{' '}
-    //             {translations.components.table.edit}
-    //         </StyledTableCell>
-    //     </StyledTableRow>
-    // ))}
-
+    // Add the edit button
     row.push(
         <StyledTableCell className="cell" align="center">
             <IconButton onClick={() => onSelected(user)}>
                 <img alt="status icon" width="18px" src={Eyecon} />
             </IconButton>{' '}
-            {/* {translations.components.table.edit} */}
+            {translations[selectedLang].components.table.edit}
         </StyledTableCell>,
     );
 
