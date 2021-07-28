@@ -23,6 +23,10 @@ import {
 } from '../../utils/api';
 import './Dashboard.scss';
 import { useTranslations } from '../../hooks/useTranslations';
+import {
+    patientTableHeaderRenderer,
+    patientTableRowRenderer,
+} from '../../utils/table-renderers';
 
 // TODO: Expand these as needed
 const useStyles = makeStyles(() => ({
@@ -304,6 +308,8 @@ const Dashboard = () => {
             return (
                 <MainTable
                     key={`table-${element.key}`}
+                    renderHeader={patientTableHeaderRenderer}
+                    renderTableRow={patientTableRowRenderer}
                     headers={generateHeaders(element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
                     data={

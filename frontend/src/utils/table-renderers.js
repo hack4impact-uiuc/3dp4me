@@ -5,22 +5,27 @@ import { fieldToJSX } from './fields';
 import { resolveObjPath } from './object';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import { Link } from 'react-router-dom';
+import { IconButton } from '@material-ui/core';
+import Eyecon from '../assets/view.svg';
+import translations from '../translations.json';
 
 const SORT_DIRECTIONS = {
     AESC: 'ascending',
     DESC: 'descending',
+    NONE: 'none',
 };
 
 /**
  * Given item data, a field key, and a field type, this function finds
  * the data and formats it accordingly.
- * @param {Object} patient The data
+ * @param {Object} data The data
  * @param {String} fieldKey The field key. Can be nested with '.' (i.e. 'medicalInfo.data.options')
  * @param {*} fieldType The field type of the data that will be retrieved
  * @returns A stringified, formated version of the data.
  */
-const getField = (patient, fieldKey, fieldType, selectedLang) => {
-    const fieldData = resolveObjPath(patient, fieldKey);
+const getField = (data, fieldKey, fieldType, selectedLang) => {
+    const fieldData = resolveObjPath(data, fieldKey);
     return fieldToJSX(fieldData, fieldType, selectedLang);
 };
 
@@ -34,12 +39,17 @@ const getField = (patient, fieldKey, fieldType, selectedLang) => {
 const renderSortArrow = (sortConfig, sortKey) => {
     if (!sortConfig || sortConfig.key !== sortKey) return;
 
-    if (sortConfig.direction === SORT_DIRECTIONS.AESC)
-        return <ArrowDropUpIcon className="dropdown-arrow" />;
-    if (sortConfig.direction === SORT_DIRECTIONS.DESC)
-        return <ArrowDropDownIcon className="dropdown-arrow" />;
+    switch (sortConfig.direction) {
+        case SORT_DIRECTIONS.AESC:
+            return <ArrowDropUpIcon className="dropdown-arrow" />;
+        case SORT_DIRECTIONS.DESC:
+            return <ArrowDropDownIcon className="dropdown-arrow" />;
+        case SORT_DIRECTIONS.NONE:
+            return null;
+        default:
+            console.error(`Invalid sort direction: '${sortConfig.direction}'`);
+    }
 
-    console.error(`Invalid sort direction: '${sortConfig.direction}'`);
     return null;
 };
 
@@ -55,7 +65,7 @@ export const defaultTableRowRenderer = (rowData, itemData, selectedLang) => {
     const cellClassName = selectedLang === LANGUAGES.AR ? 'cell-rtl' : 'cell';
     const cellAlign = selectedLang === LANGUAGES.AR ? 'right' : 'left';
 
-    // Construct a cell for each piece of patient data
+    // Construct a cell for each piece of data
     let row = rowData.map(({ id, dataType }) => (
         <StyledTableCell
             className={cellClassName}
@@ -76,7 +86,6 @@ export const defaultTableRowRenderer = (rowData, itemData, selectedLang) => {
  * @param {String} selectedLang The currently selected language.
  * @returns Array of cells
  */
-
 export const defaultTableHeaderRenderer = (
     headers,
     sortConfig,
@@ -101,5 +110,51 @@ export const defaultTableHeaderRenderer = (
         </StyledTableCell>
     ));
 
+    return headerCells;
+};
+
+/**
+ * Renders a single row of patient data. Uses the default render and adds a column
+ * at the end that links to patient data
+ */
+export const patientTableRowRenderer = (rowData, patient, selectedLang) => {
+    // Construct the base row
+    let row = defaultTableRowRenderer(rowData, patient, selectedLang);
+
+    // Add a link to the patient's page
+    row.push(
+        <StyledTableCell className="cell" align="center">
+            <Link
+                className="table-view-link"
+                to={`/patient-info/${patient._id}`}
+            >
+                <IconButton>
+                    <img alt="status icon" width="18px" src={Eyecon} />
+                </IconButton>{' '}
+                {translations[selectedLang].components.table.view}
+            </Link>
+        </StyledTableCell>,
+    );
+
+    return row;
+};
+
+/**
+ * Renders header for patient data. Uses the default render and adds a column
+ * at the end for the 'view patient' link
+ */
+export const patientTableHeaderRenderer = (
+    headers,
+    sortConfig,
+    onRequestSort,
+    selectedLang,
+) => {
+    let headerCells = defaultTableHeaderRenderer(
+        headers,
+        sortConfig,
+        onRequestSort,
+        selectedLang,
+    );
+    headerCells.push(<StyledTableCell className="header" align="center" />);
     return headerCells;
 };

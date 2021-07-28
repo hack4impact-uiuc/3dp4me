@@ -6,23 +6,19 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
-import { IconButton } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import './MainTable.scss';
-import { resolveObjPath } from '../../utils/object';
 import useSortableData from '../../hooks/useSortableData';
-import Eyecon from '../../assets/view.svg';
 import { TableHeaderType } from '../../utils/custom-proptypes';
-import { LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
-import { StyledTableCell, StyledTableRow } from './MainTable.style';
-import { fieldToJSX } from '../../utils/fields';
-import {
-    defaultTableHeaderRenderer,
-    defaultTableRowRenderer,
-} from '../../utils/table-renderers';
+import { StyledTableRow } from './MainTable.style';
 
-const MainTable = ({ data, headers, rowData }) => {
+const MainTable = ({
+    data,
+    headers,
+    rowData,
+    renderHeader,
+    renderTableRow,
+}) => {
     const [translations, selectedLang] = useTranslations();
 
     const UNSORTED_DATA = data;
@@ -36,47 +32,9 @@ const MainTable = ({ data, headers, rowData }) => {
 
         return items.map((patient) => (
             <StyledTableRow key={patient._id}>
-                {renderTableRow(patient)}
+                {renderTableRow(rowData, patient, selectedLang)}
             </StyledTableRow>
         ));
-    };
-
-    const renderHeader = () => {
-        let headerCells = defaultTableHeaderRenderer(
-            headers,
-            sortConfig,
-            requestSort,
-            selectedLang,
-        );
-        headerCells.push(<StyledTableCell className="header" align="center" />);
-        return headerCells;
-    };
-
-    /**
-     * Given patient data, constructs an array of cells for the row.
-     * @param {Object} patient The patient data
-     * @returns Array of cells
-     */
-    const renderTableRow = (patient) => {
-        // Construct the base row
-        let row = defaultTableRowRenderer(rowData, patient, selectedLang);
-
-        // Add a link to the patient's page
-        row.push(
-            <StyledTableCell className="cell" align="center">
-                <Link
-                    className="table-view-link"
-                    to={`/patient-info/${patient._id}`}
-                >
-                    <IconButton>
-                        <img alt="status icon" width="18px" src={Eyecon} />
-                    </IconButton>{' '}
-                    {translations.components.table.view}
-                </Link>
-            </StyledTableCell>,
-        );
-
-        return row;
     };
 
     return (
@@ -84,7 +42,14 @@ const MainTable = ({ data, headers, rowData }) => {
             <TableContainer className="table-container" component={Paper}>
                 <Table stickyHeader className="table">
                     <TableHead>
-                        <TableRow>{renderHeader()}</TableRow>
+                        <TableRow>
+                            {renderHeader(
+                                headers,
+                                sortConfig,
+                                requestSort,
+                                selectedLang,
+                            )}
+                        </TableRow>
                     </TableHead>
                     <TableBody className="table-body">
                         {renderTableBody()}

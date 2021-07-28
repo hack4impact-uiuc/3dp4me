@@ -18,6 +18,10 @@ import {
 } from '../../utils/constants';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
+import {
+    patientTableHeaderRenderer,
+    patientTableRowRenderer,
+} from '../../utils/table-renderers';
 
 const useStyles = makeStyles(() => ({
     swalEditButton: {
@@ -304,6 +308,8 @@ const Patients = () => {
             <MainTable
                 headers={REQUIRED_DASHBOARD_HEADERS}
                 rowData={REQUIRED_DASHBOARD_SORT_KEYS}
+                renderHeader={patientTableHeaderRenderer}
+                renderTableRow={patientTableRowRenderer}
                 data={searchQuery.length === 0 ? allPatients : filterPatients}
             />
             )
