@@ -152,3 +152,76 @@ export const patientTableHeaderRenderer = (
     headerCells.push(<StyledTableCell className="header" align="center" />);
     return headerCells;
 };
+
+export const userTableRowRenderer = (
+    rowData,
+    user,
+    selectedLang,
+    onSelected,
+) => {
+    // Construct the base row
+    let row = defaultTableRowRenderer(rowData, user, selectedLang);
+
+    // items.map((user) => (
+    //     <StyledTableRow key={user._id}>
+    //         <StyledTableCell>
+    //             {getName(user)}
+    //         </StyledTableCell>
+    //         <StyledTableCell>
+    //             {getInfo(user, 'email')}
+    //         </StyledTableCell>
+    //         <StyledTableCell>
+    //             {getRoles(user)}
+    //         </StyledTableCell>
+    //         <StyledTableCell>
+    //             {getAccessLevel(user)}
+    //         </StyledTableCell>
+    //         <StyledTableCell
+    //             className="cell"
+    //             align="center"
+    //         >
+    //             <IconButton
+    //                 onClick={() => onSelected(user)}
+    //             >
+    //                 <img
+    //                     alt="status icon"
+    //                     width="18px"
+    //                     src={Eyecon}
+    //                 />
+    //             </IconButton>{' '}
+    //             {translations.components.table.edit}
+    //         </StyledTableCell>
+    //     </StyledTableRow>
+    // ))}
+
+    row.push(
+        <StyledTableCell className="cell" align="center">
+            <IconButton onClick={() => onSelected(user)}>
+                <img alt="status icon" width="18px" src={Eyecon} />
+            </IconButton>{' '}
+            {/* {translations.components.table.edit} */}
+        </StyledTableCell>,
+    );
+
+    return row;
+};
+
+/**
+ * Renders header for user data. Uses the default render and adds a column
+ * at the end for the 'view user' button
+ */
+export const userTableHeaderRenderer = (
+    headers,
+    sortConfig,
+    onRequestSort,
+    selectedLang,
+) => {
+    let headerCells = defaultTableHeaderRenderer(
+        headers,
+        sortConfig,
+        onRequestSort,
+        selectedLang,
+    );
+    headerCells.push(<StyledTableCell className="header" align="center" />);
+    return headerCells;
+};

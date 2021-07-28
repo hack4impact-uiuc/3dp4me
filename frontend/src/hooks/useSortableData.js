@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
 import _ from 'lodash';
+import { useState, useMemo } from 'react';
 import { SORT_DIRECTIONS } from '../utils/constants';
 import { resolveObjPath } from '../utils/object';
 

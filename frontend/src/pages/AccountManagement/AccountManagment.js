@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 
-import { LANGUAGES } from '../../utils/constants';
+import { ACCESS_LEVELS, FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import { getAllRoles, getAllUsers } from '../../utils/api';
 import MainUserTable from '../../components/Table/MainUserTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { useTranslations } from '../../hooks/useTranslations';
+import MainTable from '../../components/Table/MainTable';
+import {
+    userTableHeaderRenderer,
+    userTableRowRenderer,
+} from '../../utils/table-renderers';
 
 const AccountManagement = () => {
     const selectedLang = useTranslations()[1];
@@ -61,16 +66,86 @@ const AccountManagement = () => {
         });
     };
 
-    function generateMainUserTable() {
-        const headings = ['Name', 'Email', 'Role', 'Access'];
-        if (getAllUsers() == null) return null;
+    const transformData = (users) => {
+        const getInfo = (user, atr) => {
+            return user?.Attributes?.find((attribute) => attribute.Name === atr)
+                ?.Value;
+        };
 
+        const getAccessLevelValue = (user) => {
+            return getInfo(user, 'custom:access') || ACCESS_LEVELS.PENDING;
+        };
+
+        const getAccessLevel = (user) => {
+            const access = getAccessLevelValue(user);
+            return access;
+            //return statusStyle[access];
+        };
+
+        const getName = (user) => {
+            return getInfo(user, 'name') || user.Username;
+        };
+
+        const getId = (user) => {
+            return user.Username;
+        };
+
+        const getRolesValue = (user) => {
+            const info = getInfo(user, 'custom:security_roles');
+            return info ? JSON.parse(info) : [];
+        };
+
+        const getRoles = (user) => {
+            let roles = getRolesValue(user);
+            if (roles.length === 0) return 'Not Assigned';
+
+            roles = roles.map((r) => {
+                for (let i = 0; i < rolesData.length; i += 1) {
+                    if (r === rolesData[i]._id)
+                        return rolesData[i]?.Question[selectedLang];
+                }
+
+                return 'Unrecognized role';
+            });
+
+            return roles.join(', ');
+        };
+
+        return users.map((user) => ({
+            Name: getName(user),
+            Email: getInfo(user, 'email'),
+            Roles: getRoles(user),
+            Access: getAccessLevel(user),
+        }));
+    };
+
+    function generateMainUserTable() {
+        const headings = [
+            { title: 'Name', sortKey: 'Name', dataType: FIELD_TYPES.STRING },
+            { title: 'Email', sortKey: 'Email', dataType: FIELD_TYPES.STRING },
+            { title: 'Roles', sortKey: 'Roles', dataType: FIELD_TYPES.STRING },
+            {
+                title: 'Access',
+                sortKey: 'Access',
+                dataType: FIELD_TYPES.STRING,
+            },
+        ];
+
+        const rowData = [
+            { id: 'Name', dataType: FIELD_TYPES.STRING },
+            { id: 'Email', dataType: FIELD_TYPES.STRING },
+            { id: 'Roles', dataType: FIELD_TYPES.STRING },
+            { id: 'Access', dataType: FIELD_TYPES.STRING },
+        ];
+
+        console.log(userMetaData);
         return (
-            <MainUserTable
+            <MainTable
+                data={transformData(userMetaData)}
                 headers={headings}
-                rowIds={['Name', 'Email', 'Role', 'Access']}
-                users={userMetaData}
-                roleData={rolesData}
+                rowData={rowData}
+                renderHeader={userTableHeaderRenderer}
+                renderTableRow={userTableRowRenderer}
                 onUserSelected={onUserSelected}
             />
         );

@@ -18,6 +18,7 @@ import Eyecon from '../../assets/view.svg';
 import { TableHeaderType } from '../../utils/custom-proptypes';
 import { ACCESS_LEVELS, LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
+import { userTableHeaderRenderer } from '../../utils/table-renderers';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -116,7 +117,13 @@ const MainUserTable = ({ users, roleData, headers, onUserSelected }) => {
                 <Table stickyHeader className="table">
                     <TableHead>
                         <TableRow>
-                            {headers.map((header) => (
+                            {userTableHeaderRenderer(
+                                headers,
+                                sortConfig,
+                                requestSort,
+                                selectedLang,
+                            )}
+                            {/* {headers.map((header) => (
                                 <StyledTableCell
                                     onClick={() => requestSort(header.sortKey)}
                                     className="header"
@@ -152,7 +159,7 @@ const MainUserTable = ({ users, roleData, headers, onUserSelected }) => {
                                         )}
                                     </div>
                                 </StyledTableCell>
-                            ))}
+                            ))} */}
                             <StyledTableCell
                                 className="header"
                                 align="center"
