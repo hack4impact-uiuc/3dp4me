@@ -1,5 +1,5 @@
 import { Auth } from 'aws-amplify';
-import { LANGUAGE_ATTRIBUTE_KEY } from '../utils/constants';
+import { COGNITO_ATTRIBUTES } from '../utils/constants';
 
 // Used as a placeholder while fetching real data
 const DEFAULT_USER = {
@@ -27,7 +27,7 @@ export async function getCurrentUserInfo() {
 export async function saveLanguagePreference(langKey) {
     const user = await Auth.currentAuthenticatedUser();
     Auth.updateUserAttributes(user, {
-        [LANGUAGE_ATTRIBUTE_KEY]: langKey,
+        [COGNITO_ATTRIBUTES.LANGUAGE]: langKey,
     });
 }
 

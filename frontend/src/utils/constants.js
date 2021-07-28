@@ -1,4 +1,8 @@
-export const LANGUAGE_ATTRIBUTE_KEY = 'custom:language';
+export const COGNITO_ATTRIBUTES = {
+    LANGUAGE: 'custom:language',
+    ROLES: 'custom:security_roles',
+    ACCESS: 'custom:access',
+};
 
 export const FIELD_TYPES = {
     STRING: 'String',
