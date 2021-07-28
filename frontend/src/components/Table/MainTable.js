@@ -9,8 +9,6 @@ import PropTypes from 'prop-types';
 import { IconButton } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import './MainTable.scss';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import { resolveObjPath } from '../../utils/object';
 import useSortableData from '../../hooks/useSortableData';
 import Eyecon from '../../assets/view.svg';
@@ -19,11 +17,10 @@ import { LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 import { StyledTableCell, StyledTableRow } from './MainTable.style';
 import { fieldToJSX } from '../../utils/fields';
-
-const SORT_DIRECTIONS = {
-    AESC: 'ascending',
-    DESC: 'descending',
-};
+import {
+    defaultTableHeaderRenderer,
+    defaultTableRowRenderer,
+} from '../../utils/table-renderers';
 
 const MainTable = ({ data, headers, rowData }) => {
     const [translations, selectedLang] = useTranslations();
@@ -33,19 +30,6 @@ const MainTable = ({ data, headers, rowData }) => {
         data,
         UNSORTED_DATA,
     );
-
-    /**
-     * Given a patient data, a field key, and a field type, this function finds
-     * the data and formats it accordingly.
-     * @param {Object} patient The patient data
-     * @param {String} fieldKey The field key. Can be nested with '.' (i.e. 'medicalInfo.data.options')
-     * @param {*} fieldType The field type of the data that will be retrieved
-     * @returns A stringified, formated version of the data.
-     */
-    const getPatientField = (patient, fieldKey, fieldType) => {
-        const fieldData = resolveObjPath(patient, fieldKey);
-        return fieldToJSX(fieldData, fieldType, selectedLang);
-    };
 
     const renderTableBody = () => {
         if (!items || !rowData) return null;
@@ -57,39 +41,14 @@ const MainTable = ({ data, headers, rowData }) => {
         ));
     };
 
-    const renderSortArrow = (sortKey) => {
-        if (!sortConfig || sortConfig.key !== sortKey) return;
-
-        if (sortConfig.direction === SORT_DIRECTIONS.AESC)
-            return <ArrowDropUpIcon className="dropdown-arrow" />;
-        if (sortConfig.direction === SORT_DIRECTIONS.DESC)
-            return <ArrowDropDownIcon className="dropdown-arrow" />;
-
-        console.error(`Invalid sort direction: '${sortConfig.direction}'`);
-        return null;
-    };
-
     const renderHeader = () => {
-        const cellAlign = selectedLang === LANGUAGES.AR ? 'right' : 'left';
-        const cellClassName =
-            selectedLang === LANGUAGES.AR ? 'cell-align-rtl' : 'cell-align';
-
-        let headerCells = headers.map((header) => (
-            <StyledTableCell
-                onClick={() => requestSort(header.sortKey)}
-                className="header"
-                key={header.title}
-                align={cellAlign}
-            >
-                <div className={cellClassName}>
-                    {header.title}
-                    {renderSortArrow(header.sortKey)}
-                </div>
-            </StyledTableCell>
-        ));
-
+        let headerCells = defaultTableHeaderRenderer(
+            headers,
+            sortConfig,
+            requestSort,
+            selectedLang,
+        );
         headerCells.push(<StyledTableCell className="header" align="center" />);
-
         return headerCells;
     };
 
@@ -99,20 +58,8 @@ const MainTable = ({ data, headers, rowData }) => {
      * @returns Array of cells
      */
     const renderTableRow = (patient) => {
-        const cellClassName =
-            selectedLang === LANGUAGES.AR ? 'cell-rtl' : 'cell';
-        const cellAlign = selectedLang === LANGUAGES.AR ? 'right' : 'left';
-
-        // Construct a cell for each piece of patient data
-        let row = rowData.map(({ id, dataType }) => (
-            <StyledTableCell
-                className={cellClassName}
-                key={`${patient._id}-${id}`}
-                align={cellAlign}
-            >
-                {getPatientField(patient, id, dataType)}
-            </StyledTableCell>
-        ));
+        // Construct the base row
+        let row = defaultTableRowRenderer(rowData, patient, selectedLang);
 
         // Add a link to the patient's page
         row.push(
