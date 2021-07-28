@@ -304,9 +304,7 @@ const Patients = () => {
             <MainTable
                 headers={REQUIRED_DASHBOARD_HEADERS}
                 rowData={REQUIRED_DASHBOARD_SORT_KEYS}
-                patients={
-                    searchQuery.length === 0 ? allPatients : filterPatients
-                }
+                data={searchQuery.length === 0 ? allPatients : filterPatients}
             />
             )
         </div>

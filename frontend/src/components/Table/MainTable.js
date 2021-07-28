@@ -28,36 +28,24 @@ import {
     LANGUAGES,
     PATIENT_STATUS,
     SIGNATURE_STATUS,
+    STEP_STATUS,
 } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
 import { useTranslations } from '../../hooks/useTranslations';
+import { StyledTableCell, StyledTableRow } from './MainTable.style';
 
-const StyledTableCell = withStyles((theme) => ({
-    head: {
-        backgroundColor: theme.palette.common.white,
-        color: theme.palette.common.black,
-    },
-}))(TableCell);
-
-const StyledTableRow = withStyles(() => ({
-    root: {
-        '&:hover': {
-            backgroundColor: '#f0f0f0',
-        },
-    },
-}))(TableRow);
-
-const MainTable = ({ patients, headers, rowData }) => {
+const MainTable = ({ data, headers, rowData }) => {
     const [translations, selectedLang] = useTranslations();
 
-    const UNSORTED_DATA = patients;
+    const UNSORTED_DATA = data;
     const { items, requestSort, sortConfig } = useSortableData(
-        patients,
+        data,
         UNSORTED_DATA,
     );
 
+    // TODO: Can I get rid of the first 3??
     const statusStyle = {
-        Finished: (
+        [STEP_STATUS.FINISHED]: (
             <div>
                 <img
                     alt="complete"
@@ -68,7 +56,7 @@ const MainTable = ({ patients, headers, rowData }) => {
                 {translations.components.bottombar.finished}
             </div>
         ),
-        'Partially Complete': (
+        [STEP_STATUS.PARTIALLY_FINISHED]: (
             <div style={{ color: '#ff9d00' }}>
                 <img
                     alt="partial"
@@ -79,7 +67,7 @@ const MainTable = ({ patients, headers, rowData }) => {
                 {translations.components.bottombar.partial}
             </div>
         ),
-        Unfinished: (
+        [STEP_STATUS.UNFINISHED]: (
             <div style={{ color: 'red' }}>
                 <img
                     alt="incomplete"
@@ -120,6 +108,14 @@ const MainTable = ({ patients, headers, rowData }) => {
         ),
     };
 
+    /**
+     * Given a patient data, a field key, and a field type, this function finds
+     * the data and formats it accordingly.
+     * @param {Object} patient The patient data
+     * @param {String} fieldKey The field key. Can be nested with '.' (i.e. 'medicalInfo.data.options')
+     * @param {*} fieldType The field type of the data that will be retrieved
+     * @returns A stringified, formated version of the data.
+     */
     const getPatientField = (patient, fieldKey, fieldType) => {
         const rawData = resolveObjPath(patient, fieldKey);
         switch (fieldType) {
@@ -134,6 +130,8 @@ const MainTable = ({ patients, headers, rowData }) => {
                     : SIGNATURE_STATUS.UNSIGNED;
                 return signatureStyles[status];
             }
+            case FIELD_TYPES.STATUS:
+                return <b>{statusStyle[rawData]}</b>;
             default:
                 return rawData;
         }
@@ -144,48 +142,48 @@ const MainTable = ({ patients, headers, rowData }) => {
 
         return items.map((patient) => (
             <StyledTableRow key={patient._id}>
-                {rowData.map(({ id, dataType }) => (
-                    <StyledTableCell
-                        className={
-                            selectedLang === LANGUAGES.AR ? 'cell-rtl' : 'cell'
-                        }
-                        key={patient._id + id}
-                        align={selectedLang === LANGUAGES.AR ? 'right' : 'left'}
-                    >
-                        {id === 'status' ? (
-                            <>
-                                {Object.values(PATIENT_STATUS).includes(
-                                    resolveObjPath(patient, id),
-                                ) ? (
-                                    <b>
-                                        {
-                                            statusStyle[
-                                                resolveObjPath(patient, id)
-                                            ]
-                                        }
-                                    </b>
-                                ) : (
-                                    statusStyle[resolveObjPath(patient, id)]
-                                )}
-                            </>
-                        ) : (
-                            getPatientField(patient, id, dataType)
-                        )}
-                    </StyledTableCell>
-                ))}
-                <StyledTableCell className="cell" align="center">
-                    <Link
-                        className="table-view-link"
-                        to={`/patient-info/${patient._id}`}
-                    >
-                        <IconButton>
-                            <img alt="status icon" width="18px" src={Eyecon} />
-                        </IconButton>{' '}
-                        {translations.components.table.view}
-                    </Link>
-                </StyledTableCell>
+                {renderTableRow(patient)}
             </StyledTableRow>
         ));
+    };
+
+    /**
+     * Given patient data, constructs an array of cells for the row.
+     * @param {Object} patient The patient data
+     * @returns Array of cells
+     */
+    const renderTableRow = (patient) => {
+        const cellClassName =
+            selectedLang === LANGUAGES.AR ? 'cell-rtl' : 'cell';
+        const cellAlign = selectedLang === LANGUAGES.AR ? 'right' : 'left';
+
+        // Construct a cell for each piece of patient data
+        let row = rowData.map(({ id, dataType }) => (
+            <StyledTableCell
+                className={cellClassName}
+                key={`${patient._id}-${id}`}
+                align={cellAlign}
+            >
+                {getPatientField(patient, id, dataType)}
+            </StyledTableCell>
+        ));
+
+        // Add a link to the patient's page
+        row.push(
+            <StyledTableCell className="cell" align="center">
+                <Link
+                    className="table-view-link"
+                    to={`/patient-info/${patient._id}`}
+                >
+                    <IconButton>
+                        <img alt="status icon" width="18px" src={Eyecon} />
+                    </IconButton>{' '}
+                    {translations.components.table.view}
+                </Link>
+            </StyledTableCell>,
+        );
+
+        return row;
     };
 
     return (

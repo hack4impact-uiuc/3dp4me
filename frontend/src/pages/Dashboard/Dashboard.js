@@ -306,7 +306,7 @@ const Dashboard = () => {
                     key={`table-${element.key}`}
                     headers={generateHeaders(element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
-                    patients={
+                    data={
                         searchQuery.length === 0 ? patients : filteredPatients
                     }
                 />
