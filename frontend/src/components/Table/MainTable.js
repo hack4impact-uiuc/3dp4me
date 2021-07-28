@@ -20,6 +20,11 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { StyledTableCell, StyledTableRow } from './MainTable.style';
 import { fieldToJSX } from '../../utils/fields';
 
+const SORT_DIRECTIONS = {
+    AESC: 'ascending',
+    DESC: 'descending',
+};
+
 const MainTable = ({ data, headers, rowData }) => {
     const [translations, selectedLang] = useTranslations();
 
@@ -50,6 +55,42 @@ const MainTable = ({ data, headers, rowData }) => {
                 {renderTableRow(patient)}
             </StyledTableRow>
         ));
+    };
+
+    const renderSortArrow = (sortKey) => {
+        if (!sortConfig || sortConfig.key !== sortKey) return;
+
+        if (sortConfig.direction === SORT_DIRECTIONS.AESC)
+            return <ArrowDropUpIcon className="dropdown-arrow" />;
+        if (sortConfig.direction === SORT_DIRECTIONS.DESC)
+            return <ArrowDropDownIcon className="dropdown-arrow" />;
+
+        console.error(`Invalid sort direction: '${sortConfig.direction}'`);
+        return null;
+    };
+
+    const renderHeader = () => {
+        const cellAlign = selectedLang === LANGUAGES.AR ? 'right' : 'left';
+        const cellClassName =
+            selectedLang === LANGUAGES.AR ? 'cell-align-rtl' : 'cell-align';
+
+        let headerCells = headers.map((header) => (
+            <StyledTableCell
+                onClick={() => requestSort(header.sortKey)}
+                className="header"
+                key={header.title}
+                align={cellAlign}
+            >
+                <div className={cellClassName}>
+                    {header.title}
+                    {renderSortArrow(header.sortKey)}
+                </div>
+            </StyledTableCell>
+        ));
+
+        headerCells.push(<StyledTableCell className="header" align="center" />);
+
+        return headerCells;
     };
 
     /**
@@ -96,49 +137,7 @@ const MainTable = ({ data, headers, rowData }) => {
             <TableContainer className="table-container" component={Paper}>
                 <Table stickyHeader className="table">
                     <TableHead>
-                        <TableRow>
-                            {headers.map((header) => (
-                                <StyledTableCell
-                                    onClick={() => requestSort(header.sortKey)}
-                                    className="header"
-                                    key={header.title}
-                                    align={
-                                        selectedLang === LANGUAGES.AR
-                                            ? 'right'
-                                            : 'left'
-                                    }
-                                >
-                                    <div
-                                        className={
-                                            selectedLang === LANGUAGES.AR
-                                                ? 'cell-align-rtl'
-                                                : 'cell-align'
-                                        }
-                                    >
-                                        {header.title}
-                                        {sortConfig !== null &&
-                                        sortConfig.key === header.sortKey &&
-                                        sortConfig.direction === 'ascending' ? (
-                                            <ArrowDropUpIcon className="dropdown-arrow" />
-                                        ) : (
-                                            <></>
-                                        )}
-                                        {sortConfig !== null &&
-                                        sortConfig.key === header.sortKey &&
-                                        sortConfig.direction ===
-                                            'descending' ? (
-                                            <ArrowDropDownIcon className="dropdown-arrow" />
-                                        ) : (
-                                            <></>
-                                        )}
-                                    </div>
-                                </StyledTableCell>
-                            ))}
-                            <StyledTableCell
-                                className="header"
-                                align="center"
-                            />
-                        </TableRow>
+                        <TableRow>{renderHeader()}</TableRow>
                     </TableHead>
                     <TableBody className="table-body">
                         {renderTableBody()}
