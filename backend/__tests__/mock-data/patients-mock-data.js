@@ -230,7 +230,7 @@ module.exports.EXPECTED_GET_RESTRICTED_DATA = {
         AR: "استطلاع"
       },
       readableGroups: [
-        "606e0a4602b23d02bc77673a"
+        "606e0a4602b23d02bc77673a", "606e0a4602b23d02bc77673d"
       ],
 	  
       writableGroups: ["606e0a4602b23d02bc77673c"],
@@ -246,7 +246,7 @@ module.exports.EXPECTED_GET_RESTRICTED_DATA = {
           },
           fieldType: "String",
           readableGroups: [
-            "606e0a4602b23d02bc77673a"
+            "606e0a4602b23d02bc77673d"
           ],
           writableGroups: [],
           _id: "607086644e7ccf3c7cea23d8",

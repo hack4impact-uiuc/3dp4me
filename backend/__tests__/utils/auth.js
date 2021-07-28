@@ -54,6 +54,14 @@ module.exports.initS3Mocker = (AWS) => {
     });
 };
 
+
+module.exports.initS3GetMocker = (AWS) => {
+	AWS.mock('S3', 'getObject', (params) => {
+		lastUploadedFileParams = params;
+		return Promise.resolve();
+	});
+}
+
 /**
  * Mocks the Cognito Identity Service Provider so that whenever the server queries for the current user, a static
  * user is returned.
