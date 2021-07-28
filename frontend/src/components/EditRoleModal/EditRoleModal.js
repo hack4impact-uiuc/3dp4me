@@ -32,8 +32,6 @@ const EditRoleModal = ({
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
     const errorWrap = useErrorWrap();
 
-    console.log(userInfo);
-
     useEffect(() => {
         setUserData(_.cloneDeep(userInfo));
     }, [userInfo]);

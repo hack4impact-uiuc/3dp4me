@@ -4,14 +4,8 @@ const getAttr = (user, atr) => {
     return user?.Attributes?.find((attribute) => attribute.Name === atr)?.Value;
 };
 
-export const getAccessLevelValue = (user) => {
-    return getAttr(user, COGNITO_ATTRIBUTES.ACCESS) || ACCESS_LEVELS.PENDING;
-};
-
 export const getAccessLevel = (user) => {
-    const access = getAccessLevelValue(user);
-    return access;
-    //return statusStyle[access];
+    return getAttr(user, COGNITO_ATTRIBUTES.ACCESS) || ACCESS_LEVELS.PENDING;
 };
 
 export const getName = (user) => {

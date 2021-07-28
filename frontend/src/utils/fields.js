@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    ACCESS_LEVELS,
     FIELD_TYPES,
     PATIENT_STATUS,
     SIGNATURE_STATUS,
@@ -83,6 +84,48 @@ const statusToJSX = (status, selectedLang) => {
     );
 };
 
+const accessToString = (access, selectedLang) => {
+    const accessTranslations = translations[selectedLang].accountManagement;
+
+    switch (access) {
+        case ACCESS_LEVELS.GRANTED:
+            return accessTranslations.Approved;
+        case ACCESS_LEVELS.PENDING:
+            return accessTranslations.Pending;
+        case ACCESS_LEVELS.REVOKED:
+            return accessTranslations.Revoked;
+        default:
+            console.error(`Unrecognized access level: ${access}`);
+    }
+
+    return access;
+};
+
+const getAccessColor = (access) => {
+    switch (access) {
+        case ACCESS_LEVELS.GRANTED:
+            return '#65d991';
+        case ACCESS_LEVELS.PENDING:
+            return 'black';
+        case ACCESS_LEVELS.REVOKED:
+            return 'red';
+        default:
+            console.error(`Unrecognized accces level ${access}`);
+    }
+
+    return 'black';
+};
+
+const accessToJSX = (access, selectedLang) => {
+    const accessString = accessToString(access, selectedLang);
+    const accessColor = getAccessColor(access);
+    return (
+        <div style={{ color: accessColor }}>
+            <b>{accessString}</b>
+        </div>
+    );
+};
+
 const signatureToJSX = (signature) => {
     switch (signature) {
         case SIGNATURE_STATUS.SIGNED:
@@ -111,6 +154,8 @@ export const fieldToString = (fieldData, fieldType, selectedLang) => {
             return formatDate(new Date(fieldData), selectedLang);
         case FIELD_TYPES.STATUS:
             return statusToString(fieldData, selectedLang);
+        case FIELD_TYPES.ACCESS:
+            return accessToString(fieldData, selectedLang);
         default:
             return fieldData;
     }
@@ -124,6 +169,8 @@ export const fieldToJSX = (fieldData, fieldType, selectedLang) => {
             return signatureToJSX(fieldData);
         case FIELD_TYPES.STATUS:
             return statusToJSX(fieldData, selectedLang);
+        case FIELD_TYPES.ACCESS:
+            return accessToJSX(fieldData, selectedLang);
         default:
             return stringifiedField;
     }

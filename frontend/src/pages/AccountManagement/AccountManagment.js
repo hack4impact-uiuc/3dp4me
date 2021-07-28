@@ -15,7 +15,6 @@ import MainTable from '../../components/Table/MainTable';
 import {
     generateUserTableRowRenderer,
     userTableHeaderRenderer,
-    userTableRowRenderer,
 } from '../../utils/table-renderers';
 import {
     getAccessLevel,
@@ -54,6 +53,7 @@ const AccountManagement = () => {
         const fullUserData = userMetaData.find(
             (u) => u.Username === user.Username,
         );
+
         setSelectedUser({
             accessLevel: getAccessLevel(fullUserData),
             userId: getUsername(fullUserData),
@@ -117,7 +117,7 @@ const AccountManagement = () => {
             { id: 'Name', dataType: FIELD_TYPES.STRING },
             { id: 'Email', dataType: FIELD_TYPES.STRING },
             { id: 'Roles', dataType: FIELD_TYPES.STRING },
-            { id: 'Access', dataType: FIELD_TYPES.STRING },
+            { id: 'Access', dataType: FIELD_TYPES.ACCESS },
         ];
 
         return (

@@ -25,8 +25,9 @@ export const FIELD_TYPES = {
     FIELD_GROUP: 'FieldGroup',
     SIGNATURE: 'Signature',
 
-    // This is a special field only used on the frontend
+    // These are special fields only used on the frontend for table rendering
     STATUS: 'Status',
+    ACCESS: 'Access',
 };
 
 export const REQUIRED_DASHBOARD_HEADERS = [
