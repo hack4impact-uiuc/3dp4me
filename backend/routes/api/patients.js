@@ -44,11 +44,13 @@ router.get(
             });
 
         let stepKeys = await getStepKeys();
-        for (const stepKey of stepKeys) {
+        let stepLookups = stepKeys.map(async (stepKey) => {
             let model = mongoose.model(stepKey);
             const stepData = await model.findOne({ patientId: id });
             patientData.set(stepKey, stepData, { strict: false });
-        }
+        });
+
+        await Promise.all(stepLookups);
 
         res.status(200).json({
             code: 200,

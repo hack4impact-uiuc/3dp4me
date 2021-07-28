@@ -23,6 +23,7 @@ router.get(
 
         const model = mongoose.model(stage);
 
+        // Cannot use an aggregation here due to the encryption middleware
         let patients = await models.Patient.find({
             status: overallStatusEnum.ACTIVE,
         }).lean();
