@@ -3,6 +3,12 @@ import _ from 'lodash';
 import { SORT_DIRECTIONS } from '../utils/constants';
 import { resolveObjPath } from '../utils/object';
 
+/**
+ * Hook that takes in an array of data and sorts it when requested
+ * @param {Array} data The data to sort
+ * @returns Three items: `sortedData` is the data after sorting. `requestSort` is a function
+ *          that causes a resort when called, and `sortConfig` tells about the current sort config
+ */
 const useSortableData = (data) => {
     const [sortConfig, setSortConfig] = useState(null);
     const sortableData = useMemo(() => _.cloneDeep(data), [data]);
@@ -12,7 +18,6 @@ const useSortableData = (data) => {
          * non-null object is always treated as greater than null
          */
         const compare = (a, b, key) => {
-            console.log(key);
             const aVal = resolveObjPath(a, key);
             const bVal = resolveObjPath(b, key);
             if ((!aVal && bVal) || aVal > bVal) return -1;
@@ -21,6 +26,7 @@ const useSortableData = (data) => {
             return 0;
         };
 
+        // Do the actual sorting if requested
         if (sortConfig !== null) {
             if (sortConfig.direction === SORT_DIRECTIONS.NONE) return data;
 
