@@ -15,6 +15,7 @@ import PhoneField from '../Fields/PhoneField';
 import FieldGroup from '../Fields/FieldGroup';
 import SignatureField from '../Fields/SignatureField';
 import { useTranslations } from '../../hooks/useTranslations';
+import TextArea from '../Fields/TextArea';
 
 const StepField = ({
     metadata,
@@ -67,7 +68,7 @@ const StepField = ({
             case FIELD_TYPES.MULTILINE_STRING:
                 return (
                     <div>
-                        <Notes
+                        <TextArea
                             disabled={isDisabled}
                             onChange={handleSimpleUpdate}
                             title={displayName}

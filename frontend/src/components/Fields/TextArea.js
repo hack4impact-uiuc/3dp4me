@@ -1,8 +1,8 @@
 import React from 'react';
-import './Notes.scss';
+import './TextArea.scss';
 import PropTypes from 'prop-types';
 
-const Notes = ({ title, disabled, fieldId, onChange, value = '' }) => {
+const TextArea = ({ title, disabled, fieldId, onChange, value = '' }) => {
     return (
         <div className="notes-wrapper">
             <div className="notes-header">
@@ -20,7 +20,7 @@ const Notes = ({ title, disabled, fieldId, onChange, value = '' }) => {
     );
 };
 
-Notes.propTypes = {
+TextArea.propTypes = {
     title: PropTypes.string.isRequired,
     disabled: PropTypes.bool.isRequired,
     fieldId: PropTypes.string.isRequired,
@@ -28,4 +28,4 @@ Notes.propTypes = {
     onChange: PropTypes.func.isRequired,
 };
 
-export default Notes;
+export default TextArea;
