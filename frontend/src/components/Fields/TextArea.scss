@@ -1,22 +1,11 @@
 @import '../../styles/colors.scss';
 
-.notes-wrapper {
+.text-area-wrapper {
     width: 350px;
     margin-top: 50px;
     margin-bottom: 25px;
 
-    .notes-header {
-        color: black;
-        width: 100%;
-        padding: 2px;
-        padding-left: 10px;
-
-        h3 {
-            font-weight: 100;
-        }
-    }
-
-    .notes-body {
+    .text-area-body {
         width: 100%;
         font-family: 'Ubuntu';
         max-height: 300px;
@@ -28,13 +17,7 @@
         background: $notesBackground;
     }
 
-    .active-body {
-        min-width: 98%;
-        max-width: 98%;
-        font-family: 'Ubuntu';
-        max-height: 300px;
-        min-height: 100px;
-        font-size: 16px;
+    .active-text-area {
         background: white;
     }
 }

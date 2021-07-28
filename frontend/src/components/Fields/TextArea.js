@@ -4,16 +4,18 @@ import PropTypes from 'prop-types';
 
 const TextArea = ({ title, disabled, fieldId, onChange, value = '' }) => {
     return (
-        <div className="notes-wrapper">
-            <div className="notes-header">
-                <h3>{title}</h3>
-            </div>
+        <div className="text-area-wrapper">
+            <h3>{title}</h3>
             <div>
                 <textarea
                     disabled={disabled}
                     onChange={(e) => onChange(fieldId, e.target.value)}
                     value={value}
-                    className={disabled ? 'notes-body' : 'active-body'}
+                    className={
+                        disabled
+                            ? 'text-area-body'
+                            : 'text-area-body active-text-area'
+                    }
                 />
             </div>
         </div>

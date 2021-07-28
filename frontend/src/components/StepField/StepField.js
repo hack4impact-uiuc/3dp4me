@@ -6,7 +6,6 @@ import { Divider } from '@material-ui/core';
 
 import AudioRecorder from '../AudioRecorder/AudioRecorder';
 import TextField from '../Fields/TextField';
-import Notes from '../Notes/Notes';
 import Files from '../Files/Files';
 import { FIELD_TYPES } from '../../utils/constants';
 import RadioButtonField from '../Fields/RadioButtonField';
