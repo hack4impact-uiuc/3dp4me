@@ -40,7 +40,7 @@ const USER_TABLE_ROW_DATA = [
 ];
 
 const AccountManagement = () => {
-    const selectedLang = useTranslations()[1];
+    const [translations, selectedLang] = useTranslations();
     const [userMetaData, setUserMetaData] = useState([]);
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -178,7 +178,7 @@ const AccountManagement = () => {
                                     : 'patient-list-title'
                             }
                         >
-                            User Database
+                            {translations.accountManagement.userDatabase}
                         </h2>
                     </div>
                 </div>

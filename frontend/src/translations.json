@@ -146,6 +146,7 @@
             }
         },
         "accountManagement": {
+            "userDatabase": "User Database",
             "editAccount": "Edit Account",
             "username": "Username",
             "email": "Email",
@@ -349,6 +350,7 @@
             }
         },
         "accountManagement": {
+            "userDatabase": "User Database",
             "editAccount": "Edit Account",
             "Access": "Access",
             "Approved": "Approved",
