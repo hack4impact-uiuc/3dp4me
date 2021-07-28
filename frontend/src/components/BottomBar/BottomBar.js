@@ -50,7 +50,7 @@ const BottomBar = ({
                 className={className}
                 MenuProps={{ disableScrollLock: true }}
                 onClick={(e) => onStatusChange('status', e.target.value)}
-                defaultValue={status}
+                value={status}
             >
                 <MenuItem value={STEP_STATUS.UNFINISHED}>
                     {translations.components.bottombar.unfinished}
@@ -90,10 +90,18 @@ const BottomBar = ({
             selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button';
 
         return [
-            <Button className={saveBtnClassName} onClick={onSave}>
+            <Button
+                key="bottom-bar-save"
+                className={saveBtnClassName}
+                onClick={onSave}
+            >
                 {translations.components.button.save}
             </Button>,
-            <Button className="discard-button" onClick={onDiscard}>
+            <Button
+                key="bottom-bar-discard"
+                className="discard-button"
+                onClick={onDiscard}
+            >
                 <b>{translations.components.button.discard.title}</b>
             </Button>,
         ];
