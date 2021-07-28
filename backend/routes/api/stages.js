@@ -10,7 +10,6 @@ router.get(
     '/:stage',
     errorWrap(async (req, res) => {
         const { stage } = req.params;
-        let stepData = [];
         const steps = await models.Step.find({ key: stage });
 
         // Check if stage exists in metadata
@@ -22,26 +21,28 @@ router.get(
             });
         }
 
-        const model = await mongoose.model(stage);
+        const model = mongoose.model(stage);
 
-        // TODO: Replace with an aggregation command that gets all patient data then $lookup on patientId for stage
         let patients = await models.Patient.find({
             status: overallStatusEnum.ACTIVE,
-        });
+        }).lean();
 
-        for (let i = 0; i < patients.length; i++) {
-            const stepInfo = await model.findOne({
-                patientId: patients[i]._id.toString(),
+        let lookups = patients.map(async (p) => {
+            const stageInfo = await model.findOne({
+                patientId: p._id.toString(),
             });
 
-            stepData[i] = patients[i].toObject();
-            stepData[i][stage] = stepInfo;
-        }
+            return {
+                ...p,
+                [stage]: stageInfo,
+            };
+        });
 
+        let patientData = await Promise.all(lookups);
         res.status(200).json({
             code: 200,
             success: true,
-            result: stepData,
+            result: patientData,
         });
     }),
 );
