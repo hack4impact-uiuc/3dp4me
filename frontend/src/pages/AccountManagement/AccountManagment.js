@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 
-import { ACCESS_LEVELS, FIELD_TYPES, LANGUAGES } from '../../utils/constants';
+import {
+    ACCESS_LEVELS,
+    COGNITO_ATTRIBUTES,
+    FIELD_TYPES,
+    LANGUAGES,
+} from '../../utils/constants';
 import { getAllRoles, getAllUsers } from '../../utils/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
@@ -12,6 +17,14 @@ import {
     userTableHeaderRenderer,
     userTableRowRenderer,
 } from '../../utils/table-renderers';
+import {
+    getAccessLevel,
+    getEmail,
+    getName,
+    getRoles,
+    getRolesValue,
+    getUsername,
+} from '../../aws/aws-users';
 
 const AccountManagement = () => {
     const selectedLang = useTranslations()[1];
@@ -38,14 +51,26 @@ const AccountManagement = () => {
     }, [setUserMetaData, errorWrap]);
 
     const onUserSelected = (user) => {
-        setSelectedUser(user);
+        const fullUserData = userMetaData.find(
+            (u) => u.Username === user.Username,
+        );
+        setSelectedUser({
+            accessLevel: getAccessLevel(fullUserData),
+            userId: getUsername(fullUserData),
+            userName: getName(fullUserData),
+            userEmail: getEmail(fullUserData),
+            roles: getRolesValue(fullUserData),
+        });
     };
 
     const onUserEdited = (username, accessLevel, roles) => {
         setUserMetaData((metaData) => {
-            const updatedAccess = { Name: 'custom:access', Value: accessLevel };
+            const updatedAccess = {
+                Name: COGNITO_ATTRIBUTES.ACCESS,
+                Value: accessLevel,
+            };
             const updatedRoles = {
-                Name: 'custom:security_roles',
+                Name: COGNITO_ATTRIBUTES.ROLES,
                 Value: JSON.stringify(roles),
             };
 
@@ -67,54 +92,11 @@ const AccountManagement = () => {
     };
 
     const transformData = (users) => {
-        const getInfo = (user, atr) => {
-            return user?.Attributes?.find((attribute) => attribute.Name === atr)
-                ?.Value;
-        };
-
-        const getAccessLevelValue = (user) => {
-            return getInfo(user, 'custom:access') || ACCESS_LEVELS.PENDING;
-        };
-
-        const getAccessLevel = (user) => {
-            const access = getAccessLevelValue(user);
-            return access;
-            //return statusStyle[access];
-        };
-
-        const getName = (user) => {
-            return getInfo(user, 'name') || user.Username;
-        };
-
-        const getId = (user) => {
-            return user.Username;
-        };
-
-        const getRolesValue = (user) => {
-            const info = getInfo(user, 'custom:security_roles');
-            return info ? JSON.parse(info) : [];
-        };
-
-        const getRoles = (user) => {
-            let roles = getRolesValue(user);
-            if (roles.length === 0) return 'Not Assigned';
-
-            roles = roles.map((r) => {
-                for (let i = 0; i < rolesData.length; i += 1) {
-                    if (r === rolesData[i]._id)
-                        return rolesData[i]?.Question[selectedLang];
-                }
-
-                return 'Unrecognized role';
-            });
-
-            return roles.join(', ');
-        };
-
         return users.map((user) => ({
+            Username: getUsername(user),
             Name: getName(user),
-            Email: getInfo(user, 'email'),
-            Roles: getRoles(user),
+            Email: getEmail(user),
+            Roles: getRoles(user, rolesData, selectedLang),
             Access: getAccessLevel(user),
         }));
     };

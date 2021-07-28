@@ -32,6 +32,8 @@ const EditRoleModal = ({
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
     const errorWrap = useErrorWrap();
 
+    console.log(userInfo);
+
     useEffect(() => {
         setUserData(_.cloneDeep(userInfo));
     }, [userInfo]);
@@ -146,12 +148,21 @@ EditRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onUserEdited: PropTypes.func.isRequired,
-    allRoles: PropTypes.arrayOf(PropTypes.string),
+    allRoles: PropTypes.arrayOf(
+        PropTypes.shape({
+            _id: PropTypes.string,
+            IsHidden: PropTypes.bool,
+            Question: PropTypes.shape({
+                EN: PropTypes.string,
+                AR: PropTypes.string,
+            }),
+        }),
+    ),
     userInfo: PropTypes.shape({
         userId: PropTypes.string,
         userName: PropTypes.string,
         userEmail: PropTypes.string,
-        roles: PropTypes.arrayOf(PropTypes.String),
+        roles: PropTypes.arrayOf(PropTypes.string),
     }),
 };
 
