@@ -8,6 +8,7 @@ import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { useTranslations } from '../../hooks/useTranslations';
 import MainTable from '../../components/Table/MainTable';
 import {
+    generateUserTableRowRenderer,
     userTableHeaderRenderer,
     userTableRowRenderer,
 } from '../../utils/table-renderers';
@@ -137,15 +138,13 @@ const AccountManagement = () => {
             { id: 'Access', dataType: FIELD_TYPES.STRING },
         ];
 
-        console.log(userMetaData);
         return (
             <MainTable
                 data={transformData(userMetaData)}
                 headers={headings}
                 rowData={rowData}
                 renderHeader={userTableHeaderRenderer}
-                renderTableRow={userTableRowRenderer}
-                onUserSelected={onUserSelected}
+                renderTableRow={generateUserTableRowRenderer(onUserSelected)}
             />
         );
     }

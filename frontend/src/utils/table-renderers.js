@@ -154,30 +154,45 @@ export const patientTableHeaderRenderer = (
 };
 
 /**
- * Renders a single row of user data. Uses the default render and adds a column
- * at the end that links to user editing modal
+ * This is an object instead of a function because we need to bind onSelected. See generateUserTableRowRenderer.
  */
-export const userTableRowRenderer = (
-    rowData,
-    user,
-    selectedLang,
-    onSelected,
-) => {
-    // Construct the base row
-    let row = defaultTableRowRenderer(rowData, user, selectedLang);
+const userTableRowRenderer = {
+    /**
+     * Function called when a user is selected
+     */
+    onSelected: undefined,
 
-    // Add the edit button
-    row.push(
-        <StyledTableCell className="cell" align="center">
-            <IconButton onClick={() => onSelected(user)}>
-                <img alt="status icon" width="18px" src={Eyecon} />
-            </IconButton>{' '}
-            {translations[selectedLang].components.table.edit}
-        </StyledTableCell>,
-    );
+    /**
+     * Renders a single row of user data. Uses the default render and adds a column
+     * at the end that links to user editing modal
+     */
+    Renderer: function (rowData, user, selectedLang) {
+        // Construct the base row
+        let row = defaultTableRowRenderer(rowData, user, selectedLang);
 
-    return row;
+        // Add the edit button
+        row.push(
+            <StyledTableCell className="cell" align="center">
+                <IconButton onClick={() => this.onSelected(user)}>
+                    <img alt="status icon" width="18px" src={Eyecon} />
+                </IconButton>{' '}
+                {translations[selectedLang].components.table.edit}
+            </StyledTableCell>,
+        );
+
+        return row;
+    },
 };
+
+/**
+ * Creates a userTableRowRenderer with onSelected bound
+ * @param {Function} onSelected The function to bind to onSelected
+ * @returns The bound renderer
+ */
+export const generateUserTableRowRenderer = (onSelected) =>
+    userTableRowRenderer.Renderer.bind({
+        onSelected: onSelected,
+    });
 
 /**
  * Renders header for user data. Uses the default render and adds a column
