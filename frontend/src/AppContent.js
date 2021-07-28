@@ -12,7 +12,7 @@ import ErrorModal from './components/ErrorModal/ErrorModal';
 import {
     REDUCER_ACTIONS,
     LANGUAGES,
-    LANGUAGE_ATTRIBUTE_KEY,
+    COGNITO_ATTRIBUTES,
 } from './utils/constants';
 import { Context } from './store/Store';
 import { useTranslations } from './hooks/useTranslations';
@@ -27,7 +27,7 @@ function AppContent({ username, userEmail }) {
             const userInfo = await getCurrentUserInfo();
             if (!userInfo?.attributes) return;
 
-            const language = userInfo.attributes[LANGUAGE_ATTRIBUTE_KEY];
+            const language = userInfo.attributes[COGNITO_ATTRIBUTES.LANGUAGE];
             if (isLanguageValid(language)) {
                 dispatch({
                     type: REDUCER_ACTIONS.SET_LANGUAGE,

@@ -1,34 +1,29 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Logo from '../../assets/3dp4me_logo.png';
 import AccountDropdown from '../AccountDropdown/AccountDropdown';
-import './Navbar.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
+import './Navbar.scss';
+import { useStyles } from './Navbar.style';
 
-const useStyles = makeStyles((theme) => ({
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        boxShadow: '0px 0px 4px 0 rgba(0,0,0,0.25)',
-    },
-    toolBar: {
-        minHeight: '48px',
-    },
-    navTitle: {
-        fontWeight: 'bold',
-    },
-}));
+const ROUTES = {
+    DASHBOARD: '/',
+    PATIENTS: '/patients',
+    METRICS: '/metrics',
+    ACCOUNT: '/account',
+};
 
 const Navbar = ({ username, userEmail }) => {
     const [translations, selectedLang] = useTranslations();
     const classes = useStyles();
-    const [active, setActive] = useState('dashboard');
+    const [activeRoute, setActiveRoute] = useState(ROUTES.DASHBOARD);
     const [anchorEl, setAnchorEl] = useState(null);
+    const navTranslations = translations.components.navbar;
 
     const handleAccountClick = (e) => {
         setAnchorEl(e.currentTarget);
@@ -36,6 +31,20 @@ const Navbar = ({ username, userEmail }) => {
 
     const handleAccountClose = () => {
         setAnchorEl(null);
+    };
+
+    const renderLink = (text, route) => {
+        const activeClass = activeRoute === route ? 'active' : '';
+
+        return (
+            <Link
+                className={`nav-item ${activeClass}`}
+                onClick={() => setActiveRoute(route)}
+                to={`${route}`}
+            >
+                {text}
+            </Link>
+        );
     };
 
     return (
@@ -52,52 +61,29 @@ const Navbar = ({ username, userEmail }) => {
                     />
 
                     <Link
-                        onClick={() => setActive('dashboard')}
+                        onClick={() => setActiveRoute(ROUTES.DASHBOARD)}
                         id="nav-title"
                         className={`${classes.navTitle} nav-item`}
-                        to="/"
+                        to={ROUTES.DASHBOARD}
                     >
                         {translations.components.navbar.dashboard.navTitle}
                     </Link>
-                    <Link
-                        className={`nav-item ${
-                            active === 'dashboard' ? 'active' : ''
-                        }`}
-                        onClick={() => setActive('dashboard')}
-                        to="/"
-                    >
-                        {translations.components.navbar.dashboard.navTitle}
-                    </Link>
-                    <Link
-                        className={`nav-item ${
-                            active === 'patients' ? 'active' : ''
-                        }`}
-                        onClick={() => setActive('patients')}
-                        to="/patients"
-                    >
-                        {translations.components.navbar.patients.navTitle}
-                    </Link>
-                    <Link
-                        className={`nav-item ${
-                            active === 'metrics' ? 'active' : ''
-                        }`}
-                        onClick={() => setActive('metrics')}
-                        to="/metrics"
-                    >
-                        {translations.components.navbar.metrics.navTitle}
-                    </Link>
-                    <Link
-                        className={`nav-item ${
-                            active === 'account' ? 'active' : ''
-                        }`}
-                        onClick={() => setActive('account')}
-                        to="/account"
-                    >
-                        {
-                            translations.components.navbar.accountManagement
-                                .navTitle
-                        }
-                    </Link>
+                    {renderLink(
+                        navTranslations.dashboard.navTitle,
+                        ROUTES.DASHBOARD,
+                    )}
+                    {renderLink(
+                        navTranslations.patients.navTitle,
+                        ROUTES.PATIENTS,
+                    )}
+                    {renderLink(
+                        navTranslations.metrics.navTitle,
+                        ROUTES.METRICS,
+                    )}
+                    {renderLink(
+                        navTranslations.accountManagement.navTitle,
+                        ROUTES.ACCOUNT,
+                    )}
                     <AccountCircleIcon
                         className="accountCircle"
                         aria-controls="account-dropdown-menu"
