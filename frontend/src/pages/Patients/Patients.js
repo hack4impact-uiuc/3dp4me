@@ -7,7 +7,7 @@ import swal from 'sweetalert';
 import reactSwal from '@sweetalert/with-react';
 
 import { getPatientName } from '../../utils/utils';
-import MainTable from '../../components/Table/MainTable';
+import Table from '../../components/Table/Table';
 import search from '../../assets/search.svg';
 import archive from '../../assets/archive.svg';
 import { getAllPatients } from '../../utils/api';
@@ -305,7 +305,7 @@ const Patients = () => {
                     </div>
                 </div>
             </div>
-            <MainTable
+            <Table
                 headers={REQUIRED_DASHBOARD_HEADERS}
                 rowData={REQUIRED_DASHBOARD_SORT_KEYS}
                 renderHeader={patientTableHeaderRenderer}

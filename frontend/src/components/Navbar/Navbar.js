@@ -8,6 +8,7 @@ import Logo from '../../assets/3dp4me_logo.png';
 import AccountDropdown from '../AccountDropdown/AccountDropdown';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
+
 import './Navbar.scss';
 import { useStyles } from './Navbar.style';
 

@@ -13,7 +13,7 @@ import {
     REQUIRED_DASHBOARD_HEADERS,
     LANGUAGES,
 } from '../../utils/constants';
-import MainTable from '../../components/Table/MainTable';
+import Table from '../../components/Table/Table';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import search from '../../assets/search.svg';
 import {
@@ -306,7 +306,7 @@ const Dashboard = () => {
             if (step !== element.key) return null;
 
             return (
-                <MainTable
+                <Table
                     key={`table-${element.key}`}
                     renderHeader={patientTableHeaderRenderer}
                     renderTableRow={patientTableRowRenderer}

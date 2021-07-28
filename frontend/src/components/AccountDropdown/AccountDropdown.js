@@ -10,6 +10,7 @@ import { saveLanguagePreference, signOut } from '../../aws/aws-helper';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES, REDUCER_ACTIONS } from '../../utils/constants';
 import { Context } from '../../store/Store';
+
 import { useStyles } from './AccountDropdown.styles';
 
 const AccountDropdown = ({

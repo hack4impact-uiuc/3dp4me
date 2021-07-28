@@ -1,24 +1,20 @@
 import React from 'react';
-import Table from '@material-ui/core/Table';
+import MaterialUITable from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
-import './MainTable.scss';
+
 import useSortableData from '../../hooks/useSortableData';
 import { TableHeaderType } from '../../utils/custom-proptypes';
 import { useTranslations } from '../../hooks/useTranslations';
-import { StyledTableRow } from './MainTable.style';
 
-const MainTable = ({
-    data,
-    headers,
-    rowData,
-    renderHeader,
-    renderTableRow,
-}) => {
+import { StyledTableRow } from './Table.style';
+import './Table.scss';
+
+const Table = ({ data, headers, rowData, renderHeader, renderTableRow }) => {
     const selectedLang = useTranslations()[1];
     const { sortedData, requestSort, sortConfig } = useSortableData(data);
 
@@ -35,7 +31,7 @@ const MainTable = ({
     return (
         <div className="table-container">
             <TableContainer className="table-container" component={Paper}>
-                <Table stickyHeader className="table">
+                <MaterialUITable stickyHeader className="table">
                     <TableHead>
                         <TableRow>
                             {renderHeader(
@@ -49,13 +45,13 @@ const MainTable = ({
                     <TableBody className="table-body">
                         {renderTableBody()}
                     </TableBody>
-                </Table>
+                </MaterialUITable>
             </TableContainer>
         </div>
     );
 };
 
-MainTable.propTypes = {
+Table.propTypes = {
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
     renderHeader: PropTypes.func.isRequired,
     renderTableRow: PropTypes.func.isRequired,
@@ -68,4 +64,4 @@ MainTable.propTypes = {
     ).isRequired,
 };
 
-export default MainTable;
+export default Table;

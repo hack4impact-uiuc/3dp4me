@@ -31,7 +31,7 @@ function AppContent({ username, userEmail }) {
             if (isLanguageValid(language)) {
                 dispatch({
                     type: REDUCER_ACTIONS.SET_LANGUAGE,
-                    language: language,
+                    language,
                 });
             }
         };

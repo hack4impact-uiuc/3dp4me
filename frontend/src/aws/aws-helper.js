@@ -1,4 +1,5 @@
 import { Auth } from 'aws-amplify';
+
 import { COGNITO_ATTRIBUTES } from '../utils/constants';
 
 // Used as a placeholder while fetching real data

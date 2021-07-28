@@ -1,4 +1,13 @@
 import React from 'react';
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
+
+import finishedIcon from '../assets/check.svg';
+import partiallyIcon from '../assets/half-circle.svg';
+import unfinishedIcon from '../assets/exclamation.svg';
+import translations from '../translations.json';
+
+import { formatDate } from './date';
 import {
     ACCESS_LEVELS,
     FIELD_TYPES,
@@ -6,13 +15,6 @@ import {
     SIGNATURE_STATUS,
     STEP_STATUS,
 } from './constants';
-import { formatDate } from './date';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
-import finishedIcon from '../assets/check.svg';
-import partiallyIcon from '../assets/half-circle.svg';
-import unfinishedIcon from '../assets/exclamation.svg';
-import translations from '../translations.json';
 
 const statusToString = (status, selectedLang) => {
     const bottomBarTranslations =

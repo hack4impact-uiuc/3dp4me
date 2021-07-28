@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { useState, useMemo } from 'react';
+
 import { SORT_DIRECTIONS } from '../utils/constants';
 import { resolveObjPath } from '../utils/object';
 
@@ -39,7 +40,7 @@ const useSortableData = (data) => {
         }
 
         return sortableData;
-    }, [data, sortConfig]);
+    }, [data, sortableData, sortConfig]);
 
     /**
      * Circularly toggles from up to down to none
@@ -62,9 +63,9 @@ const useSortableData = (data) => {
     };
 
     return {
-        sortedData: sortedData,
-        requestSort: requestSort,
-        sortConfig: sortConfig,
+        sortedData,
+        requestSort,
+        sortConfig,
     };
 };
 

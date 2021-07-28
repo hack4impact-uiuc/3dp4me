@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 
 import {
-    ACCESS_LEVELS,
     COGNITO_ATTRIBUTES,
     FIELD_TYPES,
     LANGUAGES,
@@ -11,7 +10,7 @@ import { getAllRoles, getAllUsers } from '../../utils/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { useTranslations } from '../../hooks/useTranslations';
-import MainTable from '../../components/Table/MainTable';
+import Table from '../../components/Table/Table';
 import {
     generateUserTableRowRenderer,
     userTableHeaderRenderer,
@@ -143,7 +142,7 @@ const AccountManagement = () => {
 
     function generateMainUserTable() {
         return (
-            <MainTable
+            <Table
                 data={usersToTableFormat(userMetaData)}
                 headers={USER_TABLE_HEADERS}
                 rowData={USER_TABLE_ROW_DATA}

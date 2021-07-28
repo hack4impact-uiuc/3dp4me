@@ -1,14 +1,16 @@
 import React from 'react';
-import { StyledTableCell } from '../components/Table/MainTable.style';
-import { LANGUAGES, SORT_DIRECTIONS } from './constants';
-import { fieldToJSX } from './fields';
-import { resolveObjPath } from './object';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import { Link } from 'react-router-dom';
 import { IconButton } from '@material-ui/core';
+
+import { StyledTableCell } from '../components/Table/Table.style';
 import Eyecon from '../assets/view.svg';
 import translations from '../translations.json';
+
+import { resolveObjPath } from './object';
+import { fieldToJSX } from './fields';
+import { LANGUAGES, SORT_DIRECTIONS } from './constants';
 
 /**
  * Given item data, a field key, and a field type, this function finds
@@ -31,7 +33,7 @@ const getField = (data, fieldKey, fieldType, selectedLang) => {
  * @returns The arrow
  */
 const renderSortArrow = (sortConfig, sortKey) => {
-    if (!sortConfig || sortConfig.key !== sortKey) return;
+    if (!sortConfig || sortConfig.key !== sortKey) return null;
 
     switch (sortConfig.direction) {
         case SORT_DIRECTIONS.AESC:
@@ -60,7 +62,7 @@ export const defaultTableRowRenderer = (rowData, itemData, selectedLang) => {
     const cellAlign = selectedLang === LANGUAGES.AR ? 'right' : 'left';
 
     // Construct a cell for each piece of data
-    let row = rowData.map(({ id, dataType }) => (
+    const row = rowData.map(({ id, dataType }) => (
         <StyledTableCell
             className={cellClassName}
             key={`${itemData._id}-${id}`}
@@ -90,7 +92,7 @@ export const defaultTableHeaderRenderer = (
     const cellClassName =
         selectedLang === LANGUAGES.AR ? 'cell-align-rtl' : 'cell-align';
 
-    let headerCells = headers.map((header) => (
+    const headerCells = headers.map((header) => (
         <StyledTableCell
             onClick={() => onRequestSort(header.sortKey)}
             className="header"
@@ -113,7 +115,7 @@ export const defaultTableHeaderRenderer = (
  */
 export const patientTableRowRenderer = (rowData, patient, selectedLang) => {
     // Construct the base row
-    let row = defaultTableRowRenderer(rowData, patient, selectedLang);
+    const row = defaultTableRowRenderer(rowData, patient, selectedLang);
 
     // Add a link to the patient's page
     row.push(
@@ -143,7 +145,7 @@ export const patientTableHeaderRenderer = (
     onRequestSort,
     selectedLang,
 ) => {
-    let headerCells = defaultTableHeaderRenderer(
+    const headerCells = defaultTableHeaderRenderer(
         headers,
         sortConfig,
         onRequestSort,
@@ -166,9 +168,9 @@ const userTableRowRenderer = {
      * Renders a single row of user data. Uses the default render and adds a column
      * at the end that links to user editing modal
      */
-    Renderer: function (rowData, user, selectedLang) {
+    Renderer(rowData, user, selectedLang) {
         // Construct the base row
-        let row = defaultTableRowRenderer(rowData, user, selectedLang);
+        const row = defaultTableRowRenderer(rowData, user, selectedLang);
 
         // Add the edit button
         row.push(
@@ -191,7 +193,7 @@ const userTableRowRenderer = {
  */
 export const generateUserTableRowRenderer = (onSelected) =>
     userTableRowRenderer.Renderer.bind({
-        onSelected: onSelected,
+        onSelected,
     });
 
 /**
@@ -204,7 +206,7 @@ export const userTableHeaderRenderer = (
     onRequestSort,
     selectedLang,
 ) => {
-    let headerCells = defaultTableHeaderRenderer(
+    const headerCells = defaultTableHeaderRenderer(
         headers,
         sortConfig,
         onRequestSort,
