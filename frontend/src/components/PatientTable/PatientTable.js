@@ -13,6 +13,7 @@ import { getPatientName } from '../../utils/utils';
 import CreatePatientModal from '../CreatePatientModal/CreatePatientModal';
 import Table from '../Table/Table';
 import { TableRowType, TableHeaderType } from '../../utils/custom-proptypes';
+import { ROUTES } from '../../utils/constants';
 
 /**
  * A table to be used with patient data. Same as a normal <Table/> element,
@@ -62,7 +63,17 @@ const PatientTable = ({
      */
     const onSaveAndEditPatient = async (patientData) => {
         const patientId = await onSavePatient(patientData);
-        if (patientId) window.location.href += `patient-info/${patientId}`;
+        let currentRoute = window.location.href;
+        let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}`;
+
+        // Remove doulbe '/'
+        if (
+            relativeRoute[0] === '/' &&
+            currentRoute[currentRoute.length - 1] === '/'
+        )
+            relativeRoute = relativeRoute.substr(1, relativeRoute.length - 1);
+
+        if (patientId) window.location.href = currentRoute + relativeRoute;
     };
 
     /**

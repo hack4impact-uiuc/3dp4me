@@ -12,6 +12,7 @@ import {
     REDUCER_ACTIONS,
     LANGUAGES,
     COGNITO_ATTRIBUTES,
+    ROUTES,
 } from './utils/constants';
 import { Context } from './store/Store';
 import { useTranslations } from './hooks/useTranslations';
@@ -65,19 +66,22 @@ function AppContent({ username, userEmail }) {
                         } content`}
                     >
                         <Switch>
-                            <Route exact path="/">
+                            <Route exact path={ROUTES.DASHBOARD}>
                                 <Dashboard />
                             </Route>
-                            <Route exact path="/account">
+                            <Route exact path={ROUTES.ACCOUNT}>
                                 <AccountManagement />
                             </Route>
-                            <Route exact path="/patients">
+                            <Route exact path={ROUTES.PATIENTS}>
                                 <Patients />
                             </Route>
-                            <Route exact path="/patient-info/:patientId">
+                            <Route
+                                exact
+                                path={`${ROUTES.PATIENT_DETAIL}/:patientId`}
+                            >
                                 <Controller />
                             </Route>
-                            <Route exact path="/section-tab">
+                            <Route exact path={ROUTES.DASHBOARD_MANAGEMENT}>
                                 <SectionTab />
                             </Route>
                         </Switch>

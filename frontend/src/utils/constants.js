@@ -1,3 +1,11 @@
+export const ROUTES = {
+    DASHBOARD: '/',
+    PATIENTS: '/patients',
+    ACCOUNT: '/account',
+    DASHBOARD_MANAGEMENT: '/section-tab',
+    PATIENT_DETAIL: '/patient-info',
+};
+
 export const SORT_DIRECTIONS = {
     AESC: 'ascending',
     DESC: 'descending',

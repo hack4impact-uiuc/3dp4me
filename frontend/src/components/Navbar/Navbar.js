@@ -7,16 +7,10 @@ import PropTypes from 'prop-types';
 import Logo from '../../assets/3dp4me_logo.png';
 import AccountDropdown from '../AccountDropdown/AccountDropdown';
 import { useTranslations } from '../../hooks/useTranslations';
-import { LANGUAGES } from '../../utils/constants';
+import { LANGUAGES, ROUTES } from '../../utils/constants';
 
 import './Navbar.scss';
 import { useStyles } from './Navbar.style';
-
-const ROUTES = {
-    DASHBOARD: '/',
-    PATIENTS: '/patients',
-    ACCOUNT: '/account',
-};
 
 const Navbar = ({ username, userEmail }) => {
     const [translations, selectedLang] = useTranslations();
