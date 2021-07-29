@@ -4,7 +4,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import _ from 'lodash';
-import './Controller.scss';
+import './PatientDetail.scss';
 import {
     Accordion,
     AccordionDetails,
@@ -15,7 +15,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 
-import StepContent from '../StepContent/StepContent';
+import StepContent from '../../steps/StepContent/StepContent';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
 import {
@@ -38,7 +38,7 @@ const enTheme = createMuiTheme({
     direction: 'ltr',
 });
 
-const Controller = () => {
+const PatientDetail = () => {
     const [translations, selectedLang] = useTranslations();
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -307,4 +307,4 @@ const Controller = () => {
     );
 };
 
-export default Controller;
+export default PatientDetail;

@@ -10,6 +10,9 @@ import {
 } from '../../utils/constants';
 import './Patients.scss';
 
+/**
+ * Shows a table of all patients within the system
+ */
 const Patients = () => {
     const translations = useTranslations()[0];
     const [allPatients, setAllPatients] = useState([]);

@@ -12,6 +12,9 @@ import './Dashboard.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
 
+/**
+ * Shows a table of active patients, with a different table for each step
+ */
 const Dashboard = () => {
     const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();

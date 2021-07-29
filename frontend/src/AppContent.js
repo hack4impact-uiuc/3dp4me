@@ -6,7 +6,7 @@ import AccountManagement from './pages/AccountManagement/AccountManagment';
 import Patients from './pages/Patients/Patients';
 import Navbar from './components/Navbar/Navbar';
 import SectionTab from './components/SectionTab/SectionTab';
-import Controller from './steps/Controller/Controller';
+import PatientDetail from './pages/PatientDetail/PatientDetail';
 import ErrorModal from './components/ErrorModal/ErrorModal';
 import {
     REDUCER_ACTIONS,
@@ -79,7 +79,7 @@ function AppContent({ username, userEmail }) {
                                 exact
                                 path={`${ROUTES.PATIENT_DETAIL}/:patientId`}
                             >
-                                <Controller />
+                                <PatientDetail />
                             </Route>
                             <Route exact path={ROUTES.DASHBOARD_MANAGEMENT}>
                                 <SectionTab />
