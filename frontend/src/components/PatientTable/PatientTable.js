@@ -63,7 +63,7 @@ const PatientTable = ({
      */
     const onSaveAndEditPatient = async (patientData) => {
         const patientId = await onSavePatient(patientData);
-        let currentRoute = window.location.href;
+        const currentRoute = window.location.href;
         let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}`;
 
         // Remove doulbe '/'

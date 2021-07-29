@@ -1,33 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Snackbar, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import './Patients.scss';
-import MuiAlert from '@material-ui/lab/Alert';
-import swal from 'sweetalert';
-import reactSwal from '@sweetalert/with-react';
 
-import { getPatientName } from '../../utils/utils';
-import Table from '../../components/Table/Table';
-import search from '../../assets/search.svg';
-import archive from '../../assets/archive.svg';
 import { getAllPatients } from '../../utils/api';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { useTranslations } from '../../hooks/useTranslations';
+import PatientTable from '../../components/PatientTable/PatientTable';
 import {
     ALL_PATIENT_DASHBOARD_HEADERS,
     ALL_PATIENT_DASHBOARD_ROW_DATA,
-    LANGUAGES,
-    REQUIRED_DASHBOARD_HEADERS,
-    REQUIRED_DASHBOARD_SORT_KEYS,
 } from '../../utils/constants';
-import { useErrorWrap } from '../../hooks/useErrorWrap';
-import { useTranslations } from '../../hooks/useTranslations';
-import {
-    patientTableHeaderRenderer,
-    patientTableRowRenderer,
-} from '../../utils/table-renderers';
-import PatientTable from '../../components/PatientTable/PatientTable';
+import './Patients.scss';
 
 const Patients = () => {
-    const [translations, selectedLang] = useTranslations();
+    const translations = useTranslations()[0];
     const [allPatients, setAllPatients] = useState([]);
     const errorWrap = useErrorWrap();
 
