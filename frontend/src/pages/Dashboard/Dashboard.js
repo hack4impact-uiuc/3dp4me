@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import MuiAlert from '@material-ui/lab/Alert';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
 
@@ -26,8 +25,6 @@ import {
     patientTableRowRenderer,
 } from '../../utils/table-renderers';
 import CreatePatientModal from '../../components/CreatePatientModal/CreatePatientModal';
-
-const CLOSE_REASON_CLICKAWAY = 'clickaway';
 
 const Dashboard = () => {
     const errorWrap = useErrorWrap();
@@ -132,12 +129,6 @@ const Dashboard = () => {
         setFilteredPatients(filtered);
     };
 
-    const onCloseSnackbar = (event, reason) => {
-        if (reason === CLOSE_REASON_CLICKAWAY) return;
-
-        setSnackbarOpen(false);
-    };
-
     /**
      * Called when the user selects a new step to view. Sets the step
      * and refetches patient data for this step
@@ -239,21 +230,6 @@ const Dashboard = () => {
                 onSave={onSavePatient}
                 onSaveAndEdit={onSaveAndEditPatient}
             />
-
-            <Snackbar
-                open={isSnackbarOpen}
-                autoHideDuration={3000}
-                onClose={onCloseSnackbar}
-            >
-                <MuiAlert
-                    onClose={onCloseSnackbar}
-                    severity="error"
-                    elevation={6}
-                    variant="filled"
-                >
-                    {translations.components.table.noPatientsFound}
-                </MuiAlert>
-            </Snackbar>
 
             <div className="tabs">
                 <ToggleButtons

@@ -1,17 +1,116 @@
-import React from 'react';
+import React, { useState } from 'react';
+import search from '../../assets/search.svg';
 import SimpleTable from '../SimpleTable/SimpleTable';
 import PropTypes from 'prop-types';
+import MuiAlert from '@material-ui/lab/Alert';
 import { TableHeaderType } from '../../utils/custom-proptypes';
+import { LANGUAGES } from '../../utils/constants';
+import { useTranslations } from '../../hooks/useTranslations';
+import { Button, Snackbar, TextField } from '@material-ui/core';
 
-const Table = ({ data, headers, rowData, renderHeader, renderTableRow }) => {
+const CLOSE_REASON_CLICKAWAY = 'clickaway';
+
+/**
+ * Wraps <SimpleTable />, adding search and the ability to add items
+ */
+const Table = ({
+    doesRowMatchQuery,
+    tableTitle,
+    data,
+    headers,
+    rowData,
+    renderHeader,
+    renderTableRow,
+}) => {
+    const [translations, selectedLang] = useTranslations();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+    const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+
+    /**
+     * Updates the search bar and filtered patients
+     */
+    const handleSearch = (e) => {
+        setSearchQuery(e.target.value);
+
+        const filtered = data.filter((row) =>
+            doesRowMatchQuery(row, e.target.value),
+        );
+
+        setSnackbarOpen(filtered.length === 0);
+        setFilteredData(filtered);
+    };
+
+    const onCloseSnackbar = (event, reason) => {
+        if (reason === CLOSE_REASON_CLICKAWAY) return;
+
+        setSnackbarOpen(false);
+    };
+
+    const setCreatePatientModalOpen = () => {};
+
     return (
-        <SimpleTable
-            data={data}
-            headers={headers}
-            rowData={rowData}
-            renderHeader={renderHeader}
-            renderTableRow={renderTableRow}
-        />
+        <div>
+            <Snackbar
+                open={isSnackbarOpen}
+                autoHideDuration={3000}
+                onClose={onCloseSnackbar}
+            >
+                <MuiAlert
+                    onClose={onCloseSnackbar}
+                    severity="error"
+                    elevation={6}
+                    variant="filled"
+                >
+                    {translations.components.table.noPatientsFound}
+                </MuiAlert>
+            </Snackbar>
+
+            <div className="header">
+                <div className="section">
+                    <h2
+                        className={
+                            selectedLang === LANGUAGES.AR
+                                ? 'patient-list-title-ar'
+                                : 'patient-list-title'
+                        }
+                    >
+                        <p>{tableTitle}</p>
+                    </h2>
+                    <TextField
+                        InputProps={{
+                            startAdornment: (
+                                <img
+                                    alt="star"
+                                    style={{ marginRight: '10px' }}
+                                    src={search}
+                                    width="16px"
+                                />
+                            ),
+                        }}
+                        className="patient-list-search-field"
+                        onChange={handleSearch}
+                        value={searchQuery}
+                        size="small"
+                        variant="outlined"
+                        placeholder={translations.components.search.placeholder}
+                    />
+                    <Button
+                        className="create-patient-button"
+                        onClick={() => setCreatePatientModalOpen(true)}
+                    >
+                        {translations.components.button.createPatient}
+                    </Button>
+                </div>
+            </div>
+            <SimpleTable
+                data={filteredData?.length ? filteredData : data}
+                headers={headers}
+                rowData={rowData}
+                renderHeader={renderHeader}
+                renderTableRow={renderTableRow}
+            />
+        </div>
     );
 };
 

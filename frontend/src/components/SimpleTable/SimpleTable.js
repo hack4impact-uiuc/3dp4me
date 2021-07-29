@@ -14,6 +14,9 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { StyledTableRow } from './SimpleTable.style';
 import './SimpleTable.scss';
 
+/**
+ * Just a normal, old, simple table.
+ */
 const SimpleTable = ({
     data,
     headers,
