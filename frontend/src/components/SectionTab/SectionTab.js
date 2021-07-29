@@ -92,8 +92,8 @@ const SectionTab = () => {
             (field) => field.stepNumber === foundField.stepNumber + 1,
         );
         if (foundField.stepNumber !== updatedMetadata.length - 1) {
-            foundField.stepNumber += 1;
-            afterField.stepNumber -= 1;
+            foundField.stepNumber++;
+            afterField.stepNumber--;
             const sortedMetadata = SortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
@@ -109,8 +109,8 @@ const SectionTab = () => {
         const afterField = root.find((f) => f.fieldNumber === fieldNumber + 1);
 
         if (foundField && afterField) {
-            foundField.fieldNumber += 1;
-            afterField.fieldNumber -= 1;
+            foundField.fieldNumber++;
+            afterField.fieldNumber--;
             const sortedMetadata = SortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
@@ -126,8 +126,8 @@ const SectionTab = () => {
         );
 
         if (foundField && beforeField) {
-            foundField.stepNumber -= 1;
-            beforeField.stepNumber += 1;
+            foundField.stepNumber--;
+            beforeField.stepNumber++;
             const sortedMetadata = SortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
@@ -142,8 +142,8 @@ const SectionTab = () => {
         const foundField = root.find((f) => f.fieldNumber === fieldNumber);
         const beforeField = root.find((f) => f.fieldNumber === fieldNumber - 1);
         if (foundField.fieldNumber !== 0) {
-            foundField.fieldNumber -= 1;
-            beforeField.fieldNumber += 1;
+            foundField.fieldNumber--;
+            beforeField.fieldNumber++;
             const sortedMetadata = SortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }

@@ -30,7 +30,7 @@ export const getRoles = (user, allRolesData, selectedLang) => {
     if (roles.length === 0) return 'Not Assigned';
 
     roles = roles.map((r) => {
-        for (let i = 0; i < allRolesData.length; i += 1) {
+        for (let i = 0; i < allRolesData.length; i++) {
             if (r === allRolesData[i]._id)
                 return allRolesData[i]?.Question[selectedLang];
         }

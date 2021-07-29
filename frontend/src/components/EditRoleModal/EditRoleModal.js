@@ -46,7 +46,7 @@ const EditRoleModal = ({
 
     const onSave = async () => {
         // Update users roles
-        for (let i = 0; i < allRoles.length; i += 1) {
+        for (let i = 0; i < allRoles.length; i++) {
             const role = allRoles[i];
 
             // If user has role

@@ -89,7 +89,7 @@ const FieldGroup = ({
         const numFieldGroups = getNumFields();
         const groups = [];
 
-        for (let i = 0; i < numFieldGroups; i += 1) {
+        for (let i = 0; i < numFieldGroups; i++) {
             groups.push(
                 <h3>{`${metadata?.displayName[selectedLang]} ${i + 1}`}</h3>,
             );
