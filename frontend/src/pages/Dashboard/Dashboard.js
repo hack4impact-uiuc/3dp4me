@@ -29,7 +29,6 @@ import CreatePatientModal from '../../components/CreatePatientModal/CreatePatien
 const Dashboard = () => {
     const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();
-    const [searchQuery, setSearchQuery] = useState('');
     const [isCreatePatientModalOpen, setCreatePatientModalOpen] = useState(
         false,
     );
@@ -42,9 +41,6 @@ const Dashboard = () => {
 
     // Currently selected step
     const [selectedStep, setSelectedStep] = useState('');
-
-    // A list of filtered patients according to the search query
-    const [filteredPatients, setFilteredPatients] = useState([]);
 
     /**
      * Gets metadata for all setps
@@ -129,6 +125,9 @@ const Dashboard = () => {
         });
     };
 
+    /**
+     * Gets the display name of the currently selected step
+     */
     function getTableTitle() {
         if (stepsMetaData == null) return translations.components.table.loading;
 
@@ -189,8 +188,6 @@ const Dashboard = () => {
 
         return stepsMetaData.map((element) => {
             if (selectedStep !== element.key) return null;
-            const tableData =
-                searchQuery.length === 0 ? patients : filteredPatients;
 
             return (
                 <Table
@@ -205,7 +202,7 @@ const Dashboard = () => {
                     renderTableRow={patientTableRowRenderer}
                     headers={generateHeaders(element.key, element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
-                    data={tableData}
+                    data={patients}
                 />
             );
         });
