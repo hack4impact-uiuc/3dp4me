@@ -3,8 +3,8 @@ import _ from 'lodash';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
-    REQUIRED_DASHBOARD_SORT_KEYS,
-    REQUIRED_DASHBOARD_HEADERS,
+    PATIENTS_BY_STEP_TABLE_ROW_DATA,
+    PATIENTS_BY_STEP_TABLE_HEADERS,
 } from '../../utils/constants';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import { getAllStepsMetadata, getPatientsByStage } from '../../api/api';
@@ -93,7 +93,7 @@ const Dashboard = () => {
     function generateHeaders(stepKey, fields) {
         if (fields == null) return [];
 
-        const headers = _.cloneDeep(REQUIRED_DASHBOARD_HEADERS);
+        const headers = _.cloneDeep(PATIENTS_BY_STEP_TABLE_HEADERS);
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 headers.push({
@@ -113,7 +113,7 @@ const Dashboard = () => {
     function generateRowData(stepKey, fields) {
         if (fields == null) return [];
 
-        const rowData = _.cloneDeep(REQUIRED_DASHBOARD_SORT_KEYS);
+        const rowData = _.cloneDeep(PATIENTS_BY_STEP_TABLE_ROW_DATA);
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 rowData.push({

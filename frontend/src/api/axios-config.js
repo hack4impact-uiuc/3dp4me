@@ -4,7 +4,6 @@ import { getCurrentSession } from '../aws/aws-helper';
 
 let cachedJWTToken = null;
 const BASE_URL = process.env.REACT_APP_BACKEND_BASE_URL;
-console.log(BASE_URL);
 
 // The configured axios instance to be exported
 const instance = axios.create({
