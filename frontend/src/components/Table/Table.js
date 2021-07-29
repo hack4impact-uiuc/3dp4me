@@ -16,6 +16,8 @@ const CLOSE_REASON_CLICKAWAY = 'clickaway';
 const Table = ({
     doesRowMatchQuery,
     tableTitle,
+    addRowButtonTitle,
+    onCreateRow,
     data,
     headers,
     rowData,
@@ -41,13 +43,14 @@ const Table = ({
         setFilteredData(filtered);
     };
 
+    /**
+     * Only close snackbar if the 'x' button is pressed
+     */
     const onCloseSnackbar = (event, reason) => {
         if (reason === CLOSE_REASON_CLICKAWAY) return;
 
         setSnackbarOpen(false);
     };
-
-    const setCreatePatientModalOpen = () => {};
 
     return (
         <div>
@@ -97,14 +100,14 @@ const Table = ({
                     />
                     <Button
                         className="create-patient-button"
-                        onClick={() => setCreatePatientModalOpen(true)}
+                        onClick={onCreateRow}
                     >
-                        {translations.components.button.createPatient}
+                        {addRowButtonTitle}
                     </Button>
                 </div>
             </div>
             <SimpleTable
-                data={filteredData?.length ? filteredData : data}
+                data={searchQuery?.length ? filteredData : data}
                 headers={headers}
                 rowData={rowData}
                 renderHeader={renderHeader}

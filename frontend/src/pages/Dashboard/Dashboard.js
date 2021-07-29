@@ -30,7 +30,6 @@ const Dashboard = () => {
     const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();
     const [searchQuery, setSearchQuery] = useState('');
-    const [isSnackbarOpen, setSnackbarOpen] = useState(false);
     const [isCreatePatientModalOpen, setCreatePatientModalOpen] = useState(
         false,
     );
@@ -116,20 +115,6 @@ const Dashboard = () => {
     };
 
     /**
-     * Updates the search bar and filtered patients
-     */
-    const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
-
-        const filtered = patients.filter((patient) =>
-            doesPatientMatchQuery(patient, e.target.value),
-        );
-
-        setSnackbarOpen(filtered.length === 0);
-        setFilteredPatients(filtered);
-    };
-
-    /**
      * Called when the user selects a new step to view. Sets the step
      * and refetches patient data for this step
      */
@@ -144,18 +129,16 @@ const Dashboard = () => {
         });
     };
 
-    function generatePageHeader() {
+    function getTableTitle() {
         if (stepsMetaData == null) return translations.components.table.loading;
 
-        return stepsMetaData.map((element) => {
-            if (selectedStep !== element.key) return null;
+        for (let i = 0; i < stepsMetaData?.length; i++) {
+            if (selectedStep === stepsMetaData[i].key)
+                return stepsMetaData[i].displayName[selectedLang];
+        }
 
-            return (
-                <p key={`header-${element.key}`}>
-                    {element.displayName[selectedLang]}
-                </p>
-            );
-        });
+        console.error(`Unrecognized step: ${selectedStep}`);
+        return null;
     }
 
     /**
@@ -212,6 +195,12 @@ const Dashboard = () => {
             return (
                 <Table
                     key={`table-${element.key}`}
+                    onCreateRow={() => setCreatePatientModalOpen(true)}
+                    tableTitle={getTableTitle()}
+                    doesRowMatchQuery={doesPatientMatchQuery}
+                    addRowButtonTitle={
+                        translations.components.button.createPatient
+                    }
                     renderHeader={patientTableHeaderRenderer}
                     renderTableRow={patientTableRowRenderer}
                     headers={generateHeaders(element.key, element.fields)}
@@ -239,48 +228,7 @@ const Dashboard = () => {
                 />
             </div>
 
-            <div className="patient-list">
-                <div className="header">
-                    <div className="section">
-                        <h2
-                            className={
-                                selectedLang === LANGUAGES.AR
-                                    ? 'patient-list-title-ar'
-                                    : 'patient-list-title'
-                            }
-                        >
-                            {generatePageHeader()}
-                        </h2>
-                        <TextField
-                            InputProps={{
-                                startAdornment: (
-                                    <img
-                                        alt="star"
-                                        style={{ marginRight: '10px' }}
-                                        src={search}
-                                        width="16px"
-                                    />
-                                ),
-                            }}
-                            className="patient-list-search-field"
-                            onChange={handleSearch}
-                            value={searchQuery}
-                            size="small"
-                            variant="outlined"
-                            placeholder={
-                                translations.components.search.placeholder
-                            }
-                        />
-                        <Button
-                            className="create-patient-button"
-                            onClick={() => setCreatePatientModalOpen(true)}
-                        >
-                            {translations.components.button.createPatient}
-                        </Button>
-                    </div>
-                </div>
-                {generateMainTable()}
-            </div>
+            <div className="patient-list">{generateMainTable()}</div>
         </div>
     );
 };
