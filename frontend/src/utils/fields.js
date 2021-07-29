@@ -132,8 +132,16 @@ const accessToJSX = (access, selectedLang) => {
     );
 };
 
+const signatureToString = (signatureData) => {
+    return signatureData?.signatureData
+        ? SIGNATURE_STATUS.SIGNED
+        : SIGNATURE_STATUS.UNSIGNED;
+};
+
 const signatureToJSX = (signature) => {
-    switch (signature) {
+    const signatureStatus = signatureToString(signature);
+
+    switch (signatureStatus) {
         case SIGNATURE_STATUS.SIGNED:
             return (
                 <div style={{ color: '#65d991' }}>
@@ -141,13 +149,16 @@ const signatureToJSX = (signature) => {
                 </div>
             );
         case SIGNATURE_STATUS.UNSIGNED:
-        default:
             return (
                 <div style={{ color: 'red' }}>
                     <CloseIcon />
                 </div>
             );
+        default:
+            console.error(`Unrecognized signature status ${signatureStatus}`);
     }
+
+    return null;
 };
 
 export const fieldToString = (fieldData, fieldType, selectedLang) => {
@@ -162,6 +173,8 @@ export const fieldToString = (fieldData, fieldType, selectedLang) => {
             return statusToString(fieldData, selectedLang);
         case FIELD_TYPES.ACCESS:
             return accessToString(fieldData, selectedLang);
+        case FIELD_TYPES.SIGNATURE:
+            return signatureToString(fieldData);
         default:
             return fieldData;
     }

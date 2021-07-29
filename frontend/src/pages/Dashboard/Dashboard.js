@@ -40,6 +40,20 @@ const Dashboard = () => {
         false,
     );
 
+    useEffect(() => {
+        const getMetadata = async () => {
+            let res = await getAllStepsMetadata();
+            setStepsMetaData(res.result);
+            if (res.result.length > 0) {
+                setStep(res.result[0].key);
+                res = await getPatientsByStage(res.result[0].key);
+                setPatients(res.result);
+            }
+        };
+
+        errorWrap(getMetadata);
+    }, [setStep, setStepsMetaData, errorWrap]);
+
     /**
      * Saves a patient to the DB
      */
@@ -71,24 +85,33 @@ const Dashboard = () => {
         if (patientId) window.location.href += `patient-info/${patientId}`;
     };
 
+    /**
+     * Given a query and patient data, return true if this patient should
+     * be included in the search results
+     */
     const doesPatientMatchQuery = (patient, query) => {
-        if (
-            getPatientName(patient)
-                .toLowerCase()
-                .indexOf(query.toLowerCase()) !== -1
-        )
-            return true;
+        const patientName = getPatientName(patient).toLowerCase();
+        const patientId = patient?._id?.toLowerCase();
+        const lowercaseQuery = query?.toLowerCase();
 
-        if (patient._id.indexOf(query) !== -1) return true;
+        // If query is contained in patient name
+        if (patientName.indexOf(lowercaseQuery) !== -1) return true;
+
+        // If query is contained in patient's ID
+        if (patientId.indexOf(lowercaseQuery) !== -1) return true;
 
         return false;
     };
 
     const handleSearch = (e) => {
+        // Update the search query
         setSearchQuery(e.target.value);
+
+        // Update the list of patients
         const filtered = patients.filter((patient) =>
             doesPatientMatchQuery(patient, e.target.value),
         );
+
         setNoPatient(filtered.length === 0);
         setFilteredPatients(filtered);
     };
@@ -102,31 +125,15 @@ const Dashboard = () => {
     };
 
     const handleStep = async (stepKey) => {
-        setSearchQuery('');
-        if (stepKey !== null) {
-            setStep(stepKey);
-            errorWrap(async () => {
-                const res = await getPatientsByStage(stepKey);
-                setPatients(res.result);
-            });
-        }
+        if (!stepKey) return;
+
+        // TODO: Put the patient data in a store
+        setStep(stepKey);
+        errorWrap(async () => {
+            const res = await getPatientsByStage(stepKey);
+            setPatients(res.result);
+        });
     };
-
-    useEffect(() => {
-        const getMetadata = async () => {
-            errorWrap(async () => {
-                let res = await getAllStepsMetadata();
-                setStepsMetaData(res.result);
-                if (res.result.length > 0) {
-                    setStep(res.result[0].key);
-                    res = await getPatientsByStage(res.result[0].key);
-                    setPatients(res.result);
-                }
-            });
-        };
-
-        getMetadata();
-    }, [setStep, setStepsMetaData, errorWrap]);
 
     function generatePageHeader() {
         if (stepsMetaData == null) return translations.components.table.loading;
