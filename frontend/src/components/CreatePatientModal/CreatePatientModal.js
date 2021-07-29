@@ -17,49 +17,39 @@ const CreatePatientModal = ({ isOpen, onClose }) => {
                         {translations.components.swal.createPatient.firstName}
                     </span>
                     <TextField
+                        className="create-patient-text-field"
                         size="small"
-                        id="createFirstName"
-                        fullWidth
-                        style={{ padding: 10 }}
                         variant="outlined"
+                        fullWidth
                     />
                     <span>
                         {translations.components.swal.createPatient.middleName}
                     </span>
                     <div style={{ display: 'flex' }}>
                         <TextField
+                            className="create-patient-text-field"
                             size="small"
-                            id="createFathersName"
-                            fullWidth
-                            style={{ padding: 10 }}
                             variant="outlined"
+                            fullWidth
                         />
                         <TextField
+                            className="create-patient-text-field"
                             size="small"
-                            id="createGrandfathersName"
-                            fullWidth
-                            style={{ padding: 10 }}
                             variant="outlined"
+                            fullWidth
                         />
                     </div>
                     <span>
                         {translations.components.swal.createPatient.lastName}
                     </span>
                     <TextField
+                        className="create-patient-text-field"
                         size="small"
-                        id="createFamilyName"
-                        fullWidth
-                        style={{ padding: 10 }}
                         variant="outlined"
+                        fullWidth
                     />
                 </div>
-                <div
-                    style={{
-                        display: 'flex',
-                        float: 'right',
-                        paddingBottom: '10px',
-                    }}
-                >
+                <div className="create-patient-button-container">
                     <Button className="create-patient-button create-patient-edit-button">
                         {
                             translations.components.swal.createPatient.buttons
