@@ -28,31 +28,41 @@ import {
 import CreatePatientModal from '../../components/CreatePatientModal/CreatePatientModal';
 
 const Dashboard = () => {
-    const [patients, setPatients] = useState([]);
-    const [stepsMetaData, setStepsMetaData] = useState(null);
-    const [step, setStep] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filteredPatients, setFilteredPatients] = useState([]);
-    const [noPatient, setNoPatient] = useState(false);
     const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSnackbarOpen, setSnackbarOpen] = useState(false);
     const [isCreatePatientModalOpen, setCreatePatientModalOpen] = useState(
         false,
     );
 
+    // All patients for the selected step
+    const [patients, setPatients] = useState([]);
+
+    // The metadata for all steps
+    const [stepsMetaData, setStepsMetaData] = useState(null);
+
+    // Currently selected step
+    const [selectedStep, setSelectedStep] = useState('');
+
+    // A list of filtered patients according to the search query
+    const [filteredPatients, setFilteredPatients] = useState([]);
+
     useEffect(() => {
         const getMetadata = async () => {
             let res = await getAllStepsMetadata();
+
+            // TODO: Sort metadata here
             setStepsMetaData(res.result);
             if (res.result.length > 0) {
-                setStep(res.result[0].key);
+                setSelectedStep(res.result[0].key);
                 res = await getPatientsByStage(res.result[0].key);
                 setPatients(res.result);
             }
         };
 
         errorWrap(getMetadata);
-    }, [setStep, setStepsMetaData, errorWrap]);
+    }, [setSelectedStep, setStepsMetaData, errorWrap]);
 
     /**
      * Saves a patient to the DB
@@ -112,7 +122,7 @@ const Dashboard = () => {
             doesPatientMatchQuery(patient, e.target.value),
         );
 
-        setNoPatient(filtered.length === 0);
+        setSnackbarOpen(filtered.length === 0);
         setFilteredPatients(filtered);
     };
 
@@ -121,14 +131,14 @@ const Dashboard = () => {
             return;
         }
 
-        setNoPatient(false);
+        setSnackbarOpen(false);
     };
 
     const handleStep = async (stepKey) => {
         if (!stepKey) return;
 
         // TODO: Put the patient data in a store
-        setStep(stepKey);
+        setSelectedStep(stepKey);
         errorWrap(async () => {
             const res = await getPatientsByStage(stepKey);
             setPatients(res.result);
@@ -139,7 +149,7 @@ const Dashboard = () => {
         if (stepsMetaData == null) return translations.components.table.loading;
 
         return stepsMetaData.map((element) => {
-            if (step !== element.key) return null;
+            if (selectedStep !== element.key) return null;
 
             return (
                 <p key={`header-${element.key}`}>
@@ -157,7 +167,7 @@ const Dashboard = () => {
             if (field.isVisibleOnDashboard)
                 headers.push({
                     title: field.displayName[selectedLang],
-                    sortKey: `${step}.${field.key}`,
+                    sortKey: `${selectedStep}.${field.key}`,
                     fieldType: field.fieldType,
                 });
         });
@@ -184,7 +194,7 @@ const Dashboard = () => {
         if (stepsMetaData == null) return null;
 
         return stepsMetaData.map((element) => {
-            if (step !== element.key) return null;
+            if (selectedStep !== element.key) return null;
 
             return (
                 <Table
@@ -211,7 +221,7 @@ const Dashboard = () => {
             />
 
             <Snackbar
-                open={noPatient}
+                open={isSnackbarOpen}
                 autoHideDuration={3000}
                 onClose={handleNoPatientClose}
             >
@@ -226,7 +236,7 @@ const Dashboard = () => {
             </Snackbar>
             <div className="tabs">
                 <ToggleButtons
-                    step={step}
+                    step={selectedStep}
                     metaData={stepsMetaData}
                     handleStep={handleStep}
                 />
