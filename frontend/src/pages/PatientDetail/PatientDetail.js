@@ -15,7 +15,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 
-import StepContent from '../../steps/StepContent/StepContent';
+import StepContent from '../../components/StepContent/StepContent';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
 import {
