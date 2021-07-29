@@ -52,6 +52,20 @@ export const REQUIRED_DASHBOARD_SORT_KEYS = [
     { id: 'status', dataType: FIELD_TYPES.STATUS },
 ];
 
+export const ALL_PATIENT_DASHBOARD_HEADERS = [
+    { title: 'firstName', sortKey: 'firstName' },
+    { title: 'familyName', sortKey: 'familyName' },
+    { title: 'lastEdited', sortKey: 'lastEdited' },
+    { title: 'status', sortKey: 'status' },
+];
+
+export const ALL_PATIENT_DASHBOARD_ROW_DATA = [
+    { id: 'firstName', dataType: FIELD_TYPES.STRING },
+    { id: 'familyName', dataType: FIELD_TYPES.STRING },
+    { id: 'lastEdited', dataType: FIELD_TYPES.DATE },
+    { id: 'status', dataType: FIELD_TYPES.STATUS },
+];
+
 export const ACCESS_LEVELS = {
     GRANTED: 'Granted',
     REVOKED: 'Revoked',
