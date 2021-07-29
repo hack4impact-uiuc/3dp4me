@@ -31,14 +31,10 @@ export const FIELD_TYPES = {
 };
 
 export const REQUIRED_DASHBOARD_HEADERS = [
-    { title: 'firstName', sortKey: 'firstName', fieldType: FIELD_TYPES.STRING },
-    {
-        title: 'familyName',
-        sortKey: 'familyName',
-        fieldType: FIELD_TYPES.STRING,
-    },
-    { title: 'lastEdited', sortKey: 'lastEdited', fieldType: FIELD_TYPES.DATE },
-    { title: 'status', sortKey: 'status', fieldType: FIELD_TYPES.STATUS },
+    { title: 'firstName', sortKey: 'firstName' },
+    { title: 'familyName', sortKey: 'familyName' },
+    { title: 'lastEdited', sortKey: 'lastEdited' },
+    { title: 'status', sortKey: 'status' },
 ];
 
 export const REQUIRED_DASHBOARD_SORT_KEYS = [

@@ -27,6 +27,8 @@ import {
 } from '../../utils/table-renderers';
 import CreatePatientModal from '../../components/CreatePatientModal/CreatePatientModal';
 
+const CLOSE_REASON_CLICKAWAY = 'clickaway';
+
 const Dashboard = () => {
     const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();
@@ -48,6 +50,9 @@ const Dashboard = () => {
     // A list of filtered patients according to the search query
     const [filteredPatients, setFilteredPatients] = useState([]);
 
+    /**
+     * Gets metadata for all setps
+     */
     useEffect(() => {
         const getMetadata = async () => {
             let res = await getAllStepsMetadata();
@@ -113,11 +118,12 @@ const Dashboard = () => {
         return false;
     };
 
+    /**
+     * Updates the search bar and filtered patients
+     */
     const handleSearch = (e) => {
-        // Update the search query
         setSearchQuery(e.target.value);
 
-        // Update the list of patients
         const filtered = patients.filter((patient) =>
             doesPatientMatchQuery(patient, e.target.value),
         );
@@ -126,15 +132,17 @@ const Dashboard = () => {
         setFilteredPatients(filtered);
     };
 
-    const handleNoPatientClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+    const onCloseSnackbar = (event, reason) => {
+        if (reason === CLOSE_REASON_CLICKAWAY) return;
 
         setSnackbarOpen(false);
     };
 
-    const handleStep = async (stepKey) => {
+    /**
+     * Called when the user selects a new step to view. Sets the step
+     * and refetches patient data for this step
+     */
+    const onStepSelected = async (stepKey) => {
         if (!stepKey) return;
 
         // TODO: Put the patient data in a store
@@ -159,7 +167,12 @@ const Dashboard = () => {
         });
     }
 
-    function generateHeaders(fields) {
+    /**
+     * Generates headers for a step table. Goes through each field in the step and checks
+     * if it should be visible on the dashboard. If so, adds to headers.
+     * @returns Array of headers
+     */
+    function generateHeaders(stepKey, fields) {
         if (fields == null) return [];
 
         const headers = _.cloneDeep(REQUIRED_DASHBOARD_HEADERS);
@@ -167,14 +180,18 @@ const Dashboard = () => {
             if (field.isVisibleOnDashboard)
                 headers.push({
                     title: field.displayName[selectedLang],
-                    sortKey: `${selectedStep}.${field.key}`,
-                    fieldType: field.fieldType,
+                    sortKey: `${stepKey}.${field.key}`,
                 });
         });
 
         return headers;
     }
 
+    /**
+     * Generates row data for a step table. Goes through each field in the step and checks
+     * if it should be visible on the dashboard. If so, adds to row data.
+     * @returns Array of row data
+     */
     function generateRowData(stepKey, fields) {
         if (fields == null) return [];
 
@@ -201,7 +218,7 @@ const Dashboard = () => {
                     key={`table-${element.key}`}
                     renderHeader={patientTableHeaderRenderer}
                     renderTableRow={patientTableRowRenderer}
-                    headers={generateHeaders(element.fields)}
+                    headers={generateHeaders(element.key, element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
                     data={
                         searchQuery.length === 0 ? patients : filteredPatients
@@ -223,10 +240,10 @@ const Dashboard = () => {
             <Snackbar
                 open={isSnackbarOpen}
                 autoHideDuration={3000}
-                onClose={handleNoPatientClose}
+                onClose={onCloseSnackbar}
             >
                 <MuiAlert
-                    onClose={handleNoPatientClose}
+                    onClose={onCloseSnackbar}
                     severity="error"
                     elevation={6}
                     variant="filled"
@@ -238,7 +255,7 @@ const Dashboard = () => {
                 <ToggleButtons
                     step={selectedStep}
                     metaData={stepsMetaData}
-                    handleStep={handleStep}
+                    handleStep={onStepSelected}
                 />
             </div>
             <div className="patient-list">
