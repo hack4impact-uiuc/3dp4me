@@ -4,7 +4,7 @@ import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import { Link } from 'react-router-dom';
 import { IconButton } from '@material-ui/core';
 
-import { StyledTableCell } from '../components/Table/Table.style';
+import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
 import Eyecon from '../assets/view.svg';
 import translations from '../translations.json';
 
