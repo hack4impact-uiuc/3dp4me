@@ -48,15 +48,15 @@ const Dashboard = () => {
         let patientId = null;
 
         await errorWrap(async () => {
+            // Make the request
             const res = await postNewPatient(patientData);
             patientId = res?.result?._id;
-        });
 
-        swal({
-            title: res?.success
-                ? translations.components.swal.createPatient.successMsg
-                : translations.components.swal.createPatient.failMsg,
-            icon: res?.success ? 'success' : 'warning',
+            // Show success/error
+            swal({
+                title: translations.components.swal.createPatient.successMsg,
+                icon: 'success',
+            });
         });
 
         return patientId;
@@ -68,7 +68,7 @@ const Dashboard = () => {
      */
     const onSaveAndEditPatient = async (patientData) => {
         const patientId = await onSavePatient(patientData);
-        window.location.href += `patient-info/${patientId}`;
+        if (patientId) window.location.href += `patient-info/${patientId}`;
     };
 
     const doesPatientMatchQuery = (patient, query) => {
