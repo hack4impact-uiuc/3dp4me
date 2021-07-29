@@ -16,6 +16,9 @@ import {
     STEP_STATUS,
 } from './constants';
 
+/**
+ * Converts a step or patient status to a string
+ */
 const statusToString = (status, selectedLang) => {
     const bottomBarTranslations =
         translations[selectedLang].components.bottombar;
@@ -40,6 +43,9 @@ const statusToString = (status, selectedLang) => {
     return status;
 };
 
+/**
+ * Gets the icon associated with the status. Null if no icon.
+ */
 const getStatusIcon = (status) => {
     switch (status) {
         case STEP_STATUS.FINISHED:
@@ -59,6 +65,9 @@ const getStatusIcon = (status) => {
     return null;
 };
 
+/**
+ * Gets the color associated with the status. Null if no color.
+ */
 const getStatusColor = (status) => {
     switch (status) {
         case PATIENT_STATUS.ACTIVE:
@@ -78,6 +87,9 @@ const getStatusColor = (status) => {
     return 'black';
 };
 
+/**
+ * Converts a status value to JSX.
+ */
 const statusToJSX = (status, selectedLang) => {
     const statusStringified = statusToString(status, selectedLang);
     const statusIcon = getStatusIcon(status);
@@ -104,6 +116,9 @@ const statusToJSX = (status, selectedLang) => {
     );
 };
 
+/**
+ * Converts an access level value to string
+ */
 const accessToString = (access, selectedLang) => {
     const accessTranslations = translations[selectedLang].accountManagement;
 
@@ -121,6 +136,9 @@ const accessToString = (access, selectedLang) => {
     return access;
 };
 
+/**
+ * Gets the color associated with an access level
+ */
 const getAccessColor = (access) => {
     switch (access) {
         case ACCESS_LEVELS.GRANTED:
@@ -138,6 +156,9 @@ const getAccessColor = (access) => {
     return 'black';
 };
 
+/**
+ * Gets the JSX associated with an access level
+ */
 const accessToJSX = (access, selectedLang) => {
     const accessString = accessToString(access, selectedLang);
     const accessColor = getAccessColor(access);
@@ -148,14 +169,20 @@ const accessToJSX = (access, selectedLang) => {
     );
 };
 
-const signatureToString = (signatureData) => {
+/**
+ * Given signature data, converts it to a standard enum value
+ */
+const signatureDataToValue = (signatureData) => {
     return signatureData?.signatureData
         ? SIGNATURE_STATUS.SIGNED
         : SIGNATURE_STATUS.UNSIGNED;
 };
 
-const signatureToJSX = (signature) => {
-    const signatureStatus = signatureToString(signature);
+/**
+ * Gets the JSX associated with the given signature data
+ */
+const signatureToJSX = (signatureData) => {
+    const signatureStatus = signatureDataToValue(signatureData);
 
     switch (signatureStatus) {
         case SIGNATURE_STATUS.SIGNED:
@@ -179,6 +206,13 @@ const signatureToJSX = (signature) => {
     return null;
 };
 
+/**
+ * Turn field data into a string
+ * @param {Any} fieldData The data to stringify
+ * @param {String} fieldType The type of this data
+ * @param {String} selectedLang The currently selected language
+ * @returns The stringified field
+ */
 export const fieldToString = (fieldData, fieldType, selectedLang) => {
     // TODO: Do all of the field types and add an assert that checks it
     switch (fieldType) {
@@ -194,7 +228,7 @@ export const fieldToString = (fieldData, fieldType, selectedLang) => {
         case FIELD_TYPES.ACCESS:
             return accessToString(fieldData, selectedLang);
         case FIELD_TYPES.SIGNATURE:
-            return signatureToString(fieldData);
+            return signatureDataToValue(fieldData);
         default:
             console.error(`fieldToString(): Unrecognized field: ${fieldType}`);
     }
@@ -202,6 +236,13 @@ export const fieldToString = (fieldData, fieldType, selectedLang) => {
     return fieldData;
 };
 
+/**
+ * Turn field data into JSX. I.e. apply formatting to it.
+ * @param {Any} fieldData The data to get JSX for.
+ * @param {String} fieldType The type of this data.
+ * @param {String} selectedLang The currently selected language
+ * @returns The JSX
+ */
 export const fieldToJSX = (fieldData, fieldType, selectedLang) => {
     const stringifiedField = fieldToString(fieldData, fieldType, selectedLang);
 

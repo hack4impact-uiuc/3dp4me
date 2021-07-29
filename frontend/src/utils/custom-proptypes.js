@@ -24,6 +24,7 @@ export const TableRowType = PropTypes.shape({
     dataType: PropTypes.string,
 });
 
+// TODO: remove these
 export const fieldType = PropTypes.shape({
     state: PropTypes.string.isRequired,
 });

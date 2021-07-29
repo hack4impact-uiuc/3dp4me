@@ -1,5 +1,11 @@
 import { LANGUAGES } from './constants';
 
+/**
+ * Formats a date object according to the selected language
+ * @param {Date} date The date object to format
+ * @param {String} language Should be one of the valid options defined in constants.js
+ * @returns The formatted date string
+ */
 export const formatDate = (date, language) => {
     if (date == null) return 'Undefined';
 
