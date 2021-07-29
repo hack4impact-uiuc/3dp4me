@@ -207,11 +207,16 @@ const Dashboard = () => {
         return rowData;
     }
 
+    /**
+     * Generates the table for the selected step
+     */
     function generateMainTable() {
         if (stepsMetaData == null) return null;
 
         return stepsMetaData.map((element) => {
             if (selectedStep !== element.key) return null;
+            const tableData =
+                searchQuery.length === 0 ? patients : filteredPatients;
 
             return (
                 <Table
@@ -220,9 +225,7 @@ const Dashboard = () => {
                     renderTableRow={patientTableRowRenderer}
                     headers={generateHeaders(element.key, element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
-                    data={
-                        searchQuery.length === 0 ? patients : filteredPatients
-                    }
+                    data={tableData}
                 />
             );
         });
@@ -251,6 +254,7 @@ const Dashboard = () => {
                     {translations.components.table.noPatientsFound}
                 </MuiAlert>
             </Snackbar>
+
             <div className="tabs">
                 <ToggleButtons
                     step={selectedStep}
@@ -258,6 +262,7 @@ const Dashboard = () => {
                     handleStep={onStepSelected}
                 />
             </div>
+
             <div className="patient-list">
                 <div className="header">
                     <div className="section">

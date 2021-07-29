@@ -1,5 +1,7 @@
 import { Button, Modal, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+
 import { useTranslations } from '../../hooks/useTranslations';
 import './CreatePatientModal.scss';
 
@@ -12,10 +14,10 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
 
     const onSavePatient = (isSaveAndEdit) => {
         const patientData = {
-            firstName: firstName,
-            fathersName: fathersName,
-            grandfathersName: grandfathersName,
-            familyName: familyName,
+            firstName,
+            fathersName,
+            grandfathersName,
+            familyName,
         };
 
         if (isSaveAndEdit) onSaveAndEdit(patientData);
@@ -102,6 +104,11 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
     );
 };
 
-CreatePatientModal.propTypes = {};
+CreatePatientModal.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onSaveAndEdit: PropTypes.func.isRequired,
+};
 
 export default CreatePatientModal;
