@@ -25,13 +25,11 @@ import {
     patientTableRowRenderer,
 } from '../../utils/table-renderers';
 import CreatePatientModal from '../../components/CreatePatientModal/CreatePatientModal';
+import PatientTable from '../../components/PatientTable/PatientTable';
 
 const Dashboard = () => {
     const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();
-    const [isCreatePatientModalOpen, setCreatePatientModalOpen] = useState(
-        false,
-    );
 
     // All patients for the selected step
     const [patients, setPatients] = useState([]);
@@ -62,52 +60,11 @@ const Dashboard = () => {
     }, [setSelectedStep, setStepsMetaData, errorWrap]);
 
     /**
-     * Saves a patient to the DB
+     * Called when a patient is successfully added to the backend
+     * @param {Object} patientData The patient data (returned from server)
      */
-    const onSavePatient = async (patientData) => {
-        // TODO: Update the local data
-        let patientId = null;
-
-        await errorWrap(async () => {
-            // Make the request
-            const res = await postNewPatient(patientData);
-            patientId = res?.result?._id;
-
-            // Show success/error
-            swal({
-                title: translations.components.swal.createPatient.successMsg,
-                icon: 'success',
-            });
-        });
-
-        return patientId;
-    };
-
-    /**
-     * Saves patient to the DB and immediately navigates to the
-     * detail view for that patient
-     */
-    const onSaveAndEditPatient = async (patientData) => {
-        const patientId = await onSavePatient(patientData);
-        if (patientId) window.location.href += `patient-info/${patientId}`;
-    };
-
-    /**
-     * Given a query and patient data, return true if this patient should
-     * be included in the search results
-     */
-    const doesPatientMatchQuery = (patient, query) => {
-        const patientName = getPatientName(patient).toLowerCase();
-        const patientId = patient?._id?.toLowerCase();
-        const lowercaseQuery = query?.toLowerCase();
-
-        // If query is contained in patient name
-        if (patientName.indexOf(lowercaseQuery) !== -1) return true;
-
-        // If query is contained in patient's ID
-        if (patientId.indexOf(lowercaseQuery) !== -1) return true;
-
-        return false;
+    const onAddPatient = (patientData) => {
+        setPatients((oldPatients) => oldPatients.concat(patientData));
     };
 
     /**
@@ -190,19 +147,13 @@ const Dashboard = () => {
             if (selectedStep !== element.key) return null;
 
             return (
-                <Table
+                <PatientTable
+                    onAddPatient={onAddPatient}
                     key={`table-${element.key}`}
-                    onCreateRow={() => setCreatePatientModalOpen(true)}
                     tableTitle={getTableTitle()}
-                    doesRowMatchQuery={doesPatientMatchQuery}
-                    addRowButtonTitle={
-                        translations.components.button.createPatient
-                    }
-                    renderHeader={patientTableHeaderRenderer}
-                    renderTableRow={patientTableRowRenderer}
                     headers={generateHeaders(element.key, element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
-                    data={patients}
+                    patients={patients}
                 />
             );
         });
@@ -210,13 +161,6 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard">
-            <CreatePatientModal
-                isOpen={isCreatePatientModalOpen}
-                onClose={() => setCreatePatientModalOpen(false)}
-                onSave={onSavePatient}
-                onSaveAndEdit={onSaveAndEditPatient}
-            />
-
             <div className="tabs">
                 <ToggleButtons
                     step={selectedStep}
@@ -224,7 +168,6 @@ const Dashboard = () => {
                     handleStep={onStepSelected}
                 />
             </div>
-
             <div className="patient-list">{generateMainTable()}</div>
         </div>
     );
