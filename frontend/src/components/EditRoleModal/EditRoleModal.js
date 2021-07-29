@@ -19,7 +19,7 @@ import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
-import { removeUserRole, setUserAccess, addUserRole } from '../../utils/api';
+import { removeUserRole, setUserAccess, addUserRole } from '../../api/api';
 
 const EditRoleModal = ({
     isOpen,

@@ -4,7 +4,7 @@ import swal from 'sweetalert';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
-import { postNewPatient } from '../../utils/api';
+import { postNewPatient } from '../../api/api';
 import {
     patientTableHeaderRenderer,
     patientTableRowRenderer,

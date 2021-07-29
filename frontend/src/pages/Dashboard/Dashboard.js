@@ -7,7 +7,7 @@ import {
     REQUIRED_DASHBOARD_HEADERS,
 } from '../../utils/constants';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
-import { getAllStepsMetadata, getPatientsByStage } from '../../utils/api';
+import { getAllStepsMetadata, getPatientsByStage } from '../../api/api';
 import './Dashboard.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';

@@ -6,7 +6,7 @@ import {
     FIELD_TYPES,
     LANGUAGES,
 } from '../../utils/constants';
-import { getAllRoles, getAllUsers } from '../../utils/api';
+import { getAllRoles, getAllUsers } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { useTranslations } from '../../hooks/useTranslations';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { getAllPatients } from '../../utils/api';
+import { getAllPatients } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';

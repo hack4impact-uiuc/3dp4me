@@ -4,7 +4,7 @@ import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 
 import BottomBar from '../BottomBar/BottomBar';
-import { getAllStepsMetadata } from '../../utils/api';
+import { getAllStepsMetadata } from '../../api/api';
 import Sidebar from '../Sidebar/Sidebar';
 import StepManagementContent from '../StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';

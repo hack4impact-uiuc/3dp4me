@@ -4,7 +4,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import _ from 'lodash';
-import './PatientDetail.scss';
+import './Controller.scss';
 import {
     Accordion,
     AccordionDetails,
@@ -15,7 +15,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 
-import StepContent from '../../components/StepContent/StepContent';
+import StepContent from '../../steps/StepContent/StepContent';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
 import {
@@ -25,7 +25,7 @@ import {
     updateStage,
 } from '../../api/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
-import { getPatientName, sortMetadata } from '../../utils/utils';
+import { getPatientName } from '../../utils/utils';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
@@ -38,11 +38,12 @@ const enTheme = createMuiTheme({
     direction: 'ltr',
 });
 
-const PatientDetail = () => {
-    const errorWrap = useErrorWrap();
+const Controller = () => {
     const [translations, selectedLang] = useTranslations();
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
+    const errorWrap = useErrorWrap();
+
     const [selectedStep, setSelectedStep] = useState('');
     const [stepMetaData, setStepMetaData] = useState(null);
     const [patientData, setPatientData] = useState(null);
@@ -111,7 +112,21 @@ const PatientDetail = () => {
                 res = await getPatientById(patientId);
                 const data = res.result;
 
-                metaData = sortMetadata(metaData);
+                metaData = metaData.sort((a, b) => a.stepNumber - b.stepNumber);
+                metaData.forEach((stepData) => {
+                    stepData.fields = stepData.fields.sort(
+                        (a, b) => a.fieldNumber - b.fieldNumber,
+                    );
+
+                    stepData.fields.forEach((field) => {
+                        if (!field.options?.length) return;
+
+                        field.options = field.options.sort(
+                            (a, b) => a.Index - b.Index,
+                        );
+                    });
+                });
+
                 if (metaData.length > 0) setSelectedStep(metaData[0].key);
 
                 setStepMetaData(metaData);
@@ -123,34 +138,32 @@ const PatientDetail = () => {
         getData();
     }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
 
-    /**
-     * This generates the main content of this screen.
-     * Renders all of the fields in the selected step
-     */
     const generateStepContent = () => {
         if (stepMetaData == null) return null;
         if (patientData == null) return null;
 
-        const className =
-            selectedLang === LANGUAGES.AR ? 'steps steps-ar' : 'steps';
-
         return (
-            <div className={className}>
+            <div
+                className={`steps ${
+                    selectedLang === LANGUAGES.AR ? 'steps-ar' : ''
+                }`}
+            >
                 {stepMetaData.map((step) => {
-                    if (step.key !== selectedStep) return null;
-
-                    return (
-                        <StepContent
-                            key={step.key}
-                            patientId={patientId}
-                            onDataSaved={onStepSaved}
-                            metaData={stepMetaData.find(
-                                (s) => s.key === step.key,
-                            )}
-                            stepData={patientData[step.key] ?? {}}
-                            loading={loading}
-                        />
-                    );
+                    if (step.key === selectedStep) {
+                        return (
+                            <StepContent
+                                key={step.key}
+                                patientId={patientId}
+                                onDataSaved={onStepSaved}
+                                metaData={stepMetaData.find(
+                                    (s) => s.key === step.key,
+                                )}
+                                stepData={patientData[step.key] ?? {}}
+                                loading={loading}
+                            />
+                        );
+                    }
+                    return null;
                 })}
             </div>
         );
@@ -294,4 +307,4 @@ const PatientDetail = () => {
     );
 };
 
-export default PatientDetail;
+export default Controller;

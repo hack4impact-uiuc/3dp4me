@@ -1,50 +1,6 @@
-import axios from 'axios';
-
-import { getCurrentSession } from '../aws/aws-helper';
+import instance from './axios-config';
 
 const FileDownload = require('js-file-download');
-
-const IN_DEV_ENV =
-    !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
-const BASE_URL = IN_DEV_ENV
-    ? 'http://localhost:8080/api'
-    : 'https://3dp4me-software.org/api';
-
-const instance = axios.create({
-    baseURL: BASE_URL,
-    validateStatus: () => {
-        return true;
-    },
-});
-
-let cachedJWTToken = null;
-
-const updateCachedJWTToken = async () => {
-    const {
-        accessToken: { jwtToken },
-    } = await getCurrentSession();
-    cachedJWTToken = jwtToken;
-};
-
-const addAuthHeader = async (config) => {
-    const updatedConfig = config;
-
-    // Grab the JWT token
-    if (!cachedJWTToken) await updateCachedJWTToken();
-
-    if (cachedJWTToken)
-        updatedConfig.headers.Authorization = `Bearer ${cachedJWTToken}`;
-
-    return updatedConfig;
-};
-
-const onRequestError = (error) => {
-    // Set token to null so that we refetch token again on next request
-    cachedJWTToken = null;
-    return Promise.reject(error);
-};
-
-instance.interceptors.request.use(addAuthHeader, onRequestError);
 
 export const getAllPatients = async () => {
     const requestString = '/patients';

@@ -13,7 +13,7 @@ import {
 
 import { STEP_STATUS, FIELD_TYPES } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
-import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
+import { downloadFile, uploadFile, deleteFile } from '../../api/api';
 import StepField from '../../components/StepField/StepField';
 import BottomBar from '../../components/BottomBar/BottomBar';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
