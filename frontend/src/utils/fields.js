@@ -27,15 +27,17 @@ const statusToString = (status, selectedLang) => {
             return bottomBarTranslations.partial;
         case STEP_STATUS.UNFINISHED:
             return bottomBarTranslations.unfinished;
-        case STEP_STATUS.ACTIVE:
+        case PATIENT_STATUS.ACTIVE:
             return bottomBarTranslations.active;
-        case STEP_STATUS.ARCHIVE:
+        case PATIENT_STATUS.ARCHIVE:
             return bottomBarTranslations.archived;
-        case STEP_STATUS.FEEDBACK:
+        case PATIENT_STATUS.FEEDBACK:
             return bottomBarTranslations.feedback;
         default:
-            return status;
+            console.error(`statusToString(): Unrecognized status: ${status}`);
     }
+
+    return status;
 };
 
 const getStatusIcon = (status) => {
@@ -46,9 +48,15 @@ const getStatusIcon = (status) => {
             return partiallyIcon;
         case STEP_STATUS.UNFINISHED:
             return unfinishedIcon;
-        default:
+        case PATIENT_STATUS.ACTIVE:
+        case PATIENT_STATUS.ARCHIVE:
+        case PATIENT_STATUS.FEEDBACK:
             return null;
+        default:
+            console.error(`getStatusIcon(): Unrecognized status: ${status}`);
     }
+
+    return null;
 };
 
 const getStatusColor = (status) => {
@@ -59,9 +67,15 @@ const getStatusColor = (status) => {
             return 'black';
         case PATIENT_STATUS.FEEDBACK:
             return '#5395f8';
+        case STEP_STATUS.FINISHED:
+        case STEP_STATUS.PARTIALLY_FINISHED:
+        case STEP_STATUS.UNFINISHED:
+            return null;
         default:
-            return 'black';
+            console.error(`getStatusColor(): Unrecognized status: ${status}`);
     }
+
+    return 'black';
 };
 
 const statusToJSX = (status, selectedLang) => {
@@ -116,7 +130,9 @@ const getAccessColor = (access) => {
         case ACCESS_LEVELS.REVOKED:
             return 'red';
         default:
-            console.error(`Unrecognized accces level ${access}`);
+            console.error(
+                `getAccessColor(): Unrecognized accces level ${access}`,
+            );
     }
 
     return 'black';
@@ -155,7 +171,9 @@ const signatureToJSX = (signature) => {
                 </div>
             );
         default:
-            console.error(`Unrecognized signature status ${signatureStatus}`);
+            console.error(
+                `signatureToJSX(): Unrecognized signature status ${signatureStatus}`,
+            );
     }
 
     return null;
@@ -164,8 +182,10 @@ const signatureToJSX = (signature) => {
 export const fieldToString = (fieldData, fieldType, selectedLang) => {
     // TODO: Do all of the field types and add an assert that checks it
     switch (fieldType) {
+        case FIELD_TYPES.MULTILINE_STRING:
         case FIELD_TYPES.STRING:
         case FIELD_TYPES.NUMBER:
+        case FIELD_TYPES.PHONE:
             return fieldData;
         case FIELD_TYPES.DATE:
             return formatDate(new Date(fieldData), selectedLang);
@@ -176,14 +196,22 @@ export const fieldToString = (fieldData, fieldType, selectedLang) => {
         case FIELD_TYPES.SIGNATURE:
             return signatureToString(fieldData);
         default:
-            return fieldData;
+            console.error(`fieldToString(): Unrecognized field: ${fieldType}`);
     }
+
+    return fieldData;
 };
 
 export const fieldToJSX = (fieldData, fieldType, selectedLang) => {
     const stringifiedField = fieldToString(fieldData, fieldType, selectedLang);
 
     switch (fieldType) {
+        case FIELD_TYPES.MULTILINE_STRING:
+        case FIELD_TYPES.STRING:
+        case FIELD_TYPES.NUMBER:
+        case FIELD_TYPES.PHONE:
+        case FIELD_TYPES.DATE:
+            return stringifiedField;
         case FIELD_TYPES.SIGNATURE:
             return signatureToJSX(fieldData);
         case FIELD_TYPES.STATUS:
@@ -191,6 +219,8 @@ export const fieldToJSX = (fieldData, fieldType, selectedLang) => {
         case FIELD_TYPES.ACCESS:
             return accessToJSX(fieldData, selectedLang);
         default:
-            return stringifiedField;
+            console.error(`fieldToJSX(): Unrecognized field: ${fieldType}`);
     }
+
+    return stringifiedField;
 };
