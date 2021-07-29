@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import swal from 'sweetalert';
+
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { postNewPatient } from '../../utils/api';
@@ -10,6 +12,7 @@ import {
 import { getPatientName } from '../../utils/utils';
 import CreatePatientModal from '../CreatePatientModal/CreatePatientModal';
 import Table from '../Table/Table';
+import { TableRowType, TableHeaderType } from '../../utils/custom-proptypes';
 
 /**
  * A table to be used with patient data. Same as a normal <Table/> element,
@@ -104,6 +107,12 @@ const PatientTable = ({
     );
 };
 
-PatientTable.propTypes = {};
+PatientTable.propTypes = {
+    onAddPatient: PropTypes.func.isRequired,
+    tableTitle: PropTypes.string,
+    patients: PropTypes.arrayOf(PropTypes.object),
+    headers: PropTypes.arrayOf(TableHeaderType).isRequired,
+    rowData: PropTypes.arrayOf(TableRowType).isRequired,
+};
 
 export default PatientTable;

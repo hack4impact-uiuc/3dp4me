@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import search from '../../assets/search.svg';
-import SimpleTable from '../SimpleTable/SimpleTable';
 import PropTypes from 'prop-types';
 import MuiAlert from '@material-ui/lab/Alert';
-import { TableHeaderType } from '../../utils/custom-proptypes';
+import { Button, Snackbar, TextField } from '@material-ui/core';
+
+import search from '../../assets/search.svg';
+import SimpleTable from '../SimpleTable/SimpleTable';
+import { TableHeaderType, TableRowType } from '../../utils/custom-proptypes';
 import { LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
-import { Button, Snackbar, TextField } from '@material-ui/core';
 
 const CLOSE_REASON_CLICKAWAY = 'clickaway';
 
@@ -118,16 +119,15 @@ const Table = ({
 };
 
 Table.propTypes = {
+    doesRowMatchQuery: PropTypes.func.isRequired,
+    tableTitle: PropTypes.string,
+    addRowButtonTitle: PropTypes.string.isRequired,
+    onCreateRow: PropTypes.func.isRequired,
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
     renderHeader: PropTypes.func.isRequired,
     renderTableRow: PropTypes.func.isRequired,
     data: PropTypes.arrayOf(PropTypes.object),
-    rowData: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string,
-            dataType: PropTypes.string,
-        }),
-    ).isRequired,
+    rowData: PropTypes.arrayOf(TableRowType).isRequired,
 };
 
 export default Table;

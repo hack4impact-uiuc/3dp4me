@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 
 import useSortableData from '../../hooks/useSortableData';
-import { TableHeaderType } from '../../utils/custom-proptypes';
+import { TableHeaderType, TableRowType } from '../../utils/custom-proptypes';
 import { useTranslations } from '../../hooks/useTranslations';
 
 import { StyledTableRow } from './SimpleTable.style';
@@ -65,12 +65,7 @@ SimpleTable.propTypes = {
     renderHeader: PropTypes.func.isRequired,
     renderTableRow: PropTypes.func.isRequired,
     data: PropTypes.arrayOf(PropTypes.object),
-    rowData: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string,
-            dataType: PropTypes.string,
-        }),
-    ).isRequired,
+    rowData: PropTypes.arrayOf(TableRowType).isRequired,
 };
 
 export default SimpleTable;

@@ -9,6 +9,11 @@ export const TableHeaderType = PropTypes.shape({
     sortKey: PropTypes.string.isRequired,
 });
 
+export const TableRowType = PropTypes.shape({
+    id: PropTypes.string,
+    dataType: PropTypes.string,
+});
+
 export const fieldType = PropTypes.shape({
     state: PropTypes.string.isRequired,
 });

@@ -1,30 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import swal from 'sweetalert';
-import { Button, TextField, Snackbar } from '@material-ui/core';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
-import { getPatientName } from '../../utils/utils';
 import {
     REQUIRED_DASHBOARD_SORT_KEYS,
     REQUIRED_DASHBOARD_HEADERS,
-    LANGUAGES,
 } from '../../utils/constants';
-import Table from '../../components/Table/Table';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
-import search from '../../assets/search.svg';
-import {
-    getAllStepsMetadata,
-    getPatientsByStage,
-    postNewPatient,
-} from '../../utils/api';
+import { getAllStepsMetadata, getPatientsByStage } from '../../utils/api';
 import './Dashboard.scss';
 import { useTranslations } from '../../hooks/useTranslations';
-import {
-    patientTableHeaderRenderer,
-    patientTableRowRenderer,
-} from '../../utils/table-renderers';
-import CreatePatientModal from '../../components/CreatePatientModal/CreatePatientModal';
 import PatientTable from '../../components/PatientTable/PatientTable';
 
 const Dashboard = () => {
