@@ -1,17 +1,7 @@
 /* eslint no-param-reassign: "warn" */
 import React, { useEffect, useState } from 'react';
-import Drawer from '@material-ui/core/Drawer';
-import Toolbar from '@material-ui/core/Toolbar';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import _ from 'lodash';
 import './PatientDetail.scss';
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Button,
-} from '@material-ui/core';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 
@@ -29,14 +19,7 @@ import { getPatientName, sortMetadata } from '../../utils/utils';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
-
-const arTheme = createMuiTheme({
-    direction: 'rtl',
-});
-
-const enTheme = createMuiTheme({
-    direction: 'ltr',
-});
+import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
 
 const PatientDetail = () => {
     const errorWrap = useErrorWrap();
@@ -53,9 +36,34 @@ const PatientDetail = () => {
     const params = useParams();
     const { patientId } = params;
 
-    const handleNotePanel = (panel) => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : false);
-    };
+    /**
+     * Fetch metadata for all steps and the patient's data.
+     * Then sort it.
+     */
+    useEffect(() => {
+        const getData = async () => {
+            errorWrap(async () => {
+                // Step metadata
+                let res = await getAllStepsMetadata();
+                let metaData = res.result;
+
+                // Patient data
+                res = await getPatientById(patientId);
+                const data = res.result;
+
+                // Sort it
+                metaData = sortMetadata(metaData);
+                if (metaData.length > 0) setSelectedStep(metaData[0].key);
+
+                // Store it
+                setStepMetaData(metaData);
+                setPatientData(data);
+                setLoading(false);
+            });
+        };
+
+        getData();
+    }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
 
     const onStepSaved = (stepKey, stepData) => {
         errorWrap(async () => {
@@ -102,27 +110,6 @@ const PatientDetail = () => {
         setSelectedStep(newStep);
     };
 
-    useEffect(() => {
-        const getData = async () => {
-            errorWrap(async () => {
-                let res = await getAllStepsMetadata();
-                let metaData = res.result;
-
-                res = await getPatientById(patientId);
-                const data = res.result;
-
-                metaData = sortMetadata(metaData);
-                if (metaData.length > 0) setSelectedStep(metaData[0].key);
-
-                setStepMetaData(metaData);
-                setPatientData(data);
-                setLoading(false);
-            });
-        };
-
-        getData();
-    }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
-
     /**
      * This generates the main content of this screen.
      * Renders all of the fields in the selected step
@@ -156,41 +143,6 @@ const PatientDetail = () => {
         );
     };
 
-    const generateNoteSidebar = () => {
-        if (stepMetaData == null) return null;
-        if (patientData == null) return null;
-
-        return (
-            <div className="drawer-notes-wrapper">
-                {stepMetaData.map((metaData) => {
-                    if (metaData.fields.find((f) => f.key === 'notes') == null)
-                        return null;
-
-                    if (patientData[metaData.key]?.notes == null) return null;
-
-                    return (
-                        <Accordion
-                            key={`notes-${metaData?.key}`}
-                            expanded={expanded === metaData.key}
-                            onChange={handleNotePanel(metaData.key)}
-                        >
-                            <AccordionSummary
-                                expandIcon={
-                                    <ExpandMoreIcon className="expand-icon" />
-                                }
-                            >
-                                {metaData.displayName[selectedLang]}
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                {patientData[metaData.key].notes}
-                            </AccordionDetails>
-                        </Accordion>
-                    );
-                })}
-            </div>
-        );
-    };
-
     return (
         <LoadWrapper loading={loading}>
             <div className="root">
@@ -200,79 +152,11 @@ const PatientDetail = () => {
                     isOpen={isManagePatientModalOpen}
                     onClose={() => setManagePatientModalOpen(false)}
                 />
-                <ThemeProvider
-                    theme={selectedLang === LANGUAGES.AR ? arTheme : enTheme}
-                >
-                    <Drawer
-                        className={
-                            selectedLang === LANGUAGES.EN
-                                ? 'drawer'
-                                : 'drawer-rtl'
-                        }
-                        variant="permanent"
-                        classes={{
-                            paper: 'drawer-paper',
-                        }}
-                    >
-                        <Toolbar />
-                        <div className="drawer-container">
-                            <div>
-                                <div className="drawer-text-section">
-                                    <span className="drawer-text-label">
-                                        {translations.components.sidebar.name}
-                                    </span>{' '}
-                                    <br />
-                                    <span className="drawer-text">
-                                        {getPatientName(patientData)}
-                                    </span>
-                                </div>
-                                <div className="drawer-text-section">
-                                    <span className="drawer-text-label">
-                                        {
-                                            translations.components.sidebar
-                                                .orderID
-                                        }
-                                    </span>{' '}
-                                    <br />
-                                    <span className="drawer-text">
-                                        {patientData?.orderId}
-                                    </span>
-                                </div>
-                                <div className="drawer-text-section">
-                                    <span className="drawer-text-label">
-                                        {translations.components.sidebar.status}
-                                    </span>{' '}
-                                    <br />
-                                    <span className="drawer-text">
-                                        {patientData?.status}
-                                    </span>
-                                </div>
-                                <span className="drawer-text-label">
-                                    {translations.components.notes.title}
-                                </span>
-                                {generateNoteSidebar()}
-                            </div>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Button
-                                    onClick={() =>
-                                        setManagePatientModalOpen(true)
-                                    }
-                                    className="manage-patient-button"
-                                >
-                                    {
-                                        translations.components.button
-                                            .managePatient
-                                    }
-                                </Button>
-                            </div>
-                        </div>
-                    </Drawer>
-                </ThemeProvider>
+
+                <PatientDetailSidebar
+                    stepMetaData={stepMetaData}
+                    patientData={patientData}
+                />
 
                 <div
                     className={`controller-content ${

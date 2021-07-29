@@ -39,9 +39,7 @@ function AppContent({ username, userEmail }) {
                     language,
                 });
             } else {
-                console.error(
-                    `Your preferred language is invalid!: ${language}`,
-                );
+                console.error(`Language is invalid: ${language}`);
             }
         };
 
