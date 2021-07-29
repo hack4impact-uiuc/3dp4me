@@ -16,6 +16,7 @@ import {
 } from '../../styles/variables.scss';
 import { resolveMixedObjPath } from '../../utils/object';
 import { useTranslations } from '../../hooks/useTranslations';
+import { sortMetadata } from '../../utils/utils';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -30,31 +31,6 @@ const SectionTab = () => {
     const [fieldModalOpen, setFieldModalOpen] = useState(true);
     const [stepModalOpen, setStepModalOpen] = useState(false);
     const errorWrap = useErrorWrap();
-
-    const SortMetadata = useCallback(
-        (stepMetaData) => {
-            const data = stepMetaData?.sort(
-                (a, b) => a?.stepNumber - b?.stepNumber,
-            );
-
-            data.forEach((stepData) => {
-                stepData.fields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
-                SortSubFields(stepData?.fields);
-            });
-
-            return data;
-        },
-        [SortSubFields],
-    );
-
-    const SortSubFields = useCallback((fields) => {
-        if (!fields) return;
-
-        fields.forEach((field) => {
-            field.subFields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
-            SortSubFields(field?.subFields?.subFields);
-        });
-    }, []);
 
     const onAddStep = () => {
         setStepModalOpen(true);
@@ -94,7 +70,7 @@ const SectionTab = () => {
         if (foundField.stepNumber !== updatedMetadata.length - 1) {
             foundField.stepNumber++;
             afterField.stepNumber--;
-            const sortedMetadata = SortMetadata(updatedMetadata);
+            const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
     }
@@ -111,7 +87,7 @@ const SectionTab = () => {
         if (foundField && afterField) {
             foundField.fieldNumber++;
             afterField.fieldNumber--;
-            const sortedMetadata = SortMetadata(updatedMetadata);
+            const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
     }
@@ -128,7 +104,7 @@ const SectionTab = () => {
         if (foundField && beforeField) {
             foundField.stepNumber--;
             beforeField.stepNumber++;
-            const sortedMetadata = SortMetadata(updatedMetadata);
+            const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
     }
@@ -144,7 +120,7 @@ const SectionTab = () => {
         if (foundField.fieldNumber !== 0) {
             foundField.fieldNumber--;
             beforeField.fieldNumber++;
-            const sortedMetadata = SortMetadata(updatedMetadata);
+            const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
     }
@@ -173,12 +149,12 @@ const SectionTab = () => {
                 if (res.result.length > 0) {
                     setSelectedStep(res.result[0].key);
                 }
-                const sortedMetadata = SortMetadata(res.result);
+                const sortedMetadata = sortMetadata(res.result);
                 setStepMetadata(sortedMetadata);
             });
         };
         fetchData();
-    }, [setStepMetadata, errorWrap, SortMetadata]);
+    }, [setStepMetadata, errorWrap, sortMetadata]);
 
     const onFieldModalClose = () => {
         setFieldModalOpen(false);

@@ -25,7 +25,7 @@ import {
     updateStage,
 } from '../../utils/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
-import { getPatientName } from '../../utils/utils';
+import { getPatientName, sortMetadata } from '../../utils/utils';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
@@ -39,11 +39,10 @@ const enTheme = createMuiTheme({
 });
 
 const PatientDetail = () => {
+    const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
-    const errorWrap = useErrorWrap();
-
     const [selectedStep, setSelectedStep] = useState('');
     const [stepMetaData, setStepMetaData] = useState(null);
     const [patientData, setPatientData] = useState(null);
@@ -112,21 +111,7 @@ const PatientDetail = () => {
                 res = await getPatientById(patientId);
                 const data = res.result;
 
-                metaData = metaData.sort((a, b) => a.stepNumber - b.stepNumber);
-                metaData.forEach((stepData) => {
-                    stepData.fields = stepData.fields.sort(
-                        (a, b) => a.fieldNumber - b.fieldNumber,
-                    );
-
-                    stepData.fields.forEach((field) => {
-                        if (!field.options?.length) return;
-
-                        field.options = field.options.sort(
-                            (a, b) => a.Index - b.Index,
-                        );
-                    });
-                });
-
+                metaData = sortMetadata(metaData);
                 if (metaData.length > 0) setSelectedStep(metaData[0].key);
 
                 setStepMetaData(metaData);
