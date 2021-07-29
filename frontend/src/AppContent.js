@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Dashboard from './pages/Dashboard/Dashboard';
 import AccountManagement from './pages/AccountManagement/AccountManagment';
-import Metrics from './pages/Metrics/Metrics';
 import Patients from './pages/Patients/Patients';
 import Navbar from './components/Navbar/Navbar';
 import SectionTab from './components/SectionTab/SectionTab';
@@ -71,9 +70,6 @@ function AppContent({ username, userEmail }) {
                             </Route>
                             <Route exact path="/account">
                                 <AccountManagement />
-                            </Route>
-                            <Route exact path="/metrics">
-                                <Metrics />
                             </Route>
                             <Route exact path="/patients">
                                 <Patients />

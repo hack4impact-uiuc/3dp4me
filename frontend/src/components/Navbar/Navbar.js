@@ -15,7 +15,6 @@ import { useStyles } from './Navbar.style';
 const ROUTES = {
     DASHBOARD: '/',
     PATIENTS: '/patients',
-    METRICS: '/metrics',
     ACCOUNT: '/account',
 };
 
@@ -76,10 +75,6 @@ const Navbar = ({ username, userEmail }) => {
                     {renderLink(
                         navTranslations.patients.navTitle,
                         ROUTES.PATIENTS,
-                    )}
-                    {renderLink(
-                        navTranslations.metrics.navTitle,
-                        ROUTES.METRICS,
                     )}
                     {renderLink(
                         navTranslations.accountManagement.navTitle,
