@@ -76,6 +76,7 @@ const Navbar = ({ username, userEmail }) => {
                         navTranslations.patients.navTitle,
                         ROUTES.PATIENTS,
                     )}
+                    {/* TODO: Only render this if the user is ADMIN */}
                     {renderLink(
                         navTranslations.accountManagement.navTitle,
                         ROUTES.ACCOUNT,
