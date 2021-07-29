@@ -7,7 +7,7 @@ import Store from './store/Store';
 import AppContent from './AppContent';
 import { awsconfig } from './aws/aws-exports';
 import { LANGUAGES } from './utils/constants';
-import Login from './components/Login/Login';
+import Login from './pages/Login/Login';
 import {
     UNDEFINED_AUTH,
     AUTHENTICATED,
