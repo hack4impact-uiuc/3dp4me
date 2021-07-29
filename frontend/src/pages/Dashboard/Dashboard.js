@@ -40,41 +40,35 @@ const Dashboard = () => {
         false,
     );
 
-    const onSavePatient = (patientData) => {
-        console.log(patientData);
+    /**
+     * Saves a patient to the DB
+     */
+    const onSavePatient = async (patientData) => {
+        // TODO: Update the local data
+        let patientId = null;
+
+        await errorWrap(async () => {
+            const res = await postNewPatient(patientData);
+            patientId = res?.result?._id;
+        });
+
+        swal({
+            title: res?.success
+                ? translations.components.swal.createPatient.successMsg
+                : translations.components.swal.createPatient.failMsg,
+            icon: res?.success ? 'success' : 'warning',
+        });
+
+        return patientId;
     };
 
-    const onSaveAndEditPatient = (patientData) => {
-        onSavePatient(patientData);
-    };
-
-    const createPatientHelper = async (edit) => {
-        const patient = {};
-        patient.firstName = document.getElementById('createFirstName').value;
-        patient.fathersName = document.getElementById(
-            'createFathersName',
-        ).value;
-        patient.grandfathersName = document.getElementById(
-            'createGrandfathersName',
-        ).value;
-        patient.familyName = document.getElementById('createFamilyName').value;
-
-        let res = null;
-        try {
-            res = await postNewPatient(patient);
-            const id = res.result._id;
-
-            if (edit) window.location.href += `patient-info/${id}`;
-        } catch (error) {
-            console.error(error);
-        } finally {
-            swal({
-                title: res?.success
-                    ? translations.components.swal.createPatient.successMsg
-                    : translations.components.swal.createPatient.failMsg,
-                icon: res?.success ? 'success' : 'warning',
-            });
-        }
+    /**
+     * Saves patient to the DB and immediately navigates to the
+     * detail view for that patient
+     */
+    const onSaveAndEditPatient = async (patientData) => {
+        const patientId = await onSavePatient(patientData);
+        window.location.href += `patient-info/${patientId}`;
     };
 
     const doesPatientMatchQuery = (patient, query) => {
