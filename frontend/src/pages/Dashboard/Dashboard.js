@@ -40,6 +40,14 @@ const Dashboard = () => {
         false,
     );
 
+    const onSavePatient = (patientData) => {
+        console.log(patientData);
+    };
+
+    const onSaveAndEditPatient = (patientData) => {
+        onSavePatient(patientData);
+    };
+
     const createPatientHelper = async (edit) => {
         const patient = {};
         patient.firstName = document.getElementById('createFirstName').value;
@@ -197,6 +205,8 @@ const Dashboard = () => {
             <CreatePatientModal
                 isOpen={isCreatePatientModalOpen}
                 onClose={() => setCreatePatientModalOpen(false)}
+                onSave={onSavePatient}
+                onSaveAndEdit={onSaveAndEditPatient}
             />
 
             <Snackbar

@@ -70,7 +70,11 @@ const statusToJSX = (status, selectedLang) => {
     const statusColor = getStatusColor(status);
 
     if (!statusIcon) {
-        return <div style={{ color: statusColor }}>{statusStringified}</div>;
+        return (
+            <b>
+                <div style={{ color: statusColor }}>{statusStringified}</div>
+            </b>
+        );
     }
 
     return (
