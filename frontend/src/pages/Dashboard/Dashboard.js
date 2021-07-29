@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
-import reactSwal from '@sweetalert/with-react';
 import swal from 'sweetalert';
 import { Button, TextField, Snackbar } from '@material-ui/core';
 
@@ -27,42 +25,9 @@ import {
     patientTableHeaderRenderer,
     patientTableRowRenderer,
 } from '../../utils/table-renderers';
-
-// TODO: Expand these as needed
-const useStyles = makeStyles(() => ({
-    swalEditButton: {
-        backgroundColor: '#5395F8',
-        color: 'white',
-        padding: '0 24px 0 24px',
-        height: '38px',
-        width: 'auto',
-        fontSize: '12px',
-        fontWeight: 'bold',
-        transition: 'all 0.2s',
-        borderRadius: '2px',
-        boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.15)',
-        '&:hover': {
-            backgroundColor: '#84b3fa',
-        },
-    },
-    swalCloseButton: {
-        backgroundColor: 'white',
-        color: 'black',
-        padding: '0 24px 0 24px',
-        height: '38px',
-        width: 'auto',
-        fontSize: '12px',
-        fontWeight: 'bold',
-        marginLeft: '10px',
-        '&:hover': {
-            backgroundColor: '#D3D3D3',
-        },
-    },
-}));
+import CreatePatientModal from '../../components/CreatePatientModal/CreatePatientModal';
 
 const Dashboard = () => {
-    const classes = useStyles();
-
     const [patients, setPatients] = useState([]);
     const [stepsMetaData, setStepsMetaData] = useState(null);
     const [step, setStep] = useState('');
@@ -71,6 +36,9 @@ const Dashboard = () => {
     const [noPatient, setNoPatient] = useState(false);
     const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();
+    const [isCreatePatientModalOpen, setCreatePatientModalOpen] = useState(
+        false,
+    );
 
     const createPatientHelper = async (edit) => {
         const patient = {};
@@ -99,102 +67,6 @@ const Dashboard = () => {
                 icon: res?.success ? 'success' : 'warning',
             });
         }
-    };
-
-    const createPatient = () => {
-        reactSwal({
-            buttons: {},
-            content: (
-                <div
-                    style={{
-                        marginRight: '10px',
-                        fontFamily: 'Ubuntu',
-                        margin: '0px !important',
-                        textAlign: 'left',
-                    }}
-                >
-                    <h2 style={{ fontWeight: 'bolder' }}>
-                        {translations.components.swal.createPatient.title}
-                    </h2>
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>
-                            {
-                                translations.components.swal.createPatient
-                                    .firstName
-                            }
-                        </span>
-                        <TextField
-                            size="small"
-                            id="createFirstName"
-                            fullWidth
-                            style={{ padding: 10 }}
-                            variant="outlined"
-                        />
-                        <span>
-                            {
-                                translations.components.swal.createPatient
-                                    .middleName
-                            }
-                        </span>
-                        <div style={{ display: 'flex' }}>
-                            <TextField
-                                size="small"
-                                id="createFathersName"
-                                fullWidth
-                                style={{ padding: 10 }}
-                                variant="outlined"
-                            />
-                            <TextField
-                                size="small"
-                                id="createGrandfathersName"
-                                fullWidth
-                                style={{ padding: 10 }}
-                                variant="outlined"
-                            />
-                        </div>
-                        <span>
-                            {
-                                translations.components.swal.createPatient
-                                    .lastName
-                            }
-                        </span>
-                        <TextField
-                            size="small"
-                            id="createFamilyName"
-                            fullWidth
-                            style={{ padding: 10 }}
-                            variant="outlined"
-                        />
-                    </div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            float: 'right',
-                            paddingBottom: '10px',
-                        }}
-                    >
-                        <Button
-                            className={classes.swalEditButton}
-                            onClick={() => createPatientHelper(true)}
-                        >
-                            {
-                                translations.components.swal.createPatient
-                                    .buttons.edit
-                            }
-                        </Button>
-                        <Button
-                            className={classes.swalCloseButton}
-                            onClick={() => createPatientHelper(false)}
-                        >
-                            {
-                                translations.components.swal.createPatient
-                                    .buttons.noEdit
-                            }
-                        </Button>
-                    </div>
-                </div>
-            ),
-        });
     };
 
     const doesPatientMatchQuery = (patient, query) => {
@@ -322,6 +194,11 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard">
+            <CreatePatientModal
+                isOpen={isCreatePatientModalOpen}
+                onClose={() => setCreatePatientModalOpen(false)}
+            />
+
             <Snackbar
                 open={noPatient}
                 autoHideDuration={3000}
@@ -377,7 +254,7 @@ const Dashboard = () => {
                         />
                         <Button
                             className="create-patient-button"
-                            onClick={createPatient}
+                            onClick={() => setCreatePatientModalOpen(true)}
                         >
                             {translations.components.button.createPatient}
                         </Button>
