@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Dashboard from './pages/Dashboard/Dashboard';
@@ -18,7 +19,7 @@ import { Context } from './store/Store';
 import { useTranslations } from './hooks/useTranslations';
 import { getCurrentUserInfo } from './aws/aws-helper';
 
-function AppContent({ username, userEmail }) {
+const AppContent = ({ username, userEmail }) => {
     const [state, dispatch] = useContext(Context);
     const selectedLang = useTranslations()[1];
     const contentClassNames =
@@ -98,6 +99,11 @@ function AppContent({ username, userEmail }) {
             </Router>
         </div>
     );
-}
+};
+
+AppContent.propTypes = {
+    username: PropTypes.string.isRequired,
+    userEmail: PropTypes.string.isRequired,
+};
 
 export default AppContent;

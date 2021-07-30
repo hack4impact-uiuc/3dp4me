@@ -214,7 +214,6 @@ const signatureToJSX = (signatureData) => {
  * @returns The stringified field
  */
 export const fieldToString = (fieldData, fieldType, selectedLang) => {
-    // TODO: Do all of the field types and add an assert that checks it
     switch (fieldType) {
         case FIELD_TYPES.MULTILINE_STRING:
         case FIELD_TYPES.STRING:

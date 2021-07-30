@@ -1,5 +1,5 @@
 import './SectionTab.scss';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 

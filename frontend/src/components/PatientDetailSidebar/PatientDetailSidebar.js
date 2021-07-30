@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Toolbar from '@material-ui/core/Toolbar';
-import { useTranslations } from '../../hooks/useTranslations';
 import {
     createMuiTheme,
     ThemeProvider,
@@ -12,6 +11,8 @@ import {
     AccordionSummary,
     Button,
 } from '@material-ui/core';
+
+import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
 import { getPatientName } from '../../utils/utils';
 import './PatientDetailSidebar.scss';
@@ -149,6 +150,7 @@ const PatientDetailSidebar = ({ stepMetaData, patientData, onViewPatient }) => {
 PatientDetailSidebar.propTypes = {
     stepMetaData: PropTypes.array.isRequired,
     patientData: PropTypes.object.isRequired,
+    onViewPatient: PropTypes.func.isRequired,
 };
 
 export default PatientDetailSidebar;
