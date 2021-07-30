@@ -1,3 +1,5 @@
+import translations from '../translations.json';
+
 /**
  * List of possible field types. Must match Metadata.js in the backend.
  */
@@ -55,11 +57,15 @@ export const COGNITO_ATTRIBUTES = {
  * List of headers that every per step table has. These are
  * the leftmost columns on the dashboard screen.
  */
-export const PATIENTS_BY_STEP_TABLE_HEADERS = [
-    { title: 'firstName', sortKey: 'firstName' },
-    { title: 'familyName', sortKey: 'familyName' },
-    { title: 'lastEdited', sortKey: 'lastEdited' },
-];
+export const getStepDashboardHeaders = (langKey) => {
+    const t = translations[langKey].tableHeaders;
+
+    return [
+        { title: t.firstName, sortKey: 'firstName' },
+        { title: t.familyName, sortKey: 'familyName' },
+        { title: t.lastEdited, sortKey: 'lastEdited' },
+    ];
+};
 
 /**
  * List of row data that every per step table has.
@@ -75,12 +81,16 @@ export const PATIENTS_BY_STEP_TABLE_ROW_DATA = [
  * List of headers that every patient table has. These are
  * the leftmost columns on the 'all patients' screen.
  */
-export const ALL_PATIENT_DASHBOARD_HEADERS = [
-    { title: 'firstName', sortKey: 'firstName' },
-    { title: 'familyName', sortKey: 'familyName' },
-    { title: 'lastEdited', sortKey: 'lastEdited' },
-    { title: 'status', sortKey: 'status' },
-];
+export const getPatientDashboardHeaders = (langKey) => {
+    const t = translations[langKey].tableHeaders;
+
+    return [
+        { title: t.firstName, sortKey: 'firstName' },
+        { title: t.familyName, sortKey: 'familyName' },
+        { title: t.lastEdited, sortKey: 'lastEdited' },
+        { title: t.status, sortKey: 'status' },
+    ];
+};
 
 /**
  * List of row data that every patient table has.

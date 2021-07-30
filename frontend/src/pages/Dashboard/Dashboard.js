@@ -3,8 +3,8 @@ import _ from 'lodash';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
+    getStepDashboardHeaders,
     PATIENTS_BY_STEP_TABLE_ROW_DATA,
-    PATIENTS_BY_STEP_TABLE_HEADERS,
     FIELD_TYPES,
 } from '../../utils/constants';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
@@ -95,10 +95,10 @@ const Dashboard = () => {
     function generateHeaders(stepKey, fields) {
         if (fields == null) return [];
 
-        const headers = _.cloneDeep(PATIENTS_BY_STEP_TABLE_HEADERS);
+        const headers = getStepDashboardHeaders(selectedLang);
 
         headers.push({
-            title: 'status',
+            title: translations.tableHeaders.status,
             sortKey: `${stepKey}.status`,
         });
 

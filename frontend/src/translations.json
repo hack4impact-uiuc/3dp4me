@@ -1,5 +1,11 @@
 {
     "EN": {
+        "tableHeaders": {
+            "firstName": "First Name",
+            "familyName": "Family Name",
+            "lastEdited": "Last Edited",
+            "status": "Status"
+        },
         "components": {
             "login": {
                 "signOut": "Sign Out"
@@ -152,6 +158,12 @@
         }
     },
     "AR": {
+        "tableHeaders": {
+            "firstName": "الاسم الاول",
+            "familyName": "اسم العائلة",
+            "lastEdited": "آخر تحرير",
+            "status": "حالة"
+        },
         "components": {
             "login": {
                 "signOut": "Sign Out"

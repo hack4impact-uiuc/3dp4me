@@ -5,7 +5,7 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
 import {
-    ALL_PATIENT_DASHBOARD_HEADERS,
+    getPatientDashboardHeaders,
     ALL_PATIENT_DASHBOARD_ROW_DATA,
 } from '../../utils/constants';
 import './Patients.scss';
@@ -14,7 +14,7 @@ import './Patients.scss';
  * Shows a table of all patients within the system
  */
 const Patients = () => {
-    const translations = useTranslations()[0];
+    const [translations, selectedLang] = useTranslations();
     const [allPatients, setAllPatients] = useState([]);
     const errorWrap = useErrorWrap();
 
@@ -47,7 +47,7 @@ const Patients = () => {
                     tableTitle={
                         translations.components.navbar.patients.pageTitle
                     }
-                    headers={ALL_PATIENT_DASHBOARD_HEADERS}
+                    headers={getPatientDashboardHeaders(selectedLang)}
                     rowData={ALL_PATIENT_DASHBOARD_ROW_DATA}
                     patients={allPatients}
                 />
