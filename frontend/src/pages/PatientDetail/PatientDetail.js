@@ -20,6 +20,10 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
 import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
 
+/**
+ * The detail view for a patient. Shows their information
+ * for each step.
+ */
 const PatientDetail = () => {
     const errorWrap = useErrorWrap();
     const params = useParams();

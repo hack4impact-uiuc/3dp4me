@@ -7,7 +7,7 @@ import GoogleLogo from '../../assets/google_logo.svg';
 import './Login.scss';
 
 /**
- * Login button that uses Google OAuth when clicked
+ * Page for users to log in with Google
  */
 const Login = () => {
     return (

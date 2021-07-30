@@ -38,6 +38,10 @@ const USER_TABLE_ROW_DATA = [
     { id: USER_TABLE_HEADERS[3].sortKey, dataType: FIELD_TYPES.ACCESS },
 ];
 
+/**
+ * The account management screen. Allows admins to accept people into the
+ * platform and assign roles.
+ */
 const AccountManagement = () => {
     const [translations, selectedLang] = useTranslations();
     const [userMetaData, setUserMetaData] = useState([]);
