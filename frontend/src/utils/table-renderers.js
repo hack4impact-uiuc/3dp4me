@@ -119,7 +119,11 @@ export const patientTableRowRenderer = (rowData, patient, selectedLang) => {
 
     // Add a link to the patient's page
     row.push(
-        <StyledTableCell className="cell" align="center">
+        <StyledTableCell
+            key="view-patient-data"
+            className="cell"
+            align="center"
+        >
             <Link
                 className="table-view-link"
                 to={`/patient-info/${patient._id}`}
@@ -151,7 +155,13 @@ export const patientTableHeaderRenderer = (
         onRequestSort,
         selectedLang,
     );
-    headerCells.push(<StyledTableCell className="header" align="center" />);
+    headerCells.push(
+        <StyledTableCell
+            key="view-patient"
+            className="header"
+            align="center"
+        />,
+    );
     return headerCells;
 };
 
@@ -174,7 +184,11 @@ const userTableRowRenderer = {
 
         // Add the edit button
         row.push(
-            <StyledTableCell className="cell" align="center">
+            <StyledTableCell
+                key="view-user-data"
+                className="cell"
+                align="center"
+            >
                 <IconButton onClick={() => this.onSelected(user)}>
                     <img alt="status icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
@@ -212,6 +226,8 @@ export const userTableHeaderRenderer = (
         onRequestSort,
         selectedLang,
     );
-    headerCells.push(<StyledTableCell className="header" align="center" />);
+    headerCells.push(
+        <StyledTableCell key="view-user" className="header" align="center" />,
+    );
     return headerCells;
 };

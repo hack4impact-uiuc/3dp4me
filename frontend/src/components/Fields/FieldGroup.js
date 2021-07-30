@@ -90,9 +90,10 @@ const FieldGroup = ({
         const groups = [];
 
         for (let i = 0; i < numFieldGroups; i++) {
-            groups.push(
-                <h3>{`${metadata?.displayName[selectedLang]} ${i + 1}`}</h3>,
-            );
+            const displayName = `${metadata?.displayName[selectedLang]} ${
+                i + 1
+            }`;
+            groups.push(<h3 key={displayName}>{displayName}</h3>);
             groups.push(generateSingleGroup(i));
         }
 
@@ -115,7 +116,7 @@ FieldGroup.propTypes = {
     handleFileDownload: PropTypes.func.isRequired,
     handleFileDelete: PropTypes.func.isRequired,
     stepKey: PropTypes.string,
-    value: PropTypes.object,
+    value: PropTypes.array,
     patientId: PropTypes.string,
     metadata: PropTypes.object,
     isDisabled: PropTypes.bool.isRequired,

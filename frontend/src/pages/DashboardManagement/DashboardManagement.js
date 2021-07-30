@@ -154,7 +154,7 @@ const SectionTab = () => {
             });
         };
         fetchData();
-    }, [setStepMetadata, errorWrap, sortMetadata]);
+    }, [setStepMetadata, errorWrap]);
 
     const onFieldModalClose = () => {
         setFieldModalOpen(false);

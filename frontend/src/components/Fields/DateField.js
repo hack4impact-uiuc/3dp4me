@@ -3,15 +3,11 @@ import DatePicker from 'react-datepicker';
 import PropTypes from 'prop-types';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Fields.scss';
+import { useTranslations } from '../../hooks/useTranslations';
 
-const DateField = ({
-    langKey,
-    displayName,
-    isDisabled,
-    fieldId,
-    value,
-    onChange,
-}) => {
+const DateField = ({ displayName, isDisabled, fieldId, value, onChange }) => {
+    const selectedLang = useTranslations()[1];
+
     const sendChanges = (date) => {
         onChange(fieldId, date.toString());
     };
@@ -26,7 +22,7 @@ const DateField = ({
             <DatePicker
                 selected={Date.parse(value)}
                 disabled={isDisabled}
-                locale={langKey}
+                locale={selectedLang}
                 className={className}
                 onChange={sendChanges}
             />
@@ -35,11 +31,10 @@ const DateField = ({
 };
 
 DateField.propTypes = {
-    langKey: PropTypes.string.isRequired,
     displayName: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
     fieldId: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
 };
 

@@ -148,8 +148,8 @@ const PatientDetailSidebar = ({ stepMetaData, patientData, onViewPatient }) => {
 };
 
 PatientDetailSidebar.propTypes = {
-    stepMetaData: PropTypes.array.isRequired,
-    patientData: PropTypes.object.isRequired,
+    stepMetaData: PropTypes.array,
+    patientData: PropTypes.object,
     onViewPatient: PropTypes.func.isRequired,
 };
 
