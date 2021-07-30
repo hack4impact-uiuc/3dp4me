@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Toolbar from '@material-ui/core/Toolbar';
-import './PatientDetailSidebar.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
     createMuiTheme,
@@ -15,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { LANGUAGES } from '../../utils/constants';
 import { getPatientName } from '../../utils/utils';
+import './PatientDetailSidebar.scss';
 
 const arTheme = createMuiTheme({
     direction: 'rtl',

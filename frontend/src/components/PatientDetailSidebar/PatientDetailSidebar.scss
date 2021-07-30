@@ -1,0 +1,67 @@
+@import '../../styles/variables.scss';
+@import '../../styles/colors.scss';
+
+.root {
+    display: flex;
+
+    .drawer {
+        width: $drawerWidth;
+        flex-shrink: 0;
+    }
+
+    .drawer-rtl {
+        flex-shrink: 0;
+    }
+
+    .drawer-paper {
+        width: $drawerWidth;
+        background-color: $sidebar;
+        color: white;
+    }
+
+    .drawer-container {
+        overflow: 'auto';
+        padding: 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .drawer-text {
+        font-size: 16px;
+    }
+
+    .drawer-text-label {
+        font-size: 14px;
+        color: $controllerSidebarLabel;
+    }
+
+    .drawer-text-section {
+        margin-bottom: 30px;
+    }
+
+    .drawer-notes-wrapper {
+        margin-top: 3px;
+
+        .expand-icon {
+            color: $button;
+        }
+    }
+
+    .manage-patient-button {
+        background-color: $button;
+        color: white;
+        padding: 0 24px 0 24px;
+        height: 38px;
+        width: auto;
+        font-size: 12px;
+        font-weight: bold;
+        transition: all 0.2s;
+        border-radius: 2px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+        &:hover {
+            background-color: $buttonHighlight;
+        }
+    }
+}
