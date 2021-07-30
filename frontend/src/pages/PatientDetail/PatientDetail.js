@@ -1,4 +1,3 @@
-/* eslint no-param-reassign: "warn" */
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import './PatientDetail.scss';
@@ -15,7 +14,7 @@ import {
     updateStage,
 } from '../../api/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
-import { getPatientName, sortMetadata } from '../../utils/utils';
+import { sortMetadata } from '../../utils/utils';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
@@ -23,8 +22,9 @@ import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientD
 
 const PatientDetail = () => {
     const errorWrap = useErrorWrap();
+    const params = useParams();
+    const { patientId } = params;
     const [translations, selectedLang] = useTranslations();
-    const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(true);
     const [selectedStep, setSelectedStep] = useState('');
     const [stepMetaData, setStepMetaData] = useState(null);
@@ -32,9 +32,6 @@ const PatientDetail = () => {
     const [isManagePatientModalOpen, setManagePatientModalOpen] = useState(
         false,
     );
-
-    const params = useParams();
-    const { patientId } = params;
 
     /**
      * Fetch metadata for all steps and the patient's data.
@@ -65,6 +62,10 @@ const PatientDetail = () => {
         getData();
     }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
 
+    /**
+     * Called when the patient data for a step is saved
+     * Submits to the backend and displays a message
+     */
     const onStepSaved = (stepKey, stepData) => {
         errorWrap(async () => {
             const newPatientData = _.cloneDeep(patientData);
@@ -74,6 +75,10 @@ const PatientDetail = () => {
         });
     };
 
+    /**
+     * Called when the patient data is submitted from the modal.dd
+     * Submits to the backend and displays a message
+     */
     const onPatientDataSaved = async (newPatientData) => {
         const patientDataCopy = _.cloneDeep(patientData);
         Object.assign(patientDataCopy, newPatientData);
@@ -156,6 +161,7 @@ const PatientDetail = () => {
                 <PatientDetailSidebar
                     stepMetaData={stepMetaData}
                     patientData={patientData}
+                    onViewPatient={() => setManagePatientModalOpen(true)}
                 />
 
                 <div

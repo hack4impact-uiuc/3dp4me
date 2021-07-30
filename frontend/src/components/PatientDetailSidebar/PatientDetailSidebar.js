@@ -24,7 +24,7 @@ const enTheme = createMuiTheme({
     direction: 'ltr',
 });
 
-const PatientDetailSidebar = ({ stepMetaData, patientData }) => {
+const PatientDetailSidebar = ({ stepMetaData, patientData, onViewPatient }) => {
     const [expandedStepKey, setExpandedStepKey] = useState(null);
     const [translations, selectedLang] = useTranslations();
 
@@ -134,10 +134,7 @@ const PatientDetailSidebar = ({ stepMetaData, patientData }) => {
                         }}
                     >
                         <Button
-                            onClick={
-                                () => {}
-                                //setManagePatientModalOpen(true)
-                            }
+                            onClick={onViewPatient}
                             className="manage-patient-button"
                         >
                             {translations.components.button.managePatient}
@@ -149,6 +146,9 @@ const PatientDetailSidebar = ({ stepMetaData, patientData }) => {
     );
 };
 
-PatientDetailSidebar.propTypes = {};
+PatientDetailSidebar.propTypes = {
+    stepMetaData: PropTypes.array.isRequired,
+    patientData: PropTypes.object.isRequired,
+};
 
 export default PatientDetailSidebar;
