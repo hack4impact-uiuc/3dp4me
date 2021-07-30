@@ -2,7 +2,6 @@
     "EN": {
         "components": {
             "login": {
-                "authLoading": "Authenticating User",
                 "signOut": "Sign Out"
             },
             "signature": {
@@ -25,9 +24,6 @@
                 "patients": {
                     "navTitle": "Patients",
                     "pageTitle": "All Patients"
-                },
-                "metrics": {
-                    "navTitle": "Metrics"
                 },
                 "accountManagement": {
                     "navTitle": "Account Management"
@@ -110,10 +106,7 @@
                     "firstName": "Name",
                     "middleName": "Middle Names",
                     "lastName": "Last Name",
-                    "dob": "DOB",
-                    "id": "ID",
                     "successMsg": "Created Patient",
-                    "failMsg": "Could not create Patient",
                     "buttons": {
                         "noEdit": "Save and Close",
                         "edit": "Save and Continue Editing"
@@ -121,13 +114,10 @@
                 },
                 "managePatient": {
                     "title": "Manage Patient",
-                    "profileInformation": "Profile Information",
                     "firstName": "First Name",
                     "fatherName": "Father Name",
                     "grandfatherName": "Grandfather Name",
                     "familyName": "Family Name",
-                    "profileManagement": "Profile Management",
-                    "archiveInformation": "Archiving a patient will take them off of the dashboard view",
                     "successMsg": "Updated Patient",
                     "buttons": {
                         "save": "Save"
@@ -164,7 +154,6 @@
     "AR": {
         "components": {
             "login": {
-                "authLoading": "مصادقة المستخدم",
                 "signOut": "Sign Out"
             },
             "signature": {
@@ -188,13 +177,8 @@
                     "navTitle": "\u0627\u0644\u0645\u0631\u0636\u0649",
                     "pageTitle": "\u0643\u0644 \u0627\u0644\u0645\u0631\u0636\u0649"
                 },
-                "metrics": {
-                    "navTitle": "\u0627\u0644\u0645\u0642\u0627\u064a\u064a\u0633",
-                    "pageTitle": ""
-                },
                 "accountManagement": {
-                    "navTitle": "\u0627\u062f\u0627\u0631\u0629 \u0627\u0644\u062d\u0633\u0627\u0628",
-                    "pageTitle": ""
+                    "navTitle": "\u0627\u062f\u0627\u0631\u0629 \u0627\u0644\u062d\u0633\u0627\u0628"
                 },
                 "dashboardManagement": {
                     "navTitle": "إدارة لوحة القيادة"
@@ -207,11 +191,9 @@
             "sidebar": {
                 "name": "\u0627\u0633\u0645",
                 "orderID": "\u0631\u0642\u0645 \u0627\u0644\u062a\u0639\u0631\u064a\u0641 \u0627\u0644\u062e\u0627\u0635 \u0628\u0627\u0644\u0637\u0644\u0628",
-                "dob": "DOB",
                 "status": "\u0627\u0644\u062d\u0627\u0644\u0629"
             },
             "bottombar": {
-                "status": "\u0627\u0644\u062d\u0627\u0644\u0629",
                 "unfinished": "\u063a\u064a\u0631 \u0645\u0643\u062a\u0645\u0644",
                 "partial": "\u0645\u0643\u062a\u0645\u0644 \u062c\u0632\u0626\u064a\u064b\u0627",
                 "finished": "\u0627\u0643\u062a\u0645\u0627\u0644",
@@ -222,34 +204,13 @@
                 "lastEditedBy": "التعديل الأخير بواسطة",
                 "on": "تشغيل",
                 "savedMessage": {
-                    "patientInfo": "\u062a\u0645 \u062d\u0641\u0638 \u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0645\u0631\u064a\u0636",
-                    "earScan": "\u062a\u0645 \u062d\u0641\u0638 \u0645\u0633\u062d \u0627\u0644\u0623\u0630\u0646",
-                    "model": "\u062a\u0645 \u062d\u0641\u0638 \u0646\u0645\u0648\u0630\u062c CAD",
-                    "print": "\u062a\u0645 \u062d\u0641\u0638 \u0627\u0644\u0637\u0628\u0627\u0639\u0629 \u062b\u0644\u0627\u062b\u064a\u0629 \u0627\u0644\u0623\u0628\u0639\u0627\u062f",
-                    "processing": "\u062a\u0645 \u062d\u0641\u0638 \u0627\u0644\u0645\u0639\u0627\u0644\u062c\u0629 \u0627\u0644\u0644\u0627\u062d\u0642\u0629",
-                    "delivery": "\u062a\u0645 \u062d\u0641\u0638 \u0627\u0644\u062a\u0633\u0644\u064a\u0645",
-                    "feedback": "\u062a\u0645 \u062d\u0641\u0638 \u0627\u0644\u062a\u0639\u0644\u064a\u0642\u0627\u062a"
+                    "patientInfo": "\u062a\u0645 \u062d\u0641\u0638 \u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0645\u0631\u064a\u0636"
                 }
-            },
-            "stepTabs": {
-                "patientInfo": "\u0627\u0644\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0637\u0628\u064a\u0629",
-                "earScan": "\u0645\u0633\u062d \u0627\u0644\u0623\u0630\u0646",
-                "CADModeling": "\u0646\u0645\u0630\u062c\u0629 CAD",
-                "print": "\u0637\u0628\u0627\u0639\u0629 \u062b\u0644\u0627\u062b\u064a\u0629 \u0627\u0644\u0623\u0628\u0639\u0627\u062f",
-                "processing": "\u0645\u0639\u0627\u0644\u062c\u0629",
-                "delivery": "\u062a\u0648\u0635\u064a\u0644",
-                "feedback": "\u0631\u062f\u0648\u062f \u0627\u0644\u0641\u0639\u0644"
             },
             "table": {
                 "loading": "جار التحميل",
                 "noPatientsFound": "\u0622\u0633\u0641! \u0644\u0627 \u064a\u0648\u062c\u062f \u0645\u0631\u0636\u0649 \u0645\u0637\u0627\u0628\u0642\u064a\u0646",
                 "view": "\u0631\u0623\u064a"
-            },
-            "dropdown": {
-                "newest": "\u0627\u0644\u0623\u062d\u062f\u062b",
-                "oldest": "\u0627\u0644\u0623\u0642\u062f\u0645",
-                "serial": "\u0645\u0633\u0644\u0633\u0644",
-                "status": "\u0627\u0644\u062d\u0627\u0644\u0629"
             },
             "selectQuestionFormat": {
                 "allQuestions": "All Questions",
@@ -260,7 +221,6 @@
             },
             "button": {
                 "createPatient": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",
-                "upload": "\u0631\u0641\u0639 \u0645\u0644\u0641",
                 "save": "\u062d\u0641\u0638",
                 "edit": "\u062a\u062d\u0631\u064a\u0631 \u0627\u0644\u062e\u0637\u0648\u0629",
                 "next": "Next",
@@ -282,8 +242,6 @@
                 "title": "\u0645\u0644\u0627\u062d\u0638\u0627\u062a"
             },
             "file": {
-                "download": "\u062a\u062d\u0645\u064a\u0644",
-                "title": "\u0627\u0644\u0645\u0644\u0641\u0627\u062a",
                 "addAnother": "\u0623\u0636\u0641 \u0622\u062e\u0631"
             },
             "audio": {
@@ -300,10 +258,7 @@
                     "firstName": "\u0627\u0633\u0645",
                     "middleName": "\u0627\u0644\u0623\u0633\u0645\u0627\u0621 \u0627\u0644\u0648\u0633\u0637\u0649",
                     "lastName": "\u0627\u0644\u0643\u0646\u064a\u0629",
-                    "dob": "DOB",
-                    "id": "\u0625\u0630",
                     "successMsg": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",
-                    "failMsg": "تعذر إنشاء المريض",
                     "buttons": {
                         "noEdit": "\u0627\u062d\u0641\u0638 \u0648\u0623\u063a\u0644\u0642",
                         "edit": "\u0627\u062d\u0641\u0638 \u0648\u062a\u0627\u0628\u0639 \u0627\u0644\u062a\u062d\u0631\u064a\u0631"
@@ -311,22 +266,12 @@
                 },
                 "managePatient": {
                     "title": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0631\u064a\u0636",
-                    "profileInformation": "\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a",
                     "firstName": "الاسم الأول",
                     "fatherName": "اسم الأب",
                     "grandfatherName": "اسم جده",
                     "familyName": "اسم العائلة",
-                    "profileManagement": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0634\u062e\u0635\u064a",
-                    "archiveInformation": "\u0633\u062a\u0624\u062f\u064a \u0623\u0631\u0634\u0641\u0629 \u0627\u0644\u0645\u0631\u064a\u0636 \u0625\u0644\u0649 \u0625\u0632\u0627\u0644\u062a\u0647 \u0645\u0646 \u0639\u0631\u0636 \u0644\u0648\u062d\u0629 \u0627\u0644\u0642\u064a\u0627\u062f\u0629",
-                    "active": "\u0646\u0634\u064a\u0637",
-                    "feedback": "\u0631\u062f\u0648\u062f \u0627\u0644\u0641\u0639\u0644",
-                    "archive": "\u0623\u0631\u0634\u064a\u0641",
-                    "deleteInformation": "\u0633\u064a\u0624\u062f\u064a \u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636 \u0625\u0644\u0649 \u0625\u0632\u0627\u0644\u062a\u0647 \u0645\u0646 \u0627\u0644\u0645\u0646\u0635\u0629 \u0625\u0644\u0649 \u0627\u0644\u0623\u0628\u062f\u0021",
                     "successMsg": "\u0627\u0644\u0645\u0631\u064a\u0636 \u0627\u0644\u0645\u062d\u062f\u062b",
-                    "confirmDeleteMsg": "\u062a\u0623\u0643\u064a\u062f \u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636",
-                    "deleteSuccessMsg": "\u062a\u0645 \u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636",
                     "buttons": {
-                        "delete": "\u062d\u0630\u0641 \u0627\u0644\u0645\u0631\u064a\u0636",
                         "save": "\u062d\u0641\u0638"
                     },
                     "orderId": "رقم التعريف الخاص بالطلب"
@@ -338,19 +283,9 @@
                     "clearance": "Clearance Level",
                     "showOnDashBoard": "Show on Dashboard",
                     "field": "Field",
-                    "arabic": "Arabic Question",
-                    "arabicChoice": "Arabic Choice #",
-                    "arabicDividerName": "Arabic Divider Name",
-                    "arabicHeaderName": "Arabic Header Name",
-                    "english": "English Question",
-                    "englishChoice": "English Choice #",
-                    "englishDividerName": "English Divider Name",
-                    "englishHeaderName": "English Header Name",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard",
-                        "addChoice": "+",
-                        "removeChoice": "x"
+                        "discard": "Discard"
                     }
                 }
             }
@@ -366,70 +301,6 @@
             "Discard": "Discard",
             "username": "Username",
             "email": "Email"
-        },
-        "pages": {
-            "patientInfoTitle": "\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0637\u0628\u064a\u0629",
-            "earScanTitle": "\u0645\u0633\u062d \u0627\u0644\u0623\u0630\u0646",
-            "CADModelingTitle": "\u0646\u0645\u0630\u062c\u0629 CAD",
-            "printingTitle": "\u0637\u0628\u0627\u0639\u0629 \u062b\u0644\u0627\u062b\u064a\u0629 \u0627\u0644\u0623\u0628\u0639\u0627\u062f",
-            "postProcessingTitle": "\u0627\u0644\u0645\u0639\u0627\u0644\u062c\u0629 \u0627\u0644\u0628\u0639\u062f\u064a\u0629",
-            "deliveryTitle": "\u062a\u0648\u0635\u064a\u0644",
-            "feedbackTitle": "\u0631\u062f\u0648\u062f \u0627\u0644\u0641\u0639\u0644"
-        },
-        "patientView": {
-            "patientInfo": {
-                "title": "\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0637\u0628\u064a\u0629",
-                "patientSection": "\u0635\u0628\u0648\u0631",
-                "name": "\u0627\u0633\u0645",
-                "dob": "DOB",
-                "ssn": "\u0627\u0644\u0623\u0631\u062f\u0646 SSN",
-                "address": "\u0639\u0646\u0648\u0627\u0646",
-                "phone": "\u0647\u0627\u062a\u0641",
-                "emergencySection": "\u0627\u0644\u0627\u062a\u0635\u0627\u0644 \u0628\u0627\u0644\u0637\u0648\u0627\u0631\u0649\u0621",
-                "relationship": "\u0635\u0644\u0629",
-                "informationSection": "\u0645\u0639\u0644\u0648\u0645\u0627\u062a",
-                "deliverySection": "\u0637\u0631\u064a\u0642\u0629 \u0627\u0644\u062a\u0648\u0635\u064a\u0644",
-                "delivery": "\u062a\u0648\u0635\u064a\u0644",
-                "handDelivery": "\u0627\u0644\u062a\u0633\u0644\u064a\u0645 \u0628\u0627\u0644\u064a\u062f",
-                "pickup": "\u0627\u0645\u0633\u0643"
-            },
-            "earScan": {
-                "title": "\u0645\u0633\u062d \u0627\u0644\u0623\u0630\u0646",
-                "fileHeaderLeft": "\u0645\u0633\u062d \u0627\u0644\u0623\u0630\u0646 \u0627\u0644\u064a\u0633\u0631\u0649",
-                "fileHeaderRight": "\u0645\u0633\u062d \u0627\u0644\u0623\u0630\u0646 \u0627\u0644\u064a\u0645\u0646\u0649"
-            },
-            "CADModeling": {
-                "title": "\u0646\u0645\u0648\u0630\u062c CAD",
-                "fileHeaderLeft": "CAD \u0627\u0644\u0623\u0630\u0646 \u0627\u0644\u064a\u0633\u0631\u0649",
-                "fileHeaderRight": "\u0627\u0644\u0623\u0630\u0646 \u0627\u0644\u064a\u0645\u0646\u0649 CAD"
-            },
-            "printing": {
-                "title": "\u0637\u0628\u0627\u0639\u0629 \u062b\u0644\u0627\u062b\u064a\u0629 \u0627\u0644\u0623\u0628\u0639\u0627\u062f",
-                "fileHeader": "\u0645\u0644\u0641 \u0627\u0644\u0637\u0628\u0627\u0639\u0629 \u062b\u0644\u0627\u062b\u064a\u0629 \u0627\u0644\u0623\u0628\u0639\u0627\u062f"
-            },
-            "postProcessing": {
-                "title": "\u0627\u0644\u0645\u0639\u0627\u0644\u062c\u0629 \u0627\u0644\u0628\u0639\u062f\u064a\u0629",
-                "fileHeader": ""
-            },
-            "delivery": {
-                "title": "\u062a\u0648\u0635\u064a\u0644",
-                "address": "\u0639\u0646\u0648\u0627\u0646",
-                "addressLabel": "\u0644\u064a\u062a\u0645 \u062a\u0633\u0644\u064a\u0645\u0647\u0627 \u0628\u0627\u0644\u064a\u062f",
-                "notReady": "\u062c\u0627\u0647\u0632 \u0644\u0644\u062a\u0633\u0644\u064a\u0645",
-                "ready": "\u062c\u0627\u0647\u0632 \u0644\u0644\u062a\u0633\u0644\u064a\u0645",
-                "out": "\u062e\u0627\u0631\u062c \u0644\u0644\u062a\u0648\u0635\u064a\u0644",
-                "handDelivered": "\u062a\u0633\u0644\u0645 \u0628\u0627\u0644\u064a\u062f",
-                "pickup": "\u0627\u0645\u0633\u0643",
-                "status": "\u0627\u0644\u062d\u0627\u0644\u0629"
-            },
-            "feedback": {
-                "title": "\u0631\u062f\u0648\u062f \u0627\u0644\u0641\u0639\u0644",
-                "initial": "\u0627\u0644\u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0627\u0644\u0623\u0648\u0644\u064a\u0629",
-                "sixMonth": "\u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0644\u0645\u062f\u0629 6 \u0623\u0634\u0647\u0631",
-                "oneYear": "1 \u0633\u0646\u0629 \u0645\u0644\u0627\u062d\u0638\u0627\u062a",
-                "twoYear": "2 \u0633\u0646\u0629 \u0645\u0644\u0627\u062d\u0638\u0627\u062a",
-                "collected": "\u062a\u0645 \u062c\u0645\u0639\u0647\u0627 \u0641\u064a:"
-            }
         }
     }
 }
