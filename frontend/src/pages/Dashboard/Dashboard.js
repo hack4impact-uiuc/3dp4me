@@ -5,6 +5,7 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
     PATIENTS_BY_STEP_TABLE_ROW_DATA,
     PATIENTS_BY_STEP_TABLE_HEADERS,
+    FIELD_TYPES,
 } from '../../utils/constants';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import { getAllStepsMetadata, getPatientsByStage } from '../../api/api';
@@ -95,6 +96,12 @@ const Dashboard = () => {
         if (fields == null) return [];
 
         const headers = _.cloneDeep(PATIENTS_BY_STEP_TABLE_HEADERS);
+
+        headers.push({
+            title: 'status',
+            sortKey: `${stepKey}.status`,
+        });
+
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 headers.push({
@@ -115,6 +122,11 @@ const Dashboard = () => {
         if (fields == null) return [];
 
         const rowData = _.cloneDeep(PATIENTS_BY_STEP_TABLE_ROW_DATA);
+        rowData.push({
+            id: `${stepKey}.status`,
+            dataType: FIELD_TYPES.STEP_STATUS,
+        });
+
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 rowData.push({

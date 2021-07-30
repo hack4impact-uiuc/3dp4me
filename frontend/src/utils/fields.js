@@ -17,9 +17,9 @@ import {
 } from './constants';
 
 /**
- * Converts a step or patient status to a string
+ * Converts a step status to a string
  */
-const statusToString = (status, selectedLang) => {
+const stepStatusToString = (status, selectedLang) => {
     const bottomBarTranslations =
         translations[selectedLang].components.bottombar;
 
@@ -30,6 +30,24 @@ const statusToString = (status, selectedLang) => {
             return bottomBarTranslations.partial;
         case STEP_STATUS.UNFINISHED:
             return bottomBarTranslations.unfinished;
+        case undefined:
+        case null:
+            return bottomBarTranslations.unfinished;
+        default:
+            console.error(`statusToString(): Unrecognized status: ${status}`);
+    }
+
+    return status;
+};
+
+/**
+ * Converts a patient status to a string
+ */
+const patientStatusToString = (status, selectedLang) => {
+    const bottomBarTranslations =
+        translations[selectedLang].components.bottombar;
+
+    switch (status) {
         case PATIENT_STATUS.ACTIVE:
             return bottomBarTranslations.active;
         case PATIENT_STATUS.ARCHIVE:
@@ -44,9 +62,9 @@ const statusToString = (status, selectedLang) => {
 };
 
 /**
- * Gets the icon associated with the status. Null if no icon.
+ * Gets the icon associated with the status.
  */
-const getStatusIcon = (status) => {
+const getStepStatusIcon = (status) => {
     switch (status) {
         case STEP_STATUS.FINISHED:
             return finishedIcon;
@@ -54,21 +72,22 @@ const getStatusIcon = (status) => {
             return partiallyIcon;
         case STEP_STATUS.UNFINISHED:
             return unfinishedIcon;
-        case PATIENT_STATUS.ACTIVE:
-        case PATIENT_STATUS.ARCHIVE:
-        case PATIENT_STATUS.FEEDBACK:
-            return null;
+        case undefined:
+        case null:
+            return unfinishedIcon;
         default:
-            console.error(`getStatusIcon(): Unrecognized status: ${status}`);
+            console.error(
+                `getStepStatusIcon(): Unrecognized status: ${status}`,
+            );
     }
 
     return null;
 };
 
 /**
- * Gets the color associated with the status. Null if no color.
+ * Gets the color associated with the status.
  */
-const getStatusColor = (status) => {
+const getPatientStatusColor = (status) => {
     switch (status) {
         case PATIENT_STATUS.ACTIVE:
             return '#65d991';
@@ -76,32 +95,21 @@ const getStatusColor = (status) => {
             return 'black';
         case PATIENT_STATUS.FEEDBACK:
             return '#5395f8';
-        case STEP_STATUS.FINISHED:
-        case STEP_STATUS.PARTIALLY_FINISHED:
-        case STEP_STATUS.UNFINISHED:
-            return null;
         default:
-            console.error(`getStatusColor(): Unrecognized status: ${status}`);
+            console.error(
+                `getPatientStatusColor(): Unrecognized status: ${status}`,
+            );
     }
 
     return 'black';
 };
 
 /**
- * Converts a status value to JSX.
+ * Converts a step status value to JSX.
  */
-const statusToJSX = (status, selectedLang) => {
-    const statusStringified = statusToString(status, selectedLang);
-    const statusIcon = getStatusIcon(status);
-    const statusColor = getStatusColor(status);
-
-    if (!statusIcon) {
-        return (
-            <b>
-                <div style={{ color: statusColor }}>{statusStringified}</div>
-            </b>
-        );
-    }
+const stepStatusToJSX = (status, selectedLang) => {
+    const statusStringified = stepStatusToString(status, selectedLang);
+    const statusIcon = getStepStatusIcon(status);
 
     return (
         <div>
@@ -113,6 +121,20 @@ const statusToJSX = (status, selectedLang) => {
             />
             {` ${statusStringified}`}
         </div>
+    );
+};
+
+/**
+ * Converts a patient's overall status value to JSX.
+ */
+const patientStatusToJSX = (status, selectedLang) => {
+    const statusStringified = patientStatusToString(status, selectedLang);
+    const statusColor = getPatientStatusColor(status);
+
+    return (
+        <b>
+            <div style={{ color: statusColor }}>{statusStringified}</div>
+        </b>
     );
 };
 
@@ -222,8 +244,10 @@ export const fieldToString = (fieldData, fieldType, selectedLang) => {
             return fieldData;
         case FIELD_TYPES.DATE:
             return formatDate(new Date(fieldData), selectedLang);
-        case FIELD_TYPES.STATUS:
-            return statusToString(fieldData, selectedLang);
+        case FIELD_TYPES.STEP_STATUS:
+            return stepStatusToString(fieldData, selectedLang);
+        case FIELD_TYPES.PATIENT_STATUS:
+            return patientStatusToString(fieldData, selectedLang);
         case FIELD_TYPES.ACCESS:
             return accessToString(fieldData, selectedLang);
         case FIELD_TYPES.SIGNATURE:
@@ -254,8 +278,10 @@ export const fieldToJSX = (fieldData, fieldType, selectedLang) => {
             return stringifiedField;
         case FIELD_TYPES.SIGNATURE:
             return signatureToJSX(fieldData);
-        case FIELD_TYPES.STATUS:
-            return statusToJSX(fieldData, selectedLang);
+        case FIELD_TYPES.STEP_STATUS:
+            return stepStatusToJSX(fieldData, selectedLang);
+        case FIELD_TYPES.PATIENT_STATUS:
+            return patientStatusToJSX(fieldData, selectedLang);
         case FIELD_TYPES.ACCESS:
             return accessToJSX(fieldData, selectedLang);
         default:
