@@ -11,6 +11,7 @@ import { getAllStepsMetadata, getPatientsByStage } from '../../api/api';
 import './Dashboard.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
+import { sortMetadata } from '../../utils/utils';
 
 /**
  * Shows a table of active patients, with a different table for each step
@@ -35,11 +36,11 @@ const Dashboard = () => {
         const getMetadata = async () => {
             let res = await getAllStepsMetadata();
 
-            // TODO: Sort metadata here
-            setStepsMetaData(res.result);
-            if (res.result.length > 0) {
-                setSelectedStep(res.result[0].key);
-                res = await getPatientsByStage(res.result[0].key);
+            const metaData = sortMetadata(res.result);
+            setStepsMetaData(metaData);
+            if (metaData.length > 0) {
+                setSelectedStep(metaData[0].key);
+                res = await getPatientsByStage(metaData[0].key);
                 setPatients(res.result);
             }
         };
