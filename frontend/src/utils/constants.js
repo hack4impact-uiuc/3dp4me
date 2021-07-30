@@ -28,7 +28,7 @@ export const ROUTES = {
     DASHBOARD: '/',
     PATIENTS: '/patients',
     ACCOUNT: '/account',
-    DASHBOARD_MANAGEMENT: '/section-tab',
+    DASHBOARD_MANAGEMENT: '/dashboard-management',
     PATIENT_DETAIL: '/patient-info',
 };
 

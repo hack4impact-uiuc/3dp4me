@@ -1,14 +1,14 @@
-import './SectionTab.scss';
+import './DashboardManagement.scss';
 import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 
-import BottomBar from '../BottomBar/BottomBar';
+import BottomBar from '../../components/BottomBar/BottomBar';
 import { getAllStepsMetadata } from '../../api/api';
-import Sidebar from '../Sidebar/Sidebar';
-import StepManagementContent from '../StepManagementContent/StepManagementContent';
-import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
-import CreateStepModal from '../CreateStepModal/CreateStepModal';
+import Sidebar from '../../components/Sidebar/Sidebar';
+import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
+import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
+import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
     drawerWidth,
@@ -28,7 +28,7 @@ const SectionTab = () => {
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
-    const [fieldModalOpen, setFieldModalOpen] = useState(true);
+    const [fieldModalOpen, setFieldModalOpen] = useState(false);
     const [stepModalOpen, setStepModalOpen] = useState(false);
     const errorWrap = useErrorWrap();
 

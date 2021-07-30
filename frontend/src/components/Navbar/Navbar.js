@@ -75,6 +75,10 @@ const Navbar = ({ username, userEmail }) => {
                         navTranslations.accountManagement.navTitle,
                         ROUTES.ACCOUNT,
                     )}
+                    {renderLink(
+                        navTranslations.dashboardManagement.navTitle,
+                        ROUTES.DASHBOARD_MANAGEMENT,
+                    )}
                     <AccountCircleIcon
                         className="accountCircle"
                         aria-controls="account-dropdown-menu"

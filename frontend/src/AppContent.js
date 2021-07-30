@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import AccountManagement from './pages/AccountManagement/AccountManagment';
 import Patients from './pages/Patients/Patients';
 import Navbar from './components/Navbar/Navbar';
-import SectionTab from './components/SectionTab/SectionTab';
+import DashboardManagement from './pages/DashboardManagement/DashboardManagement';
 import PatientDetail from './pages/PatientDetail/PatientDetail';
 import ErrorModal from './components/ErrorModal/ErrorModal';
 import {
@@ -86,7 +86,7 @@ const AppContent = ({ username, userEmail }) => {
                             <Patients />
                         </Route>
                         <Route exact path={ROUTES.DASHBOARD_MANAGEMENT}>
-                            <SectionTab />
+                            <DashboardManagement />
                         </Route>
                         <Route
                             exact
