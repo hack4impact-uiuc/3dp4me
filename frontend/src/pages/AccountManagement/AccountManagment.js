@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 
 import {
+    getUserTableHeaders,
     COGNITO_ATTRIBUTES,
-    FIELD_TYPES,
+    USER_TABLE_ROW_DATA,
     LANGUAGES,
 } from '../../utils/constants';
 import { getAllRoles, getAllUsers } from '../../api/api';
@@ -23,20 +24,6 @@ import {
     getRolesValue,
     getUsername,
 } from '../../aws/aws-users';
-
-const USER_TABLE_HEADERS = [
-    { title: 'Name', sortKey: 'Name' },
-    { title: 'Email', sortKey: 'Email' },
-    { title: 'Roles', sortKey: 'Roles' },
-    { title: 'Access', sortKey: 'Access' },
-];
-
-const USER_TABLE_ROW_DATA = [
-    { id: USER_TABLE_HEADERS[0].sortKey, dataType: FIELD_TYPES.STRING },
-    { id: USER_TABLE_HEADERS[1].sortKey, dataType: FIELD_TYPES.STRING },
-    { id: USER_TABLE_HEADERS[2].sortKey, dataType: FIELD_TYPES.STRING },
-    { id: USER_TABLE_HEADERS[3].sortKey, dataType: FIELD_TYPES.ACCESS },
-];
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -148,7 +135,7 @@ const AccountManagement = () => {
         return (
             <Table
                 data={usersToTableFormat(userMetaData)}
-                headers={USER_TABLE_HEADERS}
+                headers={getUserTableHeaders(selectedLang)}
                 rowData={USER_TABLE_ROW_DATA}
                 renderHeader={userTableHeaderRenderer}
                 renderTableRow={generateUserTableRowRenderer(onUserSelected)}

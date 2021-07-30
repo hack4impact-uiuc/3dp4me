@@ -104,6 +104,32 @@ export const ALL_PATIENT_DASHBOARD_ROW_DATA = [
 ];
 
 /**
+ * List of headers that the user table has. These are
+ * the columns on the 'manage users' screen.
+ */
+export const getUserTableHeaders = (langKey) => {
+    const t = translations[langKey].tableHeaders;
+
+    return [
+        { title: t.name, sortKey: 'Name' },
+        { title: t.email, sortKey: 'Email' },
+        { title: t.roles, sortKey: 'Roles' },
+        { title: t.access, sortKey: 'Access' },
+    ];
+};
+
+/**
+ * List of row data that the user table has.
+ * 'id' must match 'sortKey' in the headers
+ */
+export const USER_TABLE_ROW_DATA = [
+    { id: 'Name', dataType: FIELD_TYPES.STRING },
+    { id: 'Email', dataType: FIELD_TYPES.STRING },
+    { id: 'Roles', dataType: FIELD_TYPES.STRING },
+    { id: 'Access', dataType: FIELD_TYPES.ACCESS },
+];
+
+/**
  * List of different access levels. Must match the backend.
  */
 export const ACCESS_LEVELS = {
