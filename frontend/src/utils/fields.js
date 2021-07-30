@@ -23,15 +23,14 @@ const stepStatusToString = (status, selectedLang) => {
     const bottomBarTranslations =
         translations[selectedLang].components.bottombar;
 
+    if (!status) return bottomBarTranslations.unfinished;
+
     switch (status) {
         case STEP_STATUS.FINISHED:
             return bottomBarTranslations.finished;
         case STEP_STATUS.PARTIALLY_FINISHED:
             return bottomBarTranslations.partial;
         case STEP_STATUS.UNFINISHED:
-            return bottomBarTranslations.unfinished;
-        case undefined:
-        case null:
             return bottomBarTranslations.unfinished;
         default:
             console.error(`statusToString(): Unrecognized status: ${status}`);
@@ -65,15 +64,14 @@ const patientStatusToString = (status, selectedLang) => {
  * Gets the icon associated with the status.
  */
 const getStepStatusIcon = (status) => {
+    if (!status) return unfinishedIcon;
+
     switch (status) {
         case STEP_STATUS.FINISHED:
             return finishedIcon;
         case STEP_STATUS.PARTIALLY_FINISHED:
             return partiallyIcon;
         case STEP_STATUS.UNFINISHED:
-            return unfinishedIcon;
-        case undefined:
-        case null:
             return unfinishedIcon;
         default:
             console.error(
