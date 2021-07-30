@@ -4,7 +4,6 @@ import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
 
 import RadioButtonField from '../Fields/RadioButtonField';
-import { FieldsType } from '../../utils/custom-proptypes';
 import { FIELD_TYPES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
@@ -141,7 +140,6 @@ const StepManagementContent = ({
 };
 
 StepManagementContent.propTypes = {
-    fields: FieldsType.isRequired,
     isEditing: PropTypes.bool.isRequired,
     onDownPressed: PropTypes.func.isRequired,
     onEditField: PropTypes.func.isRequired,
