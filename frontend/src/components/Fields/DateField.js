@@ -1,6 +1,7 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import PropTypes from 'prop-types';
+
 import 'react-datepicker/dist/react-datepicker.css';
 import './Fields.scss';
 import { useTranslations } from '../../hooks/useTranslations';
