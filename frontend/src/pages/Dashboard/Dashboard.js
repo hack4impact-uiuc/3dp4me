@@ -97,6 +97,7 @@ const Dashboard = () => {
 
         const headers = getStepDashboardHeaders(selectedLang);
 
+        // Have to push this at runtime because we don't know the stepKey ahead
         headers.push({
             title: translations.tableHeaders.status,
             sortKey: `${stepKey}.status`,
