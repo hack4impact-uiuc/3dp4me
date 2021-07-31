@@ -13,6 +13,7 @@ const {
     setResponseHeaders,
     configureHelment,
 } = require('./middleware/responses');
+const { logRequest } = require('./middleware/logging');
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.get('/*', function (req, res, next) {
 });
 
 app.use(requireAuthentication);
+app.use(logRequest);
 app.use(require('./routes'));
 app.use(errorHandler);
 
