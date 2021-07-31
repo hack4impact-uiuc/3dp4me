@@ -1,8 +1,8 @@
+var server = require('../../../app');
 const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
-var server = require('../../../app');
 const {
     initAuthMocker,
     setCurrentUser,
@@ -62,7 +62,8 @@ describe('POST /patients', () => {
 
         // Check that DB is correct
         const patientId = resContent.result._id;
-        let patientData = await models.Patient.findById(patientId).lean();
+        let patientData = await models.Patient.findById(patientId);
+        patientData = patientData.toObject();
 
         expect(patientId).not.toBeNull();
         expect(patientData.dateCreated.getTime()).toBeGreaterThanOrEqual(
@@ -70,7 +71,7 @@ describe('POST /patients', () => {
         );
 
         patientData = _.omit(patientData, ['_id', 'dateCreated', '__v']);
-        expectedResult = _.omit(expectedResult, ['_id', 'dateCreated']);
+        expectedResult = _.omit(expectedResult, ['_id', 'dateCreated', '__v']);
         expectStrictEqualWithTimestampOrdering(expectedResult, patientData);
     });
 
@@ -96,7 +97,8 @@ describe('POST /patients', () => {
 
         // Check that DB is correct
         const patientId = resContent.result._id;
-        let patientData = await models.Patient.findById(patientId).lean();
+        let patientData = await models.Patient.findById(patientId);
+        patientData = patientData.toObject();
 
         expect(patientId).not.toBeNull();
 
@@ -123,7 +125,7 @@ describe('POST /patients', () => {
 
         // Check that DB is correct
         const patientId = resContent.result._id;
-        let patientData = await models.Patient.findById(patientId).lean();
+        let patientData = await models.Patient.findById(patientId);
 
         expect(patientData).not.toBeNull();
         expect(
