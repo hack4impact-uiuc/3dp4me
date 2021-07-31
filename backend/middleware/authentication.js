@@ -96,8 +96,6 @@ const requireAuthentication = async (req, res, next) => {
 };
 
 const requireRole = (role) => {
-    console.log(role);
-    console.log(ADMIN_ID);
     return async (req, res, next) => {
         if (!req.user) await requireAuthentication();
         if (!req.user.roles.includes(role)) {
