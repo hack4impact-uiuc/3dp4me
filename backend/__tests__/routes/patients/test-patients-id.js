@@ -114,7 +114,6 @@ describe('GET /patient/:id', () => {
         const res = await withAuthentication(
             request(server).get(`/api/patients/${patientID}`),
         );
-        console.log(res.text);
         // Check statuses are correct
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);

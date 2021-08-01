@@ -73,8 +73,9 @@ router.get(
                 });
             });
 
-            const collection = await mongoose.connection.db.collection(stepKey);
-            const stepData = await collection.findOne({ patientId: id });
+            let stepData = mongoose.model(stepKey).findOne({ patientId: id });
+            stepData = stepData.toObject();
+
             if (!isAdmin(req.user))
                 for (const [key, value] of Object.entries(stepData)) {
                     if (!readableFields.includes(key)) {
@@ -281,7 +282,7 @@ router.delete(
             false,
             true,
         );
-        if (writableFields.includes(fieldKey)) {
+        if (!writableFields.includes(fieldKey)) {
             return res.status(403).json({
                 success: false,
                 message: `User does not have permissions to execute operation.`,
@@ -348,7 +349,7 @@ router.post(
             false,
             true,
         );
-        if (writableFields.includes(fieldKey))
+        if (!writableFields.includes(fieldKey))
             return res.status(403).json({
                 success: false,
                 message: 'User does not have permissions to execute operation.',
