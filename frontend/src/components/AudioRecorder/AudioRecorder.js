@@ -1,5 +1,6 @@
 /* eslint-disable */
 
+import translations from '../../translations.json';
 import MicRecorder from 'mic-recorder-to-mp3';
 import AddIcon from '@material-ui/icons/Add';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -30,9 +31,7 @@ class AudioRecorder extends React.Component {
             blobURL: '',
             playbackBlobURL: '',
             isBlocked: false,
-            lang: this.props.languageData.translations[
-                this.props.languageData.selectedLanguage
-            ],
+            lang: translations[this.props.selectedLanguage],
         };
     }
 

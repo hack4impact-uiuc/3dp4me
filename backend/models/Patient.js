@@ -1,4 +1,13 @@
 const mongoose = require('mongoose');
+const encrypt = require('mongoose-encryption');
+
+const UNECRYPTED_FIELDS = [
+    'dateCreated',
+    'orderId',
+    'lastEdited',
+    'lastEditedBy',
+    'status',
+];
 
 const overallStatusEnum = {
     ACTIVE: 'Active',
@@ -20,6 +29,13 @@ const patientSchema = new mongoose.Schema({
         required: false,
         default: overallStatusEnum.ACTIVE,
     },
+});
+
+// Encrypt everything personal
+patientSchema.plugin(encrypt, {
+    encryptionKey: process.env.ENCRYPTION_KEY,
+    signingKey: process.env.SIGNING_KEY,
+    excludeFromEncryption: UNECRYPTED_FIELDS,
 });
 
 const Patient = mongoose.model('Patient', patientSchema, 'Patient');

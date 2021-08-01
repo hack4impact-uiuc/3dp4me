@@ -166,6 +166,15 @@ export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
     return res.data;
 };
 
+export const getAllRoles = async () => {
+    const requestString = `/roles`;
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
 export const addUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
     const res = await instance.put(requestString);
@@ -187,6 +196,15 @@ export const removeUserRole = async (username, roleName) => {
 export const getAllUsers = async () => {
     const requestString = `/users`;
     const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const setUserAccess = async (username, access) => {
+    const requestString = `/users/${username}/access/${access}`;
+    const res = await instance.put(requestString);
 
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
