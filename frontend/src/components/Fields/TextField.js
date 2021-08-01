@@ -8,18 +8,22 @@ const TextField = ({
     isDisabled,
     fieldId = '',
     value = '',
+    className = '',
     onChange = () => {},
 }) => {
     const sendChanges = (e) => {
         onChange(fieldId, e.target.value);
     };
+
     return (
         <div>
             <h3>{displayName}</h3>
             <Text
                 type={type}
                 disabled={isDisabled}
-                className={!isDisabled ? 'active-input' : 'input-field'}
+                className={`${
+                    !isDisabled ? 'active-input' : 'input-field'
+                } ${className}`}
                 variant="outlined"
                 onChange={sendChanges}
                 value={value}
@@ -34,6 +38,7 @@ TextField.propTypes = {
     fieldId: PropTypes.string,
     value: PropTypes.string,
     type: PropTypes.string,
+    className: PropTypes.string,
     onChange: PropTypes.func,
 };
 

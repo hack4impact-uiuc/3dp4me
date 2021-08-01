@@ -64,8 +64,8 @@ describe('DELETE /patients/:id/files/:stepKey/:fieldKey/:fileName #214', () => {
     it('delete file from step with one file', async () => {
         const startTimestamp = Date.now();
         const FILE_NAME = 'utilisation_modular.ssf';
-        const original_step = await mongoose.connection.db
-            .collection(STEP_KEY)
+        const original_step = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: PATIENT_ID_WITH_ONE_FILE });
         const expected_file_output = original_step.file;
         expected_file_output.shift();
@@ -77,24 +77,30 @@ describe('DELETE /patients/:id/files/:stepKey/:fieldKey/:fileName #214', () => {
         );
         expect(res.status).toBe(200);
 
-        const modified_step = await mongoose.connection.db
-            .collection(STEP_KEY)
+        const modified_step = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: PATIENT_ID_WITH_ONE_FILE });
 
-        expect(modified_step.file).toStrictEqual(expected_file_output);
+        expect(JSON.stringify(modified_step.file)).toEqual(
+            JSON.stringify(expected_file_output),
+        );
         expect(modified_step.lastEditedBy).toBe(
             getCurrentAuthenticatedUserAttribute('name'),
         );
-        expect(modified_step.lastEdited).toBeGreaterThanOrEqual(startTimestamp);
-        expect(modified_step.lastEdited).toBeLessThanOrEqual(Date.now());
+        expect(modified_step.lastEdited.getTime()).toBeGreaterThanOrEqual(
+            startTimestamp,
+        );
+        expect(modified_step.lastEdited.getTime()).toBeLessThanOrEqual(
+            Date.now(),
+        );
     });
 
     it('delete file from step with more than one file', async () => {
         const startTimestamp = Date.now();
         const FILE_NAME = 'intelligent_encompassing.cpio';
         const PATIENT_ID_WITH_MANY_FILES = '60944e084f4c0d4330cc258c';
-        const original_step = await mongoose.connection.db
-            .collection(STEP_KEY)
+        const original_step = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: PATIENT_ID_WITH_MANY_FILES });
         const expected_file_output = original_step.file;
         expected_file_output.shift();
@@ -106,17 +112,22 @@ describe('DELETE /patients/:id/files/:stepKey/:fieldKey/:fileName #214', () => {
         );
         expect(res.status).toBe(200);
 
-        const modified_step = await mongoose.connection.db
-            .collection(STEP_KEY)
+        let modified_step = await mongoose
+            .model(STEP_KEY)
             .findOne({ patientId: PATIENT_ID_WITH_MANY_FILES });
+        modified_step = modified_step.toObject();
 
-        expect(modified_step.file).toStrictEqual(expected_file_output);
+        expect(JSON.stringify(modified_step.file)).toStrictEqual(
+            JSON.stringify(expected_file_output),
+        );
         expect(modified_step.lastEditedBy).toBe(
             getCurrentAuthenticatedUserAttribute('name'),
         );
-        expect(modified_step.lastEdited).toBeGreaterThanOrEqual(startTimestamp);
-        expect(modified_step.lastEdited).toBeLessThanOrEqual(Date.now());
+        expect(modified_step.lastEdited.getTime()).toBeGreaterThanOrEqual(
+            startTimestamp,
+        );
+        expect(modified_step.lastEdited.getTime()).toBeLessThanOrEqual(
+            Date.now(),
+        );
     });
 });
-
-//helper function/modularization

@@ -221,7 +221,7 @@ module.exports.EXPECTED_PUT_DATA = {
     familyName: 'Wang',
     dateCreated: '2020-12-02T01:17:55.181Z',
     lastEdited: '2020-07-12T22:25:28.949Z',
-    lastEditedBy: 'KaceyEbert',
+    lastEditedBy: 'Matthew Walowski',
 };
 
 module.exports.EXPECTED_GET_RESTRICTED_DATA = {

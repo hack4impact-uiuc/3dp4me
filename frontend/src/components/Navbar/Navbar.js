@@ -7,8 +7,9 @@ import PropTypes from 'prop-types';
 
 import Logo from '../../assets/3dp4me_logo.png';
 import AccountDropdown from '../AccountDropdown/AccountDropdown';
-import { LanguageDataType } from '../../utils/custom-proptypes';
 import './Navbar.scss';
+import { useTranslations } from '../../hooks/useTranslations';
+import { LANGUAGES } from '../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -23,13 +24,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
+const Navbar = ({ username, userEmail }) => {
+    const [translations, selectedLang] = useTranslations();
     const classes = useStyles();
     const [active, setActive] = useState('dashboard');
     const [anchorEl, setAnchorEl] = useState(null);
-
-    const key = languageData.selectedLanguage;
-    const lang = languageData.translations[key];
 
     const handleAccountClick = (e) => {
         setAnchorEl(e.currentTarget);
@@ -45,7 +44,9 @@ const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
                 <Toolbar className={`navbar ${classes.toolBar}`}>
                     <img
                         alt="Logo"
-                        className={key === 'AR' ? 'logo-ar' : ''}
+                        className={
+                            selectedLang === LANGUAGES.AR ? 'logo-ar' : ''
+                        }
                         height={32}
                         src={Logo}
                     />
@@ -56,7 +57,7 @@ const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
                         className={`${classes.navTitle} nav-item`}
                         to="/"
                     >
-                        {lang.components.navbar.dashboard.navTitle}
+                        {translations.components.navbar.dashboard.navTitle}
                     </Link>
                     <Link
                         className={`nav-item ${
@@ -65,7 +66,7 @@ const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
                         onClick={() => setActive('dashboard')}
                         to="/"
                     >
-                        {lang.components.navbar.dashboard.navTitle}
+                        {translations.components.navbar.dashboard.navTitle}
                     </Link>
                     <Link
                         className={`nav-item ${
@@ -74,7 +75,7 @@ const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
                         onClick={() => setActive('patients')}
                         to="/patients"
                     >
-                        {lang.components.navbar.patients.navTitle}
+                        {translations.components.navbar.patients.navTitle}
                     </Link>
                     <Link
                         className={`nav-item ${
@@ -83,7 +84,7 @@ const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
                         onClick={() => setActive('metrics')}
                         to="/metrics"
                     >
-                        {lang.components.navbar.metrics.navTitle}
+                        {translations.components.navbar.metrics.navTitle}
                     </Link>
                     <Link
                         className={`nav-item ${
@@ -92,7 +93,10 @@ const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
                         onClick={() => setActive('account')}
                         to="/account"
                     >
-                        {lang.components.navbar.accountManagement.navTitle}
+                        {
+                            translations.components.navbar.accountManagement
+                                .navTitle
+                        }
                     </Link>
                     <AccountCircleIcon
                         className="accountCircle"
@@ -103,8 +107,6 @@ const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
                     <AccountDropdown
                         anchorEl={anchorEl}
                         handleClose={handleAccountClose}
-                        languageData={languageData}
-                        setLang={setSelectedLang}
                         username={username}
                         userEmail={userEmail}
                     />
@@ -115,8 +117,6 @@ const Navbar = ({ languageData, setSelectedLang, username, userEmail }) => {
 };
 
 Navbar.propTypes = {
-    setSelectedLang: PropTypes.func.isRequired,
-    languageData: LanguageDataType.isRequired,
     username: PropTypes.string.isRequired,
     userEmail: PropTypes.string.isRequired,
 };

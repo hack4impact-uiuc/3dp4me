@@ -1,4 +1,4 @@
-require('../../app.js');
+var server = require('../../app');
 const db = require('../utils/db');
 const request = require('supertest');
 const omitDeep = require('omit-deep-lodash');

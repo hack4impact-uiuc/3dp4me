@@ -2,7 +2,7 @@ import React from 'react';
 import './Notes.scss';
 import PropTypes from 'prop-types';
 
-const Notes = ({ title, disabled, fieldId, value, onChange }) => {
+const Notes = ({ title, disabled, fieldId, onChange, value = '' }) => {
     return (
         <div className="notes-wrapper">
             <div className="notes-header">
@@ -24,7 +24,7 @@ Notes.propTypes = {
     title: PropTypes.string.isRequired,
     disabled: PropTypes.bool.isRequired,
     fieldId: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
 };
 

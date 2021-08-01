@@ -216,10 +216,21 @@ const generateRoles = (numRoles) => {
 const generateRole = () => {
     const role = {};
 
-    if (getRandomInt(2)) role.roleDescription = faker.lorem.sentences();
+    if (getRandomInt(2)) {
+        role.roleDescription = {
+            EN: faker.lorem.sentences(),
+            AR: faker.lorem.sentences(),
+        };
+    }
 
-    role.roleName = faker.lorem.word();
+    role.roleName = {
+        EN: faker.lorem.word(),
+        AR: faker.lorem.word(),
+    };
+
     role.isMutable = getRandomInt(2);
+    roles.isHidden = getRandomInt(2);
+
     role._id = mongoose.Types.ObjectId();
     return role;
 };

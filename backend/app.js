@@ -5,14 +5,19 @@ const express = require('express');
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
-const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
 const { initDB } = require('./utils/init-db');
+const {
+    setResponseHeaders,
+    configureHelment,
+} = require('./middleware/responses');
+
 const app = express();
 
-app.use(helmet());
+app.use(configureHelment());
+app.use(setResponseHeaders);
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 app.use(cors());
 

@@ -1,8 +1,10 @@
+import { LANGUAGES } from './constants';
+
 export const formatDate = (date, language) => {
     if (date == null) return 'Undefined';
 
     let locale = 'ar-SA';
-    if (language === 'EN') locale = 'en-US';
+    if (language === LANGUAGES.EN) locale = 'en-US';
 
     const options = {
         year: 'numeric',
