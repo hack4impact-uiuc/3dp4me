@@ -74,7 +74,9 @@ router.get(
                 });
             });
 
-            let stepData = mongoose.model(stepKey).findOne({ patientId: id });
+            let stepData = await mongoose
+                .model(stepKey)
+                .findOne({ patientId: id });
             stepData = stepData.toObject();
 
             if (!isAdmin(req.user))
