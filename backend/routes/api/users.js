@@ -249,4 +249,16 @@ router.put(
     }),
 );
 
+// Gets information about the user making this request. Modify this as needed on the frontend
+router.get(
+    '/self',
+    errorWrap(async (req, res) => {
+        // TODO: Check ADMIN_ID once daniel's PR is merged
+        res.status(200).json({
+            //isAdmin: req.user.roles.includes(ADMIN_ID),
+            isAdmin: false,
+        });
+    }),
+);
+
 module.exports = router;
