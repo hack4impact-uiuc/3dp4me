@@ -1,5 +1,8 @@
 {
     "EN": {
+        "errors": {
+            "noMetadata": "You aren't allowed to view any steps. Contact an administrator to give you the proper roles."
+        },
         "tableHeaders": {
             "firstName": "First Name",
             "familyName": "Family Name",
@@ -162,6 +165,9 @@
         }
     },
     "AR": {
+        "errors": {
+            "noMetadata": "لا يُسمح لك بمشاهدة أي خطوات. اتصل بالمسؤول لمنحك الأدوار المناسبة."
+        },
         "tableHeaders": {
             "firstName": "الاسم الاول",
             "familyName": "اسم العائلة",

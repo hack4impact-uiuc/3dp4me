@@ -43,11 +43,13 @@ const Dashboard = () => {
                 setSelectedStep(metaData[0].key);
                 res = await getPatientsByStage(metaData[0].key);
                 setPatients(res.result);
+            } else {
+                throw new Error(translations.errors.noMetadata);
             }
         };
 
         errorWrap(getMetadata);
-    }, [setSelectedStep, setStepsMetaData, errorWrap]);
+    }, [setSelectedStep, setStepsMetaData, errorWrap, translations]);
 
     /**
      * Called when a patient is successfully added to the backend
