@@ -179,3 +179,12 @@ export const setUserAccess = async (username, access) => {
 
     return res.data;
 };
+
+export const getSelf = async () => {
+    const requestString = `/users/self`;
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};

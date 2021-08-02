@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { AppBar, Toolbar } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom';
@@ -11,10 +11,12 @@ import { LANGUAGES, ROUTES } from '../../utils/constants';
 
 import './Navbar.scss';
 import { useStyles } from './Navbar.style';
+import { Context } from '../../store/Store';
 
 const Navbar = ({ username, userEmail }) => {
-    const [translations, selectedLang] = useTranslations();
+    const state = useContext(Context)[0];
     const classes = useStyles();
+    const [translations, selectedLang] = useTranslations();
     const [activeRoute, setActiveRoute] = useState(ROUTES.DASHBOARD);
     const [anchorEl, setAnchorEl] = useState(null);
     const navTranslations = translations.components.navbar;
@@ -32,6 +34,7 @@ const Navbar = ({ username, userEmail }) => {
 
         return (
             <Link
+                key={route}
                 className={`nav-item ${activeClass}`}
                 onClick={() => setActiveRoute(route)}
                 to={`${route}`}
@@ -39,6 +42,29 @@ const Navbar = ({ username, userEmail }) => {
                 {text}
             </Link>
         );
+    };
+
+    const renderLinks = () => {
+        let links = [
+            renderLink(navTranslations.dashboard.navTitle, ROUTES.DASHBOARD),
+            renderLink(navTranslations.patients.navTitle, ROUTES.PATIENTS),
+        ];
+
+        // If the user is admin, they can use account/dashboard management
+        if (state.isAdmin) {
+            links = links.concat([
+                renderLink(
+                    navTranslations.accountManagement.navTitle,
+                    ROUTES.ACCOUNT,
+                ),
+                renderLink(
+                    navTranslations.dashboardManagement.navTitle,
+                    ROUTES.DASHBOARD_MANAGEMENT,
+                ),
+            ]);
+        }
+
+        return links;
     };
 
     return (
@@ -62,23 +88,9 @@ const Navbar = ({ username, userEmail }) => {
                     >
                         {translations.components.navbar.dashboard.navTitle}
                     </Link>
-                    {renderLink(
-                        navTranslations.dashboard.navTitle,
-                        ROUTES.DASHBOARD,
-                    )}
-                    {renderLink(
-                        navTranslations.patients.navTitle,
-                        ROUTES.PATIENTS,
-                    )}
-                    {/* TODO: Only render this if the user is ADMIN */}
-                    {renderLink(
-                        navTranslations.accountManagement.navTitle,
-                        ROUTES.ACCOUNT,
-                    )}
-                    {renderLink(
-                        navTranslations.dashboardManagement.navTitle,
-                        ROUTES.DASHBOARD_MANAGEMENT,
-                    )}
+
+                    {renderLinks()}
+
                     <AccountCircleIcon
                         className="accountCircle"
                         aria-controls="account-dropdown-menu"

@@ -18,6 +18,11 @@ const Reducer = (state, action) => {
                 ...state,
                 isErrorVisible: false,
             };
+        case REDUCER_ACTIONS.SET_ADMIN_STATUS:
+            return {
+                ...state,
+                isAdmin: action.isAdmin,
+            };
         default:
             return state;
     }

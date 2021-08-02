@@ -18,6 +18,7 @@ import {
 import { Context } from './store/Store';
 import { useTranslations } from './hooks/useTranslations';
 import { getCurrentUserInfo } from './aws/aws-helper';
+import { getSelf } from './api/api';
 
 const AppContent = ({ username, userEmail }) => {
     const [state, dispatch] = useContext(Context);
@@ -27,6 +28,7 @@ const AppContent = ({ username, userEmail }) => {
 
     /**
      * Gets the user's preferred language and sets it in the store
+     * Also checks if the user is an admin and updates store
      */
     useEffect(() => {
         const setLanguage = async () => {
@@ -37,14 +39,23 @@ const AppContent = ({ username, userEmail }) => {
             if (isLanguageValid(language)) {
                 dispatch({
                     type: REDUCER_ACTIONS.SET_LANGUAGE,
-                    language,
+                    language: language,
                 });
             } else {
                 console.error(`Language is invalid: ${language}`);
             }
         };
 
+        const setAdminStatus = async () => {
+            const selfRes = await getSelf();
+            dispatch({
+                type: REDUCER_ACTIONS.SET_ADMIN_STATUS,
+                isAdmin: selfRes.isAdmin,
+            });
+        };
+
         setLanguage();
+        setAdminStatus();
     }, [dispatch]);
 
     /**

@@ -256,7 +256,8 @@ router.get(
         // TODO: Check ADMIN_ID once daniel's PR is merged
         res.status(200).json({
             //isAdmin: req.user.roles.includes(ADMIN_ID),
-            isAdmin: false,
+            success: true,
+            isAdmin: true,
         });
     }),
 );
