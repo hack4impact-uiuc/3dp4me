@@ -34,7 +34,6 @@ const EditRoleModal = ({
 
     useEffect(() => {
         setUserData(_.cloneDeep(userInfo));
-        console.log(userInfo);
     }, [userInfo]);
 
     const onRolesChange = (id, roles) => {
