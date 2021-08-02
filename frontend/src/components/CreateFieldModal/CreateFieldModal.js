@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
+import AccessDropdown from '../AccessDropdown/AccessDropdown';
 
 const CreateFieldModal = ({ isOpen, onModalClose }) => {
     const translations = useTranslations()[0];
@@ -152,6 +153,24 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
         return options;
     };
 
+    const renderRolesSelection = () => {
+        return (
+            <div style={{ padding: 10 }}>
+                <Select
+                    id="demo-simple-select"
+                    MenuProps={{
+                        style: { zIndex: 35001 },
+                    }}
+                    defaultValue="Confidential"
+                >
+                    <MenuItem value="Confidential">Confidential</MenuItem>
+                    <MenuItem value="Secret">Secret</MenuItem>
+                    <MenuItem value="Top Secret">Top Secret</MenuItem>
+                </Select>
+            </div>
+        );
+    };
+
     return (
         <Modal
             open={isOpen}
@@ -190,21 +209,8 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
                     <span>
                         {translations.components.swal.createField.clearance}
                     </span>
-                    <div style={{ padding: 10 }}>
-                        <Select
-                            id="demo-simple-select"
-                            MenuProps={{
-                                style: { zIndex: 35001 },
-                            }}
-                            defaultValue="Confidential"
-                        >
-                            <MenuItem value="Confidential">
-                                Confidential
-                            </MenuItem>
-                            <MenuItem value="Secret">Secret</MenuItem>
-                            <MenuItem value="Top Secret">Top Secret</MenuItem>
-                        </Select>
-                    </div>
+                    <AccessDropdown />
+                    {/* {renderRolesSelection()} */}
                     <div style={{ padding: 10 }}>
                         <Checkbox size="medium" />
                         <span>

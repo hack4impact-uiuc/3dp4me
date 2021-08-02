@@ -20,6 +20,7 @@ import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { removeUserRole, setUserAccess, addUserRole } from '../../api/api';
+import AccessDropdown from '../AccessDropdown/AccessDropdown';
 
 const EditRoleModal = ({
     isOpen,
@@ -77,26 +78,6 @@ const EditRoleModal = ({
         onUserEdited(userData.userId, userData.accessLevel, userData.roles);
     };
 
-    const renderAccessDropdown = () => {
-        return (
-            <Select
-                native
-                value={userData?.accessLevel}
-                onChange={onAccessChange}
-            >
-                <option value={ACCESS_LEVELS.GRANTED}>
-                    {translations.accountManagement.Approved}
-                </option>
-                <option value={ACCESS_LEVELS.REVOKED}>
-                    {translations.accountManagement.Revoked}
-                </option>
-                <option value={ACCESS_LEVELS.PENDING}>
-                    {translations.accountManagement.Pending}
-                </option>
-            </Select>
-        );
-    };
-
     return (
         <Modal open={isOpen} onClose={onClose} className="edit-role-modal">
             <div className="edit-role-modal-wrapper">
@@ -127,7 +108,10 @@ const EditRoleModal = ({
                     <InputLabel>
                         {translations.accountManagement.access}
                     </InputLabel>
-                    {renderAccessDropdown()}
+                    <AccessDropdown
+                        onValueChange={onAccessChange}
+                        value={userData?.accessLevel}
+                    />
                 </FormControl>
                 <div>
                     <Button className="save-user-button" onClick={onSave}>
