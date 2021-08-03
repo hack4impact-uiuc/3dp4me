@@ -19,11 +19,13 @@ import {
 import {
     getAccessLevel,
     getEmail,
+    getId,
     getName,
     getRoles,
     getRolesValue,
     getUsername,
 } from '../../aws/aws-users';
+import SimpleTable from '../../components/SimpleTable/SimpleTable';
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -66,7 +68,7 @@ const AccountManagement = () => {
     const userToRoleModalFormat = (user) => {
         return {
             accessLevel: getAccessLevel(user),
-            userId: getUsername(user),
+            userId: getId(user),
             userName: getName(user),
             userEmail: getEmail(user),
             roles: getRolesValue(user),
@@ -133,7 +135,7 @@ const AccountManagement = () => {
 
     function generateMainUserTable() {
         return (
-            <Table
+            <SimpleTable
                 data={usersToTableFormat(userMetaData)}
                 headers={getUserTableHeaders(selectedLang)}
                 rowData={USER_TABLE_ROW_DATA}

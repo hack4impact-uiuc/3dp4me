@@ -20,6 +20,10 @@ export const getUsername = (user) => {
     return user.Username;
 };
 
+export const getId = (user) => {
+    return user.Username;
+};
+
 export const getRolesValue = (user) => {
     const info = getAttr(user, COGNITO_ATTRIBUTES.ROLES);
     return info ? JSON.parse(info) : [];
