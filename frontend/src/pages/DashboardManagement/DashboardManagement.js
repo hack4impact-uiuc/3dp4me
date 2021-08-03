@@ -4,7 +4,7 @@ import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 
 import BottomBar from '../../components/BottomBar/BottomBar';
-import { getAllStepsMetadata } from '../../api/api';
+import { getAllRoles, getAllStepsMetadata } from '../../api/api';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
@@ -17,6 +17,7 @@ import {
 import { resolveMixedObjPath } from '../../utils/object';
 import { useTranslations } from '../../hooks/useTranslations';
 import { sortMetadata } from '../../utils/utils';
+import { rolesToMultiSelectFormat } from '../../utils/convert';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -30,6 +31,7 @@ const SectionTab = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [fieldModalOpen, setFieldModalOpen] = useState(false);
     const [stepModalOpen, setStepModalOpen] = useState(false);
+    const [rolesData, setRolesData] = useState([]);
     const errorWrap = useErrorWrap();
 
     const onAddStep = () => {
@@ -151,6 +153,10 @@ const SectionTab = () => {
                 }
                 const sortedMetadata = sortMetadata(res.result);
                 setStepMetadata(sortedMetadata);
+
+                const rolesRes = await getAllRoles();
+                const roles = rolesToMultiSelectFormat(rolesRes.result);
+                setRolesData(roles);
             });
         };
         fetchData();
@@ -168,6 +174,7 @@ const SectionTab = () => {
         return (
             <CreateFieldModal
                 isOpen={fieldModalOpen}
+                allRoles={rolesData}
                 onModalClose={onFieldModalClose}
             />
         );

@@ -24,6 +24,7 @@ import {
     getRolesValue,
     getUsername,
 } from '../../aws/aws-users';
+import { rolesToMultiSelectFormat } from '../../utils/convert';
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -48,17 +49,6 @@ const AccountManagement = () => {
         };
         errorWrap(fetchData);
     }, [setUserMetaData, errorWrap]);
-
-    /**
-     * Converts the roles response to a format useable by the MultiSelect field
-     */
-    const rolesToMultiSelectFormat = (roles) => {
-        return roles.map((r) => ({
-            _id: r?._id,
-            IsHidden: r?.isHidden,
-            Question: r?.roleName,
-        }));
-    };
 
     /**
      * Formats a user to a format useable by the EditRoleModal

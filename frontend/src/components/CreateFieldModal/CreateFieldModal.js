@@ -14,14 +14,16 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-import { FIELD_TYPES } from '../../utils/constants';
+import { ACCESS_LEVELS, FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 import AccessDropdown from '../AccessDropdown/AccessDropdown';
+import MultiSelectField from '../Fields/MultiSelectField';
 
-const CreateFieldModal = ({ isOpen, onModalClose }) => {
-    const translations = useTranslations()[0];
+const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
+    const [translations, selectedLang] = useTranslations();
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
+    const [fieldRoles, setFieldRoles] = useState([]);
     const [numChoices, setNumChoices] = useState(1);
 
     const BootstrapInput = withStyles((theme) => ({
@@ -52,6 +54,10 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
             },
         },
     }))(InputBase);
+
+    const onRolesChange = (id, roles) => {
+        setFieldRoles(roles);
+    };
 
     const handleFieldTypeSelect = (e) => {
         setFieldType(e.target.value);
@@ -153,24 +159,6 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
         return options;
     };
 
-    const renderRolesSelection = () => {
-        return (
-            <div style={{ padding: 10 }}>
-                <Select
-                    id="demo-simple-select"
-                    MenuProps={{
-                        style: { zIndex: 35001 },
-                    }}
-                    defaultValue="Confidential"
-                >
-                    <MenuItem value="Confidential">Confidential</MenuItem>
-                    <MenuItem value="Secret">Secret</MenuItem>
-                    <MenuItem value="Top Secret">Top Secret</MenuItem>
-                </Select>
-            </div>
-        );
-    };
-
     return (
         <Modal
             open={isOpen}
@@ -206,11 +194,16 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
                             </NativeSelect>
                         </FormControl>
                     </div>
-                    <span>
-                        {translations.components.swal.createField.clearance}
-                    </span>
-                    <AccessDropdown />
-                    {/* {renderRolesSelection()} */}
+
+                    <MultiSelectField
+                        title="Roles"
+                        langKey={selectedLang}
+                        options={allRoles}
+                        selectedOptions={fieldRoles}
+                        onChange={onRolesChange}
+                        isDisabled={false}
+                    />
+
                     <div style={{ padding: 10 }}>
                         <Checkbox size="medium" />
                         <span>
