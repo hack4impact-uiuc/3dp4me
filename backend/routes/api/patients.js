@@ -77,7 +77,7 @@ router.get(
             let stepData = await mongoose
                 .model(stepKey)
                 .findOne({ patientId: id });
-            stepData = stepData.toObject();
+            if (stepData) stepData = stepData.toObject();
 
             if (!isAdmin(req.user))
                 for (const [key, value] of Object.entries(stepData)) {
@@ -142,6 +142,7 @@ router.put(
         _.assign(patient, req.body);
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
+
         const savedPatient = await patient.save();
 
         res.status(200).json({
@@ -191,17 +192,17 @@ const getAccessibleFields = async (stepKey, user, readable, writable) => {
                 ],
             });
         else return [];
+
+        steps.map((step) => {
+            step.fields = step.fields.filter((field) => {
+                return field.readableGroups.some((role) =>
+                    user.roles.includes(role),
+                );
+            });
+        });
     }
 
     let readableFields = [];
-
-    steps.map((step) => {
-        step.fields = step.fields.filter((field) => {
-            return field.readableGroups.some((role) =>
-                user.roles.includes(role),
-            );
-        });
-    });
 
     steps.forEach((step) => {
         step.fields.forEach((field) => {
@@ -362,7 +363,7 @@ router.post(
 
         const model = await mongoose.model(stepKey);
         let stepData =
-            (await collection.findOne({ patientId: id })) || new model({});
+            (await model.findOne({ patientId: id })) || new model({});
 
         // Set ID in case patient does not have any information for this step yet
         stepData.patientId = id;

@@ -29,7 +29,7 @@
         "json": "^11.0.0",
         "libphonenumber-js": "^1.9.11",
         "mongodb-memory-server": "^6.9.6",
-        "mongoose": "^5.12.7",
+        "mongoose": "^5.13.5",
         "mongoose-encryption": "^2.1.0",
         "node": "^15.0.0",
         "omit-deep-lodash": "^1.1.5",

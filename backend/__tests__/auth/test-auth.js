@@ -114,13 +114,19 @@ describe('Test authentication ', () => {
         expect(resContent.success).toBe(true);
         expectStrictEqualWithTimestampOrdering(
             EXPECTED_PUT_DATA,
-            resContent.result,
+            omitDeep(resContent.result, '__v'),
         );
 
-        let updatedData = await mongoose.connection
-            .collection(STEP_KEY)
+        let updatedData = await mongoose
+            .model(STEP_KEY)
             .findOne({ _id: mongoose.Types.ObjectId(patientID) });
-        expectStrictEqualWithTimestampOrdering(EXPECTED_PUT_DATA, updatedData);
+        updatedData = updatedData.toObject();
+        updatedData._id = updatedData._id.toString();
+
+        expectStrictEqualWithTimestampOrdering(
+            EXPECTED_PUT_DATA,
+            omitDeep(updatedData, '__v'),
+        );
     });
 
     it('does not return parts not readableBy user', async () => {
@@ -172,7 +178,9 @@ describe('Test authentication ', () => {
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
         const dataAfter = await model.findOne({ patientId: PATIENT_ID }).lean();
-        expect(dataBefore).toStrictEqual(dataAfter);
+        expect(omitDeep(dataBefore, '_ac', '_ct')).toStrictEqual(
+            omitDeep(dataAfter, '_ac', '_ct'),
+        );
     });
 
     it('accept auth for correct user auth for patient files', async () => {
