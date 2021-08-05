@@ -78,6 +78,10 @@ const MainUserTable = ({ users, roleData, headers, onUserSelected }) => {
         return getInfo(user, 'name') || user.Username;
     };
 
+    const getId = (user) => {
+        return user.Username;
+    };
+
     const getRolesValue = (user) => {
         const info = getInfo(user, 'custom:security_roles');
         return info ? JSON.parse(info) : [];
@@ -101,6 +105,7 @@ const MainUserTable = ({ users, roleData, headers, onUserSelected }) => {
 
     const onSelected = (item) => {
         onUserSelected({
+            userId: getId(item),
             userName: getName(item),
             userEmail: getInfo(item, 'email'),
             roles: getRolesValue(item),
