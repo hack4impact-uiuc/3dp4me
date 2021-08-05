@@ -10,6 +10,7 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
+const { isAdmin } = require('../../middleware/authentication');
 const {
     removeRequestAttributes,
     STEP_IMMUTABLE_ATTRIBUTES,
@@ -35,6 +36,7 @@ router.get(
     '/:id',
     errorWrap(async (req, res) => {
         const { id } = req.params;
+        roles = [req.user.roles];
         let patientData = await models.Patient.findById(id);
         if (!patientData)
             return res.status(404).json({
@@ -45,8 +47,45 @@ router.get(
 
         let stepKeys = await getStepKeys();
         for (const stepKey of stepKeys) {
-            let model = mongoose.model(stepKey);
-            const stepData = await model.findOne({ patientId: id });
+            if (isAdmin(req.user)) {
+                steps = await models.Step.find({});
+            } else {
+                steps = await models.Step.find({
+                    $and: [
+                        { key: stepKey },
+                        { readableGroups: { $in: [req.user.roles] } },
+                    ],
+                });
+            }
+
+            let readableFields = [];
+
+            steps.map((step) => {
+                step.fields = step.fields.filter((field) => {
+                    return field.readableGroups.some((role) =>
+                        roles.includes(role),
+                    );
+                });
+            });
+
+            steps.forEach((step) => {
+                step.fields.forEach((field) => {
+                    readableFields.push(field.key);
+                });
+            });
+
+            let stepData = await mongoose
+                .model(stepKey)
+                .findOne({ patientId: id });
+            if (stepData) stepData = stepData.toObject();
+
+            if (!isAdmin(req.user))
+                for (const [key, value] of Object.entries(stepData)) {
+                    if (!readableFields.includes(key)) {
+                        delete stepData[key];
+                    }
+                }
+
             patientData.set(stepKey, stepData, { strict: false });
         }
 
@@ -70,7 +109,6 @@ router.post(
             new_patient = new models.Patient(patient);
             await new_patient.save();
         } catch (error) {
-            console.log(error);
             return res.status(400).json({
                 code: 400,
                 success: false,
@@ -104,6 +142,7 @@ router.put(
         _.assign(patient, req.body);
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
+
         const savedPatient = await patient.save();
 
         res.status(200).json({
@@ -115,27 +154,101 @@ router.put(
     }),
 );
 
+/**
+ *
+ * @param {*} user
+ * @param {*} readable
+ * @param {*} writable
+ */
+const getAccessibleFields = async (stepKey, user, readable, writable) => {
+    let steps = null;
+    if (isAdmin(user)) {
+        steps = await models.Step.find({});
+    } else {
+        if (readable && writable)
+            steps = await models.Step.find({
+                $and: [
+                    { key: stepKey },
+                    {
+                        $or: [
+                            { readableGroups: { $in: user.roles } },
+                            { writableGroups: { $in: user.roles } },
+                        ],
+                    },
+                ],
+            });
+        else if (readable)
+            steps = await models.Step.find({
+                $and: [
+                    { key: stepKey },
+                    { readableGroups: { $in: user.roles } },
+                ],
+            });
+        else if (writable)
+            steps = await models.Step.find({
+                $and: [
+                    { key: stepKey },
+                    { writableGroups: { $in: user.roles } },
+                ],
+            });
+        else return [];
+
+        steps.map((step) => {
+            step.fields = step.fields.filter((field) => {
+                return field.readableGroups.some((role) =>
+                    user.roles.includes(role),
+                );
+            });
+        });
+    }
+
+    let readableFields = [];
+
+    steps.forEach((step) => {
+        step.fields.forEach((field) => {
+            readableFields.push(field.key);
+        });
+    });
+
+    return readableFields;
+};
+
 // GET: Download a file
 router.get(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
-        var s3Stream = downloadFile(
-            `${id}/${stepKey}/${fieldKey}/${fileName}`,
-            {
-                accessKeyId: ACCESS_KEY_ID,
-                secretAccessKey: SECRET_ACCESS_KEY,
-            },
-        ).createReadStream();
 
-        s3Stream
-            .on('error', function (err) {
-                res.json('S3 Error:' + err);
-            })
-            .on('close', function () {
-                res.end();
+        const readableFields = await getAccessibleFields(
+            stepKey,
+            req.user,
+            true,
+            false,
+        );
+
+        if (readableFields.includes(fieldKey)) {
+            var s3Stream = downloadFile(
+                `${id}/${stepKey}/${fieldKey}/${fileName}`,
+                {
+                    accessKeyId: ACCESS_KEY_ID,
+                    secretAccessKey: SECRET_ACCESS_KEY,
+                },
+            ).createReadStream();
+
+            s3Stream
+                .on('error', function (err) {
+                    res.json('S3 Error:' + err);
+                })
+                .on('close', function () {
+                    res.end();
+                });
+            s3Stream.pipe(res);
+        } else {
+            return res.status(403).json({
+                success: false,
+                message: 'User does not have permissions to execute operation.',
             });
-        s3Stream.pipe(res);
+        }
     }),
 );
 
@@ -166,6 +279,18 @@ router.delete(
             return res.status(404).json({
                 success: false,
                 message: `Patient does not have any data on record for this step`,
+            });
+        }
+        const writableFields = await getAccessibleFields(
+            stepKey,
+            req.user,
+            false,
+            true,
+        );
+        if (!writableFields.includes(fieldKey)) {
+            return res.status(403).json({
+                success: false,
+                message: `User does not have permissions to execute operation.`,
             });
         }
 
@@ -224,6 +349,18 @@ router.post(
             });
         }
 
+        const writableFields = await getAccessibleFields(
+            stepKey,
+            req.user,
+            false,
+            true,
+        );
+        if (!writableFields.includes(fieldKey))
+            return res.status(403).json({
+                success: false,
+                message: 'User does not have permissions to execute operation.',
+            });
+
         const model = await mongoose.model(stepKey);
         let stepData =
             (await model.findOne({ patientId: id })) || new model({});
@@ -274,8 +411,38 @@ router.post(
     '/:id/:stage',
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
+        roles = [req.user.roles.toString()];
         const { id, stage } = req.params;
-        const steps = await models.Step.find({ key: stage });
+        let steps = null;
+        if (isAdmin(req.user)) {
+            steps = await models.Step.find({ key: stage });
+        } else {
+            steps = await models.Step.find({
+                $and: [
+                    { key: stage },
+                    { writableGroups: { $in: [req.user.roles.toString()] } }, // Check this is correct req.user.roles is an array
+                ],
+            });
+            let writableFields = [];
+
+            steps.map((step) => {
+                step.fields = step.fields.filter((field) => {
+                    return field.writableGroups.some((role) =>
+                        roles.includes(role),
+                    );
+                });
+            });
+
+            steps.forEach((step) => {
+                writableFields.push(step.fields.key);
+            });
+
+            for (const [key, value] of Object.entries(req.body)) {
+                if (!writableFields.includes(key)) {
+                    delete req.body[key];
+                }
+            }
+        }
 
         if (steps.length == 0) {
             return res.status(404).json({
@@ -298,18 +465,25 @@ router.post(
         let patientStepData = await model.findOne({ patientId: id });
         if (!patientStepData) {
             patientStepData = req.body;
-            patientStepData.lastEdited = Date.now();
-            patientStepData.lastEditedBy = req.user.name;
+            if (Object.keys(req.body) != 0) {
+                patientStepData.lastEdited = Date.now();
+                patientStepData.lastEditedBy = req.user.name;
+            }
+
             patientStepData.patientId = id;
             const newStepDataModel = new model(patientStepData);
             patientStepData = await newStepDataModel.save();
         } else {
             patientStepData = _.assign(patientStepData, req.body);
-            patientStepData.lastEdited = Date.now();
-            patientStepData.lastEditedBy = req.user.name;
+
+            if (Object.keys(req.body) != 0) {
+                patientStepData.lastEdited = Date.now();
+                patientStepData.lastEditedBy = req.user.name;
+            }
             patientStepData = await patientStepData.save();
         }
 
+        // Doesn't update if step was not changed
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
         await patient.save();

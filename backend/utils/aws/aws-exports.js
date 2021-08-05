@@ -5,5 +5,5 @@ exports.USER_POOL_ID = process.env.USER_POOL_ID;
 exports.ACCESS_KEY_ID = process.env.ACCESS_KEY_ID;
 exports.SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY;
 exports.SECURITY_ROLE_ATTRIBUTE_NAME = 'custom:security_roles';
-exports.ACCESS_LEVEL_ATTRIBUTE_NAME = 'custom:access';
+exports.SECURITY_ACCESS_ATTRIBUTE_NAME = 'custom:access';
 exports.SECURITY_ROLE_ATTRIBUTE_MAX_LEN = 1024;

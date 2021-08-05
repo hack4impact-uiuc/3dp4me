@@ -1,8 +1,20 @@
+const { LexModelBuildingService } = require('aws-sdk');
 var AWS = require('aws-sdk');
 const {
     COGNITO_REGION,
     SECURITY_ROLE_ATTRIBUTE_NAME,
+    SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../utils/aws/aws-exports');
+
+module.exports.ACCESS_LEVELS = {
+    GRANTED: 'Granted',
+    REVOKED: 'Revoked',
+    PENDING: 'Pending',
+};
+
+const ADMIN_ID = process.env.ADMIN_ID;
+
+const isAdmin = (user) => user.roles.includes(ADMIN_ID);
 
 const getUser = async (accessToken) => {
     var params = {
@@ -26,14 +38,24 @@ const parseUserSecurityRoles = (user) => {
     return JSON.parse(securityRolesString.Value);
 };
 
+const parseUserAccess = (user) => {
+    const accessLevelString = user?.UserAttributes?.find(
+        (attribute) => attribute.Name === SECURITY_ACCESS_ATTRIBUTE_NAME,
+    )?.Value;
+
+    if (!accessLevelString) return this.ACCESS_LEVELS.PENDING;
+
+    return accessLevelString;
+};
+
 const parseUserName = (user) => {
-    const name = user?.UserAttributes?.find(
+    const userNameString = user?.UserAttributes?.find(
         (attribute) => attribute.Name === 'name',
-    );
+    )?.Value;
 
-    if (!name?.Value) return '';
+    if (!userNameString) return '';
 
-    return name.Value;
+    return userNameString;
 };
 
 const parseUserEmail = (user) => {
@@ -52,8 +74,9 @@ const requireAuthentication = async (req, res, next) => {
         const user = await getUser(accessToken);
         user.roles = parseUserSecurityRoles(user);
         user.name = parseUserName(user) || parseUserEmail(user);
+        user.accessLevel = parseUserAccess(user);
 
-        if (!user.roles || user.roles.length === 0) {
+        if (user.accessLevel !== this.ACCESS_LEVELS.GRANTED) {
             return res.status(403).json({
                 success: false,
                 message:
@@ -87,5 +110,11 @@ const requireRole = (role) => {
     };
 };
 
+const requireAdmin = requireRole(ADMIN_ID);
+
+module.exports.isAdmin = isAdmin;
+module.exports.ADMIN_ID = ADMIN_ID;
+module.exports.requireRole = requireRole;
+module.exports.requireAdmin = requireAdmin;
 module.exports.requireAuthentication = requireAuthentication;
 module.exports.parseUserSecurityRoles = parseUserSecurityRoles;

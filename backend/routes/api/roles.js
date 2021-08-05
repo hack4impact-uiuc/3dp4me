@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models/index');
+const { requireAdmin } = require('../../middleware/authentication');
 
 // Get all roles
 router.get(
@@ -19,6 +20,7 @@ router.get(
 // Adds role to the DB
 router.post(
     '/',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const newRole = new models.Role(req.body);
         const savedRole = await newRole.save();
@@ -33,6 +35,7 @@ router.post(
 // Changes role
 router.put(
     '/:roleId',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { roleId } = req.params;
         const role = await models.Role.findById(roleId);
@@ -67,6 +70,7 @@ router.put(
 // Delete role
 router.delete(
     '/:roleId',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { roleId } = req.params;
         const role = await models.Role.findById(roleId);

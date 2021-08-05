@@ -8,11 +8,12 @@ module.exports.STEP_IMMUTABLE_ATTRIBUTES = GLOBALLY_IMMUTABLE_ATTRIBUTES.concat(
     'patientId',
 );
 
-module.exports.PATIENT_IMMUTABLE_ATTRIBUTES = GLOBALLY_IMMUTABLE_ATTRIBUTES.concat(
-    'dateCreated',
-    'lastEdited',
-    'lastEditedBy',
-);
+module.exports.PATIENT_IMMUTABLE_ATTRIBUTES =
+    GLOBALLY_IMMUTABLE_ATTRIBUTES.concat(
+        'dateCreated',
+        'lastEdited',
+        'lastEditedBy',
+    );
 
 /**
  * Removes attributes from a request's body. So if "_id" is passed in, "_id" will be removed

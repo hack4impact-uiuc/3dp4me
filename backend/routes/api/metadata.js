@@ -12,9 +12,13 @@ const {
     stepStatusEnum,
     validateOptions,
 } = require('../../models');
-const { removeAttributesFrom } = require('../../middleware/requests');
+const {
+    removeAttributesFrom,
+    removeRequestAttributes,
+} = require('../../middleware/requests');
 const { fieldEnum, isUniqueStepNumber } = require('../../models/Metadata');
 const mongoose = require('mongoose');
+const { requireAdmin, isAdmin } = require('../../middleware/authentication');
 
 const generateFieldSchema = (field) => {
     switch (field.fieldType) {
@@ -98,7 +102,7 @@ const generateSchemaFromMetadata = (stepMetadata) => {
         enum: Object.values(stepStatusEnum),
         default: stepStatusEnum.UNFINISHED,
     };
-    stepSchema.lastEdited = { type: Date, required: true, default: new Date() };
+    stepSchema.lastEdited = { type: Date, required: true, default: Date.now };
     stepSchema.lastEditedBy = {
         type: String,
         required: true,
@@ -128,7 +132,26 @@ const generateFieldsFromMetadata = (fieldsMetadata, schema = {}) => {
 router.get(
     '/steps',
     errorWrap(async (req, res) => {
-        const metaData = await models.Step.find({});
+        let metaData;
+
+        if (isAdmin(req.user)) {
+            metaData = await models.Step.find({});
+        } else {
+            const roles = [req.user.roles.toString()];
+            metaData = await models.Step.find({
+                readableGroups: { $in: [req.user.roles.toString()] },
+            });
+
+            // Iterate over fields and remove fields that do not have matching permissions
+            metaData.map((step) => {
+                step.fields = step.fields.filter((field) => {
+                    return field.readableGroups.some((role) =>
+                        roles.includes(role),
+                    );
+                });
+            });
+        }
+
         if (!metaData) {
             res.status(404).json({
                 code: 404,
@@ -149,6 +172,7 @@ router.get(
 // POST metadata/steps
 router.post(
     '/steps',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const steps = req.body;
         const new_step_metadata = new models.Step(steps);
@@ -244,9 +268,9 @@ const putOneStep = async (stepBody, res, session) => {
     return step;
 };
 
-// PUT metadata/steps/:stepkey
 router.put(
     '/steps/',
+    requireAdmin,
     errorWrap(async (req, res) => {
         try {
             let stepData = [];
@@ -301,6 +325,7 @@ router.put(
 // DELETE metadata/steps/:stepkey
 router.delete(
     '/steps/:stepkey',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const step = await models.Step.deleteOne({ key: stepkey });
