@@ -76,7 +76,7 @@ function copyNodeJSCodeTask() {
 
 function addEngineToPackage() {
     return exec(
-        `yarn json -I -f ${paths.prod_build}/package.json -e "this.engines = { 'node': '14.12.0' }"`,
+        `yarn json -I -f ${paths.prod_build}/package.json -e "this.engines = { 'node': '14.17.3' }"`,
     );
 }
 
