@@ -1,11 +1,11 @@
 const _ = require('lodash');
 const AWS_SDK = require('aws-sdk');
-const { SECURITY_ROLE_ATTRIBUTE_NAME } = require('../../utils/aws/aws-exports');
 const {
-    MOCK_USER,
-    MOCK_AUTH_TOKEN,
-    MOCK_ROLE_ID,
-} = require('../mock-data/auth-mock-data');
+    SECURITY_ROLE_ATTRIBUTE_NAME,
+    SECURITY_ACCESS_ATTRIBUTE_NAME,
+} = require('../../utils/aws/aws-exports');
+const { MOCK_USER, MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
+const { ACCESS_LEVELS, ADMIN_ID } = require('../../middleware/authentication');
 
 let currentAuthenticatedUser = null;
 let lastUploadedFileParams = null;
@@ -16,12 +16,17 @@ let lastUploadedFileParams = null;
  * @param  {...String} roles Roles to add
  * @returns The user data
  */
-module.exports.createUserDataWithRoles = (...roles) => {
+module.exports.createUserDataWithRolesAndAccess = (access, ...roles) => {
     const user = _.cloneDeep(MOCK_USER);
     currentAuthenticatedUser = user;
     user.UserAttributes.push({
         Name: SECURITY_ROLE_ATTRIBUTE_NAME,
         Value: JSON.stringify(roles),
+    });
+
+    user.UserAttributes.push({
+        Name: SECURITY_ACCESS_ATTRIBUTE_NAME,
+        Value: access,
     });
 
     return user;
@@ -49,6 +54,19 @@ module.exports.initS3Mocker = (AWS) => {
     });
 };
 
+module.exports.initS3GetMocker = (AWS) => {
+    path = require('path');
+    AWS.mock(
+        'S3',
+        'getObject',
+        Buffer.from(
+            require('fs').readFileSync(
+                path.resolve(__dirname, '../mock-data/test.csv'),
+            ),
+        ),
+    );
+};
+
 /**
  * Mocks the Cognito Identity Service Provider so that whenever the server queries for the current user, a static
  * user is returned.
@@ -58,7 +76,10 @@ module.exports.initS3Mocker = (AWS) => {
  */
 module.exports.setCurrentUser = (
     AWS,
-    user = this.createUserDataWithRoles(MOCK_ROLE_ID),
+    user = this.createUserDataWithRolesAndAccess(
+        ACCESS_LEVELS.GRANTED,
+        ADMIN_ID,
+    ),
 ) => {
     AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
         return Promise.resolve(user);

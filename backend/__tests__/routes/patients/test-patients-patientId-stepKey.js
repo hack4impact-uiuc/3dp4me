@@ -4,12 +4,12 @@ const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
-
 const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
+    createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const omitDeep = require('omit-deep-lodash');
 const {
@@ -76,7 +76,7 @@ describe('POST /patient', () => {
             ...DEFAULT_STEP_DATA,
             patientId: patientID,
             lastEdited: startTimestamp,
-            lastEditedBy: getCurrentAuthenticatedUserAttribute('name'),
+            lastEditedBy: 'Admin',
         };
 
         // Send the request
