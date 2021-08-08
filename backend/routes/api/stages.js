@@ -26,7 +26,7 @@ router.get(
         // Cannot use an aggregation here due to the encryption middleware
         let patients = await models.Patient.find({
             status: overallStatusEnum.ACTIVE,
-        }).lean();
+        });
 
         let lookups = patients.map(async (p) => {
             const stageInfo = await model.findOne({

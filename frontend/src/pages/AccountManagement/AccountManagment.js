@@ -21,6 +21,7 @@ import {
     getEmail,
     getName,
     getRoles,
+    getId,
     getRolesValue,
     getUsername,
 } from '../../aws/aws-users';
