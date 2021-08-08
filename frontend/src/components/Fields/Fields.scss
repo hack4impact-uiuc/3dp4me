@@ -26,3 +26,17 @@
         }
     }
 }
+
+.phone-input-container {
+    .PhoneInputInput:disabled {
+        background: $secondary;
+    }
+
+    .PhoneInputInput {
+        flex: none;
+        width: 170px;
+        padding: 18.5px 14px;
+        border: solid 1px $controllerBorder;
+        border-radius: 3px;
+    }
+}

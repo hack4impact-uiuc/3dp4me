@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Menu from '@material-ui/core/Menu';
-import { Button, makeStyles } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import PropTypes from 'prop-types';
@@ -11,28 +11,7 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES, REDUCER_ACTIONS } from '../../utils/constants';
 import { Context } from '../../store/Store';
 
-const useStyles = makeStyles({
-    menuWrapper: {
-        margin: '10px',
-        width: 'fit-content',
-    },
-    accountEmail: {
-        color: 'grey',
-        lineHeight: '0px',
-    },
-    languageSelectorWrapper: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    languageSelector: {
-        height: '35px',
-        marginLeft: '5px',
-    },
-    signOutButton: {
-        padding: '8px 0px 0px 0px',
-    },
-});
+import { useStyles } from './AccountDropdown.styles';
 
 const AccountDropdown = ({
     anchorEl,
@@ -67,8 +46,9 @@ const AccountDropdown = ({
                     <p>{username}</p>
                     <p className={styles.accountEmail}>{userEmail}</p>
                     <div className={styles.languageSelectorWrapper}>
-                        {/* TODO: ARABIC BOIIIII */}
-                        <p>Language</p>
+                        <p>
+                            {translations.components.navbar.dropdown.language}
+                        </p>
                         <FormControl
                             variant="outlined"
                             className={styles.languageSelector}
@@ -77,8 +57,12 @@ const AccountDropdown = ({
                                 value={selectedLang}
                                 onChange={handleLanguageSelect}
                             >
-                                <MenuItem value={LANGUAGES.EN}>EN</MenuItem>
-                                <MenuItem value={LANGUAGES.AR}>AR</MenuItem>
+                                <MenuItem value={LANGUAGES.EN}>
+                                    {translations.components.navbar.dropdown.EN}
+                                </MenuItem>
+                                <MenuItem value={LANGUAGES.AR}>
+                                    {translations.components.navbar.dropdown.AR}
+                                </MenuItem>
                             </Select>
                         </FormControl>
                     </div>

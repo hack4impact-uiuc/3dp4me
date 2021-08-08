@@ -62,7 +62,7 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
 
     const generateChoices = () => {
         const choices = [];
-        for (let i = 0; i < numChoices; i += 1) {
+        for (let i = 0; i < numChoices; i++) {
             choices.push(
                 <div>
                     <span>

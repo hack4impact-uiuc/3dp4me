@@ -1,0 +1,70 @@
+@import '../../styles/colors.scss';
+
+.create-patient-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .create-patient-modal-wrapper {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 8px;
+        min-width: 40%;
+        padding: 10px;
+
+        .create-patient-header {
+            font-weight: 'bolder';
+        }
+
+        .create-patient-text-field {
+            padding: 10px;
+        }
+
+        .create-patient-button {
+            padding: 0 24px 0 24px;
+            height: 38px;
+            flex: 1;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .create-patient-input-wrapper {
+            font-size: '17px';
+            text-align: 'left';
+        }
+
+        .create-patient-row {
+            display: flex;
+        }
+
+        .create-patient-button-container {
+            display: flex;
+            float: right;
+            padding-bottom: 10px;
+
+            .create-patient-edit-button {
+                background-color: #5395f8;
+                color: white;
+                transition: all 0.2s;
+                border-radius: '2px';
+                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+
+                &:hover {
+                    background-color: #84b3fa;
+                }
+            }
+
+            .create-patient-close-button {
+                background-color: 'white';
+                color: 'black';
+                margin-block-start: '10px';
+
+                &:hover {
+                    background-color: '#D3D3D3';
+                }
+            }
+        }
+    }
+}

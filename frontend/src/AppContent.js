@@ -1,91 +1,109 @@
 import React, { useContext, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Dashboard from './pages/Dashboard/Dashboard';
 import AccountManagement from './pages/AccountManagement/AccountManagment';
-import Metrics from './pages/Metrics/Metrics';
 import Patients from './pages/Patients/Patients';
 import Navbar from './components/Navbar/Navbar';
-import SectionTab from './components/SectionTab/SectionTab';
-import Controller from './steps/Controller/Controller';
+import DashboardManagement from './pages/DashboardManagement/DashboardManagement';
+import PatientDetail from './pages/PatientDetail/PatientDetail';
 import ErrorModal from './components/ErrorModal/ErrorModal';
-import { REDUCER_ACTIONS, LANGUAGES } from './utils/constants';
+import {
+    REDUCER_ACTIONS,
+    LANGUAGES,
+    COGNITO_ATTRIBUTES,
+    ROUTES,
+} from './utils/constants';
 import { Context } from './store/Store';
 import { useTranslations } from './hooks/useTranslations';
 import { getCurrentUserInfo } from './aws/aws-helper';
 
-function AppContent({ username, userEmail }) {
+const AppContent = ({ username, userEmail }) => {
     const [state, dispatch] = useContext(Context);
     const selectedLang = useTranslations()[1];
+    const contentClassNames =
+        selectedLang === LANGUAGES.AR ? 'flip content' : 'content';
 
+    /**
+     * Gets the user's preferred language and sets it in the store
+     */
     useEffect(() => {
         const setLanguage = async () => {
             const userInfo = await getCurrentUserInfo();
+            if (!userInfo?.attributes) return;
 
-            if (
-                userInfo.attributes &&
-                Object.values(LANGUAGES).includes(
-                    userInfo.attributes['custom:language'],
-                )
-            ) {
+            const language = userInfo.attributes[COGNITO_ATTRIBUTES.LANGUAGE];
+            if (isLanguageValid(language)) {
                 dispatch({
                     type: REDUCER_ACTIONS.SET_LANGUAGE,
-                    language: userInfo.attributes['custom:language'],
+                    language,
                 });
+            } else {
+                console.error(`Language is invalid: ${language}`);
             }
         };
 
         setLanguage();
-    }, []);
+    }, [dispatch]);
 
+    /**
+     * Returns true if the given string is a valid language identifier
+     */
+    const isLanguageValid = (language) => {
+        return Object.values(LANGUAGES).includes(language);
+    };
+
+    /**
+     * Sets store when the global error modal should be closed
+     */
     const handleErrorModalClose = () => {
         dispatch({ type: REDUCER_ACTIONS.CLEAR_ERROR });
     };
 
-    const renderAppContent = () => {
-        return (
-            <div dir={selectedLang === LANGUAGES.AR ? 'rtl' : 'ltr'}>
-                <Router>
-                    <Navbar username={username} userEmail={userEmail} />
+    return (
+        <div dir={selectedLang === LANGUAGES.AR ? 'rtl' : 'ltr'}>
+            <Router>
+                <Navbar username={username} userEmail={userEmail} />
 
-                    <ErrorModal
-                        message={state.error}
-                        isOpen={state.isErrorVisible}
-                        onClose={handleErrorModalClose}
-                    />
+                {/* Global error popup */}
+                <ErrorModal
+                    message={state.error}
+                    isOpen={state.isErrorVisible}
+                    onClose={handleErrorModalClose}
+                />
 
-                    <div
-                        className={`${
-                            selectedLang === LANGUAGES.AR ? 'flip' : ''
-                        } content`}
-                    >
-                        <Switch>
-                            <Route exact path="/">
-                                <Dashboard />
-                            </Route>
-                            <Route exact path="/account">
-                                <AccountManagement />
-                            </Route>
-                            <Route exact path="/metrics">
-                                <Metrics />
-                            </Route>
-                            <Route exact path="/patients">
-                                <Patients />
-                            </Route>
-                            <Route exact path="/patient-info/:patientId">
-                                <Controller />
-                            </Route>
-                            <Route exact path="/section-tab">
-                                <SectionTab />
-                            </Route>
-                        </Switch>
-                    </div>
-                </Router>
-            </div>
-        );
-    };
+                {/* Routes */}
+                <div className={contentClassNames}>
+                    <Switch>
+                        <Route exact path={ROUTES.DASHBOARD}>
+                            <Dashboard />
+                        </Route>
+                        <Route exact path={ROUTES.ACCOUNT}>
+                            <AccountManagement />
+                        </Route>
+                        <Route exact path={ROUTES.PATIENTS}>
+                            <Patients />
+                        </Route>
+                        <Route exact path={ROUTES.DASHBOARD_MANAGEMENT}>
+                            <DashboardManagement />
+                        </Route>
+                        <Route
+                            exact
+                            path={`${ROUTES.PATIENT_DETAIL}/:patientId`}
+                        >
+                            <PatientDetail />
+                        </Route>
+                    </Switch>
+                </div>
+            </Router>
+        </div>
+    );
+};
 
-    return renderAppContent();
-}
+AppContent.propTypes = {
+    username: PropTypes.string.isRequired,
+    userEmail: PropTypes.string.isRequired,
+};
 
 export default AppContent;

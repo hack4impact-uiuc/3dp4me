@@ -26,6 +26,7 @@ const SignatureField = ({
     useEffect(() => {
         if (!value?.signatureData || isModalOpen) return;
 
+        // Throw the existing signature data onto the canvas
         const canvas = document.querySelector('canvas');
         const signaturePad = new SignaturePad(canvas);
         const data = transformSignatureData(
@@ -56,9 +57,12 @@ const SignatureField = ({
 
             formattedPoints = formattedPoints.map((point) => {
                 const newPoint = {};
+
+                // Scale the data points so that they fit this canvas
                 newPoint.x = (point.x / originalCanvasWidth) * canvas.width;
                 newPoint.y = (point.y / originalCanvasHeight) * canvas.height;
 
+                // Scales the time of each touch point.... doens't work great
                 const scaleFactor = canvas.width / originalCanvasWidth;
                 const deltaT = point.time - firstTimestamp;
                 newPoint.time = firstTimestamp + deltaT * scaleFactor;
@@ -73,13 +77,16 @@ const SignatureField = ({
         return formattedData;
     };
 
-    /* a function that uses the canvas ref to clear the canvas 
-    via a method given by react-signature-canvas */
+    /**
+     * Clear the canvas
+     */
     const clear = () => sigCanvas.current.clear();
 
-    /* a function that uses the canvas ref to trim the canvas 
-    from white spaces via a method given by react-signature-canvas
-    then saves it in our state */
+    /**
+     * Saves signature data points along with the canvas width and height so that
+     * we can display it across different device sizes. Also save the document URL
+     * that was shown at the time of signing (in case it's updated in the future)
+     */
     const save = () => {
         const canvas = document.querySelector('canvas');
         onChange(`${fieldId}.signatureData`, sigCanvas.current.toData());
@@ -90,10 +97,16 @@ const SignatureField = ({
         setIsModalOpen(false);
     };
 
+    /**
+     * Toggles whether the signing docs are visible
+     */
     const onToggleDocument = () => {
         setIsDocumentVisible((visible) => !visible);
     };
 
+    /**
+     * Shows the documents that the user is signing
+     */
     const renderDocuments = () => {
         if (!isDocumentVisible) return null;
 
@@ -111,6 +124,18 @@ const SignatureField = ({
                 />
             </div>
         );
+    };
+
+    /**
+     * Renders the canvas for displaying saved signatures (not for creating new ones).
+     * The library we're using is kind of bad... we can't ever have more than one canvas
+     * elements on screen
+     */
+    const renderCanvas = () => {
+        // We can't render the canvas while the other canvas is visible
+        if (!value?.signatureData || isModalOpen) return null;
+
+        return <canvas />;
     };
 
     return (
@@ -146,10 +171,8 @@ const SignatureField = ({
                     </Button>
                 </div>
             </Modal>
-            {/* if our we have a non-null image url we should 
-            show an image and pass our imageURL state to it */}
             <div className="sig-container">
-                {value?.signatureData && !isModalOpen ? <canvas /> : null}
+                {renderCanvas()}
                 <div className="sig-ctl-container">
                     <Button
                         className="sig-ctl-button doc-btn"

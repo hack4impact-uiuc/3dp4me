@@ -6,7 +6,6 @@ import { Divider } from '@material-ui/core';
 
 import AudioRecorder from '../AudioRecorder/AudioRecorder';
 import TextField from '../Fields/TextField';
-import Notes from '../Notes/Notes';
 import Files from '../Files/Files';
 import { FIELD_TYPES } from '../../utils/constants';
 import RadioButtonField from '../Fields/RadioButtonField';
@@ -15,6 +14,7 @@ import PhoneField from '../Fields/PhoneField';
 import FieldGroup from '../Fields/FieldGroup';
 import SignatureField from '../Fields/SignatureField';
 import { useTranslations } from '../../hooks/useTranslations';
+import TextArea from '../Fields/TextArea';
 
 const StepField = ({
     metadata,
@@ -67,7 +67,7 @@ const StepField = ({
             case FIELD_TYPES.MULTILINE_STRING:
                 return (
                     <div>
-                        <Notes
+                        <TextArea
                             disabled={isDisabled}
                             onChange={handleSimpleUpdate}
                             title={displayName}

@@ -1,37 +1,6 @@
-import axios from 'axios';
-
-import { getCurrentSession } from '../aws/aws-helper';
+import instance from './axios-config';
 
 const FileDownload = require('js-file-download');
-
-const IN_DEV_ENV =
-    !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
-const BASE_URL = IN_DEV_ENV
-    ? 'http://localhost:8080/api'
-    : 'https://3dp4me-software.org/api';
-
-const instance = axios.create({
-    baseURL: BASE_URL,
-    validateStatus: () => {
-        return true;
-    },
-});
-
-instance.interceptors.request.use(
-    async (config) => {
-        const configCopy = config;
-        const {
-            accessToken: { jwtToken },
-        } = await getCurrentSession();
-        if (jwtToken) {
-            configCopy.headers.Authorization = `Bearer ${jwtToken}`;
-        }
-        return configCopy;
-    },
-    (error) => {
-        return Promise.reject(error);
-    },
-);
 
 export const getAllPatients = async () => {
     const requestString = '/patients';

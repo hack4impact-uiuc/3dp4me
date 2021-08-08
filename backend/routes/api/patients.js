@@ -46,7 +46,7 @@ router.get(
             });
 
         let stepKeys = await getStepKeys();
-        for (const stepKey of stepKeys) {
+        let stepDataPromises = stepKeys.map(async (stepKey) => {
             if (isAdmin(req.user)) {
                 steps = await models.Step.find({});
             } else {
@@ -87,7 +87,9 @@ router.get(
                 }
 
             patientData.set(stepKey, stepData, { strict: false });
-        }
+        });
+
+        await Promise.all(stepDataPromises);
 
         res.status(200).json({
             code: 200,

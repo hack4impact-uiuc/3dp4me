@@ -5,11 +5,14 @@ import { Modal, RootRef } from '@material-ui/core';
 import './ErrorModal.scss';
 import WarningIcon from '../../assets/warning.svg';
 
-const ErrorModal = ({ message = 'An error occured', isOpen, onClose }) => {
-    // Have this for accessibility (linter)
+const KEYCODE_SPACE = 32;
+const DEFAULT_ERROR_MSG = 'An error occurred';
+
+const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }) => {
+    // Have this for accessibility
     const onKeyDown = (e) => {
         // Space bar pressed
-        if (e.keyCode === 32) onClose();
+        if (e.keyCode === KEYCODE_SPACE) onClose();
     };
 
     return (

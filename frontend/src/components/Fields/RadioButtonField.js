@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useTranslations } from '../../hooks/useTranslations';
+import { FieldOptionsType } from '../../utils/custom-proptypes';
 
 const RadioButtonField = ({
     fieldId,
@@ -14,10 +15,13 @@ const RadioButtonField = ({
 }) => {
     const selectedLang = useTranslations()[1];
 
+    const shouldHideOption = (option) => {
+        return option.IsHidden && value?.toString() !== option._id.toString();
+    };
+
     const generateQuestions = () => {
         return options.map((option) => {
-            if (option.IsHidden && value?.toString() !== option._id.toString())
-                return null;
+            if (shouldHideOption(option)) return null;
 
             return (
                 <FormControlLabel
@@ -51,18 +55,7 @@ RadioButtonField.propTypes = {
     value: PropTypes.string,
     isDisabled: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired,
-    options: PropTypes.arrayOf(
-        PropTypes.shape({
-            IsHidden: PropTypes.bool.isRequired,
-            _id: PropTypes.string.isRequired,
-            Question: PropTypes.shape({
-                EN: PropTypes.string.isRequired,
-                AR: PropTypes.string.isRequired,
-            }),
-        }),
-    ),
+    options: FieldOptionsType,
 };
-
-// TODO: Proptypes
 
 export default RadioButtonField;

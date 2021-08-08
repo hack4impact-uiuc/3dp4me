@@ -11,15 +11,15 @@ import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const BottomBar = ({
-    edit,
+    isEditing,
     lastEdited,
     lastEditedBy,
-    status = null,
-    style = null,
     onStatusChange,
     onSave,
     onDiscard,
-    setEdit,
+    onEdit,
+    status = null,
+    style = null,
 }) => {
     const [translations, selectedLang] = useTranslations();
 
@@ -35,19 +35,23 @@ const BottomBar = ({
         ),
     };
 
+    /**
+     * Renders the dropdown for step status. If status is null, then this isn't rendered at all.
+     */
     const renderStatusSelector = () => {
         if (!status) return null;
+        const className =
+            selectedLang === LANGUAGES.AR
+                ? 'status-selector-ar'
+                : 'status-selector';
 
         return (
             <Select
-                className="status-selector"
+                className={className}
                 MenuProps={{ disableScrollLock: true }}
                 onClick={(e) => onStatusChange('status', e.target.value)}
-                defaultValue={status}
+                value={status}
             >
-                <MenuItem disabled value="default">
-                    {translations.components.bottombar.default}
-                </MenuItem>
                 <MenuItem value={STEP_STATUS.UNFINISHED}>
                     {translations.components.bottombar.unfinished}
                 </MenuItem>
@@ -61,6 +65,9 @@ const BottomBar = ({
         );
     };
 
+    /**
+     * Renders the status icon and text
+     */
     const renderStatus = () => {
         if (!status) return null;
 
@@ -75,15 +82,59 @@ const BottomBar = ({
         );
     };
 
+    /**
+     * Renders the discard and save buttons side by side
+     */
+    const renderDiscardAndSaveButtons = () => {
+        const saveBtnClassName =
+            selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button';
+
+        return [
+            <Button
+                key="bottom-bar-save"
+                className={saveBtnClassName}
+                onClick={onSave}
+            >
+                {translations.components.button.save}
+            </Button>,
+            <Button
+                key="bottom-bar-discard"
+                className="discard-button"
+                onClick={onDiscard}
+            >
+                <b>{translations.components.button.discard.title}</b>
+            </Button>,
+        ];
+    };
+
+    /**
+     * Renders all of the controls for the bottom bar (status selector, save, discard)
+     */
+    const renderToolbarControls = () => {
+        if (isEditing) {
+            return (
+                <div>
+                    {renderStatusSelector()}
+                    {renderDiscardAndSaveButtons()}
+                </div>
+            );
+        }
+
+        return (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                {renderStatus()}
+                <Button className="edit-button" onClick={() => onEdit()}>
+                    {translations.components.button.edit}
+                </Button>
+            </div>
+        );
+    };
+
     const getLastEditedString = () => {
         if (!lastEdited || !lastEditedBy) return '';
 
-        return `${
-            translations.components.bottombar.lastEditedBy
-        } ${lastEditedBy} ${translations.components.bottombar.on} ${formatDate(
-            new Date(lastEdited),
-            selectedLang,
-        )}`;
+        const lastEditedDate = formatDate(new Date(lastEdited), selectedLang);
+        return `${translations.components.bottombar.lastEditedBy} ${lastEditedBy} ${translations.components.bottombar.on} ${lastEditedDate}`;
     };
 
     return (
@@ -100,97 +151,7 @@ const BottomBar = ({
                 <div className="editor-section" style={style?.editorSection}>
                     {getLastEditedString()}
                 </div>
-                {edit ? (
-                    <div>
-                        {selectedLang !== LANGUAGES.AR ? (
-                            <div>
-                                {renderStatusSelector()}
-                                <Button
-                                    className="save-button"
-                                    onClick={onSave}
-                                >
-                                    {translations.components.button.save}
-                                </Button>
-                                <Button
-                                    className="discard-button"
-                                    onClick={onDiscard}
-                                >
-                                    <b>
-                                        {
-                                            translations.components.button
-                                                .discard.title
-                                        }
-                                    </b>
-                                </Button>
-                            </div>
-                        ) : (
-                            <div>
-                                <Select
-                                    className="status-selector-ar"
-                                    MenuProps={{ disableScrollLock: true }}
-                                    onClick={(e) =>
-                                        onStatusChange('status', e.target.value)
-                                    }
-                                    defaultValue={status}
-                                >
-                                    <MenuItem disabled value="default">
-                                        {
-                                            translations.components.bottombar
-                                                .default
-                                        }
-                                    </MenuItem>
-                                    <MenuItem value={STEP_STATUS.UNFINISHED}>
-                                        {
-                                            translations.components.bottombar
-                                                .unfinished
-                                        }
-                                    </MenuItem>
-                                    <MenuItem
-                                        value={STEP_STATUS.PARTIALLY_FINISHED}
-                                    >
-                                        {
-                                            translations.components.bottombar
-                                                .partial
-                                        }
-                                    </MenuItem>
-                                    <MenuItem value={STEP_STATUS.FINISHED}>
-                                        {
-                                            translations.components.bottombar
-                                                .finished
-                                        }
-                                    </MenuItem>
-                                </Select>
-                                <Button
-                                    className="save-button-ar"
-                                    onClick={onSave}
-                                >
-                                    {translations.components.button.save}
-                                </Button>
-                                <Button
-                                    className="discard-button"
-                                    onClick={onDiscard}
-                                >
-                                    <b>
-                                        {
-                                            translations.components.button
-                                                .discard.title
-                                        }
-                                    </b>
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                ) : (
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        {renderStatus()}
-                        <Button
-                            className="edit-button"
-                            onClick={() => setEdit(true)}
-                        >
-                            {translations.components.button.edit}
-                        </Button>
-                    </div>
-                )}
+                {renderToolbarControls()}
             </Toolbar>
         </AppBar>
     );
@@ -198,14 +159,14 @@ const BottomBar = ({
 
 BottomBar.propTypes = {
     style: PropTypes.object,
-    edit: PropTypes.bool.isRequired,
+    isEditing: PropTypes.bool.isRequired,
     lastEdited: PropTypes.string,
     lastEditedBy: PropTypes.string,
     status: PropTypes.string,
     onStatusChange: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     onDiscard: PropTypes.func.isRequired,
-    setEdit: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
 };
 
 export default BottomBar;

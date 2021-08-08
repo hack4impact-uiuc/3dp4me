@@ -1,53 +1,72 @@
-import React from 'react';
+import _ from 'lodash';
+import { useState, useMemo } from 'react';
 
+import { SORT_DIRECTIONS } from '../utils/constants';
 import { resolveObjPath } from '../utils/object';
 
-const useSortableData = (items, UNSORTED_DATA, config = null) => {
-    const [sortConfig, setSortConfig] = React.useState(config);
+/**
+ * Hook that takes in an array of data and sorts it when requested
+ * @param {Array} data The data to sort
+ * @returns Three items: `sortedData` is the data after sorting. `requestSort` is a function
+ *          that causes a resort when called, and `sortConfig` tells about the current sort config
+ */
+const useSortableData = (data) => {
+    const [sortConfig, setSortConfig] = useState(null);
+    const sortableData = useMemo(() => _.cloneDeep(data), [data]);
+    const sortedData = useMemo(() => {
+        /**
+         * Compares the two objects with comparison operator. A
+         * non-null object is always treated as greater than null
+         */
+        const compare = (a, b, key) => {
+            const aVal = resolveObjPath(a, key);
+            const bVal = resolveObjPath(b, key);
+            if ((!aVal && bVal) || aVal > bVal) return -1;
+            if ((aVal && !bVal) || aVal < bVal) return 1;
 
-    const compare = (a, b, key) => {
-        const aVal = resolveObjPath(a, key);
-        const bVal = resolveObjPath(b, key);
+            return 0;
+        };
 
-        if ((!aVal && bVal) || aVal > bVal) return -1;
-
-        if ((aVal && !bVal) || aVal < bVal) return 1;
-
-        return 0;
-    };
-
-    const sortedItems = React.useMemo(() => {
-        const sortableItems = [...items];
+        // Do the actual sorting if requested
         if (sortConfig !== null) {
-            if (sortConfig.direction === 'none') return UNSORTED_DATA;
+            if (sortConfig.direction === SORT_DIRECTIONS.NONE) return data;
 
-            sortableItems.sort((a, b) => {
+            sortableData.sort((a, b) => {
                 const res = compare(a, b, sortConfig.key);
-                return sortConfig.direction === 'ascending' ? res : res * -1;
+                return sortConfig.direction === SORT_DIRECTIONS.AESC
+                    ? res
+                    : res * -1;
             });
         }
-        return sortableItems;
-    }, [items, sortConfig, compare, UNSORTED_DATA]);
 
+        return sortableData;
+    }, [data, sortableData, sortConfig]);
+
+    /**
+     * Circularly toggles from up to down to none
+     */
     const requestSort = (key) => {
-        let direction = 'ascending';
+        let direction = SORT_DIRECTIONS.AESC;
+
         if (
-            sortConfig &&
-            sortConfig.key === key &&
-            sortConfig.direction === 'ascending'
-        ) {
-            direction = 'descending';
-        } else if (
-            sortConfig &&
-            sortConfig.key === key &&
-            sortConfig.direction === 'descending'
-        ) {
-            direction = 'none';
-        }
+            sortConfig?.key === key &&
+            sortConfig?.direction === SORT_DIRECTIONS.AESC
+        )
+            direction = SORT_DIRECTIONS.DESC;
+        else if (
+            sortConfig?.key === key &&
+            sortConfig?.direction === SORT_DIRECTIONS.DESC
+        )
+            direction = SORT_DIRECTIONS.NONE;
+
         setSortConfig({ key, direction });
     };
 
-    return { items: sortedItems, requestSort, sortConfig };
+    return {
+        sortedData,
+        requestSort,
+        sortConfig,
+    };
 };
 
 export default useSortableData;

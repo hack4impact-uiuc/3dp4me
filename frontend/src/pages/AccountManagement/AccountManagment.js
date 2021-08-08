@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 
-import { LANGUAGES } from '../../utils/constants';
-import { getAllRoles, getAllUsers } from '../../utils/api';
-import MainUserTable from '../../components/Table/MainUserTable';
+import {
+    getUserTableHeaders,
+    COGNITO_ATTRIBUTES,
+    USER_TABLE_ROW_DATA,
+    LANGUAGES,
+} from '../../utils/constants';
+import { getAllRoles, getAllUsers } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { useTranslations } from '../../hooks/useTranslations';
+import {
+    generateUserTableRowRenderer,
+    userTableHeaderRenderer,
+} from '../../utils/table-renderers';
+import {
+    getAccessLevel,
+    getEmail,
+    getId,
+    getName,
+    getRoles,
+    getRolesValue,
+    getUsername,
+} from '../../aws/aws-users';
+import SimpleTable from '../../components/SimpleTable/SimpleTable';
 
+/**
+ * The account management screen. Allows admins to accept people into the
+ * platform and assign roles.
+ */
 const AccountManagement = () => {
-    const selectedLang = useTranslations()[1];
+    const [translations, selectedLang] = useTranslations();
     const [userMetaData, setUserMetaData] = useState([]);
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -21,34 +43,83 @@ const AccountManagement = () => {
             setUserMetaData(userRes.result.Users);
 
             const rolesRes = await getAllRoles();
-            const roles = rolesRes.result.map((r) => ({
-                _id: r?._id,
-                IsHidden: r?.isHidden,
-                Question: r?.roleName,
-            }));
+            const roles = rolesToMultiSelectFormat(rolesRes.result);
 
             setRolesData(roles);
         };
         errorWrap(fetchData);
     }, [setUserMetaData, errorWrap]);
 
-    const onUserSelected = (user) => {
-        setSelectedUser(user);
+    /**
+     * Converts the roles response to a format useable by the MultiSelect field
+     */
+    const rolesToMultiSelectFormat = (roles) => {
+        return roles.map((r) => ({
+            _id: r?._id,
+            IsHidden: r?.isHidden,
+            Question: r?.roleName,
+        }));
     };
 
+    /**
+     * Formats a user to a format useable by the EditRoleModal
+     */
+    const userToRoleModalFormat = (user) => {
+        return {
+            accessLevel: getAccessLevel(user),
+            userId: getId(user),
+            userName: getName(user),
+            userEmail: getEmail(user),
+            roles: getRolesValue(user),
+        };
+    };
+
+    /**
+     * Formats the users response to be useable by the table
+     */
+    const usersToTableFormat = (users) => {
+        return users.map((user) => ({
+            Username: getUsername(user),
+            Name: getName(user),
+            Email: getEmail(user),
+            Roles: getRoles(user, rolesData, selectedLang),
+            Access: getAccessLevel(user),
+        }));
+    };
+
+    /**
+     * Called when a user row is clicked on
+     */
+    const onUserSelected = (user) => {
+        const userData = userMetaData.find((u) => u.Username === user.Username);
+
+        setSelectedUser(userToRoleModalFormat(userData));
+    };
+
+    /**
+     * Called when a user's data is updated
+     */
     const onUserEdited = (username, accessLevel, roles) => {
         setUserMetaData((metaData) => {
-            const updatedAccess = { Name: 'custom:access', Value: accessLevel };
+            // Create updated access attribute
+            const updatedAccess = {
+                Name: COGNITO_ATTRIBUTES.ACCESS,
+                Value: accessLevel,
+            };
+
+            // Create update role attribute
             const updatedRoles = {
-                Name: 'custom:security_roles',
+                Name: COGNITO_ATTRIBUTES.ROLES,
                 Value: JSON.stringify(roles),
             };
 
+            // Clone the structure and find user
             const updatedUsers = _.cloneDeep(metaData);
             const userToUpdate = updatedUsers.find(
                 (user) => user.Username === username,
             );
 
+            // Do the update
             userToUpdate.Attributes = userToUpdate.Attributes.filter(
                 (attrib) =>
                     attrib.Name !== updatedAccess.Name &&
@@ -62,16 +133,13 @@ const AccountManagement = () => {
     };
 
     function generateMainUserTable() {
-        const headings = ['Name', 'Email', 'Role', 'Access'];
-        if (getAllUsers() == null) return null;
-
         return (
-            <MainUserTable
-                headers={headings}
-                rowIds={['Name', 'Email', 'Role', 'Access']}
-                users={userMetaData}
-                roleData={rolesData}
-                onUserSelected={onUserSelected}
+            <SimpleTable
+                data={usersToTableFormat(userMetaData)}
+                headers={getUserTableHeaders(selectedLang)}
+                rowData={USER_TABLE_ROW_DATA}
+                renderHeader={userTableHeaderRenderer}
+                renderTableRow={generateUserTableRowRenderer(onUserSelected)}
             />
         );
     }
@@ -101,7 +169,7 @@ const AccountManagement = () => {
                                     : 'patient-list-title'
                             }
                         >
-                            User Database
+                            {translations.accountManagement.userDatabase}
                         </h2>
                     </div>
                 </div>

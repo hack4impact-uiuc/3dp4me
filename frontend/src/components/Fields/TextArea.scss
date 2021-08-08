@@ -1,0 +1,23 @@
+@import '../../styles/colors.scss';
+
+.text-area-wrapper {
+    width: 350px;
+    margin-top: 50px;
+    margin-bottom: 25px;
+
+    .text-area-body {
+        width: 100%;
+        font-family: 'Ubuntu';
+        max-height: 300px;
+        min-height: 100px;
+        font-size: 16px;
+        line-height: 1.5;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background: $notesBackground;
+    }
+
+    .active-text-area {
+        background: white;
+    }
+}

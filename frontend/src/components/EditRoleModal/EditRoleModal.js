@@ -19,7 +19,7 @@ import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
-import { removeUserRole, setUserAccess, addUserRole } from '../../utils/api';
+import { removeUserRole, setUserAccess, addUserRole } from '../../api/api';
 
 const EditRoleModal = ({
     isOpen,
@@ -46,7 +46,7 @@ const EditRoleModal = ({
 
     const onSave = async () => {
         // Update users roles
-        for (let i = 0; i < allRoles.length; i += 1) {
+        for (let i = 0; i < allRoles.length; i++) {
             const role = allRoles[i];
 
             // If user has role
@@ -75,6 +75,26 @@ const EditRoleModal = ({
         // Close modal and update local data
         onClose();
         onUserEdited(userData.userId, userData.accessLevel, userData.roles);
+    };
+
+    const renderAccessDropdown = () => {
+        return (
+            <Select
+                native
+                value={userData?.accessLevel}
+                onChange={onAccessChange}
+            >
+                <option value={ACCESS_LEVELS.GRANTED}>
+                    {translations.accountManagement.Approved}
+                </option>
+                <option value={ACCESS_LEVELS.REVOKED}>
+                    {translations.accountManagement.Revoked}
+                </option>
+                <option value={ACCESS_LEVELS.PENDING}>
+                    {translations.accountManagement.Pending}
+                </option>
+            </Select>
+        );
     };
 
     return (
@@ -107,21 +127,7 @@ const EditRoleModal = ({
                     <InputLabel>
                         {translations.accountManagement.access}
                     </InputLabel>
-                    <Select
-                        native
-                        value={userData?.accessLevel}
-                        onChange={onAccessChange}
-                    >
-                        <option value={ACCESS_LEVELS.GRANTED}>
-                            {translations.accountManagement.Approved}
-                        </option>
-                        <option value={ACCESS_LEVELS.REVOKED}>
-                            {translations.accountManagement.Revoked}
-                        </option>
-                        <option value={ACCESS_LEVELS.PENDING}>
-                            {translations.accountManagement.Pending}
-                        </option>
-                    </Select>
+                    {renderAccessDropdown()}
                 </FormControl>
                 <div>
                     <Button className="save-user-button" onClick={onSave}>
@@ -140,12 +146,21 @@ EditRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onUserEdited: PropTypes.func.isRequired,
-    allRoles: PropTypes.arrayOf(PropTypes.string),
+    allRoles: PropTypes.arrayOf(
+        PropTypes.shape({
+            _id: PropTypes.string,
+            IsHidden: PropTypes.bool,
+            Question: PropTypes.shape({
+                EN: PropTypes.string,
+                AR: PropTypes.string,
+            }),
+        }),
+    ),
     userInfo: PropTypes.shape({
         userId: PropTypes.string,
         userName: PropTypes.string,
         userEmail: PropTypes.string,
-        roles: PropTypes.arrayOf(PropTypes.String),
+        roles: PropTypes.arrayOf(PropTypes.string),
     }),
 };
 

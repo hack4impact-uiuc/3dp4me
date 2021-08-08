@@ -13,9 +13,9 @@ import {
 
 import { STEP_STATUS, FIELD_TYPES } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
-import { downloadFile, uploadFile, deleteFile } from '../../utils/api';
-import StepField from '../../components/StepField/StepField';
-import BottomBar from '../../components/BottomBar/BottomBar';
+import { downloadFile, uploadFile, deleteFile } from '../../api/api';
+import StepField from '../StepField/StepField';
+import BottomBar from '../BottomBar/BottomBar';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 
@@ -212,8 +212,8 @@ const StepContent = ({
                 onSave={saveData}
                 status={updatedData?.status || STEP_STATUS.UNFINISHED}
                 onStatusChange={handleSimpleUpdate}
-                edit={edit}
-                setEdit={setEdit}
+                isEditing={edit}
+                onEdit={() => setEdit(true)}
             />
         );
     };

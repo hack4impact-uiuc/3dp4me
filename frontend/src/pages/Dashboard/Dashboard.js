@@ -1,289 +1,133 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { makeStyles } from '@material-ui/core/styles';
-import MuiAlert from '@material-ui/lab/Alert';
-import reactSwal from '@sweetalert/with-react';
-import swal from 'sweetalert';
-import { Button, TextField, Snackbar } from '@material-ui/core';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
-import { getPatientName } from '../../utils/utils';
 import {
-    REQUIRED_DASHBOARD_SORT_KEYS,
-    REQUIRED_DASHBOARD_HEADERS,
-    LANGUAGES,
+    getStepDashboardHeaders,
+    PATIENTS_BY_STEP_TABLE_ROW_DATA,
+    FIELD_TYPES,
 } from '../../utils/constants';
-import MainTable from '../../components/Table/MainTable';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
-import search from '../../assets/search.svg';
-import {
-    getAllStepsMetadata,
-    getPatientsByStage,
-    postNewPatient,
-} from '../../utils/api';
+import { getAllStepsMetadata, getPatientsByStage } from '../../api/api';
 import './Dashboard.scss';
 import { useTranslations } from '../../hooks/useTranslations';
+import PatientTable from '../../components/PatientTable/PatientTable';
+import { sortMetadata } from '../../utils/utils';
 
-// TODO: Expand these as needed
-const useStyles = makeStyles(() => ({
-    swalEditButton: {
-        backgroundColor: '#5395F8',
-        color: 'white',
-        padding: '0 24px 0 24px',
-        height: '38px',
-        width: 'auto',
-        fontSize: '12px',
-        fontWeight: 'bold',
-        transition: 'all 0.2s',
-        borderRadius: '2px',
-        boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.15)',
-        '&:hover': {
-            backgroundColor: '#84b3fa',
-        },
-    },
-    swalCloseButton: {
-        backgroundColor: 'white',
-        color: 'black',
-        padding: '0 24px 0 24px',
-        height: '38px',
-        width: 'auto',
-        fontSize: '12px',
-        fontWeight: 'bold',
-        marginLeft: '10px',
-        '&:hover': {
-            backgroundColor: '#D3D3D3',
-        },
-    },
-}));
-
+/**
+ * Shows a table of active patients, with a different table for each step
+ */
 const Dashboard = () => {
-    const classes = useStyles();
-
-    const [patients, setPatients] = useState([]);
-    const [stepsMetaData, setStepsMetaData] = useState(null);
-    const [step, setStep] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filteredPatients, setFilteredPatients] = useState([]);
-    const [noPatient, setNoPatient] = useState(false);
     const errorWrap = useErrorWrap();
     const [translations, selectedLang] = useTranslations();
 
-    const createPatientHelper = async (edit) => {
-        const patient = {};
-        patient.firstName = document.getElementById('createFirstName').value;
-        patient.fathersName = document.getElementById(
-            'createFathersName',
-        ).value;
-        patient.grandfathersName = document.getElementById(
-            'createGrandfathersName',
-        ).value;
-        patient.familyName = document.getElementById('createFamilyName').value;
+    // All patients for the selected step
+    const [patients, setPatients] = useState([]);
 
-        let res = null;
-        try {
-            res = await postNewPatient(patient);
-            const id = res.result._id;
+    // The metadata for all steps
+    const [stepsMetaData, setStepsMetaData] = useState(null);
 
-            if (edit) window.location.href += `patient-info/${id}`;
-        } catch (error) {
-            console.error(error);
-        } finally {
-            swal({
-                title: res?.success
-                    ? translations.components.swal.createPatient.successMsg
-                    : translations.components.swal.createPatient.failMsg,
-                icon: res?.success ? 'success' : 'warning',
-            });
-        }
-    };
+    // Currently selected step
+    const [selectedStep, setSelectedStep] = useState('');
 
-    const createPatient = () => {
-        reactSwal({
-            buttons: {},
-            content: (
-                <div
-                    style={{
-                        marginRight: '10px',
-                        fontFamily: 'Ubuntu',
-                        margin: '0px !important',
-                        textAlign: 'left',
-                    }}
-                >
-                    <h2 style={{ fontWeight: 'bolder' }}>
-                        {translations.components.swal.createPatient.title}
-                    </h2>
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>
-                            {
-                                translations.components.swal.createPatient
-                                    .firstName
-                            }
-                        </span>
-                        <TextField
-                            size="small"
-                            id="createFirstName"
-                            fullWidth
-                            style={{ padding: 10 }}
-                            variant="outlined"
-                        />
-                        <span>
-                            {
-                                translations.components.swal.createPatient
-                                    .middleName
-                            }
-                        </span>
-                        <div style={{ display: 'flex' }}>
-                            <TextField
-                                size="small"
-                                id="createFathersName"
-                                fullWidth
-                                style={{ padding: 10 }}
-                                variant="outlined"
-                            />
-                            <TextField
-                                size="small"
-                                id="createGrandfathersName"
-                                fullWidth
-                                style={{ padding: 10 }}
-                                variant="outlined"
-                            />
-                        </div>
-                        <span>
-                            {
-                                translations.components.swal.createPatient
-                                    .lastName
-                            }
-                        </span>
-                        <TextField
-                            size="small"
-                            id="createFamilyName"
-                            fullWidth
-                            style={{ padding: 10 }}
-                            variant="outlined"
-                        />
-                    </div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            float: 'right',
-                            paddingBottom: '10px',
-                        }}
-                    >
-                        <Button
-                            className={classes.swalEditButton}
-                            onClick={() => createPatientHelper(true)}
-                        >
-                            {
-                                translations.components.swal.createPatient
-                                    .buttons.edit
-                            }
-                        </Button>
-                        <Button
-                            className={classes.swalCloseButton}
-                            onClick={() => createPatientHelper(false)}
-                        >
-                            {
-                                translations.components.swal.createPatient
-                                    .buttons.noEdit
-                            }
-                        </Button>
-                    </div>
-                </div>
-            ),
-        });
-    };
-
-    const doesPatientMatchQuery = (patient, query) => {
-        if (
-            getPatientName(patient)
-                .toLowerCase()
-                .indexOf(query.toLowerCase()) !== -1
-        )
-            return true;
-
-        if (patient._id.indexOf(query) !== -1) return true;
-
-        return false;
-    };
-
-    const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
-        const filtered = patients.filter((patient) =>
-            doesPatientMatchQuery(patient, e.target.value),
-        );
-        setNoPatient(filtered.length === 0);
-        setFilteredPatients(filtered);
-    };
-
-    const handleNoPatientClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setNoPatient(false);
-    };
-
-    const handleStep = async (stepKey) => {
-        setSearchQuery('');
-        if (stepKey !== null) {
-            setStep(stepKey);
-            errorWrap(async () => {
-                const res = await getPatientsByStage(stepKey);
-                setPatients(res.result);
-            });
-        }
-    };
-
+    /**
+     * Gets metadata for all setps
+     */
     useEffect(() => {
         const getMetadata = async () => {
-            errorWrap(async () => {
-                let res = await getAllStepsMetadata();
-                setStepsMetaData(res.result);
-                if (res.result.length > 0) {
-                    setStep(res.result[0].key);
-                    res = await getPatientsByStage(res.result[0].key);
-                    setPatients(res.result);
-                }
-            });
+            let res = await getAllStepsMetadata();
+
+            const metaData = sortMetadata(res.result);
+            setStepsMetaData(metaData);
+            if (metaData.length > 0) {
+                setSelectedStep(metaData[0].key);
+                res = await getPatientsByStage(metaData[0].key);
+                setPatients(res.result);
+            }
         };
 
-        getMetadata();
-    }, [setStep, setStepsMetaData, errorWrap]);
+        errorWrap(getMetadata);
+    }, [setSelectedStep, setStepsMetaData, errorWrap]);
 
-    function generatePageHeader() {
+    /**
+     * Called when a patient is successfully added to the backend
+     * @param {Object} patientData The patient data (returned from server)
+     */
+    const onAddPatient = (patientData) => {
+        setPatients((oldPatients) => oldPatients.concat(patientData));
+    };
+
+    /**
+     * Called when the user selects a new step to view. Sets the step
+     * and refetches patient data for this step
+     */
+    const onStepSelected = async (stepKey) => {
+        if (!stepKey) return;
+
+        // TODO: Put the patient data in a store
+        setSelectedStep(stepKey);
+        errorWrap(async () => {
+            const res = await getPatientsByStage(stepKey);
+            setPatients(res.result);
+        });
+    };
+
+    /**
+     * Gets the display name of the currently selected step
+     */
+    function getTableTitle() {
         if (stepsMetaData == null) return translations.components.table.loading;
 
-        return stepsMetaData.map((element) => {
-            if (step !== element.key) return null;
+        for (let i = 0; i < stepsMetaData?.length; i++) {
+            if (selectedStep === stepsMetaData[i].key)
+                return stepsMetaData[i].displayName[selectedLang];
+        }
 
-            return (
-                <p key={`header-${element.key}`}>
-                    {element.displayName[selectedLang]}
-                </p>
-            );
-        });
+        console.error(`Unrecognized step: ${selectedStep}`);
+        return null;
     }
 
-    function generateHeaders(fields) {
+    /**
+     * Generates headers for a step table. Goes through each field in the step and checks
+     * if it should be visible on the dashboard. If so, adds to headers.
+     * @returns Array of headers
+     */
+    function generateHeaders(stepKey, fields) {
         if (fields == null) return [];
 
-        const headers = _.cloneDeep(REQUIRED_DASHBOARD_HEADERS);
+        const headers = getStepDashboardHeaders(selectedLang);
+
+        // Have to push this at runtime because we don't know the stepKey ahead
+        headers.push({
+            title: translations.tableHeaders.status,
+            sortKey: `${stepKey}.status`,
+        });
+
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 headers.push({
                     title: field.displayName[selectedLang],
-                    sortKey: `${step}.${field.key}`,
-                    fieldType: field.fieldType,
+                    sortKey: `${stepKey}.${field.key}`,
                 });
         });
 
         return headers;
     }
 
+    /**
+     * Generates row data for a step table. Goes through each field in the step and checks
+     * if it should be visible on the dashboard. If so, adds to row data.
+     * @returns Array of row data
+     */
     function generateRowData(stepKey, fields) {
         if (fields == null) return [];
 
-        const rowData = _.cloneDeep(REQUIRED_DASHBOARD_SORT_KEYS);
+        const rowData = _.cloneDeep(PATIENTS_BY_STEP_TABLE_ROW_DATA);
+        rowData.push({
+            id: `${stepKey}.status`,
+            dataType: FIELD_TYPES.STEP_STATUS,
+        });
+
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 rowData.push({
@@ -295,20 +139,23 @@ const Dashboard = () => {
         return rowData;
     }
 
+    /**
+     * Generates the table for the selected step
+     */
     function generateMainTable() {
         if (stepsMetaData == null) return null;
 
         return stepsMetaData.map((element) => {
-            if (step !== element.key) return null;
+            if (selectedStep !== element.key) return null;
 
             return (
-                <MainTable
+                <PatientTable
+                    onAddPatient={onAddPatient}
                     key={`table-${element.key}`}
-                    headers={generateHeaders(element.fields)}
+                    tableTitle={getTableTitle()}
+                    headers={generateHeaders(element.key, element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
-                    patients={
-                        searchQuery.length === 0 ? patients : filteredPatients
-                    }
+                    patients={patients}
                 />
             );
         });
@@ -316,69 +163,14 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard">
-            <Snackbar
-                open={noPatient}
-                autoHideDuration={3000}
-                onClose={handleNoPatientClose}
-            >
-                <MuiAlert
-                    onClose={handleNoPatientClose}
-                    severity="error"
-                    elevation={6}
-                    variant="filled"
-                >
-                    {translations.components.table.noPatientsFound}
-                </MuiAlert>
-            </Snackbar>
             <div className="tabs">
                 <ToggleButtons
-                    step={step}
+                    step={selectedStep}
                     metaData={stepsMetaData}
-                    handleStep={handleStep}
+                    handleStep={onStepSelected}
                 />
             </div>
-            <div className="patient-list">
-                <div className="header">
-                    <div className="section">
-                        <h2
-                            className={
-                                selectedLang === LANGUAGES.AR
-                                    ? 'patient-list-title-ar'
-                                    : 'patient-list-title'
-                            }
-                        >
-                            {generatePageHeader()}
-                        </h2>
-                        <TextField
-                            InputProps={{
-                                startAdornment: (
-                                    <img
-                                        alt="star"
-                                        style={{ marginRight: '10px' }}
-                                        src={search}
-                                        width="16px"
-                                    />
-                                ),
-                            }}
-                            className="patient-list-search-field"
-                            onChange={handleSearch}
-                            value={searchQuery}
-                            size="small"
-                            variant="outlined"
-                            placeholder={
-                                translations.components.search.placeholder
-                            }
-                        />
-                        <Button
-                            className="create-patient-button"
-                            onClick={createPatient}
-                        >
-                            {translations.components.button.createPatient}
-                        </Button>
-                    </div>
-                </div>
-                {generateMainTable()}
-            </div>
+            <div className="patient-list">{generateMainTable()}</div>
         </div>
     );
 };

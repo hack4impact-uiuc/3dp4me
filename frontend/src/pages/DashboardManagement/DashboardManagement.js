@@ -1,14 +1,14 @@
-import './SectionTab.scss';
-import React, { useState, useEffect, useCallback } from 'react';
+import './DashboardManagement.scss';
+import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 
-import BottomBar from '../BottomBar/BottomBar';
-import { getAllStepsMetadata } from '../../utils/api';
-import Sidebar from '../Sidebar/Sidebar';
-import StepManagementContent from '../StepManagementContent/StepManagementContent';
-import CreateFieldModal from '../CreateFieldModal/CreateFieldModal';
-import CreateStepModal from '../CreateStepModal/CreateStepModal';
+import BottomBar from '../../components/BottomBar/BottomBar';
+import { getAllStepsMetadata } from '../../api/api';
+import Sidebar from '../../components/Sidebar/Sidebar';
+import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
+import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
+import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
     drawerWidth,
@@ -16,6 +16,7 @@ import {
 } from '../../styles/variables.scss';
 import { resolveMixedObjPath } from '../../utils/object';
 import { useTranslations } from '../../hooks/useTranslations';
+import { sortMetadata } from '../../utils/utils';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -27,34 +28,9 @@ const SectionTab = () => {
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
-    const [fieldModalOpen, setFieldModalOpen] = useState(true);
+    const [fieldModalOpen, setFieldModalOpen] = useState(false);
     const [stepModalOpen, setStepModalOpen] = useState(false);
     const errorWrap = useErrorWrap();
-
-    const SortMetadata = useCallback(
-        (stepMetaData) => {
-            const data = stepMetaData?.sort(
-                (a, b) => a?.stepNumber - b?.stepNumber,
-            );
-
-            data.forEach((stepData) => {
-                stepData.fields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
-                SortSubFields(stepData?.fields);
-            });
-
-            return data;
-        },
-        [SortSubFields],
-    );
-
-    const SortSubFields = useCallback((fields) => {
-        if (!fields) return;
-
-        fields.forEach((field) => {
-            field.subFields.sort((a, b) => a?.fieldNumber - b?.fieldNumber);
-            SortSubFields(field?.subFields?.subFields);
-        });
-    }, []);
 
     const onAddStep = () => {
         setStepModalOpen(true);
@@ -92,9 +68,9 @@ const SectionTab = () => {
             (field) => field.stepNumber === foundField.stepNumber + 1,
         );
         if (foundField.stepNumber !== updatedMetadata.length - 1) {
-            foundField.stepNumber += 1;
-            afterField.stepNumber -= 1;
-            const sortedMetadata = SortMetadata(updatedMetadata);
+            foundField.stepNumber++;
+            afterField.stepNumber--;
+            const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
     }
@@ -109,9 +85,9 @@ const SectionTab = () => {
         const afterField = root.find((f) => f.fieldNumber === fieldNumber + 1);
 
         if (foundField && afterField) {
-            foundField.fieldNumber += 1;
-            afterField.fieldNumber -= 1;
-            const sortedMetadata = SortMetadata(updatedMetadata);
+            foundField.fieldNumber++;
+            afterField.fieldNumber--;
+            const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
     }
@@ -126,9 +102,9 @@ const SectionTab = () => {
         );
 
         if (foundField && beforeField) {
-            foundField.stepNumber -= 1;
-            beforeField.stepNumber += 1;
-            const sortedMetadata = SortMetadata(updatedMetadata);
+            foundField.stepNumber--;
+            beforeField.stepNumber++;
+            const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
     }
@@ -142,9 +118,9 @@ const SectionTab = () => {
         const foundField = root.find((f) => f.fieldNumber === fieldNumber);
         const beforeField = root.find((f) => f.fieldNumber === fieldNumber - 1);
         if (foundField.fieldNumber !== 0) {
-            foundField.fieldNumber -= 1;
-            beforeField.fieldNumber += 1;
-            const sortedMetadata = SortMetadata(updatedMetadata);
+            foundField.fieldNumber--;
+            beforeField.fieldNumber++;
+            const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
     }
@@ -173,12 +149,12 @@ const SectionTab = () => {
                 if (res.result.length > 0) {
                     setSelectedStep(res.result[0].key);
                 }
-                const sortedMetadata = SortMetadata(res.result);
+                const sortedMetadata = sortMetadata(res.result);
                 setStepMetadata(sortedMetadata);
             });
         };
         fetchData();
-    }, [setStepMetadata, errorWrap, SortMetadata]);
+    }, [setStepMetadata, errorWrap]);
 
     const onFieldModalClose = () => {
         setFieldModalOpen(false);
@@ -235,8 +211,8 @@ const SectionTab = () => {
                 </div>
 
                 <BottomBar
-                    edit={isEditing}
-                    setEdit={setIsEditing}
+                    eisEditing={isEditing}
+                    onEdit={() => setIsEditing(true)}
                     onSave={onSaveChanges}
                     onDiscard={onDiscardChanges}
                     style={{
