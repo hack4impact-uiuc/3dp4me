@@ -34,7 +34,7 @@ router.get(
             });
 
             return {
-                ...p,
+                ...p.toObject(),
                 [stage]: stageInfo,
             };
         });

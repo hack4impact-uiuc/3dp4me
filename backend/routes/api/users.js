@@ -10,6 +10,7 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
     SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
+    SECURITY_ACCESS_ATTRIBUTE_NAME,
     ACCESS_LEVEL_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
 const { parseUserSecurityRoles } = require('../../middleware/authentication');
@@ -221,7 +222,7 @@ router.put(
         const params = {
             UserAttributes: [
                 {
-                    Name: ACCESS_LEVEL_ATTRIBUTE_NAME,
+                    Name: SECURITY_ACCESS_ATTRIBUTE_NAME,
                     Value: accessLevel,
                 },
             ],

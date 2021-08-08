@@ -1,15 +1,16 @@
+var server = require('../../../app');
 const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
 
-var server = require('../../../app');
 const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
 } = require('../../utils/auth');
+const { models } = require('../../../models');
 
 describe('PUT /patients/:id', () => {
     const PATIENT_ID = '60944e084f4c0d4330cc258b';
@@ -27,7 +28,7 @@ describe('PUT /patients/:id', () => {
         server = require('../../../app');
     });
 
-    it('returns 404 when given bad ID format', (done) => {
+    it('returns 500 when given bad ID format', (done) => {
         withAuthentication(request(server).put(`/api/patients/badid`)).expect(
             500,
             done,
@@ -101,9 +102,9 @@ describe('PUT /patients/:id', () => {
     });
 
     const getPatientFromDB = async () => {
-        const result = await mongoose.connection.db
-            .collection(COLLECTION_NAME)
-            .findOne({ _id: mongoose.Types.ObjectId(PATIENT_ID) });
-        return result;
+        const result = await models.Patient.findOne({
+            _id: mongoose.Types.ObjectId(PATIENT_ID),
+        });
+        return result.toObject();
     };
 });

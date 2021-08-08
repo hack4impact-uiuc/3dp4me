@@ -11,7 +11,7 @@ import { getAllRoles, getAllUsers } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { useTranslations } from '../../hooks/useTranslations';
-import Table from '../../components/Table/Table';
+import SimpleTable from '../../components/SimpleTable/SimpleTable';
 import {
     generateUserTableRowRenderer,
     userTableHeaderRenderer,
@@ -66,7 +66,7 @@ const AccountManagement = () => {
     const userToRoleModalFormat = (user) => {
         return {
             accessLevel: getAccessLevel(user),
-            userId: getUsername(user),
+            userId: getId(user),
             userName: getName(user),
             userEmail: getEmail(user),
             roles: getRolesValue(user),
@@ -133,7 +133,7 @@ const AccountManagement = () => {
 
     function generateMainUserTable() {
         return (
-            <Table
+            <SimpleTable
                 data={usersToTableFormat(userMetaData)}
                 headers={getUserTableHeaders(selectedLang)}
                 rowData={USER_TABLE_ROW_DATA}

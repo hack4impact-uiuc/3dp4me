@@ -1,14 +1,13 @@
+var server = require('../../../app');
 const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const mongoose = require('mongoose');
-var server = require('../../../app');
 const AWS = require('aws-sdk-mock');
 const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
-    getCurrentAuthenticatedUserAttribute,
 } = require('../../utils/auth');
 const omitDeep = require('omit-deep-lodash');
 const {
@@ -125,7 +124,6 @@ describe('GET /patient/:id', () => {
         const res = await withAuthentication(
             request(server).get(`/api/patients/${patientID}`),
         );
-
         // Check statuses are correct
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);

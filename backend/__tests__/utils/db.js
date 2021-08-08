@@ -10,6 +10,7 @@ const exampleData = require('../../../scripts/data/example.json');
 const { initModels } = require('../../utils/init-models');
 const { models } = require('../../models');
 
+console.log('TTES');
 let patients = null;
 let roles = null;
 let steps = null;
@@ -19,14 +20,18 @@ let medicalInfo = null;
 let replSet = new MongoMemoryReplSet({
     replSet: { storageEngine: 'wiredTiger' },
 });
+console.log('2');
 
 /**
  * Connect to the in-memory database.
  * Should only be called once per suite
  */
 module.exports.connect = async () => {
+    if (replSet._state !== 'running') await replSet.start();
     await replSet.waitUntilRunning();
+    console.log('5');
     const uri = await replSet.getUri();
+    console.log('6');
 
     const mongooseOpts = {
         useNewUrlParser: true,
@@ -34,7 +39,9 @@ module.exports.connect = async () => {
     };
 
     await mongoose.connect(uri, mongooseOpts);
+    console.log('7');
     await this.resetDatabase();
+    console.log('4');
 };
 
 /**
