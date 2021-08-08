@@ -25,7 +25,6 @@ const Patients = () => {
         const getData = async () => {
             errorWrap(async () => {
                 const res = await getAllPatients();
-                console.log(res);
                 setAllPatients(res.result);
             });
         };

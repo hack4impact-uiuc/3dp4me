@@ -257,7 +257,6 @@ router.put(
 router.get(
     '/self',
     errorWrap(async (req, res) => {
-        // TODO: Check ADMIN_ID once daniel's PR is merged
         res.status(200).json({
             isAdmin: req.user.roles.includes(ADMIN_ID),
             success: true,
