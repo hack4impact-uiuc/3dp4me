@@ -1,6 +1,12 @@
 import translations from '../translations.json';
 
 /**
+ * Generic URL for phone number country flags. {XX} will be replaced by two letter country code.
+ */
+export const FLAG_URL =
+    'https://3dp4me-public.s3.eu-north-1.amazonaws.com/country-flag-icons-gh-pages/3x2/{XX}.svg';
+
+/**
  * List of possible field types. Must match Metadata.js in the backend.
  */
 export const FIELD_TYPES = {
