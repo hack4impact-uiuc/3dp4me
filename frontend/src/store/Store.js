@@ -9,6 +9,7 @@ const initialState = {
     error: '',
     isErrorVisible: false,
     language: LANGUAGES.EN,
+    isAdmin: false,
 };
 
 const Store = ({ children }) => {

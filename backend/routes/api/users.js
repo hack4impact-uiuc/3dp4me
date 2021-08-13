@@ -13,7 +13,10 @@ const {
     SECURITY_ACCESS_ATTRIBUTE_NAME,
     ACCESS_LEVEL_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
-const { parseUserSecurityRoles } = require('../../middleware/authentication');
+const {
+    parseUserSecurityRoles,
+    ADMIN_ID,
+} = require('../../middleware/authentication');
 
 const getIdentityProvider = () => {
     return new AWS.CognitoIdentityServiceProvider({
@@ -247,6 +250,17 @@ router.put(
                 });
             },
         );
+    }),
+);
+
+// Gets information about the user making this request. Modify this as needed on the frontend
+router.get(
+    '/self',
+    errorWrap(async (req, res) => {
+        res.status(200).json({
+            isAdmin: req.user.roles.includes(ADMIN_ID),
+            success: true,
+        });
     }),
 );
 

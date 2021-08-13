@@ -11,6 +11,7 @@ import { getAllRoles, getAllUsers } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import { useTranslations } from '../../hooks/useTranslations';
+import SimpleTable from '../../components/SimpleTable/SimpleTable';
 import {
     generateUserTableRowRenderer,
     userTableHeaderRenderer,
@@ -18,13 +19,12 @@ import {
 import {
     getAccessLevel,
     getEmail,
-    getId,
     getName,
     getRoles,
+    getId,
     getRolesValue,
     getUsername,
 } from '../../aws/aws-users';
-import SimpleTable from '../../components/SimpleTable/SimpleTable';
 
 /**
  * The account management screen. Allows admins to accept people into the
