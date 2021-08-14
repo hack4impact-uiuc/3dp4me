@@ -3,18 +3,17 @@ const {
     ACCESS_LEVELS,
     ERR_AUTH_FAILED,
     ERR_NOT_APPROVED,
+    ADMIN_ID,
 } = require('../utils/constants');
 const { sendResponse } = require('../utils/response');
 
-const getUserFromRequest = async (req) => {
-    const authHeader = req?.headers?.authorization?.split(' ');
-    if (authHeader?.length != 2) return null;
-
-    const accessToken = authHeader[1];
-    return await getUserByAccessToken(accessToken);
-};
-
-const requireAuthentication = async (req, res, next) => {
+/**
+ * Middleware requires the incoming request to be authenticated. If not authenticated, a response
+ * is sent back to the client, and the middleware chain is stopped. Authenticatio is done through
+ * the 'authentication' HTTP header, which should be of the format 'Bearer <ACCESS_TOKEN>'. If
+ * successful, the user's data is attachted to req.user before calling the next function.
+ */
+module.exports.requireAuthentication = async (req, res, next) => {
     try {
         const user = await getUserFromRequest(req);
         if (!user) return sendResponse(res, 401, ERR_AUTH_FAILED);
@@ -30,7 +29,13 @@ const requireAuthentication = async (req, res, next) => {
     }
 };
 
-const requireRole = (role) => {
+/**
+ * Constructs a middleware function that requires the user to
+ * have the specified role ID.
+ * @param {String} role The mongo ID of the role required.
+ * @returns A middleware function that requires the role.
+ */
+module.exports.requireRole = (role) => {
     return async (req, res, next) => {
         if (!req.user) await requireAuthentication();
         if (!req.user.roles.includes(role))
@@ -40,9 +45,15 @@ const requireRole = (role) => {
     };
 };
 
-const requireAdmin = requireRole(ADMIN_ID);
+/**
+ * Convienience middleware to require a user to be Admin before proceeding.
+ */
+module.exports.requireAdmin = this.requireRole(ADMIN_ID);
 
-module.exports.ADMIN_ID = ADMIN_ID;
-module.exports.requireRole = requireRole;
-module.exports.requireAdmin = requireAdmin;
-module.exports.requireAuthentication = requireAuthentication;
+const getUserFromRequest = async (req) => {
+    const authHeader = req?.headers?.authorization?.split(' ');
+    if (authHeader?.length != 2) return null;
+
+    const accessToken = authHeader[1];
+    return await getUserByAccessToken(accessToken);
+};

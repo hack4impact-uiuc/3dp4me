@@ -6,9 +6,7 @@ const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
-    createUserDataWithRolesAndAccess,
 } = require('../utils/auth');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../../middleware/authentication');
 
 describe('mock auth', () => {
     afterAll(async () => await db.closeDatabase());

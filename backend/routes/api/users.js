@@ -11,12 +11,9 @@ const {
     SECRET_ACCESS_KEY,
     SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
-    ACCESS_LEVEL_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
-const {
-    parseUserSecurityRoles,
-    ADMIN_ID,
-} = require('../../middleware/authentication');
+const { ADMIN_ID } = require('../../utils/constants');
+const { parseUserSecurityRoles } = require('../../utils/aws/aws-user');
 
 const getIdentityProvider = () => {
     return new AWS.CognitoIdentityServiceProvider({

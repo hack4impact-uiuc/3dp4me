@@ -5,7 +5,7 @@ const {
     SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
 const { MOCK_USER, MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../../middleware/authentication');
+const { ADMIN_ID, ACCESS_LEVELS } = require('../../utils/constants');
 
 let currentAuthenticatedUser = null;
 let lastUploadedFileParams = null;

@@ -1,11 +1,10 @@
 var AWS = require('aws-sdk');
-const { ADMIN_ID } = require('../../middleware/authentication');
 const {
     COGNITO_REGION,
     SECURITY_ROLE_ATTRIBUTE_NAME,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
-const { ACCESS_LEVELS } = require('../constants');
+const { ACCESS_LEVELS, ADMIN_ID } = require('../constants');
 
 /**
  * Given a user object, determine if they are an admin.
@@ -24,10 +23,25 @@ module.exports.isAdmin = (user) => user.roles.includes(ADMIN_ID);
  */
 exports.getUserByAccessToken = async (accessToken) => {
     const user = await getUser(accessToken);
-    user.roles = parseUserSecurityRoles(user);
+    user.roles = this.parseUserSecurityRoles(user);
     user.name = parseUserName(user) || parseUserEmail(user);
     user.accessLevel = parseUserAccess(user);
     return user;
+};
+
+/**
+ * Given an AWS user, find and parse their security roles into an array of role IDs.
+ * @param {Object} user The user returned by AWS Cognito.
+ * @returns An array of strings, where each entry is a role ID. Defaults to empty array of no roles.
+ */
+module.exports.parseUserSecurityRoles = (user) => {
+    const securityRolesString = user?.UserAttributes?.find(
+        (attribute) => attribute.Name === SECURITY_ROLE_ATTRIBUTE_NAME,
+    );
+
+    if (!securityRolesString?.Value) return [];
+
+    return JSON.parse(securityRolesString.Value);
 };
 
 const getUser = async (accessToken) => {
@@ -40,16 +54,6 @@ const getUser = async (accessToken) => {
     );
 
     return await cognitoidentityserviceprovider.getUser(params).promise();
-};
-
-const parseUserSecurityRoles = (user) => {
-    const securityRolesString = user?.UserAttributes?.find(
-        (attribute) => attribute.Name === SECURITY_ROLE_ATTRIBUTE_NAME,
-    );
-
-    if (!securityRolesString?.Value) return [];
-
-    return JSON.parse(securityRolesString.Value);
 };
 
 const parseUserAccess = (user) => {
