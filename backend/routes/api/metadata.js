@@ -18,7 +18,8 @@ const {
 } = require('../../middleware/requests');
 const { fieldEnum, isUniqueStepNumber } = require('../../models/Metadata');
 const mongoose = require('mongoose');
-const { requireAdmin, isAdmin } = require('../../middleware/authentication');
+const { requireAdmin } = require('../../middleware/authentication');
+const { isAdmin } = require('../../utils/aws/aws-user');
 
 const generateFieldSchema = (field) => {
     switch (field.fieldType) {

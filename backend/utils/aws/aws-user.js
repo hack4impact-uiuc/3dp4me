@@ -1,10 +1,18 @@
 var AWS = require('aws-sdk');
+const { ADMIN_ID } = require('../../middleware/authentication');
 const {
     COGNITO_REGION,
     SECURITY_ROLE_ATTRIBUTE_NAME,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
 const { ACCESS_LEVELS } = require('../constants');
+
+/**
+ * Given a user object, determine if they are an admin.
+ * @param {Object} user The user to check.
+ * @returns True if user is admin.
+ */
+module.exports.isAdmin = (user) => user.roles.includes(ADMIN_ID);
 
 /**
  * Looks up a user by their access token.

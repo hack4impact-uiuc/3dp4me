@@ -1,13 +1,10 @@
 const { getUserByAccessToken } = require('../utils/aws/aws-user');
-const { ACCESS_LEVELS } = require('../utils/constants');
+const {
+    ACCESS_LEVELS,
+    ERR_AUTH_FAILED,
+    ERR_NOT_APPROVED,
+} = require('../utils/constants');
 const { sendResponse } = require('../utils/response');
-
-const ERR_NOT_APPROVED =
-    'You are not approved to access this site. Please contact an administrator.';
-const ERR_AUTH_FAILED = 'Authentication failed';
-const ADMIN_ID = process.env.ADMIN_ID;
-
-const isAdmin = (user) => user.roles.includes(ADMIN_ID);
 
 const getUserFromRequest = async (req) => {
     const authHeader = req?.headers?.authorization?.split(' ');
@@ -45,7 +42,6 @@ const requireRole = (role) => {
 
 const requireAdmin = requireRole(ADMIN_ID);
 
-module.exports.isAdmin = isAdmin;
 module.exports.ADMIN_ID = ADMIN_ID;
 module.exports.requireRole = requireRole;
 module.exports.requireAdmin = requireAdmin;
