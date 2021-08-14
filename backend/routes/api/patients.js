@@ -10,12 +10,12 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
+const { removeRequestAttributes } = require('../../middleware/requests');
+const { isAdmin } = require('../../utils/aws/aws-user');
 const {
-    removeRequestAttributes,
     STEP_IMMUTABLE_ATTRIBUTES,
     PATIENT_IMMUTABLE_ATTRIBUTES,
-} = require('../../middleware/requests');
-const { isAdmin } = require('../../utils/aws/aws-user');
+} = require('../../utils/constants');
 
 // GET: Returns all patients
 router.get(

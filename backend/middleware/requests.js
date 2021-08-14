@@ -1,20 +1,5 @@
 const _ = require('lodash');
 
-const GLOBALLY_IMMUTABLE_ATTRIBUTES = ['_id', '__v'];
-
-module.exports.STEP_IMMUTABLE_ATTRIBUTES = GLOBALLY_IMMUTABLE_ATTRIBUTES.concat(
-    'lastEdited',
-    'lastEditedBy',
-    'patientId',
-);
-
-module.exports.PATIENT_IMMUTABLE_ATTRIBUTES =
-    GLOBALLY_IMMUTABLE_ATTRIBUTES.concat(
-        'dateCreated',
-        'lastEdited',
-        'lastEditedBy',
-    );
-
 /**
  * Removes attributes from a request's body. So if "_id" is passed in, "_id" will be removed
  * from the request if it exists.
