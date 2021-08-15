@@ -1,22 +1,5 @@
 const mongoose = require('mongoose');
-
-const fieldEnum = {
-    AUDIO: 'Audio',
-    STRING: 'String',
-    MULTILINE_STRING: 'MultilineString',
-    FILE: 'File',
-    NUMBER: 'Number',
-    DATE: 'Date',
-    PHONE: 'Phone',
-    DIVIDER: 'Divider',
-    HEADER: 'Header',
-    RADIO_BUTTON: 'RadioButton',
-    MULTI_SELECT: 'MultiSelect',
-    AUDIO: 'Audio',
-    SIGNATURE: 'Signature',
-    PHOTO: 'Photo',
-    FIELD_GROUP: 'FieldGroup',
-};
+const { FIELDS } = require('../utils/constants');
 
 const languageSchema = new mongoose.Schema({
     EN: { type: String, required: true },
@@ -46,9 +29,9 @@ const fieldSchema = new mongoose.Schema({
     key: { type: String, required: true },
     fieldType: {
         type: String,
-        enum: Object.values(fieldEnum),
+        enum: Object.values(FIELDS),
         required: true,
-        default: fieldEnum.STRING,
+        default: FIELDS.STRING,
     },
     options: {
         type: [questionOptionSchema],
@@ -138,11 +121,9 @@ stepSchema.path('stepNumber').validate(async function () {
     return await isUniqueStepNumber(this.stepNumber, this.key);
 });
 
-const Step = mongoose.model('steps', stepSchema);
+module.exports.Step = mongoose.model('steps', stepSchema);
 module.exports = {
-    Step,
     isUniqueStepNumber,
-    fieldEnum,
     questionOptionSchema,
     validateOptions,
 };

@@ -1,4 +1,4 @@
-const { fieldEnum } = require('../../models/Metadata');
+const { FIELDS } = require('../../utils/constants');
 
 module.exports.PUT_STEP_REORDERED_FIELDS = [
     {
@@ -2795,7 +2795,7 @@ module.exports.POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS = {
     fields: [
         {
             key: 'demographicDivider',
-            fieldType: fieldEnum.FIELD_GROUP,
+            fieldType: FIELDS.FIELD_GROUP,
             displayName: {
                 EN: 'Field group',
                 AR: 'االديموغرافية',
@@ -2816,7 +2816,7 @@ module.exports.POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS = {
     fields: [
         {
             key: 'demographicDivider',
-            fieldType: fieldEnum.FIELD_GROUP,
+            fieldType: FIELDS.FIELD_GROUP,
             displayName: {
                 EN: 'Field group',
                 AR: 'االديموغرافية',
@@ -2838,7 +2838,7 @@ module.exports.POST_SUB_FIELD_WITHOUT_OPTIONS = {
     fields: [
         {
             key: 'demographicDivider',
-            fieldType: fieldEnum.FIELD_GROUP,
+            fieldType: FIELDS.FIELD_GROUP,
             displayName: {
                 EN: 'Field group',
                 AR: 'االديموغرافية',
@@ -2860,7 +2860,7 @@ module.exports.POST_SUB_FIELD_WITH_EMPTY_OPTIONS = {
     fields: [
         {
             key: 'demographicDivider',
-            fieldType: fieldEnum.FIELD_GROUP,
+            fieldType: FIELDS.FIELD_GROUP,
             displayName: {
                 EN: 'Field group',
                 AR: 'االديموغرافية',
@@ -2882,7 +2882,7 @@ module.exports.POST_STEP_WITH_BAD_SUB_FIELD = {
     fields: [
         {
             key: 'demographicDivider',
-            fieldType: fieldEnum.FIELD_GROUP,
+            fieldType: FIELDS.FIELD_GROUP,
             displayName: {
                 EN: 'Field group',
                 AR: 'االديموغرافية',
@@ -2904,7 +2904,7 @@ module.exports.POST_STEP_WITH_DUPLICATE_SUB_FIELDKEY = {
     fields: [
         {
             key: 'demographicDivider',
-            fieldType: fieldEnum.FIELD_GROUP,
+            fieldType: FIELDS.FIELD_GROUP,
             displayName: {
                 EN: 'Field group',
                 AR: 'االديموغرافية',

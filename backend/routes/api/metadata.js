@@ -16,34 +16,35 @@ const {
     removeAttributesFrom,
     removeRequestAttributes,
 } = require('../../middleware/requests');
-const { fieldEnum, isUniqueStepNumber } = require('../../models/Metadata');
+const { isUniqueStepNumber } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 const { requireAdmin } = require('../../middleware/authentication');
 const { isAdmin } = require('../../utils/aws/aws-user');
+const { FIELDS } = require('../../utils/constants');
 
 const generateFieldSchema = (field) => {
     switch (field.fieldType) {
-        case fieldEnum.STRING:
+        case FIELDS.STRING:
             return {
                 type: String,
                 default: '',
             };
-        case fieldEnum.MULTILINE_STRING:
+        case FIELDS.MULTILINE_STRING:
             return {
                 type: String,
                 default: '',
             };
-        case fieldEnum.NUMBER:
+        case FIELDS.NUMBER:
             return {
                 type: Number,
                 default: 0,
             };
-        case fieldEnum.DATE:
+        case FIELDS.DATE:
             return {
                 type: Date,
                 default: Date.now,
             };
-        case fieldEnum.PHONE:
+        case FIELDS.PHONE:
             return {
                 type: String,
                 default: '',
@@ -52,7 +53,7 @@ const generateFieldSchema = (field) => {
                     message: 'Not a valid phone number',
                 },
             };
-        case fieldEnum.RADIO_BUTTON:
+        case FIELDS.RADIO_BUTTON:
             if (!field?.options?.length)
                 throw new Error('Radio button must have options');
 
@@ -60,17 +61,17 @@ const generateFieldSchema = (field) => {
                 type: String,
                 default: '',
             };
-        case fieldEnum.FILE:
+        case FIELDS.FILE:
             return {
                 type: [fileSchema],
                 default: [],
             };
-        case fieldEnum.AUDIO:
+        case FIELDS.AUDIO:
             return {
                 type: [fileSchema],
                 default: [],
             };
-        case fieldEnum.FIELD_GROUP:
+        case FIELDS.FIELD_GROUP:
             if (!field?.subFields?.length)
                 throw new Error('Field groups must have sub fields');
 
@@ -79,7 +80,7 @@ const generateFieldSchema = (field) => {
                 required: true,
                 default: [],
             };
-        case fieldEnum.SIGNATURE:
+        case FIELDS.SIGNATURE:
             const defaultURL = field?.additionalData?.defaultDocumentURL;
             if (!defaultURL?.EN || !defaultURL?.AR)
                 throw new Error(
@@ -87,7 +88,7 @@ const generateFieldSchema = (field) => {
                 );
 
             return { type: signatureSchema };
-        case fieldEnum.DIVIDER:
+        case FIELDS.DIVIDER:
             return null;
         default:
             throw new Error(`Unrecognized field type, ${field.type}`);
