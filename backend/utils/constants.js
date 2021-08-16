@@ -24,9 +24,13 @@ module.exports.FIELDS = {
     FIELD_GROUP: 'FieldGroup',
 };
 
+module.exports.STEPS_COLLECTION_NAME = 'steps';
+
 module.exports.ERR_NOT_APPROVED =
     'You are not approved to access this site. Please contact an administrator.';
 module.exports.ERR_AUTH_FAILED = 'Authentication failed';
+module.exports.ERR_FIELD_VALIDATION_FAILED =
+    'fieldKeys and fieldNumbers must be unique';
 
 const GLOBALLY_IMMUTABLE_ATTRIBUTES = ['_id', '__v'];
 

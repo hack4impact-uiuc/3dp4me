@@ -146,8 +146,8 @@ describe('Test authentication ', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        expect(omitDeep(resContent.result, '__v')).toStrictEqual([
-            EXPECTED_GET_RESTRICTED_DATA,
+        expect(omitDeep(resContent.result, '__v', '_id')).toStrictEqual([
+            omitDeep(EXPECTED_GET_RESTRICTED_DATA, '_id'),
         ]);
     });
 
