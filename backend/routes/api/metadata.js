@@ -5,28 +5,12 @@ const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const mongoose = require('mongoose');
 const { requireAdmin } = require('../../middleware/authentication');
-const { isAdmin } = require('../../utils/aws/aws-user');
 const { generateSchemaFromMetadata } = require('../../utils/init-db');
 const { sendResponse } = require('../../utils/response');
-const { updateStepsInTransaction } = require('../../utils/stepUtils');
-
-const getReadableSteps = async (req) => {
-    if (isAdmin(req.user)) return await models.Step.find({});
-
-    const roles = [req.user.roles.toString()];
-    const metaData = await models.Step.find({
-        readableGroups: { $in: [req.user.roles.toString()] },
-    });
-
-    // Iterate over fields and remove fields that do not have matching permissions
-    metaData.map((step) => {
-        step.fields = step.fields.filter((field) => {
-            return field.readableGroups.some((role) => roles.includes(role));
-        });
-    });
-
-    return metaData;
-};
+const {
+    updateStepsInTransaction,
+    getReadableSteps,
+} = require('../../utils/stepUtils');
 
 /**
  * Gets the metadata for a step. This describes the fields contained in the steps.

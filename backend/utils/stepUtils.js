@@ -2,8 +2,27 @@ const _ = require('lodash');
 const { removeAttributesFrom } = require('../middleware/requests');
 const { models } = require('../models');
 const { isUniqueStepNumber } = require('../models/Metadata');
+const { isAdmin } = require('./aws/aws-user');
 const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
 const { abortAndError } = require('./transactionUtils');
+
+module.exports.getReadableSteps = async (req) => {
+    if (isAdmin(req.user)) return await models.Step.find({});
+
+    const roles = [req.user.roles.toString()];
+    const metaData = await models.Step.find({
+        readableGroups: { $in: [req.user.roles.toString()] },
+    });
+
+    // Iterate over fields and remove fields that do not have matching permissions
+    metaData.map((step) => {
+        step.fields = step.fields.filter((field) => {
+            return field.readableGroups.some((role) => roles.includes(role));
+        });
+    });
+
+    return metaData;
+};
 
 module.exports.updateStepsInTransaction = async (req, session) => {
     let stepData = [];
