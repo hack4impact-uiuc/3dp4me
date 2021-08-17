@@ -1,18 +1,6 @@
 const mongoose = require('mongoose');
 
-const fileSchema = new mongoose.Schema({
-    filename: { type: String, required: true },
-    uploadedBy: { type: String, required: true },
-    uploadDate: { type: Date, required: true },
-});
-
-const stepStatusEnum = {
-    UNFINISHED: 'Unfinished',
-    PARTIAL: 'Partial',
-    FINISHED: 'Finished',
-};
-
-const signatureSchema = new mongoose.Schema({
+module.exports.signatureSchema = new mongoose.Schema({
     signatureData: [
         [
             {
@@ -30,5 +18,3 @@ const signatureSchema = new mongoose.Schema({
         AR: { type: String, required: true },
     },
 });
-
-module.exports = { fileSchema, stepStatusEnum, signatureSchema };

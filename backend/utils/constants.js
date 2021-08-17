@@ -30,6 +30,12 @@ module.exports.PATIENT_STATUS_ENUM = {
     FEEDBACK: 'Feedback',
 };
 
+module.exports.STEP_STATUS_ENUM = {
+    UNFINISHED: 'Unfinished',
+    PARTIAL: 'Partial',
+    FINISHED: 'Finished',
+};
+
 module.exports.STEPS_COLLECTION_NAME = 'steps';
 
 module.exports.ERR_NOT_APPROVED =

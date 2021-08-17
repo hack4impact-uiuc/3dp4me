@@ -5,19 +5,15 @@ const router = express.Router();
 const isValidNumber = require('libphonenumber-js');
 const { errorWrap } = require('../../utils');
 const { getFieldByKey } = require('../../utils/step-utils');
-const { signatureSchema } = require('../../models/StepSchemaSubmodel');
-const {
-    models,
-    fileSchema,
-    stepStatusEnum,
-    validateOptions,
-} = require('../../models');
+const { models } = require('../../models');
 const { removeAttributesFrom } = require('../../middleware/requests');
 const { isUniqueStepNumber } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 const { requireAdmin } = require('../../middleware/authentication');
 const { isAdmin } = require('../../utils/aws/aws-user');
-const { FIELDS } = require('../../utils/constants');
+const { FIELDS, STEP_STATUS_ENUM } = require('../../utils/constants');
+const { signatureSchema } = require('../../schemas/signatureSchema');
+const { fileSchema } = require('../../schemas/fileSchema');
 
 const generateFieldSchema = (field) => {
     switch (field.fieldType) {
@@ -98,8 +94,8 @@ const generateSchemaFromMetadata = (stepMetadata) => {
     stepSchema.status = {
         type: String,
         required: true,
-        enum: Object.values(stepStatusEnum),
-        default: stepStatusEnum.UNFINISHED,
+        enum: Object.values(STEP_STATUS_ENUM),
+        default: STEP_STATUS_ENUM.UNFINISHED,
     };
     stepSchema.lastEdited = { type: Date, required: true, default: Date.now };
     stepSchema.lastEditedBy = {

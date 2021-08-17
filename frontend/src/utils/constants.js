@@ -146,7 +146,7 @@ export const ACCESS_LEVELS = {
 };
 
 /**
- * List of completion statuses for a step. Must match StepSchemaSubmodel.js in backend
+ * List of completion statuses for a step. Must match constants.js in backend
  */
 export const STEP_STATUS = {
     FINISHED: 'Finished',
@@ -155,7 +155,7 @@ export const STEP_STATUS = {
 };
 
 /**
- * List of completion statuses for an entire patient. Must match Patient.js in backend
+ * List of completion statuses for an entire patient. Must match constants.js in backend
  */
 export const PATIENT_STATUS = {
     FEEDBACK: 'Feedback',

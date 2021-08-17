@@ -6,7 +6,6 @@ const {
 } = require('./Patient');
 
 const { Step, questionOptionSchema, validateOptions } = require('./Metadata');
-const { fileSchema, stepStatusEnum } = require('./StepSchemaSubmodel');
 const { Role } = require('./Role');
 
 const models = {
@@ -21,7 +20,5 @@ module.exports = {
     validateOptions,
     statusEnum,
     deliveryEnum,
-    fileSchema,
-    stepStatusEnum,
     feedbackEnum,
 };

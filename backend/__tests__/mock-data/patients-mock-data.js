@@ -1,5 +1,7 @@
-const { stepStatusEnum } = require('../../models');
-const { PATIENT_STATUS_ENUM } = require('../../utils/constants');
+const {
+    PATIENT_STATUS_ENUM,
+    STEP_STATUS_ENUM,
+} = require('../../utils/constants');
 const mongoose = require('mongoose');
 
 module.exports.POST_PATIENT = {
@@ -31,7 +33,7 @@ module.exports.DEFAULT_PATIENT_DATA = {
 };
 
 module.exports.POST_FINISHED_STEP_DATA = {
-    status: stepStatusEnum.FINISHED,
+    status: STEP_STATUS_ENUM.FINISHED,
     string: 'helloo',
     multilineString: 'Test looooooooong string',
     number: 932,
@@ -60,7 +62,7 @@ module.exports.POST_FINISHED_STEP_DATA = {
 };
 
 module.exports.DEFAULT_STEP_DATA = {
-    status: stepStatusEnum.UNFINISHED,
+    status: STEP_STATUS_ENUM.UNFINISHED,
     string: '',
     multilineString: '',
     number: 0,
