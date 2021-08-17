@@ -4,7 +4,7 @@ const router = express.Router();
 const _ = require('lodash');
 const { getStepKeys } = require('../../utils/patient-utils');
 const { errorWrap } = require('../../utils');
-const { models, overallStatusEnum } = require('../../models');
+const { models } = require('../../models');
 const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
 const {
     ACCESS_KEY_ID,

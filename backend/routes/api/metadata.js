@@ -12,10 +12,7 @@ const {
     stepStatusEnum,
     validateOptions,
 } = require('../../models');
-const {
-    removeAttributesFrom,
-    removeRequestAttributes,
-} = require('../../middleware/requests');
+const { removeAttributesFrom } = require('../../middleware/requests');
 const { isUniqueStepNumber } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 const { requireAdmin } = require('../../middleware/authentication');

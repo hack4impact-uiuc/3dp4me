@@ -2,7 +2,6 @@ const {
     Patient,
     statusEnum,
     deliveryEnum,
-    overallStatusEnum,
     feedbackEnum,
 } = require('./Patient');
 
@@ -22,7 +21,6 @@ module.exports = {
     validateOptions,
     statusEnum,
     deliveryEnum,
-    overallStatusEnum,
     fileSchema,
     stepStatusEnum,
     feedbackEnum,

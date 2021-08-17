@@ -49,7 +49,6 @@ const isUniqueStepNumber = async (stepNumber, stepKey, session) => {
     // If there's exactly one, the stepKeys better match
     return steps[0].key === stepKey;
 };
-module.exports.isUniqueStepNumber = isUniqueStepNumber;
 
 /**
  * Schema for a question option. E.g. radio button field.
@@ -147,4 +146,6 @@ stepSchema.path('stepNumber').validate(async function () {
     return await isUniqueStepNumber(this.stepNumber, this.key);
 });
 
+// This must be at end of file so that isUniqueStepNumber is bound in the stepNumber validator
+module.exports.isUniqueStepNumber = isUniqueStepNumber;
 module.exports.Step = mongoose.model(STEPS_COLLECTION_NAME, stepSchema);

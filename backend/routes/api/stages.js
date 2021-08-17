@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
-const { models, overallStatusEnum } = require('../../models');
+const { models } = require('../../models');
+const { PATIENT_STATUS_ENUM } = require('../../utils/constants');
 const mongoose = require('mongoose');
 
 // GET: Returns basic stage info for every user
@@ -25,7 +26,7 @@ router.get(
 
         // Cannot use an aggregation here due to the encryption middleware
         let patients = await models.Patient.find({
-            status: overallStatusEnum.ACTIVE,
+            status: PATIENT_STATUS_ENUM.ACTIVE,
         });
 
         let lookups = patients.map(async (p) => {

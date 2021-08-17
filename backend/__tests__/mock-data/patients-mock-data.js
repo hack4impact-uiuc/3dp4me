@@ -1,4 +1,5 @@
-const { stepStatusEnum, overallStatusEnum } = require('../../models');
+const { stepStatusEnum } = require('../../models');
+const { PATIENT_STATUS_ENUM } = require('../../utils/constants');
 const mongoose = require('mongoose');
 
 module.exports.POST_PATIENT = {
@@ -7,7 +8,7 @@ module.exports.POST_PATIENT = {
     grandfathersName: 'Gene',
     familyName: 'Walowski',
     orderId: '1234',
-    status: overallStatusEnum.FEEDBACK,
+    status: PATIENT_STATUS_ENUM.FEEDBACK,
 };
 
 module.exports.POST_PATIENT_MINIMAL_REQUEST = {
@@ -26,7 +27,7 @@ module.exports.DEFAULT_PATIENT_DATA = {
     fathersName: '',
     grandfathersName: '',
     orderId: '',
-    status: overallStatusEnum.ACTIVE,
+    status: PATIENT_STATUS_ENUM.ACTIVE,
 };
 
 module.exports.POST_FINISHED_STEP_DATA = {
@@ -196,7 +197,7 @@ module.exports.PUT_BAD_PATIENT_DATA = {
     grandfathersName: 'Gene',
     familyName: 'Wang',
     orderId: '123456',
-    status: overallStatusEnum.FEEDBACK,
+    status: PATIENT_STATUS_ENUM.FEEDBACK,
     dateCreated: Date.now(),
     _id: '0944e084f4c0d4330cc258b',
     __v: 32,
@@ -208,7 +209,7 @@ module.exports.PUT_PATIENT_DATA = {
     grandfathersName: 'Gene',
     familyName: 'Wang',
     orderId: '123456',
-    status: overallStatusEnum.FEEDBACK,
+    status: PATIENT_STATUS_ENUM.FEEDBACK,
 };
 
 module.exports.EXPECTED_PUT_DATA = {

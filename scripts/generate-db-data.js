@@ -1,6 +1,7 @@
 const faker = require('faker');
 const fs = require('fs');
-const { overallStatusEnum, stepStatusEnum } = require('../backend/models');
+const { stepStatusEnum } = require('../backend/models');
+const { PATIENT_STATUS_ENUM } = require('../utils/constants');
 const mongoose = require('mongoose');
 
 const generateData = () => {
@@ -47,9 +48,9 @@ const generatePatient = () => {
     patient.lastEditedBy = faker.name.firstName() + faker.name.lastName();
 
     const status = getRandomInt(3);
-    if (status == 0) patient.status = overallStatusEnum.ACTIVE;
-    else if (status == 1) patient.status = overallStatusEnum.ARCHIVED;
-    else patient.status = overallStatusEnum.FEEDBACK;
+    if (status == 0) patient.status = PATIENT_STATUS_ENUM.ACTIVE;
+    else if (status == 1) patient.status = PATIENT_STATUS_ENUM.ARCHIVED;
+    else patient.status = PATIENT_STATUS_ENUM.FEEDBACK;
 
     return patient;
 };

@@ -24,6 +24,12 @@ module.exports.FIELDS = {
     FIELD_GROUP: 'FieldGroup',
 };
 
+module.exports.PATIENT_STATUS_ENUM = {
+    ACTIVE: 'Active',
+    ARCHIVED: 'Archived',
+    FEEDBACK: 'Feedback',
+};
+
 module.exports.STEPS_COLLECTION_NAME = 'steps';
 
 module.exports.ERR_NOT_APPROVED =
