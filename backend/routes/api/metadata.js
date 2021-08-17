@@ -85,7 +85,7 @@ const areFieldTypesSame = (fieldA, fieldB) => {
     return fieldA.fieldType === fieldB.fieldType;
 };
 
-const updateStepInTransation = async (stepBody, res, session) => {
+const updateStepInTransation = async (stepBody, session) => {
     // Cannot find step
     if (!stepBody?.key) await abortAndError(session, `stepKey missing`);
 
@@ -112,7 +112,7 @@ const updateStepInTransation = async (stepBody, res, session) => {
         if (existingField && !areFieldTypesSame(requestField, existingField))
             await abortAndError(
                 session,
-                `Cannot change the type of ${stepKey}.${field.key}`,
+                `Cannot change the type of ${stepKey}.${existingField.key}`,
             );
 
         // If this is a new field that we haven't seen yet, add it to the list of new fields
@@ -145,6 +145,42 @@ const updateStepInTransation = async (stepBody, res, session) => {
     return step;
 };
 
+const updateStepsInTransaction = async (req, session) => {
+    let stepData = [];
+
+    // Go through all of the step updates in the request body and apply them
+    for (step of req.body) {
+        const updatedStepModel = await updateStepInTransation(step, session);
+        stepData.push(updatedStepModel);
+    }
+
+    // Go through the updated models and check validation
+    await validateSteps(stepData, session);
+    return stepData;
+};
+
+const validateSteps = async (steps, session) => {
+    for (step of steps) {
+        await validateStep(step, session);
+    }
+};
+
+const validateStep = async (step, session) => {
+    // Run synchronous tests
+    let error = step.validateSync();
+    if (error) {
+        await session.abortTransaction();
+        throw `Validation error: ${error}`;
+    }
+
+    // Run async test manually
+    let isValid = await isUniqueStepNumber(step.stepNumber, step.key, session);
+    if (!isValid) {
+        await session.abortTransaction();
+        throw `Validation error: ${step.key} does not have unique stepNumber`;
+    }
+};
+
 /**
  * Updates many steps at a time. We need to process many steps at a time becuase -- for instance --
  * if we want to swap step order (i.e. step 5 becomes step 6 and vice versa), then there is a moment
@@ -158,44 +194,7 @@ router.put(
         try {
             let stepData = [];
             await mongoose.connection.transaction(async (session) => {
-                // Go through all of the step updates in the request body and apply them
-                for (step of req.body) {
-                    const updatedStepModel = await updateStepInTransation(
-                        step,
-                        res,
-                        session,
-                    );
-                    stepData.push(updatedStepModel);
-                }
-
-                // Go through the updated models and check validation
-                for (step of stepData) {
-                    // Run synchronous tests
-                    let error = step.validateSync();
-                    if (error) {
-                        await session.abortTransaction();
-                        return await sendResponse(
-                            res,
-                            400,
-                            `Validation error: ${error}`,
-                        );
-                    }
-
-                    // Run async test manually
-                    let isValid = await isUniqueStepNumber(
-                        step.stepNumber,
-                        step.key,
-                        session,
-                    );
-                    if (!isValid) {
-                        await session.abortTransaction();
-                        return await sendResponse(
-                            res,
-                            400,
-                            `Validation error: Does not have unique stepNumber`,
-                        );
-                    }
-                }
+                stepData = await updateStepsInTransaction(req, session);
             });
 
             await sendResponse(res, 200, 'Step(s) edited', stepData);
