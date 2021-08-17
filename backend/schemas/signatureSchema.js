@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+/**
+ * Schema used to collect signature data. SignatureData is all of the data points,
+ * while signatureCanvasWidth/Height are for recording the canvas size on which signatureData
+ * is collected. DocumentURL records the default document URL for both EN and AR.
+ */
 module.exports.signatureSchema = new mongoose.Schema({
     signatureData: [
         [
