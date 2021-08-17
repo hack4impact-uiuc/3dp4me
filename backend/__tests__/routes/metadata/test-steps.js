@@ -50,12 +50,12 @@ describe('POST /steps', () => {
         server = require('../../../app');
     });
 
-    // it('returns 400 if missing required fields', (done) => {
-    //     withAuthentication(request(server).post(`/api/metadata/steps`)).expect(
-    //         400,
-    //         done,
-    //     );
-    // });
+    it('returns 400 if missing required fields', (done) => {
+        withAuthentication(request(server).post(`/api/metadata/steps`)).expect(
+            400,
+            done,
+        );
+    });
 
     const postAndExpect = async (body, status) => {
         const initDbStats = await mongoose.connection.db.stats();

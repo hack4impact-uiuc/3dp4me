@@ -1,8 +1,6 @@
 const express = require('express');
-const encrypt = require('mongoose-encryption');
 const _ = require('lodash');
 const router = express.Router();
-const isValidNumber = require('libphonenumber-js');
 const { errorWrap } = require('../../utils');
 const { getFieldByKey } = require('../../utils/step-utils');
 const { models } = require('../../models');
@@ -11,117 +9,10 @@ const { isUniqueStepNumber } = require('../../models/Metadata');
 const mongoose = require('mongoose');
 const { requireAdmin } = require('../../middleware/authentication');
 const { isAdmin } = require('../../utils/aws/aws-user');
-const { FIELDS, STEP_STATUS_ENUM } = require('../../utils/constants');
-const { signatureSchema } = require('../../schemas/signatureSchema');
-const { fileSchema } = require('../../schemas/fileSchema');
-
-const generateFieldSchema = (field) => {
-    switch (field.fieldType) {
-        case FIELDS.STRING:
-            return {
-                type: String,
-                default: '',
-            };
-        case FIELDS.MULTILINE_STRING:
-            return {
-                type: String,
-                default: '',
-            };
-        case FIELDS.NUMBER:
-            return {
-                type: Number,
-                default: 0,
-            };
-        case FIELDS.DATE:
-            return {
-                type: Date,
-                default: Date.now,
-            };
-        case FIELDS.PHONE:
-            return {
-                type: String,
-                default: '',
-                validate: {
-                    validator: isValidNumber,
-                    message: 'Not a valid phone number',
-                },
-            };
-        case FIELDS.RADIO_BUTTON:
-            if (!field?.options?.length)
-                throw new Error('Radio button must have options');
-
-            return {
-                type: String,
-                default: '',
-            };
-        case FIELDS.FILE:
-            return {
-                type: [fileSchema],
-                default: [],
-            };
-        case FIELDS.AUDIO:
-            return {
-                type: [fileSchema],
-                default: [],
-            };
-        case FIELDS.FIELD_GROUP:
-            if (!field?.subFields?.length)
-                throw new Error('Field groups must have sub fields');
-
-            return {
-                type: [generateFieldsFromMetadata(field.subFields)],
-                required: true,
-                default: [],
-            };
-        case FIELDS.SIGNATURE:
-            const defaultURL = field?.additionalData?.defaultDocumentURL;
-            if (!defaultURL?.EN || !defaultURL?.AR)
-                throw new Error(
-                    'Signatures must have a default document for both English and Arabic',
-                );
-
-            return { type: signatureSchema };
-        case FIELDS.DIVIDER:
-            return null;
-        default:
-            throw new Error(`Unrecognized field type, ${field.type}`);
-    }
-};
-
-const generateSchemaFromMetadata = (stepMetadata) => {
-    let stepSchema = {};
-    stepSchema.patientId = { type: String, required: true, unique: true };
-    stepSchema.status = {
-        type: String,
-        required: true,
-        enum: Object.values(STEP_STATUS_ENUM),
-        default: STEP_STATUS_ENUM.UNFINISHED,
-    };
-    stepSchema.lastEdited = { type: Date, required: true, default: Date.now };
-    stepSchema.lastEditedBy = {
-        type: String,
-        required: true,
-        default: 'Admin',
-    };
-    generateFieldsFromMetadata(stepMetadata.fields, stepSchema);
-    const schema = new mongoose.Schema(stepSchema);
-
-    schema.plugin(encrypt, {
-        encryptionKey: process.env.ENCRYPTION_KEY,
-        signingKey: process.env.SIGNING_KEY,
-        excludeFromEncryption: ['patientId'],
-    });
-    mongoose.model(stepMetadata.key, schema, stepMetadata.key);
-};
-
-const generateFieldsFromMetadata = (fieldsMetadata, schema = {}) => {
-    fieldsMetadata.forEach((field) => {
-        const generatedSchema = generateFieldSchema(field);
-        if (generatedSchema) schema[field.key] = generatedSchema;
-    });
-
-    return schema;
-};
+const {
+    generateSchemaFromMetadata,
+    generateFieldSchema,
+} = require('../../utils/init-db');
 
 // GET metadata/steps
 router.get(
@@ -285,6 +176,7 @@ router.put(
                     if (error || !isValid) {
                         await session.abortTransaction();
                         if (error) {
+                            console.log(error);
                             return res.status(400).json({
                                 code: 400,
                                 success: false,
@@ -340,4 +232,3 @@ router.delete(
 );
 
 module.exports = router;
-module.exports.generateSchemaFromMetadata = generateSchemaFromMetadata;
