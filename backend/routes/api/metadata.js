@@ -100,27 +100,11 @@ const updateStepInTransation = async (stepBody, session) => {
         await abortAndError(session, `No step with key, ${stepKey}`);
 
     // Build up a list of al the new fields added
-    let addedFields = [];
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
-    for (const requestField of strippedBody.fields) {
-        const existingField = getFieldByKey(
-            stepToEdit.fields,
-            requestField.key,
-        );
-
-        // If both fields are the same but fieldtypes are not the same
-        if (existingField && !areFieldTypesSame(requestField, existingField))
-            await abortAndError(
-                session,
-                `Cannot change the type of ${stepKey}.${existingField.key}`,
-            );
-
-        // If this is a new field that we haven't seen yet, add it to the list of new fields
-        const hasAddedField = addedFields.some(
-            (f) => f.key === requestField.key,
-        );
-        if (!existingField && !hasAddedField) addedFields.push(requestField);
-    }
+    const addedFields = await getAddedFields(
+        stepToEdit.fields,
+        strippedBody.fields,
+    );
 
     // Checks that fields were not deleted
     const numUnchangedFields = strippedBody.fields.length - addedFields.length;
@@ -143,6 +127,29 @@ const updateStepInTransation = async (stepBody, session) => {
 
     // Return the model so that we can do validation later
     return step;
+};
+
+const getAddedFields = async (oldFields, newFields) => {
+    // Build up a list of al the new fields added
+    let addedFields = [];
+    for (const requestField of newFields) {
+        const existingField = getFieldByKey(oldFields, requestField.key);
+
+        // If both fields are the same but fieldtypes are not the same
+        if (existingField && !areFieldTypesSame(requestField, existingField))
+            await abortAndError(
+                session,
+                `Cannot change the type of ${stepKey}.${existingField.key}`,
+            );
+
+        // If this is a new field that we haven't seen yet, add it to the list of new fields
+        const hasAddedField = addedFields.some(
+            (f) => f.key === requestField.key,
+        );
+        if (!existingField && !hasAddedField) addedFields.push(requestField);
+    }
+
+    return addedFields;
 };
 
 const updateStepsInTransaction = async (req, session) => {
