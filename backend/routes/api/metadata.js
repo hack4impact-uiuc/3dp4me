@@ -74,66 +74,74 @@ router.post(
     }),
 );
 
+const abortAndError = async (transaction, error) => {
+    await transaction.abortTransaction();
+    throw error;
+};
+
+const areFieldTypesSame = (fieldA, fieldB) => {
+    if (!fieldA || !fieldB) return false;
+
+    return fieldA.fieldType === fieldB.fieldType;
+};
+
 const updateStepInTransation = async (stepBody, res, session) => {
     // Cannot find step
-    if (!stepBody?.key) {
-        await session.abortTransaction();
-        throw `stepKey missing`;
-    }
+    if (!stepBody?.key) await abortAndError(session, `stepKey missing`);
 
+    // Get the step to edit
     const stepKey = stepBody.key;
-    stepBody = removeAttributesFrom(stepBody, ['_id', '__v']);
     let stepToEdit = await models.Step.findOne({ key: stepKey }).session(
         session,
     );
 
-    // Return if stepToEdit cannot be found
-    if (!stepToEdit) {
-        await session.abortTransaction();
-        throw `No step with key, ${stepKey}`;
-    }
+    // Abort if can't find step to edit
+    if (!stepToEdit)
+        await abortAndError(session, `No step with key, ${stepKey}`);
 
+    // Build up a list of al the new fields added
     let addedFields = [];
-    for (const requestField of stepBody.fields) {
+    const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
+    for (const requestField of strippedBody.fields) {
+        const existingField = getFieldByKey(
+            stepToEdit.fields,
+            requestField.key,
+        );
+
         // If both fields are the same but fieldtypes are not the same
-        const field = getFieldByKey(stepToEdit.fields, requestField.key);
+        if (existingField && !areFieldTypesSame(requestField, existingField))
+            await abortAndError(
+                session,
+                `Cannot change the type of ${stepKey}.${field.key}`,
+            );
 
-        if (field && field.fieldType !== requestField.fieldType) {
-            await session.abortTransaction();
-            throw `Cannot change the type of ${stepKey}.${field.key}`;
-        }
-
-        if (
-            !field &&
-            !addedFields.some(
-                (addedField) => addedField.key === requestField.key,
-            )
-        ) {
-            addedFields.push(requestField);
-        }
+        // If this is a new field that we haven't seen yet, add it to the list of new fields
+        const hasAddedField = addedFields.some(
+            (f) => f.key === requestField.key,
+        );
+        if (!existingField && !hasAddedField) addedFields.push(requestField);
     }
 
     // Checks that fields were not deleted
-    if (
-        stepBody.fields.length - addedFields.length <
-        stepToEdit.fields.length
-    ) {
-        await session.abortTransaction();
-        throw `Cannot delete fields`;
-    }
+    const numUnchangedFields = strippedBody.fields.length - addedFields.length;
+    const currentNumFields = stepToEdit.fields.length;
+    if (numUnchangedFields < currentNumFields)
+        await abortAndError(session, `Cannot delete fields`);
 
+    // Update the schema
     const schema = await mongoose.model(stepKey).schema;
-    const addedFieldsObject = {};
-
+    const schemaUpdate = {};
     addedFields.forEach((field) => {
-        addedFieldsObject[field.key] = generateFieldSchema(field);
+        schemaUpdate[field.key] = generateFieldSchema(field);
     });
-    schema.add(addedFieldsObject);
+    schema.add(schemaUpdate);
 
+    // Finally, update the metadata for this step
     step = await models.Step.findOne({ key: stepKey }).session(session);
-    _.assign(step, stepBody);
+    _.assign(step, strippedBody);
     await step.save({ session: session, validateBeforeSave: false });
 
+    // Return the model so that we can do validation later
     return step;
 };
 
@@ -149,50 +157,47 @@ router.put(
     errorWrap(async (req, res) => {
         try {
             let stepData = [];
-            const result = await mongoose.connection.transaction(
-                async (session) => {
-                    // Go through all of the step updates in the request body and apply them
-                    for (step of req.body) {
-                        const updatedStepModel = await updateStepInTransation(
-                            step,
+            await mongoose.connection.transaction(async (session) => {
+                // Go through all of the step updates in the request body and apply them
+                for (step of req.body) {
+                    const updatedStepModel = await updateStepInTransation(
+                        step,
+                        res,
+                        session,
+                    );
+                    stepData.push(updatedStepModel);
+                }
+
+                // Go through the updated models and check validation
+                for (step of stepData) {
+                    // Run synchronous tests
+                    let error = step.validateSync();
+                    if (error) {
+                        await session.abortTransaction();
+                        return await sendResponse(
                             res,
-                            session,
+                            400,
+                            `Validation error: ${error}`,
                         );
-                        stepData.push(updatedStepModel);
                     }
 
-                    // Go through the updated models and check validation
-                    for (step of stepData) {
-                        // Run synchronous tests
-                        let error = step.validateSync();
-                        if (error) {
-                            await session.abortTransaction();
-                            return await sendResponse(
-                                res,
-                                400,
-                                `Validation error: ${error}`,
-                            );
-                        }
-
-                        // Run async test manually
-                        let isValid = await isUniqueStepNumber(
-                            step.stepNumber,
-                            step.key,
-                            session,
+                    // Run async test manually
+                    let isValid = await isUniqueStepNumber(
+                        step.stepNumber,
+                        step.key,
+                        session,
+                    );
+                    if (!isValid) {
+                        await session.abortTransaction();
+                        return await sendResponse(
+                            res,
+                            400,
+                            `Validation error: Does not have unique stepNumber`,
                         );
-                        if (!isValid) {
-                            await session.abortTransaction();
-                            return await sendResponse(
-                                res,
-                                400,
-                                `Validation error: Does not have unique stepNumber`,
-                            );
-                        }
                     }
-                },
-            );
+                }
+            });
 
-            console.log(result);
             await sendResponse(res, 200, 'Step(s) edited', stepData);
         } catch (error) {
             console.error(error);
@@ -201,7 +206,9 @@ router.put(
     }),
 );
 
-// DELETE metadata/steps/:stepkey
+/**
+ * Deletes a step
+ */
 router.delete(
     '/steps/:stepkey',
     requireAdmin,
