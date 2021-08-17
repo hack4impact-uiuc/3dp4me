@@ -5,6 +5,9 @@ const { STEP_STATUS_ENUM, FIELDS } = require('./constants');
 const { signatureSchema } = require('../schemas/signatureSchema');
 const { fileSchema } = require('../schemas/fileSchema');
 
+/**
+ * Initalizes and connects to the DB. Should be called at app startup.
+ */
 module.exports.initDB = () => {
     mongoose.connect(process.env.DB_URI, {
         useNewUrlParser: true,
@@ -23,11 +26,17 @@ module.exports.initDB = () => {
     mongoose.set('useFindAndModify', false);
 };
 
+/**
+ * Initializes all of the dynamic models in the DB. Should be called immediately after initDB.
+ */
 module.exports.initModels = async () => {
     const steps = await models.Step.find();
     for (const step of steps) await this.generateSchemaFromMetadata(step);
 };
 
+/**
+ * Generate and registers a schema based off the provided metadata.
+ */
 module.exports.generateSchemaFromMetadata = (stepMetadata) => {
     let stepSchema = {};
     stepSchema.patientId = { type: String, required: true, unique: true };
@@ -54,73 +63,97 @@ module.exports.generateSchemaFromMetadata = (stepMetadata) => {
     mongoose.model(stepMetadata.key, schema, stepMetadata.key);
 };
 
+/**
+ * Generates the schema for a given field type.
+ * @param {String} field Field type (see constants.js).
+ * @returns An object describing the field schema.
+ */
 module.exports.generateFieldSchema = (field) => {
     switch (field.fieldType) {
         case FIELDS.STRING:
-            return {
-                type: String,
-                default: '',
-            };
+            return getStringSchema();
         case FIELDS.MULTILINE_STRING:
-            return {
-                type: String,
-                default: '',
-            };
+            return getStringSchema();
         case FIELDS.NUMBER:
-            return {
-                type: Number,
-                default: 0,
-            };
+            return getNumberSchema();
         case FIELDS.DATE:
-            return {
-                type: Date,
-                default: Date.now,
-            };
+            return getDateSchema();
         case FIELDS.PHONE:
-            return {
-                type: String,
-                default: '',
-            };
+            return getStringSchema();
         case FIELDS.RADIO_BUTTON:
-            if (!field?.options?.length)
-                throw new Error('Radio button must have options');
-
-            return {
-                type: String,
-                default: '',
-            };
+            return getRadioButtonSchema(field);
         case FIELDS.FILE:
-            return {
-                type: [fileSchema],
-                default: [],
-            };
+            return getFileSchema();
         case FIELDS.AUDIO:
-            return {
-                type: [fileSchema],
-                default: [],
-            };
+            return getFileSchema();
         case FIELDS.FIELD_GROUP:
-            if (!field?.subFields?.length)
-                throw new Error('Field groups must have sub fields');
-
-            return {
-                type: [generateFieldsFromMetadata(field.subFields)],
-                required: true,
-                default: [],
-            };
+            return getFieldGroupSchema(field);
         case FIELDS.SIGNATURE:
-            const defaultURL = field?.additionalData?.defaultDocumentURL;
-            if (!defaultURL?.EN || !defaultURL?.AR)
-                throw new Error(
-                    'Signatures must have a default document for both English and Arabic',
-                );
-
-            return { type: signatureSchema };
+            return getSignatureSchema(field);
         case FIELDS.DIVIDER:
             return null;
         default:
             throw new Error(`Unrecognized field type, ${field.type}`);
     }
+};
+
+const getStringSchema = () => {
+    return {
+        type: String,
+        default: '',
+    };
+};
+
+const getNumberSchema = () => {
+    return {
+        type: Number,
+        default: 0,
+    };
+};
+
+const getDateSchema = () => {
+    return {
+        type: Date,
+        default: Date.now,
+    };
+};
+
+const getRadioButtonSchema = (fieldMetadata) => {
+    if (!fieldMetadata?.options?.length)
+        throw new Error('Radio button must have options');
+
+    return {
+        type: String,
+        default: '',
+    };
+};
+
+const getFieldGroupSchema = (fieldMetadata) => {
+    if (!fieldMetadata?.subFields?.length)
+        throw new Error('Field groups must have sub fields');
+
+    return {
+        type: [generateFieldsFromMetadata(fieldMetadata.subFields)],
+        required: true,
+        default: [],
+    };
+};
+
+const getFileSchema = () => {
+    return {
+        type: [fileSchema],
+        default: [],
+    };
+};
+
+const getSignatureSchema = (fieldMetadata) => {
+    const defaultURL = fieldMetadata?.additionalData?.defaultDocumentURL;
+    if (!defaultURL?.EN || !defaultURL?.AR)
+        throw new Error(
+            'Signatures must have a default document for both English and Arabic',
+        );
+
+    return { type: signatureSchema };
 };
 
 const generateFieldsFromMetadata = (fieldsMetadata, schema = {}) => {
