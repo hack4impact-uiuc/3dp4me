@@ -13,111 +13,97 @@ const {
     generateSchemaFromMetadata,
     generateFieldSchema,
 } = require('../../utils/init-db');
+const { sendResponse } = require('../../utils/response');
 
-// GET metadata/steps
+const getReadableSteps = async (req) => {
+    if (isAdmin(req.user)) return await models.Step.find({});
+
+    const roles = [req.user.roles.toString()];
+    const metaData = await models.Step.find({
+        readableGroups: { $in: [req.user.roles.toString()] },
+    });
+
+    // Iterate over fields and remove fields that do not have matching permissions
+    metaData.map((step) => {
+        step.fields = step.fields.filter((field) => {
+            return field.readableGroups.some((role) => roles.includes(role));
+        });
+    });
+
+    return metaData;
+};
+
+/**
+ * Gets the metadata for a step. This describes the fields contained in the steps.
+ * If a user isn't allowed to view step, it isn't returned to them.
+ */
 router.get(
     '/steps',
     errorWrap(async (req, res) => {
-        let metaData;
-
-        if (isAdmin(req.user)) {
-            metaData = await models.Step.find({});
-        } else {
-            const roles = [req.user.roles.toString()];
-            metaData = await models.Step.find({
-                readableGroups: { $in: [req.user.roles.toString()] },
-            });
-
-            // Iterate over fields and remove fields that do not have matching permissions
-            metaData.map((step) => {
-                step.fields = step.fields.filter((field) => {
-                    return field.readableGroups.some((role) =>
-                        roles.includes(role),
-                    );
-                });
-            });
-        }
+        const metaData = await getReadableSteps(req);
 
         if (!metaData) {
-            res.status(404).json({
-                code: 404,
-                success: false,
-                message: 'Steps not found.',
-            });
+            await sendResponse(res, 500, 'Could not find any steps');
         } else {
-            res.status(200).json({
-                code: 200,
-                success: true,
-                message: 'Steps returned successfully.',
-                result: metaData,
-            });
+            await sendResponse(res, 200, 'Steps found', metaData);
         }
     }),
 );
 
-// POST metadata/steps
+/**
+ * Creates a new step. If the step is formatted invalid, we roll back the changes
+ * and return 400.
+ */
 router.post(
     '/steps',
     requireAdmin,
     errorWrap(async (req, res) => {
-        const steps = req.body;
-        const new_step_metadata = new models.Step(steps);
+        const step = req.body;
+        const newStep = new models.Step(step);
 
         try {
             await mongoose.connection.transaction(async (session) => {
-                await new_step_metadata.save({ session });
-                generateSchemaFromMetadata(steps);
+                await newStep.save({ session });
+                generateSchemaFromMetadata(step);
             });
 
-            await res.status(200).json({
-                code: 200,
-                success: true,
-                message: 'Step successfully created.',
-                data: new_step_metadata,
-            });
+            await sendResponse(res, 200, 'Step created', newStep);
         } catch (error) {
-            res.status(400).json({
-                code: 400,
-                success: false,
-                message: `Step could not be added: ${error}`,
-            });
+            await sendResponse(res, 400, `Could not add step: ${error}`);
         }
     }),
 );
 
-const putOneStep = async (stepBody, res, session) => {
+const updateStepInTransation = async (stepBody, res, session) => {
+    // Cannot find step
     if (!stepBody?.key) {
-        return res.status(400).json({
-            success: false,
-            message: 'No stepkey in steps',
-        });
+        await session.abortTransaction();
+        throw `stepKey missing`;
     }
-    stepBody = removeAttributesFrom(stepBody, ['_id', '__v']);
 
     const stepKey = stepBody.key;
-    stepToEdit = await models.Step.findOne({ key: stepKey }).session(session);
+    stepBody = removeAttributesFrom(stepBody, ['_id', '__v']);
+    let stepToEdit = await models.Step.findOne({ key: stepKey }).session(
+        session,
+    );
 
-    // Return 404 if stepToEdit cannot be found
+    // Return if stepToEdit cannot be found
     if (!stepToEdit) {
-        return res.status(404).json({
-            success: false,
-            message: 'No step with that key',
-        });
+        await session.abortTransaction();
+        throw `No step with key, ${stepKey}`;
     }
 
     let addedFields = [];
-
-    stepBody.fields.forEach((requestField) => {
+    for (const requestField of stepBody.fields) {
         // If both fields are the same but fieldtypes are not the same
         const field = getFieldByKey(stepToEdit.fields, requestField.key);
 
         if (field && field.fieldType !== requestField.fieldType) {
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Cannot change fieldType',
-            });
-        } else if (
+            await session.abortTransaction();
+            throw `Cannot change the type of ${stepKey}.${field.key}`;
+        }
+
+        if (
             !field &&
             !addedFields.some(
                 (addedField) => addedField.key === requestField.key,
@@ -125,18 +111,15 @@ const putOneStep = async (stepBody, res, session) => {
         ) {
             addedFields.push(requestField);
         }
-    });
+    }
 
     // Checks that fields were not deleted
     if (
         stepBody.fields.length - addedFields.length <
         stepToEdit.fields.length
     ) {
-        return res.status(400).json({
-            code: 400,
-            success: false,
-            message: 'Cannot delete fields',
-        });
+        await session.abortTransaction();
+        throw `Cannot delete fields`;
     }
 
     const schema = await mongoose.model(stepKey).schema;
@@ -154,57 +137,66 @@ const putOneStep = async (stepBody, res, session) => {
     return step;
 };
 
+/**
+ * Updates many steps at a time. We need to process many steps at a time becuase -- for instance --
+ * if we want to swap step order (i.e. step 5 becomes step 6 and vice versa), then there is a moment
+ * of inconsistency where we have two step 5s or 6s. So all step updates are batched through this endpoint
+ * which applies all the changes in a transaction and rolls back if the end state is invalid.
+ */
 router.put(
     '/steps/',
     requireAdmin,
     errorWrap(async (req, res) => {
         try {
             let stepData = [];
-            await mongoose.connection.transaction(async (session) => {
-                for (step of req.body) {
-                    stepData.push(await putOneStep(step, res, session));
-                }
-                for (step of stepData) {
-                    // Run synchronous tests and async tests separately
-                    let error = step.validateSync();
-                    let isValid = await isUniqueStepNumber(
-                        step.stepNumber,
-                        step.key,
-                        session,
-                    );
+            const result = await mongoose.connection.transaction(
+                async (session) => {
+                    // Go through all of the step updates in the request body and apply them
+                    for (step of req.body) {
+                        const updatedStepModel = await updateStepInTransation(
+                            step,
+                            res,
+                            session,
+                        );
+                        stepData.push(updatedStepModel);
+                    }
 
-                    if (error || !isValid) {
-                        await session.abortTransaction();
+                    // Go through the updated models and check validation
+                    for (step of stepData) {
+                        // Run synchronous tests
+                        let error = step.validateSync();
                         if (error) {
-                            console.log(error);
-                            return res.status(400).json({
-                                code: 400,
-                                success: false,
-                                message: `Validation error: ${error}`,
-                            });
-                        } else {
-                            return res.status(400).json({
-                                code: 400,
-                                success: false,
-                                message: `Validation error: Does not have unique stepNumber`,
-                            });
+                            await session.abortTransaction();
+                            return await sendResponse(
+                                res,
+                                400,
+                                `Validation error: ${error}`,
+                            );
+                        }
+
+                        // Run async test manually
+                        let isValid = await isUniqueStepNumber(
+                            step.stepNumber,
+                            step.key,
+                            session,
+                        );
+                        if (!isValid) {
+                            await session.abortTransaction();
+                            return await sendResponse(
+                                res,
+                                400,
+                                `Validation error: Does not have unique stepNumber`,
+                            );
                         }
                     }
-                }
-            });
-            res.status(200).json({
-                code: 200,
-                success: true,
-                message: 'Step(s) successfully edited.',
-                result: stepData,
-            });
+                },
+            );
+
+            console.log(result);
+            await sendResponse(res, 200, 'Step(s) edited', stepData);
         } catch (error) {
-            console.log(error);
-            res.status(400).json({
-                code: 400,
-                success: false,
-                message: `Step could not be added: ${error}`,
-            });
+            console.error(error);
+            await sendResponse(res, 400, `Error occurred: ${error}`);
         }
     }),
 );
@@ -217,17 +209,9 @@ router.delete(
         const { stepkey } = req.params;
         const step = await models.Step.deleteOne({ key: stepkey });
 
-        if (step.deletedCount === 0) {
-            res.status(404).json({
-                success: false,
-                message: 'Step not found',
-            });
-        } else {
-            res.status(201).json({
-                success: true,
-                message: 'Step deleted',
-            });
-        }
+        if (step.deletedCount === 0)
+            await sendResponse(res, 404, 'Step not found');
+        else await sendResponse(res, 201, 'Step deleted');
     }),
 );
 

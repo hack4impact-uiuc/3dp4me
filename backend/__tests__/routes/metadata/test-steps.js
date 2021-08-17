@@ -152,14 +152,14 @@ describe('PUT /steps/stepkey', () => {
         server = require('../../../app');
     });
 
-    it('given bad stepkey, return 404', async () => {
+    it('given bad stepkey, return 400', async () => {
         const invalidStep = [{ key: 'DoesNotExist' }];
 
         const res = await withAuthentication(
             request(server).put(`/api/metadata/steps/`).send(invalidStep),
         );
 
-        expect(res.status).toBe(404);
+        expect(res.status).toBe(400);
     });
 
     it('can reorder fields in step', async () => {
@@ -332,7 +332,6 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(400);
         expect(resContent.success).toBe(false);
-        expect(resContent.message).toBe('Cannot change fieldType');
 
         const stepAfter = await models.Step.find({}).lean();
 
@@ -353,7 +352,6 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(400);
         expect(resContent.success).toBe(false);
-        expect(resContent.message).toBe('Cannot delete fields');
 
         // Check database
         const stepAfter = await models.Step.find({}).lean();

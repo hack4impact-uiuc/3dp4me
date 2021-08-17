@@ -16,16 +16,16 @@ const { sendResponse } = require('../utils/response');
 module.exports.requireAuthentication = async (req, res, next) => {
     try {
         const user = await getUserFromRequest(req);
-        if (!user) return sendResponse(res, 401, ERR_AUTH_FAILED);
+        if (!user) return await sendResponse(res, 401, ERR_AUTH_FAILED);
 
         if (user.accessLevel !== ACCESS_LEVELS.GRANTED)
-            return sendResponse(res, 403, ERR_NOT_APPROVED);
+            return await sendResponse(res, 403, ERR_NOT_APPROVED);
 
         req.user = user;
         next();
     } catch (error) {
         console.error(error);
-        return sendResponse(res, 401, ERR_AUTH_FAILED);
+        return await sendResponse(res, 401, ERR_AUTH_FAILED);
     }
 };
 
@@ -39,7 +39,7 @@ module.exports.requireRole = (role) => {
     return async (req, res, next) => {
         if (!req.user) await requireAuthentication();
         if (!req.user.roles.includes(role))
-            return sendResponse(res, 403, ERR_NOT_APPROVED);
+            return await sendResponse(res, 403, ERR_NOT_APPROVED);
 
         next();
     };
