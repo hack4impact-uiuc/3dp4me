@@ -56,23 +56,24 @@ router.get(
                 .model(step.key)
                 .findOne({ patientId: id });
 
+            // If the patient doesn't have data for this step yet, set it to null
             if (!stepData) {
                 patientData.set(step.key, null, { strict: false });
                 return;
             }
 
-            stepData = stepData.toObject();
-
             // The user can read any field returned by getReadableSteps
             let readableFields = step.fields.map((f) => f.key);
             readableFields = readableFields.concat(getStepBaseSchemaKeys());
+            stepData = stepData.toObject();
 
             // Filter out fields that the user cannot view
-            for (const [key, value] of Object.entries(stepData)) {
-                if (!readableFields.includes(key)) {
-                    delete stepData[key];
-                }
-            }
+            stepData = _.pick(stepData, readableFields);
+            // for (const [key, value] of Object.entries(stepData)) {
+            //     if (!readableFields.includes(key)) {
+            //         delete stepData[key];
+            //     }
+            // }
 
             // Update the patient data
             patientData.set(step.key, stepData, { strict: false });
