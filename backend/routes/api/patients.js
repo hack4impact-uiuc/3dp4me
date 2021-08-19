@@ -18,6 +18,7 @@ const {
 } = require('../../utils/constants');
 const { sendResponse } = require('../../utils/response');
 const { getReadableSteps } = require('../../utils/stepUtils');
+const { getStepBaseSchemaKeys } = require('../../utils/init-db');
 
 /**
  * Returns everything in the patients collection (basic patient info)
@@ -45,37 +46,41 @@ router.get(
         if (!patientData)
             await sendResponse(res, 404, `Patient with id ${id} not found`);
 
+        // Get all steps/fields that the user is allowed to view
         let steps = await getReadableSteps(req);
-        let stepDataPromises = steps.map(async (step) => {
-            let readableFields = [];
-            step.fields.forEach((field) => {
-                readableFields.push(field.key);
-            });
 
+        // Create promises for each step so that we can do this in parallel
+        let stepDataPromises = steps.map(async (step) => {
+            // Get all patient data for this step
             let stepData = await mongoose
                 .model(step.key)
                 .findOne({ patientId: id });
 
-            if (stepData) stepData = stepData.toObject();
+            if (!stepData) {
+                patientData.set(step.key, null, { strict: false });
+                return;
+            }
 
-            if (!isAdmin(req.user)) {
-                for (const [key, value] of Object.entries(stepData)) {
-                    if (!readableFields.includes(key)) {
-                        delete stepData[key];
-                    }
+            stepData = stepData.toObject();
+
+            // The user can read any field returned by getReadableSteps
+            let readableFields = step.fields.map((f) => f.key);
+            readableFields = readableFields.concat(getStepBaseSchemaKeys());
+
+            // Filter out fields that the user cannot view
+            for (const [key, value] of Object.entries(stepData)) {
+                if (!readableFields.includes(key)) {
+                    delete stepData[key];
                 }
             }
 
+            // Update the patient data
             patientData.set(step.key, stepData, { strict: false });
         });
 
+        // Execute all the promises
         await Promise.all(stepDataPromises);
-
-        res.status(200).json({
-            code: 200,
-            success: true,
-            result: patientData,
-        });
+        await sendResponse(res, 200, 'success', patientData);
     }),
 );
 

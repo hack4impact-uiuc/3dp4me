@@ -28,7 +28,7 @@ module.exports.addFieldsToSchema = (stepKey, addedFields) => {
     schema.add(schemaUpdate);
 };
 
-module.exports.getAddedFields = async (oldFields, newFields) => {
+module.exports.getAddedFields = async (session, oldFields, newFields) => {
     // Build up a list of al the new fields added
     let addedFields = [];
     for (const requestField of newFields) {
@@ -38,7 +38,7 @@ module.exports.getAddedFields = async (oldFields, newFields) => {
         if (existingField && !areFieldTypesSame(requestField, existingField))
             await abortAndError(
                 session,
-                `Cannot change the type of ${stepKey}.${existingField.key}`,
+                `Cannot change the type of ${existingField.key}`,
             );
 
         // If this is a new field that we haven't seen yet, add it to the list of new fields

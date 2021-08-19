@@ -38,20 +38,7 @@ module.exports.initModels = async () => {
  * Generate and registers a schema based off the provided metadata.
  */
 module.exports.generateSchemaFromMetadata = (stepMetadata) => {
-    let stepSchema = {};
-    stepSchema.patientId = { type: String, required: true, unique: true };
-    stepSchema.status = {
-        type: String,
-        required: true,
-        enum: Object.values(STEP_STATUS_ENUM),
-        default: STEP_STATUS_ENUM.UNFINISHED,
-    };
-    stepSchema.lastEdited = { type: Date, required: true, default: Date.now };
-    stepSchema.lastEditedBy = {
-        type: String,
-        required: true,
-        default: 'Admin',
-    };
+    let stepSchema = getStepBaseSchema();
     generateFieldsFromMetadata(stepMetadata.fields, stepSchema);
     const schema = new mongoose.Schema(stepSchema);
 
@@ -61,6 +48,35 @@ module.exports.generateSchemaFromMetadata = (stepMetadata) => {
         excludeFromEncryption: ['patientId'],
     });
     mongoose.model(stepMetadata.key, schema, stepMetadata.key);
+};
+
+/**
+ * Returns a list of keys that are included in the base schema for a step.
+ * @returns An array of strings
+ */
+module.exports.getStepBaseSchemaKeys = () => {
+    const baseSchema = getStepBaseSchema();
+    let keys = Object.keys(baseSchema);
+    keys.push('_id');
+    return keys;
+};
+
+const getStepBaseSchema = () => {
+    let stepSchema = {};
+    stepSchema.patientId = { type: String, required: true, unique: true };
+    stepSchema.lastEdited = { type: Date, required: true, default: Date.now };
+    stepSchema.status = {
+        type: String,
+        required: true,
+        enum: Object.values(STEP_STATUS_ENUM),
+        default: STEP_STATUS_ENUM.UNFINISHED,
+    };
+    stepSchema.lastEditedBy = {
+        type: String,
+        required: true,
+        default: 'Admin',
+    };
+    return stepSchema;
 };
 
 /**

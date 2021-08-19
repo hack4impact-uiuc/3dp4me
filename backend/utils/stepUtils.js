@@ -55,6 +55,7 @@ const updateStepInTransation = async (stepBody, session) => {
     // Build up a list of al the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
     const addedFields = await getAddedFields(
+        session,
         stepToEdit.fields,
         strippedBody.fields,
     );
