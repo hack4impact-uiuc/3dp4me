@@ -16,77 +16,57 @@ const {
     STEP_IMMUTABLE_ATTRIBUTES,
     PATIENT_IMMUTABLE_ATTRIBUTES,
 } = require('../../utils/constants');
+const { sendResponse } = require('../../utils/response');
+const { getReadableSteps } = require('../../utils/stepUtils');
 
-// GET: Returns all patients
+/**
+ * Returns everything in the patients collection (basic patient info)
+ */
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        models.Patient.find().then((patientInfo) =>
-            res.status(200).json({
-                code: 200,
-                success: true,
-                result: patientInfo,
-            }),
-        );
+        const patients = await models.Patient.find();
+        await sendResponse(res, 200, '', patients);
     }),
 );
 
-// GET: Returns everything associated with patient
+/**
+ * Returns all of our data on a specific patient. Gets both the basic info
+ * from the Patient collection and the data from each step.
+ **/
 router.get(
     '/:id',
     errorWrap(async (req, res) => {
         const { id } = req.params;
         roles = [req.user.roles];
+
+        // Check if patient exists
         let patientData = await models.Patient.findById(id);
         if (!patientData)
-            return res.status(404).json({
-                code: 404,
-                message: `Patient with id ${id} not found`,
-                success: false,
-            });
+            await sendResponse(res, 404, `Patient with id ${id} not found`);
 
-        let stepKeys = await getStepKeys();
-        let stepDataPromises = stepKeys.map(async (stepKey) => {
-            if (isAdmin(req.user)) {
-                steps = await models.Step.find({});
-            } else {
-                steps = await models.Step.find({
-                    $and: [
-                        { key: stepKey },
-                        { readableGroups: { $in: [req.user.roles] } },
-                    ],
-                });
-            }
-
+        let steps = await getReadableSteps(req);
+        let stepDataPromises = steps.map(async (step) => {
             let readableFields = [];
-
-            steps.map((step) => {
-                step.fields = step.fields.filter((field) => {
-                    return field.readableGroups.some((role) =>
-                        roles.includes(role),
-                    );
-                });
-            });
-
-            steps.forEach((step) => {
-                step.fields.forEach((field) => {
-                    readableFields.push(field.key);
-                });
+            step.fields.forEach((field) => {
+                readableFields.push(field.key);
             });
 
             let stepData = await mongoose
-                .model(stepKey)
+                .model(step.key)
                 .findOne({ patientId: id });
+
             if (stepData) stepData = stepData.toObject();
 
-            if (!isAdmin(req.user))
+            if (!isAdmin(req.user)) {
                 for (const [key, value] of Object.entries(stepData)) {
                     if (!readableFields.includes(key)) {
                         delete stepData[key];
                     }
                 }
+            }
 
-            patientData.set(stepKey, stepData, { strict: false });
+            patientData.set(step.key, stepData, { strict: false });
         });
 
         await Promise.all(stepDataPromises);
@@ -98,6 +78,8 @@ router.get(
         });
     }),
 );
+
+const getAllPatientData = async (req) => {};
 
 // POST: new patient
 router.post(
