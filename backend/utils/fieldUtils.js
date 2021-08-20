@@ -1,6 +1,47 @@
 const mongoose = require('mongoose');
+const { models } = require('../models');
 const { generateFieldSchema } = require('./init-db');
 const { abortAndError } = require('./transactionUtils');
+
+/**
+ * Checks if a field is readable by a user. If the stepKey or fieldKey are
+ * invalid, returns false.
+ * @param {Object} user The user checking the field's readability. Should usually be req.user.
+ * @param {String} stepKey The stepKey of the field.
+ * @param {String} fieldKey The fieldKey within the step.
+ * @returns True if readable.
+ */
+module.exports.isFieldReadable = async (user, stepKey, fieldKey) => {
+    const fieldData = await getFieldMetadata(stepKey, fieldKey);
+    if (!fieldData) return false;
+
+    // Check that the user includes at least one readableGroup
+    return fieldData?.readableGroups?.some((g) => user.roles.includes(g));
+};
+
+/**
+ * Checks if a field is writable by a user. If the stepKey or fieldKey are
+ * invalid, returns false.
+ * @param {Object} user The user checking the field's writability. Should usually be req.user.
+ * @param {String} stepKey The stepKey of the field.
+ * @param {String} fieldKey The fieldKey within the step.
+ * @returns True if writable.
+ */
+module.exports.isFieldWritable = async (user, stepKey, fieldKey) => {
+    const fieldData = await getFieldMetadata(stepKey, fieldKey);
+    if (!fieldData) return false;
+
+    // Check that the user includes at least one readableGroup
+    return fieldData?.writableGroups?.some((g) => user.roles.includes(g));
+};
+
+const getFieldMetadata = async (stepKey, fieldKey) => {
+    let stepData = await models.Step.findOne({ key: stepKey });
+    if (!stepData) return null;
+
+    stepData = stepData.toObject();
+    return stepData?.fields?.find((f) => f.key === fieldKey);
+};
 
 module.exports.getFieldByKey = (objectList, key) => {
     if (!objectList) {

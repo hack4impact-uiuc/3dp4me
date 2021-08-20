@@ -24,8 +24,6 @@ module.exports.getReadableSteps = async (req) => {
     return metaData;
 };
 
-module.exports.isFieldReadable = async (stepKey) => {};
-
 module.exports.updateStepsInTransaction = async (req, session) => {
     let stepData = [];
 

@@ -19,6 +19,7 @@ const {
 const { sendResponse } = require('../../utils/response');
 const { getReadableSteps } = require('../../utils/stepUtils');
 const { getStepBaseSchemaKeys } = require('../../utils/init-db');
+const { isFieldReadable } = require('../../utils/fieldUtils');
 
 /**
  * Returns everything in the patients collection (basic patient info)
@@ -199,7 +200,8 @@ router.get(
             false,
         );
 
-        if (readableFields.includes(fieldKey)) {
+        const isReadable = await isFieldReadable(req.user, stepKey, fieldKey);
+        if (isReadable) {
             var s3Stream = downloadFile(
                 `${id}/${stepKey}/${fieldKey}/${fileName}`,
                 {
