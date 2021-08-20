@@ -1,5 +1,3 @@
-const HTTP_OK = 200;
-
 /**
  * Convienience function for sending responses.
  * @param {Object} res The response object
@@ -9,8 +7,12 @@ const HTTP_OK = 200;
  */
 module.exports.sendResponse = async (res, code, message, data = {}) => {
     await res.status(code).json({
-        success: code === HTTP_OK,
+        success: isCodeSuccessful(code),
         message: message,
         result: data,
     });
+};
+
+const isCodeSuccessful = (code) => {
+    return 200 <= code && code < 300;
 };

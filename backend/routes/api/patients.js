@@ -69,11 +69,6 @@ router.get(
 
             // Filter out fields that the user cannot view
             stepData = _.pick(stepData, readableFields);
-            // for (const [key, value] of Object.entries(stepData)) {
-            //     if (!readableFields.includes(key)) {
-            //         delete stepData[key];
-            //     }
-            // }
 
             // Update the patient data
             patientData.set(step.key, stepData, { strict: false });
@@ -85,62 +80,50 @@ router.get(
     }),
 );
 
-const getAllPatientData = async (req) => {};
-
-// POST: new patient
+/**
+ * Creates a new patient. Stores all the basic patient info in the Patient collection. Step
+ * data isn't created until a PUT is made for each step.
+ */
 router.post(
     '/',
     removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const patient = req.body;
-        let new_patient = null;
+        let newPatient = null;
+
         try {
             req.body.lastEditedBy = req.user.name;
-            new_patient = new models.Patient(patient);
-            await new_patient.save();
+            newPatient = new models.Patient(patient);
+            await newPatient.save();
         } catch (error) {
-            return res.status(400).json({
-                code: 400,
-                success: false,
-                message: 'Request is invalid or missing fields.',
-            });
+            return await sendResponse(res, 400, `Bad request: ${error}`);
         }
 
-        res.status(201).json({
-            code: 201,
-            success: true,
-            message: 'User successfully created.',
-            result: new_patient,
-        });
+        await sendResponse(res, 201, 'User created', newPatient);
     }),
 );
 
+/**
+ * Updates the patients information in the Patient collection.
+ * Note: This DOES NOT update the info for individual steps.
+ */
 router.put(
     '/:id',
     removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const { id } = req.params;
         const patient = await models.Patient.findById(id);
-        if (patient == null) {
-            return res.status(404).json({
-                code: 404,
-                success: false,
-                message: 'Patient with that id not found.',
-            });
-        }
+        if (!patient)
+            return await sendResponse(res, 404, `Patient "${id}" not found`);
 
+        // Copy over the attributes from the request
         _.assign(patient, req.body);
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
 
+        // Update the patient
         const savedPatient = await patient.save();
-
-        res.status(200).json({
-            code: 200,
-            success: true,
-            message: 'Patient successfully edited.',
-            result: savedPatient,
-        });
+        await sendResponse(res, 200, 'Patient updated', savedPatient);
     }),
 );
 
