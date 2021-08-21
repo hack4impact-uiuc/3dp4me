@@ -224,7 +224,11 @@ router.get(
     }),
 );
 
-// Delete: Delete a file
+/**
+ * Deletes a file from the DB so that it no longer shows up in the dashboard.
+ * Note that this currently does not delete the file from the S3, that must be
+ * done manually through the AWS website.
+ */
 router.delete(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
@@ -240,11 +244,7 @@ router.delete(
         try {
             model = mongoose.model(stepKey);
         } catch (error) {
-            return await sendResponse(
-                res,
-                404,
-                `Step with key ${stepKey} not found`,
-            );
+            return await sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
         // Make sure user has permission to delete file
@@ -287,7 +287,10 @@ router.delete(
     }),
 );
 
-// POST: upload individual files
+/**
+ * Uploads an individual file to S3 and records it in the DB.
+ * URL format similar to GET file.
+ */
 router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
@@ -304,11 +307,7 @@ router.post(
         try {
             model = mongoose.model(stepKey);
         } catch (error) {
-            return await sendResponse(
-                res,
-                404,
-                `Step with key ${stepKey} not found`,
-            );
+            return await sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
         // Make sure file is writable
