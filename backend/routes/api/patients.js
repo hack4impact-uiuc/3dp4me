@@ -396,39 +396,37 @@ router.post(
             return await sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
-        let patientStepData = await model.findOne({ patientId: id });
+        // Update the data
+        let patientStepData = await updatePatientStepData(id, model, req.body);
 
-        // If patient doesn't have step data, create it with constructor. Else update it.
-        if (!patientStepData) {
-            patientStepData = req.body;
-            if (Object.keys(req.body) != 0) {
-                patientStepData.lastEdited = Date.now();
-                patientStepData.lastEditedBy = req.user.name;
-            }
+        // Update step data last edited
+        patientStepData.lastEdited = Date.now();
+        patientStepData.lastEditedBy = req.user.name;
+        patientStepData = await patientStepData.save();
 
-            patientStepData.patientId = id;
-            const newStepDataModel = new model(patientStepData);
-            patientStepData = await newStepDataModel.save();
-        } else {
-            patientStepData = _.assign(patientStepData, req.body);
-
-            if (Object.keys(req.body) != 0) {
-                patientStepData.lastEdited = Date.now();
-                patientStepData.lastEditedBy = req.user.name;
-            }
-            patientStepData = await patientStepData.save();
-        }
-
-        // Doesn't update if step was not changed
+        // Update patient last edited
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
         await patient.save();
-        res.status(200).json({
-            success: true,
-            message: 'Patient Stage Successfully Saved',
-            result: patientStepData,
-        });
+
+        await sendResponse(res, 200, 'Step updated', patientStepData);
     }),
 );
+
+const updatePatientStepData = async (patientId, stepModel, data) => {
+    let patientStepData = await stepModel.findOne({ patientId: patientId });
+
+    // If patient doesn't have step data, create it with constructor. Else update it.
+    if (!patientStepData) {
+        patientStepData = data;
+        patientStepData.patientId = patientId;
+
+        const newStepDataModel = new stepModel(patientStepData);
+        return await newStepDataModel.save();
+    }
+
+    patientStepData = _.assign(patientStepData, data);
+    return await patientStepData.save();
+};
 
 module.exports = router;
