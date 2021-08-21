@@ -14,6 +14,7 @@ const {
 } = require('../../utils/aws/aws-exports');
 const { ADMIN_ID } = require('../../utils/constants');
 const { parseUserSecurityRoles } = require('../../utils/aws/aws-user');
+const { sendResponse } = require('../../utils/response');
 
 const getIdentityProvider = () => {
     return new AWS.CognitoIdentityServiceProvider({
@@ -23,7 +24,9 @@ const getIdentityProvider = () => {
     });
 };
 
-// Get all users
+/**
+ * Returns a list of all users in our system
+ */
 router.get(
     '/',
     errorWrap(async (req, res) => {
@@ -32,19 +35,8 @@ router.get(
         };
 
         const identityProvider = getIdentityProvider();
-        await identityProvider.listUsers(params, (err, data) => {
-            if (err) {
-                return res.status(500).json({
-                    success: false,
-                    message: err,
-                });
-            }
-
-            return res.status(200).json({
-                success: true,
-                result: data,
-            });
-        });
+        const users = await identityProvider.listUsers(params);
+        await sendResponse(res, 200, '', users);
     }),
 );
 

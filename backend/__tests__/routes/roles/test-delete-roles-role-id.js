@@ -71,7 +71,7 @@ describe('DELETE /roles/:roleid', () => {
             request(server).delete(`/api/roles/${immutableRoleId}`),
         );
 
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(403);
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(false);
 
