@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const _ = require('lodash');
-const { getStepKeys } = require('../../utils/patient-utils');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
@@ -11,7 +10,6 @@ const {
     SECRET_ACCESS_KEY,
 } = require('../../utils/aws/aws-exports');
 const { removeRequestAttributes } = require('../../middleware/requests');
-const { isAdmin } = require('../../utils/aws/aws-user');
 const {
     STEP_IMMUTABLE_ATTRIBUTES,
     PATIENT_IMMUTABLE_ATTRIBUTES,
@@ -131,65 +129,6 @@ router.put(
         await sendResponse(res, 200, 'Patient updated', savedPatient);
     }),
 );
-
-/**
- *
- * @param {*} user
- * @param {*} readable
- * @param {*} writable
- */
-const getAccessibleFields = async (stepKey, user, readable, writable) => {
-    let steps = null;
-    if (isAdmin(user)) {
-        steps = await models.Step.find({});
-    } else {
-        if (readable && writable)
-            steps = await models.Step.find({
-                $and: [
-                    { key: stepKey },
-                    {
-                        $or: [
-                            { readableGroups: { $in: user.roles } },
-                            { writableGroups: { $in: user.roles } },
-                        ],
-                    },
-                ],
-            });
-        else if (readable)
-            steps = await models.Step.find({
-                $and: [
-                    { key: stepKey },
-                    { readableGroups: { $in: user.roles } },
-                ],
-            });
-        else if (writable)
-            steps = await models.Step.find({
-                $and: [
-                    { key: stepKey },
-                    { writableGroups: { $in: user.roles } },
-                ],
-            });
-        else return [];
-
-        steps.map((step) => {
-            step.fields = step.fields.filter((field) => {
-                return field.readableGroups.some((role) =>
-                    user.roles.includes(role),
-                );
-            });
-        });
-    }
-
-    let readableFields = [];
-
-    steps.forEach((step) => {
-        step.fields.forEach((field) => {
-            readableFields.push(field.key);
-        });
-    });
-
-    return readableFields;
-};
 
 /**
  * Streams a file from the S3 bucket to the client. The request URL
