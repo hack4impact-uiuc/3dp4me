@@ -19,7 +19,7 @@ const {
 const { sendResponse } = require('../../utils/response');
 const { getReadableSteps } = require('../../utils/stepUtils');
 const { getStepBaseSchemaKeys } = require('../../utils/init-db');
-const { isFieldReadable } = require('../../utils/fieldUtils');
+const { isFieldReadable, isFieldWritable } = require('../../utils/fieldUtils');
 
 /**
  * Returns everything in the patients collection (basic patient info)
@@ -187,43 +187,40 @@ const getAccessibleFields = async (stepKey, user, readable, writable) => {
     return readableFields;
 };
 
-// GET: Download a file
+/**
+ * Streams a file from the S3 bucket to the client. The request URL
+ * params must specify the ID of the patient, the step where the file is located,
+ * the fieldKey for the file array, and the file name itself.
+ */
 router.get(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
 
-        const readableFields = await getAccessibleFields(
-            stepKey,
-            req.user,
-            true,
-            false,
-        );
-
         const isReadable = await isFieldReadable(req.user, stepKey, fieldKey);
-        if (isReadable) {
-            var s3Stream = downloadFile(
-                `${id}/${stepKey}/${fieldKey}/${fileName}`,
-                {
-                    accessKeyId: ACCESS_KEY_ID,
-                    secretAccessKey: SECRET_ACCESS_KEY,
-                },
-            ).createReadStream();
+        if (!isReadable)
+            return await sendResponse(res, 403, 'Insufficient permissions');
 
-            s3Stream
-                .on('error', function (err) {
-                    res.json('S3 Error:' + err);
-                })
-                .on('close', function () {
-                    res.end();
-                });
-            s3Stream.pipe(res);
-        } else {
-            return res.status(403).json({
-                success: false,
-                message: 'User does not have permissions to execute operation.',
+        // Open a stream from the S3 bucket
+        var s3Stream = downloadFile(
+            `${id}/${stepKey}/${fieldKey}/${fileName}`,
+            {
+                accessKeyId: ACCESS_KEY_ID,
+                secretAccessKey: SECRET_ACCESS_KEY,
+            },
+        ).createReadStream();
+
+        // Setup callbacks for stream error and stream close
+        s3Stream
+            .on('error', function (err) {
+                res.json('S3 Error:' + err);
+            })
+            .on('close', function () {
+                res.end();
             });
-        }
+
+        // Pipe the stream to the client
+        s3Stream.pipe(res);
     }),
 );
 
@@ -233,68 +230,60 @@ router.delete(
     errorWrap(async (req, res) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
 
+        // Get patient
         const patient = await models.Patient.findById(id);
-        if (patient == null) {
-            return res.status(404).json({
-                success: false,
-                message: `Patient with id ${id} not found`,
-            });
+        if (!patient)
+            return await sendResponse(res, 404, `Patient (${id}) not found`);
+
+        // Get model
+        let model;
+        try {
+            model = mongoose.model(stepKey);
+        } catch (error) {
+            return await sendResponse(
+                res,
+                404,
+                `Step with key ${stepKey} not found`,
+            );
         }
 
-        const model = await mongoose.model(stepKey);
-        if (model == null) {
-            return res.status(404).json({
-                success: false,
-                message: `Step with key ${stepKey} not found`,
-            });
-        }
+        // Make sure user has permission to delete file
+        const isWritable = await isFieldReadable(req.user, stepKey, fieldKey);
+        if (!isWritable)
+            return await sendResponse(res, 403, 'Insufficient permission');
 
+        // Get step data
         const stepData = await model.findOne({ patientId: id });
-        if (stepData == null) {
-            return res.status(404).json({
-                success: false,
-                message: `Patient does not have any data on record for this step`,
-            });
-        }
-        const writableFields = await getAccessibleFields(
-            stepKey,
-            req.user,
-            false,
-            true,
-        );
-        if (!writableFields.includes(fieldKey)) {
-            return res.status(403).json({
-                success: false,
-                message: `User does not have permissions to execute operation.`,
-            });
-        }
+        if (!stepData)
+            return await sendResponse(res, 404, 'File does not exist');
 
+        // Get the file
         const index = stepData[fieldKey].findIndex(
-            (x) => x.filename == fileName,
+            (x) => x.filename === fileName,
         );
 
-        if (index == -1) {
-            return res.status(404).json({
-                success: false,
-                message: `File ${fileName} does not exist`,
-            });
-        }
+        if (index === -1)
+            return await sendResponse(
+                res,
+                404,
+                `File "${fileName}" does not exist`,
+            );
 
         // TODO: Remove this file from AWS as well once we have a "do you want to remove this" on the frontend
+        // Remove the file from Mongo tracking
         stepData[fieldKey].splice(index, 1);
 
+        // Update step's last edited
         stepData.lastEdited = Date.now();
         stepData.lastEditedBy = req.user.name;
         await stepData.save();
 
+        // Update patient's last edited
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
-        patient.save();
+        await patient.save();
 
-        res.status(200).json({
-            success: true,
-            message: 'File successfully removed',
-        });
+        await sendResponse(res, 200, 'File deleted');
     }),
 );
 
@@ -306,44 +295,36 @@ router.post(
         const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
 
-        if (patient == null) {
-            return res.status(404).json({
-                success: false,
-                message: `Cannot find patient with id ${id}`,
-            });
+        // Make sure patient exists
+        if (!patient)
+            return await sendResponse(res, 404, `Cannot find patient "${id}"`);
+
+        // Make sure step exists
+        let model;
+        try {
+            model = mongoose.model(stepKey);
+        } catch (error) {
+            return await sendResponse(
+                res,
+                404,
+                `Step with key ${stepKey} not found`,
+            );
         }
 
-        const collectionInfo = await mongoose.connection.db
-            .listCollections({ name: stepKey })
-            .toArray();
+        // Make sure file is writable
+        const isWritable = await isFieldWritable(req.user, stepKey, fieldKey);
+        if (!isWritable)
+            return await sendResponse(res, 403, 'Insufficient permission');
 
-        if (collectionInfo.length == 0) {
-            return res.status(404).json({
-                success: false,
-                message: `Step with key ${stepKey} not found`,
-            });
-        }
-
-        const writableFields = await getAccessibleFields(
-            stepKey,
-            req.user,
-            false,
-            true,
-        );
-        if (!writableFields.includes(fieldKey))
-            return res.status(403).json({
-                success: false,
-                message: 'User does not have permissions to execute operation.',
-            });
-
-        const model = await mongoose.model(stepKey);
-        let stepData =
-            (await model.findOne({ patientId: id })) || new model({});
+        // Get patient's data for this step. If patient has no data, construct it with the model.
+        let stepData = await model.findOne({ patientId: id });
+        if (!stepData) stepData = new model({});
 
         // Set ID in case patient does not have any information for this step yet
         stepData.patientId = id;
-        if (!stepData || !stepData[fieldKey]) stepData[fieldKey] = [];
+        if (!stepData[fieldKey]) stepData[fieldKey] = [];
 
+        // Upload the file to the S3
         let file = req.files.uploadedFile;
         await uploadFile(
             file.data,
@@ -354,30 +335,33 @@ router.post(
             },
         );
 
+        // Record this file in the DB
         stepData[fieldKey].push({
             filename: fileName,
             uploadedBy: req.user.name,
             uploadDate: Date.now(),
         });
+
+        // TODO: Make this a middleware
+        // Update step's last edited
         stepData.lastEdited = Date.now();
         stepData.lastEditedBy = req.user.name;
         await stepData.save();
 
+        // Update patient's last edited
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
         await patient.save();
 
-        res.status(201).json({
-            success: true,
-            message: 'File successfully uploaded',
-            data: {
-                name: fileName,
-                uploadedBy: req.user.name,
-                uploadDate: Date.now(),
-                mimetype: file.mimetype,
-                size: file.size,
-            },
-        });
+        // Send the response
+        const respData = {
+            name: fileName,
+            uploadedBy: req.user.name,
+            uploadDate: Date.now(),
+            mimetype: file.mimetype,
+            size: file.size,
+        };
+        await sendResponse(res, 201, 'File uploaded', respData);
     }),
 );
 

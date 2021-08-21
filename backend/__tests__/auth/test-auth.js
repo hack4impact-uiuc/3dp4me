@@ -232,8 +232,5 @@ describe('Test authentication ', () => {
 
         expect(res.status).toBe(403);
         expect(resContent.success).toBe(false);
-        expect(resContent.message).toBe(
-            'User does not have permissions to execute operation.',
-        );
     });
 });

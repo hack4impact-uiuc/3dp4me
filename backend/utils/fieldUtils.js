@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { models } = require('../models');
+const { isAdmin } = require('./aws/aws-user');
 const { generateFieldSchema } = require('./init-db');
 const { abortAndError } = require('./transactionUtils');
 
@@ -12,6 +13,8 @@ const { abortAndError } = require('./transactionUtils');
  * @returns True if readable.
  */
 module.exports.isFieldReadable = async (user, stepKey, fieldKey) => {
+    if (isAdmin(user)) return true;
+
     const fieldData = await getFieldMetadata(stepKey, fieldKey);
     if (!fieldData) return false;
 
@@ -28,6 +31,8 @@ module.exports.isFieldReadable = async (user, stepKey, fieldKey) => {
  * @returns True if writable.
  */
 module.exports.isFieldWritable = async (user, stepKey, fieldKey) => {
+    if (isAdmin(user)) return true;
+
     const fieldData = await getFieldMetadata(stepKey, fieldKey);
     if (!fieldData) return false;
 

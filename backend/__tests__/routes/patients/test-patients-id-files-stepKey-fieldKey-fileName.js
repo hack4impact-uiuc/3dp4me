@@ -85,16 +85,16 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         expect(resContent.success).toBe(true);
 
         // Check response
-        expect(resContent.data.name).toBe(FILE_NAME);
-        expect(resContent.data.uploadDate).toBeGreaterThanOrEqual(
+        expect(resContent.result.name).toBe(FILE_NAME);
+        expect(resContent.result.uploadDate).toBeGreaterThanOrEqual(
             startTimestamp,
         );
-        expect(resContent.data.uploadDate).toBeLessThanOrEqual(Date.now());
-        expect(resContent.data.uploadedBy).toBe(
+        expect(resContent.result.uploadDate).toBeLessThanOrEqual(Date.now());
+        expect(resContent.result.uploadedBy).toBe(
             getCurrentAuthenticatedUserAttribute('name'),
         );
-        expect(resContent.data.mimetype).toBe('image/jpeg');
-        expect(resContent.data.size).toBe(4855);
+        expect(resContent.result.mimetype).toBe('image/jpeg');
+        expect(resContent.result.size).toBe(4855);
 
         // Check DB
         const patientData = await mongoose

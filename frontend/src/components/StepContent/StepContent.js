@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import './StepContent.scss';
-import swal from 'sweetalert';
 import {
-    CircularProgress,
     Backdrop,
     Button,
-    Select,
+    CircularProgress,
     MenuItem,
+    Select,
 } from '@material-ui/core';
-
-import { STEP_STATUS, FIELD_TYPES } from '../../utils/constants';
-import { formatDate } from '../../utils/date';
-import { downloadFile, uploadFile, deleteFile } from '../../api/api';
-import StepField from '../StepField/StepField';
-import BottomBar from '../BottomBar/BottomBar';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import swal from 'sweetalert';
+import { deleteFile, downloadFile, uploadFile } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
+import { FIELD_TYPES, STEP_STATUS } from '../../utils/constants';
+import { formatDate } from '../../utils/date';
+import BottomBar from '../BottomBar/BottomBar';
+import StepField from '../StepField/StepField';
+import './StepContent.scss';
 
 const StepContent = ({
     patientId,
@@ -76,9 +75,9 @@ const StepContent = ({
             );
 
             const newFile = {
-                filename: res.data.name,
-                uploadedBy: res.data.uploadedBy,
-                uploadDate: res.data.uploadDate,
+                filename: res.result.name,
+                uploadedBy: res.result.uploadedBy,
+                uploadDate: res.result.uploadDate,
             };
 
             let files = _.cloneDeep(updatedData[fieldKey]);
