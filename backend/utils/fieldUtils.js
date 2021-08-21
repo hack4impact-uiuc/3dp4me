@@ -5,6 +5,33 @@ const { generateFieldSchema } = require('./init-db');
 const { abortAndError } = require('./transactionUtils');
 
 /**
+ * Returns the keys of all fields writable by a user in a step.
+ * @param {Object} user The user to check access for. Usually req.user.
+ * @param {String} stepKey The key of the step to check.
+ * @returns Array of strings. Each entry is a fieldKey that is writable.
+ */
+module.exports.getWritableFields = async (user, stepKey) => {
+    const fields = await getWritableFieldsInStep(user, stepKey);
+    return fields.concat(['status']);
+};
+
+const getWritableFieldsInStep = async (user, stepKey) => {
+    let stepData = await models.Step.findOne({ key: stepKey });
+    if (!stepData) return [];
+
+    // Return all fields if user is admin
+    stepData = stepData.toObject();
+    if (isAdmin(user)) return stepData.fields.map((f) => f.key);
+
+    // Check each field to see if user has a writable role
+    const writableFields = stepData.fields.filter((field) => {
+        return field.writableGroups.some((role) => user.roles.includes(role));
+    });
+
+    return writableFields.map((f) => f.key);
+};
+
+/**
  * Checks if a field is readable by a user. If the stepKey or fieldKey are
  * invalid, returns false.
  * @param {Object} user The user checking the field's readability. Should usually be req.user.

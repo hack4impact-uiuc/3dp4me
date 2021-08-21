@@ -61,6 +61,10 @@ module.exports.getStepBaseSchemaKeys = () => {
     return keys;
 };
 
+/**
+ * Be careful modifying this base schema. We use it all over the app! Do a string search
+ * for the field name across the entire project to find references before changing something.
+ */
 const getStepBaseSchema = () => {
     let stepSchema = {};
     stepSchema.patientId = { type: String, required: true, unique: true };

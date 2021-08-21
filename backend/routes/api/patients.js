@@ -19,7 +19,11 @@ const {
 const { sendResponse } = require('../../utils/response');
 const { getReadableSteps } = require('../../utils/stepUtils');
 const { getStepBaseSchemaKeys } = require('../../utils/init-db');
-const { isFieldReadable, isFieldWritable } = require('../../utils/fieldUtils');
+const {
+    isFieldReadable,
+    isFieldWritable,
+    getWritableFields,
+} = require('../../utils/fieldUtils');
 
 /**
  * Returns everything in the patients collection (basic patient info)
@@ -364,63 +368,37 @@ router.post(
     }),
 );
 
-// POST: Updates info for patient at stage
+/**
+ * Updates (or creates) the patients data for an individual step. The URL must contain
+ * the patient's ID and the stepKey to update.
+ */
 router.post(
-    '/:id/:stage',
+    '/:id/:stepKey',
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         roles = [req.user.roles.toString()];
-        const { id, stage } = req.params;
-        let steps = null;
-        if (isAdmin(req.user)) {
-            steps = await models.Step.find({ key: stage });
-        } else {
-            steps = await models.Step.find({
-                $and: [
-                    { key: stage },
-                    { writableGroups: { $in: [req.user.roles.toString()] } }, // Check this is correct req.user.roles is an array
-                ],
-            });
-            let writableFields = [];
+        const { id, stepKey } = req.params;
 
-            steps.map((step) => {
-                step.fields = step.fields.filter((field) => {
-                    return field.writableGroups.some((role) =>
-                        roles.includes(role),
-                    );
-                });
-            });
-
-            steps.forEach((step) => {
-                writableFields.push(step.fields.key);
-            });
-
-            for (const [key, value] of Object.entries(req.body)) {
-                if (!writableFields.includes(key)) {
-                    delete req.body[key];
-                }
-            }
-        }
-
-        if (steps.length == 0) {
-            return res.status(404).json({
-                code: 404,
-                success: false,
-                message: 'Stage not found.',
-            });
-        }
-
+        // Make sure patient exists
         const patient = await models.Patient.findById(id);
-        if (!patient) {
-            return res.status(404).json({
-                code: 404,
-                success: false,
-                message: 'Patient not found.',
-            });
+        if (!patient)
+            return await sendResponse(res, 404, `Patient "${id}" not found`);
+
+        // Filter out request fields that the user cannot write
+        const writableFields = await getWritableFields(req.user, stepKey);
+        req.body = _.pick(req.body, writableFields);
+
+        // Find the patient's step data
+        let model;
+        try {
+            model = mongoose.model(stepKey);
+        } catch (error) {
+            return await sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
-        let model = mongoose.model(stage);
         let patientStepData = await model.findOne({ patientId: id });
+
+        // If patient doesn't have step data, create it with constructor. Else update it.
         if (!patientStepData) {
             patientStepData = req.body;
             if (Object.keys(req.body) != 0) {
