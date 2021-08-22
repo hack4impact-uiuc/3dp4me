@@ -5,7 +5,7 @@ const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const mongoose = require('mongoose');
 const { requireAdmin } = require('../../middleware/authentication');
-const { generateSchemaFromMetadata } = require('../../utils/init-db');
+const { generateSchemaFromMetadata } = require('../../utils/initDb');
 const { sendResponse } = require('../../utils/response');
 const {
     updateStepsInTransaction,

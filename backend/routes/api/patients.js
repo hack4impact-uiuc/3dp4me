@@ -16,7 +16,7 @@ const {
 } = require('../../utils/constants');
 const { sendResponse } = require('../../utils/response');
 const { getReadableSteps } = require('../../utils/stepUtils');
-const { getStepBaseSchemaKeys } = require('../../utils/init-db');
+const { getStepBaseSchemaKeys } = require('../../utils/initDb');
 const {
     isFieldReadable,
     isFieldWritable,

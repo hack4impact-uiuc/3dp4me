@@ -1,10 +1,10 @@
 var AWS = require('aws-sdk');
+const { ACCESS_LEVELS, ADMIN_ID } = require('../constants');
 const {
     COGNITO_REGION,
     SECURITY_ROLE_ATTRIBUTE_NAME,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('./awsExports');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../constants');
 
 /**
  * Given a user object, determine if they are an admin.

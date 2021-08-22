@@ -22,6 +22,13 @@ module.exports.getValidRoles = async (roles) => {
     return validRoles;
 };
 
+/**
+ * Creates the AWS parameters to perform a role update on the user.
+ * @param {String} username The username of the user to update.
+ * @param {Array} oldRoles Array of IDs of the user's current roles.
+ * @param {Array} newRole Array of IDs of the user's new roles to add.
+ * @returns The update parameter.
+ */
 module.exports.createRoleUpdateParams = (username, oldRoles, newRole) => {
     let roles = oldRoles;
     if (newRole) roles = arrayUnique(oldRoles.concat(newRole));

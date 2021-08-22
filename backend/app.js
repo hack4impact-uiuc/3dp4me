@@ -8,7 +8,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
-const { initDB } = require('./utils/init-db');
+const { initDB } = require('./utils/initDb');
 const {
     setResponseHeaders,
     configureHelment,
@@ -46,7 +46,7 @@ app.get('/*', function (req, res, next) {
 });
 
 app.use(requireAuthentication);
-//app.use(logRequest);
+app.use(logRequest);
 app.use(require('./routes'));
 app.use(errorHandler);
 

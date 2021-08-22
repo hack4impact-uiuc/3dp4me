@@ -7,7 +7,7 @@ const stepData = require('../../../scripts/data/steps.json');
 const medicalData = require('../../../scripts/data/medicalInfo.json');
 const surveyData = require('../../../scripts/data/survey.json');
 const exampleData = require('../../../scripts/data/example.json');
-const { initModels } = require('../../utils/init-db');
+const { initModels } = require('../../utils/initDb');
 const { models } = require('../../models');
 
 let patients = null;
