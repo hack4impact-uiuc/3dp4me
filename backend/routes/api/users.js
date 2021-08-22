@@ -18,6 +18,11 @@ const {
     getUserRoles,
 } = require('../../utils/aws/aws-user');
 const { sendResponse } = require('../../utils/response');
+const {
+    createRoleUpdateParams,
+    getValidRoles,
+    isRoleValid,
+} = require('../../utils/roleUtils');
 
 const getIdentityProvider = () => {
     return new AWS.CognitoIdentityServiceProvider({
@@ -43,64 +48,6 @@ router.get(
     }),
 );
 
-const isRoleValid = async (role) => {
-    const roles = await models.Role.find({});
-    for (r of roles) {
-        if (role.toString() === r._id.toString()) return true;
-    }
-
-    return false;
-};
-
-function arrayUnique(array) {
-    var a = array.concat();
-    for (var i = 0; i < a.length; ++i) {
-        for (var j = i + 1; j < a.length; ++j) {
-            if (a[i] === a[j]) a.splice(j--, 1);
-        }
-    }
-
-    return a;
-}
-
-/**
- * Removes invalid roles from the incoming roles array. For example, if a user has a role that is later deleted,
- * this will remove that old role from the user.
- */
-const getValidRoles = async (roles) => {
-    let validRoles = [];
-
-    for (role of roles) {
-        const roleIsValid = await isRoleValid(role);
-        if (roleIsValid) validRoles.push(role);
-    }
-
-    return validRoles;
-};
-
-const createAttributeUpdateParams = (username, oldRoles, newRole) => {
-    let roles = oldRoles;
-    if (newRole) roles = arrayUnique(oldRoles.concat(newRole));
-
-    let rolesStringified = JSON.stringify(roles);
-
-    // AWS puts a hard limit on how many roles we can store
-    if (rolesStringified.length > SECURITY_ROLE_ATTRIBUTE_MAX_LEN) return null;
-
-    const params = {
-        UserAttributes: [
-            {
-                Name: SECURITY_ROLE_ATTRIBUTE_NAME,
-                Value: JSON.stringify(roles),
-            },
-        ],
-        UserPoolId: USER_POOL_ID,
-        Username: username,
-    };
-
-    return params;
-};
-
 /**
  * Gives a user a role. The URL params are the user's unique
  * username and the roleID to add.
@@ -109,47 +56,28 @@ router.put(
     '/:username/roles/:roleId',
     errorWrap(async (req, res) => {
         const { username, roleId } = req.params;
-        const roleIsValid = await isRoleValid(roleId);
-        if (!roleIsValid) {
-            return res.status(400).json({
-                success: false,
-                message: 'The requested role is not valid',
-            });
-        }
 
+        // Check that role is valid
+        const roleIsValid = await isRoleValid(roleId);
+        if (!roleIsValid) return await sendResponse(res, 400, 'Invalid role');
+
+        // Create the object to pass to AWS to perform the update
         const userRoles = await getUserRoles(username);
         const validUserRoles = await getValidRoles(userRoles);
-        const params = createAttributeUpdateParams(
-            username,
-            validUserRoles,
-            roleId,
-        );
+        const params = createRoleUpdateParams(username, validUserRoles, roleId);
 
-        if (!params) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    'This user has reached the max amount of roles. They are not allowed to have any more.',
-            });
-        }
+        // If we couldn't create the params, the user has the max amount of roles.
+        if (!params)
+            return await sendResponse(
+                res,
+                400,
+                'User has max amount of roles.',
+            );
 
+        // Do the update
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminUpdateUserAttributes(
-            params,
-            (err, data) => {
-                if (err) {
-                    return res.status(500).json({
-                        success: false,
-                        message: err,
-                    });
-                }
-
-                return res.status(200).json({
-                    success: true,
-                    message: 'Role successfully added',
-                });
-            },
-        );
+        await identityProvider.adminUpdateUserAttributes(params).promise();
+        await sendResponse(res, 200, 'Role added to user');
     }),
 );
 
@@ -171,7 +99,7 @@ router.delete(
         }
 
         userRoles.splice(roleIndex, 1);
-        const params = createAttributeUpdateParams(username, userRoles, null);
+        const params = createRoleUpdateParams(username, userRoles, null);
 
         const identityProvider = getIdentityProvider();
         await identityProvider.adminUpdateUserAttributes(
