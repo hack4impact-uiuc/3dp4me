@@ -4,11 +4,11 @@ const router = express.Router();
 const _ = require('lodash');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
-const { uploadFile, downloadFile } = require('../../utils/aws/aws-s3-helpers');
+const { uploadFile, downloadFile } = require('../../utils/aws/awsS3Helpers');
 const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
-} = require('../../utils/aws/aws-exports');
+} = require('../../utils/aws/awsExports');
 const { removeRequestAttributes } = require('../../middleware/requests');
 const {
     STEP_IMMUTABLE_ATTRIBUTES,

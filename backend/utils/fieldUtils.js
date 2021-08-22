@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { models } = require('../models');
-const { isAdmin } = require('./aws/aws-user');
+const { isAdmin } = require('./aws/awsUsers');
 const { generateFieldSchema } = require('./init-db');
 const { abortAndError } = require('./transactionUtils');
 

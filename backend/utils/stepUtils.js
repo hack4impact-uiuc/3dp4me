@@ -2,7 +2,7 @@ const _ = require('lodash');
 const { removeAttributesFrom } = require('../middleware/requests');
 const { models } = require('../models');
 const { isUniqueStepNumber } = require('../models/Metadata');
-const { isAdmin } = require('./aws/aws-user');
+const { isAdmin } = require('./aws/awsUsers');
 const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
 const { abortAndError } = require('./transactionUtils');
 

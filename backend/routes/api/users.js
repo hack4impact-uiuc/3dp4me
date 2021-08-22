@@ -8,8 +8,8 @@ const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
-} = require('../../utils/aws/aws-exports');
-const { getUserRoles } = require('../../utils/aws/aws-user');
+} = require('../../utils/aws/awsExports');
+const { getUserRoles } = require('../../utils/aws/awsUsers');
 const { sendResponse } = require('../../utils/response');
 const {
     createRoleUpdateParams,
@@ -139,7 +139,11 @@ router.put(
 router.get(
     '/self',
     errorWrap(async (req, res) => {
-        await sendResponse(res, 200);
+        const data = {
+            isAdmin: req.user.roles.includes(ADMIN_ID),
+        };
+
+        await sendResponse(res, 200, '', data);
     }),
 );
 

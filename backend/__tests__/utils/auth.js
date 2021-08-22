@@ -3,7 +3,7 @@ const AWS_SDK = require('aws-sdk');
 const {
     SECURITY_ROLE_ATTRIBUTE_NAME,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
-} = require('../../utils/aws/aws-exports');
+} = require('../../utils/aws/awsExports');
 const { MOCK_USER, MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
 const { ADMIN_ID, ACCESS_LEVELS } = require('../../utils/constants');
 

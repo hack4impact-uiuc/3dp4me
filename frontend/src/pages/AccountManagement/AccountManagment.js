@@ -1,30 +1,29 @@
-import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-
-import {
-    getUserTableHeaders,
-    COGNITO_ATTRIBUTES,
-    USER_TABLE_ROW_DATA,
-    LANGUAGES,
-} from '../../utils/constants';
+import React, { useEffect, useState } from 'react';
 import { getAllRoles, getAllUsers } from '../../api/api';
-import { useErrorWrap } from '../../hooks/useErrorWrap';
+import {
+    getAccessLevel,
+    getEmail,
+    getId,
+    getName,
+    getRoles,
+    getRolesValue,
+    getUsername,
+} from '../../aws/awsUsers';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
-import { useTranslations } from '../../hooks/useTranslations';
 import SimpleTable from '../../components/SimpleTable/SimpleTable';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { useTranslations } from '../../hooks/useTranslations';
+import {
+    COGNITO_ATTRIBUTES,
+    getUserTableHeaders,
+    LANGUAGES,
+    USER_TABLE_ROW_DATA,
+} from '../../utils/constants';
 import {
     generateUserTableRowRenderer,
     userTableHeaderRenderer,
 } from '../../utils/table-renderers';
-import {
-    getAccessLevel,
-    getEmail,
-    getName,
-    getRoles,
-    getId,
-    getRolesValue,
-    getUsername,
-} from '../../aws/aws-users';
 
 /**
  * The account management screen. Allows admins to accept people into the

@@ -1,4 +1,4 @@
-const { S3_BUCKET_NAME, S3_REGION } = require('./aws-exports.js');
+const { S3_BUCKET_NAME, S3_REGION } = require('./awsExports.js');
 var AWS = require('aws-sdk');
 
 /**

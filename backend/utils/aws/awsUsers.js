@@ -3,7 +3,7 @@ const {
     COGNITO_REGION,
     SECURITY_ROLE_ATTRIBUTE_NAME,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
-} = require('../../utils/aws/aws-exports');
+} = require('./awsExports');
 const { ACCESS_LEVELS, ADMIN_ID } = require('../constants');
 
 /**

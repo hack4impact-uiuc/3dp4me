@@ -1,4 +1,4 @@
-const { getUserByAccessToken } = require('../utils/aws/aws-user');
+const { getUserByAccessToken } = require('../utils/aws/awsUsers');
 const {
     ACCESS_LEVELS,
     ERR_AUTH_FAILED,

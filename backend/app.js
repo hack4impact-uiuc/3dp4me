@@ -1,6 +1,6 @@
 require('express-async-errors');
 require('dotenv').config({ path: `${process.env.NODE_ENV}.env` });
-require('./utils/aws/aws-setup');
+require('./utils/aws/awsSetup');
 const express = require('express');
 const path = require('path');
 const fileUpload = require('express-fileupload');
