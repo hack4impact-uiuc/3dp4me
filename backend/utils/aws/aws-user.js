@@ -44,6 +44,33 @@ module.exports.parseUserSecurityRoles = (user) => {
     return JSON.parse(securityRolesString.Value);
 };
 
+/**
+ * Returns an array of roleIDs that the given user has.
+ * @param {String} username The unique username of the user.
+ * @returns Array of roleIDs as strings.
+ */
+module.exports.getUserRoles = async (username) => {
+    const user = await getUserByUsername(username);
+    return parseUserSecurityRoles(user);
+};
+
+const getUserByUsername = async (username) => {
+    const params = {
+        UserPoolId: USER_POOL_ID,
+        Username: username,
+    };
+
+    const identityProvider = getIdentityProvider();
+    let user = null;
+    try {
+        user = await identityProvider.adminGetUser(params).promise();
+    } catch (e) {
+        console.log(e);
+    }
+
+    return user;
+};
+
 const getUser = async (accessToken) => {
     var params = {
         AccessToken: accessToken,

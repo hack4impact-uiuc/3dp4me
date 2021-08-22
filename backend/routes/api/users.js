@@ -13,7 +13,10 @@ const {
     SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
 const { ADMIN_ID } = require('../../utils/constants');
-const { parseUserSecurityRoles } = require('../../utils/aws/aws-user');
+const {
+    parseUserSecurityRoles,
+    getUserRoles,
+} = require('../../utils/aws/aws-user');
 const { sendResponse } = require('../../utils/response');
 
 const getIdentityProvider = () => {
@@ -35,7 +38,7 @@ router.get(
         };
 
         const identityProvider = getIdentityProvider();
-        const users = await identityProvider.listUsers(params);
+        const users = await identityProvider.listUsers(params).promise();
         await sendResponse(res, 200, '', users);
     }),
 );
@@ -47,28 +50,6 @@ const isRoleValid = async (role) => {
     }
 
     return false;
-};
-
-const getUserByUsername = async (username) => {
-    const params = {
-        UserPoolId: USER_POOL_ID,
-        Username: username,
-    };
-
-    const identityProvider = getIdentityProvider();
-    let user = null;
-    try {
-        user = await identityProvider.adminGetUser(params).promise();
-    } catch (e) {
-        console.log(e);
-    }
-
-    return user;
-};
-
-const getUserRoles = async (username) => {
-    const user = await getUserByUsername(username);
-    return parseUserSecurityRoles(user);
 };
 
 function arrayUnique(array) {
@@ -120,7 +101,10 @@ const createAttributeUpdateParams = (username, oldRoles, newRole) => {
     return params;
 };
 
-// Gives a user a role
+/**
+ * Gives a user a role. The URL params are the user's unique
+ * username and the roleID to add.
+ */
 router.put(
     '/:username/roles/:roleId',
     errorWrap(async (req, res) => {
@@ -169,7 +153,10 @@ router.put(
     }),
 );
 
-// Deletes user role
+/**
+ * Deletes a role from a user. The URL params are the user's unique
+ * username and the roleID to add.
+ */
 router.delete(
     '/:username/roles/:roleId',
     errorWrap(async (req, res) => {
@@ -206,7 +193,10 @@ router.delete(
     }),
 );
 
-// Gives a user an access level
+/**
+ * Gives a user an access level. The URL params are the user's unique
+ * username and the access level to set.
+ */
 router.put(
     '/:username/access/:accessLevel',
     errorWrap(async (req, res) => {
@@ -242,7 +232,9 @@ router.put(
     }),
 );
 
-// Gets information about the user making this request. Modify this as needed on the frontend
+/**
+ * Gets information about the user making this request.
+ */
 router.get(
     '/self',
     errorWrap(async (req, res) => {
