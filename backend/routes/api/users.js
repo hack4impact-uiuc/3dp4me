@@ -1,28 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../../utils');
-const { models } = require('../../models/index');
 const AWS = require('aws-sdk');
 const {
     USER_POOL_ID,
-    SECURITY_ROLE_ATTRIBUTE_NAME,
     COGNITO_REGION,
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
-    SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../../utils/aws/aws-exports');
-const { ADMIN_ID } = require('../../utils/constants');
-const {
-    parseUserSecurityRoles,
-    getUserRoles,
-} = require('../../utils/aws/aws-user');
+const { getUserRoles } = require('../../utils/aws/aws-user');
 const { sendResponse } = require('../../utils/response');
 const {
     createRoleUpdateParams,
     getValidRoles,
     isRoleValid,
 } = require('../../utils/roleUtils');
+const { requireAdmin } = require('../../middleware/authentication');
 
 const getIdentityProvider = () => {
     return new AWS.CognitoIdentityServiceProvider({
@@ -37,6 +31,7 @@ const getIdentityProvider = () => {
  */
 router.get(
     '/',
+    requireAdmin,
     errorWrap(async (req, res) => {
         var params = {
             UserPoolId: USER_POOL_ID,
@@ -54,6 +49,7 @@ router.get(
  */
 router.put(
     '/:username/roles/:roleId',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { username, roleId } = req.params;
 
@@ -87,37 +83,24 @@ router.put(
  */
 router.delete(
     '/:username/roles/:roleId',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { username, roleId } = req.params;
+
+        // Check if user has this role
         const userRoles = await getUserRoles(username);
         const roleIndex = userRoles.indexOf(roleId);
-        if (roleIndex == -1) {
-            return res.status(400).json({
-                success: false,
-                message: 'User does not have role',
-            });
-        }
+        if (roleIndex === -1)
+            return await sendResponse(res, 400, 'User does not have role');
 
+        // Create params for the update in AWS
         userRoles.splice(roleIndex, 1);
         const params = createRoleUpdateParams(username, userRoles, null);
 
+        // Do the update
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminUpdateUserAttributes(
-            params,
-            (err, data) => {
-                if (err) {
-                    return res.status(500).json({
-                        success: false,
-                        message: err,
-                    });
-                }
-
-                return res.status(200).json({
-                    success: true,
-                    message: 'Role successfully removed',
-                });
-            },
-        );
+        await identityProvider.adminUpdateUserAttributes(params).promise();
+        await sendResponse(res, 200, 'Role removed');
     }),
 );
 
@@ -127,8 +110,11 @@ router.delete(
  */
 router.put(
     '/:username/access/:accessLevel',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { username, accessLevel } = req.params;
+
+        // Create the params for the update
         const params = {
             UserAttributes: [
                 {
@@ -140,23 +126,10 @@ router.put(
             Username: username,
         };
 
+        // Do the update
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminUpdateUserAttributes(
-            params,
-            (err, data) => {
-                if (err) {
-                    return res.status(500).json({
-                        success: false,
-                        message: err,
-                    });
-                }
-
-                return res.status(200).json({
-                    success: true,
-                    message: 'Access level successfully changed',
-                });
-            },
-        );
+        await identityProvider.adminUpdateUserAttributes(params).promise();
+        await sendResponse(res, 200, 'Access updated');
     }),
 );
 
@@ -166,10 +139,7 @@ router.put(
 router.get(
     '/self',
     errorWrap(async (req, res) => {
-        res.status(200).json({
-            isAdmin: req.user.roles.includes(ADMIN_ID),
-            success: true,
-        });
+        await sendResponse(res, 200);
     }),
 );
 
