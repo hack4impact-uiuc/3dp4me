@@ -1,5 +1,7 @@
 module.exports.ADMIN_ID = process.env.ADMIN_ID;
 
+module.exports.ENV_TEST = 'test';
+
 module.exports.ACCESS_LEVELS = {
     GRANTED: 'Granted',
     REVOKED: 'Revoked',

@@ -14,6 +14,7 @@ const {
     configureHelment,
 } = require('./middleware/responses');
 const { logRequest } = require('./middleware/logging');
+const { ENV_TEST } = require('./utils/constants');
 
 const app = express();
 
@@ -21,15 +22,13 @@ app.use(configureHelment());
 app.use(setResponseHeaders);
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 app.use(cors());
-
 app.use(
     fileUpload({
         createParentPath: true,
     }),
 );
 
-if (process.env.NODE_ENV != 'test') initDB();
-
+if (process.env.NODE_ENV != ENV_TEST) initDB();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
