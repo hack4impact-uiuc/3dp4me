@@ -4,7 +4,6 @@ const {
     deliveryEnum,
     feedbackEnum,
 } = require('./Patient');
-
 const { Step, questionOptionSchema, validateOptions } = require('./Metadata');
 const { Role } = require('./Role');
 

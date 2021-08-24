@@ -1,7 +1,9 @@
 const express = require('express');
+
 const router = express.Router();
-const { errorWrap } = require('../../utils');
 const AWS = require('aws-sdk');
+
+const { errorWrap } = require('../../utils');
 const {
     USER_POOL_ID,
     COGNITO_REGION,
@@ -18,13 +20,12 @@ const {
 } = require('../../utils/roleUtils');
 const { requireAdmin } = require('../../middleware/authentication');
 
-const getIdentityProvider = () => {
-    return new AWS.CognitoIdentityServiceProvider({
+const getIdentityProvider = () =>
+    new AWS.CognitoIdentityServiceProvider({
         region: COGNITO_REGION,
         accessKeyId: ACCESS_KEY_ID,
         secretAccessKey: SECRET_ACCESS_KEY,
     });
-};
 
 /**
  * Returns a list of all users in our system
@@ -33,7 +34,7 @@ router.get(
     '/',
     requireAdmin,
     errorWrap(async (req, res) => {
-        var params = {
+        const params = {
             UserPoolId: USER_POOL_ID,
         };
 
@@ -63,12 +64,13 @@ router.put(
         const params = createRoleUpdateParams(username, validUserRoles, roleId);
 
         // If we couldn't create the params, the user has the max amount of roles.
-        if (!params)
+        if (!params) {
             return await sendResponse(
                 res,
                 400,
                 'User has max amount of roles.',
             );
+        }
 
         // Do the update
         const identityProvider = getIdentityProvider();

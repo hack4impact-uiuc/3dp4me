@@ -1,11 +1,13 @@
 require('express-async-errors');
 require('dotenv').config({ path: `${process.env.NODE_ENV}.env` });
 require('./utils/aws/awsSetup');
-const express = require('express');
 const path = require('path');
+
+const express = require('express');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
 const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
 const { initDB } = require('./utils/initDb');
@@ -33,23 +35,25 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // This allows the backend to either serve routes or redirect to frontend
-app.get('/*', function (req, res, next) {
+app.get('/*', (req, res, next) => {
     if (req._parsedOriginalUrl.path.includes('/api')) next();
-    else
+    else {
         res.sendFile(
             path.join(__dirname, '../frontend/build/index.html'),
-            function (err) {
+            (err) => {
                 if (err) res.status(500).send(err);
             },
         );
+    }
 });
 
 app.use(requireAuthentication);
 app.use(logRequest);
 app.use(require('./routes'));
+
 app.use(errorHandler);
 
-process.on('unhandledRejection', function (reason, p) {
+process.on('unhandledRejection', (reason, p) => {
     console.log(`UNHANDLED REJECTION: ${reason}`);
 });
 

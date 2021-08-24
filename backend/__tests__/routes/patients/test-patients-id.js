@@ -1,15 +1,16 @@
-var server = require('../../../app');
-const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const mongoose = require('mongoose');
 const AWS = require('aws-sdk-mock');
+const omitDeep = require('omit-deep-lodash');
+
 const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
 } = require('../../utils/auth');
-const omitDeep = require('omit-deep-lodash');
+let server = require('../../../app');
+const db = require('../../utils/db');
 const {
     expectStrictEqualWithTimestampOrdering,
     areObjectsDisjoint,
@@ -165,7 +166,7 @@ describe('GET /patient/:id', () => {
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
 
-        //Check responses
+        // Check responses
         expectStrictEqualWithTimestampOrdering(
             GET_PATIENT_WITH_ALL_STEP_DATA,
             omitDeep(resContent.result, '__v'),
@@ -174,15 +175,15 @@ describe('GET /patient/:id', () => {
 
     it('get patient with no step data and no steps in collection', async () => {
         // Delete all steps
-        let updatedData = await mongoose.connection
+        const updatedData = await mongoose.connection
             .collection('steps')
             .deleteMany({});
         expect(updatedData.deletedCount).toBe(3);
 
         // Delete model
-        delete mongoose.connection.models['survey'];
-        delete mongoose.connection.models['example'];
-        delete mongoose.connection.models['medicalInfo'];
+        delete mongoose.connection.models.survey;
+        delete mongoose.connection.models.example;
+        delete mongoose.connection.models.medicalInfo;
 
         const patientID = '60944e084f4c0d4330cc25ec';
         const res = await withAuthentication(
@@ -208,13 +209,13 @@ describe('GET /patient/:id', () => {
 
     it('get patient with some step data and some steps in collection', async () => {
         // Delete one step
-        let updatedData = await mongoose.connection
+        const updatedData = await mongoose.connection
             .collection('steps')
             .deleteOne({ key: 'example' });
         expect(updatedData.deletedCount).toBe(1);
 
         // Delete model
-        delete mongoose.connection.models['example'];
+        delete mongoose.connection.models.example;
 
         const patientID = '60944e084f4c0d4330cc25ee';
         const res = await withAuthentication(

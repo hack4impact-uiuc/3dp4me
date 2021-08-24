@@ -9,8 +9,8 @@
 module.exports.expectStrictEqualWithTimestampOrdering = (a, b) => {
     // Doing the parsing and stringifying allows us to ignore underlying types.
     // For example, normally toEqual will fail if we have a Date and String that are actually equivalent
-    let aCopy = JSON.parse(JSON.stringify(a));
-    let bCopy = JSON.parse(JSON.stringify(b));
+    const aCopy = JSON.parse(JSON.stringify(a));
+    const bCopy = JSON.parse(JSON.stringify(b));
 
     const bTimestamp = new Date(bCopy.lastEdited);
     const aTimestamp = new Date(aCopy.lastEdited);
@@ -30,7 +30,7 @@ module.exports.expectStrictEqualWithTimestampOrdering = (a, b) => {
  * @returns True if a and b are disjoint, false otherwise
  */
 module.exports.areObjectsDisjoint = (a, b) => {
-    for (let k of Object.keys(a)) {
+    for (const k of Object.keys(a)) {
         if (b[k] && a[k] == b[k]) return false;
     }
 

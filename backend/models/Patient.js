@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const encrypt = require('mongoose-encryption');
+
 const { PATIENT_STATUS_ENUM } = require('../utils/constants');
 
 const UNECRYPTED_FIELDS = [

@@ -1,7 +1,8 @@
-let server = require('../../app');
-const db = require('../utils/db');
 const AWS = require('aws-sdk-mock');
 const request = require('supertest');
+
+let server = require('../../app');
+const db = require('../utils/db');
 const { initAuthMocker, setCurrentUser } = require('../utils/auth');
 
 describe('Get statically served files', () => {
@@ -18,7 +19,7 @@ describe('Get statically served files', () => {
     });
 
     it('uses cross origin isolation', async () => {
-        const res = await request(server).get(`/`);
+        const res = await request(server).get('/');
 
         // Need these headers for SharedArrayBuffer to work in newer browsers
         expect(res.status).toBe(200);

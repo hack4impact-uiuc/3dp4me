@@ -1,5 +1,7 @@
-var AWS = require('aws-sdk');
+const AWS = require('aws-sdk');
+
 const { ACCESS_LEVELS, ADMIN_ID } = require('../constants');
+
 const {
     COGNITO_REGION,
     SECURITY_ROLE_ATTRIBUTE_NAME,
@@ -72,11 +74,11 @@ const getUserByUsername = async (username) => {
 };
 
 const getUser = async (accessToken) => {
-    var params = {
+    const params = {
         AccessToken: accessToken,
     };
 
-    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider(
+    const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider(
         { region: COGNITO_REGION },
     );
 

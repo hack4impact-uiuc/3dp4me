@@ -8,11 +8,9 @@
 module.exports.sendResponse = async (res, code, message, data = {}) => {
     await res.status(code).json({
         success: isCodeSuccessful(code),
-        message: message,
+        message,
         result: data,
     });
 };
 
-const isCodeSuccessful = (code) => {
-    return 200 <= code && code < 300;
-};
+const isCodeSuccessful = (code) => code >= 200 && code < 300;

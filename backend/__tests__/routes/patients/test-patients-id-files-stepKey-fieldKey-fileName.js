@@ -1,10 +1,12 @@
-var server = require('../../../app');
-const db = require('../../utils/db');
+const { resolve } = require('path');
+
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
-const resolve = require('path').resolve;
+
+const db = require('../../utils/db');
+let server = require('../../../app');
 const {
     initAuthMocker,
     setCurrentUser,
@@ -34,7 +36,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
     const STEP_KEY = 'example';
     const FIELD_KEY = 'file';
     const FILE_NAME = 'newfile.txt';
-    const TEST_FILE = resolve(`./__tests__/mock-data/test-file.jpg`);
+    const TEST_FILE = resolve('./__tests__/mock-data/test-file.jpg');
 
     const expectStatusWithDBUnchanged = async (requestURL, status) => {
         const initDbStats = await mongoose.connection.db.stats();
@@ -99,7 +101,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         // Check DB
         const patientData = await mongoose
             .model(STEP_KEY)
-            .findOne({ patientId: patientId });
+            .findOne({ patientId });
         expect(patientData.lastEdited.getTime()).toBeGreaterThanOrEqual(
             startTimestamp,
         );

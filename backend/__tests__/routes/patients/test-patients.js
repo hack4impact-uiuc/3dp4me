@@ -1,8 +1,9 @@
-var server = require('../../../app');
-const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
+
+let server = require('../../../app');
+const db = require('../../utils/db');
 const {
     initAuthMocker,
     setCurrentUser,
@@ -35,7 +36,7 @@ describe('POST /patients', () => {
     });
 
     it('returns 400 when missing required fields', (done) => {
-        withAuthentication(request(server).post(`/api/patients/`, {})).expect(
+        withAuthentication(request(server).post('/api/patients/', {})).expect(
             400,
             done,
         );
@@ -52,7 +53,7 @@ describe('POST /patients', () => {
 
         // Send the request
         const res = await withAuthentication(
-            request(server).post(`/api/patients/`).send(body),
+            request(server).post('/api/patients/').send(body),
         );
 
         // Check response
@@ -87,7 +88,7 @@ describe('POST /patients', () => {
 
         // Send the request
         const res = await withAuthentication(
-            request(server).post(`/api/patients/`).send(body),
+            request(server).post('/api/patients/').send(body),
         );
 
         // Check response
@@ -115,7 +116,7 @@ describe('POST /patients', () => {
 
         // Send the request
         const res = await withAuthentication(
-            request(server).post(`/api/patients/`).send(body),
+            request(server).post('/api/patients/').send(body),
         );
 
         // Check response
@@ -125,7 +126,7 @@ describe('POST /patients', () => {
 
         // Check that DB is correct
         const patientId = resContent.result._id;
-        let patientData = await models.Patient.findById(patientId);
+        const patientData = await models.Patient.findById(patientId);
 
         expect(patientData).not.toBeNull();
         expect(

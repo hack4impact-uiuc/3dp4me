@@ -5,5 +5,25 @@
     },
     "env": {
         "es6": true
-    }
+    },
+    "rules": {
+        "no-use-before-define": "off",
+        "no-plusplus": "off",
+        "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+        "import/order": [
+            "warn",
+            {
+                "groups": [
+                    "builtin",
+                    "external",
+                    "internal",
+                    "parent",
+                    "sibling",
+                    "index"
+                ],
+                "newlines-between": "always"
+            }
+        ]
+    },
+    "extends": ["airbnb"]
 }

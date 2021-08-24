@@ -1,9 +1,11 @@
 const encrypt = require('mongoose-encryption');
 const mongoose = require('mongoose');
+
 const { models } = require('../models');
-const { STEP_STATUS_ENUM, FIELDS } = require('./constants');
 const { signatureSchema } = require('../schemas/signatureSchema');
 const { fileSchema } = require('../schemas/fileSchema');
+
+const { STEP_STATUS_ENUM, FIELDS } = require('./constants');
 
 /**
  * Initalizes and connects to the DB. Should be called at app startup.
@@ -38,7 +40,7 @@ module.exports.initModels = async () => {
  * Generate and registers a schema based off the provided metadata.
  */
 module.exports.generateSchemaFromMetadata = (stepMetadata) => {
-    let stepSchema = getStepBaseSchema();
+    const stepSchema = getStepBaseSchema();
     generateFieldsFromMetadata(stepMetadata.fields, stepSchema);
     const schema = new mongoose.Schema(stepSchema);
 
@@ -56,7 +58,7 @@ module.exports.generateSchemaFromMetadata = (stepMetadata) => {
  */
 module.exports.getStepBaseSchemaKeys = () => {
     const baseSchema = getStepBaseSchema();
-    let keys = Object.keys(baseSchema);
+    const keys = Object.keys(baseSchema);
     keys.push('_id');
     return keys;
 };
@@ -66,7 +68,7 @@ module.exports.getStepBaseSchemaKeys = () => {
  * for the field name across the entire project to find references before changing something.
  */
 const getStepBaseSchema = () => {
-    let stepSchema = {};
+    const stepSchema = {};
     stepSchema.patientId = { type: String, required: true, unique: true };
     stepSchema.lastEdited = { type: Date, required: true, default: Date.now };
     stepSchema.status = {
@@ -117,26 +119,20 @@ module.exports.generateFieldSchema = (field) => {
     }
 };
 
-const getStringSchema = () => {
-    return {
-        type: String,
-        default: '',
-    };
-};
+const getStringSchema = () => ({
+    type: String,
+    default: '',
+});
 
-const getNumberSchema = () => {
-    return {
-        type: Number,
-        default: 0,
-    };
-};
+const getNumberSchema = () => ({
+    type: Number,
+    default: 0,
+});
 
-const getDateSchema = () => {
-    return {
-        type: Date,
-        default: Date.now,
-    };
-};
+const getDateSchema = () => ({
+    type: Date,
+    default: Date.now,
+});
 
 const getRadioButtonSchema = (fieldMetadata) => {
     if (!fieldMetadata?.options?.length)
@@ -159,19 +155,18 @@ const getFieldGroupSchema = (fieldMetadata) => {
     };
 };
 
-const getFileSchema = () => {
-    return {
-        type: [fileSchema],
-        default: [],
-    };
-};
+const getFileSchema = () => ({
+    type: [fileSchema],
+    default: [],
+});
 
 const getSignatureSchema = (fieldMetadata) => {
     const defaultURL = fieldMetadata?.additionalData?.defaultDocumentURL;
-    if (!defaultURL?.EN || !defaultURL?.AR)
+    if (!defaultURL?.EN || !defaultURL?.AR) {
         throw new Error(
             'Signatures must have a default document for both English and Arabic',
         );
+    }
 
     return { type: signatureSchema };
 };

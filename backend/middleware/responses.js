@@ -31,8 +31,8 @@ module.exports.setResponseHeaders = (req, res, next) => {
  * Creates the middleware object for Helmet. Used for security.
  * @returns The Helment middleware.
  */
-module.exports.configureHelment = () => {
-    return helmet({
+module.exports.configureHelment = () =>
+    helmet({
         contentSecurityPolicy: {
             useDefaults: true,
             directives: {
@@ -43,4 +43,3 @@ module.exports.configureHelment = () => {
             },
         },
     });
-};

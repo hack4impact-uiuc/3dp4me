@@ -12,7 +12,7 @@ module.exports.isRoleValid = async (role) => {
  * this will remove that old role from the user.
  */
 module.exports.getValidRoles = async (roles) => {
-    let validRoles = [];
+    const validRoles = [];
 
     for (role of roles) {
         const roleIsValid = await isRoleValid(role);
@@ -33,7 +33,7 @@ module.exports.createRoleUpdateParams = (username, oldRoles, newRole) => {
     let roles = oldRoles;
     if (newRole) roles = arrayUnique(oldRoles.concat(newRole));
 
-    let rolesStringified = JSON.stringify(roles);
+    const rolesStringified = JSON.stringify(roles);
 
     // AWS puts a hard limit on how many roles we can store
     if (rolesStringified.length > SECURITY_ROLE_ATTRIBUTE_MAX_LEN) return null;
@@ -53,9 +53,9 @@ module.exports.createRoleUpdateParams = (username, oldRoles, newRole) => {
 };
 
 function arrayUnique(array) {
-    var a = array.concat();
-    for (var i = 0; i < a.length; ++i) {
-        for (var j = i + 1; j < a.length; ++j) {
+    const a = array.concat();
+    for (let i = 0; i < a.length; ++i) {
+        for (let j = i + 1; j < a.length; ++j) {
             if (a[i] === a[j]) a.splice(j--, 1);
         }
     }

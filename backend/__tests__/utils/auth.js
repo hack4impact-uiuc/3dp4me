@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const AWS_SDK = require('aws-sdk');
+
 const {
     SECURITY_ROLE_ATTRIBUTE_NAME,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
@@ -38,9 +39,9 @@ module.exports.createUserDataWithRolesAndAccess = (access, ...roles) => {
  */
 module.exports.initAuthMocker = (AWS) => {
     AWS.setSDKInstance(AWS_SDK);
-    AWS.mock('CognitoIdentityServiceProvider', 'getUser', () => {
-        return Promise.reject();
-    });
+    AWS.mock('CognitoIdentityServiceProvider', 'getUser', () =>
+        Promise.reject(),
+    );
 };
 
 /**
@@ -81,9 +82,9 @@ module.exports.setCurrentUser = (
         ADMIN_ID,
     ),
 ) => {
-    AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
-        return Promise.resolve(user);
-    });
+    AWS.remock('CognitoIdentityServiceProvider', 'getUser', () =>
+        Promise.resolve(user),
+    );
 };
 
 /**
@@ -92,22 +93,16 @@ module.exports.setCurrentUser = (
  * @param {*} request
  * @param {*} AWSMocker
  */
-module.exports.withAuthentication = (request) => {
-    return request.set({
+module.exports.withAuthentication = (request) =>
+    request.set({
         authorization: MOCK_AUTH_TOKEN,
     });
-};
 
-module.exports.getCurrentAuthenticatedUser = () => {
-    return currentAuthenticatedUser;
-};
+module.exports.getCurrentAuthenticatedUser = () => currentAuthenticatedUser;
 
-module.exports.getCurrentAuthenticatedUserAttribute = (attribName) => {
-    return currentAuthenticatedUser.UserAttributes.find(
+module.exports.getCurrentAuthenticatedUserAttribute = (attribName) =>
+    currentAuthenticatedUser.UserAttributes.find(
         (attrib) => attrib.Name === attribName,
     ).Value;
-};
 
-module.exports.getLastUploadedFileParams = () => {
-    return lastUploadedFileParams;
-};
+module.exports.getLastUploadedFileParams = () => lastUploadedFileParams;

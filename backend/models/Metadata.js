@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const { languageSchema } = require('../schemas/languageSchema');
 const {
     FIELDS,
@@ -12,10 +13,10 @@ const {
  * @returns True if valid, false otherwise.
  */
 module.exports.validateOptions = (questionOptionSchema) => {
-    var questionIndex = Object.create(null);
-    for (var i = 0; i < questionOptionSchema.length; ++i) {
+    const questionIndex = Object.create(null);
+    for (let i = 0; i < questionOptionSchema.length; ++i) {
         // Check if we've already seen this index
-        var value = questionOptionSchema[i];
+        const value = questionOptionSchema[i];
         if (value.Index in questionIndex) return false;
 
         // Else, track this index and continue
@@ -37,7 +38,7 @@ const isUniqueStepNumber = async (stepNumber, stepKey, session) => {
     // Find all steps with this step number
     const steps = await mongoose.connection.db
         .collection(STEPS_COLLECTION_NAME)
-        .find({ stepNumber: stepNumber }, { session: session })
+        .find({ stepNumber }, { session })
         .toArray();
 
     // If there's more than one, it's not unique.
@@ -65,11 +66,11 @@ module.exports.questionOptionSchema = new mongoose.Schema({
  * @returns True if valid, false otherwise.
  */
 const validateStep = (fieldSchema) => {
-    var fieldNumbers = Object.create(null);
-    var fieldKeys = Object.create(null);
-    for (var i = 0; i < fieldSchema.length; ++i) {
+    const fieldNumbers = Object.create(null);
+    const fieldKeys = Object.create(null);
+    for (let i = 0; i < fieldSchema.length; ++i) {
         // Check if we've already seen this fieldNumber or fieldKey
-        var value = fieldSchema[i];
+        const value = fieldSchema[i];
         if (value.fieldNumber in fieldNumbers || value.key in fieldKeys)
             return false;
 

@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models/index');
@@ -43,7 +44,7 @@ router.put(
             return await sendResponse(res, 404, `Role ${roleId} not found`);
 
         if (!role.isMutable)
-            return await sendResponse(res, 403, `Role is immutable`);
+            return await sendResponse(res, 403, 'Role is immutable');
 
         const result = await models.Role.findByIdAndUpdate(
             roleId,
@@ -68,7 +69,7 @@ router.delete(
             return await sendResponse(res, 404, `Role ${roleId} not found`);
 
         if (!role.isMutable)
-            return await sendResponse(res, 403, `Role is immutable`);
+            return await sendResponse(res, 403, 'Role is immutable');
 
         await models.Role.findByIdAndDelete(roleId);
         await sendResponse(res, 200, 'Role deleted');

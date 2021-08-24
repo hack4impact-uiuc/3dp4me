@@ -1,11 +1,13 @@
+const fs = require('fs');
+const { exec } = require('child_process');
+
 const { src, dest, series, parallel } = require('gulp');
 const del = require('del');
-const fs = require('fs');
 const zip = require('gulp-zip');
 const rename = require('gulp-rename');
 const log = require('fancy-log');
-var exec = require('child_process').exec;
 const GulpClient = require('gulp');
+
 const NODE_ENV = 'production';
 const paths = {
     prod_build: '../prod-build',
@@ -42,7 +44,7 @@ function createProdBuildFolder() {
 
 function buildReactCodeTask(cb) {
     log('building React code into the directory');
-    return exec('cd ../frontend && yarn build', function (err, stdout, stderr) {
+    return exec('cd ../frontend && yarn build', (err, stdout, stderr) => {
         log(stdout);
         log(stderr);
         cb(err);
@@ -51,7 +53,7 @@ function buildReactCodeTask(cb) {
 
 function buildServerCodeTask(cb) {
     log('building server code into the directory');
-    return exec('yarn build', function (err, stdout, stderr) {
+    return exec('yarn build', (err, stdout, stderr) => {
         log(stdout);
         log(stderr);
         cb(err);

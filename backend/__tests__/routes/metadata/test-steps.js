@@ -1,10 +1,11 @@
-var server = require('../../../app');
-const db = require('../../utils/db');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 const omitDeep = require('omit-deep-lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
+
+let server = require('../../../app');
+const db = require('../../utils/db');
 const {
     POST_STEP_WITHOUT_OPTIONS,
     POST_STEP_WITH_EMPTY_OPTIONS,
@@ -51,7 +52,7 @@ describe('POST /steps', () => {
     });
 
     it('returns 400 if missing required fields', (done) => {
-        withAuthentication(request(server).post(`/api/metadata/steps`)).expect(
+        withAuthentication(request(server).post('/api/metadata/steps')).expect(
             400,
             done,
         );
@@ -60,7 +61,7 @@ describe('POST /steps', () => {
     const postAndExpect = async (body, status) => {
         const initDbStats = await mongoose.connection.db.stats();
         const res = await withAuthentication(
-            request(server).post(`/api/metadata/steps`).send(body),
+            request(server).post('/api/metadata/steps').send(body),
         );
 
         expect(res.status).toBe(status);
@@ -121,7 +122,7 @@ describe('POST /steps', () => {
     it('successfully registers a new step when given good request', async () => {
         const body = POST_STEP_WITH_OPTIONS;
         const res = await withAuthentication(
-            request(server).post(`/api/metadata/steps`).send(body),
+            request(server).post('/api/metadata/steps').send(body),
         );
 
         // Check response
@@ -156,7 +157,7 @@ describe('PUT /steps/stepkey', () => {
         const invalidStep = [{ key: 'DoesNotExist' }];
 
         const res = await withAuthentication(
-            request(server).put(`/api/metadata/steps/`).send(invalidStep),
+            request(server).put('/api/metadata/steps/').send(invalidStep),
         );
 
         expect(res.status).toBe(400);
@@ -165,7 +166,7 @@ describe('PUT /steps/stepkey', () => {
     it('can reorder fields in step', async () => {
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps`)
+                .put('/api/metadata/steps')
                 .send(PUT_STEP_REORDERED_FIELDS),
         );
 
@@ -189,7 +190,7 @@ describe('PUT /steps/stepkey', () => {
     it('can add a field correctly', async () => {
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps/`)
+                .put('/api/metadata/steps/')
                 .send(PUT_STEP_ADDED_FIELD),
         );
 
@@ -214,7 +215,7 @@ describe('PUT /steps/stepkey', () => {
     it('can edit current fields', async () => {
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps`)
+                .put('/api/metadata/steps')
                 .send(PUT_STEP_EDITED_FIELDS),
         );
 
@@ -241,7 +242,7 @@ describe('PUT /steps/stepkey', () => {
 
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps/`)
+                .put('/api/metadata/steps/')
                 .send(PUT_STEP_DUPLICATE_FIELD),
         );
 
@@ -261,7 +262,7 @@ describe('PUT /steps/stepkey', () => {
 
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps/`)
+                .put('/api/metadata/steps/')
                 .send(PUT_STEP_SUBFIELD_MISSING_FIELDS),
         );
 
@@ -279,7 +280,7 @@ describe('PUT /steps/stepkey', () => {
     it('correctly returns 200 when reordering steps', async () => {
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps`)
+                .put('/api/metadata/steps')
                 .send(PUT_STEPS_SWAPPED_STEPNUMBER),
         );
 
@@ -305,7 +306,7 @@ describe('PUT /steps/stepkey', () => {
 
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps`)
+                .put('/api/metadata/steps')
                 .send(PUT_DUPLICATE_STEPS),
         );
 
@@ -324,7 +325,7 @@ describe('PUT /steps/stepkey', () => {
 
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps/`)
+                .put('/api/metadata/steps/')
                 .send(PUT_STEP_EDIT_FIELDTYPE),
         );
 
@@ -344,7 +345,7 @@ describe('PUT /steps/stepkey', () => {
 
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps/`)
+                .put('/api/metadata/steps/')
                 .send(PUT_STEP_DELETED_FIELD),
         );
 

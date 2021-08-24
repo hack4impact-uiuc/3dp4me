@@ -1,9 +1,11 @@
 const express = require('express');
 const _ = require('lodash');
+
 const router = express.Router();
+const mongoose = require('mongoose');
+
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
-const mongoose = require('mongoose');
 const { requireAdmin } = require('../../middleware/authentication');
 const { generateSchemaFromMetadata } = require('../../utils/initDb');
 const { sendResponse } = require('../../utils/response');

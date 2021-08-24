@@ -1,7 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
 const router = express.Router();
 const _ = require('lodash');
+
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const { uploadFile, downloadFile } = require('../../utils/aws/awsS3Helpers');
@@ -37,7 +39,7 @@ router.get(
 /**
  * Returns all of our data on a specific patient. Gets both the basic info
  * from the Patient collection and the data from each step.
- **/
+ * */
 router.get(
     '/:id',
     errorWrap(async (req, res) => {
@@ -45,15 +47,15 @@ router.get(
         roles = [req.user.roles];
 
         // Check if patient exists
-        let patientData = await models.Patient.findById(id);
+        const patientData = await models.Patient.findById(id);
         if (!patientData)
             await sendResponse(res, 404, `Patient with id ${id} not found`);
 
         // Get all steps/fields that the user is allowed to view
-        let steps = await getReadableSteps(req);
+        const steps = await getReadableSteps(req);
 
         // Create promises for each step so that we can do this in parallel
-        let stepDataPromises = steps.map(async (step) => {
+        const stepDataPromises = steps.map(async (step) => {
             // Get all patient data for this step
             let stepData = await mongoose
                 .model(step.key)
@@ -145,7 +147,7 @@ router.get(
             return await sendResponse(res, 403, 'Insufficient permissions');
 
         // Open a stream from the S3 bucket
-        var s3Stream = downloadFile(
+        const s3Stream = downloadFile(
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
             {
                 accessKeyId: ACCESS_KEY_ID,
@@ -155,10 +157,10 @@ router.get(
 
         // Setup callbacks for stream error and stream close
         s3Stream
-            .on('error', function (err) {
-                res.json('S3 Error:' + err);
+            .on('error', (err) => {
+                res.json(`S3 Error:${err}`);
             })
-            .on('close', function () {
+            .on('close', () => {
                 res.end();
             });
 
@@ -205,12 +207,13 @@ router.delete(
             (x) => x.filename === fileName,
         );
 
-        if (index === -1)
+        if (index === -1) {
             return await sendResponse(
                 res,
                 404,
                 `File "${fileName}" does not exist`,
             );
+        }
 
         // TODO: Remove this file from AWS as well once we have a "do you want to remove this" on the frontend
         // Remove the file from Mongo tracking
@@ -267,7 +270,7 @@ router.post(
         if (!stepData[fieldKey]) stepData[fieldKey] = [];
 
         // Upload the file to the S3
-        let file = req.files.uploadedFile;
+        const file = req.files.uploadedFile;
         await uploadFile(
             file.data,
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
@@ -353,7 +356,7 @@ router.post(
 );
 
 const updatePatientStepData = async (patientId, stepModel, data) => {
-    let patientStepData = await stepModel.findOne({ patientId: patientId });
+    let patientStepData = await stepModel.findOne({ patientId });
 
     // If patient doesn't have step data, create it with constructor. Else update it.
     if (!patientStepData) {

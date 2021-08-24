@@ -1,7 +1,8 @@
-var server = require('../../app');
-const db = require('../utils/db');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
+
+let server = require('../../app');
+const db = require('../utils/db');
 const {
     initAuthMocker,
     setCurrentUser,

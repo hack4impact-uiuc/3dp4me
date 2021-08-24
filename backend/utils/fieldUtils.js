@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+
 const { models } = require('../models');
+
 const { isAdmin } = require('./aws/awsUsers');
 const { generateFieldSchema } = require('./initDb');
 const { abortAndError } = require('./transactionUtils');
@@ -24,9 +26,9 @@ const getWritableFieldsInStep = async (user, stepKey) => {
     if (isAdmin(user)) return stepData.fields.map((f) => f.key);
 
     // Check each field to see if user has a writable role
-    const writableFields = stepData.fields.filter((field) => {
-        return field.writableGroups.some((role) => user.roles.includes(role));
-    });
+    const writableFields = stepData.fields.filter((field) =>
+        field.writableGroups.some((role) => user.roles.includes(role)),
+    );
 
     return writableFields.map((f) => f.key);
 };
@@ -97,22 +99,23 @@ module.exports.addFieldsToSchema = (stepKey, addedFields) => {
     });
 
     // Add it to the existing schema
-    const schema = mongoose.model(stepKey).schema;
+    const { schema } = mongoose.model(stepKey);
     schema.add(schemaUpdate);
 };
 
 module.exports.getAddedFields = async (session, oldFields, newFields) => {
     // Build up a list of al the new fields added
-    let addedFields = [];
+    const addedFields = [];
     for (const requestField of newFields) {
         const existingField = this.getFieldByKey(oldFields, requestField.key);
 
         // If both fields are the same but fieldtypes are not the same
-        if (existingField && !areFieldTypesSame(requestField, existingField))
+        if (existingField && !areFieldTypesSame(requestField, existingField)) {
             await abortAndError(
                 session,
                 `Cannot change the type of ${existingField.key}`,
             );
+        }
 
         // If this is a new field that we haven't seen yet, add it to the list of new fields
         const hasAddedField = addedFields.some(

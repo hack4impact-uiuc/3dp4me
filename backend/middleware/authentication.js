@@ -35,14 +35,12 @@ module.exports.requireAuthentication = async (req, res, next) => {
  * @param {String} role The mongo ID of the role required.
  * @returns A middleware function that requires the role.
  */
-module.exports.requireRole = (role) => {
-    return async (req, res, next) => {
-        if (!req.user) await requireAuthentication();
-        if (!req.user.roles.includes(role))
-            return await sendResponse(res, 403, ERR_NOT_APPROVED);
+module.exports.requireRole = (role) => async (req, res, next) => {
+    if (!req.user) await requireAuthentication();
+    if (!req.user.roles.includes(role))
+        return await sendResponse(res, 403, ERR_NOT_APPROVED);
 
-        next();
-    };
+    next();
 };
 
 /**

@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const mongoose = require('mongoose');
 const { MongoMemoryReplSet } = require('mongodb-memory-server');
+
 const patientData = require('../../../scripts/data/patients.json');
 const roleData = require('../../../scripts/data/roles.json');
 const stepData = require('../../../scripts/data/steps.json');
@@ -16,7 +17,7 @@ let steps = null;
 let survey = null;
 let example = null;
 let medicalInfo = null;
-let replSet = new MongoMemoryReplSet({
+const replSet = new MongoMemoryReplSet({
     replSet: { storageEngine: 'wiredTiger' },
 });
 
@@ -86,9 +87,8 @@ const constructDynamicData = () => {
     medicalInfo = constructAll(medicalData, mongoose.model('medicalInfo'));
 };
 
-const constructAll = (data, constructor) => {
-    return data.map((item) => new constructor(item));
-};
+const constructAll = (data, constructor) =>
+    data.map((item) => new constructor(item));
 
 /**
  * Remove all the data for all db collections.
@@ -99,7 +99,7 @@ module.exports.clearDatabase = async () => {
         delete mongoose.connection.models[step.key];
     });
 
-    const collections = mongoose.connection.collections;
+    const { collections } = mongoose.connection;
     for (const key in collections) {
         const collection = collections[key];
         await collection.deleteMany();
