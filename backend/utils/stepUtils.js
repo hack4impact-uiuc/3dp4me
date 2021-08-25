@@ -18,9 +18,12 @@ module.exports.getReadableSteps = async (req) => {
 
     // Iterate over fields and remove fields that do not have matching permissions
     for (let i = 0; i < metaData.length; ++i) {
-        metaData[i].fields = metaData[i].fields.filter((field) =>
-            field.readableGroups.some((role) => roles.includes(role)),
-        );
+        metaData[i].fields = metaData[i].fields.filter((field) => {
+            const hasPerms = field.readableGroups.some((role) =>
+                roles.includes(role),
+            );
+            return hasPerms;
+        });
     }
 
     return metaData;

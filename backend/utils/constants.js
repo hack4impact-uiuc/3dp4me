@@ -9,7 +9,6 @@ module.exports.ACCESS_LEVELS = {
 };
 
 module.exports.FIELDS = {
-    AUDIO: 'Audio',
     STRING: 'String',
     MULTILINE_STRING: 'MultilineString',
     FILE: 'File',

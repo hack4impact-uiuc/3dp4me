@@ -7,6 +7,8 @@ const {
     SECURITY_ROLE_ATTRIBUTE_NAME,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
     USER_POOL_ID,
+    ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY,
 } = require('./awsExports');
 
 module.exports.getIdentityProvider = () =>
@@ -90,7 +92,7 @@ const getUser = async (accessToken) => {
         { region: COGNITO_REGION },
     );
 
-    return await cognitoidentityserviceprovider.getUser(params).promise();
+    return cognitoidentityserviceprovider.getUser(params).promise();
 };
 
 const parseUserAccess = (user) => {

@@ -5,13 +5,13 @@
 const errorHandler = (err, req, res, next) => {
     console.error(err);
     if (res?.headersSent) {
-        return next(err);
+        next(err);
+    } else {
+        res.status(500).json({
+            success: false,
+            message: `An error occurred: ${err?.message}`,
+        });
     }
-
-    res.status(500).json({
-        success: false,
-        message: `An error occurred: ${err?.message}`,
-    });
 };
 
 module.exports = errorHandler;

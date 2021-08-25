@@ -26,9 +26,12 @@ const getWritableFieldsInStep = async (user, stepKey) => {
     if (isAdmin(user)) return stepData.fields.map((f) => f.key);
 
     // Check each field to see if user has a writable role
-    const writableFields = stepData.fields.filter((field) =>
-        field.writableGroups.some((role) => user.roles.includes(role)),
-    );
+    const writableFields = stepData.fields.filter((field) => {
+        const isWritable = field.writableGroups.some((role) =>
+            user.roles.includes(role),
+        );
+        return isWritable;
+    });
 
     return writableFields.map((f) => f.key);
 };
@@ -82,9 +85,9 @@ module.exports.getFieldByKey = (objectList, key) => {
         return null;
     }
 
-    for (const object of objectList) {
-        if (object?.key === key) {
-            return object;
+    for (let i = 0; i < objectList.length; ++i) {
+        if (objectList[i]?.key === key) {
+            return objectList[i];
         }
     }
 
@@ -103,10 +106,13 @@ module.exports.addFieldsToSchema = (stepKey, addedFields) => {
     schema.add(schemaUpdate);
 };
 
+// Disabling no await because the await only gets called if an error is thrown
+/* eslint-disable no-await-in-loop */
 module.exports.getAddedFields = async (session, oldFields, newFields) => {
     // Build up a list of al the new fields added
     const addedFields = [];
-    for (const requestField of newFields) {
+    for (let i = 0; i < newFields.length; ++i) {
+        const requestField = newFields[i];
         const existingField = this.getFieldByKey(oldFields, requestField.key);
 
         // If both fields are the same but fieldtypes are not the same
@@ -126,6 +132,7 @@ module.exports.getAddedFields = async (session, oldFields, newFields) => {
 
     return addedFields;
 };
+/* eslint-enable no-await-in-loop */
 
 const areFieldTypesSame = (fieldA, fieldB) => {
     if (!fieldA || !fieldB) return false;

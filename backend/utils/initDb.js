@@ -34,7 +34,7 @@ module.exports.initDB = () => {
  */
 module.exports.initModels = async () => {
     const steps = await models.Step.find();
-    for (const step of steps) this.generateSchemaFromMetadata(step);
+    steps.forEach((step) => this.generateSchemaFromMetadata(step));
 };
 
 /**

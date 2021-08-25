@@ -8,8 +8,8 @@ const {
 
 module.exports.isRoleValid = async (role) => {
     const roles = await models.Role.find({});
-    for (const r of roles) {
-        if (role.toString() === r._id.toString()) return true;
+    for (let i = 0; i < roles.length; ++i) {
+        if (role.toString() === roles[i]._id.toString()) return true;
     }
 
     return false;
