@@ -142,8 +142,10 @@ router.get(
         const { id, stepKey, fieldKey, fileName } = req.params;
 
         const isReadable = await isFieldReadable(req.user, stepKey, fieldKey);
-        if (!isReadable)
-            return sendResponse(res, 403, 'Insufficient permissions');
+        if (!isReadable) {
+            sendResponse(res, 403, 'Insufficient permissions');
+            return;
+        }
 
         // Open a stream from the S3 bucket
         const s3Stream = downloadFile(

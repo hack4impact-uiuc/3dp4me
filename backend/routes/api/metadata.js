@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const mongoose = require('mongoose');
+const log = require('loglevel');
 
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
@@ -73,7 +74,7 @@ router.put(
 
             await sendResponse(res, 200, 'Step(s) edited', stepData);
         } catch (error) {
-            console.error(error);
+            log.error(error);
             await sendResponse(res, 400, `Error occurred: ${error}`);
         }
     }),

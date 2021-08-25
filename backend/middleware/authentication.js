@@ -1,3 +1,5 @@
+const log = require('loglevel');
+
 const { getUserByAccessToken } = require('../utils/aws/awsUsers');
 const {
     ACCESS_LEVELS,
@@ -25,7 +27,7 @@ module.exports.requireAuthentication = async (req, res, next) => {
             next();
         }
     } catch (error) {
-        console.error(error);
+        log.error(error);
         sendResponse(res, 401, ERR_AUTH_FAILED);
     }
 };
