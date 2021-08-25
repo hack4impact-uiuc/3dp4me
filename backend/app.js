@@ -2,6 +2,7 @@ require('express-async-errors');
 require('dotenv').config({ path: `${process.env.NODE_ENV}.env` });
 require('./utils/aws/awsSetup');
 const path = require('path');
+const log = require('loglevel');
 
 const express = require('express');
 const fileUpload = require('express-fileupload');
@@ -48,13 +49,13 @@ app.get('/*', (req, res, next) => {
 });
 
 app.use(requireAuthentication);
-// app.use(logRequest);
+app.use(logRequest);
 app.use(require('./routes'));
 
 app.use(errorHandler);
 
 process.on('unhandledRejection', (reason, p) => {
-    console.log(`UNHANDLED REJECTION: ${reason}`);
+    log.error(`UNHANDLED REJECTION: ${reason}`);
 });
 
 module.exports = app;

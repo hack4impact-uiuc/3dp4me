@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const log = require('loglevel');
 
 const { ACCESS_LEVELS, ADMIN_ID } = require('../constants');
 
@@ -77,7 +78,7 @@ const getUserByUsername = async (username) => {
     try {
         user = await identityProvider.adminGetUser(params).promise();
     } catch (e) {
-        console.log(e);
+        log.error(e);
     }
 
     return user;

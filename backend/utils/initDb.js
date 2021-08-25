@@ -1,3 +1,4 @@
+const log = require('loglevel');
 const _ = require('lodash');
 const encrypt = require('mongoose-encryption');
 const mongoose = require('mongoose');
@@ -19,11 +20,11 @@ module.exports.initDB = () => {
 
     mongoose.connection
         .once('open', () => {
-            console.log('Connected to the DB');
+            log.info('Connected to the DB');
             this.initModels();
         })
         .on('error', (error) =>
-            console.log('Error connecting to the database: ', error),
+            log.error('Error connecting to the database: ', error),
         );
 
     mongoose.set('useFindAndModify', false);

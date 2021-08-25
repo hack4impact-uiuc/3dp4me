@@ -30,6 +30,7 @@
         "json": "^11.0.0",
         "libphonenumber-js": "^1.9.11",
         "lodash": "^4.17.21",
+        "loglevel": "^1.7.1",
         "mongodb-memory-server": "^6.9.6",
         "mongoose": "^5.13.5",
         "mongoose-encryption": "^2.1.0",

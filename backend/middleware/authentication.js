@@ -16,16 +16,17 @@ const { sendResponse } = require('../utils/response');
 module.exports.requireAuthentication = async (req, res, next) => {
     try {
         const user = await getUserFromRequest(req);
-        if (!user) return await sendResponse(res, 401, ERR_AUTH_FAILED);
-
-        if (user.accessLevel !== ACCESS_LEVELS.GRANTED)
-            return await sendResponse(res, 403, ERR_NOT_APPROVED);
-
-        req.user = user;
-        next();
+        if (!user) {
+            sendResponse(res, 401, ERR_AUTH_FAILED);
+        } else if (user.accessLevel !== ACCESS_LEVELS.GRANTED) {
+            sendResponse(res, 403, ERR_NOT_APPROVED);
+        } else {
+            req.user = user;
+            next();
+        }
     } catch (error) {
         console.error(error);
-        return await sendResponse(res, 401, ERR_AUTH_FAILED);
+        sendResponse(res, 401, ERR_AUTH_FAILED);
     }
 };
 
@@ -36,11 +37,10 @@ module.exports.requireAuthentication = async (req, res, next) => {
  * @returns A middleware function that requires the role.
  */
 module.exports.requireRole = (role) => async (req, res, next) => {
-    if (!req.user) await requireAuthentication();
+    if (!req.user) await this.requireAuthentication();
     if (!req.user.roles.includes(role))
-        return await sendResponse(res, 403, ERR_NOT_APPROVED);
-
-    next();
+        sendResponse(res, 403, ERR_NOT_APPROVED);
+    else next();
 };
 
 /**
@@ -50,8 +50,8 @@ module.exports.requireAdmin = this.requireRole(ADMIN_ID);
 
 const getUserFromRequest = async (req) => {
     const authHeader = req?.headers?.authorization?.split(' ');
-    if (authHeader?.length != 2) return null;
+    if (authHeader?.length !== 2) return null;
 
     const accessToken = authHeader[1];
-    return await getUserByAccessToken(accessToken);
+    return getUserByAccessToken(accessToken);
 };

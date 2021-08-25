@@ -107,8 +107,8 @@ const fieldSchema = new mongoose.Schema({
     readableGroups: { type: [String], required: true, default: [] },
     writableGroups: { type: [String], required: true, default: [] },
 
-    // This field is for any additional data that doesn't fit in this schema. Try to avoid using this if possible.
-    // If you must use this, add asserts to generateFieldSchema to make sure this has the proper data
+    // This field is for any additional data that doesn't fit in this schema. Try to avoid using this.
+    // If you must use this, add asserts to generateFieldSchema to make sure this has the proper data.
     additionalData: { type: mongoose.Schema.Types.Mixed, required: false },
 });
 
@@ -144,7 +144,7 @@ const stepSchema = new mongoose.Schema({
 
 // Run validator when stepNumber is changed.
 stepSchema.path('stepNumber').validate(async function () {
-    return await isUniqueStepNumber(this.stepNumber, this.key);
+    return isUniqueStepNumber(this.stepNumber, this.key);
 });
 
 // This must be at end of file so that isUniqueStepNumber is bound in the stepNumber validator
