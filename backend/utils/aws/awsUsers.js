@@ -6,7 +6,15 @@ const {
     COGNITO_REGION,
     SECURITY_ROLE_ATTRIBUTE_NAME,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
+    USER_POOL_ID,
 } = require('./awsExports');
+
+module.exports.getIdentityProvider = () =>
+    new AWS.CognitoIdentityServiceProvider({
+        region: COGNITO_REGION,
+        accessKeyId: ACCESS_KEY_ID,
+        secretAccessKey: SECRET_ACCESS_KEY,
+    });
 
 /**
  * Given a user object, determine if they are an admin.
@@ -53,7 +61,7 @@ module.exports.parseUserSecurityRoles = (user) => {
  */
 module.exports.getUserRoles = async (username) => {
     const user = await getUserByUsername(username);
-    return parseUserSecurityRoles(user);
+    return this.parseUserSecurityRoles(user);
 };
 
 const getUserByUsername = async (username) => {
@@ -62,7 +70,7 @@ const getUserByUsername = async (username) => {
         Username: username,
     };
 
-    const identityProvider = getIdentityProvider();
+    const identityProvider = this.getIdentityProvider();
     let user = null;
     try {
         user = await identityProvider.adminGetUser(params).promise();

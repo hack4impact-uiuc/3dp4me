@@ -11,7 +11,10 @@ const {
     SECRET_ACCESS_KEY,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../../utils/aws/awsExports');
-const { getUserRoles } = require('../../utils/aws/awsUsers');
+const {
+    getUserRoles,
+    getIdentityProvider,
+} = require('../../utils/aws/awsUsers');
 const { sendResponse } = require('../../utils/response');
 const {
     createRoleUpdateParams,
@@ -19,13 +22,6 @@ const {
     isRoleValid,
 } = require('../../utils/roleUtils');
 const { requireAdmin } = require('../../middleware/authentication');
-
-const getIdentityProvider = () =>
-    new AWS.CognitoIdentityServiceProvider({
-        region: COGNITO_REGION,
-        accessKeyId: ACCESS_KEY_ID,
-        secretAccessKey: SECRET_ACCESS_KEY,
-    });
 
 /**
  * Returns a list of all users in our system

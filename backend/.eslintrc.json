@@ -9,6 +9,7 @@
     "rules": {
         "no-use-before-define": "off",
         "no-plusplus": "off",
+        "no-throw-literal": "off",
         "no-underscore-dangle": ["error", { "allow": ["_id"] }],
         "import/order": [
             "warn",

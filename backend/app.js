@@ -48,7 +48,7 @@ app.get('/*', (req, res, next) => {
 });
 
 app.use(requireAuthentication);
-app.use(logRequest);
+// app.use(logRequest);
 app.use(require('./routes'));
 
 app.use(errorHandler);

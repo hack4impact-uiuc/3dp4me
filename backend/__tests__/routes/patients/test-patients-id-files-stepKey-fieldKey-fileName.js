@@ -5,8 +5,8 @@ const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
 
-const db = require('../../utils/db');
 let server = require('../../../app');
+const db = require('../../utils/db');
 const {
     initAuthMocker,
     setCurrentUser,

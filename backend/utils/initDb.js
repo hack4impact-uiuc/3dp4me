@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const encrypt = require('mongoose-encryption');
 const mongoose = require('mongoose');
 
@@ -33,15 +34,15 @@ module.exports.initDB = () => {
  */
 module.exports.initModels = async () => {
     const steps = await models.Step.find();
-    for (const step of steps) await this.generateSchemaFromMetadata(step);
+    for (const step of steps) this.generateSchemaFromMetadata(step);
 };
 
 /**
  * Generate and registers a schema based off the provided metadata.
  */
 module.exports.generateSchemaFromMetadata = (stepMetadata) => {
-    const stepSchema = getStepBaseSchema();
-    generateFieldsFromMetadata(stepMetadata.fields, stepSchema);
+    let stepSchema = getStepBaseSchema();
+    stepSchema = generateFieldsFromMetadata(stepMetadata.fields, stepSchema);
     const schema = new mongoose.Schema(stepSchema);
 
     schema.plugin(encrypt, {
@@ -172,10 +173,12 @@ const getSignatureSchema = (fieldMetadata) => {
 };
 
 const generateFieldsFromMetadata = (fieldsMetadata, schema = {}) => {
+    const updatedSchema = _.cloneDeep(schema);
+
     fieldsMetadata.forEach((field) => {
         const generatedSchema = this.generateFieldSchema(field);
-        if (generatedSchema) schema[field.key] = generatedSchema;
+        if (generatedSchema) updatedSchema[field.key] = generatedSchema;
     });
 
-    return schema;
+    return updatedSchema;
 };

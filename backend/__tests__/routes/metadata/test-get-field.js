@@ -2,8 +2,8 @@ const _ = require('lodash');
 const AWS = require('aws-sdk-mock');
 const omitDeep = require('omit-deep-lodash');
 
-const db = require('../../utils/db');
 let server = require('../../../app');
+const db = require('../../utils/db');
 const { initAuthMocker, setCurrentUser } = require('../../utils/auth');
 const { models } = require('../../../models');
 const {

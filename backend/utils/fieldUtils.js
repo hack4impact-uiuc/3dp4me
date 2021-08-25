@@ -82,7 +82,7 @@ module.exports.getFieldByKey = (objectList, key) => {
         return null;
     }
 
-    for (object of objectList) {
+    for (const object of objectList) {
         if (object?.key === key) {
             return object;
         }

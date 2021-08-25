@@ -1,6 +1,14 @@
+const { models } = require('../models');
+
+const {
+    SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
+    SECURITY_ROLE_ATTRIBUTE_NAME,
+    USER_POOL_ID,
+} = require('./aws/awsExports');
+
 module.exports.isRoleValid = async (role) => {
     const roles = await models.Role.find({});
-    for (r of roles) {
+    for (const r of roles) {
         if (role.toString() === r._id.toString()) return true;
     }
 
@@ -8,16 +16,18 @@ module.exports.isRoleValid = async (role) => {
 };
 
 /**
- * Removes invalid roles from the incoming roles array. For example, if a user has a role that is later deleted,
- * this will remove that old role from the user.
+ * Removes invalid roles from the incoming roles array. For example, if a user has a role
+ * that is later deleted, this will remove that old role from the user.
  */
 module.exports.getValidRoles = async (roles) => {
     const validRoles = [];
 
-    for (role of roles) {
-        const roleIsValid = await isRoleValid(role);
+    const addRoles = roles.map(async (role) => {
+        const roleIsValid = await this.isRoleValid(role);
         if (roleIsValid) validRoles.push(role);
-    }
+    });
+
+    await Promise.all(addRoles);
 
     return validRoles;
 };

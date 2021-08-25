@@ -4,6 +4,7 @@ const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
 const omitDeep = require('omit-deep-lodash');
 
+let server = require('../../../app');
 const {
     initAuthMocker,
     setCurrentUser,
@@ -11,7 +12,6 @@ const {
     getCurrentAuthenticatedUserAttribute,
     createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
-let server = require('../../../app');
 const db = require('../../utils/db');
 const {
     expectStrictEqualWithTimestampOrdering,
