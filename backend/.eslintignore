@@ -1,3 +1,4 @@
 **/mock-data
 webpack.config.js
 build/
+__tests__/

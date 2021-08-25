@@ -10,7 +10,6 @@ const {
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
-    createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
 const db = require('../../utils/db');
 const {

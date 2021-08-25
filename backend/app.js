@@ -2,8 +2,8 @@ require('express-async-errors');
 require('dotenv').config({ path: `${process.env.NODE_ENV}.env` });
 require('./utils/aws/awsSetup');
 const path = require('path');
-const log = require('loglevel');
 
+const log = require('loglevel');
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
@@ -31,7 +31,7 @@ app.use(
     }),
 );
 
-if (process.env.NODE_ENV != ENV_TEST) initDB();
+if (process.env.NODE_ENV !== ENV_TEST) initDB();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -54,7 +54,7 @@ app.use(require('./routes'));
 
 app.use(errorHandler);
 
-process.on('unhandledRejection', (reason, p) => {
+process.on('unhandledRejection', (reason) => {
     log.error(`UNHANDLED REJECTION: ${reason}`);
 });
 

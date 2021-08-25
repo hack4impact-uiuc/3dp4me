@@ -6,7 +6,6 @@ const del = require('del');
 const zip = require('gulp-zip');
 const rename = require('gulp-rename');
 const log = require('fancy-log');
-const GulpClient = require('gulp');
 
 const NODE_ENV = 'production';
 const paths = {
@@ -33,10 +32,10 @@ function createProdBuildFolder() {
         log('📁  folder created:', dir);
     }
 
-    const server_dir = paths.server_source_dest;
-    if (!fs.existsSync(server_dir)) {
-        fs.mkdirSync(server_dir);
-        log('📁  folder created:', server_dir);
+    const serverDir = paths.server_source_dest;
+    if (!fs.existsSync(serverDir)) {
+        fs.mkdirSync(serverDir);
+        log('📁  folder created:', serverDir);
     }
 
     return Promise.resolve('the value is ignored');

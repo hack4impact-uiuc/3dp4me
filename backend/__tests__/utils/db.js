@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const mongoose = require('mongoose');
 const { MongoMemoryReplSet } = require('mongodb-memory-server');
 
@@ -28,7 +27,7 @@ const replSet = new MongoMemoryReplSet({
 module.exports.connect = async () => {
     if (replSet._state !== 'running') await replSet.start();
     await replSet.waitUntilRunning();
-    const uri = await replSet.getUri();
+    const uri = replSet.getUri();
 
     const mongooseOpts = {
         useNewUrlParser: true,
@@ -64,10 +63,11 @@ module.exports.resetDatabase = async () => {
     await saveMany(medicalInfo);
 };
 
-const saveMany = async (models) => {
-    for (let i = 0; i < models.length; i++) {
-        models[i].isNew = true;
-        await models[i].save();
+const saveMany = async (modelList) => {
+    for (let i = 0; i < modelList.length; i++) {
+        const model = modelList[i];
+        model[i].isNew = true;
+        await model[i].save();
     }
 };
 
