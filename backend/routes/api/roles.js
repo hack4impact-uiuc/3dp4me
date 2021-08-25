@@ -13,7 +13,7 @@ router.get(
     '/',
     errorWrap(async (req, res) => {
         const roles = await models.Role.find({});
-        return await sendResponse(res, 200, '', roles);
+        return sendResponse(res, 200, '', roles);
     }),
 );
 
@@ -26,7 +26,7 @@ router.post(
     errorWrap(async (req, res) => {
         const newRole = new models.Role(req.body);
         const savedRole = await newRole.save();
-        return await sendResponse(res, 200, 'Role created', savedRole);
+        return sendResponse(res, 200, 'Role created', savedRole);
     }),
 );
 
@@ -40,11 +40,9 @@ router.put(
     errorWrap(async (req, res) => {
         const { roleId } = req.params;
         const role = await models.Role.findById(roleId);
-        if (!role)
-            return await sendResponse(res, 404, `Role ${roleId} not found`);
+        if (!role) return sendResponse(res, 404, `Role ${roleId} not found`);
 
-        if (!role.isMutable)
-            return await sendResponse(res, 403, 'Role is immutable');
+        if (!role.isMutable) return sendResponse(res, 403, 'Role is immutable');
 
         const result = await models.Role.findByIdAndUpdate(
             roleId,
@@ -52,7 +50,7 @@ router.put(
             { new: true },
         );
 
-        await sendResponse(res, 200, 'Role updated', result);
+        return sendResponse(res, 200, 'Role updated', result);
     }),
 );
 
@@ -65,14 +63,12 @@ router.delete(
     errorWrap(async (req, res) => {
         const { roleId } = req.params;
         const role = await models.Role.findById(roleId);
-        if (!role)
-            return await sendResponse(res, 404, `Role ${roleId} not found`);
+        if (!role) return sendResponse(res, 404, `Role ${roleId} not found`);
 
-        if (!role.isMutable)
-            return await sendResponse(res, 403, 'Role is immutable');
+        if (!role.isMutable) return sendResponse(res, 403, 'Role is immutable');
 
         await models.Role.findByIdAndDelete(roleId);
-        await sendResponse(res, 200, 'Role deleted');
+        return sendResponse(res, 200, 'Role deleted');
     }),
 );
 

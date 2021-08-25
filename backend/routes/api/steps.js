@@ -21,15 +21,14 @@ router.get(
         const steps = await models.Step.find({ key: stepKey });
 
         // Check if step exists
-        if (steps.length == 0)
-            return await sendResponse(res, 404, 'Step not found');
+        if (steps.length === 0) return sendResponse(res, 404, 'Step not found');
 
         // Get model
         let model;
         try {
             model = mongoose.model(stepKey);
         } catch (error) {
-            return await sendResponse(res, 404, `Step "${stepKey}" not found`);
+            return sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
         // Cannot use an aggregation here due to the encryption middleware
@@ -50,7 +49,7 @@ router.get(
         });
 
         const patientData = await Promise.all(lookups);
-        await sendResponse(res, 200, '', patientData);
+        return sendResponse(res, 200, '', patientData);
     }),
 );
 

@@ -1,5 +1,4 @@
 const express = require('express');
-const _ = require('lodash');
 
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -57,9 +56,10 @@ router.post(
 
 /**
  * Updates many steps at a time. We need to process many steps at a time becuase -- for instance --
- * if we want to swap step order (i.e. step 5 becomes step 6 and vice versa), then there is a moment
- * of inconsistency where we have two step 5s or 6s. So all step updates are batched through this endpoint
- * which applies all the changes in a transaction and rolls back if the end state is invalid.
+ * if we want to swap step order (i.e. step 5 becomes step 6 and vice versa), then there is a
+ * moment of inconsistency where we have two step 5s or 6s. So all step updates are batched
+ * through this endpoint which applies all the changes in a transaction and rolls back if the
+ * end state is invalid.
  */
 router.put(
     '/steps/',

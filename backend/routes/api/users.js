@@ -1,14 +1,9 @@
 const express = require('express');
 
 const router = express.Router();
-const AWS = require('aws-sdk');
-
 const { errorWrap } = require('../../utils');
 const {
     USER_POOL_ID,
-    COGNITO_REGION,
-    ACCESS_KEY_ID,
-    SECRET_ACCESS_KEY,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../../utils/aws/awsExports');
 const {
@@ -22,6 +17,7 @@ const {
     isRoleValid,
 } = require('../../utils/roleUtils');
 const { requireAdmin } = require('../../middleware/authentication');
+const { ADMIN_ID } = require('../../utils/constants');
 
 /**
  * Returns a list of all users in our system
@@ -52,7 +48,7 @@ router.put(
 
         // Check that role is valid
         const roleIsValid = await isRoleValid(roleId);
-        if (!roleIsValid) return await sendResponse(res, 400, 'Invalid role');
+        if (!roleIsValid) return sendResponse(res, 400, 'Invalid role');
 
         // Create the object to pass to AWS to perform the update
         const userRoles = await getUserRoles(username);
@@ -61,17 +57,13 @@ router.put(
 
         // If we couldn't create the params, the user has the max amount of roles.
         if (!params) {
-            return await sendResponse(
-                res,
-                400,
-                'User has max amount of roles.',
-            );
+            return sendResponse(res, 400, 'User has max amount of roles.');
         }
 
         // Do the update
         const identityProvider = getIdentityProvider();
         await identityProvider.adminUpdateUserAttributes(params).promise();
-        await sendResponse(res, 200, 'Role added to user');
+        return sendResponse(res, 200, 'Role added to user');
     }),
 );
 
@@ -89,7 +81,7 @@ router.delete(
         const userRoles = await getUserRoles(username);
         const roleIndex = userRoles.indexOf(roleId);
         if (roleIndex === -1)
-            return await sendResponse(res, 400, 'User does not have role');
+            return sendResponse(res, 400, 'User does not have role');
 
         // Create params for the update in AWS
         userRoles.splice(roleIndex, 1);
@@ -98,7 +90,7 @@ router.delete(
         // Do the update
         const identityProvider = getIdentityProvider();
         await identityProvider.adminUpdateUserAttributes(params).promise();
-        await sendResponse(res, 200, 'Role removed');
+        return sendResponse(res, 200, 'Role removed');
     }),
 );
 
