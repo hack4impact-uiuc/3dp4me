@@ -66,8 +66,8 @@ module.exports.resetDatabase = async () => {
 const saveMany = async (modelList) => {
     for (let i = 0; i < modelList.length; i++) {
         const model = modelList[i];
-        model[i].isNew = true;
-        await model[i].save();
+        model.isNew = true;
+        await model.save();
     }
 };
 

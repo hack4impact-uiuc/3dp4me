@@ -37,7 +37,7 @@ app.use(bodyParser.json());
 
 // This allows the backend to either serve routes or redirect to frontend
 app.get('/*', (req, res, next) => {
-    if (req.originalUrl.path.includes('/api')) next();
+    if (req.url.includes('/api')) next();
     else {
         res.sendFile(
             path.join(__dirname, '../frontend/build/index.html'),
