@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
+
 import { getAllRoles, getAllUsers } from '../../api/api';
 import {
     getAccessLevel,
@@ -9,7 +10,7 @@ import {
     getRoles,
     getRolesValue,
     getUsername,
-} from '../../aws/awsUsers';
+} from '../../aws/aws-users';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import SimpleTable from '../../components/SimpleTable/SimpleTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';

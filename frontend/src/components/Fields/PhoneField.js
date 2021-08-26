@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import PhoneInput from 'react-phone-number-input';
+
 import 'react-phone-number-input/style.css';
 import { FLAG_URL } from '../../utils/constants';
 import './Fields.scss';
