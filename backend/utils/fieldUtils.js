@@ -27,9 +27,7 @@ const getWritableFieldsInStep = async (user, stepKey) => {
 
     // Check each field to see if user has a writable role
     const writableFields = stepData.fields.filter((field) => {
-        const isWritable = field.writableGroups.some((role) =>
-            user.roles.includes(role),
-        );
+        const isWritable = field.writableGroups.some((role) => user.roles.includes(role));
         return isWritable;
     });
 

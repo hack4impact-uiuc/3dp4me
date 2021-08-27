@@ -35,12 +35,12 @@
             "pre-commit": "yarn check-sensitive-files && lint-staged"
         }
     },
-    "lint-staged": {
-        "./**/*.{js,css,scss,json,md,jsx}": [
-            "prettier --write"
-        ],
+    "lint-staged": { 
         "./api/**/*.{js,jsx}": [
             "cd api && yarn lint"
+        ],
+        "./client/**/*.{js,css,scss,json,md,jsx}": [
+            "prettier --write"
         ],
         "./client/**/*.{js,jsx}": [
             "cd frontend && yarn lint"

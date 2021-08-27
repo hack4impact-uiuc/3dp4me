@@ -80,8 +80,7 @@ router.delete(
         // Check if user has this role
         const userRoles = await getUserRoles(username);
         const roleIndex = userRoles.indexOf(roleId);
-        if (roleIndex === -1)
-            return sendResponse(res, 400, 'User does not have role');
+        if (roleIndex === -1) return sendResponse(res, 400, 'User does not have role');
 
         // Create params for the update in AWS
         userRoles.splice(roleIndex, 1);

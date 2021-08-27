@@ -16,5 +16,4 @@ module.exports.removeRequestAttributes = (attributes) => (req, res, next) => {
  * @param {Array} attributes String array of attributes to remove
  * @returns
  */
-module.exports.removeAttributesFrom = (obj, attributes) =>
-    _.omit(obj, attributes);
+module.exports.removeAttributesFrom = (obj, attributes) => _.omit(obj, attributes);

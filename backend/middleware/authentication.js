@@ -40,8 +40,7 @@ module.exports.requireAuthentication = async (req, res, next) => {
  */
 module.exports.requireRole = (role) => async (req, res, next) => {
     if (!req.user) await this.requireAuthentication();
-    if (!req.user.roles.includes(role))
-        sendResponse(res, 403, ERR_NOT_APPROVED);
+    if (!req.user.roles.includes(role)) sendResponse(res, 403, ERR_NOT_APPROVED);
     else next();
 };
 
