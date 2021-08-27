@@ -1,17 +1,17 @@
-var server = require('../../../app');
-const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
+const omitDeep = require('omit-deep-lodash');
+
+let server = require('../../../app');
 const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
-    createUserDataWithRolesAndAccess,
 } = require('../../utils/auth');
-const omitDeep = require('omit-deep-lodash');
+const db = require('../../utils/db');
 const {
     expectStrictEqualWithTimestampOrdering,
     areObjectsDisjoint,
@@ -76,7 +76,7 @@ describe('POST /patient', () => {
             ...DEFAULT_STEP_DATA,
             patientId: patientID,
             lastEdited: startTimestamp,
-            lastEditedBy: 'Admin',
+            lastEditedBy: getCurrentAuthenticatedUserAttribute('name'),
         };
 
         // Send the request

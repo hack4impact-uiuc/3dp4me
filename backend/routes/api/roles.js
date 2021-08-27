@@ -1,99 +1,74 @@
 const express = require('express');
+
 const router = express.Router();
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models/index');
 const { requireAdmin } = require('../../middleware/authentication');
+const { sendResponse } = require('../../utils/response');
 
-// Get all roles
+/**
+ * Returns all roles in the DB.
+ */
 router.get(
     '/',
     errorWrap(async (req, res) => {
         const roles = await models.Role.find({});
-
-        return res.status(200).json({
-            success: true,
-            result: roles,
-        });
+        return sendResponse(res, 200, '', roles);
     }),
 );
 
-// Adds role to the DB
+/**
+ * Adds role to DB.
+ */
 router.post(
     '/',
     requireAdmin,
     errorWrap(async (req, res) => {
         const newRole = new models.Role(req.body);
         const savedRole = await newRole.save();
-
-        return res.status(200).json({
-            success: true,
-            result: savedRole,
-        });
+        return sendResponse(res, 200, 'Role created', savedRole);
     }),
 );
 
-// Changes role
+/**
+ * Updates a role. This should only update either the role name or description.
+ * If the role to update is marked as immutable, it is not modified.
+ */
 router.put(
     '/:roleId',
     requireAdmin,
     errorWrap(async (req, res) => {
         const { roleId } = req.params;
         const role = await models.Role.findById(roleId);
-        if (role == null) {
-            return res.status(400).json({
-                success: false,
-                message: `Role with ID "${roleId}" does not exist`,
-            });
-        }
+        if (!role) return sendResponse(res, 404, `Role ${roleId} not found`);
 
-        if (!role.isMutable) {
-            return res.status(400).json({
-                success: false,
-                message: `Role with ID "${roleId}" cannot be modified`,
-            });
-        }
+        if (!role.isMutable) return sendResponse(res, 403, 'Role is immutable');
 
-        delete req.body._id;
         const result = await models.Role.findByIdAndUpdate(
             roleId,
             { $set: req.body },
             { new: true },
         );
 
-        return res.status(200).json({
-            success: true,
-            result: result,
-        });
+        return sendResponse(res, 200, 'Role updated', result);
     }),
 );
 
-// Delete role
+/**
+ * Deletes a role. Immutable roles cannot be deleted.
+ */
 router.delete(
     '/:roleId',
     requireAdmin,
     errorWrap(async (req, res) => {
         const { roleId } = req.params;
         const role = await models.Role.findById(roleId);
-        if (role == null) {
-            return res.status(404).json({
-                success: false,
-                message: `Role with ID "${roleId}" does not exist`,
-            });
-        }
+        if (!role) return sendResponse(res, 404, `Role ${roleId} not found`);
 
-        if (!role.isMutable) {
-            return res.status(400).json({
-                success: false,
-                message: `Role with ID "${roleId}" is not allowed to be deleted`,
-            });
-        }
+        if (!role.isMutable) return sendResponse(res, 403, 'Role is immutable');
 
         await models.Role.findByIdAndDelete(roleId);
-        return res.status(200).json({
-            success: true,
-            message: 'Role deleted',
-        });
-        // TODO: When role is added/removed from user, cleanse user
+        return sendResponse(res, 200, 'Role deleted');
     }),
 );
 

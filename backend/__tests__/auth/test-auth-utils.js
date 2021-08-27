@@ -1,14 +1,13 @@
-var server = require('../../app');
-const db = require('../utils/db');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
+
+let server = require('../../app');
+const db = require('../utils/db');
 const {
     initAuthMocker,
     setCurrentUser,
     withAuthentication,
-    createUserDataWithRolesAndAccess,
 } = require('../utils/auth');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../../middleware/authentication');
 
 describe('mock auth', () => {
     afterAll(async () => await db.closeDatabase());

@@ -1,5 +1,5 @@
-const errorHandler = require('./error-handler');
-const errorWrap = require('./error-wrap');
+const errorHandler = require('./errorHandler');
+const errorWrap = require('./errorWrap');
 
 module.exports = {
     errorHandler,

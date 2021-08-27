@@ -1,10 +1,10 @@
-var server = require('../../../app');
-const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
 
+let server = require('../../../app');
+const db = require('../../utils/db');
 const {
     initAuthMocker,
     setCurrentUser,
@@ -29,7 +29,7 @@ describe('PUT /patients/:id', () => {
     });
 
     it('returns 500 when given bad ID format', (done) => {
-        withAuthentication(request(server).put(`/api/patients/badid`)).expect(
+        withAuthentication(request(server).put('/api/patients/badid')).expect(
             500,
             done,
         );
@@ -61,7 +61,7 @@ describe('PUT /patients/:id', () => {
 
         expect(res.status).toBe(200);
 
-        let expectedResult = _.omit(body, 'lastEdited');
+        const expectedResult = _.omit(body, 'lastEdited');
         expectedResult.lastEditedBy = 'Matthew Walowski';
 
         let actualResult = await getPatientFromDB();

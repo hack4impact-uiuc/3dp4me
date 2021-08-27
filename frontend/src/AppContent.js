@@ -39,7 +39,7 @@ const AppContent = ({ username, userEmail }) => {
             if (isLanguageValid(language)) {
                 dispatch({
                     type: REDUCER_ACTIONS.SET_LANGUAGE,
-                    language: language,
+                    language,
                 });
             } else {
                 console.error(`Language is invalid: ${language}`);

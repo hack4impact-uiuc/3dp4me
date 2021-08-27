@@ -1,120 +1,58 @@
-const { LexModelBuildingService } = require('aws-sdk');
-var AWS = require('aws-sdk');
+const log = require('loglevel');
+
+const { getUserByAccessToken } = require('../utils/aws/awsUsers');
 const {
-    COGNITO_REGION,
-    SECURITY_ROLE_ATTRIBUTE_NAME,
-    SECURITY_ACCESS_ATTRIBUTE_NAME,
-} = require('../utils/aws/aws-exports');
+    ACCESS_LEVELS,
+    ERR_AUTH_FAILED,
+    ERR_NOT_APPROVED,
+    ADMIN_ID,
+} = require('../utils/constants');
+const { sendResponse } = require('../utils/response');
 
-module.exports.ACCESS_LEVELS = {
-    GRANTED: 'Granted',
-    REVOKED: 'Revoked',
-    PENDING: 'Pending',
-};
-
-const ADMIN_ID = process.env.ADMIN_ID;
-
-const isAdmin = (user) => user.roles.includes(ADMIN_ID);
-
-const getUser = async (accessToken) => {
-    var params = {
-        AccessToken: accessToken,
-    };
-
-    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider(
-        { region: COGNITO_REGION },
-    );
-
-    return await cognitoidentityserviceprovider.getUser(params).promise();
-};
-
-const parseUserSecurityRoles = (user) => {
-    const securityRolesString = user?.UserAttributes?.find(
-        (attribute) => attribute.Name === SECURITY_ROLE_ATTRIBUTE_NAME,
-    );
-
-    if (!securityRolesString?.Value) return [];
-
-    return JSON.parse(securityRolesString.Value);
-};
-
-const parseUserAccess = (user) => {
-    const accessLevelString = user?.UserAttributes?.find(
-        (attribute) => attribute.Name === SECURITY_ACCESS_ATTRIBUTE_NAME,
-    )?.Value;
-
-    if (!accessLevelString) return this.ACCESS_LEVELS.PENDING;
-
-    return accessLevelString;
-};
-
-const parseUserName = (user) => {
-    const userNameString = user?.UserAttributes?.find(
-        (attribute) => attribute.Name === 'name',
-    )?.Value;
-
-    if (!userNameString) return '';
-
-    return userNameString;
-};
-
-const parseUserEmail = (user) => {
-    const name = user?.UserAttributes?.find(
-        (attribute) => attribute.Name === 'email',
-    );
-
-    if (!name?.Value) return '';
-
-    return name.Value;
-};
-
-const requireAuthentication = async (req, res, next) => {
+/**
+ * Middleware requires the incoming request to be authenticated. If not authenticated, a response
+ * is sent back to the client, and the middleware chain is stopped. Authenticatio is done through
+ * the 'authentication' HTTP header, which should be of the format 'Bearer <ACCESS_TOKEN>'. If
+ * successful, the user's data is attachted to req.user before calling the next function.
+ */
+module.exports.requireAuthentication = async (req, res, next) => {
     try {
-        const accessToken = req.headers.authorization.split(' ')[1];
-        const user = await getUser(accessToken);
-        user.roles = parseUserSecurityRoles(user);
-        user.name = parseUserName(user) || parseUserEmail(user);
-        user.accessLevel = parseUserAccess(user);
-
-        if (user.accessLevel !== this.ACCESS_LEVELS.GRANTED) {
-            return res.status(403).json({
-                success: false,
-                message:
-                    'You are not approved to access this site. Please contact an administrator.',
-            });
+        const user = await getUserFromRequest(req);
+        if (!user) {
+            sendResponse(res, 401, ERR_AUTH_FAILED);
+        } else if (user.accessLevel !== ACCESS_LEVELS.GRANTED) {
+            sendResponse(res, 403, ERR_NOT_APPROVED);
+        } else {
+            req.user = user;
+            next();
         }
-
-        req.user = user;
-        next();
     } catch (error) {
-        console.error(error);
-        return res.status(401).json({
-            success: false,
-            message: 'Authentication Failed',
-        });
+        log.error(error);
+        sendResponse(res, 401, ERR_AUTH_FAILED);
     }
 };
 
-const requireRole = (role) => {
-    return async (req, res, next) => {
-        if (!req.user) await requireAuthentication();
-        if (!req.user.roles.includes(role)) {
-            return res.status(403).json({
-                success: false,
-                message:
-                    'You are not approved to access this resource. Please contact an administrator.',
-            });
-        }
-
-        next();
-    };
+/**
+ * Constructs a middleware function that requires the user to
+ * have the specified role ID.
+ * @param {String} role The mongo ID of the role required.
+ * @returns A middleware function that requires the role.
+ */
+module.exports.requireRole = (role) => async (req, res, next) => {
+    if (!req.user) await this.requireAuthentication();
+    if (!req.user.roles.includes(role)) sendResponse(res, 403, ERR_NOT_APPROVED);
+    else next();
 };
 
-const requireAdmin = requireRole(ADMIN_ID);
+/**
+ * Convienience middleware to require a user to be Admin before proceeding.
+ */
+module.exports.requireAdmin = this.requireRole(ADMIN_ID);
 
-module.exports.isAdmin = isAdmin;
-module.exports.ADMIN_ID = ADMIN_ID;
-module.exports.requireRole = requireRole;
-module.exports.requireAdmin = requireAdmin;
-module.exports.requireAuthentication = requireAuthentication;
-module.exports.parseUserSecurityRoles = parseUserSecurityRoles;
+const getUserFromRequest = async (req) => {
+    const authHeader = req?.headers?.authorization?.split(' ');
+    if (authHeader?.length !== 2) return null;
+
+    const accessToken = authHeader[1];
+    return getUserByAccessToken(accessToken);
+};

@@ -1,227 +1,109 @@
 const express = require('express');
+
 const router = express.Router();
 const { errorWrap } = require('../../utils');
-const { models } = require('../../models/index');
-const AWS = require('aws-sdk');
 const {
     USER_POOL_ID,
-    SECURITY_ROLE_ATTRIBUTE_NAME,
-    COGNITO_REGION,
-    ACCESS_KEY_ID,
-    SECRET_ACCESS_KEY,
-    SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
-    ACCESS_LEVEL_ATTRIBUTE_NAME,
-} = require('../../utils/aws/aws-exports');
+} = require('../../utils/aws/awsExports');
 const {
-    parseUserSecurityRoles,
-    ADMIN_ID,
-} = require('../../middleware/authentication');
+    getUserRoles,
+    getIdentityProvider,
+} = require('../../utils/aws/awsUsers');
+const { sendResponse } = require('../../utils/response');
+const {
+    createRoleUpdateParams,
+    getValidRoles,
+    isRoleValid,
+} = require('../../utils/roleUtils');
+const { requireAdmin } = require('../../middleware/authentication');
+const { ADMIN_ID } = require('../../utils/constants');
 
-const getIdentityProvider = () => {
-    return new AWS.CognitoIdentityServiceProvider({
-        region: COGNITO_REGION,
-        accessKeyId: ACCESS_KEY_ID,
-        secretAccessKey: SECRET_ACCESS_KEY,
-    });
-};
-
-// Get all users
+/**
+ * Returns a list of all users in our system
+ */
 router.get(
     '/',
+    requireAdmin,
     errorWrap(async (req, res) => {
-        var params = {
+        const params = {
             UserPoolId: USER_POOL_ID,
         };
 
         const identityProvider = getIdentityProvider();
-        await identityProvider.listUsers(params, (err, data) => {
-            if (err) {
-                return res.status(500).json({
-                    success: false,
-                    message: err,
-                });
-            }
-
-            return res.status(200).json({
-                success: true,
-                result: data,
-            });
-        });
+        const users = await identityProvider.listUsers(params).promise();
+        await sendResponse(res, 200, '', users);
     }),
 );
-
-const isRoleValid = async (role) => {
-    const roles = await models.Role.find({});
-    for (r of roles) {
-        if (role.toString() === r._id.toString()) return true;
-    }
-
-    return false;
-};
-
-const getUserByUsername = async (username) => {
-    const params = {
-        UserPoolId: USER_POOL_ID,
-        Username: username,
-    };
-
-    const identityProvider = getIdentityProvider();
-    let user = null;
-    try {
-        user = await identityProvider.adminGetUser(params).promise();
-    } catch (e) {
-        console.log(e);
-    }
-
-    return user;
-};
-
-const getUserRoles = async (username) => {
-    const user = await getUserByUsername(username);
-    return parseUserSecurityRoles(user);
-};
-
-function arrayUnique(array) {
-    var a = array.concat();
-    for (var i = 0; i < a.length; ++i) {
-        for (var j = i + 1; j < a.length; ++j) {
-            if (a[i] === a[j]) a.splice(j--, 1);
-        }
-    }
-
-    return a;
-}
 
 /**
- * Removes invalid roles from the incoming roles array. For example, if a user has a role that is later deleted,
- * this will remove that old role from the user.
+ * Gives a user a role. The URL params are the user's unique
+ * username and the roleID to add.
  */
-const getValidRoles = async (roles) => {
-    let validRoles = [];
-
-    for (role of roles) {
-        const roleIsValid = await isRoleValid(role);
-        if (roleIsValid) validRoles.push(role);
-    }
-
-    return validRoles;
-};
-
-const createAttributeUpdateParams = (username, oldRoles, newRole) => {
-    let roles = oldRoles;
-    if (newRole) roles = arrayUnique(oldRoles.concat(newRole));
-
-    let rolesStringified = JSON.stringify(roles);
-
-    // AWS puts a hard limit on how many roles we can store
-    if (rolesStringified.length > SECURITY_ROLE_ATTRIBUTE_MAX_LEN) return null;
-
-    const params = {
-        UserAttributes: [
-            {
-                Name: SECURITY_ROLE_ATTRIBUTE_NAME,
-                Value: JSON.stringify(roles),
-            },
-        ],
-        UserPoolId: USER_POOL_ID,
-        Username: username,
-    };
-
-    return params;
-};
-
-// Gives a user a role
 router.put(
     '/:username/roles/:roleId',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { username, roleId } = req.params;
-        const roleIsValid = await isRoleValid(roleId);
-        if (!roleIsValid) {
-            return res.status(400).json({
-                success: false,
-                message: 'The requested role is not valid',
-            });
-        }
 
+        // Check that role is valid
+        const roleIsValid = await isRoleValid(roleId);
+        if (!roleIsValid) return sendResponse(res, 400, 'Invalid role');
+
+        // Create the object to pass to AWS to perform the update
         const userRoles = await getUserRoles(username);
         const validUserRoles = await getValidRoles(userRoles);
-        const params = createAttributeUpdateParams(
-            username,
-            validUserRoles,
-            roleId,
-        );
+        const params = createRoleUpdateParams(username, validUserRoles, roleId);
 
+        // If we couldn't create the params, the user has the max amount of roles.
         if (!params) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    'This user has reached the max amount of roles. They are not allowed to have any more.',
-            });
+            return sendResponse(res, 400, 'User has max amount of roles.');
         }
 
+        // Do the update
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminUpdateUserAttributes(
-            params,
-            (err, data) => {
-                if (err) {
-                    return res.status(500).json({
-                        success: false,
-                        message: err,
-                    });
-                }
-
-                return res.status(200).json({
-                    success: true,
-                    message: 'Role successfully added',
-                });
-            },
-        );
+        await identityProvider.adminUpdateUserAttributes(params).promise();
+        return sendResponse(res, 200, 'Role added to user');
     }),
 );
 
-// Deletes user role
+/**
+ * Deletes a role from a user. The URL params are the user's unique
+ * username and the roleID to add.
+ */
 router.delete(
     '/:username/roles/:roleId',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { username, roleId } = req.params;
+
+        // Check if user has this role
         const userRoles = await getUserRoles(username);
         const roleIndex = userRoles.indexOf(roleId);
-        if (roleIndex == -1) {
-            return res.status(400).json({
-                success: false,
-                message: 'User does not have role',
-            });
-        }
+        if (roleIndex === -1) return sendResponse(res, 400, 'User does not have role');
 
+        // Create params for the update in AWS
         userRoles.splice(roleIndex, 1);
-        const params = createAttributeUpdateParams(username, userRoles, null);
+        const params = createRoleUpdateParams(username, userRoles, null);
 
+        // Do the update
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminUpdateUserAttributes(
-            params,
-            (err, data) => {
-                if (err) {
-                    return res.status(500).json({
-                        success: false,
-                        message: err,
-                    });
-                }
-
-                return res.status(200).json({
-                    success: true,
-                    message: 'Role successfully removed',
-                });
-            },
-        );
+        await identityProvider.adminUpdateUserAttributes(params).promise();
+        return sendResponse(res, 200, 'Role removed');
     }),
 );
 
-// Gives a user an access level
+/**
+ * Gives a user an access level. The URL params are the user's unique
+ * username and the access level to set.
+ */
 router.put(
     '/:username/access/:accessLevel',
+    requireAdmin,
     errorWrap(async (req, res) => {
         const { username, accessLevel } = req.params;
+
+        // Create the params for the update
         const params = {
             UserAttributes: [
                 {
@@ -233,34 +115,24 @@ router.put(
             Username: username,
         };
 
+        // Do the update
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminUpdateUserAttributes(
-            params,
-            (err, data) => {
-                if (err) {
-                    return res.status(500).json({
-                        success: false,
-                        message: err,
-                    });
-                }
-
-                return res.status(200).json({
-                    success: true,
-                    message: 'Access level successfully changed',
-                });
-            },
-        );
+        await identityProvider.adminUpdateUserAttributes(params).promise();
+        await sendResponse(res, 200, 'Access updated');
     }),
 );
 
-// Gets information about the user making this request. Modify this as needed on the frontend
+/**
+ * Gets information about the user making this request.
+ */
 router.get(
     '/self',
     errorWrap(async (req, res) => {
-        res.status(200).json({
+        const data = {
             isAdmin: req.user.roles.includes(ADMIN_ID),
-            success: true,
-        });
+        };
+
+        await sendResponse(res, 200, '', data);
     }),
 );
 

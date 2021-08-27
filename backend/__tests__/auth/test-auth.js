@@ -1,7 +1,10 @@
-var server = require('../../app');
-const db = require('../utils/db');
 const request = require('supertest');
 const omitDeep = require('omit-deep-lodash');
+const AWS = require('aws-sdk-mock');
+const mongoose = require('mongoose');
+
+let server = require('../../app');
+const db = require('../utils/db');
 const {
     withAuthentication,
     createUserDataWithRolesAndAccess,
@@ -10,9 +13,7 @@ const {
     initS3Mocker,
     initS3GetMocker,
 } = require('../utils/auth');
-const AWS = require('aws-sdk-mock');
 const { MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../../middleware/authentication');
 const {
     PUT_PATIENT_DATA,
     EXPECTED_PUT_DATA,
@@ -21,7 +22,7 @@ const {
     EXPECTED_FILE_DATA,
 } = require('../mock-data/patients-mock-data');
 const { expectStrictEqualWithTimestampOrdering } = require('../utils/utils');
-const mongoose = require('mongoose');
+const { ADMIN_ID, ACCESS_LEVELS } = require('../../utils/constants');
 
 describe('Test authentication ', () => {
     afterAll(async () => await db.closeDatabase());
@@ -63,9 +64,9 @@ describe('Test authentication ', () => {
     });
 
     it('fails when given valid user token but improper roles', (done) => {
-        AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
-            return Promise.resolve(createUserDataWithRolesAndAccess());
-        });
+        AWS.remock('CognitoIdentityServiceProvider', 'getUser', () =>
+            Promise.resolve(createUserDataWithRolesAndAccess()),
+        );
 
         request(server)
             .get('/api/patients')
@@ -76,14 +77,14 @@ describe('Test authentication ', () => {
     });
 
     it('succeeds when given valid user token with proper roles', (done) => {
-        AWS.remock('CognitoIdentityServiceProvider', 'getUser', () => {
-            return Promise.resolve(
+        AWS.remock('CognitoIdentityServiceProvider', 'getUser', () =>
+            Promise.resolve(
                 createUserDataWithRolesAndAccess(
                     ACCESS_LEVELS.GRANTED,
                     ADMIN_ID,
                 ),
-            );
-        });
+            ),
+        );
 
         request(server)
             .get('/api/patients')
@@ -140,14 +141,14 @@ describe('Test authentication ', () => {
         );
 
         const res = await withAuthentication(
-            request(server).get(`/api/metadata/steps`),
+            request(server).get('/api/metadata/steps'),
         );
 
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        expect(omitDeep(resContent.result, '__v')).toStrictEqual([
-            EXPECTED_GET_RESTRICTED_DATA,
+        expect(omitDeep(resContent.result, '__v', '_id')).toStrictEqual([
+            omitDeep(EXPECTED_GET_RESTRICTED_DATA, '_id'),
         ]);
     });
 
@@ -232,8 +233,5 @@ describe('Test authentication ', () => {
 
         expect(res.status).toBe(403);
         expect(resContent.success).toBe(false);
-        expect(resContent.message).toBe(
-            'User does not have permissions to execute operation.',
-        );
     });
 });

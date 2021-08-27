@@ -1,14 +1,15 @@
-let server = require('../../../app');
-const db = require('../../utils/db');
 const _ = require('lodash');
 const AWS = require('aws-sdk-mock');
 const omitDeep = require('omit-deep-lodash');
+
+let server = require('../../../app');
+const db = require('../../utils/db');
 const { initAuthMocker, setCurrentUser } = require('../../utils/auth');
-const { getFieldByKey } = require('../../../utils/step-utils');
 const { models } = require('../../../models');
 const {
     GET_FIELD_BY_KEY_EXPECTED,
 } = require('../../mock-data/steps-mock-data');
+const { getFieldByKey } = require('../../../utils/fieldUtils');
 
 describe('Test getFieldByKey', () => {
     afterAll(async () => await db.closeDatabase());

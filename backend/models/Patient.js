@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const encrypt = require('mongoose-encryption');
 
+const { PATIENT_STATUS_ENUM } = require('../utils/constants');
+
 const UNECRYPTED_FIELDS = [
     'dateCreated',
     'orderId',
@@ -9,12 +11,10 @@ const UNECRYPTED_FIELDS = [
     'status',
 ];
 
-const overallStatusEnum = {
-    ACTIVE: 'Active',
-    ARCHIVED: 'Archived',
-    FEEDBACK: 'Feedback',
-};
-
+/**
+ * Schema for basic patient information. This is the bare minnimum of info needed
+ * to put a patient into the system.
+ */
 const patientSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     fathersName: { type: String, required: false, default: '' },
@@ -25,9 +25,9 @@ const patientSchema = new mongoose.Schema({
     lastEdited: { type: Date, required: false, default: Date.now },
     lastEditedBy: { type: String, required: true },
     status: {
-        type: overallStatusEnum,
+        type: PATIENT_STATUS_ENUM,
         required: false,
-        default: overallStatusEnum.ACTIVE,
+        default: PATIENT_STATUS_ENUM.ACTIVE,
     },
 });
 
@@ -38,9 +38,4 @@ patientSchema.plugin(encrypt, {
     excludeFromEncryption: UNECRYPTED_FIELDS,
 });
 
-const Patient = mongoose.model('Patient', patientSchema, 'Patient');
-
-module.exports = {
-    Patient,
-    overallStatusEnum,
-};
+module.exports.Patient = mongoose.model('Patient', patientSchema, 'Patient');

@@ -1,10 +1,11 @@
-var server = require('../../../app');
-const db = require('../../utils/db');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 const omitDeep = require('omit-deep-lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
+
+let server = require('../../../app');
+const db = require('../../utils/db');
 const {
     POST_STEP_WITHOUT_OPTIONS,
     POST_STEP_WITH_EMPTY_OPTIONS,
@@ -51,7 +52,7 @@ describe('POST /steps', () => {
     });
 
     it('returns 400 if missing required fields', (done) => {
-        withAuthentication(request(server).post(`/api/metadata/steps`)).expect(
+        withAuthentication(request(server).post('/api/metadata/steps')).expect(
             400,
             done,
         );
@@ -60,7 +61,7 @@ describe('POST /steps', () => {
     const postAndExpect = async (body, status) => {
         const initDbStats = await mongoose.connection.db.stats();
         const res = await withAuthentication(
-            request(server).post(`/api/metadata/steps`).send(body),
+            request(server).post('/api/metadata/steps').send(body),
         );
 
         expect(res.status).toBe(status);
@@ -121,7 +122,7 @@ describe('POST /steps', () => {
     it('successfully registers a new step when given good request', async () => {
         const body = POST_STEP_WITH_OPTIONS;
         const res = await withAuthentication(
-            request(server).post(`/api/metadata/steps`).send(body),
+            request(server).post('/api/metadata/steps').send(body),
         );
 
         // Check response
@@ -152,20 +153,20 @@ describe('PUT /steps/stepkey', () => {
         server = require('../../../app');
     });
 
-    it('given bad stepkey, return 404', async () => {
+    it('given bad stepkey, return 400', async () => {
         const invalidStep = [{ key: 'DoesNotExist' }];
 
         const res = await withAuthentication(
-            request(server).put(`/api/metadata/steps/`).send(invalidStep),
+            request(server).put('/api/metadata/steps/').send(invalidStep),
         );
 
-        expect(res.status).toBe(404);
+        expect(res.status).toBe(400);
     });
 
     it('can reorder fields in step', async () => {
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps`)
+                .put('/api/metadata/steps')
                 .send(PUT_STEP_REORDERED_FIELDS),
         );
 
@@ -173,8 +174,8 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        expect(resContent.result).toStrictEqual(
-            PUT_STEP_REORDERED_FIELDS_EXPECTED,
+        expect(omitDeep(resContent.result, '_id')).toStrictEqual(
+            omitDeep(PUT_STEP_REORDERED_FIELDS_EXPECTED, '_id'),
         );
 
         // Check database
@@ -189,7 +190,7 @@ describe('PUT /steps/stepkey', () => {
     it('can add a field correctly', async () => {
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps/`)
+                .put('/api/metadata/steps/')
                 .send(PUT_STEP_ADDED_FIELD),
         );
 
@@ -197,7 +198,9 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        expect(resContent.result).toStrictEqual(PUT_STEP_ADDED_FIELD_EXPECTED);
+        expect(omitDeep(resContent.result, '_id')).toStrictEqual(
+            omitDeep(PUT_STEP_ADDED_FIELD_EXPECTED, '_id'),
+        );
 
         // Check database
         let step = await models.Step.findOne({ key: STEP_KEY }).lean();
@@ -212,7 +215,7 @@ describe('PUT /steps/stepkey', () => {
     it('can edit current fields', async () => {
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps`)
+                .put('/api/metadata/steps')
                 .send(PUT_STEP_EDITED_FIELDS),
         );
 
@@ -220,7 +223,9 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
-        expect(resContent.result).toStrictEqual(PUT_STEP_EDITED_FIELDS);
+        expect(omitDeep(resContent.result, '_id')).toStrictEqual(
+            omitDeep(PUT_STEP_EDITED_FIELDS, '_id'),
+        );
 
         // Check database
         let step = await models.Step.findOne({ key: STEP_KEY }).lean();
@@ -237,7 +242,7 @@ describe('PUT /steps/stepkey', () => {
 
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps/`)
+                .put('/api/metadata/steps/')
                 .send(PUT_STEP_DUPLICATE_FIELD),
         );
 
@@ -257,7 +262,7 @@ describe('PUT /steps/stepkey', () => {
 
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps/`)
+                .put('/api/metadata/steps/')
                 .send(PUT_STEP_SUBFIELD_MISSING_FIELDS),
         );
 
@@ -275,7 +280,7 @@ describe('PUT /steps/stepkey', () => {
     it('correctly returns 200 when reordering steps', async () => {
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps`)
+                .put('/api/metadata/steps')
                 .send(PUT_STEPS_SWAPPED_STEPNUMBER),
         );
 
@@ -284,7 +289,7 @@ describe('PUT /steps/stepkey', () => {
         expect(res.status).toBe(200);
         expect(resContent.success).toBe(true);
         expect(omitDeep(resContent.result, '_id', '__v')).toStrictEqual(
-            PUT_STEPS_SWAPPED_STEPNUMBER,
+            omitDeep(PUT_STEPS_SWAPPED_STEPNUMBER, '_id'),
         );
 
         // Check database
@@ -301,7 +306,7 @@ describe('PUT /steps/stepkey', () => {
 
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps`)
+                .put('/api/metadata/steps')
                 .send(PUT_DUPLICATE_STEPS),
         );
 
@@ -320,7 +325,7 @@ describe('PUT /steps/stepkey', () => {
 
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps/`)
+                .put('/api/metadata/steps/')
                 .send(PUT_STEP_EDIT_FIELDTYPE),
         );
 
@@ -328,7 +333,6 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(400);
         expect(resContent.success).toBe(false);
-        expect(resContent.message).toBe('Cannot change fieldType');
 
         const stepAfter = await models.Step.find({}).lean();
 
@@ -341,7 +345,7 @@ describe('PUT /steps/stepkey', () => {
 
         const res = await withAuthentication(
             request(server)
-                .put(`/api/metadata/steps/`)
+                .put('/api/metadata/steps/')
                 .send(PUT_STEP_DELETED_FIELD),
         );
 
@@ -349,7 +353,6 @@ describe('PUT /steps/stepkey', () => {
         const resContent = JSON.parse(res.text);
         expect(res.status).toBe(400);
         expect(resContent.success).toBe(false);
-        expect(resContent.message).toBe('Cannot delete fields');
 
         // Check database
         const stepAfter = await models.Step.find({}).lean();

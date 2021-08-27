@@ -1,6 +1,9 @@
 const faker = require('faker');
 const fs = require('fs');
-const { overallStatusEnum, stepStatusEnum } = require('../backend/models');
+const {
+    PATIENT_STATUS_ENUM,
+    STEP_STATUS_ENUM,
+} = require('../backend/utils/constants');
 const mongoose = require('mongoose');
 
 const generateData = () => {
@@ -47,9 +50,9 @@ const generatePatient = () => {
     patient.lastEditedBy = faker.name.firstName() + faker.name.lastName();
 
     const status = getRandomInt(3);
-    if (status == 0) patient.status = overallStatusEnum.ACTIVE;
-    else if (status == 1) patient.status = overallStatusEnum.ARCHIVED;
-    else patient.status = overallStatusEnum.FEEDBACK;
+    if (status == 0) patient.status = PATIENT_STATUS_ENUM.ACTIVE;
+    else if (status == 1) patient.status = PATIENT_STATUS_ENUM.ARCHIVED;
+    else patient.status = PATIENT_STATUS_ENUM.FEEDBACK;
 
     return patient;
 };
@@ -84,8 +87,8 @@ const removeNulls = (arr) => {
 const appendGlobalStepData = (generateInfo, userID) => {
     let info = null;
     const status = getRandomInt(3);
-    if (status == 0) info = generateInfo(stepStatusEnum.FINISHED);
-    else if (status == 1) info = generateInfo(stepStatusEnum.PARTIAL);
+    if (status == 0) info = generateInfo(STEP_STATUS_ENUM.FINISHED);
+    else if (status == 1) info = generateInfo(STEP_STATUS_ENUM.PARTIAL);
     else return null;
 
     info.patientId = userID;
@@ -99,17 +102,17 @@ const generateMedicalInfo = (status) => {
     info._id = mongoose.Types.ObjectId();
     info.status = status;
 
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.address = faker.address.streetAddress();
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.homePhone = faker.phone.phoneNumber();
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.cellPhone = faker.phone.phoneNumber();
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.age = getRandomInt(70) + 1;
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.nationalID = faker.random.alphaNumeric();
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.householdSize = getRandomInt(10) + 1;
 
     const selectedGender = getRandomInt(3);
@@ -118,7 +121,7 @@ const generateMedicalInfo = (status) => {
         '607080f7da92745444f64c12',
         '607080f7da92745444f64c14',
     ];
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.gender = genders[selectedGender];
 
     return info;
@@ -128,15 +131,15 @@ const generateSurveyInfo = (status) => {
     const info = {};
     info._id = mongoose.Types.ObjectId();
     info.status = status;
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.numWorkingPeople = getRandomInt(6);
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.numberCars = getRandomInt(3);
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.numberRetiredPeople = getRandomInt(6);
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.numMilitaryPolice = getRandomInt(4);
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.numDisabledPeople = getRandomInt(5);
 
     const incomes = [
@@ -148,7 +151,7 @@ const generateSurveyInfo = (status) => {
         '6070816ada92745444f64c5c',
     ];
     const selectedIncome = getRandomInt(incomes.length);
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.incomeRange = incomes[selectedIncome];
 
     const insurances = [
@@ -157,7 +160,7 @@ const generateSurveyInfo = (status) => {
         '6070816ada92745444f64c65',
     ];
     const selectedInsurance = getRandomInt(insurances.length);
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.typeOfInsurance = insurances[selectedInsurance];
 
     return info;
@@ -166,26 +169,26 @@ const generateSurveyInfo = (status) => {
 const generateExampleInfo = (status) => {
     const info = {};
     info._id = mongoose.Types.ObjectId();
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.status = status;
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.string = faker.random.alphaNumeric();
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.multilineString = faker.lorem.paragraphs();
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.number = getRandomInt(100);
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.date = faker.date.past();
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.phone = faker.phone.phoneNumber();
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.file = generateFiles(getRandomInt(5));
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.audio = generateFiles(getRandomInt(5));
 
     const options = ['607086644e7ccf3c7cea23da', '607086644e7ccf3c7cea23dc'];
     const selectedOption = getRandomInt(options.length);
-    if (status == stepStatusEnum.FINISHED || getRandomInt(2))
+    if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.radioButton = options[selectedOption];
 
     return info;

@@ -3,7 +3,32 @@
     "parserOptions": {
         "ecmaVersion": 6
     },
+    "plugins": ["jest"],
     "env": {
-        "es6": true
-    }
+        "es6": true,
+        "node": true,
+        "jest/globals": true
+    },
+    "rules": {
+        "indent": [2, 4],
+        "no-use-before-define": "off",
+        "no-plusplus": "off",
+        "no-throw-literal": "off",
+        "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+        "import/order": [
+            "warn",
+            {
+                "groups": [
+                    "builtin",
+                    "external",
+                    "internal",
+                    "parent",
+                    "sibling",
+                    "index"
+                ],
+                "newlines-between": "always"
+            }
+        ]
+    },
+    "extends": ["airbnb"]
 }

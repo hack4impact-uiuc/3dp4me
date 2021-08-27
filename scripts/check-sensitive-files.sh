@@ -1,15 +1,15 @@
 #!/bin/bash
-
 ROOT_DIR="$(pwd)/"
 LIST=$(git diff --cached --name-only --diff-filter=ACRM)
+FORBIDDEN_FILES=(backend/production.env backend/development.env frontend/production.env frontend/development.env)
 
-for file in $LIST
+for file in "${FORBIDDEN_FILES[@]}"
 do
-    if [[ "${file: -4}" == *.env ]]; then
-        echo
-        echo You cannot commit file $file! Did you run the init script?
-        echo From the root of the repo, run yarn init-repo
-        exit 1
+    git diff --quiet --exit-code $file
+    if [ $? -ne 0 ]; 
+    then
+        echo You cannot commit file $file! Run the following command:
+        echo git reset HEAD -- $file
     fi
 done
 exit 0

@@ -16,6 +16,10 @@
         "del": "^6.0.0",
         "dotenv": "^8.2.0",
         "eslint": "^7.18.0",
+        "eslint-plugin-import": "^2.24.2",
+        "eslint-plugin-jest": "^24.4.0",
+        "eslint-plugin-jsx-a11y": "^6.4.1",
+        "eslint-plugin-react": "^7.24.0",
         "express": "^4.17.1",
         "express-async-errors": "^3.1.1",
         "express-fileupload": "^1.2.0",
@@ -28,6 +32,8 @@
         "jest": "^27.0.6",
         "json": "^11.0.0",
         "libphonenumber-js": "^1.9.11",
+        "lodash": "^4.17.21",
+        "loglevel": "^1.7.1",
         "mongodb-memory-server": "^6.9.6",
         "mongoose": "^5.13.5",
         "mongoose-encryption": "^2.1.0",
@@ -41,6 +47,7 @@
         "webpack-node-externals": "^2.5.2"
     },
     "devDependencies": {
+        "eslint-config-airbnb": "^18.2.1",
         "nodemon": "^2.0.4"
     },
     "scripts": {
@@ -49,8 +56,7 @@
         "start": "cross-env NODE_ENV=development node ./bin/www",
         "test": "jest --runInBand --forceExit",
         "lint": "eslint --fix \"./**/*.{js,jsx}\" -c .eslintrc.json",
-        "format": "prettier --write \"./**/*.{js,jsx,json,md}\"",
-        "format:check": "prettier --check \"./**/*.{js,jsx,json,md}\""
+        "lint:check": "eslint \"./**/*.{js,jsx}\" -c .eslintrc.json"
     },
     "jest": {
         "testEnvironment": "node",

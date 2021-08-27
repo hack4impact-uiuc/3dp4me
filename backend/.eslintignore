@@ -1,1 +1,5 @@
 **/mock-data
+webpack.config.js
+build/
+__tests__/
+gulpfile.js

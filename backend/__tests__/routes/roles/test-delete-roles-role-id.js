@@ -1,10 +1,10 @@
-var server = require('../../../app');
-const db = require('../../utils/db');
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
 
+let server = require('../../../app');
+const db = require('../../utils/db');
 const {
     initAuthMocker,
     setCurrentUser,
@@ -27,7 +27,7 @@ describe('DELETE /roles/:roleid', () => {
     });
 
     it('returns 500 when given bad ID format', (done) => {
-        withAuthentication(request(server).delete(`/api/roles/badid`)).expect(
+        withAuthentication(request(server).delete('/api/roles/badid')).expect(
             500,
             done,
         );
@@ -71,7 +71,7 @@ describe('DELETE /roles/:roleid', () => {
             request(server).delete(`/api/roles/${immutableRoleId}`),
         );
 
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(403);
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(false);
 

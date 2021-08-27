@@ -1,10 +1,12 @@
-var server = require('../../../app');
-const db = require('../../utils/db');
+const { resolve } = require('path');
+
 const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
-const resolve = require('path').resolve;
+
+let server = require('../../../app');
+const db = require('../../utils/db');
 const {
     initAuthMocker,
     setCurrentUser,
@@ -13,7 +15,7 @@ const {
     initS3Mocker,
     getLastUploadedFileParams,
 } = require('../../utils/auth');
-const { S3_BUCKET_NAME } = require('../../../utils/aws/aws-exports');
+const { S3_BUCKET_NAME } = require('../../../utils/aws/awsExports');
 
 describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
     afterAll(async () => await db.closeDatabase());
@@ -34,7 +36,7 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
     const STEP_KEY = 'example';
     const FIELD_KEY = 'file';
     const FILE_NAME = 'newfile.txt';
-    const TEST_FILE = resolve(`./__tests__/mock-data/test-file.jpg`);
+    const TEST_FILE = resolve('./__tests__/mock-data/test-file.jpg');
 
     const expectStatusWithDBUnchanged = async (requestURL, status) => {
         const initDbStats = await mongoose.connection.db.stats();
@@ -85,21 +87,21 @@ describe('POST /patients/:id/files/:stepKey/:fieldKey/:fileName', () => {
         expect(resContent.success).toBe(true);
 
         // Check response
-        expect(resContent.data.name).toBe(FILE_NAME);
-        expect(resContent.data.uploadDate).toBeGreaterThanOrEqual(
+        expect(resContent.result.name).toBe(FILE_NAME);
+        expect(resContent.result.uploadDate).toBeGreaterThanOrEqual(
             startTimestamp,
         );
-        expect(resContent.data.uploadDate).toBeLessThanOrEqual(Date.now());
-        expect(resContent.data.uploadedBy).toBe(
+        expect(resContent.result.uploadDate).toBeLessThanOrEqual(Date.now());
+        expect(resContent.result.uploadedBy).toBe(
             getCurrentAuthenticatedUserAttribute('name'),
         );
-        expect(resContent.data.mimetype).toBe('image/jpeg');
-        expect(resContent.data.size).toBe(4855);
+        expect(resContent.result.mimetype).toBe('image/jpeg');
+        expect(resContent.result.size).toBe(4855);
 
         // Check DB
         const patientData = await mongoose
             .model(STEP_KEY)
-            .findOne({ patientId: patientId });
+            .findOne({ patientId });
         expect(patientData.lastEdited.getTime()).toBeGreaterThanOrEqual(
             startTimestamp,
         );

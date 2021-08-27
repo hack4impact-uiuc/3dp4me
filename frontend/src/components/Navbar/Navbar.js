@@ -10,8 +10,9 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES, ROUTES } from '../../utils/constants';
 
 import './Navbar.scss';
-import { useStyles } from './Navbar.style';
 import { Context } from '../../store/Store';
+
+import { useStyles } from './Navbar.style';
 
 const Navbar = ({ username, userEmail }) => {
     const state = useContext(Context)[0];

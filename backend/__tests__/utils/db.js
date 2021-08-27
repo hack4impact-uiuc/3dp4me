@@ -1,26 +1,24 @@
-const _ = require('lodash');
 const mongoose = require('mongoose');
 const { MongoMemoryReplSet } = require('mongodb-memory-server');
+
 const patientData = require('../../../scripts/data/patients.json');
 const roleData = require('../../../scripts/data/roles.json');
 const stepData = require('../../../scripts/data/steps.json');
 const medicalData = require('../../../scripts/data/medicalInfo.json');
 const surveyData = require('../../../scripts/data/survey.json');
 const exampleData = require('../../../scripts/data/example.json');
-const { initModels } = require('../../utils/init-models');
+const { initModels } = require('../../utils/initDb');
 const { models } = require('../../models');
 
-console.log('TTES');
 let patients = null;
 let roles = null;
 let steps = null;
 let survey = null;
 let example = null;
 let medicalInfo = null;
-let replSet = new MongoMemoryReplSet({
+const replSet = new MongoMemoryReplSet({
     replSet: { storageEngine: 'wiredTiger' },
 });
-console.log('2');
 
 /**
  * Connect to the in-memory database.
@@ -29,9 +27,7 @@ console.log('2');
 module.exports.connect = async () => {
     if (replSet._state !== 'running') await replSet.start();
     await replSet.waitUntilRunning();
-    console.log('5');
-    const uri = await replSet.getUri();
-    console.log('6');
+    const uri = replSet.getUri();
 
     const mongooseOpts = {
         useNewUrlParser: true,
@@ -39,9 +35,7 @@ module.exports.connect = async () => {
     };
 
     await mongoose.connect(uri, mongooseOpts);
-    console.log('7');
     await this.resetDatabase();
-    console.log('4');
 };
 
 /**
@@ -69,10 +63,11 @@ module.exports.resetDatabase = async () => {
     await saveMany(medicalInfo);
 };
 
-const saveMany = async (models) => {
-    for (let i = 0; i < models.length; i++) {
-        models[i].isNew = true;
-        await models[i].save();
+const saveMany = async (modelList) => {
+    for (let i = 0; i < modelList.length; i++) {
+        const model = modelList[i];
+        model.isNew = true;
+        await model.save();
     }
 };
 
@@ -92,9 +87,8 @@ const constructDynamicData = () => {
     medicalInfo = constructAll(medicalData, mongoose.model('medicalInfo'));
 };
 
-const constructAll = (data, constructor) => {
-    return data.map((item) => new constructor(item));
-};
+const constructAll = (data, constructor) =>
+    data.map((item) => new constructor(item));
 
 /**
  * Remove all the data for all db collections.
@@ -105,7 +99,7 @@ module.exports.clearDatabase = async () => {
         delete mongoose.connection.models[step.key];
     });
 
-    const collections = mongoose.connection.collections;
+    const { collections } = mongoose.connection;
     for (const key in collections) {
         const collection = collections[key];
         await collection.deleteMany();
