@@ -57,7 +57,7 @@ jobs:
 
       - name: Run linter
         working-directory: ./backend
-        run: yarn lint
+        run: yarn lint:check
 
   test:
     runs-on: ubuntu-latest
