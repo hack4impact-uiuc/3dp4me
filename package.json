@@ -40,10 +40,10 @@
             "prettier --write"
         ],
         "./api/**/*.{js,jsx}": [
-            "eslint --fix -c api/.eslintrc.json"
+            "cd api && yarn lint && yarn format"
         ],
         "./client/**/*.{js,jsx}": [
-            "eslint --fix -c client/.eslintrc.json"
+            "cd frontend && yarn lint"
         ]
     },
     "dependencies": {
