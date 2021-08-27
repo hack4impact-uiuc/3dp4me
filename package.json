@@ -40,7 +40,7 @@
             "prettier --write"
         ],
         "./api/**/*.{js,jsx}": [
-            "cd api && yarn lint && yarn format"
+            "cd api && yarn lint"
         ],
         "./client/**/*.{js,jsx}": [
             "cd frontend && yarn lint"

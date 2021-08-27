@@ -53,9 +53,7 @@
         "start": "cross-env NODE_ENV=development node ./bin/www",
         "test": "jest --runInBand --forceExit",
         "lint": "eslint --fix \"./**/*.{js,jsx}\" -c .eslintrc.json",
-        "lint:check": "eslint \"./**/*.{js,jsx}\" -c .eslintrc.json",
-        "format": "prettier --write \"./**/*.{js,jsx,json,md}\"",
-        "format:check": "prettier --check \"./**/*.{js,jsx,json,md}\""
+        "lint:check": "eslint \"./**/*.{js,jsx}\" -c .eslintrc.json"
     },
     "jest": {
         "testEnvironment": "node",

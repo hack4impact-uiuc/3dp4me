@@ -10,6 +10,7 @@
         "jest/globals": true
     },
     "rules": {
+        "indent": [2, 4],
         "no-use-before-define": "off",
         "no-plusplus": "off",
         "no-throw-literal": "off",
