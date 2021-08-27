@@ -36,8 +36,8 @@
         }
     },
     "lint-staged": { 
-        "./api/**/*.{js,jsx}": [
-            "cd api && yarn lint"
+        "./backend/**/*.{js,jsx}": [
+            "cd backend && yarn lint"
         ],
         "./client/**/*.{js,css,scss,json,md,jsx}": [
             "prettier --write"
