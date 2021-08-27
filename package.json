@@ -35,15 +35,15 @@
             "pre-commit": "yarn check-sensitive-files && lint-staged"
         }
     },
-    "lint-staged": { 
-        "./backend/**/*.{js,jsx}": [
-            "cd backend && yarn lint"
-        ],
-        "./client/**/*.{js,css,scss,json,md,jsx}": [
+    "lint-staged": {
+        "./**/*.{js,css,scss,json,md,jsx}": [
             "prettier --write"
         ],
+        "./api/**/*.{js,jsx}": [
+            "eslint --fix -c api/.eslintrc.json"
+        ],
         "./client/**/*.{js,jsx}": [
-            "cd frontend && yarn lint"
+            "eslint --fix -c client/.eslintrc.json"
         ]
     },
     "dependencies": {
