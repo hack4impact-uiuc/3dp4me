@@ -37,7 +37,7 @@
         "mongodb-memory-server": "^6.9.6",
         "mongoose": "^5.13.5",
         "mongoose-encryption": "^2.1.0",
-        "node": "^15.0.0",
+        "node": "^16.9.1",
         "omit-deep-lodash": "^1.1.5",
         "prettier": "^2.2.1",
         "superagent-defaults": "^0.1.14",
