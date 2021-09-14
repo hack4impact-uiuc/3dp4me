@@ -28,9 +28,8 @@ const PatientTable = ({
 }) => {
     const errorWrap = useErrorWrap();
     const translations = useTranslations()[0];
-    const [isCreatePatientModalOpen, setCreatePatientModalOpen] = useState(
-        false,
-    );
+    const [isCreatePatientModalOpen, setCreatePatientModalOpen] =
+        useState(false);
 
     /**
      * Saves a patient to the DB

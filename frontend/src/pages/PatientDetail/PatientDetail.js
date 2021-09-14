@@ -33,9 +33,8 @@ const PatientDetail = () => {
     const [selectedStep, setSelectedStep] = useState('');
     const [stepMetaData, setStepMetaData] = useState(null);
     const [patientData, setPatientData] = useState(null);
-    const [isManagePatientModalOpen, setManagePatientModalOpen] = useState(
-        false,
-    );
+    const [isManagePatientModalOpen, setManagePatientModalOpen] =
+        useState(false);
 
     /**
      * Fetch metadata for all steps and the patient's data.

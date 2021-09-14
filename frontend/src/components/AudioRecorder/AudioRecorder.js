@@ -188,9 +188,9 @@ class AudioRecorder extends React.Component {
         fetch(this.state.blobURL)
             .then((r) => r.blob())
             .then((blob) => {
-                const file_name = `${
-                    this.props.fieldKey
-                }_${Math.random().toString(36).substring(6)}.mp3`;
+                const file_name = `${this.props.fieldKey}_${Math.random()
+                    .toString(36)
+                    .substring(6)}.mp3`;
                 const file_object = new File([blob], file_name, {
                     type: 'audio/mp3',
                 });
