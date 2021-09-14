@@ -5796,10 +5796,10 @@ country-flag-icons@^1.0.2:
   resolved "https://registry.yarnpkg.com/country-flag-icons/-/country-flag-icons-1.4.10.tgz#3d440b14ff745caf755afb326398285ce2451bb6"
   integrity sha512-4qngHBNB+k7IyXztHYVh0Nfo1SBwUX0ePksCQKntuuCHr/sNbzxtl1Oi0SDtov1q19HqJBzKdULEefYmafXmdg==
 
-cra-template@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/cra-template/-/cra-template-1.0.3.tgz#0d717b1e04cac41984a345b3feabe082fcf76eb7"
-  integrity sha512-cId6LtH8xfrFSz8XoEjaXIVjB0N7TJubro08WuVbqGuOaYwoakYUtCWlVvLeUKNsy42SkulYx3soABetKhf0EA==
+cra-template@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/cra-template/-/cra-template-1.1.2.tgz#04bb68c9e9c0822d3c6436950fc6f202c92bc9e5"
+  integrity sha512-NZXGdiY+AODaBU5AZFCLlohOnhQRG+NI8oixWuMQySA3Fp+AcOpZt2d6U7hgUn8wgbLm8ynJwg6hih+ORyojfQ==
 
 create-ecdh@^4.0.0:
   version "4.0.4"
