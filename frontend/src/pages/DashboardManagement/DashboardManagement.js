@@ -55,11 +55,11 @@ const SectionTab = () => {
         setIsEditing(false);
     };
 
-    function UpdateSelectedStep(stepKey) {
+    const UpdateSelectedStep = (stepKey) => {
         setSelectedStep(stepKey);
-    }
+    };
 
-    function onDownPressed(stepKey) {
+    const onDownPressed = (stepKey) => {
         const updatedMetadata = _.cloneDeep(stepMetadata);
         const foundField = updatedMetadata.find(
             (field) => field.key === stepKey,
@@ -73,9 +73,9 @@ const SectionTab = () => {
             const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
-    }
+    };
 
-    function onCardDownPressed(stepKey, fieldRoot, fieldNumber) {
+    const onCardDownPressed = (stepKey, fieldRoot, fieldNumber) => {
         const updatedMetadata = _.cloneDeep(stepMetadata);
         const foundStep = updatedMetadata.find(
             (field) => field.key === stepKey,
@@ -90,9 +90,9 @@ const SectionTab = () => {
             const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
-    }
+    };
 
-    function onUpPressed(stepKey) {
+    const onUpPressed = (stepKey) => {
         const updatedMetadata = _.cloneDeep(stepMetadata);
         const foundField = updatedMetadata.find(
             (field) => field.key === stepKey,
@@ -107,9 +107,9 @@ const SectionTab = () => {
             const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
-    }
+    };
 
-    function onCardUpPressed(stepKey, fieldRoot, fieldNumber) {
+    const onCardUpPressed = (stepKey, fieldRoot, fieldNumber) => {
         const updatedMetadata = _.cloneDeep(stepMetadata);
         const foundStep = updatedMetadata.find(
             (field) => field.key === stepKey,
@@ -123,7 +123,7 @@ const SectionTab = () => {
             const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
-    }
+    };
 
     function GenerateStepManagementContent() {
         const selectedStepMetadata = stepMetadata.find(
