@@ -21,7 +21,7 @@
 
         .sig-ctl-button {
             background-color: $button;
-            width: $sigContainerWidth / 2;
+            width: math.div($sigContainerWidth, 2);
             color: white;
             padding: 0 24px 0 24px;
             height: 38px;
