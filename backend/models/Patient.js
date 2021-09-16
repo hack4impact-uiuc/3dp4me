@@ -25,7 +25,8 @@ const patientSchema = new mongoose.Schema({
     lastEdited: { type: Date, required: false, default: Date.now },
     lastEditedBy: { type: String, required: true },
     status: {
-        type: PATIENT_STATUS_ENUM,
+        type: String,
+        enum: Object.values(PATIENT_STATUS_ENUM),
         required: false,
         default: PATIENT_STATUS_ENUM.ACTIVE,
     },
