@@ -14,7 +14,7 @@
         "eslint-plugin-react-hooks": "^4.2.0",
         "husky": "^7.0.2",
         "lint-staged": "^10.5.3",
-        "prettier": "^2.2.1"
+        "prettier": "^2.4.0"
     },
     "scripts": {
         "init-repo": "chmod +x ./scripts/init-repo.sh && ./scripts/init-repo.sh",
