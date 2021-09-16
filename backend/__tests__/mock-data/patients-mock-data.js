@@ -258,4 +258,5 @@ module.exports.EXPECTED_GET_RESTRICTED_DATA = {
     ],
 };
 
-module.exports.EXPECTED_FILE_DATA = '1,2,3,4,5,6\n1,2,3,4,5,6';
+module.exports.EXPECTED_FILE_DATA =
+    'Test data. No newlines here, Windows be dumm like that.';

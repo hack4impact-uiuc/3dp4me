@@ -54,7 +54,7 @@
         "dev": "nodemon ./bin/www",
         "build": "cross-env NODE_ENV=production webpack ./bin/www",
         "start": "cross-env NODE_ENV=development node ./bin/www",
-        "test": "cross-env NODE_ENV=test jest --runInBand --forceExit",
+        "test": "cross-env S3_BUCKET_NAME=test jest --runInBand --forceExit",
         "lint": "eslint --fix \"./**/*.{js,jsx}\" -c .eslintrc.json",
         "lint:check": "eslint \"./**/*.{js,jsx}\" -c .eslintrc.json"
     },
