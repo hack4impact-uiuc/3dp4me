@@ -52,7 +52,7 @@ describe('PUT /patients/:id', () => {
             grandfathersName: 'Gramps',
             orderId: 'm',
             familyName: 'Chalasani',
-            status: 'Inactive',
+            status: 'Archived',
         };
 
         const res = await withAuthentication(
