@@ -189,7 +189,6 @@ describe('Test authentication ', () => {
         const MOCK_ROLE_ID = '606e0a4602b23d02bc77673a';
         const PATIENT_ID = '60944e084f4c0d4330cc2594';
         const STEP_KEY = 'example';
-        const model = mongoose.model(STEP_KEY);
         setCurrentUser(
             AWS,
             createUserDataWithRolesAndAccess(
@@ -204,7 +203,6 @@ describe('Test authentication ', () => {
             ),
         );
 
-        const path = require('path');
         expect(res.text).toBe(EXPECTED_FILE_DATA);
     });
 
