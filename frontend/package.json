@@ -69,6 +69,7 @@
     },
     "devDependencies": {
         "cypress": "^8.4.0",
+        "eslint-config-prettier": "^8.3.0",
         "react-app-env": "^1.2.3"
     }
 }
