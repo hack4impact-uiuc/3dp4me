@@ -3,7 +3,6 @@
     "version": "1.0.0",
     "description": "Package with the development tools for 3DP4ME (such as Prettier and Husky). Please see the individual client and api sub-packages for the actual dependencies.",
     "devDependencies": {
-        "eslint": "^7.32.0",
         "eslint-config-airbnb": "^18.0.1",
         "eslint-config-prettier": "^6.3.0",
         "eslint-plugin-flowtype": "^4.3.0",
@@ -12,7 +11,7 @@
         "eslint-plugin-prettier": "^3.1.1",
         "eslint-plugin-react": "^7.25.1",
         "eslint-plugin-react-hooks": "^4.2.0",
-        "husky": "^7.0.2",
+        "husky": "^7.0.0",
         "lint-staged": "^10.5.3",
         "prettier": "^2.4.0"
     },
@@ -20,7 +19,8 @@
         "init-repo": "chmod +x ./scripts/init-repo.sh && ./scripts/init-repo.sh",
         "check-sensitive-files": "chmod +x ./scripts/check-sensitive-files.sh && ./scripts/check-sensitive-files.sh",
         "format": "prettier --write '{client/**/*.{js,jsx,css,scss,json,md},api/**/*.{js,jsx,json,md}}'",
-        "gen-db": "node scripts/generate-db-data.js"
+        "gen-db": "node scripts/generate-db-data.js",
+        "prepare": "husky install"
     },
     "repository": {
         "type": "git",
@@ -30,11 +30,6 @@
         "url": "https://github.com/hack4impact-uiuc/3dp4me/issues"
     },
     "homepage": "https://github.com/hack4impact-uiuc/3dp4me#readme",
-    "husky": {
-        "hooks": {
-            "pre-commit": "yarn check-sensitive-files && lint-staged"
-        }
-    },
     "lint-staged": {
         "./**/*.{js,css,scss,json,md,jsx}": [
             "prettier --write"

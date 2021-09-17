@@ -1,4 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
+. "$(dirname "$0")/common.sh"
 
-yarn check-sensitive-files && lint-staged
+yarn check-sensitive-files && yarn lint-staged
