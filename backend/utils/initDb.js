@@ -23,9 +23,9 @@ module.exports.initDB = () => {
             log.info('Connected to the DB');
             this.initModels();
         })
-        .on('error', (error) => log.error('Error connecting to the database: ', error));
-
-    mongoose.set('useFindAndModify', false);
+        .on('error', (error) =>
+            log.error('Error connecting to the database: ', error),
+        );
 };
 
 /**
@@ -92,30 +92,30 @@ const getStepBaseSchema = () => {
  */
 module.exports.generateFieldSchema = (field) => {
     switch (field.fieldType) {
-    case FIELDS.STRING:
-        return getStringSchema();
-    case FIELDS.MULTILINE_STRING:
-        return getStringSchema();
-    case FIELDS.NUMBER:
-        return getNumberSchema();
-    case FIELDS.DATE:
-        return getDateSchema();
-    case FIELDS.PHONE:
-        return getStringSchema();
-    case FIELDS.RADIO_BUTTON:
-        return getRadioButtonSchema(field);
-    case FIELDS.FILE:
-        return getFileSchema();
-    case FIELDS.AUDIO:
-        return getFileSchema();
-    case FIELDS.FIELD_GROUP:
-        return getFieldGroupSchema(field);
-    case FIELDS.SIGNATURE:
-        return getSignatureSchema(field);
-    case FIELDS.DIVIDER:
-        return null;
-    default:
-        throw new Error(`Unrecognized field type, ${field.type}`);
+        case FIELDS.STRING:
+            return getStringSchema();
+        case FIELDS.MULTILINE_STRING:
+            return getStringSchema();
+        case FIELDS.NUMBER:
+            return getNumberSchema();
+        case FIELDS.DATE:
+            return getDateSchema();
+        case FIELDS.PHONE:
+            return getStringSchema();
+        case FIELDS.RADIO_BUTTON:
+            return getRadioButtonSchema(field);
+        case FIELDS.FILE:
+            return getFileSchema();
+        case FIELDS.AUDIO:
+            return getFileSchema();
+        case FIELDS.FIELD_GROUP:
+            return getFieldGroupSchema(field);
+        case FIELDS.SIGNATURE:
+            return getSignatureSchema(field);
+        case FIELDS.DIVIDER:
+            return null;
+        default:
+            throw new Error(`Unrecognized field type, ${field.type}`);
     }
 };
 
@@ -135,7 +135,8 @@ const getDateSchema = () => ({
 });
 
 const getRadioButtonSchema = (fieldMetadata) => {
-    if (!fieldMetadata?.options?.length) throw new Error('Radio button must have options');
+    if (!fieldMetadata?.options?.length)
+        throw new Error('Radio button must have options');
 
     return {
         type: String,
@@ -144,7 +145,8 @@ const getRadioButtonSchema = (fieldMetadata) => {
 };
 
 const getFieldGroupSchema = (fieldMetadata) => {
-    if (!fieldMetadata?.subFields?.length) throw new Error('Field groups must have sub fields');
+    if (!fieldMetadata?.subFields?.length)
+        throw new Error('Field groups must have sub fields');
 
     return {
         type: [generateFieldsFromMetadata(fieldMetadata.subFields)],
