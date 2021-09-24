@@ -128,8 +128,10 @@ router.put(
 router.get(
     '/self',
     errorWrap(async (req, res) => {
+        const isAdmin = req?.user?.roles?.includes(ADMIN_ID) || false;
+
         const data = {
-            isAdmin: req.user.roles.includes(ADMIN_ID),
+            isAdmin,
         };
 
         await sendResponse(res, 200, '', data);

@@ -37,6 +37,18 @@ router.get(
 );
 
 /**
+ * Returns the count of documents in the patients collection
+ */
+
+router.get(
+    '/count',
+    errorWrap(async (req, res) => {
+        const patientCount = await models.Patient.count();
+        return sendResponse(res, 200, 'success', patientCount);
+    }),
+);
+
+/**
  * Returns all of our data on a specific patient. Gets both the basic info
  * from the Patient collection and the data from each step.
  * */
