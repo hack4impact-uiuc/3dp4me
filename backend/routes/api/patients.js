@@ -49,6 +49,27 @@ router.get(
 );
 
 /**
+ * Returns a specific amount of patients based on page number
+ */
+
+router.get(
+    '/:pageNumber/:nPerPage',
+    errorWrap(async (req, res) => {
+        let { pageNumber, nPerPage } = req.params;
+        pageNumber = parseInt(pageNumber, 10);
+        nPerPage = parseInt(nPerPage, 10);
+
+        const documentsToSkip = pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0;
+
+        const patients = await models.Patient.find()
+            .sort({ _id: 1 }).skip(documentsToSkip)
+            .limit(nPerPage);
+
+        await sendResponse(res, 200, '', patients);
+    }),
+);
+
+/**
  * Returns all of our data on a specific patient. Gets both the basic info
  * from the Patient collection and the data from each step.
  * */
