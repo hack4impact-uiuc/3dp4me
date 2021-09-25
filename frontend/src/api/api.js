@@ -2,6 +2,23 @@ import instance from './axios-config';
 
 const FileDownload = require('js-file-download');
 
+
+export const getPatientsCount = async () => {
+    const requestString = '/patients/count';
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const getPatientsByPageNumber = async (pageNumber, nPerPage) => {
+    const requestString = `/patients/${pageNumber}/${nPerPage}`;
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
 export const getAllPatients = async () => {
     const requestString = '/patients';
     const res = await instance.get(requestString);
