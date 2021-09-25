@@ -51,7 +51,7 @@
         "nodemon": "^2.0.4"
     },
     "scripts": {
-        "dev": "nodemon ./bin/www",
+        "dev": "cross-env NODE_ENV=development nodemon ./bin/www",
         "build": "cross-env NODE_ENV=production webpack ./bin/www",
         "start": "cross-env NODE_ENV=development node ./bin/www",
         "test": "cross-env S3_BUCKET_NAME=test jest --runInBand --forceExit",

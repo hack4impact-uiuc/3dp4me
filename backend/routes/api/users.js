@@ -36,6 +36,47 @@ router.get(
     }),
 );
 
+router.get(
+    '/:nPerPage',
+    requireAdmin,
+    errorWrap(async (req, res) => {
+        // eslint-disable-next-line prefer-const
+        let { nPerPage } = req.params;
+        nPerPage = parseInt(nPerPage, 10);
+
+        const params = {
+            UserPoolId: USER_POOL_ID,
+            Limit: nPerPage,
+        };
+
+        const identityProvider = getIdentityProvider();
+        const users = await identityProvider.listUsers(params).promise();
+
+        await sendResponse(res, 200, '', users);
+    }),
+);
+
+router.get(
+    '/:token/:nPerPage',
+    requireAdmin,
+    errorWrap(async (req, res) => {
+        // eslint-disable-next-line prefer-const
+        let { token, nPerPage } = req.params;
+        nPerPage = parseInt(nPerPage, 10);
+
+        const params = {
+            UserPoolId: USER_POOL_ID,
+            Limit: nPerPage,
+            PaginationToken: token,
+        };
+
+        const identityProvider = getIdentityProvider();
+        const users = await identityProvider.listUsers(params).promise();
+
+        await sendResponse(res, 200, '', users);
+    }),
+);
+
 /**
  * Gives a user a role. The URL params are the user's unique
  * username and the roleID to add.

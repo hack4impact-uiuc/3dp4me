@@ -1,7 +1,8 @@
+
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
-import { getAllRoles, getAllUsers } from '../../api/api';
+import { getAllRoles, getAllUsers, getUsersByPageNumber } from '../../api/api';
 import {
     getAccessLevel,
     getEmail,
@@ -26,6 +27,9 @@ import {
     userTableHeaderRenderer,
 } from '../../utils/table-renderers';
 
+const USERS_PER_PAGE = 10;
+
+
 /**
  * The account management screen. Allows admins to accept people into the
  * platform and assign roles.
@@ -35,19 +39,25 @@ const AccountManagement = () => {
     const [userMetaData, setUserMetaData] = useState([]);
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [paginationToken, setPaginationToken] = useState("");
+
     const errorWrap = useErrorWrap();
 
+    const fetchData = async (token) => {
+        const userRes = await getUsersByPageNumber(token, USERS_PER_PAGE);
+        setUserMetaData(userRes.result.Users);
+
+        const newPaginationToken = userRes.result.PaginationToken;
+        setPaginationToken(newPaginationToken);
+
+        const rolesRes = await getAllRoles();
+        const roles = rolesToMultiSelectFormat(rolesRes.result);
+
+        setRolesData(roles);
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            const userRes = await getAllUsers();
-            setUserMetaData(userRes.result.Users);
-
-            const rolesRes = await getAllRoles();
-            const roles = rolesToMultiSelectFormat(rolesRes.result);
-
-            setRolesData(roles);
-        };
-        errorWrap(fetchData);
+        errorWrap(fetchData(paginationToken));
     }, [setUserMetaData, errorWrap]);
 
     /**
