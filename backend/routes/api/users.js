@@ -62,6 +62,7 @@ router.get(
     errorWrap(async (req, res) => {
         // eslint-disable-next-line prefer-const
         let { token, nPerPage } = req.params;
+
         nPerPage = parseInt(nPerPage, 10);
 
         const params = {

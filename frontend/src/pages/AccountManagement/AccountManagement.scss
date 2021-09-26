@@ -1,0 +1,35 @@
+.load-div {
+    display: flex;
+    padding-left: 15px;
+    padding-right: 15px;
+    flex-wrap: wrap;
+    text-align: center;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0 auto;
+    width: 90%;
+    background-color: #323366;
+    height: 10vh;
+    border-bottom-left-radius: 5px; 
+    border-bottom-right-radius: 5px; 
+}
+
+
+.load-more-btn {
+    margin-top: 20px;
+    width: 200px;
+    height: 50px;
+    background-color: transparent;
+    border: 3px solid white;
+    color: white;
+    border-radius: 5px;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.load-more-text {
+    color: red;
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 20px !important;
+}

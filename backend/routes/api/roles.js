@@ -18,6 +18,28 @@ router.get(
 );
 
 /**
+ * Returns roles based on page number
+ */
+
+router.get(
+    '/:pageNumber/:nPerPage',
+    errorWrap(async (req, res) => {
+        let { pageNumber, nPerPage } = req.params;
+        pageNumber = parseInt(pageNumber, 10);
+        nPerPage = parseInt(nPerPage, 10);
+
+        const documentsToSkip = pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0;
+
+        const roles = await models.Role.find()
+            .sort({ _id: 1 }).skip(documentsToSkip)
+            .limit(nPerPage);
+
+        await sendResponse(res, 200, '', roles);
+    }),
+);
+
+
+/**
  * Adds role to DB.
  */
 router.post(

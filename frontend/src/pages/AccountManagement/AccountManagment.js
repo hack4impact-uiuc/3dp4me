@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
-import { getAllRoles, getAllUsers, getUsersByPageNumber } from '../../api/api';
+import { getAllRoles, getAllUsers, getUsersByPageNumber, getRolesByPageNumner } from '../../api/api';
 import {
     getAccessLevel,
     getEmail,
@@ -26,6 +26,8 @@ import {
     generateUserTableRowRenderer,
     userTableHeaderRenderer,
 } from '../../utils/table-renderers';
+import './AccountManagement.scss';
+
 
 const USERS_PER_PAGE = 10;
 
@@ -40,24 +42,35 @@ const AccountManagement = () => {
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const [paginationToken, setPaginationToken] = useState("");
+    const [usersLeft, setUsersLeft] = useState(true);
+    const [pageNumber, setPageNumber] = useState(1);
 
     const errorWrap = useErrorWrap();
 
-    const fetchData = async (token) => {
-        const userRes = await getUsersByPageNumber(token, USERS_PER_PAGE);
-        setUserMetaData(userRes.result.Users);
+    const fetchData = async () => {
+        const userRes = await getUsersByPageNumber(paginationToken, USERS_PER_PAGE);
+
+        const totalUserMetaData = userMetaData.concat(userRes.result.Users)
+        setUserMetaData(totalUserMetaData);
 
         const newPaginationToken = userRes.result.PaginationToken;
-        setPaginationToken(newPaginationToken);
 
-        const rolesRes = await getAllRoles();
-        const roles = rolesToMultiSelectFormat(rolesRes.result);
+        if (newPaginationToken) {
+            setPaginationToken(newPaginationToken);
+        } else {
+            setUsersLeft(false);
+        }
 
-        setRolesData(roles);
+        const rolesRes = await getRolesByPageNumner(pageNumber, USERS_PER_PAGE);
+        const newRoles = rolesToMultiSelectFormat(rolesRes.result);
+        const allRoles = rolesData.concat(newRoles);
+        setRolesData(allRoles);
+
+        setPageNumber(pageNumber + 1);
     };
 
     useEffect(() => {
-        errorWrap(fetchData(paginationToken));
+        errorWrap(fetchData);
     }, [setUserMetaData, errorWrap]);
 
     /**
@@ -144,13 +157,15 @@ const AccountManagement = () => {
 
     function generateMainUserTable() {
         return (
-            <SimpleTable
-                data={usersToTableFormat(userMetaData)}
-                headers={getUserTableHeaders(selectedLang)}
-                rowData={USER_TABLE_ROW_DATA}
-                renderHeader={userTableHeaderRenderer}
-                renderTableRow={generateUserTableRowRenderer(onUserSelected)}
-            />
+            <>
+                <SimpleTable
+                    data={usersToTableFormat(userMetaData)}
+                    headers={getUserTableHeaders(selectedLang)}
+                    rowData={USER_TABLE_ROW_DATA}
+                    renderHeader={userTableHeaderRenderer}
+                    renderTableRow={generateUserTableRowRenderer(onUserSelected)}
+                />
+            </>
         );
     }
 
@@ -181,9 +196,19 @@ const AccountManagement = () => {
                         >
                             {translations.accountManagement.userDatabase}
                         </h2>
+
                     </div>
                 </div>
                 {generateMainUserTable()}
+                {/* Add translation below for Load More */}
+                <div className = 'load-div'> 
+                    {usersLeft
+                    ?
+                    <button className = 'load-more-btn' onClick = {() => errorWrap(fetchData)}>Load More</button>
+                    :
+                    <p className = 'load-more-text'>No More Users</p>
+                    }
+                </div>
             </div>
             {generateUserEditModal()}
         </div>

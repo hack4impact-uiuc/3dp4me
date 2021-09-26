@@ -2,6 +2,23 @@ import instance from './axios-config';
 
 const FileDownload = require('js-file-download');
 
+
+export const getPatientsCount = async () => {
+    const requestString = '/patients/count';
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const getPatientsByPageNumber = async (pageNumber, nPerPage) => {
+    const requestString = `/patients/${pageNumber}/${nPerPage}`;
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
 export const getAllPatients = async () => {
     const requestString = '/patients';
     const res = await instance.get(requestString);
@@ -144,6 +161,14 @@ export const getAllRoles = async () => {
     return res.data;
 };
 
+export const getRolesByPageNumner = async (pageNumber, nPerPage) => {
+    const requestString = `/roles/${pageNumber}/${nPerPage}`;
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
 export const addUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
     const res = await instance.put(requestString);
@@ -164,6 +189,18 @@ export const removeUserRole = async (username, roleName) => {
 
 export const getAllUsers = async () => {
     const requestString = `/users`;
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const getUsersByPageNumber = async (token, nPerPage) => {
+
+    const encodedToken = encodeURIComponent(token);
+    const requestString = token === '' ? `/users/${nPerPage}` : `/users/${encodedToken}/${nPerPage}`;
+
     const res = await instance.get(requestString);
 
     if (!res?.data?.success) throw new Error(res?.data?.message);
