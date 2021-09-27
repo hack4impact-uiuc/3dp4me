@@ -24,6 +24,7 @@ export const FIELD_TYPES = {
     AUDIO: 'Audio',
     FIELD_GROUP: 'FieldGroup',
     SIGNATURE: 'Signature',
+    PHOTO: 'Photo',
 
     // These are special fields only used on the frontend for table rendering
     STEP_STATUS: 'StepStatus',

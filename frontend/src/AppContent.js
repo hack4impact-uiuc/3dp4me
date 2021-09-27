@@ -1,26 +1,28 @@
-import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import Dashboard from './pages/Dashboard/Dashboard';
-import AccountManagement from './pages/AccountManagement/AccountManagment';
-import Patients from './pages/Patients/Patients';
+import { getSelf } from './api/api';
+import { getCurrentUserInfo } from './aws/aws-helper';
+import ErrorModal from './components/ErrorModal/ErrorModal';
 import Navbar from './components/Navbar/Navbar';
+import { useErrorWrap } from './hooks/useErrorWrap';
+import { useTranslations } from './hooks/useTranslations';
+import AccountManagement from './pages/AccountManagement/AccountManagment';
+import Dashboard from './pages/Dashboard/Dashboard';
 import DashboardManagement from './pages/DashboardManagement/DashboardManagement';
 import PatientDetail from './pages/PatientDetail/PatientDetail';
-import ErrorModal from './components/ErrorModal/ErrorModal';
+import Patients from './pages/Patients/Patients';
+import { Context } from './store/Store';
 import {
-    REDUCER_ACTIONS,
-    LANGUAGES,
     COGNITO_ATTRIBUTES,
+    LANGUAGES,
+    REDUCER_ACTIONS,
     ROUTES,
 } from './utils/constants';
-import { Context } from './store/Store';
-import { useTranslations } from './hooks/useTranslations';
-import { getCurrentUserInfo } from './aws/aws-helper';
-import { getSelf } from './api/api';
 
 const AppContent = ({ username, userEmail }) => {
+    const errorWrap = useErrorWrap();
     const [state, dispatch] = useContext(Context);
     const selectedLang = useTranslations()[1];
     const contentClassNames =
@@ -50,12 +52,12 @@ const AppContent = ({ username, userEmail }) => {
             const selfRes = await getSelf();
             dispatch({
                 type: REDUCER_ACTIONS.SET_ADMIN_STATUS,
-                isAdmin: selfRes.isAdmin,
+                isAdmin: selfRes?.result?.isAdmin,
             });
         };
 
         setLanguage();
-        setAdminStatus();
+        errorWrap(setAdminStatus);
     }, [dispatch]);
 
     /**
