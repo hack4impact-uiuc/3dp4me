@@ -9,9 +9,15 @@ import { COUNTRY } from '../../utils/constants';
 // Make marker movable either by searching or dragging (and not appear if no position is passed in)
 const MapField = ({ position }) => {
     return (
-        <Map center={position} zoom={13} scrollWheelZoom={false}>
+        <Map
+            center={position}
+            zoom={13}
+            scrollWheelZoom={false}
+            height="200px"
+            width="200px"
+        >
             <TileLayer
-                noWrap={true}
+                noWrap
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
@@ -25,7 +31,7 @@ const MapField = ({ position }) => {
                 // search={this.state.search}
                 showMarker={false}
                 zoom={7}
-                closeResultsOnClick={true}
+                closeResultsOnClick
                 openSearchOnLoad={false}
                 providerOptions={{
                     region: { COUNTRY },
@@ -35,11 +41,7 @@ const MapField = ({ position }) => {
                 // provider="BingMap"
                 // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
             >
-                {(info) => (
-                    <Marker position={info?.latLng}>
-                        {this.customPopup(info)}
-                    </Marker>
-                )}
+                {(info) => <Marker position={info?.latLng} />}
             </Search>
         </Map>
     );
