@@ -29,7 +29,7 @@
         "gulp-rename": "^2.0.0",
         "gulp-zip": "^5.1.0",
         "helmet": "^4.6.0",
-        "jest": "^27.0.6",
+        "jest": "^27.2.2",
         "json": "^11.0.0",
         "libphonenumber-js": "^1.9.11",
         "lodash": "^4.17.21",
