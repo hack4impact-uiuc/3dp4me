@@ -1,7 +1,6 @@
 .load-div {
     display: flex;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 4px 12px;
     flex-wrap: wrap;
     text-align: center;
     flex-direction: row;
@@ -9,27 +8,26 @@
     margin: 0 auto;
     width: 90%;
     background-color: #323366;
-    height: 10vh;
+    height: auto;
     border-bottom-left-radius: 5px; 
     border-bottom-right-radius: 5px; 
 }
 
 
 .load-more-btn {
-    margin-top: 20px;
-    width: 200px;
-    height: 50px;
-    background-color: transparent;
+    height: auto;
+    padding: 6px 24px;
+    background-color: white;
     border: 3px solid white;
-    color: white;
+    color: #323366;
     border-radius: 5px;
-    font-size: 25px;
+    font-size: 1em;
     font-weight: bold;
 }
 
 .load-more-text {
     color: red;
-    font-size: 25px;
+    font-size: 1em;
     font-weight: bold;
-    margin-top: 20px !important;
+    padding: 6px 0px;
 }

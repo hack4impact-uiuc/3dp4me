@@ -200,11 +200,10 @@ const AccountManagement = () => {
                     </div>
                 </div>
                 {generateMainUserTable()}
-                {/* Add translation below for Load More */}
                 <div className = 'load-div'> 
                     {usersLeft
                     ?
-                    <button className = 'load-more-btn' onClick = {() => errorWrap(fetchData)}>Load More</button>
+                    <button className = 'load-more-btn' onClick = {() => errorWrap(fetchData)}>{translations.components.button.loadMore}</button>
                     :
                     <p className = 'load-more-text'>No More Users</p>
                     }

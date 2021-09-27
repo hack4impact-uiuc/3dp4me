@@ -2,8 +2,7 @@
 
 .paginate-container {
     display: flex;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 4px 12px;
     flex-wrap: wrap;
     text-align: center;
     flex-direction: row;
@@ -11,43 +10,53 @@
     margin: 0 auto;
     width: 90%;
     background-color: #323366;
-    height: 10vh;
+    height: auto;
     border-bottom-left-radius: 5px; 
     border-bottom-right-radius: 5px; 
   }
   
 .paginate-container li {
-    margin: 25px;
+    margin: 4px 8px;
     display: inline-block;
 }
 
 .paginate-page, .paginate-active {
-    min-width: 50px;
+    min-width: 25px;
     width: fit-content;
     height: fit-content;
-    padding: 5px;
+    padding: 2px 4px;
     color: white;
 }
 
 
 .paginate-previous, .paginate-next  {
     min-width: 50px;
+    text-align: center;
     width: fit-content;
     height: fit-content;
-    padding: 5px;
+    padding: 2px 4px;
     color: white;
 }
 
 .paginate-active {
-    border: 2px solid white;
-    border-radius: 5px;
+    // border: 2px solid white;
+    border-radius: 2px;
+    background-color: white;
+    .paginate-link {
+        color: #323366;
+    }
 }
 
 .paginate-link {
     color: white;
-    font-size: 20px;
+    font-size: 0.9em;
 }
 
 .paginate-link:hover  {
     color: rgb(211, 210, 210);
+}
+
+.arrow {
+    width: 12px;
+    height: auto;
 }

@@ -4,7 +4,8 @@ import { useTranslations } from '../../hooks/useTranslations';
 
 import './PaginateBar.scss';
 import ReactPaginate from 'react-paginate'; //see: https://www.npmjs.com/package/react-paginate
-
+import RightArrow from '../../assets/right-arrow.svg'
+import LeftArrow from '../../assets/left-arrow.svg'
 
 
 /**
@@ -15,8 +16,9 @@ const PaginateBar = (props) => {
 
     const { pageCount, onPageChange } = props;
 
-    let nextLabel = <p>{translations.components.button.next}</p>
-    let previousLabel = <p>{translations.components.button.previous}</p>
+    // let nextLabel = <img src = >{translations.components.button.next}</img>
+    let nextLabel = <img className = "arrow" src = {RightArrow}/>
+    let previousLabel = <img className = "arrow" src = {LeftArrow}/>
 
     return (
         <ReactPaginate previousLabel={'previous'}

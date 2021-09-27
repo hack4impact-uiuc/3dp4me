@@ -20,6 +20,24 @@ const { requireAdmin } = require('../../middleware/authentication');
 const { ADMIN_ID } = require('../../utils/constants');
 
 /**
+ * Gets information about the user making this request.
+ */
+router.get(
+    '/self',
+    errorWrap(async (req, res) => {
+        const isAdmin = req?.user?.roles?.includes(ADMIN_ID) || false;
+
+        console.log(isAdmin);
+
+        const data = {
+            isAdmin,
+        };
+
+        await sendResponse(res, 200, '', data);
+    }),
+);
+
+/**
  * Returns a list of all users in our system
  */
 router.get(
@@ -161,22 +179,6 @@ router.put(
         const identityProvider = getIdentityProvider();
         await identityProvider.adminUpdateUserAttributes(params).promise();
         await sendResponse(res, 200, 'Access updated');
-    }),
-);
-
-/**
- * Gets information about the user making this request.
- */
-router.get(
-    '/self',
-    errorWrap(async (req, res) => {
-        const isAdmin = req?.user?.roles?.includes(ADMIN_ID) || false;
-
-        const data = {
-            isAdmin,
-        };
-
-        await sendResponse(res, 200, '', data);
     }),
 );
 

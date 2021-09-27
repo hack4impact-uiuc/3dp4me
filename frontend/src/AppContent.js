@@ -49,6 +49,8 @@ const AppContent = ({ username, userEmail }) => {
         };
 
         const setAdminStatus = async () => {
+            console.log("set admin status");
+
             const selfRes = await getSelf();
             dispatch({
                 type: REDUCER_ACTIONS.SET_ADMIN_STATUS,
