@@ -25,6 +25,7 @@ export const FIELD_TYPES = {
     FIELD_GROUP: 'FieldGroup',
     SIGNATURE: 'Signature',
     MAP: 'Map',
+    PHOTO: 'Photo',
 
     // These are special fields only used on the frontend for table rendering
     STEP_STATUS: 'StepStatus',
