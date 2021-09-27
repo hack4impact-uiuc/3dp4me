@@ -36,7 +36,9 @@ const Patients = () => {
     };
 
     const updatePage = async (newPage) => {
-        await getData(newPage);
+        errorWrap(async () => {
+            await getData(newPage);
+        });
     }
 
     /**

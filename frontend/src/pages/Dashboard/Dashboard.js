@@ -8,43 +8,15 @@ import {
     FIELD_TYPES,
 } from '../../utils/constants';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
-import { getAllStepsMetadata, getPatientsByStage } from '../../api/api';
+import { getAllStepsMetadata, getPatientsByStage, getPatientsByStagePageNumber, getPatientsCount } from '../../api/api';
 import './Dashboard.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
 import { sortMetadata } from '../../utils/utils';
+import PaginateBar from '../../components/PaginateBar/PaginateBar';
 
 
-// const getMetadata = async (pageNumber) => {
-//     let res = await getAllStepsMetadata();
-
-//     const metaData = sortMetadata(res.result);
-//     setStepsMetaData(metaData);
-//     if (metaData.length > 0) {
-//         setSelectedStep(metaData[0].key);
-//         res = await getPatientsByStagePageNumber(metaData[0].key, pageNumber, PATIENTS_PER_PAGE);
-//         setPatients(res.result);
-//     } else {
-//         throw new Error(translations.errors.noMetadata);
-//     }
-// };
-
-// /**
-//  * Gets metadata for all setps
-//  */
-// useEffect(() => {
-    
-//     const getCount = async () => {
-//         errorWrap(async () => {
-//             const res = await getPatientsCount();
-
-//             setPatientsCount(res.result);
-//             errorWrap(getMetadata(1));
-//         });
-//     }
-
-//     getCount();
-// }, [setSelectedStep, setStepsMetaData, errorWrap, translations]);
+const PATIENTS_PER_PAGE = 1;
 
 /**
  * Shows a table of active patients, with a different table for each step
@@ -62,25 +34,56 @@ const Dashboard = () => {
     // Currently selected step
     const [selectedStep, setSelectedStep] = useState('');
 
+    // Currently selected page
+    const [selectedPageNumber, setPageNumber] = useState(1);
+
+    //Number of total patients in the database
+    const [patientsCount, setPatientsCount] = useState(0);
+
+
+    /** 
+     * Gets patient data based on page number and step
+    */
+
+    const getPatientData = async (stepKey, pageNumber) => {
+        errorWrap(async () => {
+            const res = await getPatientsByStagePageNumber(stepKey, pageNumber, PATIENTS_PER_PAGE);
+            setPatients(res.result);
+        });
+    }
+
+
+    /**
+     * Gets metadata for all steps, only called once
+     */
+    const getMetadata = async (pageNumber) => {
+        let res = await getAllStepsMetadata();
+
+        const metaData = sortMetadata(res.result);
+        setStepsMetaData(metaData);
+        if (metaData.length > 0) {
+            setSelectedStep(metaData[0].key);
+            await getPatientData(metaData[0].key, selectedPageNumber);
+        } else {
+            throw new Error(translations.errors.noMetadata);
+        }
+    };
+
     /**
      * Gets metadata for all setps
      */
     useEffect(() => {
-        const getMetadata = async () => {
-            let res = await getAllStepsMetadata();
+        
+        const getCount = async () => {
+            errorWrap(async () => {
+                const res = await getPatientsCount();
 
-            const metaData = sortMetadata(res.result);
-            setStepsMetaData(metaData);
-            if (metaData.length > 0) {
-                setSelectedStep(metaData[0].key);
-                res = await getPatientsByStage(metaData[0].key);
-                setPatients(res.result);
-            } else {
-                throw new Error(translations.errors.noMetadata);
-            }
-        };
+                setPatientsCount(res.result);
+                await getMetadata();
+            });
+        }
 
-        errorWrap(getMetadata);
+        getCount();
     }, [setSelectedStep, setStepsMetaData, errorWrap, translations]);
 
     /**
@@ -100,11 +103,14 @@ const Dashboard = () => {
 
         // TODO: Put the patient data in a store
         setSelectedStep(stepKey);
-        errorWrap(async () => {
-            const res = await getPatientsByStage(stepKey);
-            setPatients(res.result);
-        });
+
+        await getPatientData(stepKey, selectedPageNumber);
     };
+
+    const onPageNumberChanged = async (newPageNumber) => {
+        setPageNumber(newPageNumber);
+        await getPatientData(selectedStep, newPageNumber);
+    }
 
     /**
      * Gets the display name of the currently selected step
@@ -205,6 +211,7 @@ const Dashboard = () => {
                 />
             </div>
             <div className="patient-list">{generateMainTable()}</div>
+            <PaginateBar pageCount = {patientsCount / PATIENTS_PER_PAGE} onPageChange = {onPageNumberChanged}/>
         </div>
     );
 };
