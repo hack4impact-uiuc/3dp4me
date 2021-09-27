@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import { getSelf } from './api/api';
 import { getCurrentUserInfo } from './aws/aws-helper';
 import ErrorModal from './components/ErrorModal/ErrorModal';
@@ -14,9 +15,11 @@ import PatientDetail from './pages/PatientDetail/PatientDetail';
 import Patients from './pages/Patients/Patients';
 import { Context } from './store/Store';
 import {
-    COGNITO_ATTRIBUTES, LANGUAGES, REDUCER_ACTIONS, ROUTES
+    COGNITO_ATTRIBUTES,
+    LANGUAGES,
+    REDUCER_ACTIONS,
+    ROUTES,
 } from './utils/constants';
-
 
 const AppContent = ({ username, userEmail }) => {
     const errorWrap = useErrorWrap();
