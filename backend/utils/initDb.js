@@ -104,6 +104,8 @@ module.exports.generateFieldSchema = (field) => {
         return getRadioButtonSchema(field);
     case FIELDS.FILE:
         return getFileSchema();
+    case FIELDS.PHOTO:
+        return getFileSchema();
     case FIELDS.AUDIO:
         return getFileSchema();
     case FIELDS.FIELD_GROUP:
