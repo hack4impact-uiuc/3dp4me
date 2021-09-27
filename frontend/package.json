@@ -30,6 +30,7 @@
         "react-datepicker": "^4.2.1",
         "react-dom": "^16.13.1",
         "react-flexbox-grid": "^2.1.2",
+        "react-html5-camera-photo": "^1.5.5",
         "react-modal": "^3.12.1",
         "react-phone-number-input": "^3.1.25",
         "react-router-dom": "^5.2.0",
