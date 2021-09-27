@@ -38,11 +38,11 @@
         "./**/*.{js,css,scss,json,md,jsx}": [
             "prettier --write"
         ],
-        "./api/**/*.{js,jsx}": [
-            "eslint --fix -c api/.eslintrc.json"
+        "./backend/**/*.{js,jsx}": [
+            "eslint --fix -c backend/.eslintrc.json"
         ],
-        "./client/**/*.{js,jsx}": [
-            "eslint --fix -c client/.eslintrc.json"
+        "./frontend/**/*.{js,jsx}": [
+            "eslint --fix -c frontend/.eslintrc.json"
         ]
     },
     "dependencies": {
