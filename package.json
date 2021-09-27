@@ -35,11 +35,14 @@
         }
     },
     "lint-staged": {
+        "./**/*.{js,css,scss,json,md,jsx}": [
+            "prettier --write"
+        ],
         "./api/**/*.{js,jsx}": [
-            "eslint --fix -c backend/.eslintrc.json"
+            "eslint --fix -c api/.eslintrc.json"
         ],
         "./client/**/*.{js,jsx}": [
-            "eslint --fix -c frontend/.eslintrc.json"
+            "eslint --fix -c client/.eslintrc.json"
         ]
     },
     "dependencies": {
