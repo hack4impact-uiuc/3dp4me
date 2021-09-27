@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import { getSelf } from './api/api';
 import { getCurrentUserInfo } from './aws/aws-helper';
 import ErrorModal from './components/ErrorModal/ErrorModal';
