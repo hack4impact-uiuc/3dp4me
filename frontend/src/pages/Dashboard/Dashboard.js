@@ -14,6 +14,38 @@ import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
 import { sortMetadata } from '../../utils/utils';
 
+
+// const getMetadata = async (pageNumber) => {
+//     let res = await getAllStepsMetadata();
+
+//     const metaData = sortMetadata(res.result);
+//     setStepsMetaData(metaData);
+//     if (metaData.length > 0) {
+//         setSelectedStep(metaData[0].key);
+//         res = await getPatientsByStagePageNumber(metaData[0].key, pageNumber, PATIENTS_PER_PAGE);
+//         setPatients(res.result);
+//     } else {
+//         throw new Error(translations.errors.noMetadata);
+//     }
+// };
+
+// /**
+//  * Gets metadata for all setps
+//  */
+// useEffect(() => {
+    
+//     const getCount = async () => {
+//         errorWrap(async () => {
+//             const res = await getPatientsCount();
+
+//             setPatientsCount(res.result);
+//             errorWrap(getMetadata(1));
+//         });
+//     }
+
+//     getCount();
+// }, [setSelectedStep, setStepsMetaData, errorWrap, translations]);
+
 /**
  * Shows a table of active patients, with a different table for each step
  */

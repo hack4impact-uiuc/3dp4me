@@ -35,6 +35,14 @@ export const getPatientsByStage = async (stage) => {
     return res.data;
 };
 
+export const getPatientsByStagePageNumber = async (stage, pageNumber, nPerPage) => {
+    const requestString = `/stages/${stage}/${pageNumber}/${nPerPage}`;
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
 export const getPatientById = async (id) => {
     const requestString = `/patients/${id}`;
     const res = await instance.get(requestString);
