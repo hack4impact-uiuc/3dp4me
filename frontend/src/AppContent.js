@@ -15,9 +15,11 @@ import PatientDetail from './pages/PatientDetail/PatientDetail';
 import Patients from './pages/Patients/Patients';
 import { Context } from './store/Store';
 import {
-    COGNITO_ATTRIBUTES, LANGUAGES, REDUCER_ACTIONS, ROUTES
+    COGNITO_ATTRIBUTES,
+    LANGUAGES,
+    REDUCER_ACTIONS,
+    ROUTES,
 } from './utils/constants';
-
 
 const AppContent = ({ username, userEmail }) => {
     const errorWrap = useErrorWrap();
