@@ -24,6 +24,7 @@ export const FIELD_TYPES = {
     AUDIO: 'Audio',
     FIELD_GROUP: 'FieldGroup',
     SIGNATURE: 'Signature',
+    MAP: 'Map',
 
     // These are special fields only used on the frontend for table rendering
     STEP_STATUS: 'StepStatus',
@@ -195,3 +196,5 @@ export const SIGNATURE_STATUS = {
  * must use this string in their models for status.
  */
 export const PATIENT_KEY_STATUS = 'status';
+
+export const COUNTRY = 'JO';
