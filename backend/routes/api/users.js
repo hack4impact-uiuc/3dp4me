@@ -42,59 +42,47 @@ router.get(
     '/',
     requireAdmin,
     errorWrap(async (req, res) => {
-        const params = {
-            UserPoolId: USER_POOL_ID,
-        };
-
-        const identityProvider = getIdentityProvider();
-        const users = await identityProvider.listUsers(params).promise();
-        await sendResponse(res, 200, '', users);
-    }),
-);
-
-router.get(
-    '/:nPerPage',
-    requireAdmin,
-    errorWrap(async (req, res) => {
         // eslint-disable-next-line prefer-const
-        let { nPerPage } = req.params;
-        nPerPage = parseInt(nPerPage, 10);
+        let { token, nPerPage } = req.query;
 
-        const params = {
-            UserPoolId: USER_POOL_ID,
-            Limit: nPerPage,
-        };
+        if (nPerPage !== undefined) {
+            if (token !== undefined) {
+                nPerPage = parseInt(nPerPage, 10);
 
-        const identityProvider = getIdentityProvider();
-        const users = await identityProvider.listUsers(params).promise();
+                const params = {
+                    UserPoolId: USER_POOL_ID,
+                    Limit: nPerPage,
+                    PaginationToken: token,
+                };
+                const identityProvider = getIdentityProvider();
+                try {
+                    const users = await identityProvider.listUsers(params).promise();
+                    await sendResponse(res, 200, '', users);
+                } catch (error) {
+                    console.error(error);
+                    await sendResponse(res, 400, 'Please send a proper pagination token.', {});
+                }
+            } else {
+                nPerPage = parseInt(nPerPage, 10);
 
-        await sendResponse(res, 200, '', users);
-    }),
-);
+                const params = {
+                    UserPoolId: USER_POOL_ID,
+                    Limit: nPerPage,
+                };
 
-router.get(
-    '/:token/:nPerPage',
-    requireAdmin,
-    errorWrap(async (req, res) => {
-        // eslint-disable-next-line prefer-const
-        let { token, nPerPage } = req.params;
+                const identityProvider = getIdentityProvider();
+                const users = await identityProvider.listUsers(params).promise();
 
-        nPerPage = parseInt(nPerPage, 10);
+                await sendResponse(res, 200, '', users);
+            }
+        } else {
+            const params = {
+                UserPoolId: USER_POOL_ID,
+            };
 
-        const params = {
-            UserPoolId: USER_POOL_ID,
-            Limit: nPerPage,
-            PaginationToken: token,
-        };
-
-        const identityProvider = getIdentityProvider();
-
-        try {
+            const identityProvider = getIdentityProvider();
             const users = await identityProvider.listUsers(params).promise();
             await sendResponse(res, 200, '', users);
-        } catch (error) {
-            console.error(error);
-            await sendResponse(res, 400, 'Please send a proper pagination token.', {});
         }
     }),
 );

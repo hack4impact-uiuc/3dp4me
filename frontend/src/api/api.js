@@ -12,7 +12,7 @@ export const getPatientsCount = async () => {
 };
 
 export const getPatientsByPageNumber = async (pageNumber, nPerPage) => {
-    const requestString = `/patients/${pageNumber}/${nPerPage}`;
+    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
@@ -36,7 +36,7 @@ export const getPatientsByStage = async (stage) => {
 };
 
 export const getPatientsByStagePageNumber = async (stage, pageNumber, nPerPage) => {
-    const requestString = `/stages/${stage}/${pageNumber}/${nPerPage}`;
+    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
@@ -207,7 +207,7 @@ export const getAllUsers = async () => {
 export const getUsersByPageNumber = async (token, nPerPage) => {
 
     const encodedToken = encodeURIComponent(token);
-    const requestString = token === '' ? `/users/${nPerPage}` : `/users/${encodedToken}/${nPerPage}`;
+    const requestString = token === '' ? `/users?nPerPage=${nPerPage}` : `/users?token=${encodedToken}&nPerPage=${nPerPage}`;
 
     const res = await instance.get(requestString);
 

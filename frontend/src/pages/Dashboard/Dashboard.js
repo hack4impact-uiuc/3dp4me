@@ -108,6 +108,9 @@ const Dashboard = () => {
     };
 
     const onPageNumberChanged = async (newPageNumber) => {
+
+        if (selectedStep === '') return;
+
         setPageNumber(newPageNumber);
         await getPatientData(selectedStep, newPageNumber);
     }

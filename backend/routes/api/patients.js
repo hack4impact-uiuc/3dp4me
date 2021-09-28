@@ -31,8 +31,22 @@ const {
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        const patients = await models.Patient.find();
-        await sendResponse(res, 200, '', patients);
+        let { pageNumber, nPerPage } = req.query;
+
+        if (pageNumber !== undefined && nPerPage !== undefined) {
+            pageNumber = parseInt(pageNumber, 10);
+            nPerPage = parseInt(nPerPage, 10);
+            const documentsToSkip = pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0;
+            const patients = await models.Patient.find()
+                .sort({ lastEdited: -1 }).skip(documentsToSkip)
+                .limit(nPerPage);
+            await sendResponse(res, 200, '', patients);
+        } else {
+            pageNumber = parseInt(pageNumber, 10);
+            nPerPage = parseInt(nPerPage, 10);
+            const patients = await models.Patient.find();
+            await sendResponse(res, 200, '', patients);
+        }
     }),
 );
 
@@ -45,27 +59,6 @@ router.get(
     errorWrap(async (req, res) => {
         const patientCount = await models.Patient.count();
         return sendResponse(res, 200, 'success', patientCount);
-    }),
-);
-
-/**
- * Returns a specific amount of patients based on page number
- */
-
-router.get(
-    '/:pageNumber/:nPerPage',
-    errorWrap(async (req, res) => {
-        let { pageNumber, nPerPage } = req.params;
-        pageNumber = parseInt(pageNumber, 10);
-        nPerPage = parseInt(nPerPage, 10);
-
-        const documentsToSkip = pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0;
-
-        const patients = await models.Patient.find()
-            .sort({ lastEdited: -1 }).skip(documentsToSkip)
-            .limit(nPerPage);
-
-        await sendResponse(res, 200, '', patients);
     }),
 );
 
