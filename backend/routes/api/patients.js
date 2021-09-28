@@ -62,7 +62,7 @@ router.get(
         const documentsToSkip = pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0;
 
         const patients = await models.Patient.find()
-            .sort({ _id: 1 }).skip(documentsToSkip)
+            .sort({ lastEdited: -1 }).skip(documentsToSkip)
             .limit(nPerPage);
 
         await sendResponse(res, 200, '', patients);

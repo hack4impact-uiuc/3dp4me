@@ -13,7 +13,7 @@ import './Patients.scss';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
 
 
-const PATIENTS_PER_PAGE = 1;
+const PATIENTS_PER_PAGE = 14;
 
 /**
  * Shows a table of all patients within the system

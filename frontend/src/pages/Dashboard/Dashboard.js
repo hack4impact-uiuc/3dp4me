@@ -16,7 +16,7 @@ import { sortMetadata } from '../../utils/utils';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
 
 
-const PATIENTS_PER_PAGE = 1;
+const PATIENTS_PER_PAGE = 14;
 
 /**
  * Shows a table of active patients, with a different table for each step

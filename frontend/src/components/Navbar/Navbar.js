@@ -31,7 +31,8 @@ const Navbar = ({ username, userEmail }) => {
     };
 
     const renderLink = (text, route) => {
-        const activeClass = activeRoute === route ? 'active' : '';
+        //Replaced activeRoute with window.location.pathname since activeRoute defaults to '/' on page reload
+        const activeClass = window.location.pathname === route ? 'active' : '';
 
         return (
             <Link

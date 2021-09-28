@@ -27,8 +27,6 @@ router.get(
     errorWrap(async (req, res) => {
         const isAdmin = req?.user?.roles?.includes(ADMIN_ID) || false;
 
-        console.log(isAdmin);
-
         const data = {
             isAdmin,
         };
@@ -90,9 +88,14 @@ router.get(
         };
 
         const identityProvider = getIdentityProvider();
-        const users = await identityProvider.listUsers(params).promise();
 
-        await sendResponse(res, 200, '', users);
+        try {
+            const users = await identityProvider.listUsers(params).promise();
+            await sendResponse(res, 200, '', users);
+        } catch (error) {
+            console.error(error);
+            await sendResponse(res, 400, 'Please send a proper pagination token.', {});
+        }
     }),
 );
 

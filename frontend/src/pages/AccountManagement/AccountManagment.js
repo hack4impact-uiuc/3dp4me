@@ -29,7 +29,7 @@ import {
 import './AccountManagement.scss';
 
 
-const USERS_PER_PAGE = 10;
+const USERS_PER_PAGE = 14;
 
 
 /**
