@@ -13,7 +13,7 @@ import DateField from '../Fields/DateField';
 import PhoneField from '../Fields/PhoneField';
 import FieldGroup from '../Fields/FieldGroup';
 import SignatureField from '../Fields/SignatureField';
-import PhotoField from '../Fields/PhotoField'
+import {PhotoField} from '../Fields/PhotoField'
 import { useTranslations } from '../../hooks/useTranslations';
 import TextArea from '../Fields/TextArea';
 
@@ -162,9 +162,12 @@ const StepField = ({
                 );
             case FIELD_TYPES.HEADER:
                 return <h3>{displayName}</h3>;
-            case FIELD_TYPES.PHONE:
+            case FIELD_TYPES.PHOTO:
                 return (
-                    <PhotoField/>
+                    <PhotoField
+                        patientId={patientId}
+                        stepKey={stepKey}
+                    />
                 )
             default:
                 return null;
