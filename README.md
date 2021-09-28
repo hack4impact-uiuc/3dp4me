@@ -100,7 +100,7 @@ To do this, they need a system that will help track individual hearing aids and 
       ><br /><sub>Software Developer</sub>
     </td>
     <td align="center">
-      <a href="abehara2.github.io"
+      <a href="https://abehara2.github.io/"
         ><img
           src="https://media-exp1.licdn.com/dms/image/C5603AQGyU2TjxvH8Jw/profile-displayphoto-shrink_200_200/0/1610096609905?e=1638403200&v=beta&t=eAVPr6Xcbxm9jdgLnlMabp3t4B0d_kjeUSMCsSOqAk0"
           width="500px;"
