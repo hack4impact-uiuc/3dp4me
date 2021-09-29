@@ -59,7 +59,6 @@ router.get(
                     const users = await identityProvider.listUsers(params).promise();
                     await sendResponse(res, 200, '', users);
                 } catch (error) {
-                    console.error(error);
                     await sendResponse(res, 400, 'Please send a proper pagination token.', {});
                 }
             } else {

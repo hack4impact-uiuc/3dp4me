@@ -1,48 +1,49 @@
-import React, { useEffect, useState } from 'react';
-
-import { useTranslations } from '../../hooks/useTranslations';
+import React from 'react';
 
 import './PaginateBar.scss';
-import ReactPaginate from 'react-paginate'; //see: https://www.npmjs.com/package/react-paginate
-import RightArrow from '../../assets/right-arrow.svg'
-import LeftArrow from '../../assets/left-arrow.svg'
+import ReactPaginate from 'react-paginate'; // see: https://www.npmjs.com/package/react-paginate
+import PropTypes from 'prop-types';
 
+import RightArrow from '../../assets/right-arrow.svg';
+import LeftArrow from '../../assets/left-arrow.svg';
 
 /**
  * Shows a table of all patients within the system
  */
 const PaginateBar = (props) => {
-    const [translations, selectedLang] = useTranslations();
-
     const { pageCount, onPageChange } = props;
 
-    // let nextLabel = <img src = >{translations.components.button.next}</img>
-    let nextLabel = <img className = "arrow" src = {RightArrow}/>
-    let previousLabel = <img className = "arrow" src = {LeftArrow}/>
+    const nextLabel = <img className="arrow" alt="" src={RightArrow} />;
+    const previousLabel = <img className="arrow" alt="" src={LeftArrow} />;
 
     return (
-        <ReactPaginate previousLabel={'previous'}
-                initialPage = {0}
-                nextLabel={'next'}
-                breakLabel={'...'}
-                breakClassName={'break-me'}
-                pageCount={pageCount}
-                marginPagesDisplayed={10}
-                pageRangeDisplayed={5}
-                onPageChange={(newPage) => {onPageChange(newPage.selected+1)}}
-                containerClassName={'paginate-container'}
-                pageClassName={'paginate-page'}
-                activeClassName={'paginate-active'}
-                nextClassName={'paginate-next'}
-                previousClassName={'paginate-previous'} 
-                pageLinkClassName = {'paginate-link'} 
-                previousLinkClassName = {'paginate-link'} 
-                nextLinkClassName = {'paginate-link'} 
-                nextLabel = {nextLabel}
-                previousLabel = {previousLabel}
-                />
-
+        <ReactPaginate
+            initialPage={0}
+            breakLabel="..."
+            breakClassName="break-me"
+            pageCount={pageCount}
+            marginPagesDisplayed={10}
+            pageRangeDisplayed={5}
+            onPageChange={(newPage) => {
+                onPageChange(newPage.selected + 1);
+            }}
+            containerClassName="paginate-container"
+            pageClassName="paginate-element"
+            activeClassName="paginate-active"
+            nextClassName="paginate-next"
+            previousClassName="paginate-previous"
+            pageLinkClassName="paginate-link"
+            previousLinkClassName="paginate-previous-link"
+            nextLinkClassName="paginate-next-link"
+            nextLabel={nextLabel}
+            previousLabel={previousLabel}
+        />
     );
+};
+
+PaginateBar.propTypes = {
+    pageCount: PropTypes.number,
+    onPageChange: PropTypes.func.isRequired,
 };
 
 export default PaginateBar;

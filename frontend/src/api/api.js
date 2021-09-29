@@ -169,7 +169,7 @@ export const getAllRoles = async () => {
     return res.data;
 };
 
-export const getRolesByPageNumner = async (pageNumber, nPerPage) => {
+export const getRolesByPageNumber = async (pageNumber, nPerPage) => {
     const requestString = `/roles/${pageNumber}/${nPerPage}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);

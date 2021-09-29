@@ -18,7 +18,7 @@ const Navbar = ({ username, userEmail }) => {
     const state = useContext(Context)[0];
     const classes = useStyles();
     const [translations, selectedLang] = useTranslations();
-    const [activeRoute, setActiveRoute] = useState(ROUTES.DASHBOARD);
+    const [activeRoute, setActiveRoute] = useState(window.location.pathname);
     const [anchorEl, setAnchorEl] = useState(null);
     const navTranslations = translations.components.navbar;
 
@@ -31,8 +31,8 @@ const Navbar = ({ username, userEmail }) => {
     };
 
     const renderLink = (text, route) => {
-        //Replaced activeRoute with window.location.pathname since activeRoute defaults to '/' on page reload
-        const activeClass = window.location.pathname === route ? 'active' : '';
+        // Replaced activeRoute with window.location.pathname since activeRoute defaults to '/' on page reload
+        const activeClass = activeRoute === route ? 'active' : '';
 
         return (
             <Link

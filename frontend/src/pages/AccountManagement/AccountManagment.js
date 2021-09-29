@@ -1,8 +1,7 @@
-
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
-import { getAllRoles, getAllUsers, getUsersByPageNumber, getRolesByPageNumner } from '../../api/api';
+import { getUsersByPageNumber, getRolesByPageNumber } from '../../api/api';
 import {
     getAccessLevel,
     getEmail,
@@ -28,9 +27,7 @@ import {
 } from '../../utils/table-renderers';
 import './AccountManagement.scss';
 
-
 const USERS_PER_PAGE = 14;
-
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -41,16 +38,19 @@ const AccountManagement = () => {
     const [userMetaData, setUserMetaData] = useState([]);
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [paginationToken, setPaginationToken] = useState("");
+    const [paginationToken, setPaginationToken] = useState('');
     const [usersLeft, setUsersLeft] = useState(true);
     const [pageNumber, setPageNumber] = useState(1);
 
     const errorWrap = useErrorWrap();
 
     const fetchData = async () => {
-        const userRes = await getUsersByPageNumber(paginationToken, USERS_PER_PAGE);
+        const userRes = await getUsersByPageNumber(
+            paginationToken,
+            USERS_PER_PAGE,
+        );
 
-        const totalUserMetaData = userMetaData.concat(userRes.result.Users)
+        const totalUserMetaData = userMetaData.concat(userRes.result.Users);
         setUserMetaData(totalUserMetaData);
 
         const newPaginationToken = userRes.result.PaginationToken;
@@ -61,7 +61,7 @@ const AccountManagement = () => {
             setUsersLeft(false);
         }
 
-        const rolesRes = await getRolesByPageNumner(pageNumber, USERS_PER_PAGE);
+        const rolesRes = await getRolesByPageNumber(pageNumber, USERS_PER_PAGE);
         const newRoles = rolesToMultiSelectFormat(rolesRes.result);
         const allRoles = rolesData.concat(newRoles);
         setRolesData(allRoles);
@@ -163,7 +163,9 @@ const AccountManagement = () => {
                     headers={getUserTableHeaders(selectedLang)}
                     rowData={USER_TABLE_ROW_DATA}
                     renderHeader={userTableHeaderRenderer}
-                    renderTableRow={generateUserTableRowRenderer(onUserSelected)}
+                    renderTableRow={generateUserTableRowRenderer(
+                        onUserSelected,
+                    )}
                 />
             </>
         );
@@ -196,17 +198,21 @@ const AccountManagement = () => {
                         >
                             {translations.accountManagement.userDatabase}
                         </h2>
-
                     </div>
                 </div>
                 {generateMainUserTable()}
-                <div className = 'load-div'> 
-                    {usersLeft
-                    ?
-                    <button className = 'load-more-btn' onClick = {() => errorWrap(fetchData)}>{translations.components.button.loadMore}</button>
-                    :
-                    <p className = 'load-more-text'>No More Users</p>
-                    }
+                <div className="load-div">
+                    {usersLeft ? (
+                        <button
+                            type="button"
+                            className="load-more-btn"
+                            onClick={() => errorWrap(fetchData)}
+                        >
+                            {translations.components.button.loadMore}
+                        </button>
+                    ) : (
+                        <p className="load-more-text">No More Users</p>
+                    )}
                 </div>
             </div>
             {generateUserEditModal()}

@@ -11,16 +11,17 @@
     width: 90%;
     background-color: #323366;
     height: auto;
-    border-bottom-left-radius: 5px; 
-    border-bottom-right-radius: 5px; 
-  }
-  
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
 .paginate-container li {
     margin: 4px 8px;
     display: inline-block;
 }
 
-.paginate-page, .paginate-active {
+.paginate-element,
+.paginate-active {
     min-width: 25px;
     width: fit-content;
     height: fit-content;
@@ -28,8 +29,8 @@
     color: white;
 }
 
-
-.paginate-previous, .paginate-next  {
+.paginate-previous,
+.paginate-next {
     min-width: 50px;
     text-align: center;
     width: fit-content;
@@ -47,12 +48,15 @@
     }
 }
 
-.paginate-link {
+.paginate-link,
+paginate-previous-link {
     color: white;
     font-size: 0.9em;
 }
 
-.paginate-link:hover  {
+.paginate-link:hover,
+paginate-previous-link:hover,
+paginate-next-link:hover {
     color: rgb(211, 210, 210);
 }
 

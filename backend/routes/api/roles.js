@@ -38,7 +38,6 @@ router.get(
     }),
 );
 
-
 /**
  * Adds role to DB.
  */

@@ -1,7 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
 
-import { getAllPatients, getPatientsCount, getPatientsByPageNumber } from '../../api/api';
+import { getPatientsCount, getPatientsByPageNumber } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
@@ -11,7 +10,6 @@ import {
 } from '../../utils/constants';
 import './Patients.scss';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
-
 
 const PATIENTS_PER_PAGE = 14;
 
@@ -23,15 +21,16 @@ const Patients = () => {
     const [allPatients, setAllPatients] = useState([]);
     const [patientsCount, setPatientsCount] = useState(0);
 
-
     const errorWrap = useErrorWrap();
 
     const getData = async (newPage) => {
         errorWrap(async () => {
-            const res = await getPatientsByPageNumber(newPage, PATIENTS_PER_PAGE);
+            const res = await getPatientsByPageNumber(
+                newPage,
+                PATIENTS_PER_PAGE,
+            );
 
             setAllPatients(res.result);
-
         });
     };
 
@@ -39,23 +38,21 @@ const Patients = () => {
         errorWrap(async () => {
             await getData(newPage);
         });
-    }
+    };
 
     /**
      * Fetch data on all patients
      */
     useEffect(() => {
-
         const getCount = async () => {
             errorWrap(async () => {
                 const res = await getPatientsCount();
 
                 setPatientsCount(res.result);
-                getData(1); //page number starts at 1
+                getData(1); // page number starts at 1
             });
-        }
+        };
 
-        
         getCount();
     }, [setPatientsCount, setAllPatients, errorWrap]);
 
@@ -80,7 +77,10 @@ const Patients = () => {
                     patients={allPatients}
                 />
 
-                <PaginateBar pageCount = {patientsCount / PATIENTS_PER_PAGE} onPageChange = {updatePage}/>
+                <PaginateBar
+                    pageCount={patientsCount / PATIENTS_PER_PAGE}
+                    onPageChange={updatePage}
+                />
             </div>
         </div>
     );
