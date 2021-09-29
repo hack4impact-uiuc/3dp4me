@@ -2,7 +2,6 @@ import instance from './axios-config';
 
 const FileDownload = require('js-file-download');
 
-
 export const getPatientsCount = async () => {
     const requestString = '/patients/count';
     const res = await instance.get(requestString);
@@ -35,7 +34,11 @@ export const getPatientsByStage = async (stage) => {
     return res.data;
 };
 
-export const getPatientsByStagePageNumber = async (stage, pageNumber, nPerPage) => {
+export const getPatientsByStagePageNumber = async (
+    stage,
+    pageNumber,
+    nPerPage,
+) => {
     const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
@@ -205,9 +208,11 @@ export const getAllUsers = async () => {
 };
 
 export const getUsersByPageNumber = async (token, nPerPage) => {
-
     const encodedToken = encodeURIComponent(token);
-    const requestString = token === '' ? `/users?nPerPage=${nPerPage}` : `/users?token=${encodedToken}&nPerPage=${nPerPage}`;
+    const requestString =
+        token === ''
+            ? `/users?nPerPage=${nPerPage}`
+            : `/users?token=${encodedToken}&nPerPage=${nPerPage}`;
 
     const res = await instance.get(requestString);
 
