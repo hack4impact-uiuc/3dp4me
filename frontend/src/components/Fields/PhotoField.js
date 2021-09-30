@@ -19,11 +19,12 @@ const PhotoField = ({patientId, stepKey}) => {
     }
 
     
-    const handleTakePhoto = (dataUri) => {
+    const handleTakePhoto = async (dataUri) => {
         const photo = dataURItoBlob(dataUri);
         const fileName = "hi"; //TODO: CHANGE THIS NAME TO BE UNIQUE THROUGH Date class --> String 
-        uploadFile(patientId, stepKey, 'PHOTO', fileName, photo);
-        console.log('takePhoto');
+        const res = await uploadFile(patientId, stepKey, 'PHOTO', fileName, photo);
+        console.log(res);
+        console.log(patientId);
     }
 
   return (
@@ -37,7 +38,7 @@ export {PhotoField};
 
 
 //Questions for Matt
-// Deprecated aotb, can we use this function (did we do it right), 
+// Deprecated aotb, can we use this function (did we do it right), confirmation button
 
 
 
