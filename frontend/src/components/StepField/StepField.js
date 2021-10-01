@@ -167,6 +167,7 @@ const StepField = ({
                     <PhotoField
                         patientId={patientId}
                         stepKey={stepKey}
+                        handleFileUpload={handleFileUpload}
                     />
                 )
             default:
