@@ -1,9 +1,12 @@
 import React from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
-import {uploadFile} from '../../api/api'
+import {uploadFile} from '../../api/api';
+import ImageGallery from 'react-image-gallery';
+import "react-image-gallery/styles/css/image-gallery.css";
 
-const PhotoField = ({patientId, stepKey}) => {
+
+const PhotoField = ({patientId, stepKey, handleFileUpload}) => {
 
     const dataURItoBlob = (dataURI) => {
         var byteString = atob(dataURI.split(',')[1]);
@@ -20,17 +23,39 @@ const PhotoField = ({patientId, stepKey}) => {
 
     
     const handleTakePhoto = async (dataUri) => {
-        const photo = dataURItoBlob(dataUri);
-        const fileName = "hi"; //TODO: CHANGE THIS NAME TO BE UNIQUE THROUGH Date class --> String 
-        const res = await uploadFile(patientId, stepKey, 'PHOTO', fileName, photo);
-        console.log(res);
-        console.log(patientId);
+        const photoObj = dataURItoBlob(dataUri);
+        const d = Date.now();
+        const fileName = d.toString();
+        const photoFile = new File([photoObj], fileName);
+        handleFileUpload('photo', photoFile);
     }
 
+
+    //TODO: Delete this boi
+    const images = [
+  {
+    original: 'https://picsum.photos/id/1018/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1018/250/150/',
+  },
+  {
+    original: 'https://picsum.photos/id/1015/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1015/250/150/',
+  },
+  {
+    original: 'https://picsum.photos/id/1019/1000/600/',
+    thumbnail: 'https://picsum.photos/id/1019/250/150/',
+  },
+];
+
+
   return (
+    <div>
     <Camera 
       onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
     />
+        <ImageGallery items={images} />
+    </div>
+
   );
 };
 
