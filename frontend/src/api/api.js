@@ -18,23 +18,7 @@ export const getPatientsByPageNumber = async (pageNumber, nPerPage) => {
     return res.data;
 };
 
-export const getAllPatients = async () => {
-    const requestString = '/patients';
-    const res = await instance.get(requestString);
-    if (!res?.data?.success) throw new Error(res?.data?.message);
-
-    return res.data;
-};
-
-export const getPatientsByStage = async (stage) => {
-    const requestString = `/stages/${stage}`;
-    const res = await instance.get(requestString);
-    if (!res?.data?.success) throw new Error(res?.data?.message);
-
-    return res.data;
-};
-
-export const getPatientsByStagePageNumber = async (
+export const getPatientsByStageAndPageNumber = async (
     stage,
     pageNumber,
     nPerPage,
@@ -166,15 +150,6 @@ export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
 export const getAllRoles = async () => {
     const requestString = `/roles`;
     const res = await instance.get(requestString);
-
-    if (!res?.data?.success) throw new Error(res?.data?.message);
-
-    return res.data;
-};
-
-export const getRolesByPageNumber = async (pageNumber, nPerPage) => {
-    const requestString = `/roles/${pageNumber}/${nPerPage}`;
-    const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
@@ -192,15 +167,6 @@ export const addUserRole = async (username, roleName) => {
 export const removeUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
     const res = await instance.delete(requestString);
-
-    if (!res?.data?.success) throw new Error(res?.data?.message);
-
-    return res.data;
-};
-
-export const getAllUsers = async () => {
-    const requestString = `/users`;
-    const res = await instance.get(requestString);
 
     if (!res?.data?.success) throw new Error(res?.data?.message);
 

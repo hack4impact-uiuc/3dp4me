@@ -7,11 +7,10 @@ import PatientTable from '../../components/PatientTable/PatientTable';
 import {
     getPatientDashboardHeaders,
     ALL_PATIENT_DASHBOARD_ROW_DATA,
+    PEOPLE_PER_PAGE
 } from '../../utils/constants';
 import './Patients.scss';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
-
-const PATIENTS_PER_PAGE = 14;
 
 /**
  * Shows a table of all patients within the system
@@ -27,7 +26,7 @@ const Patients = () => {
         errorWrap(async () => {
             const res = await getPatientsByPageNumber(
                 newPage,
-                PATIENTS_PER_PAGE,
+                PEOPLE_PER_PAGE,
             );
 
             setAllPatients(res.result);
@@ -78,7 +77,7 @@ const Patients = () => {
                 />
 
                 <PaginateBar
-                    pageCount={patientsCount / PATIENTS_PER_PAGE}
+                    pageCount={Math.ceil(patientsCount / PEOPLE_PER_PAGE, 10)}
                     onPageChange={updatePage}
                 />
             </div>

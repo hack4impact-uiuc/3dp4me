@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
-import { getUsersByPageNumber, getRolesByPageNumber } from '../../api/api';
+import { getUsersByPageNumber, getAllRoles } from '../../api/api';
 import {
     getAccessLevel,
     getEmail,
@@ -20,14 +20,13 @@ import {
     getUserTableHeaders,
     LANGUAGES,
     USER_TABLE_ROW_DATA,
+    PEOPLE_PER_PAGE
 } from '../../utils/constants';
 import {
     generateUserTableRowRenderer,
     userTableHeaderRenderer,
 } from '../../utils/table-renderers';
 import './AccountManagement.scss';
-
-const USERS_PER_PAGE = 14;
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -39,15 +38,21 @@ const AccountManagement = () => {
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const [paginationToken, setPaginationToken] = useState('');
-    const [usersLeft, setUsersLeft] = useState(true);
+    const [isUserLeft, setIsUserLeft] = useState(true);
     const [pageNumber, setPageNumber] = useState(1);
 
     const errorWrap = useErrorWrap();
 
+    const fetchRoles = async () => {
+        const rolesRes = await getAllRoles();
+        const roles = rolesToMultiSelectFormat(rolesRes.result);
+        setRolesData(roles);
+    };
+
     const fetchData = async () => {
         const userRes = await getUsersByPageNumber(
             paginationToken,
-            USERS_PER_PAGE,
+            PEOPLE_PER_PAGE,
         );
 
         const totalUserMetaData = userMetaData.concat(userRes.result.Users);
@@ -58,19 +63,19 @@ const AccountManagement = () => {
         if (newPaginationToken) {
             setPaginationToken(newPaginationToken);
         } else {
-            setUsersLeft(false);
+            setIsUserLeft(false);
         }
 
-        const rolesRes = await getRolesByPageNumber(pageNumber, USERS_PER_PAGE);
-        const newRoles = rolesToMultiSelectFormat(rolesRes.result);
-        const allRoles = rolesData.concat(newRoles);
-        setRolesData(allRoles);
-
+    
         setPageNumber(pageNumber + 1);
     };
 
     useEffect(() => {
-        errorWrap(fetchData);
+
+        errorWrap(async () => {
+            await fetchRoles();
+            await fetchData();
+        });
     }, [setUserMetaData, errorWrap]);
 
     /**
@@ -157,18 +162,33 @@ const AccountManagement = () => {
 
     function generateMainUserTable() {
         return (
-            <>
-                <SimpleTable
-                    data={usersToTableFormat(userMetaData)}
-                    headers={getUserTableHeaders(selectedLang)}
-                    rowData={USER_TABLE_ROW_DATA}
-                    renderHeader={userTableHeaderRenderer}
-                    renderTableRow={generateUserTableRowRenderer(
-                        onUserSelected,
-                    )}
-                />
-            </>
+            <SimpleTable
+                data={usersToTableFormat(userMetaData)}
+                headers={getUserTableHeaders(selectedLang)}
+                rowData={USER_TABLE_ROW_DATA}
+                renderHeader={userTableHeaderRenderer}
+                renderTableRow={generateUserTableRowRenderer(
+                    onUserSelected,
+                )}
+            />
         );
+    }
+
+    function generateLoadMoreBtn() { 
+        return isUserLeft 
+        ? 
+        <div className="load-div">
+            <button
+            type="button"
+            className="load-more-btn"
+            onClick={() => errorWrap(fetchData)}>
+            {translations.components.button.loadMore}
+            
+        </button> 
+        </div>
+        : 
+        <div className="load-div">
+            <p className="load-more-text">{translations.components.button.noMoreUsers}</p></div>;
     }
 
     const generateUserEditModal = () => {
@@ -201,19 +221,7 @@ const AccountManagement = () => {
                     </div>
                 </div>
                 {generateMainUserTable()}
-                <div className="load-div">
-                    {usersLeft ? (
-                        <button
-                            type="button"
-                            className="load-more-btn"
-                            onClick={() => errorWrap(fetchData)}
-                        >
-                            {translations.components.button.loadMore}
-                        </button>
-                    ) : (
-                        <p className="load-more-text">No More Users</p>
-                    )}
-                </div>
+                {generateLoadMoreBtn()}
             </div>
             {generateUserEditModal()}
         </div>

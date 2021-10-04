@@ -17,7 +17,7 @@ const {
     isRoleValid,
 } = require('../../utils/roleUtils');
 const { requireAdmin } = require('../../middleware/authentication');
-const { ADMIN_ID } = require('../../utils/constants');
+const { ADMIN_ID, DEFAULT_USERS_ON_GET_REQUEST } = require('../../utils/constants');
 
 /**
  * Gets information about the user making this request.
@@ -42,46 +42,25 @@ router.get(
     '/',
     requireAdmin,
     errorWrap(async (req, res) => {
-        // eslint-disable-next-line prefer-const
-        let { token, nPerPage } = req.query;
+        const { token } = req.query;
+        let nPerPage = req.query.nPerPage ?? DEFAULT_USERS_ON_GET_REQUEST;
 
-        if (nPerPage !== undefined) {
-            if (token !== undefined) {
-                nPerPage = parseInt(nPerPage, 10);
+        nPerPage = parseInt(nPerPage, 10);
 
-                const params = {
-                    UserPoolId: USER_POOL_ID,
-                    Limit: nPerPage,
-                    PaginationToken: token,
-                };
-                const identityProvider = getIdentityProvider();
-                try {
-                    const users = await identityProvider.listUsers(params).promise();
-                    await sendResponse(res, 200, '', users);
-                } catch (error) {
-                    await sendResponse(res, 400, 'Please send a proper pagination token.', {});
-                }
-            } else {
-                nPerPage = parseInt(nPerPage, 10);
+        const params = {
+            UserPoolId: USER_POOL_ID,
+            Limit: nPerPage,
+        };
 
-                const params = {
-                    UserPoolId: USER_POOL_ID,
-                    Limit: nPerPage,
-                };
+        if (token) params.PaginationToken = token;
 
-                const identityProvider = getIdentityProvider();
-                const users = await identityProvider.listUsers(params).promise();
-
-                await sendResponse(res, 200, '', users);
-            }
-        } else {
-            const params = {
-                UserPoolId: USER_POOL_ID,
-            };
-
-            const identityProvider = getIdentityProvider();
+        const identityProvider = getIdentityProvider();
+        try {
             const users = await identityProvider.listUsers(params).promise();
             await sendResponse(res, 200, '', users);
+        } catch (error) {
+            console.log(error);
+            await sendResponse(res, 400, 'Please send a proper pagination token.', {});
         }
     }),
 );

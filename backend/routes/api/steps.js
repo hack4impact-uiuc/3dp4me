@@ -6,19 +6,18 @@ const mongoose = require('mongoose');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const { PATIENT_STATUS_ENUM } = require('../../utils/constants');
-const { sendResponse } = require('../../utils/response');
+const { sendResponse, getDataFromModelWithPagination } = require('../../utils/response');
 
 /**
  * Returns basic information for all patients that are active in
  * the specified step.
  *
- * TODO: We should paginate this in the future.
+ *
  */
 router.get(
     '/:stepKey',
     errorWrap(async (req, res) => {
         const { stepKey } = req.params;
-        let { pageNumber, nPerPage } = req.query;
 
         const steps = await models.Step.find({ key: stepKey });
 
@@ -33,25 +32,9 @@ router.get(
             return sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
-        let patients;
-
-        if (pageNumber !== undefined && nPerPage !== undefined) {
-            pageNumber = parseInt(pageNumber, 10);
-            nPerPage = parseInt(nPerPage, 10);
-
-            const documentsToSkip = pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0;
-            // Cannot use an aggregation here due to the encryption middleware
-            patients = await models.Patient.find({
-                status: PATIENT_STATUS_ENUM.ACTIVE,
-            })
-                .sort({ _id: 1 }).skip(documentsToSkip)
-                .limit(nPerPage);
-        } else {
-            // Cannot use an aggregation here due to the encryption middleware
-            patients = await models.Patient.find({
-                status: PATIENT_STATUS_ENUM.ACTIVE,
-            });
-        }
+        const patients = await getDataFromModelWithPagination(req, models.Patient, {
+            status: PATIENT_STATUS_ENUM.ACTIVE,
+        });
 
         // Create array of promises to speed this up a bit
         const lookups = patients.map(async (p) => {

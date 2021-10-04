@@ -8,10 +8,9 @@ import RightArrow from '../../assets/right-arrow.svg';
 import LeftArrow from '../../assets/left-arrow.svg';
 
 /**
- * Shows a table of all patients within the system
+ * Shows a pagination component with arrows and page numbers
  */
-const PaginateBar = (props) => {
-    const { pageCount, onPageChange } = props;
+const PaginateBar = ({ pageCount, onPageChange }) => {
 
     const nextLabel = <img className="arrow" alt="" src={RightArrow} />;
     const previousLabel = <img className="arrow" alt="" src={LeftArrow} />;

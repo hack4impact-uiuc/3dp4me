@@ -16,7 +16,7 @@ const {
     STEP_IMMUTABLE_ATTRIBUTES,
     PATIENT_IMMUTABLE_ATTRIBUTES,
 } = require('../../utils/constants');
-const { sendResponse } = require('../../utils/response');
+const { sendResponse, getDataFromModelWithPagination } = require('../../utils/response');
 const { getReadableSteps } = require('../../utils/stepUtils');
 const { getStepBaseSchemaKeys } = require('../../utils/initDb');
 const {
@@ -31,22 +31,8 @@ const {
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        let { pageNumber, nPerPage } = req.query;
-
-        if (pageNumber !== undefined && nPerPage !== undefined) {
-            pageNumber = parseInt(pageNumber, 10);
-            nPerPage = parseInt(nPerPage, 10);
-            const documentsToSkip = pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0;
-            const patients = await models.Patient.find()
-                .sort({ lastEdited: -1 }).skip(documentsToSkip)
-                .limit(nPerPage);
-            await sendResponse(res, 200, '', patients);
-        } else {
-            pageNumber = parseInt(pageNumber, 10);
-            nPerPage = parseInt(nPerPage, 10);
-            const patients = await models.Patient.find();
-            await sendResponse(res, 200, '', patients);
-        }
+        const patients = await getDataFromModelWithPagination(req, models.Patient);
+        await sendResponse(res, 200, '', patients);
     }),
 );
 

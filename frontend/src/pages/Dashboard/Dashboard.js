@@ -6,11 +6,12 @@ import {
     getStepDashboardHeaders,
     PATIENTS_BY_STEP_TABLE_ROW_DATA,
     FIELD_TYPES,
+    PEOPLE_PER_PAGE
 } from '../../utils/constants';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import {
     getAllStepsMetadata,
-    getPatientsByStagePageNumber,
+    getPatientsByStageAndPageNumber,
     getPatientsCount,
 } from '../../api/api';
 import './Dashboard.scss';
@@ -18,8 +19,6 @@ import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
 import { sortMetadata } from '../../utils/utils';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
-
-const PATIENTS_PER_PAGE = 14;
 
 /**
  * Shows a table of active patients, with a different table for each step
@@ -47,28 +46,26 @@ const Dashboard = () => {
      * Gets patient data based on page number and step
      */
 
-    const getPatientData = async (stepKey, pageNumber) => {
-        errorWrap(async () => {
-            const res = await getPatientsByStagePageNumber(
-                stepKey,
-                pageNumber,
-                PATIENTS_PER_PAGE,
-            );
-            setPatients(res.result);
-        });
+    const loadPatientData = async (stepKey, pageNumber) => {
+        const res = await getPatientsByStageAndPageNumber(
+            stepKey,
+            pageNumber,
+            PEOPLE_PER_PAGE,
+        );
+        setPatients(res.result);
     };
 
     /**
      * Gets metadata for all steps, only called once
      */
-    const getMetadata = async () => {
+    const loadMetadataAndPatientData = async () => {
         const res = await getAllStepsMetadata();
 
         const metaData = sortMetadata(res.result);
         setStepsMetaData(metaData);
         if (metaData.length > 0) {
             setSelectedStep(metaData[0].key);
-            await getPatientData(metaData[0].key, selectedPageNumber);
+            await loadPatientData(metaData[0].key, selectedPageNumber);
         } else {
             throw new Error(translations.errors.noMetadata);
         }
@@ -78,16 +75,16 @@ const Dashboard = () => {
      * Gets metadata for all setps
      */
     useEffect(() => {
-        const getCount = async () => {
+        const loadAllDashboardData = async () => {
             errorWrap(async () => {
                 const res = await getPatientsCount();
-
                 setPatientsCount(res.result);
-                await getMetadata();
+
+                await loadMetadataAndPatientData();
             });
         };
 
-        getCount();
+        loadAllDashboardData();
     }, [setSelectedStep, setStepsMetaData, errorWrap, translations]);
 
     /**
@@ -108,14 +105,20 @@ const Dashboard = () => {
         // TODO: Put the patient data in a store
         setSelectedStep(stepKey);
 
-        await getPatientData(stepKey, selectedPageNumber);
+        errorWrap(async () => {
+            await loadPatientData(stepKey, selectedPageNumber);
+        });
+
     };
 
     const onPageNumberChanged = async (newPageNumber) => {
         if (selectedStep === '') return;
 
         setPageNumber(newPageNumber);
-        await getPatientData(selectedStep, newPageNumber);
+
+        errorWrap(async () => {
+            await loadPatientData(selectedStep, newPageNumber);
+        });
     };
 
     /**
@@ -218,7 +221,7 @@ const Dashboard = () => {
             </div>
             <div className="patient-list">{generateMainTable()}</div>
             <PaginateBar
-                pageCount={patientsCount / PATIENTS_PER_PAGE}
+                pageCount={Math.ceil(patientsCount / PEOPLE_PER_PAGE, 10)}
                 onPageChange={onPageNumberChanged}
             />
         </div>
