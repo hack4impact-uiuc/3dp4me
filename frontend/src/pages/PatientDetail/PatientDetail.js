@@ -8,6 +8,7 @@ import StepContent from '../../components/StepContent/StepContent';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
 import {
+    downloadBlobWithoutSaving,
     getAllStepsMetadata,
     getPatientById,
     updatePatient,
@@ -36,6 +37,20 @@ const PatientDetail = () => {
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
 
+
+
+    //TODO: 
+
+    // stepData
+    // get photo array of names
+    // map through and add to each object a uri
+    // pass in that array all the way down to photofield as a prop (don't need this bc modify ref)
+    // value.uri and get them into the array formatted
+    // use value and displayName props 
+    //original and thumbnail sizing 
+
+    //future consideration: delete photo and confirm taking photo/pop up for take photo button + css
+
     /**
      * Fetch metadata for all steps and the patient's data.
      * Then sort it.
@@ -54,16 +69,66 @@ const PatientDetail = () => {
                 // Sort it
                 metaData = sortMetadata(metaData);
                 if (metaData.length > 0) setSelectedStep(metaData[0].key);
+                console.log(metaData);
+                console.log(data);
+
+
+                //iterate through 
+
+                const updatedData = updateMetaDataPhotos(metaData, data);
+
+                console.log(updatedData);
+
 
                 // Store it
                 setStepMetaData(metaData);
-                setPatientData(data);
+                setPatientData(updatedData);
                 setLoading(false);
+
             });
         };
 
         getData();
     }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
+
+    //questions:
+    //modify whole patientData or just new arrays for photos? Don't do newMetaData right?
+    //do we add anything to dependency array for useEffect such as functions below? Should these functions go inside the useEffect?
+    //why am I getting issues when using await
+
+    const updateMetaDataPhotos = async (metaData, patientData) => {
+        let newPatientData = _.cloneDeep(patientData);
+        for (let i = 0; i < metaData.length; i++) {
+            const step = metaData[i];
+            for (let j = 0; j < step.fields.length; j++) {
+                if (step.fields[j].fieldType === "Photo") {
+                    const photoData = newPatientData[step.key][step.fields[j].key];
+                    //get the photoData
+                    const newPhotoData = convertPhotosToURI(photoData, step.key, step.fields[j].key);
+
+                    newPatientData[step.key][step.fields[j].key] = newPhotoData;
+
+                    
+                }
+            }
+        }
+        return newPatientData;
+    }
+
+    const convertPhotosToURI = (photoData, stepKey, fieldKey) => {
+        const newPhotoData = photoData.map(photoObj => 
+            {
+                //const blob = await downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.fileName);
+                //console.log(blob);
+                // const urlCreator = window.URL || window.webkitURL; 
+                // const imageUrl = urlCreator.createObjectURL(blob); 
+                photoObj.uri = "https://picsum.photos/id/1018/500/300/";
+                return photoObj;
+            }
+        );
+        return newPhotoData;
+        return photoData;
+    }
 
     /**
      * Called when the patient data for a step is saved
