@@ -1,4 +1,3 @@
-import { values } from 'lodash';
 import React from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
@@ -9,12 +8,12 @@ import "react-image-gallery/styles/css/image-gallery.css";
 const PhotoField = ({handleFileUpload, value, displayName}) => {
 
     const dataURItoBlob = (dataURI) => {
-        var byteString = atob(dataURI.split(',')[1]);
-        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        const byteString = atob(dataURI.split(',')[1]);
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
 
-        var ab = new ArrayBuffer(byteString.length);
-        var ia = new Uint8Array(ab);
-        for (var i = 0; i < byteString.length; i++) {
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
             ia[i] = byteString.charCodeAt(i);
         }
 
@@ -31,12 +30,13 @@ const PhotoField = ({handleFileUpload, value, displayName}) => {
     }
 
 
+        console.log(value);
+
     const images = value.map(v => {return {original: v.uri, thumbnail: v.uri}});
 
-    console.log(images);
     
-    //TODO: Delete this boi
-//     const ogimages = [
+    // TODO: Delete this boi
+//     const images = [
 //   {
 //     original: 'https://picsum.photos/id/1018/500/300/',
 //     thumbnail: 'https://picsum.photos/id/1018/250/150/',
@@ -51,7 +51,7 @@ const PhotoField = ({handleFileUpload, value, displayName}) => {
 //   },
 // ];
 
-//console.log(ogimages);
+// console.log(ogimages);
 
 
   return (
