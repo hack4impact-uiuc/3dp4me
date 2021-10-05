@@ -13,7 +13,7 @@ const {
     DEFAULT_PATIENTS_ON_GET_REQUEST,
 } = require('../../../utils/constants');
 
-describe('GET /patients', () => {
+describe('GET /stages', () => {
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
     beforeAll(async () => {

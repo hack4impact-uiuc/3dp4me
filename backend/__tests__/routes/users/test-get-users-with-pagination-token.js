@@ -12,9 +12,11 @@ const {
     identityServiceParams,
 } = require('../../utils/auth');
 
-const {
-    DEFAULT_USERS_ON_GET_REQUEST,
-} = require('../../../utils/constants');
+const { DEFAULT_USERS_ON_GET_REQUEST } = require('../../../utils/constants');
+
+/**
+ * This test suite only checks the paramters for the request.
+ */
 
 describe('GET /users', () => {
     afterAll(async () => await db.closeDatabase());
@@ -32,9 +34,7 @@ describe('GET /users', () => {
 
     it('get users without query parameters', async () => {
         // Send the request
-        await withAuthentication(
-            request(server).get('/api/users'),
-        );
+        await withAuthentication(request(server).get('/api/users'));
 
         const identityParams = identityServiceParams();
 

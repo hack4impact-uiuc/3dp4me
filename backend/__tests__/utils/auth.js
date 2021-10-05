@@ -45,6 +45,10 @@ module.exports.initAuthMocker = (AWS) => {
     );
 };
 
+/**
+ * Initializes the auth mocker for getting the list of users. Must be called once before all tests.
+ * @param {Object} AWS The AWS mocker. An instance of this object can be created with `const AWS = require('aws-sdk-mock')`
+ */
 module.exports.initIdentityServiceMocker = (AWS) => {
     AWS.mock('CognitoIdentityServiceProvider', 'listUsers', (params) => {
         identityServiceParams = params;
