@@ -20,7 +20,7 @@ import {
     getUserTableHeaders,
     LANGUAGES,
     USER_TABLE_ROW_DATA,
-    PEOPLE_PER_PAGE
+    PEOPLE_PER_PAGE,
 } from '../../utils/constants';
 import {
     generateUserTableRowRenderer,
@@ -66,12 +66,10 @@ const AccountManagement = () => {
             setIsUserLeft(false);
         }
 
-    
         setPageNumber(pageNumber + 1);
     };
 
     useEffect(() => {
-
         errorWrap(async () => {
             await fetchRoles();
             await fetchData();
@@ -167,28 +165,29 @@ const AccountManagement = () => {
                 headers={getUserTableHeaders(selectedLang)}
                 rowData={USER_TABLE_ROW_DATA}
                 renderHeader={userTableHeaderRenderer}
-                renderTableRow={generateUserTableRowRenderer(
-                    onUserSelected,
-                )}
+                renderTableRow={generateUserTableRowRenderer(onUserSelected)}
             />
         );
     }
 
-    function generateLoadMoreBtn() { 
-        return isUserLeft 
-        ? 
-        <div className="load-div">
-            <button
-            type="button"
-            className="load-more-btn"
-            onClick={() => errorWrap(fetchData)}>
-            {translations.components.button.loadMore}
-            
-        </button> 
-        </div>
-        : 
-        <div className="load-div">
-            <p className="load-more-text">{translations.components.button.noMoreUsers}</p></div>;
+    function generateLoadMoreBtn() {
+        return isUserLeft ? (
+            <div className="load-div">
+                <button
+                    type="button"
+                    className="load-more-btn"
+                    onClick={() => errorWrap(fetchData)}
+                >
+                    {translations.components.button.loadMore}
+                </button>
+            </div>
+        ) : (
+            <div className="load-div">
+                <p className="load-more-text">
+                    {translations.components.button.noMoreUsers}
+                </p>
+            </div>
+        );
     }
 
     const generateUserEditModal = () => {

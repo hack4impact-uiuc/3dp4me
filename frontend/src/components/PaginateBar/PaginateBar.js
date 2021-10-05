@@ -11,7 +11,6 @@ import LeftArrow from '../../assets/left-arrow.svg';
  * Shows a pagination component with arrows and page numbers
  */
 const PaginateBar = ({ pageCount, onPageChange }) => {
-
     const nextLabel = <img className="arrow" alt="" src={RightArrow} />;
     const previousLabel = <img className="arrow" alt="" src={LeftArrow} />;
 

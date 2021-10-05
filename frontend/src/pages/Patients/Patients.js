@@ -7,7 +7,7 @@ import PatientTable from '../../components/PatientTable/PatientTable';
 import {
     getPatientDashboardHeaders,
     ALL_PATIENT_DASHBOARD_ROW_DATA,
-    PEOPLE_PER_PAGE
+    PEOPLE_PER_PAGE,
 } from '../../utils/constants';
 import './Patients.scss';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
@@ -24,10 +24,7 @@ const Patients = () => {
 
     const getData = async (newPage) => {
         errorWrap(async () => {
-            const res = await getPatientsByPageNumber(
-                newPage,
-                PEOPLE_PER_PAGE,
-            );
+            const res = await getPatientsByPageNumber(newPage, PEOPLE_PER_PAGE);
 
             setAllPatients(res.result);
         });

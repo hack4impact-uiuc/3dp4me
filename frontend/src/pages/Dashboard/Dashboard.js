@@ -6,7 +6,7 @@ import {
     getStepDashboardHeaders,
     PATIENTS_BY_STEP_TABLE_ROW_DATA,
     FIELD_TYPES,
-    PEOPLE_PER_PAGE
+    PEOPLE_PER_PAGE,
 } from '../../utils/constants';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import {
@@ -108,7 +108,6 @@ const Dashboard = () => {
         errorWrap(async () => {
             await loadPatientData(stepKey, selectedPageNumber);
         });
-
     };
 
     const onPageNumberChanged = async (newPageNumber) => {
