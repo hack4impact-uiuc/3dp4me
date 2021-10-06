@@ -173,12 +173,19 @@ export const removeUserRole = async (username, roleName) => {
     return res.data;
 };
 
-export const getUsersByPageNumber = async (token, nPerPage) => {
+export const getUsersByPageNumber = async (nPerPage) => {
+    const requestString = `/users?nPerPage=${nPerPage}`;
+
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const getUsersByPageNumberAndToken = async (token, nPerPage) => {
     const encodedToken = encodeURIComponent(token);
-    const requestString =
-        token === ''
-            ? `/users?nPerPage=${nPerPage}`
-            : `/users?token=${encodedToken}&nPerPage=${nPerPage}`;
+    const requestString = `/users?token=${encodedToken}&nPerPage=${nPerPage}`;
 
     const res = await instance.get(requestString);
 

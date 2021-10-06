@@ -59,7 +59,6 @@ const Dashboard = () => {
      * Gets metadata for all setps
      */
     useEffect(() => {
-
         /**
          * Gets metadata for all steps, only called once
          */
@@ -76,7 +75,6 @@ const Dashboard = () => {
             }
         };
 
-
         const loadAllDashboardData = async () => {
             errorWrap(async () => {
                 const res = await getPatientsCount();
@@ -87,7 +85,13 @@ const Dashboard = () => {
         };
 
         loadAllDashboardData();
-    }, [setSelectedStep, selectedPageNumber, setStepsMetaData, errorWrap, translations]);
+    }, [
+        setSelectedStep,
+        selectedPageNumber,
+        setStepsMetaData,
+        errorWrap,
+        translations,
+    ]);
 
     /**
      * Called when a patient is successfully added to the backend

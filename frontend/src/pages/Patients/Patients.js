@@ -33,7 +33,6 @@ const Patients = () => {
      * Fetch data on all patients
      */
     useEffect(() => {
-
         const getInitialPage = async () => {
             errorWrap(async () => {
                 // page number starts at 1

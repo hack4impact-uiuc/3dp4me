@@ -1,7 +1,11 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
-import { getUsersByPageNumber, getAllRoles } from '../../api/api';
+import {
+    getUsersByPageNumber,
+    getUsersByPageNumberAndToken,
+    getAllRoles,
+} from '../../api/api';
 import {
     getAccessLevel,
     getEmail,
@@ -39,12 +43,12 @@ const AccountManagement = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [paginationToken, setPaginationToken] = useState('');
     const [isUserLeft, setIsUserLeft] = useState(true);
-    const [pageNumber, setPageNumber] = useState(1);
+    const [pageNumber, setPageNumber] = useState(0);
 
     const errorWrap = useErrorWrap();
 
-    const fetchData = async () => {
-        const userRes = await getUsersByPageNumber(
+    const fetchMoreUsers = async () => {
+        const userRes = await getUsersByPageNumberAndToken(
             paginationToken,
             PEOPLE_PER_PAGE,
         );
@@ -63,19 +67,35 @@ const AccountManagement = () => {
         setPageNumber(pageNumber + 1);
     };
 
-    const fetchRoles = async () => {
-        const rolesRes = await getAllRoles();
-        const roles = rolesToMultiSelectFormat(rolesRes.result);
-        setRolesData(roles);
-    };
-
     useEffect(() => {
         errorWrap(async () => {
+            const fetchRoles = async () => {
+                const rolesRes = await getAllRoles();
+                const roles = rolesToMultiSelectFormat(rolesRes.result);
+                setRolesData(roles);
+            };
+
+            const fetchInitialUsers = async () => {
+                const userRes = await getUsersByPageNumber(PEOPLE_PER_PAGE);
+
+                const totalUserMetaData = userRes.result.Users;
+                setUserMetaData(totalUserMetaData);
+
+                const newPaginationToken = userRes.result.PaginationToken;
+
+                if (newPaginationToken) {
+                    setPaginationToken(newPaginationToken);
+                } else {
+                    setIsUserLeft(false);
+                }
+
+                setPageNumber(1);
+            };
 
             await fetchRoles();
-            await fetchData();
+            await fetchInitialUsers();
         });
-    }, [setUserMetaData, errorWrap, fetchData, fetchRoles]);
+    }, [setUserMetaData, errorWrap]);
 
     /**
      * Converts the roles response to a format useable by the MultiSelect field
@@ -177,7 +197,7 @@ const AccountManagement = () => {
                 <button
                     type="button"
                     className="load-more-btn"
-                    onClick={() => errorWrap(fetchData)}
+                    onClick={() => errorWrap(fetchMoreUsers)}
                 >
                     {translations.components.button.loadMore}
                 </button>
