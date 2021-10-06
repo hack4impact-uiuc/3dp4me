@@ -17,7 +17,23 @@ const {
     isRoleValid,
 } = require('../../utils/roleUtils');
 const { requireAdmin } = require('../../middleware/authentication');
-const { ADMIN_ID } = require('../../utils/constants');
+const { ADMIN_ID, DEFAULT_USERS_ON_GET_REQUEST } = require('../../utils/constants');
+
+/**
+ * Gets information about the user making this request.
+ */
+router.get(
+    '/self',
+    errorWrap(async (req, res) => {
+        const isAdmin = req?.user?.roles?.includes(ADMIN_ID) || false;
+
+        const data = {
+            isAdmin,
+        };
+
+        await sendResponse(res, 200, '', data);
+    }),
+);
 
 /**
  * Returns a list of all users in our system
@@ -26,13 +42,25 @@ router.get(
     '/',
     requireAdmin,
     errorWrap(async (req, res) => {
+        const { token } = req.query;
+        let nPerPage = req.query.nPerPage ?? DEFAULT_USERS_ON_GET_REQUEST;
+
+        nPerPage = parseInt(nPerPage, 10);
+
         const params = {
             UserPoolId: USER_POOL_ID,
+            Limit: nPerPage,
         };
 
+        if (token) params.PaginationToken = token;
+
         const identityProvider = getIdentityProvider();
-        const users = await identityProvider.listUsers(params).promise();
-        await sendResponse(res, 200, '', users);
+        try {
+            const users = await identityProvider.listUsers(params).promise();
+            await sendResponse(res, 200, '', users);
+        } catch (error) {
+            await sendResponse(res, 400, 'Please send a proper pagination token.', {});
+        }
     }),
 );
 
@@ -119,20 +147,6 @@ router.put(
         const identityProvider = getIdentityProvider();
         await identityProvider.adminUpdateUserAttributes(params).promise();
         await sendResponse(res, 200, 'Access updated');
-    }),
-);
-
-/**
- * Gets information about the user making this request.
- */
-router.get(
-    '/self',
-    errorWrap(async (req, res) => {
-        const data = {
-            isAdmin: req.user.roles.includes(ADMIN_ID),
-        };
-
-        await sendResponse(res, 200, '', data);
     }),
 );
 

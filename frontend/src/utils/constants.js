@@ -196,3 +196,5 @@ export const SIGNATURE_STATUS = {
  * must use this string in their models for status.
  */
 export const PATIENT_KEY_STATUS = 'status';
+
+export const PEOPLE_PER_PAGE = 14;

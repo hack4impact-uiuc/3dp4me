@@ -56,3 +56,6 @@ module.exports.PATIENT_IMMUTABLE_ATTRIBUTES = GLOBALLY_IMMUTABLE_ATTRIBUTES.conc
     'lastEdited',
     'lastEditedBy',
 );
+
+module.exports.DEFAULT_USERS_ON_GET_REQUEST = 0;
+module.exports.DEFAULT_PATIENTS_ON_GET_REQUEST = 1;

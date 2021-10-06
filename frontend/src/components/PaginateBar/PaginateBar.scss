@@ -1,0 +1,65 @@
+// Styles for the pagination component
+
+.paginate-container {
+    display: flex;
+    padding: 4px 12px;
+    flex-wrap: wrap;
+    text-align: center;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0 auto;
+    width: 90%;
+    background-color: #323366;
+    height: auto;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.paginate-container li {
+    margin: 4px 8px;
+    display: inline-block;
+}
+
+.paginate-element,
+.paginate-active {
+    min-width: 25px;
+    width: fit-content;
+    height: fit-content;
+    padding: 2px 4px;
+    color: white;
+}
+
+.paginate-previous,
+.paginate-next {
+    min-width: 50px;
+    text-align: center;
+    width: fit-content;
+    height: fit-content;
+    padding: 2px 4px;
+    color: white;
+}
+
+.paginate-active {
+    border-radius: 2px;
+    background-color: white;
+    .paginate-link {
+        color: #323366;
+    }
+}
+
+.paginate-link,
+paginate-previous-link {
+    color: white;
+    font-size: 0.9em;
+}
+
+.paginate-link:hover,
+paginate-previous-link:hover,
+paginate-next-link:hover {
+    color: rgb(211, 210, 210);
+}
+
+.arrow {
+    width: 12px;
+    height: auto;
+}
