@@ -39,6 +39,7 @@ describe('GET /users', () => {
         const identityParams = identityServiceParams();
 
         expect(identityParams.Limit).toBe(DEFAULT_USERS_ON_GET_REQUEST);
+        expect(identityParams.Token).toBe(undefined);
     });
 
     it('get users with nPerPage but no pagination token', async () => {
@@ -52,5 +53,6 @@ describe('GET /users', () => {
         const identityParams = identityServiceParams();
 
         expect(identityParams.Limit).toBe(nPerPage);
+        expect(identityParams.Token).toBe(undefined);
     });
 });

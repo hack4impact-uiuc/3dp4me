@@ -22,17 +22,10 @@ const Patients = () => {
 
     const errorWrap = useErrorWrap();
 
-    const getData = async (newPage) => {
-        errorWrap(async () => {
-            const res = await getPatientsByPageNumber(newPage, PEOPLE_PER_PAGE);
-
-            setAllPatients(res.result);
-        });
-    };
-
     const updatePage = async (newPage) => {
         errorWrap(async () => {
-            await getData(newPage);
+            const res = await getPatientsByPageNumber(newPage, PEOPLE_PER_PAGE);
+            setAllPatients(res.result);
         });
     };
 
@@ -40,12 +33,21 @@ const Patients = () => {
      * Fetch data on all patients
      */
     useEffect(() => {
+
+        const getInitialPage = async () => {
+            errorWrap(async () => {
+                // page number starts at 1
+                const res = await getPatientsByPageNumber(1, PEOPLE_PER_PAGE);
+                setAllPatients(res.result);
+            });
+        };
+
         const getCount = async () => {
             errorWrap(async () => {
                 const res = await getPatientsCount();
 
                 setPatientsCount(res.result);
-                getData(1); // page number starts at 1
+                getInitialPage();
             });
         };
 

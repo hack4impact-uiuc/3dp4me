@@ -43,12 +43,6 @@ const AccountManagement = () => {
 
     const errorWrap = useErrorWrap();
 
-    const fetchRoles = async () => {
-        const rolesRes = await getAllRoles();
-        const roles = rolesToMultiSelectFormat(rolesRes.result);
-        setRolesData(roles);
-    };
-
     const fetchData = async () => {
         const userRes = await getUsersByPageNumber(
             paginationToken,
@@ -69,12 +63,19 @@ const AccountManagement = () => {
         setPageNumber(pageNumber + 1);
     };
 
+    const fetchRoles = async () => {
+        const rolesRes = await getAllRoles();
+        const roles = rolesToMultiSelectFormat(rolesRes.result);
+        setRolesData(roles);
+    };
+
     useEffect(() => {
         errorWrap(async () => {
+
             await fetchRoles();
             await fetchData();
         });
-    }, [setUserMetaData, errorWrap]);
+    }, [setUserMetaData, errorWrap, fetchData, fetchRoles]);
 
     /**
      * Converts the roles response to a format useable by the MultiSelect field

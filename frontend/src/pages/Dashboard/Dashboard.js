@@ -56,25 +56,27 @@ const Dashboard = () => {
     };
 
     /**
-     * Gets metadata for all steps, only called once
-     */
-    const loadMetadataAndPatientData = async () => {
-        const res = await getAllStepsMetadata();
-
-        const metaData = sortMetadata(res.result);
-        setStepsMetaData(metaData);
-        if (metaData.length > 0) {
-            setSelectedStep(metaData[0].key);
-            await loadPatientData(metaData[0].key, selectedPageNumber);
-        } else {
-            throw new Error(translations.errors.noMetadata);
-        }
-    };
-
-    /**
      * Gets metadata for all setps
      */
     useEffect(() => {
+
+        /**
+         * Gets metadata for all steps, only called once
+         */
+        const loadMetadataAndPatientData = async () => {
+            const res = await getAllStepsMetadata();
+
+            const metaData = sortMetadata(res.result);
+            setStepsMetaData(metaData);
+            if (metaData.length > 0) {
+                setSelectedStep(metaData[0].key);
+                await loadPatientData(metaData[0].key, selectedPageNumber);
+            } else {
+                throw new Error(translations.errors.noMetadata);
+            }
+        };
+
+
         const loadAllDashboardData = async () => {
             errorWrap(async () => {
                 const res = await getPatientsCount();
@@ -85,7 +87,7 @@ const Dashboard = () => {
         };
 
         loadAllDashboardData();
-    }, [setSelectedStep, setStepsMetaData, errorWrap, translations]);
+    }, [setSelectedStep, selectedPageNumber, setStepsMetaData, errorWrap, translations]);
 
     /**
      * Called when a patient is successfully added to the backend
