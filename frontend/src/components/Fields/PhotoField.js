@@ -30,9 +30,15 @@ const PhotoField = ({handleFileUpload, value, displayName}) => {
     }
 
 
-        console.log(value);
+        //console.log(value);
+
+        //work on updating 
+        //passing in the fieldKey (fieldType stays constant), handleSimpleUpdate, in handleTakePhoto add to images, set state for images array, refactor for loops to maps 
+        
 
     const images = value.map(v => {return {original: v.uri, thumbnail: v.uri}});
+
+    //console.log(images);
 
     
     // TODO: Delete this boi

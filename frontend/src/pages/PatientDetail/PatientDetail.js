@@ -75,9 +75,9 @@ const PatientDetail = () => {
 
                 // iterate through 
 
-                const updatedData = updateMetaDataPhotos(metaData, data);
+                const updatedData = await updateMetaDataPhotos(metaData, data);
 
-                // ereconsole.log(updatedData);
+                // console.log(updatedData);
 
 
                 // Store it
@@ -110,37 +110,48 @@ const PatientDetail = () => {
                 if (step.fields[j].fieldType === "Photo") {
                     const photoData = newPatientData[step.key][step.fields[j].key];
                     // get the photoData
-                    const newPhotoData = convertPhotosToURI(photoData, step.key, step.fields[j].key);
+                    const newPhotoData = await convertPhotosToURI(photoData, step.key, step.fields[j].key);
+
+                    //resolving promises one by one
 
                     newPatientData[step.key][step.fields[j].key] = newPhotoData;
+                    // await Promise.all(newPhotoData);
+
 
                     
                 }
             }
+
+
         }
-        // await Promise.all(newPatientData);
         return newPatientData;
     }
 
     const convertPhotosToURI = async (photoData, stepKey, fieldKey) => {
-        const newPhotoData = photoData.map(photoObj => 
+        const newPhotoData = photoData.map(async photoObj => 
             {
                 // const blob = downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.fileName,);
                 // console.log(blob);
                 // const urlCreator = window.URL || window.webkitURL; 
                 // const imageUrl = urlCreator.createObjectURL(blob); 
                 // photoObj.uri = "https://picsum.photos/id/1018/500/300/";
-                photoObj.uri = photoToURI(photoObj, stepKey, fieldKey);
+                photoObj.uri = await photoToURI(photoObj, stepKey, fieldKey);
                 return photoObj;
             }
         );
 
-        await Promise.all(newPhotoData);
-        return newPhotoData;
+        const log = await Promise.all(newPhotoData);
+        console.log(log);
+        return log;
+        // console.log("hi");
+        // console.log(newPhotoData);
+        // return newPhotoData;
     }
 
+    //this should've been filename not fileName
 const photoToURI = async (photoObj, stepKey, fieldKey) => {
-    const blob = await downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.fileName,);
+    const blob = await downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.filename,);
+    console.log(photoObj.fileName);
     const uri = await blobToDataURL(blob);
     return uri;
 }
