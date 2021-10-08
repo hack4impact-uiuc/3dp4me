@@ -29,6 +29,7 @@ const StepField = ({
     handleFileUpload = () => {},
     handleFileDelete = () => {},
 }) => {
+    // console.log(value);
     const selectedLang = useTranslations()[1];
 
     const generateField = () => {
@@ -168,6 +169,8 @@ const StepField = ({
                         patientId={patientId}
                         stepKey={stepKey}
                         handleFileUpload={handleFileUpload}
+                        displayName={displayName}
+                        value={value}
                     />
                 )
             default:
