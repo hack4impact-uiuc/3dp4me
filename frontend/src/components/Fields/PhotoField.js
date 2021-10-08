@@ -9,7 +9,7 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
     const [images, setImages] = useState([]);
 
     useEffect(() => {
-      setImages(value.map(v => {return {original: v.uri, thumbnail: v.uri}}));
+      setImages(value.map(v => {return {original: v.uri, thumbnail: v.uri, originalWidth: "700"}}));
     }, [value]);
 
     const dataURItoBlob = (dataURI) => {
@@ -49,13 +49,13 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
       });
     }
 
+    //TODO: Loading Icon, Resize Image Gallery, Modal/button to open up the photo component
   return (
     <div>
     <h3>{displayName}</h3>
     <Camera 
       onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
-    />
-        <ImageGallery items={images} />
+    /> {images.length > 0 && <ImageGallery items={images} />}
     </div>
 
   );
