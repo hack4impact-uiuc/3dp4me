@@ -37,19 +37,8 @@ const PatientDetail = () => {
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
 
-
-
-    // TODO: 
-
-    // stepData
-    // get photo array of names
-    // map through and add to each object a uri
-    // pass in that array all the way down to photofield as a prop (don't need this bc modify ref)
-    // value.uri and get them into the array formatted
-    // use value and displayName props 
-    // original and thumbnail sizing 
-
-    // future consideration: delete photo and confirm taking photo/pop up for take photo button + css
+    //TODO: ADD COMMENTS
+    //Delete button/Confirm button/Modal
 
     /**
      * Fetch metadata for all steps and the patient's data.
@@ -69,18 +58,9 @@ const PatientDetail = () => {
                 // Sort it
                 metaData = sortMetadata(metaData);
                 if (metaData.length > 0) setSelectedStep(metaData[0].key);
-                // console.log(metaData);
-                // console.log(data);
-
-
-                // iterate through 
 
                 const updatedData = await updateMetaDataPhotos(metaData, data);
 
-                // console.log(updatedData);
-
-
-                // Store it
                 setStepMetaData(metaData);
                 setPatientData(updatedData);
                 setLoading(false);
@@ -91,26 +71,12 @@ const PatientDetail = () => {
         getData();
     }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
 
-    // questions:
-    // modify whole patientData or just new arrays for photos? Don't do newMetaData right?
-    // do we add anything to dependency array for useEffect such as functions below? Should these functions go inside the useEffect?
-    // why am I getting issues when using await
-    // commit .DS_Store?
-    
-
     const updateMetaDataPhotos = async (metaData, data) => {
-        // create copy of patient data
         const newPatientData = _.cloneDeep(data);
         let photoPromises = [];
 
-        // loop through steps
-        // for (let i = 0; i < metaData.length; i++) {
         metaData.map( async step => {
-
-            // const step = metaData[i];
-            // loop through fields of each step
-            //for (let j = 0; j < step.fields.length; j++) {
-                photoPromises = photoPromises.concat(step.fields.map(async field => {
+            photoPromises = photoPromises.concat(step.fields.map(async field => {
                 // when photo field is found, modify patient's data at that step and field 
                 if (field.fieldType === "Photo") {
                     const photoData = newPatientData[step.key][field.key];
@@ -124,96 +90,39 @@ const PatientDetail = () => {
 
 
                     
-                } }
-                ))
-            } 
-        //}
-            );
-        console.log(photoPromises);
+                } 
+            }))
+        });
         await Promise.all(photoPromises);
         return newPatientData;
     }
 
-    // const updateMetaDataPhotos = async (metaData, data) => {
-    //     // create copy of patient data
-    //     const newPatientData = _.cloneDeep(data);
-
-    //     // loop through steps
-    //     for (let i = 0; i < metaData.length; i++) {
-    //         const step = metaData[i];
-    //         // loop through fields of each step
-    //         for (let j = 0; j < step.fields.length; j++) {
-    //             // when photo field is found, modify patient's data at that step and field 
-    //             if (step.fields[j].fieldType === "Photo") {
-    //                 const photoData = newPatientData[step.key][step.fields[j].key];
-    //                 // get the photoData
-    //                 const newPhotoData = await convertPhotosToURI(photoData, step.key, step.fields[j].key);
-
-    //                 //resolving promises one by one
-
-    //                 newPatientData[step.key][step.fields[j].key] = newPhotoData;
-    //                 // await Promise.all(newPhotoData);
-
-
-                    
-    //             }
-    //         }
-
-
-    //     }
-    //     return newPatientData;
-    // }
-
-    //Ask Matt about performance and dependencies in useEffect
-
     const convertPhotosToURI = async (photoData, stepKey, fieldKey) => {
         const newPhotoData = photoData.map(async photoObj => 
             {
-                // const blob = downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.fileName,);
-                // console.log(blob);
-                // const urlCreator = window.URL || window.webkitURL; 
-                // const imageUrl = urlCreator.createObjectURL(blob); 
-                // photoObj.uri = "https://picsum.photos/id/1018/500/300/";
                 photoObj.uri = await photoToURI(photoObj, stepKey, fieldKey);
                 return photoObj;
             }
         );
 
         return await Promise.all(newPhotoData);
-        // console.log(log);
-        //return log;
-        // console.log("hi");
-        // console.log(newPhotoData);
-        // return newPhotoData;
     }
 
-    //this should've been filename not fileName
-const photoToURI = async (photoObj, stepKey, fieldKey) => {
-    const blob = await downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.filename,);
-    //console.log(photoObj.fileName);
-    const uri = await blobToDataURL(blob);
-    return uri;
-}
+    const photoToURI = async (photoObj, stepKey, fieldKey) => {
+        const blob = await downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.filename,);
+        const uri = await blobToDataURL(blob);
+        return uri;
+    }
 
-const blobToDataURL = (blob) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = _e => resolve(reader.result);
-    reader.onerror = _e => reject(reader.error);
-    reader.onabort = _e => reject(new Error("Read aborted"));
-    reader.readAsDataURL(blob);
-  });
-}
-
-
-
-
-// const convertPhotosToURIs = async (....) => {
-//     const URIs = photoData.map(photoObj => photoToURI(photoObj));
-//     await Promise.all(URIs)
-// }
-
-    
+    const blobToDataURL = (blob) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = _e => resolve(reader.result);
+        reader.onerror = _e => reject(reader.error);
+        reader.onabort = _e => reject(new Error("Read aborted"));
+        reader.readAsDataURL(blob);
+    });
+    }
 
     /**
      * Called when the patient data for a step is saved

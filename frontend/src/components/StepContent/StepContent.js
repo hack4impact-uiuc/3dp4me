@@ -35,8 +35,6 @@ const StepContent = ({
 
     useEffect(() => {
         setUpdatedData(_.cloneDeep(stepData));
-        //console.log(stepData);
-        //console.log(updatedData);
     }, [stepData]);
 
     const handleSimpleUpdate = (fieldKey, value) => {
