@@ -96,36 +96,75 @@ const PatientDetail = () => {
     // do we add anything to dependency array for useEffect such as functions below? Should these functions go inside the useEffect?
     // why am I getting issues when using await
     // commit .DS_Store?
+    
 
     const updateMetaDataPhotos = async (metaData, data) => {
         // create copy of patient data
         const newPatientData = _.cloneDeep(data);
+        let photoPromises = [];
 
         // loop through steps
-        for (let i = 0; i < metaData.length; i++) {
-            const step = metaData[i];
+        // for (let i = 0; i < metaData.length; i++) {
+        metaData.map( async step => {
+
+            // const step = metaData[i];
             // loop through fields of each step
-            for (let j = 0; j < step.fields.length; j++) {
+            //for (let j = 0; j < step.fields.length; j++) {
+                photoPromises = photoPromises.concat(step.fields.map(async field => {
                 // when photo field is found, modify patient's data at that step and field 
-                if (step.fields[j].fieldType === "Photo") {
-                    const photoData = newPatientData[step.key][step.fields[j].key];
+                if (field.fieldType === "Photo") {
+                    const photoData = newPatientData[step.key][field.key];
                     // get the photoData
-                    const newPhotoData = await convertPhotosToURI(photoData, step.key, step.fields[j].key);
+                    const newPhotoData = await convertPhotosToURI(photoData, step.key, field.key);
 
                     //resolving promises one by one
 
-                    newPatientData[step.key][step.fields[j].key] = newPhotoData;
+                    newPatientData[step.key][field.key] = newPhotoData;
                     // await Promise.all(newPhotoData);
 
 
                     
-                }
-            }
-
-
-        }
+                } }
+                ))
+            } 
+        //}
+            );
+        console.log(photoPromises);
+        await Promise.all(photoPromises);
         return newPatientData;
     }
+
+    // const updateMetaDataPhotos = async (metaData, data) => {
+    //     // create copy of patient data
+    //     const newPatientData = _.cloneDeep(data);
+
+    //     // loop through steps
+    //     for (let i = 0; i < metaData.length; i++) {
+    //         const step = metaData[i];
+    //         // loop through fields of each step
+    //         for (let j = 0; j < step.fields.length; j++) {
+    //             // when photo field is found, modify patient's data at that step and field 
+    //             if (step.fields[j].fieldType === "Photo") {
+    //                 const photoData = newPatientData[step.key][step.fields[j].key];
+    //                 // get the photoData
+    //                 const newPhotoData = await convertPhotosToURI(photoData, step.key, step.fields[j].key);
+
+    //                 //resolving promises one by one
+
+    //                 newPatientData[step.key][step.fields[j].key] = newPhotoData;
+    //                 // await Promise.all(newPhotoData);
+
+
+                    
+    //             }
+    //         }
+
+
+    //     }
+    //     return newPatientData;
+    // }
+
+    //Ask Matt about performance and dependencies in useEffect
 
     const convertPhotosToURI = async (photoData, stepKey, fieldKey) => {
         const newPhotoData = photoData.map(async photoObj => 
@@ -140,9 +179,9 @@ const PatientDetail = () => {
             }
         );
 
-        const log = await Promise.all(newPhotoData);
-        console.log(log);
-        return log;
+        return await Promise.all(newPhotoData);
+        // console.log(log);
+        //return log;
         // console.log("hi");
         // console.log(newPhotoData);
         // return newPhotoData;
@@ -151,7 +190,7 @@ const PatientDetail = () => {
     //this should've been filename not fileName
 const photoToURI = async (photoObj, stepKey, fieldKey) => {
     const blob = await downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.filename,);
-    console.log(photoObj.fileName);
+    //console.log(photoObj.fileName);
     const uri = await blobToDataURL(blob);
     return uri;
 }

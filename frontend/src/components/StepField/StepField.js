@@ -169,6 +169,8 @@ const StepField = ({
                         patientId={patientId}
                         stepKey={stepKey}
                         handleFileUpload={handleFileUpload}
+                        handleSimpleUpdate={handleSimpleUpdate}
+                        fieldId={metadata.key}
                         displayName={displayName}
                         value={value}
                     />
