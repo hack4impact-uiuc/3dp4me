@@ -1,9 +1,7 @@
 import './CreateFieldModal.scss';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Button,
-    Select,
-    MenuItem,
     Checkbox,
     Modal,
     NativeSelect,
@@ -14,14 +12,22 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
+import { useErrorWrap } from '../../hooks/useErrorWrap';
+import MultiSelectField from '../Fields/MultiSelectField';
+import { getAllRoles } from '../../api/api';
 import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const CreateFieldModal = ({ isOpen, onModalClose }) => {
     const translations = useTranslations()[0];
+    const selectedLang = useTranslations()[1];
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
     const [numChoices, setNumChoices] = useState(1);
+    const [allRoles, setAllRoles] = useState([]);
+    const [selectedRoles, setSelectedRoles] = useState([]);
+
+    const errorWrap = useErrorWrap();
 
     const BootstrapInput = withStyles((theme) => ({
         root: {
@@ -51,6 +57,34 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
             },
         },
     }))(InputBase);
+
+    useEffect(() => {
+        errorWrap(async () => {
+            const fetchRoles = async () => {
+                const rolesRes = await getAllRoles();
+                let allRolesNames = {};
+
+                allRolesNames = rolesRes.result.map((role) => {
+                    return {
+                        _id: role._id,
+                        IsHidden: false,
+                        Question: {
+                            EN: role.roleName.EN,
+                            AR: role.roleName.AR,
+                        },
+                    };
+                });
+
+                setAllRoles(allRolesNames);
+            };
+
+            await fetchRoles();
+        });
+    }, [errorWrap, selectedLang]);
+
+    const onRolesChange = (id, roles) => {
+        setSelectedRoles(roles);
+    };
 
     const handleFieldTypeSelect = (e) => {
         setFieldType(e.target.value);
@@ -187,24 +221,22 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
                             </NativeSelect>
                         </FormControl>
                     </div>
-                    <span>
-                        {translations.components.swal.createField.clearance}
-                    </span>
                     <div style={{ padding: 10 }}>
-                        <Select
-                            id="demo-simple-select"
-                            MenuProps={{
-                                style: { zIndex: 35001 },
-                            }}
-                            defaultValue="Confidential"
-                        >
-                            <MenuItem value="Confidential">
-                                Confidential
-                            </MenuItem>
-                            <MenuItem value="Secret">Secret</MenuItem>
-                            <MenuItem value="Top Secret">Top Secret</MenuItem>
-                        </Select>
+                        <MultiSelectField
+                            title={
+                                translations.components.swal.createField
+                                    .clearance
+                            }
+                            langKey={selectedLang}
+                            options={allRoles}
+                            selectedOptions={selectedRoles}
+                            onChange={onRolesChange}
+                            isDisabled={false}
+                        />
                     </div>
+                    <span>
+                        {translations.components.swal.createField.customization}
+                    </span>
                     <div style={{ padding: 10 }}>
                         <Checkbox size="medium" />
                         <span>
