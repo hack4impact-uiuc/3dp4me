@@ -16,7 +16,7 @@ import {
 } from '../../styles/variables.scss';
 import { resolveMixedObjPath } from '../../utils/object';
 import { useTranslations } from '../../hooks/useTranslations';
-import { sortMetadata , rolesToMultiSelectFormat } from '../../utils/utils';
+import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
