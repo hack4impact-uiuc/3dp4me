@@ -1,5 +1,5 @@
 import './CreateFieldModal.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     Button,
     Checkbox,
@@ -12,22 +12,16 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-import { useErrorWrap } from '../../hooks/useErrorWrap';
 import MultiSelectField from '../Fields/MultiSelectField';
-import { getAllRoles } from '../../api/api';
 import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 
-const CreateFieldModal = ({ isOpen, onModalClose }) => {
-    const translations = useTranslations()[0];
-    const selectedLang = useTranslations()[1];
+const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
+    const [translations, selectedLang] = useTranslations();
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
     const [numChoices, setNumChoices] = useState(1);
-    const [allRoles, setAllRoles] = useState([]);
     const [selectedRoles, setSelectedRoles] = useState([]);
-
-    const errorWrap = useErrorWrap();
 
     const BootstrapInput = withStyles((theme) => ({
         root: {
@@ -57,30 +51,6 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
             },
         },
     }))(InputBase);
-
-    useEffect(() => {
-        errorWrap(async () => {
-            const fetchRoles = async () => {
-                const rolesRes = await getAllRoles();
-                let allRolesNames = {};
-
-                allRolesNames = rolesRes.result.map((role) => {
-                    return {
-                        _id: role._id,
-                        IsHidden: false,
-                        Question: {
-                            EN: role.roleName.EN,
-                            AR: role.roleName.AR,
-                        },
-                    };
-                });
-
-                setAllRoles(allRolesNames);
-            };
-
-            await fetchRoles();
-        });
-    }, [errorWrap, selectedLang]);
 
     const onRolesChange = (id, roles) => {
         setSelectedRoles(roles);
@@ -282,6 +252,7 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
 CreateFieldModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onModalClose: PropTypes.func.isRequired,
+    allRoles: PropTypes.array.isRequired,
 };
 
 export default CreateFieldModal;
