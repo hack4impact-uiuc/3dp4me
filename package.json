@@ -47,7 +47,7 @@
         "faker": "^5.5.3",
         "fs": "^0.0.1-security",
         "libphonenumber-js": "^1.9.16",
-        "mongoose": "^6.0.6",
+        "mongoose": "^6.0.10",
         "react-audio-player": "^0.17.0",
         "react-beautiful-dnd": "^13.1.0",
         "react-datepicker": "^4.2.1",
