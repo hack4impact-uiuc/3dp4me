@@ -7,7 +7,6 @@ import {StyledButton} from '../StyledButton/StyledButton';
 import { Modal } from '@material-ui/core';
 import './PhotoField.scss';
 
-
 const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimpleUpdate}) => {
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -32,26 +31,11 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
     }
 
     const handleTakePhoto = async (dataUri) => {
-      //set Should show Image to true after adding image data into state
-      //when they do the onclick for confirm do the rest of the code written here 
-      //otherwise don't do it 
-      //delete sets showImage state to false and shows the other thing
-      //cases to handle what if they click confirm or delete without taking the photo first 
         setUri(dataUri);
         setShowImage(true);
-        // const photoObj = dataURItoBlob(dataUri);
-        // const uri = await blobToDataURL(photoObj);
-        // const d = Date.now();
-        // const fileName = d.toString();
-        // const photoFile = new File([photoObj], fileName);
-        // handleFileUpload(fieldId, photoFile);
-        // const photoTaken = {uri: uri};
-        // const newImages = value;
-        // newImages.push(photoTaken);
-        // handleSimpleUpdate(fieldId, newImages);
     }
 
-    // How to handle when to show buttons
+    // TODO: How to handle when to show buttons
     const confirmUpload = async () => {
       if (showImage) {
         const photoObj = dataURItoBlob(dataUri);
@@ -92,31 +76,21 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
       setIsOpen(false);
     }
 
-    //TODO: Loading Icon, Confirm and delete buttons, switch rtl for arabic languages?, translation, better way to handle showBullets logic and magic number
-    //Logic we need to implement:
-    // Once photo button is clicked we need to show the photo while confirm is not pressed and there is a photo in memory and delete the photo from memory once it is closed
-    // If confirm is pressed we can continue with the rest of the actions and delete the photo and bring it back to regular
-    // If delete is pressed we bring it back to regular but we don't execute rest of instructions
-    // Confirm can set uploadPhoto variable to true, Delete can set it to false 
-    //add exit button + correct css coloring for button 
+    //TODO: Loading Icon, switch rtl for arabic languages, translation, better way to handle showBullets logic and magic number
   return (
     <div>
       <h3>{displayName}</h3>
       <StyledButton onClick={handleOnClick}>Take Photo</StyledButton>
       <br/>
-
       <Modal
         open={isOpen}
         onClose={handleOnClose}
         className={"take-photo-modal"}
       > 
         <div className={"take-photo-modal-wrapper"}>
-          {/* added this toggle */}
           {showImage ? <img src={dataUri}/> : <Camera onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }/>}
           <br/>
           <div className={"button-wrapper"}>
-
-          {/* added in button components into modal, delete this comment later*/}
           <StyledButton onClick={confirmUpload}>Confirm</StyledButton>
           <StyledButton onClick={resetUpload}>Delete</StyledButton>
           </div>
