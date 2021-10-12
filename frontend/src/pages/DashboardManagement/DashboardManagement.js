@@ -4,7 +4,7 @@ import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 
 import BottomBar from '../../components/BottomBar/BottomBar';
-import { getAllStepsMetadata } from '../../api/api';
+import { getAllStepsMetadata, getAllRoles } from '../../api/api';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
@@ -16,7 +16,7 @@ import {
 } from '../../styles/variables.scss';
 import { resolveMixedObjPath } from '../../utils/object';
 import { useTranslations } from '../../hooks/useTranslations';
-import { sortMetadata } from '../../utils/utils';
+import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -30,6 +30,8 @@ const SectionTab = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [fieldModalOpen, setFieldModalOpen] = useState(false);
     const [stepModalOpen, setStepModalOpen] = useState(false);
+    const [allRoles, setAllRoles] = useState([]);
+
     const errorWrap = useErrorWrap();
 
     const onAddStep = () => {
@@ -143,17 +145,25 @@ const SectionTab = () => {
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            errorWrap(async () => {
+        errorWrap(async () => {
+            const fetchData = async () => {
                 const res = await getAllStepsMetadata();
                 if (res.result.length > 0) {
                     setSelectedStep(res.result[0].key);
                 }
                 const sortedMetadata = sortMetadata(res.result);
                 setStepMetadata(sortedMetadata);
-            });
-        };
-        fetchData();
+            };
+
+            const fetchRoles = async () => {
+                const rolesRes = await getAllRoles();
+                const roles = rolesToMultiSelectFormat(rolesRes.result);
+                setAllRoles(roles);
+            };
+
+            await fetchData();
+            await fetchRoles();
+        });
     }, [setStepMetadata, errorWrap]);
 
     const onFieldModalClose = () => {
@@ -169,6 +179,7 @@ const SectionTab = () => {
             <CreateFieldModal
                 isOpen={fieldModalOpen}
                 onModalClose={onFieldModalClose}
+                allRoles={allRoles}
             />
         );
     };
