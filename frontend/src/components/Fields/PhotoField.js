@@ -81,7 +81,8 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
 
   return (
     <div>
-      <h3>{displayName}</h3>
+      {/* translation needed */}
+      <h3>{displayName}</h3> 
       <StyledButton onClick={handleOnClick}>{translations.components.button.photo}</StyledButton>
       <br/>
       <Modal
