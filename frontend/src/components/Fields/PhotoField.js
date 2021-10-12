@@ -30,12 +30,11 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
         return new Blob([ab], {type: mimeString});
     }
 
-    const handleTakePhoto = async (dataUri) => {
-        setUri(dataUri);
+    const handleTakePhoto = async (tempDataUri) => {
+        setUri(tempDataUri);
         setShowImage(true);
     }
 
-    // TODO: How to handle when to show buttons
     const confirmUpload = async () => {
       if (showImage) {
         const photoObj = dataURItoBlob(dataUri);
@@ -71,9 +70,9 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
       setIsOpen(true);
     }
 
-    //TODO: SHould we reset or save the pic in there? 
     const handleOnClose = () => {
       setIsOpen(false);
+      resetUpload();
     }
 
     //TODO: Loading Icon, switch rtl for arabic languages, translation, better way to handle showBullets logic and magic number
@@ -89,11 +88,15 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
       > 
         <div className={"take-photo-modal-wrapper"}>
           {showImage ? <img src={dataUri}/> : <Camera onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }/>}
+          {showImage &&
+          <>
           <br/>
           <div className={"button-wrapper"}>
           <StyledButton onClick={confirmUpload}>Confirm</StyledButton>
           <StyledButton onClick={resetUpload}>Delete</StyledButton>
           </div>
+          </>
+          }
         </div>
       </Modal>
       {images.length > 0 && <ImageGallery items={images} className={"image-gallery"} showBullets={images.length <= 20}/>}
@@ -102,6 +105,14 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
 };
 
 export {PhotoField};
+
+
+
+
+//     //TODO: switch rtl for arabic languages, translation, better way to handle showBullets logic and magic number
+
+
+//             {/* handling button coloring, positioning thumbnail or cancel button to left */}
 
 
 
