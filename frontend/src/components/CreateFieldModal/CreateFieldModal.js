@@ -17,11 +17,14 @@ import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 
-const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
+const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
     const [translations, selectedLang] = useTranslations();
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
     const [numChoices, setNumChoices] = useState(1);
     const [selectedRoles, setSelectedRoles] = useState([]);
+    const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
+    const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
+    const [options, setOptions] = useState([]);
 
     const BootstrapInput = withStyles((theme) => ({
         root: {
@@ -74,6 +77,13 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
                             (i + 1)}
                     </span>
                     <LanguageInput
+                        fieldValues={{ EN: '', AR: '' }}
+                        handleEnglishFieldChange={() => {
+                            /* TODO: */
+                        }}
+                        handleArabicFieldChange={() => {
+                            /* TODO: */
+                        }}
                         onDelete={() => {
                             /* TODO: */
                         }}
@@ -90,6 +100,14 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
         return <div>{choices}</div>;
     };
 
+    const updateEnglishDisplayName = (e) => {
+        setDisplayName({ ...displayName, EN: e.target.value });
+    };
+
+    const updateArabicDislayName = (e) => {
+        setDisplayName({ ...displayName, AR: e.target.value });
+    };
+
     const generateFields = () => {
         switch (fieldType) {
             case FIELD_TYPES.STRING:
@@ -102,7 +120,11 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>Question</span>
-                        <LanguageInput />
+                        <LanguageInput
+                            fieldValues={displayName}
+                            handleEnglishFieldChange={updateEnglishDisplayName}
+                            handleArabicFieldChange={updateArabicDislayName}
+                        />
                     </div>
                 );
             case FIELD_TYPES.RADIO_BUTTON:
@@ -110,7 +132,11 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>Question</span>
-                        <LanguageInput />
+                        <LanguageInput
+                            fieldValues={displayName}
+                            handleEnglishFieldChange={updateEnglishDisplayName}
+                            handleArabicFieldChange={updateArabicDislayName}
+                        />
                         {generateChoices()}
                         <Button onClick={incrementChoices}>
                             {
@@ -124,14 +150,22 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>Divider Title</span>
-                        <LanguageInput />
+                        <LanguageInput
+                            fieldValues={displayName}
+                            handleEnglishFieldChange={updateEnglishDisplayName}
+                            handleArabicFieldChange={updateArabicDislayName}
+                        />
                     </div>
                 );
             case FIELD_TYPES.HEADER:
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>Header Title</span>
-                        <LanguageInput />
+                        <LanguageInput
+                            fieldValues={displayName}
+                            handleEnglishFieldChange={updateEnglishDisplayName}
+                            handleArabicFieldChange={updateArabicDislayName}
+                        />
                     </div>
                 );
             // case FIELD_TYPES.FIELD_GROUP:
@@ -154,6 +188,25 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
         });
 
         return options;
+    };
+
+    const saveNewField = () => {
+        const newFieldData = {
+            fieldType,
+            isVisibleOnDashboard,
+            displayName,
+            options,
+            readableGroups: selectedRoles,
+            writableGroups: selectedRoles,
+            subFields: [],
+        };
+
+        addNewField(newFieldData);
+        onModalClose();
+    };
+
+    const handleIsVisibleOnDashboard = (event) => {
+        setIsVisibleOnDashboard(event.target.checked);
     };
 
     return (
@@ -208,7 +261,11 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
                         {translations.components.swal.createField.customization}
                     </span>
                     <div style={{ padding: 10 }}>
-                        <Checkbox size="medium" />
+                        <Checkbox
+                            size="medium"
+                            checked={isVisibleOnDashboard}
+                            onChange={handleIsVisibleOnDashboard}
+                        />
                         <span>
                             {
                                 translations.components.swal.createField
@@ -229,7 +286,7 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
                     }}
                 >
                     <Button
-                        onClick={onModalClose}
+                        onClick={saveNewField}
                         className="save-field-button"
                     >
                         {translations.components.swal.createField.buttons.save}
@@ -253,6 +310,7 @@ CreateFieldModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onModalClose: PropTypes.func.isRequired,
     allRoles: PropTypes.array.isRequired,
+    addNewField: PropTypes.func.isRequired,
 };
 
 export default CreateFieldModal;

@@ -17,6 +17,7 @@ import {
 import { resolveMixedObjPath } from '../../utils/object';
 import { useTranslations } from '../../hooks/useTranslations';
 import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
+import { a } from 'aws-amplify';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -152,6 +153,9 @@ const SectionTab = () => {
                     setSelectedStep(res.result[0].key);
                 }
                 const sortedMetadata = sortMetadata(res.result);
+
+                console.log(sortedMetadata);
+
                 setStepMetadata(sortedMetadata);
             };
 
@@ -180,6 +184,7 @@ const SectionTab = () => {
                 isOpen={fieldModalOpen}
                 onModalClose={onFieldModalClose}
                 allRoles={allRoles}
+                addNewField={addNewField}
             />
         );
     };
@@ -191,6 +196,35 @@ const SectionTab = () => {
                 onModalClose={onStepModalClose}
             />
         );
+    };
+
+    const addNewField = (newFieldData) => {
+        //displayName
+        //fieldNumber
+        //fieldType
+        //isVisibleOnDashboard
+        //key
+        //options
+        //subFields
+        //writableGroups
+        //readableGroups
+
+        /**
+         * TODO
+         * 1. Find the correct step
+         * 2. Add the newFieldData to the fields
+         *      Add a fieldNumber
+         * What about _id and key?
+         * What is a sub field?
+         */
+
+        //BUG: when user clicks plus on step, it should make sure that is the selected step
+        //When you click edit step again, it closes edit
+
+        //BUG: on discard clear state
+
+        console.log(selectedStep);
+        console.log(newFieldData);
     };
 
     return (

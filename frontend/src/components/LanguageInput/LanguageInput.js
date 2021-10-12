@@ -3,7 +3,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 
-const LanguageInput = ({ onUpPressed, onDownPressed, onDelete, fieldKey }) => {
+const LanguageInput = ({
+    onUpPressed,
+    onDownPressed,
+    onDelete,
+    fieldKey,
+    fieldValues,
+    handleEnglishFieldChange,
+    handleArabicFieldChange,
+}) => {
     const generateArrows = () => {
         const shouldShowArrows = onUpPressed && onDownPressed;
 
@@ -61,6 +69,8 @@ const LanguageInput = ({ onUpPressed, onDownPressed, onDelete, fieldKey }) => {
                     fullWidth
                     variant="outlined"
                     InputProps={{ className: 'lang-input' }}
+                    value={fieldValues['EN']}
+                    onChange={handleEnglishFieldChange}
                 />
                 <TextField
                     className="language-input"
@@ -68,6 +78,8 @@ const LanguageInput = ({ onUpPressed, onDownPressed, onDelete, fieldKey }) => {
                     fullWidth
                     variant="outlined"
                     InputProps={{ className: 'lang-input' }}
+                    value={fieldValues['AR']}
+                    onChange={handleArabicFieldChange}
                 />
             </div>
             {generateDeleteButton()}
@@ -80,6 +92,9 @@ LanguageInput.propTypes = {
     onDownPressed: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     fieldKey: PropTypes.string.isRequired,
+    fieldValues: PropTypes.object.isRequired,
+    handleEnglishFieldChange: PropTypes.func.isRequired,
+    handleArabicFieldChange: PropTypes.func.isRequired,
 };
 
 export default LanguageInput;
