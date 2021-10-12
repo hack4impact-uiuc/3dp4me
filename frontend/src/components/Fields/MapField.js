@@ -1,54 +1,43 @@
-import React from 'react';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
-import Search from 'react-leaflet-search';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import ReactMapGL, { Marker } from 'react-map-gl';
+import './MapField.scss';
 
-import { COUNTRY } from '../../utils/constants';
-// <MapField position={[41.076602, 30.052495]} /> put in a container
-// Make state a prop
-// Make marker movable either by searching or dragging (and not appear if no position is passed in)
-const MapField = ({ position }) => {
+export default function MapField() {
+    const [viewport, setViewport] = useState({
+        latitude: 37.7577,
+        longitude: -122.4376,
+        zoom: 8,
+        width: '100%',
+        height: '100%',
+        pitch: 50,
+    });
+
     return (
-        <Map
-            center={position}
-            zoom={13}
-            scrollWheelZoom={false}
-            height="200px"
-            width="200px"
-        >
-            <TileLayer
-                noWrap
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-
-            <Marker position={position}>
-                <Popup> Popup! </Popup>
-            </Marker>
-
-            <Search
-                position="topleft"
-                inputPlaceholder="Custom placeholder"
-                // search={this.state.search}
-                showMarker={false}
-                zoom={7}
-                closeResultsOnClick
-                openSearchOnLoad={false}
-                providerOptions={{
-                    region: { COUNTRY },
-                }}
-
-                // default provider OpenStreetMap
-                // provider="BingMap"
-                // providerKey="AhkdlcKxeOnNCJ1wRIPmrOXLxtEHDvuWUZhiT4GYfWgfxLthOYXs5lUMqWjQmc27"
+        <div className="mapStyling">
+            <ReactMapGL
+                mapStyle="mapbox://styles/mapbox/dark-v9"
+                mapboxApiAccessToken="pk.eyJ1IjoiYXJjaG5hLTEiLCJhIjoiY2t1aHFubjl2Mmg4aDMwcXAyaW94eHYzcSJ9.qSm9IsfWo2G7CWJrX_kyeA"
+                {...viewport}
+                onViewportChange={(newView) => setViewport(newView)}
             >
-                {(info) => <Marker position={info?.latLng} />}
-            </Search>
-        </Map>
+                <Marker
+                    latitude={viewport?.latitude}
+                    longitude={viewport?.longitude}
+                    offsetLeft={viewport.zoom * -2.5}
+                    offsetTop={viewport.zoom * -5}
+                >
+                    <img
+                        src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
+                        width={viewport.zoom * 5}
+                        height={viewport.zoom * 5}
+                        alt="Location marker"
+                    />
+                </Marker>
+            </ReactMapGL>
+            <div>
+                Latitude: {viewport?.latitude.toFixed(4)} Longitude:{' '}
+                {viewport?.longitude.toFixed(4)}
+            </div>
+        </div>
     );
-};
-
-MapField.propTypes = {
-    position: PropTypes.array,
-};
-
-export default MapField;
+}
