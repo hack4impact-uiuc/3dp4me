@@ -4,14 +4,18 @@ import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
 import {StyledButton} from '../StyledButton/StyledButton';
+import { useTranslations } from '../../hooks/useTranslations';
 import { Modal } from '@material-ui/core';
 import './PhotoField.scss';
 
+const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 20;
 const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimpleUpdate}) => {
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
     const [dataUri, setUri] = useState("");
+    const translations = useTranslations()[0]; 
+
 
     useEffect(() => {
       setImages(value.map(v => {return {original: v.uri, thumbnail: v.uri, originalWidth: "700"}}));
@@ -75,11 +79,10 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
       resetUpload();
     }
 
-    //TODO: Loading Icon, switch rtl for arabic languages, translation, better way to handle showBullets logic and magic number
   return (
     <div>
       <h3>{displayName}</h3>
-      <StyledButton onClick={handleOnClick}>Take Photo</StyledButton>
+      <StyledButton onClick={handleOnClick}>{translations.components.button.photo}</StyledButton>
       <br/>
       <Modal
         open={isOpen}
@@ -92,27 +95,22 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
           <>
           <br/>
           <div className={"button-wrapper"}>
-          <StyledButton onClick={confirmUpload}>Confirm</StyledButton>
-          <StyledButton onClick={resetUpload}>Delete</StyledButton>
+          <StyledButton onClick={confirmUpload}>{translations.components.button.discard.confirmButton}</StyledButton>
+          <StyledButton onClick={resetUpload}>{translations.components.button.discard.cancelButton}</StyledButton>
           </div>
           </>
           }
         </div>
       </Modal>
-      {images.length > 0 && <ImageGallery items={images} className={"image-gallery"} showBullets={images.length <= 20}/>}
+      {images.length > 0 && <ImageGallery items={images} className={"image-gallery"} showBullets={images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW}/>}
     </div>
   );
 };
 
 export {PhotoField};
 
+    //TODO: Loading Icon, switch rtl for arabic languages, add question mark?, handle button coloring, exit button
 
-
-
-//     //TODO: switch rtl for arabic languages, translation, better way to handle showBullets logic and magic number
-
-
-//             {/* handling button coloring, positioning thumbnail or cancel button to left */}
 
 
 
