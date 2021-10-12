@@ -26,6 +26,7 @@ import {
     USER_TABLE_ROW_DATA,
     PEOPLE_PER_PAGE,
 } from '../../utils/constants';
+import { rolesToMultiSelectFormat } from '../../utils/utils';
 import {
     generateUserTableRowRenderer,
     userTableHeaderRenderer,
@@ -96,17 +97,6 @@ const AccountManagement = () => {
             await fetchInitialUsers();
         });
     }, [setUserMetaData, errorWrap]);
-
-    /**
-     * Converts the roles response to a format useable by the MultiSelect field
-     */
-    const rolesToMultiSelectFormat = (roles) => {
-        return roles.map((r) => ({
-            _id: r?._id,
-            IsHidden: r?.isHidden,
-            Question: r?.roleName,
-        }));
-    };
 
     /**
      * Formats a user to a format useable by the EditRoleModal
