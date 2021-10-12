@@ -19,7 +19,6 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
 import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
-import MapField from '../../components/Fields/MapField';
 
 /**
  * The detail view for a patient. Shows their information
@@ -182,10 +181,6 @@ const PatientDetail = () => {
                         handleStep={onStepChange}
                     />
                     {generateStepContent()}
-
-                    <div className="mapid">
-                        <MapField position={[50, 100]} />
-                    </div>
                 </div>
             </div>
         </LoadWrapper>

@@ -59,7 +59,19 @@ export const getAllStepsMetadata = async () => {
 
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
-
+    console.log(res.data.result[0]);
+    res.data.result[0].fields.push({
+        subFields: [],
+        displayName: {
+            EN: 'Number of Disabled People in House',
+            AR: 'عدد المعوقين بالمنزل',
+        },
+        fieldNumber: 7,
+        fieldType: 'Map',
+        isVisibleOnDashboard: true,
+        key: 'locationOfPatient',
+    });
+    console.log(res.data.result[0]);
     return res.data;
 };
 
