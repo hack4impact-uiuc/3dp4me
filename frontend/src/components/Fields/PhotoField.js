@@ -149,5 +149,3 @@ const PhotoField = ({
 };
 
 export { PhotoField };
-
-//TODO: Loading Icon, switch rtl for arabic languages, add question mark?, handle button coloring, exit button, disable fullscreen?
