@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import './PatientDetail.scss';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
-
-import StepContent from '../../components/StepContent/StepContent';
-import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
-import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
 import {
     getAllStepsMetadata,
     getPatientById,
     updatePatient,
-    updateStage,
+    updateStage
 } from '../../api/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
-import { sortMetadata } from '../../utils/utils';
+import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
+import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
+import StepContent from '../../components/StepContent/StepContent';
+import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
-import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
+import { sortMetadata } from '../../utils/utils';
+import './PatientDetail.scss';
+
 
 /**
  * The detail view for a patient. Shows their information
@@ -32,7 +32,8 @@ const PatientDetail = () => {
     const [loading, setLoading] = useState(true);
     const [selectedStep, setSelectedStep] = useState('');
     const [stepMetaData, setStepMetaData] = useState(null);
-    const [patientData, setPatientData] = useState(null);
+    const [remotePatientData, setRemotePatientData] = useState(null);
+    const [localPatientData, setLocalPatientData] = useState(null);
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
 
@@ -57,13 +58,13 @@ const PatientDetail = () => {
 
                 // Store it
                 setStepMetaData(metaData);
-                setPatientData(data);
+                setRemotePatientData(data);
                 setLoading(false);
             });
         };
 
         getData();
-    }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
+    }, [setStepMetaData, setRemotePatientData, setLoading, errorWrap, patientId]);
 
     /**
      * Called when the patient data for a step is saved
@@ -71,10 +72,10 @@ const PatientDetail = () => {
      */
     const onStepSaved = (stepKey, stepData) => {
         errorWrap(async () => {
-            const newPatientData = _.cloneDeep(patientData);
+            const newPatientData = _.cloneDeep(remotePatientData);
             newPatientData[stepKey] = _.cloneDeep(stepData);
             await updateStage(patientId, stepKey, stepData);
-            setPatientData(newPatientData);
+            setRemotePatientData(newPatientData);
         });
     };
 
@@ -83,11 +84,11 @@ const PatientDetail = () => {
      * Submits to the backend and displays a message
      */
     const onPatientDataSaved = async (newPatientData) => {
-        const patientDataCopy = _.cloneDeep(patientData);
-        Object.assign(patientDataCopy, newPatientData);
+        const remotePatientDataCopy = _.cloneDeep(remotePatientData);
+        Object.assign(remotePatientDataCopy, newPatientData);
         await errorWrap(async () => {
-            await updatePatient(patientId, patientDataCopy);
-            setPatientData(patientDataCopy);
+            await updatePatient(patientId, remotePatientDataCopy);
+            setRemotePatientData(remotePatientDataCopy);
             swal(
                 translations.components.swal.managePatient.successMsg,
                 '',
@@ -103,12 +104,12 @@ const PatientDetail = () => {
      */
     const getCurrentPatientModelData = () => {
         return {
-            firstName: patientData?.firstName,
-            familyName: patientData?.familyName,
-            fathersName: patientData?.fathersName,
-            grandfathersName: patientData?.grandfathersName,
-            orderId: patientData?.orderId,
-            status: patientData?.status,
+            firstName: remotePatientData?.firstName,
+            familyName: remotePatientData?.familyName,
+            fathersName: remotePatientData?.fathersName,
+            grandfathersName: remotePatientData?.grandfathersName,
+            orderId: remotePatientData?.orderId,
+            status: remotePatientData?.status,
         };
     };
 
@@ -124,7 +125,7 @@ const PatientDetail = () => {
      */
     const generateStepContent = () => {
         if (stepMetaData == null) return null;
-        if (patientData == null) return null;
+        if (remotePatientData == null) return null;
 
         const className =
             selectedLang === LANGUAGES.AR ? 'steps steps-ar' : 'steps';
@@ -142,7 +143,7 @@ const PatientDetail = () => {
                             metaData={stepMetaData.find(
                                 (s) => s.key === step.key,
                             )}
-                            stepData={patientData[step.key] ?? {}}
+                            stepData={remotePatientData[step.key] ?? {}}
                             loading={loading}
                         />
                     );
@@ -163,7 +164,7 @@ const PatientDetail = () => {
 
                 <PatientDetailSidebar
                     stepMetaData={stepMetaData}
-                    patientData={patientData}
+                    patientData={remotePatientData}
                     onViewPatient={() => setManagePatientModalOpen(true)}
                 />
 
@@ -176,7 +177,7 @@ const PatientDetail = () => {
                 >
                     <ToggleButtons
                         step={selectedStep}
-                        patientData={patientData}
+                        patientData={remotePatientData}
                         metaData={stepMetaData}
                         handleStep={onStepChange}
                     />
