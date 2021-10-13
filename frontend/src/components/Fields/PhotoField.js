@@ -34,8 +34,8 @@ const PhotoField = ({value, displayName, fieldId, handleSimpleUpdate, handleFile
         return new Blob([ab], {type: mimeString});
     }
 
-    const handleTakePhoto = (tempDataUri) => {
-        setUri(tempDataUri);
+    const handleTakePhoto = (uri) => {
+        setUri(uri);
         setShowImage(true);
     }
 
@@ -89,7 +89,7 @@ const PhotoField = ({value, displayName, fieldId, handleSimpleUpdate, handleFile
         className={"take-photo-modal"}
       > 
         <div className={"take-photo-modal-wrapper"}>
-          {showImage ? <img src={dataUri} alt="User photo"/> : <Camera onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }/>}
+          {showImage ? <img src={dataUri} alt="User Upload"/> : <Camera onTakePhoto = { (uri) => { handleTakePhoto(uri); } }/>}
           {showImage &&
           <>
           <br/>

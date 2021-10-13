@@ -90,8 +90,9 @@ const PatientDetail = () => {
     const convertPhotosToURI = async (photoData, stepKey, fieldKey) => {
         const newPhotoData = photoData.map(async photoObj => 
             {
-                photoObj.uri = await photoToURI(photoObj, stepKey, fieldKey);
-                return photoObj;
+                let modifiedPhotoObj = photoObj;
+                modifiedPhotoObj.uri = await photoToURI(photoObj, stepKey, fieldKey);
+                return modifiedPhotoObj;
             }
         );
 
