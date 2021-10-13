@@ -3,6 +3,7 @@ import './StyledButton.scss';
 import { LANGUAGES } from '../../utils/constants';
 import { Button } from '@material-ui/core';
 import { useTranslations } from '../../hooks/useTranslations';
+import PropTypes from 'prop-types';
 
 const StyledButton = ({ onClick, children }) => {
     const selectedLang = useTranslations()[1];
