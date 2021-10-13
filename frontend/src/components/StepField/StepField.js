@@ -29,7 +29,6 @@ const StepField = ({
     handleFileUpload = () => {},
     handleFileDelete = () => {},
 }) => {
-    // console.log(value);
     const selectedLang = useTranslations()[1];
 
     const generateField = () => {
@@ -168,11 +167,11 @@ const StepField = ({
                     <PhotoField
                         patientId={patientId}
                         stepKey={stepKey}
+                        value={value}
+                        displayName={displayName}
+                        fieldId={metadata.key}
                         handleFileUpload={handleFileUpload}
                         handleSimpleUpdate={handleSimpleUpdate}
-                        fieldId={metadata.key}
-                        displayName={displayName}
-                        value={value}
                     />
                 )
             default:

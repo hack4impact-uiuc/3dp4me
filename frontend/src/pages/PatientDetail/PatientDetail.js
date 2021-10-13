@@ -37,9 +37,6 @@ const PatientDetail = () => {
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
 
-    //TODO: ADD COMMENTS
-    //Delete button/Confirm button/Modal
-
     /**
      * Fetch metadata for all steps and the patient's data.
      * Then sort it.
@@ -59,6 +56,7 @@ const PatientDetail = () => {
                 metaData = sortMetadata(metaData);
                 if (metaData.length > 0) setSelectedStep(metaData[0].key);
 
+                // Patient data with photo uris
                 const updatedData = await updateMetaDataPhotos(metaData, data);
 
                 setStepMetaData(metaData);
@@ -77,19 +75,11 @@ const PatientDetail = () => {
 
         metaData.map( async step => {
             photoPromises = photoPromises.concat(step.fields.map(async field => {
-                // when photo field is found, modify patient's data at that step and field 
                 if (field.fieldType === "Photo") {
                     const photoData = newPatientData[step.key][field.key];
-                    // get the photoData
                     const newPhotoData = await convertPhotosToURI(photoData, step.key, field.key);
 
-                    //resolving promises one by one
-
                     newPatientData[step.key][field.key] = newPhotoData;
-                    // await Promise.all(newPhotoData);
-
-
-                    
                 } 
             }))
         });
@@ -109,19 +99,19 @@ const PatientDetail = () => {
     }
 
     const photoToURI = async (photoObj, stepKey, fieldKey) => {
-        const blob = await downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.filename,);
+        const blob = await downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.filename);
         const uri = await blobToDataURL(blob);
         return uri;
     }
 
     const blobToDataURL = (blob) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = _e => resolve(reader.result);
-        reader.onerror = _e => reject(reader.error);
-        reader.onabort = _e => reject(new Error("Read aborted"));
-        reader.readAsDataURL(blob);
-    });
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(reader.error);
+            reader.onabort = () => reject(new Error("Read aborted"));
+            reader.readAsDataURL(blob);
+        });
     }
 
     /**

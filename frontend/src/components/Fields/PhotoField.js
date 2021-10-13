@@ -7,9 +7,9 @@ import {StyledButton} from '../StyledButton/StyledButton';
 import { useTranslations } from '../../hooks/useTranslations';
 import { Modal } from '@material-ui/core';
 import './PhotoField.scss';
+import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
 
-const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 20;
-const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimpleUpdate}) => {
+const PhotoField = ({value, displayName, fieldId, handleSimpleUpdate, handleFileUpload}) => {
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
@@ -18,7 +18,7 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
 
 
     useEffect(() => {
-      setImages(value.map(v => {return {original: v.uri, thumbnail: v.uri, originalWidth: "700"}}));
+      setImages(value.map(v => {return {original: v.uri, thumbnail: v.uri, originalWidth: "700", originalHeight: "300"}}));
     }, [value]);
 
     const dataURItoBlob = (dataURI) => {
@@ -34,13 +34,12 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
         return new Blob([ab], {type: mimeString});
     }
 
-    const handleTakePhoto = async (tempDataUri) => {
+    const handleTakePhoto = (tempDataUri) => {
         setUri(tempDataUri);
         setShowImage(true);
     }
 
     const confirmUpload = async () => {
-      if (showImage) {
         const photoObj = dataURItoBlob(dataUri);
         const uri = await blobToDataURL(photoObj);
         const d = Date.now();
@@ -52,25 +51,25 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
         newImages.push(photoTaken);
         handleSimpleUpdate(fieldId, newImages);
         resetUpload();
-      }
     }
 
     const resetUpload = () => {
       setShowImage(false);
       setUri("");
+      setIsOpen(false);
     }
 
     const blobToDataURL = (blob) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = _e => resolve(reader.result);
-        reader.onerror = _e => reject(reader.error);
-        reader.onabort = _e => reject(new Error("Read aborted"));
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.onabort = () => reject(new Error("Read aborted"));
         reader.readAsDataURL(blob);
       });
     }
 
-    const handleOnClick = () => {
+    const handleOpenCamera = () => {
       setIsOpen(true);
     }
 
@@ -81,9 +80,8 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
 
   return (
     <div>
-      {/* translation needed */}
       <h3>{displayName}</h3> 
-      <StyledButton onClick={handleOnClick}>{translations.components.button.photo}</StyledButton>
+      <StyledButton onClick={handleOpenCamera}>{translations.components.button.photo}</StyledButton>
       <br/>
       <Modal
         open={isOpen}
@@ -91,7 +89,7 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
         className={"take-photo-modal"}
       > 
         <div className={"take-photo-modal-wrapper"}>
-          {showImage ? <img src={dataUri}/> : <Camera onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }/>}
+          {showImage ? <img src={dataUri} alt="User photo"/> : <Camera onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }/>}
           {showImage &&
           <>
           <br/>
@@ -108,9 +106,9 @@ const PhotoField = ({handleFileUpload, value, displayName, fieldId, handleSimple
   );
 };
 
-export {PhotoField};
+export { PhotoField };
 
-    //TODO: Loading Icon, switch rtl for arabic languages, add question mark?, handle button coloring, exit button
+    //TODO: Loading Icon, switch rtl for arabic languages, add question mark?, handle button coloring, exit button, disable fullscreen?
 
 
 
