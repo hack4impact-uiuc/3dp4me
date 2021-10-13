@@ -2,23 +2,37 @@ import React, { useState, useEffect } from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
-import "react-image-gallery/styles/css/image-gallery.css";
-import {StyledButton} from '../StyledButton/StyledButton';
+import 'react-image-gallery/styles/css/image-gallery.css';
+import { StyledButton } from '../StyledButton/StyledButton';
 import { useTranslations } from '../../hooks/useTranslations';
 import { Modal } from '@material-ui/core';
 import './PhotoField.scss';
 import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
 
-const PhotoField = ({value, displayName, fieldId, handleSimpleUpdate, handleFileUpload}) => {
+const PhotoField = ({
+    value,
+    displayName,
+    fieldId,
+    handleSimpleUpdate,
+    handleFileUpload,
+}) => {
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
-    const [dataUri, setUri] = useState("");
-    const translations = useTranslations()[0]; 
-
+    const [dataUri, setUri] = useState('');
+    const translations = useTranslations()[0];
 
     useEffect(() => {
-      setImages(value.map(v => {return {original: v.uri, thumbnail: v.uri, originalWidth: "700", originalHeight: "300"}}));
+        setImages(
+            value.map((v) => {
+                return {
+                    original: v.uri,
+                    thumbnail: v.uri,
+                    originalWidth: '700',
+                    originalHeight: '300',
+                };
+            }),
+        );
     }, [value]);
 
     const dataURItoBlob = (dataURI) => {
@@ -31,13 +45,13 @@ const PhotoField = ({value, displayName, fieldId, handleSimpleUpdate, handleFile
             ia[i] = byteString.charCodeAt(i);
         }
 
-        return new Blob([ab], {type: mimeString});
-    }
+        return new Blob([ab], { type: mimeString });
+    };
 
     const handleTakePhoto = (uri) => {
         setUri(uri);
         setShowImage(true);
-    }
+    };
 
     const confirmUpload = async () => {
         const photoObj = dataURItoBlob(dataUri);
@@ -46,72 +60,94 @@ const PhotoField = ({value, displayName, fieldId, handleSimpleUpdate, handleFile
         const fileName = d.toString();
         const photoFile = new File([photoObj], fileName);
         handleFileUpload(fieldId, photoFile);
-        const photoTaken = {uri: uri};
+        const photoTaken = { uri: uri };
         const newImages = value;
         newImages.push(photoTaken);
         handleSimpleUpdate(fieldId, newImages);
         resetUpload();
-    }
+    };
 
     const resetUpload = () => {
-      setShowImage(false);
-      setUri("");
-      setIsOpen(false);
-    }
+        setShowImage(false);
+        setUri('');
+        setIsOpen(false);
+    };
 
     const blobToDataURL = (blob) => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(reader.error);
-        reader.onabort = () => reject(new Error("Read aborted"));
-        reader.readAsDataURL(blob);
-      });
-    }
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(reader.error);
+            reader.onabort = () => reject(new Error('Read aborted'));
+            reader.readAsDataURL(blob);
+        });
+    };
 
     const handleOpenCamera = () => {
-      setIsOpen(true);
-    }
+        setIsOpen(true);
+    };
 
     const handleOnClose = () => {
-      setIsOpen(false);
-      resetUpload();
-    }
+        setIsOpen(false);
+        resetUpload();
+    };
 
-  return (
-    <div>
-      <h3>{displayName}</h3> 
-      <StyledButton onClick={handleOpenCamera}>{translations.components.button.photo}</StyledButton>
-      <br/>
-      <Modal
-        open={isOpen}
-        onClose={handleOnClose}
-        className={"take-photo-modal"}
-      > 
-        <div className={"take-photo-modal-wrapper"}>
-          {showImage ? <img src={dataUri} alt="User Upload"/> : <Camera onTakePhoto = { (uri) => { handleTakePhoto(uri); } }/>}
-          {showImage &&
-          <>
-          <br/>
-          <div className={"button-wrapper"}>
-          <StyledButton onClick={confirmUpload}>{translations.components.button.discard.confirmButton}</StyledButton>
-          <StyledButton onClick={resetUpload}>{translations.components.button.discard.cancelButton}</StyledButton>
-          </div>
-          </>
-          }
+    return (
+        <div>
+            <h3>{displayName}</h3>
+            <StyledButton onClick={handleOpenCamera}>
+                {translations.components.button.photo}
+            </StyledButton>
+            <br />
+            <Modal
+                open={isOpen}
+                onClose={handleOnClose}
+                className={'take-photo-modal'}
+            >
+                <div className={'take-photo-modal-wrapper'}>
+                    {showImage ? (
+                        <img src={dataUri} alt="User Upload" />
+                    ) : (
+                        <Camera
+                            onTakePhoto={(uri) => {
+                                handleTakePhoto(uri);
+                            }}
+                        />
+                    )}
+                    {showImage && (
+                        <>
+                            <br />
+                            <div className={'button-wrapper'}>
+                                <StyledButton onClick={confirmUpload}>
+                                    {
+                                        translations.components.button.discard
+                                            .confirmButton
+                                    }
+                                </StyledButton>
+                                <StyledButton onClick={resetUpload}>
+                                    {
+                                        translations.components.button.discard
+                                            .cancelButton
+                                    }
+                                </StyledButton>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </Modal>
+            {images.length > 0 && (
+                <ImageGallery
+                    items={images}
+                    className={'image-gallery'}
+                    showBullets={
+                        images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW
+                    }
+                />
+            )}
         </div>
-      </Modal>
-      {images.length > 0 && <ImageGallery items={images} className={"image-gallery"} showBullets={images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW}/>}
-    </div>
-  );
+    );
 };
 
 export { PhotoField };
 
-    //TODO: Loading Icon, switch rtl for arabic languages, add question mark?, handle button coloring, exit button, disable fullscreen?
-
-
-
-
-
-
+//TODO: Loading Icon, switch rtl for arabic languages, add question mark?, handle button coloring, exit button, disable fullscreen?

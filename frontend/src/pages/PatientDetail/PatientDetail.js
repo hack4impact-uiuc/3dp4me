@@ -62,7 +62,6 @@ const PatientDetail = () => {
                 setStepMetaData(metaData);
                 setPatientData(updatedData);
                 setLoading(false);
-
             });
         };
 
@@ -73,47 +72,60 @@ const PatientDetail = () => {
         const newPatientData = _.cloneDeep(data);
         let photoPromises = [];
 
-        metaData.map( async step => {
-            photoPromises = photoPromises.concat(step.fields.map(async field => {
-                if (field.fieldType === "Photo") {
-                    const photoData = newPatientData[step.key][field.key];
-                    const newPhotoData = await convertPhotosToURI(photoData, step.key, field.key);
+        metaData.map(async (step) => {
+            photoPromises = photoPromises.concat(
+                step.fields.map(async (field) => {
+                    if (field.fieldType === 'Photo') {
+                        const photoData = newPatientData[step.key][field.key];
+                        const newPhotoData = await convertPhotosToURI(
+                            photoData,
+                            step.key,
+                            field.key,
+                        );
 
-                    newPatientData[step.key][field.key] = newPhotoData;
-                } 
-            }))
+                        newPatientData[step.key][field.key] = newPhotoData;
+                    }
+                }),
+            );
         });
         await Promise.all(photoPromises);
         return newPatientData;
-    }
+    };
 
     const convertPhotosToURI = async (photoData, stepKey, fieldKey) => {
-        const newPhotoData = photoData.map(async photoObj => 
-            {
-                let modifiedPhotoObj = photoObj;
-                modifiedPhotoObj.uri = await photoToURI(photoObj, stepKey, fieldKey);
-                return modifiedPhotoObj;
-            }
-        );
+        const newPhotoData = photoData.map(async (photoObj) => {
+            let modifiedPhotoObj = photoObj;
+            modifiedPhotoObj.uri = await photoToURI(
+                photoObj,
+                stepKey,
+                fieldKey,
+            );
+            return modifiedPhotoObj;
+        });
 
         return await Promise.all(newPhotoData);
-    }
+    };
 
     const photoToURI = async (photoObj, stepKey, fieldKey) => {
-        const blob = await downloadBlobWithoutSaving(patientId,stepKey,fieldKey,photoObj.filename);
+        const blob = await downloadBlobWithoutSaving(
+            patientId,
+            stepKey,
+            fieldKey,
+            photoObj.filename,
+        );
         const uri = await blobToDataURL(blob);
         return uri;
-    }
+    };
 
     const blobToDataURL = (blob) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => resolve(reader.result);
             reader.onerror = () => reject(reader.error);
-            reader.onabort = () => reject(new Error("Read aborted"));
+            reader.onabort = () => reject(new Error('Read aborted'));
             reader.readAsDataURL(blob);
         });
-    }
+    };
 
     /**
      * Called when the patient data for a step is saved

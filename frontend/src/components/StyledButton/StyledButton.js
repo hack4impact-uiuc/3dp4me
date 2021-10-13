@@ -1,25 +1,21 @@
 import React from 'react';
 import './StyledButton.scss';
-import { LANGUAGES} from '../../utils/constants';
+import { LANGUAGES } from '../../utils/constants';
 import { Button } from '@material-ui/core';
 import { useTranslations } from '../../hooks/useTranslations';
 
-const StyledButton = ({onClick, children}) => {
+const StyledButton = ({ onClick, children }) => {
     const selectedLang = useTranslations()[1];
-    const saveBtnClassName = selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button';
+    const saveBtnClassName =
+        selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button';
 
     return (
-        <div className={"button-wrapper"}>
-            <Button
-                className={saveBtnClassName}
-                onClick={onClick}
-            >
+        <div className={'button-wrapper'}>
+            <Button className={saveBtnClassName} onClick={onClick}>
                 {children}
             </Button>
-        </div> 
+        </div>
     );
 };
 
-export {StyledButton}
-
-
+export { StyledButton };

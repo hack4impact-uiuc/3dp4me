@@ -13,7 +13,7 @@ import DateField from '../Fields/DateField';
 import PhoneField from '../Fields/PhoneField';
 import FieldGroup from '../Fields/FieldGroup';
 import SignatureField from '../Fields/SignatureField';
-import {PhotoField} from '../Fields/PhotoField'
+import { PhotoField } from '../Fields/PhotoField';
 import { useTranslations } from '../../hooks/useTranslations';
 import TextArea from '../Fields/TextArea';
 
@@ -173,7 +173,7 @@ const StepField = ({
                         handleFileUpload={handleFileUpload}
                         handleSimpleUpdate={handleSimpleUpdate}
                     />
-                )
+                );
             default:
                 return null;
         }
