@@ -103,7 +103,7 @@ const PatientDetail = () => {
             return modifiedPhotoObj;
         });
 
-        return await Promise.all(newPhotoData);
+        return Promise.all(newPhotoData);
     };
 
     const photoToURI = async (photoObj, stepKey, fieldKey) => {
