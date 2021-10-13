@@ -18,4 +18,9 @@ const StyledButton = ({ onClick, children }) => {
     );
 };
 
+StyledButton.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    children: PropTypes.node,
+};
+
 export { StyledButton };
