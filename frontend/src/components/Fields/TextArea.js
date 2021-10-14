@@ -1,15 +1,23 @@
-import React from 'react';
-import './TextArea.scss';
 import PropTypes from 'prop-types';
+import React, { useImperativeHandle, useState } from 'react';
+import './TextArea.scss';
 
-const TextArea = ({ title, disabled, fieldId, onChange, value = '' }) => {
+const TextArea = ({ title, disabled, ref}) => {
+    const [value, setValue] = useState("");
+
+    useImperativeHandle(ref,
+        () => ({
+            value: value
+        }),
+    )
+
     return (
         <div className="text-area-wrapper">
             <h3>{title}</h3>
             <div>
                 <textarea
                     disabled={disabled}
-                    onChange={(e) => onChange(fieldId, e.target.value)}
+                    onChange={(e) => setValue(e.target.value)}
                     value={value}
                     className={
                         disabled

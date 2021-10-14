@@ -2,22 +2,30 @@ import {
     Checkbox,
     FormControl,
     FormControlLabel,
-    FormGroup,
+    FormGroup
 } from '@material-ui/core';
-import React from 'react';
 import PropTypes from 'prop-types';
-
+import React, { useImperativeHandle, useState } from 'react';
 import { FieldOptionsType } from '../../utils/custom-proptypes';
+
 
 const MultiSelectField = ({
     title,
     langKey,
     options,
     selectedOptions,
+    ref,
     fieldId = '',
     isDisabled = true,
-    onChange = () => {},
 }) => {
+    const [value, setValue] = useState("");
+
+    useImperativeHandle(ref,
+        () => ({
+            value: value
+        }),
+    )
+
     const onSelectionChange = (e) => {
         let updatedOptions = [];
 
@@ -29,7 +37,7 @@ const MultiSelectField = ({
             updatedOptions = selectedOptions.concat([e.target.name.toString()]);
         }
 
-        onChange(fieldId, updatedOptions);
+        setValue(updatedOptions);
     };
 
     const generateQuestions = () => {

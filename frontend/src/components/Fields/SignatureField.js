@@ -1,27 +1,32 @@
 /* eslint-disable no-use-before-define */
 
-import './SignatureField.scss';
-import React, { useState, useRef, useEffect } from 'react';
+import { Button, Modal } from '@material-ui/core';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import SignaturePadWrapper from 'react-signature-canvas';
 import SignaturePad from 'signature_pad';
-import { Modal, Button } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-
 import { useTranslations } from '../../hooks/useTranslations';
+import './SignatureField.scss';
 
 const SignatureField = ({
     displayName,
     isDisabled,
     documentURL,
     fieldId = '',
-    value = '',
-    onChange = () => {},
+    ref,
 }) => {
+    const [value, setValue] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDocumentVisible, setIsDocumentVisible] = useState(false);
     const translations = useTranslations()[0];
     const sigCanvas = useRef({});
+
+    useImperativeHandle(ref,
+        () => ({
+            value: value
+        }),
+    )
 
     useEffect(() => {
         if (!value?.signatureData || isModalOpen) return;
@@ -89,11 +94,15 @@ const SignatureField = ({
      */
     const save = () => {
         const canvas = document.querySelector('canvas');
-        onChange(`${fieldId}.signatureData`, sigCanvas.current.toData());
-        onChange(`${fieldId}.signatureCanvasWidth`, canvas.width);
-        onChange(`${fieldId}.signatureCanvasHeight`, canvas.height);
-        onChange(`${fieldId}.documentURL.EN`, documentURL.EN);
-        onChange(`${fieldId}.documentURL.AR`, documentURL.AR);
+        setValue({
+            signatureData: sigCanvas.current.toData(),
+            signatureCanvasWidth: canvas.width,
+            signatureCanvasHeight: canvas.height,
+            documentURL: {
+                EN: documentURL.EN,
+                AR: documentURL.AR,
+            }
+        })
         setIsModalOpen(false);
     };
 

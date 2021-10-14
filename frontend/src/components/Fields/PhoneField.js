@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useImperativeHandle, useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
-
 import 'react-phone-number-input/style.css';
 import { FLAG_URL } from '../../utils/constants';
 import './Fields.scss';
@@ -12,12 +11,15 @@ const PhoneField = ({
     displayName,
     isDisabled,
     fieldId,
-    value = '',
-    onChange,
+    ref,
 }) => {
-    const sendChanges = (phone) => {
-        onChange(fieldId, phone);
-    };
+    const [value, setValue] = useState("");
+
+    useImperativeHandle(ref,
+        () => ({
+            value: value
+        }),
+    )
 
     return (
         <div>
@@ -27,7 +29,7 @@ const PhoneField = ({
                 className="phone-input-container"
                 defaultCountry={DEFAULT_COUNTRY}
                 disabled={isDisabled}
-                onChange={sendChanges}
+                onChange={(v) => setValue(v)}
                 value={value}
             />
         </div>

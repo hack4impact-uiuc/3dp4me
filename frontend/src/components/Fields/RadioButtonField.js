@@ -1,19 +1,25 @@
 import { FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
-import React from 'react';
 import PropTypes from 'prop-types';
-
+import React, { useImperativeHandle, useState } from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
 import { FieldOptionsType } from '../../utils/custom-proptypes';
+
 
 const RadioButtonField = ({
     fieldId,
     title,
-    value = '',
     options,
     isDisabled,
-    onChange,
+    ref,
 }) => {
     const selectedLang = useTranslations()[1];
+    const [value, setValue] = useState("");
+
+    useImperativeHandle(ref,
+        () => ({
+            value: value
+        }),
+    )
 
     const shouldHideOption = (option) => {
         return option.IsHidden && value?.toString() !== option._id.toString();
@@ -40,7 +46,7 @@ const RadioButtonField = ({
             <h3>{title}</h3>
             <RadioGroup
                 name={fieldId}
-                onChange={(e) => onChange(fieldId, e.target.value)}
+                onChange={(e) => setValue(e.target.value)}
                 value={value}
             >
                 {generateQuestions()}

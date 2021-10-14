@@ -1,21 +1,25 @@
-import React from 'react';
 import { TextField as Text } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import React, { useImperativeHandle, useState } from 'react';
 
 const TextField = ({
     displayName,
     type = '',
     isDisabled,
-    fieldId = '',
-    value = '',
+    // fieldId = '',
+    // value = '',
     className = '',
-    onChange = () => {},
+    ref,
+    // onChange = () => {},
 }) => {
     const inputClassName = !isDisabled ? 'active-input' : 'input-field';
+    const [value, setValue] = useState("")
 
-    const sendChanges = (e) => {
-        onChange(fieldId, e.target.value);
-    };
+    useImperativeHandle(ref,
+        () => ({
+            value: value
+        }),
+    )
 
     return (
         <div>
@@ -25,7 +29,7 @@ const TextField = ({
                 disabled={isDisabled}
                 className={`${inputClassName} ${className}`}
                 variant="outlined"
-                onChange={sendChanges}
+                onChange={e => setValue(e.target.value)}
                 value={value}
             />
         </div>

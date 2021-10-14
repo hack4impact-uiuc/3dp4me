@@ -3,13 +3,12 @@ import {
     Button,
     CircularProgress,
     MenuItem,
-    Select,
+    Select
 } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
-
 import { deleteFile, downloadFile, uploadFile } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -18,6 +17,7 @@ import { formatDate } from '../../utils/date';
 import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
 import './StepContent.scss';
+
 
 const StepContent = ({
     patientId,
