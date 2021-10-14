@@ -20,7 +20,7 @@ export default function MapField() {
             <button
                 type="button"
                 className="resetButton"
-                /* onClick={setViewport(initialViewport)} */
+                onClick={() => setViewport(initialViewport)}
             >
                 Reset
             </button>
