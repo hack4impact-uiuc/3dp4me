@@ -25,6 +25,7 @@ const StepContent = ({
     metaData,
     loading,
     stepData,
+    setLocalPatientData,
     onDataSaved,
 }) => {
     const [edit, setEdit] = useState(false);
@@ -39,7 +40,8 @@ const StepContent = ({
     }, [stepData]);
 
     const hasUnsavedChanges = () => {
-        return !_.isEqual(updatedData, stepData)
+        return true
+        // return !_.isEqual(updatedData, stepData)
     }
 
     const handleSimpleUpdate = (fieldKey, value) => {

@@ -135,6 +135,14 @@ const PatientDetail = () => {
                 {stepMetaData.map((step) => {
                     if (step.key !== selectedStep) return null;
 
+                    // const setDataForStep = (newData) => {
+                    //     setLocalPatientData(oldData => {
+                    //         if (_.isFunction(newData))
+                    //             return newData(oldData)
+                    //         return newData
+                    //     })
+                    // }
+
                     return (
                         <StepContent
                             key={step.key}
@@ -143,6 +151,7 @@ const PatientDetail = () => {
                             metaData={stepMetaData.find(
                                 (s) => s.key === step.key,
                             )}
+                            // setLocalPatientData={setDataForStep}
                             stepData={remotePatientData[step.key] ?? {}}
                             loading={loading}
                         />
