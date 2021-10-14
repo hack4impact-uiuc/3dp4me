@@ -3,17 +3,27 @@ import ReactMapGL, { Marker } from 'react-map-gl';
 import './MapField.scss';
 
 export default function MapField() {
-    const [viewport, setViewport] = useState({
+    const initialViewport = {
         latitude: 37.7577,
         longitude: -122.4376,
         zoom: 8,
         width: '100%',
         height: '100%',
         pitch: 50,
-    });
+    };
+
+    const [viewport, setViewport] = useState(initialViewport);
 
     return (
         <div className="mapStyling">
+            <h3>Patient Location</h3>
+            <button
+                type="button"
+                className="resetButton"
+                /* onClick={setViewport(initialViewport)} */
+            >
+                Reset
+            </button>
             <ReactMapGL
                 mapStyle="mapbox://styles/mapbox/dark-v9"
                 mapboxApiAccessToken="pk.eyJ1IjoiYXJjaG5hLTEiLCJhIjoiY2t1aHFubjl2Mmg4aDMwcXAyaW94eHYzcSJ9.qSm9IsfWo2G7CWJrX_kyeA"
@@ -34,7 +44,8 @@ export default function MapField() {
                     />
                 </Marker>
             </ReactMapGL>
-            <div>
+
+            <div className="coordinateLabel">
                 Latitude: {viewport?.latitude.toFixed(4)} Longitude:{' '}
                 {viewport?.longitude.toFixed(4)}
             </div>
