@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
+
 import 'react-image-gallery/styles/css/image-gallery.css';
+import { Modal } from '@material-ui/core';
+
 import { StyledButton } from '../StyledButton/StyledButton';
 import { useTranslations } from '../../hooks/useTranslations';
-import { Modal } from '@material-ui/core';
 import './PhotoField.scss';
 import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
+import PropTypes from 'prop-types';
 
 const PhotoField = ({
     value,
@@ -55,12 +58,12 @@ const PhotoField = ({
 
     const confirmUpload = async () => {
         const photoObj = dataURItoBlob(dataUri);
-        const uri = await blobToDataURL(photoObj);
+        const dUri = await blobToDataURL(photoObj);
         const d = Date.now();
         const fileName = d.toString();
         const photoFile = new File([photoObj], fileName);
         handleFileUpload(fieldId, photoFile);
-        const photoTaken = { uri: uri };
+        const photoTaken = { uri: dUri };
         const newImages = value;
         newImages.push(photoTaken);
         handleSimpleUpdate(fieldId, newImages);
@@ -95,16 +98,16 @@ const PhotoField = ({
     return (
         <div>
             <h3>{displayName}</h3>
-            <StyledButton onClick={handleOpenCamera}>
+            <StyledButton onClick={handleOpenCamera} primary={true}>
                 {translations.components.button.photo}
             </StyledButton>
             <br />
             <Modal
                 open={isOpen}
                 onClose={handleOnClose}
-                className={'take-photo-modal'}
+                className="take-photo-modal"
             >
-                <div className={'take-photo-modal-wrapper'}>
+                <div className="take-photo-modal-wrapper">
                     {showImage ? (
                         <img src={dataUri} alt="User Upload" />
                     ) : (
@@ -117,14 +120,20 @@ const PhotoField = ({
                     {showImage && (
                         <>
                             <br />
-                            <div className={'button-wrapper'}>
-                                <StyledButton onClick={confirmUpload}>
+                            <div className="button-wrapper">
+                                <StyledButton
+                                    onClick={confirmUpload}
+                                    primary={true}
+                                >
                                     {
                                         translations.components.button.discard
                                             .confirmButton
                                     }
                                 </StyledButton>
-                                <StyledButton onClick={resetUpload}>
+                                <StyledButton
+                                    onClick={resetUpload}
+                                    primary={false}
+                                >
                                     {
                                         translations.components.button.discard
                                             .cancelButton
@@ -138,7 +147,7 @@ const PhotoField = ({
             {images.length > 0 && (
                 <ImageGallery
                     items={images}
-                    className={'image-gallery'}
+                    className="image-gallery"
                     showBullets={
                         images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW
                     }
@@ -147,5 +156,15 @@ const PhotoField = ({
         </div>
     );
 };
+
+PhotoField.propTypes = {
+    value: PropTypes.array.isRequired,
+    displayName: PropTypes.string.isRequired,
+    fieldId: PropTypes.string.isRequired,
+    handleSimpleUpdate: PropTypes.func.isRequired,
+    handleFileUpload: PropTypes.func.isRequired,
+};
+
+export { StyledButton };
 
 export { PhotoField };

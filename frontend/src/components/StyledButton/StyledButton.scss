@@ -1,7 +1,7 @@
 @import '../../styles/colors.scss';
 @import '../../styles/variables.scss';
 
-.button-wrapper {
+.button-wrapper-primary {
     .save-button {
         background-color: $button;
         color: white;
@@ -31,6 +31,32 @@
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
         &:hover {
             background-color: $buttonHighlight;
+        }
+    }
+}
+
+.button-wrapper-secondary {
+    .save-button {
+        background-color: white;
+        color: #5f5f5f;
+        font-size: 12px;
+        padding: 6px 24px 6px 24px;
+        transition: all 0.2s;
+        &:hover {
+            color: black;
+            background-color: white;
+        }
+    }
+
+    .save-button-ar {
+        background-color: white;
+        color: #5f5f5f;
+        font-size: 12px;
+        padding: 6px 24px 6px 24px;
+        transition: all 0.2s;
+        &:hover {
+            color: black;
+            background-color: white;
         }
     }
 }
