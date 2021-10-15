@@ -119,7 +119,7 @@ const PhotoField = ({
 
     const renderImageGallery = () => {
         return (
-            {images.length > 0 && (
+            images.length > 0 && (
                 <ImageGallery
                     items={images}
                     className="image-gallery"
@@ -127,9 +127,9 @@ const PhotoField = ({
                         images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW
                     }
                 />
-            )}
+            )
         );
-    }
+    };
 
     return (
         <div>
@@ -154,8 +154,8 @@ const PhotoField = ({
 };
 
 PhotoField.defaultProps = {
-    value: []
-}
+    value: [],
+};
 
 PhotoField.propTypes = {
     value: PropTypes.array,
