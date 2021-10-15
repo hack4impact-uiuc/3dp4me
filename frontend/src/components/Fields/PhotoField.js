@@ -100,6 +100,45 @@ const PhotoField = ({
         setUri('');
     };
 
+    function renderPhotoModal() {
+        return showImage ? (
+            <img src={dataUri} alt="User Upload" />
+        ) : (
+            <Camera
+                onTakePhoto={(uri) => {
+                    handleTakePhoto(uri);
+                }}
+            />
+        );
+    }
+
+    function renderImagePreviewButtons() {
+        return (
+            showImage && (
+                <>
+                    <br />
+                    <div className="button-wrapper">
+                        <StyledButton onClick={confirmUpload} primary>
+                            {translations.components.button.discard.saveButton}
+                        </StyledButton>
+                        <StyledButton onClick={handleRetake} primary={false}>
+                            {
+                                translations.components.button.discard
+                                    .retakeButton
+                            }
+                        </StyledButton>
+                        <StyledButton onClick={resetUpload} primary={false}>
+                            {
+                                translations.components.button.discard
+                                    .cancelButton
+                            }
+                        </StyledButton>
+                    </div>
+                </>
+            )
+        );
+    }
+
     return (
         <div>
             <h3>{displayName}</h3>
@@ -113,46 +152,8 @@ const PhotoField = ({
                 className="take-photo-modal"
             >
                 <div className="take-photo-modal-wrapper">
-                    {showImage ? (
-                        <img src={dataUri} alt="User Upload" />
-                    ) : (
-                        <Camera
-                            onTakePhoto={(uri) => {
-                                handleTakePhoto(uri);
-                            }}
-                        />
-                    )}
-                    {showImage && (
-                        <>
-                            <br />
-                            <div className="button-wrapper">
-                                <StyledButton onClick={confirmUpload} primary>
-                                    {
-                                        translations.components.button.discard
-                                            .saveButton
-                                    }
-                                </StyledButton>
-                                <StyledButton
-                                    onClick={handleRetake}
-                                    primary={false}
-                                >
-                                    {
-                                        translations.components.button.discard
-                                            .retakeButton
-                                    }
-                                </StyledButton>
-                                <StyledButton
-                                    onClick={resetUpload}
-                                    primary={false}
-                                >
-                                    {
-                                        translations.components.button.discard
-                                            .cancelButton
-                                    }
-                                </StyledButton>
-                            </div>
-                        </>
-                    )}
+                    {renderPhotoModal()}
+                    {renderImagePreviewButtons()}
                 </div>
             </Modal>
             {images.length > 0 && (
