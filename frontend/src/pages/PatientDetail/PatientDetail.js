@@ -8,7 +8,6 @@ import StepContent from '../../components/StepContent/StepContent';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
 import {
-    downloadBlobWithoutSaving,
     getAllStepsMetadata,
     getPatientById,
     updatePatient,
@@ -18,8 +17,13 @@ import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import { sortMetadata } from '../../utils/utils';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
-import { LANGUAGES } from '../../utils/constants';
+import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
+
+import {
+    blobToDataURL,
+    convertPhotosToURI,
+} from '../../utils/photoManipulation';
 
 /**
  * The detail view for a patient. Shows their information
@@ -75,12 +79,13 @@ const PatientDetail = () => {
         metaData.map(async (step) => {
             photoPromises = photoPromises.concat(
                 step.fields.map(async (field) => {
-                    if (field.fieldType === 'Photo') {
+                    if (field.fieldType === FIELD_TYPES.PHOTO) {
                         const photoData = newPatientData[step.key][field.key];
                         const newPhotoData = await convertPhotosToURI(
                             photoData,
                             step.key,
                             field.key,
+                            patientId,
                         );
 
                         newPatientData[step.key][field.key] = newPhotoData;
@@ -90,41 +95,6 @@ const PatientDetail = () => {
         });
         await Promise.all(photoPromises);
         return newPatientData;
-    };
-
-    const convertPhotosToURI = async (photoData, stepKey, fieldKey) => {
-        const newPhotoData = photoData.map(async (photoObj) => {
-            let modifiedPhotoObj = photoObj;
-            modifiedPhotoObj.uri = await photoToURI(
-                photoObj,
-                stepKey,
-                fieldKey,
-            );
-            return modifiedPhotoObj;
-        });
-
-        return Promise.all(newPhotoData);
-    };
-
-    const photoToURI = async (photoObj, stepKey, fieldKey) => {
-        const blob = await downloadBlobWithoutSaving(
-            patientId,
-            stepKey,
-            fieldKey,
-            photoObj.filename,
-        );
-        const uri = await blobToDataURL(blob);
-        return uri;
-    };
-
-    const blobToDataURL = (blob) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(reader.error);
-            reader.onabort = () => reject(new Error('Read aborted'));
-            reader.readAsDataURL(blob);
-        });
     };
 
     /**

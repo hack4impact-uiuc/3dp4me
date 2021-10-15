@@ -11,6 +11,8 @@ import './PhotoField.scss';
 import 'react-html5-camera-photo/build/css/index.css';
 import 'react-image-gallery/styles/css/image-gallery.css';
 
+import { blobToDataURL } from '../../utils/photoManipulation';
+
 const PhotoField = ({
     value,
     displayName,
@@ -40,12 +42,6 @@ const PhotoField = ({
     const dataURItoBlob = (dataURI) => {
         let byteString = '';
         let mimeString = '';
-        // if (dataURI) {
-        //     byteString = atob(dataURI.split(',')[1]);
-        //     if (byteString) {
-        //         mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-        //     }
-        // }
         if (dataURI) {
             const one = dataURI.split(',')[1];
             byteString = atob(one);
@@ -90,16 +86,6 @@ const PhotoField = ({
         setIsOpen(false);
     };
 
-    const blobToDataURL = (blob) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(reader.error);
-            reader.onabort = () => reject(new Error('Read aborted'));
-            reader.readAsDataURL(blob);
-        });
-    };
-
     const handleOpenCamera = () => {
         setIsOpen(true);
     };
@@ -107,6 +93,11 @@ const PhotoField = ({
     const handleOnClose = () => {
         setIsOpen(false);
         resetUpload();
+    };
+
+    const handleRetake = () => {
+        setShowImage(false);
+        setUri('');
     };
 
     return (
@@ -138,7 +129,16 @@ const PhotoField = ({
                                 <StyledButton onClick={confirmUpload} primary>
                                     {
                                         translations.components.button.discard
-                                            .confirmButton
+                                            .saveButton
+                                    }
+                                </StyledButton>
+                                <StyledButton
+                                    onClick={handleRetake}
+                                    primary={false}
+                                >
+                                    {
+                                        translations.components.button.discard
+                                            .retakeButton
                                     }
                                 </StyledButton>
                                 <StyledButton
