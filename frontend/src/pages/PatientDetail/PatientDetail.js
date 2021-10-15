@@ -20,10 +20,7 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
 
-import {
-    blobToDataURL,
-    convertPhotosToURI,
-} from '../../utils/photoManipulation';
+import { convertPhotosToURI } from '../../utils/photoManipulation';
 
 /**
  * The detail view for a patient. Shows their information
