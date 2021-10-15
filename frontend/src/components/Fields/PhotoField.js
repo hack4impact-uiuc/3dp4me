@@ -11,8 +11,7 @@ import './PhotoField.scss';
 import 'react-html5-camera-photo/build/css/index.css';
 import 'react-image-gallery/styles/css/image-gallery.css';
 
-import { blobToDataURL } from '../../utils/photoManipulation';
-import { dataURItoBlob } from '../../utils/photoManipulation';
+import { blobToDataURL, dataURItoBlob } from '../../utils/photoManipulation';
 
 const PhotoField = ({
     value,
@@ -79,7 +78,7 @@ const PhotoField = ({
         setUri('');
     };
 
-    function renderPhotoModal() {
+    const renderPhotoModal = () => {
         return showImage ? (
             <img src={dataUri} alt="User Upload" />
         ) : (
@@ -89,9 +88,9 @@ const PhotoField = ({
                 }}
             />
         );
-    }
+    };
 
-    function renderImagePreviewButtons() {
+    const renderImagePreviewButtons = () => {
         return (
             showImage && (
                 <>
@@ -116,6 +115,20 @@ const PhotoField = ({
                 </>
             )
         );
+    };
+
+    const renderImageGallery = () => {
+        return (
+            {images.length > 0 && (
+                <ImageGallery
+                    items={images}
+                    className="image-gallery"
+                    showBullets={
+                        images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW
+                    }
+                />
+            )}
+        );
     }
 
     return (
@@ -135,27 +148,21 @@ const PhotoField = ({
                     {renderImagePreviewButtons()}
                 </div>
             </Modal>
-            {images.length > 0 && (
-                <ImageGallery
-                    items={images}
-                    className="image-gallery"
-                    showBullets={
-                        images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW
-                    }
-                />
-            )}
+            {renderImageGallery()}
         </div>
     );
 };
 
+PhotoField.defaultProps = {
+    value: []
+}
+
 PhotoField.propTypes = {
-    value: PropTypes.array.isRequired,
+    value: PropTypes.array,
     displayName: PropTypes.string.isRequired,
     fieldId: PropTypes.string.isRequired,
     handleSimpleUpdate: PropTypes.func.isRequired,
     handleFileUpload: PropTypes.func.isRequired,
 };
 
-export { StyledButton };
-
-export { PhotoField };
+export default PhotoField;
