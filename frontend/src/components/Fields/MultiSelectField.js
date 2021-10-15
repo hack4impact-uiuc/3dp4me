@@ -5,19 +5,18 @@ import {
     FormGroup
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import React, { useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { FieldOptionsType } from '../../utils/custom-proptypes';
 
 
-const MultiSelectField = ({
+const MultiSelectField = forwardRef(({
     title,
     langKey,
     options,
     selectedOptions,
-    ref,
     fieldId = '',
     isDisabled = true,
-}) => {
+}, ref) => {
     const [value, setValue] = useState("");
 
     useImperativeHandle(ref,
@@ -70,7 +69,7 @@ const MultiSelectField = ({
             <FormGroup name={fieldId}>{generateQuestions()}</FormGroup>
         </FormControl>
     );
-};
+});
 
 MultiSelectField.propTypes = {
     fieldId: PropTypes.string,

@@ -3,19 +3,17 @@
 import { Button, Modal } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import SignaturePadWrapper from 'react-signature-canvas';
 import SignaturePad from 'signature_pad';
 import { useTranslations } from '../../hooks/useTranslations';
 import './SignatureField.scss';
 
-const SignatureField = ({
+const SignatureField = forwardRef(({
     displayName,
     isDisabled,
     documentURL,
-    fieldId = '',
-    ref,
-}) => {
+}, ref) => {
     const [value, setValue] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDocumentVisible, setIsDocumentVisible] = useState(false);
@@ -203,7 +201,7 @@ const SignatureField = ({
             </div>
         </div>
     );
-};
+});
 
 SignatureField.propTypes = {
     displayName: PropTypes.string.isRequired,

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import { FLAG_URL } from '../../utils/constants';
@@ -7,12 +7,10 @@ import './Fields.scss';
 
 const DEFAULT_COUNTRY = 'JO';
 
-const PhoneField = ({
+const PhoneField = forwardRef(({
     displayName,
     isDisabled,
-    fieldId,
-    ref,
-}) => {
+}, ref) => {
     const [value, setValue] = useState("");
 
     useImperativeHandle(ref,
@@ -34,7 +32,7 @@ const PhoneField = ({
             />
         </div>
     );
-};
+});
 
 PhoneField.propTypes = {
     displayName: PropTypes.string.isRequired,

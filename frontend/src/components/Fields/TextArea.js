@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
-import React, { useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import './TextArea.scss';
 
-const TextArea = ({ title, disabled, ref}) => {
+const TextArea = forwardRef(({ title, disabled}, ref) => {
     const [value, setValue] = useState("");
 
     useImperativeHandle(ref,
@@ -28,7 +28,7 @@ const TextArea = ({ title, disabled, ref}) => {
             </div>
         </div>
     );
-};
+});
 
 TextArea.propTypes = {
     title: PropTypes.string.isRequired,

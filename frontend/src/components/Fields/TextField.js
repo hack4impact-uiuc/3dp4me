@@ -1,19 +1,20 @@
 import { TextField as Text } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import React, { useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
-const TextField = ({
+const TextField = forwardRef(({
     displayName,
-    type = '',
     isDisabled,
-    // fieldId = '',
-    // value = '',
+    initValue = '',
+    type = '',
     className = '',
-    ref,
-    // onChange = () => {},
-}) => {
+}, ref) => {
     const inputClassName = !isDisabled ? 'active-input' : 'input-field';
     const [value, setValue] = useState("")
+
+    useEffect(() => {
+        setValue(initValue)
+    }, [initValue])
 
     useImperativeHandle(ref,
         () => ({
@@ -34,7 +35,7 @@ const TextField = ({
             />
         </div>
     );
-};
+});
 
 TextField.propTypes = {
     displayName: PropTypes.string.isRequired,

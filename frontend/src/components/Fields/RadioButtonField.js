@@ -1,17 +1,16 @@
 import { FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import React, { useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
 import { FieldOptionsType } from '../../utils/custom-proptypes';
 
 
-const RadioButtonField = ({
+const RadioButtonField = forwardRef(({
     fieldId,
     title,
     options,
     isDisabled,
-    ref,
-}) => {
+}, ref) => {
     const selectedLang = useTranslations()[1];
     const [value, setValue] = useState("");
 
@@ -53,7 +52,7 @@ const RadioButtonField = ({
             </RadioGroup>
         </div>
     );
-};
+});
 
 RadioButtonField.propTypes = {
     fieldId: PropTypes.string.isRequired,

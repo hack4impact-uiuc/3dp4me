@@ -31,6 +31,7 @@ const StepContent = ({
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
     const [translations, selectedLang] = useTranslations();
+    const [fieldRefs, setFieldRefs] = useState({});
     const errorWrap = useErrorWrap();
 
     useEffect(() => {
@@ -90,13 +91,16 @@ const StepContent = ({
     };
 
     const saveData = () => {
-        onDataSaved(metaData.key, updatedData);
-        setEdit(false);
-        swal(
-            translations.components.bottombar.savedMessage.patientInfo,
-            '',
-            'success',
-        );
+        // TODO: REMOVE THIS
+        console.log(fieldRefs)
+
+        // onDataSaved(metaData.key, updatedData);
+        // setEdit(false);
+        // swal(
+        //     translations.components.bottombar.savedMessage.patientInfo,
+        //     '',
+        //     'success',
+        // );
     };
 
     const handleQuestionFormatSelect = (e) => {
@@ -134,6 +138,13 @@ const StepContent = ({
         return <h1>{metaData.displayName[selectedLang]}</h1>;
     };
 
+    const addFieldRef = (fieldKey, ref) => {
+        setFieldRefs(refs => {
+            refs[fieldKey] = ref
+            return refs;
+        })
+    }
+
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
         // if displaying a single question per page, only return the right numbered question
@@ -143,12 +154,13 @@ const StepContent = ({
                     <StepField
                         displayName={field.displayName[selectedLang]}
                         metadata={field}
-                        value={updatedData ? updatedData[field.key] : null}
+                        initValue={updatedData ? updatedData[field.key] : null}
                         key={field.key}
                         langKey={selectedLang}
                         isDisabled={!edit}
                         patientId={patientId}
                         stepKey={metaData.key}
+                        ref={(ref) => addFieldRef(field.key, ref)}
                         handleSimpleUpdate={handleSimpleUpdate}
                         handleFileDownload={handleFileDownload}
                         handleFileUpload={handleFileUpload}

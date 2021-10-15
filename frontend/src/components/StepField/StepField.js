@@ -1,33 +1,33 @@
 /* eslint import/no-cycle: "off" */
 
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Divider } from '@material-ui/core';
-
+import PropTypes from 'prop-types';
+import React, { forwardRef } from 'react';
+import { useTranslations } from '../../hooks/useTranslations';
+import { FIELD_TYPES } from '../../utils/constants';
 import AudioRecorder from '../AudioRecorder/AudioRecorder';
+import DateField from '../Fields/DateField';
+import FieldGroup from '../Fields/FieldGroup';
+import PhoneField from '../Fields/PhoneField';
+import RadioButtonField from '../Fields/RadioButtonField';
+import SignatureField from '../Fields/SignatureField';
+import TextArea from '../Fields/TextArea';
 import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
-import { FIELD_TYPES } from '../../utils/constants';
-import RadioButtonField from '../Fields/RadioButtonField';
-import DateField from '../Fields/DateField';
-import PhoneField from '../Fields/PhoneField';
-import FieldGroup from '../Fields/FieldGroup';
-import SignatureField from '../Fields/SignatureField';
-import { useTranslations } from '../../hooks/useTranslations';
-import TextArea from '../Fields/TextArea';
+
 
 const StepField = ({
     metadata,
-    value,
     patientId = '',
     displayName,
     stepKey,
     isDisabled = true,
+    initValue = '',
     handleSimpleUpdate = () => {},
     handleFileDownload = () => {},
     handleFileUpload = () => {},
     handleFileDelete = () => {},
-}) => {
+}, ref) => {
     const selectedLang = useTranslations()[1];
 
     const generateField = () => {
@@ -38,9 +38,8 @@ const StepField = ({
                         displayName={displayName}
                         isDisabled={isDisabled}
                         type="text"
-                        onChange={handleSimpleUpdate}
-                        fieldId={metadata.key}
-                        value={value}
+                        initValue={initValue}
+                        ref={ref}
                     />
                 );
             case FIELD_TYPES.NUMBER:
@@ -49,9 +48,8 @@ const StepField = ({
                         displayName={displayName}
                         isDisabled={isDisabled}
                         type="number"
-                        onChange={handleSimpleUpdate}
-                        fieldId={metadata.key}
-                        value={value}
+                        initValue={initValue}
+                        ref={ref}
                     />
                 );
             case FIELD_TYPES.PHONE:
@@ -61,7 +59,8 @@ const StepField = ({
                         isDisabled={isDisabled}
                         onChange={handleSimpleUpdate}
                         fieldId={metadata.key}
-                        value={value}
+                        initValue={initValue}
+                        ref={ref}
                     />
                 );
             case FIELD_TYPES.MULTILINE_STRING:
@@ -72,7 +71,8 @@ const StepField = ({
                             onChange={handleSimpleUpdate}
                             title={displayName}
                             fieldId={metadata.key}
-                            value={value}
+                            initValue={initValue}
+                            ref={ref}
                         />
                     </div>
                 );
@@ -83,18 +83,21 @@ const StepField = ({
                         isDisabled={isDisabled}
                         onChange={handleSimpleUpdate}
                         fieldId={metadata.key}
-                        value={value}
+                        initValue={initValue}
+                        ref={ref}
                     />
                 );
             case FIELD_TYPES.FILE:
                 return (
                     <Files
                         title={displayName}
-                        files={value}
+                        // files={value}
                         fieldKey={metadata.key}
+                        initValue={initValue}
                         handleDownload={handleFileDownload}
                         handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}
+                        ref={ref}
                     />
                 );
 
@@ -104,9 +107,10 @@ const StepField = ({
                         fieldId={metadata.key}
                         isDisabled={isDisabled}
                         title={displayName}
-                        value={value}
+                        initValue={initValue}
                         options={metadata.options}
                         onChange={handleSimpleUpdate}
+                        ref={ref}
                     />
                 );
 
@@ -117,10 +121,12 @@ const StepField = ({
                         handleDelete={handleFileDelete}
                         selectedLanguage={selectedLang}
                         patientId={patientId}
+                        initValue={initValue}
                         fieldKey={metadata.key}
                         stepKey={stepKey}
-                        files={value}
+                        // files={value}
                         title={displayName}
+                        ref={ref}
                     />
                 );
             case FIELD_TYPES.DIVIDER:
@@ -143,7 +149,8 @@ const StepField = ({
                         handleFileUpload={handleFileUpload}
                         handleFileDelete={handleFileDelete}
                         fieldId={metadata.key}
-                        value={value}
+                        // value={value}
+                        ref={ref}
                     />
                 );
             case FIELD_TYPES.SIGNATURE:
@@ -151,9 +158,10 @@ const StepField = ({
                     <SignatureField
                         displayName={displayName}
                         isDisabled={isDisabled}
+                        initValue={initValue}
                         onChange={handleSimpleUpdate}
                         fieldId={metadata.key}
-                        value={value}
+                        ref={ref}
                         documentURL={
                             metadata?.additionalData?.defaultDocumentURL
                         }
@@ -202,4 +210,4 @@ StepField.propTypes = {
     }),
 };
 
-export default StepField;
+export default forwardRef(StepField);
