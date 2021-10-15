@@ -14,7 +14,7 @@ import 'react-image-gallery/styles/css/image-gallery.css';
 import { blobToDataURL, dataURItoBlob } from '../../utils/photoManipulation';
 
 const PhotoField = ({
-    value,
+    value = [],
     displayName,
     fieldId,
     handleSimpleUpdate,
@@ -79,9 +79,11 @@ const PhotoField = ({
     };
 
     const renderPhotoModal = () => {
-        return showImage ? (
-            <img src={dataUri} alt="User Upload" />
-        ) : (
+        if (showImage) {
+            return <img src={dataUri} alt="User Upload" />;
+        }
+
+        return (
             <Camera
                 onTakePhoto={(uri) => {
                     handleTakePhoto(uri);
@@ -91,8 +93,8 @@ const PhotoField = ({
     };
 
     const renderImagePreviewButtons = () => {
-        return (
-            showImage && (
+        if (showImage) {
+            return (
                 <>
                     <br />
                     <div className="button-wrapper">
@@ -113,13 +115,15 @@ const PhotoField = ({
                         </StyledButton>
                     </div>
                 </>
-            )
-        );
+            );
+        }
+
+        return null;
     };
 
     const renderImageGallery = () => {
-        return (
-            images.length > 0 && (
+        if (images.length > 0) {
+            return (
                 <ImageGallery
                     items={images}
                     className="image-gallery"
@@ -127,8 +131,10 @@ const PhotoField = ({
                         images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW
                     }
                 />
-            )
-        );
+            );
+        }
+
+        return null;
     };
 
     return (
@@ -151,10 +157,6 @@ const PhotoField = ({
             {renderImageGallery()}
         </div>
     );
-};
-
-PhotoField.defaultProps = {
-    value: [],
 };
 
 PhotoField.propTypes = {
