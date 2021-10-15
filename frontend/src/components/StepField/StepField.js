@@ -85,7 +85,6 @@ const StepField = ({
                 return (
                     <Files
                         title={displayName}
-                        // files={value}
                         fieldKey={metadata.key}
                         initValue={initValue}
                         handleDownload={handleFileDownload}
@@ -114,10 +113,9 @@ const StepField = ({
                         handleDelete={handleFileDelete}
                         selectedLanguage={selectedLang}
                         patientId={patientId}
-                        initValue={initValue}
                         fieldKey={metadata.key}
                         stepKey={stepKey}
-                        // files={value}
+                        files={initValue}
                         title={displayName}
                         ref={ref}
                     />
