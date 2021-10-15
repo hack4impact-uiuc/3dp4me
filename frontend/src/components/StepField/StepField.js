@@ -57,8 +57,6 @@ const StepField = ({
                     <PhoneField
                         displayName={displayName}
                         isDisabled={isDisabled}
-                        onChange={handleSimpleUpdate}
-                        fieldId={metadata.key}
                         initValue={initValue}
                         ref={ref}
                     />
@@ -68,9 +66,7 @@ const StepField = ({
                     <div>
                         <TextArea
                             disabled={isDisabled}
-                            onChange={handleSimpleUpdate}
                             title={displayName}
-                            fieldId={metadata.key}
                             initValue={initValue}
                             ref={ref}
                         />
@@ -81,8 +77,6 @@ const StepField = ({
                     <DateField
                         displayName={displayName}
                         isDisabled={isDisabled}
-                        onChange={handleSimpleUpdate}
-                        fieldId={metadata.key}
                         initValue={initValue}
                         ref={ref}
                     />
@@ -109,7 +103,6 @@ const StepField = ({
                         title={displayName}
                         initValue={initValue}
                         options={metadata.options}
-                        onChange={handleSimpleUpdate}
                         ref={ref}
                     />
                 );
@@ -159,7 +152,6 @@ const StepField = ({
                         displayName={displayName}
                         isDisabled={isDisabled}
                         initValue={initValue}
-                        onChange={handleSimpleUpdate}
                         fieldId={metadata.key}
                         ref={ref}
                         documentURL={

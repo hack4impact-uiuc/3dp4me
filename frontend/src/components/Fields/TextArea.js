@@ -1,9 +1,13 @@
 import PropTypes from 'prop-types';
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import './TextArea.scss';
 
-const TextArea = forwardRef(({ title, disabled}, ref) => {
+const TextArea = forwardRef(({ title, disabled, initValue }, ref) => {
     const [value, setValue] = useState("");
+
+    useEffect(() => {
+        setValue(initValue)
+    }, [initValue])
 
     useImperativeHandle(ref,
         () => ({
@@ -33,9 +37,7 @@ const TextArea = forwardRef(({ title, disabled}, ref) => {
 TextArea.propTypes = {
     title: PropTypes.string.isRequired,
     disabled: PropTypes.bool.isRequired,
-    fieldId: PropTypes.string.isRequired,
-    value: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
+    initValue: PropTypes.string,
 };
 
 export default TextArea;

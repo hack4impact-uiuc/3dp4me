@@ -1,12 +1,12 @@
 /* eslint import/no-cycle: "off" */
 // Unfortunately, there has to be an import cycle, because this is by nature, recursive
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
-
+import PropTypes from 'prop-types';
+import React from 'react';
+import { useTranslations } from '../../hooks/useTranslations';
 import StepField from '../StepField/StepField';
 import './Fields.scss';
-import { useTranslations } from '../../hooks/useTranslations';
+
 
 const FieldGroup = ({
     isDisabled,
@@ -14,6 +14,7 @@ const FieldGroup = ({
     handleFileDownload,
     handleFileUpload,
     handleFileDelete,
+    initValue = '',
     stepKey = '',
     patientId = '',
     value = {},

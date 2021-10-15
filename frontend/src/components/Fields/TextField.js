@@ -40,11 +40,9 @@ const TextField = forwardRef(({
 TextField.propTypes = {
     displayName: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
-    fieldId: PropTypes.string,
     type: PropTypes.string,
     className: PropTypes.string,
-    onChange: PropTypes.func,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    initValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default TextField;

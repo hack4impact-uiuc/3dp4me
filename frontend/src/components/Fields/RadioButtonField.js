@@ -1,6 +1,6 @@
 import { FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
 import { FieldOptionsType } from '../../utils/custom-proptypes';
 
@@ -10,9 +10,14 @@ const RadioButtonField = forwardRef(({
     title,
     options,
     isDisabled,
+    initValue,
 }, ref) => {
     const selectedLang = useTranslations()[1];
     const [value, setValue] = useState("");
+
+    useEffect(() => {
+        setValue(initValue)
+    }, [initValue])
 
     useImperativeHandle(ref,
         () => ({
@@ -57,9 +62,8 @@ const RadioButtonField = forwardRef(({
 RadioButtonField.propTypes = {
     fieldId: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    value: PropTypes.string,
+    initValue: PropTypes.string,
     isDisabled: PropTypes.bool.isRequired,
-    onChange: PropTypes.func.isRequired,
     options: FieldOptionsType,
 };
 

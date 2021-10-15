@@ -13,12 +13,17 @@ const SignatureField = forwardRef(({
     displayName,
     isDisabled,
     documentURL,
+    initValue
 }, ref) => {
     const [value, setValue] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDocumentVisible, setIsDocumentVisible] = useState(false);
     const translations = useTranslations()[0];
     const sigCanvas = useRef({});
+
+    useEffect(() => {
+        setValue(initValue)
+    }, [initValue])
 
     useImperativeHandle(ref,
         () => ({
@@ -210,8 +215,7 @@ SignatureField.propTypes = {
         EN: PropTypes.string,
         AR: PropTypes.string,
     }).isRequired,
-    fieldId: PropTypes.string,
-    value: PropTypes.shape({
+    initValue: PropTypes.shape({
         signatureData: PropTypes.array,
         signatureCanvasWidth: PropTypes.number,
         signatureCanvasHeight: PropTypes.number,
