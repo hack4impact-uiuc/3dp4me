@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
 import Camera from 'react-html5-camera-photo';
-import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
-
-import 'react-image-gallery/styles/css/image-gallery.css';
 import { Modal } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 
+import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
 import { StyledButton } from '../StyledButton/StyledButton';
 import { useTranslations } from '../../hooks/useTranslations';
 import './PhotoField.scss';
-import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
-import PropTypes from 'prop-types';
+import 'react-html5-camera-photo/build/css/index.css';
+import 'react-image-gallery/styles/css/image-gallery.css';
 
 const PhotoField = ({
     value,
@@ -39,9 +38,24 @@ const PhotoField = ({
     }, [value]);
 
     const dataURItoBlob = (dataURI) => {
-        const byteString = atob(dataURI.split(',')[1]);
-        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
+        let byteString = '';
+        let mimeString = '';
+        // if (dataURI) {
+        //     byteString = atob(dataURI.split(',')[1]);
+        //     if (byteString) {
+        //         mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        //     }
+        // }
+        if (dataURI) {
+            const one = dataURI.split(',')[1];
+            byteString = atob(one);
+            if (byteString) {
+                const comma = dataURI.split(',')[0];
+                const colonOne = comma.split(':')[1];
+                const semicolon = colonOne.split(';')[0];
+                mimeString = semicolon;
+            }
+        }
         const ab = new ArrayBuffer(byteString.length);
         const ia = new Uint8Array(ab);
         for (let i = 0; i < byteString.length; i++) {
@@ -98,7 +112,7 @@ const PhotoField = ({
     return (
         <div>
             <h3>{displayName}</h3>
-            <StyledButton onClick={handleOpenCamera} primary={true}>
+            <StyledButton onClick={handleOpenCamera} primary>
                 {translations.components.button.photo}
             </StyledButton>
             <br />
@@ -121,10 +135,7 @@ const PhotoField = ({
                         <>
                             <br />
                             <div className="button-wrapper">
-                                <StyledButton
-                                    onClick={confirmUpload}
-                                    primary={true}
-                                >
+                                <StyledButton onClick={confirmUpload} primary>
                                     {
                                         translations.components.button.discard
                                             .confirmButton
