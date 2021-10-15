@@ -12,6 +12,7 @@ import 'react-html5-camera-photo/build/css/index.css';
 import 'react-image-gallery/styles/css/image-gallery.css';
 
 import { blobToDataURL } from '../../utils/photoManipulation';
+import { dataURItoBlob } from '../../utils/photoManipulation';
 
 const PhotoField = ({
     value,
@@ -38,28 +39,6 @@ const PhotoField = ({
             }),
         );
     }, [value]);
-
-    const dataURItoBlob = (dataURI) => {
-        let byteString = '';
-        let mimeString = '';
-        if (dataURI) {
-            const one = dataURI.split(',')[1];
-            byteString = atob(one);
-            if (byteString) {
-                const comma = dataURI.split(',')[0];
-                const colonOne = comma.split(':')[1];
-                const semicolon = colonOne.split(';')[0];
-                mimeString = semicolon;
-            }
-        }
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-
-        return new Blob([ab], { type: mimeString });
-    };
 
     const handleTakePhoto = (uri) => {
         setUri(uri);

@@ -39,3 +39,25 @@ export const photoToURI = async (photoObj, stepKey, fieldKey, patientId) => {
     const uri = await blobToDataURL(blob);
     return uri;
 };
+
+export const dataURItoBlob = (dataURI) => {
+    let byteString = '';
+    let mimeString = '';
+    if (dataURI) {
+        const one = dataURI.split(',')[1];
+        byteString = atob(one);
+        if (byteString) {
+            const comma = dataURI.split(',')[0];
+            const colonOne = comma.split(':')[1];
+            const semicolon = colonOne.split(';')[0];
+            mimeString = semicolon;
+        }
+    }
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mimeString });
+};
