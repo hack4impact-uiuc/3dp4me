@@ -1,26 +1,48 @@
 /* eslint import/no-cycle: "off" */
 // Unfortunately, there has to be an import cycle, because this is by nature, recursive
 import { Button } from '@material-ui/core';
+import _ from "lodash";
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
 import StepField from '../StepField/StepField';
 import './Fields.scss';
 
 
-const FieldGroup = ({
+const FieldGroup = forwardRef(({
     isDisabled,
-    handleSimpleUpdate,
     handleFileDownload,
     handleFileUpload,
     handleFileDelete,
-    initValue = '',
+    initValue = {},
     stepKey = '',
     patientId = '',
-    value = {},
     metadata = {},
-}) => {
+}, ref) => {
     const [translations, selectedLang] = useTranslations();
+    const [value, setValue] = useState("");
+    const [refs, setRefs] = useState({});
+
+    useEffect(() => {
+        setValue(initValue)
+    }, [initValue])
+
+    useImperativeHandle(ref,
+        () => ({
+            value: value,
+            refs: refs
+        }),
+    )
+
+    const addFieldRef = (fieldKey, i, ref) => {
+        setRefs(refs => {
+            if (!refs[i])
+                refs[i] = {}
+
+            refs[i][fieldKey] = ref
+            return refs;
+        })
+    }
 
     const getKeyBase = (index) => {
         return `${metadata.key}.${index}`;
@@ -32,10 +54,6 @@ const FieldGroup = ({
 
     const getNumFields = () => {
         return value?.length ?? 0;
-    };
-
-    const onSimpleUpdate = (k, v, i) => {
-        handleSimpleUpdate(getCompleteSubFieldKey(i, k), v);
     };
 
     const onFileUpload = (k, v, i) => {
@@ -51,7 +69,11 @@ const FieldGroup = ({
     };
 
     const onAddGroup = () => {
-        handleSimpleUpdate(getKeyBase(getNumFields()), {});
+        setValue(val => {
+            const copy = _.cloneDeep(val)
+            copy[getNumFields()] = {}
+            return copy;
+        });
     };
 
     const generateSingleGroup = (index) => {
@@ -62,14 +84,11 @@ const FieldGroup = ({
                         <StepField
                             displayName={field.displayName[selectedLang]}
                             metadata={field}
-                            value={value ? value[index][field.key] : null}
+                            initValue={value ? value[index][field.key] : null}
                             key={field.key}
                             isDisabled={isDisabled}
                             patientId={patientId}
                             stepKey={stepKey}
-                            handleSimpleUpdate={(k, v) =>
-                                onSimpleUpdate(k, v, index)
-                            }
                             handleFileDownload={(k, v) =>
                                 onFileDownload(k, v, index)
                             }
@@ -79,6 +98,7 @@ const FieldGroup = ({
                             handleFileDelete={(k, v) =>
                                 onFileDelete(k, v, index)
                             }
+                            ref={(ref) => addFieldRef(field.key, index, ref)}
                         />
                     </div>
                 </div>
@@ -109,15 +129,14 @@ const FieldGroup = ({
             </Button>
         </div>
     );
-};
+});
 
 FieldGroup.propTypes = {
-    handleSimpleUpdate: PropTypes.func.isRequired,
     handleFileUpload: PropTypes.func.isRequired,
     handleFileDownload: PropTypes.func.isRequired,
     handleFileDelete: PropTypes.func.isRequired,
     stepKey: PropTypes.string,
-    value: PropTypes.array,
+    initValue: PropTypes.array,
     patientId: PropTypes.string,
     metadata: PropTypes.object,
     isDisabled: PropTypes.bool.isRequired,

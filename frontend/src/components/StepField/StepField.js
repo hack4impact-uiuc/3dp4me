@@ -22,8 +22,7 @@ const StepField = ({
     displayName,
     stepKey,
     isDisabled = true,
-    initValue = '',
-    handleSimpleUpdate = () => {},
+    initValue,
     handleFileDownload = () => {},
     handleFileUpload = () => {},
     handleFileDelete = () => {},
@@ -90,7 +89,7 @@ const StepField = ({
                         handleDownload={handleFileDownload}
                         handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}
-                        ref={ref}
+                        // ref={ref}
                     />
                 );
 
@@ -117,7 +116,7 @@ const StepField = ({
                         stepKey={stepKey}
                         files={initValue}
                         title={displayName}
-                        ref={ref}
+                        // ref={ref}
                     />
                 );
             case FIELD_TYPES.DIVIDER:
@@ -135,12 +134,10 @@ const StepField = ({
                         displayName={displayName}
                         stepKey={stepKey}
                         isDisabled={isDisabled}
-                        handleSimpleUpdate={handleSimpleUpdate}
+                        initValue={initValue}
                         handleFileDownload={handleFileDownload}
                         handleFileUpload={handleFileUpload}
                         handleFileDelete={handleFileDelete}
-                        fieldId={metadata.key}
-                        // value={value}
                         ref={ref}
                     />
                 );
@@ -171,7 +168,6 @@ StepField.propTypes = {
     value: PropTypes.any,
     isDisabled: PropTypes.bool,
     patientId: PropTypes.string,
-    handleSimpleUpdate: PropTypes.func,
     handleFileDownload: PropTypes.func,
     handleFileUpload: PropTypes.func,
     handleFileDelete: PropTypes.func,

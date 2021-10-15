@@ -1,16 +1,16 @@
-import React from 'react';
-import './Files.scss';
 import { Button, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import CloseIcon from '@material-ui/icons/Close';
-
+import PropTypes from 'prop-types';
+import React from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
+import './Files.scss';
+
 
 const Files = ({
     title,
-    files,
+    files=[],
     fieldKey,
     handleDownload,
     handleDelete,
@@ -93,7 +93,7 @@ Files.propTypes = {
             filename: PropTypes.string.isRequired,
             uploadDate: PropTypes.instanceOf(Date).isRequired,
         }),
-    ).isRequired,
+    ),
 };
 
 export default Files;
