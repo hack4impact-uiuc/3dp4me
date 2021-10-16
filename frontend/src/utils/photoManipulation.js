@@ -44,13 +44,19 @@ export const dataURItoBlob = (dataURI) => {
     let byteString = '';
     let mimeString = '';
     if (dataURI) {
-        const one = dataURI.split(',')[1];
-        byteString = atob(one);
-        if (byteString) {
-            const comma = dataURI.split(',')[0];
-            const colonOne = comma.split(':')[1];
-            const semicolon = colonOne.split(';')[0];
-            mimeString = semicolon;
+        const splitByComma = dataURI.split(',');
+        if (splitByComma.length >= 2) {
+            const one = splitByComma[1];
+            byteString = atob(one);
+            if (byteString) {
+                const comma = dataURI.split(',')[0];
+                const splitByColon = comma.split(':');
+                if (splitByColon.length >= 2) {
+                    const colonOne = splitByColon[1];
+                    const semicolon = colonOne.split(';')[0];
+                    mimeString = semicolon;
+                }
+            }
         }
     }
     const ab = new ArrayBuffer(byteString.length);
