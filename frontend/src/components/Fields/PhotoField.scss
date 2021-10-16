@@ -1,0 +1,26 @@
+@import '../../styles/colors.scss';
+
+.take-photo-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .take-photo-modal-wrapper {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 8px;
+        min-width: 40%;
+        padding: 10px;
+
+        .button-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-left: 20px;
+        }
+    }
+}
+
+.image-gallery {
+    width: 30%;
+}

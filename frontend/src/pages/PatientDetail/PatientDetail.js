@@ -17,8 +17,10 @@ import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import { sortMetadata } from '../../utils/utils';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
-import { LANGUAGES } from '../../utils/constants';
+import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
+
+import { convertPhotosToURI } from '../../utils/photoManipulation';
 
 /**
  * The detail view for a patient. Shows their information
@@ -55,15 +57,42 @@ const PatientDetail = () => {
                 metaData = sortMetadata(metaData);
                 if (metaData.length > 0) setSelectedStep(metaData[0].key);
 
-                // Store it
+                // Patient data with photo uris
+                const updatedData = await updateMetaDataPhotos(metaData, data);
+
                 setStepMetaData(metaData);
-                setPatientData(data);
+                setPatientData(updatedData);
                 setLoading(false);
             });
         };
 
         getData();
     }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
+
+    const updateMetaDataPhotos = async (metaData, data) => {
+        const newPatientData = _.cloneDeep(data);
+        let photoPromises = [];
+
+        metaData.map(async (step) => {
+            photoPromises = photoPromises.concat(
+                step.fields.map(async (field) => {
+                    if (field.fieldType === FIELD_TYPES.PHOTO) {
+                        const photoData = newPatientData[step.key][field.key];
+                        const newPhotoData = await convertPhotosToURI(
+                            photoData,
+                            step.key,
+                            field.key,
+                            patientId,
+                        );
+
+                        newPatientData[step.key][field.key] = newPhotoData;
+                    }
+                }),
+            );
+        });
+        await Promise.all(photoPromises);
+        return newPatientData;
+    };
 
     /**
      * Called when the patient data for a step is saved
