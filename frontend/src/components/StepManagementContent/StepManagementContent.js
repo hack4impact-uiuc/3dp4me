@@ -13,13 +13,22 @@ const StepManagementContent = ({
     onEditField,
     stepMetadata,
     isEditing,
+    allRoles,
 }) => {
     const selectedLang = useTranslations()[1];
     const formatRoles = (array) => {
         if (!array?.length) return 'Admin';
 
-        // TODO: Display role names
-        return array;
+        const filteredRoles = allRoles.filter(
+            (role) => array.indexOf(role._id) >= 0,
+        );
+
+        const roleString = filteredRoles.reduce(
+            (prev, curr) => prev + ', ' + curr['Question']?.[selectedLang],
+            '',
+        );
+
+        return roleString.substring(2, roleString.length);
     };
 
     const renderBottomSection = (field) => {
@@ -145,6 +154,7 @@ StepManagementContent.propTypes = {
     onEditField: PropTypes.func.isRequired,
     stepMetadata: PropTypes.object,
     onUpPressed: PropTypes.func.isRequired,
+    allRoles: PropTypes.array.isRequired,
 };
 
 export default StepManagementContent;

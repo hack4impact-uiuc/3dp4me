@@ -75,6 +75,15 @@ export const getAllStepsMetadata = async () => {
     return res.data;
 };
 
+export const updateMultipleSteps = async (updatedSteps) => {
+    const requestString = '/metadata/steps';
+
+    const res = await instance.put(requestString, updatedSteps);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
 export const downloadBlobWithoutSaving = async (
     patientId,
     stepKey,

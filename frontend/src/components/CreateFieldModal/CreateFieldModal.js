@@ -68,6 +68,8 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
     };
 
     const generateChoices = () => {
+        //TODO: implement choices (options in state)
+
         const choices = [];
         for (let i = 0; i < numChoices; i++) {
             choices.push(
@@ -203,10 +205,24 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
 
         addNewField(newFieldData);
         onModalClose();
+        clearState();
     };
 
     const handleIsVisibleOnDashboard = (event) => {
         setIsVisibleOnDashboard(event.target.checked);
+    };
+
+    const clearState = () => {
+        setSelectedRoles([]);
+        setNumChoices(1);
+        setIsVisibleOnDashboard(false);
+        setDisplayName({ EN: '', AR: '' });
+        setOptions([]);
+    };
+
+    const onDiscard = () => {
+        clearState();
+        onModalClose();
     };
 
     return (
@@ -292,7 +308,7 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
                         {translations.components.swal.createField.buttons.save}
                     </Button>
                     <Button
-                        onClick={onModalClose}
+                        onClick={onDiscard}
                         className="discard-field-button"
                     >
                         {

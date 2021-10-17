@@ -71,7 +71,8 @@ const validateStep = (fieldSchema) => {
     for (let i = 0; i < fieldSchema.length; ++i) {
         // Check if we've already seen this fieldNumber or fieldKey
         const value = fieldSchema[i];
-        if (value.fieldNumber in fieldNumbers || value.key in fieldKeys) return false;
+        if (value.fieldNumber in fieldNumbers || value.key in fieldKeys)
+            return false;
 
         // Else, track number/key and continue
         fieldNumbers[value.fieldNumber] = true;

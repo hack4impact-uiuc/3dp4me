@@ -4,7 +4,11 @@ import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 
 import BottomBar from '../../components/BottomBar/BottomBar';
-import { getAllStepsMetadata, getAllRoles } from '../../api/api';
+import {
+    getAllStepsMetadata,
+    getAllRoles,
+    updateMultipleSteps,
+} from '../../api/api';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
@@ -17,6 +21,10 @@ import {
 import { resolveMixedObjPath } from '../../utils/object';
 import { useTranslations } from '../../hooks/useTranslations';
 import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
+import {
+    generateKeyWithCamelCase,
+    checkKeyCollision,
+} from '../../utils/metadataUtils';
 import { a } from 'aws-amplify';
 
 const expandedSidebarWidth = `${
@@ -39,7 +47,8 @@ const SectionTab = () => {
         setStepModalOpen(true);
     };
 
-    const onAddField = () => {
+    const onAddField = (stepKey) => {
+        setSelectedStep(stepKey);
         setFieldModalOpen(true);
     };
 
@@ -141,6 +150,7 @@ const SectionTab = () => {
                 onUpPressed={onCardUpPressed}
                 stepMetadata={selectedStepMetadata}
                 onEditField={onEditField}
+                allRoles={allRoles}
             />
         );
     }
@@ -149,12 +159,12 @@ const SectionTab = () => {
         errorWrap(async () => {
             const fetchData = async () => {
                 const res = await getAllStepsMetadata();
-                if (res.result.length > 0) {
-                    setSelectedStep(res.result[0].key);
-                }
+
                 const sortedMetadata = sortMetadata(res.result);
 
-                console.log(sortedMetadata);
+                if (sortedMetadata.length > 0) {
+                    setSelectedStep(sortedMetadata[0].key);
+                }
 
                 setStepMetadata(sortedMetadata);
             };
@@ -199,32 +209,42 @@ const SectionTab = () => {
     };
 
     const addNewField = (newFieldData) => {
-        //displayName
-        //fieldNumber
-        //fieldType
-        //isVisibleOnDashboard
-        //key
-        //options
-        //subFields
-        //writableGroups
-        //readableGroups
+        let updatedMetadata;
 
-        /**
-         * TODO
-         * 1. Find the correct step
-         * 2. Add the newFieldData to the fields
-         *      Add a fieldNumber
-         * What about _id and key?
-         * What is a sub field?
-         */
+        errorWrap(
+            async () => {
+                const stepIndex = stepMetadata.findIndex((element) => {
+                    return element.key === selectedStep;
+                });
 
-        //BUG: when user clicks plus on step, it should make sure that is the selected step
-        //When you click edit step again, it closes edit
+                updatedMetadata = _.cloneDeep(stepMetadata);
 
-        //BUG: on discard clear state
+                const numFields = updatedMetadata[stepIndex]['fields'].length;
+                newFieldData['fieldNumber'] = numFields;
 
-        console.log(selectedStep);
-        console.log(newFieldData);
+                let newKey = generateKeyWithCamelCase(
+                    newFieldData['displayName']['EN'],
+                );
+
+                const keyMap = updatedMetadata[stepIndex]['fields'].map(
+                    (field) => field.key,
+                );
+                let keyIncrement = 1;
+
+                while (checkKeyCollision(newKey, keyMap)) {
+                    newKey += keyIncrement;
+                    keyIncrement += 1;
+                }
+
+                newFieldData['key'] = newKey;
+                updatedMetadata[stepIndex]['fields'].push(newFieldData);
+
+                await updateMultipleSteps([updatedMetadata[stepIndex]]);
+            },
+            () => {
+                setStepMetadata(updatedMetadata);
+            },
+        );
     };
 
     return (
