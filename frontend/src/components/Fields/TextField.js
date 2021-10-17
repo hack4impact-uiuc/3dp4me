@@ -19,7 +19,7 @@ const TextField = forwardRef(({
 
     useImperativeHandle(ref,
         () => ({
-            value: value
+            value
         }),
     )
 
@@ -44,6 +44,7 @@ TextField.propTypes = {
     type: PropTypes.string,
     className: PropTypes.string,
     initValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    onChange: PropTypes.func,
 };
 
 export default TextField;
