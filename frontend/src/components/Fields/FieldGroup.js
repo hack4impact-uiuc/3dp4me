@@ -1,7 +1,6 @@
 /* eslint import/no-cycle: "off" */
 // Unfortunately, there has to be an import cycle, because this is by nature, recursive
 import { Button } from '@material-ui/core';
-import _ from "lodash";
 import PropTypes from 'prop-types';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -14,29 +13,42 @@ const FieldGroup = forwardRef(({
     handleFileDownload,
     handleFileUpload,
     handleFileDelete,
-    initValue = {},
+    initValue = [],
     stepKey = '',
     patientId = '',
     metadata = {},
 }, ref) => {
     const [translations, selectedLang] = useTranslations();
-    const [value, setValue] = useState("");
-    const [refs, setRefs] = useState({});
+    const [value, setValue] = useState([]);
+    const [refs, setRefs] = useState([]);
 
     useEffect(() => {
         setValue(initValue)
     }, [initValue])
 
     useImperativeHandle(ref,
-        () => ({
-            value: refs
-        }),
+        () => {
+            const data = {};
+            data.value = []
+
+            for (const [key, ref] of Object.entries(refs)) {
+                const item = {}
+
+                for (const [k, v] of Object.entries(ref)) {
+                   item[k]  = v.value
+                }
+
+                data.value.push(item)
+            }
+
+            return data;
+        },
     )
 
     const addFieldRef = (fieldKey, i, ref) => {
         setRefs(refs => {
             if (!refs[i])
-                refs[i] = {}
+                refs.push({})
 
             refs[i][fieldKey] = ref
             return refs;
@@ -69,9 +81,7 @@ const FieldGroup = forwardRef(({
 
     const onAddGroup = () => {
         setValue(val => {
-            const copy = _.cloneDeep(val)
-            copy[getNumFields()] = {}
-            return copy;
+            return val.concat({})
         });
     };
 

@@ -90,10 +90,20 @@ const StepContent = ({
         });
     };
 
-    const saveData = () => {
-        // TODO: REMOVE THIS
-        console.log(fieldRefs)
+    const getFormData = () => {
+        const data = {};
 
+        for (const [key, ref] of Object.entries(fieldRefs)) {
+            data[key] = ref.value
+        }
+        // TODO: Last edited, lastEditedBy
+
+        return data;
+    }
+
+    const saveData = () => {
+        const updatedData = getFormData();
+        console.log(updatedData)
 
 
         // onDataSaved(metaData.key, updatedData);
