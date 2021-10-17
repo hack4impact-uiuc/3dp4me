@@ -94,6 +94,8 @@ const StepContent = ({
         // TODO: REMOVE THIS
         console.log(fieldRefs)
 
+
+
         // onDataSaved(metaData.key, updatedData);
         // setEdit(false);
         // swal(

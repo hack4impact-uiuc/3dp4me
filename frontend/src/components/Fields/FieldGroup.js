@@ -29,8 +29,7 @@ const FieldGroup = forwardRef(({
 
     useImperativeHandle(ref,
         () => ({
-            value: value,
-            refs: refs
+            value: refs
         }),
     )
 
