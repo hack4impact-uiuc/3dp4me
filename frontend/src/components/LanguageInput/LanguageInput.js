@@ -69,7 +69,7 @@ const LanguageInput = ({
                     fullWidth
                     variant="outlined"
                     InputProps={{ className: 'lang-input' }}
-                    value={fieldValues['EN']}
+                    value={fieldValues.EN}
                     onChange={handleEnglishFieldChange}
                 />
                 <TextField
@@ -78,7 +78,7 @@ const LanguageInput = ({
                     fullWidth
                     variant="outlined"
                     InputProps={{ className: 'lang-input' }}
-                    value={fieldValues['AR']}
+                    value={fieldValues.AR}
                     onChange={handleArabicFieldChange}
                 />
             </div>

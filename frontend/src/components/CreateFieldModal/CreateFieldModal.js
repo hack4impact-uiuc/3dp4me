@@ -68,7 +68,7 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
     };
 
     const generateChoices = () => {
-        //TODO: implement choices (options in state)
+        // TODO: implement choices (options in state)
 
         const choices = [];
         for (let i = 0; i < numChoices; i++) {
@@ -180,16 +180,16 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
     };
 
     const generateFieldDropdownOptions = () => {
-        const options = [];
+        const fieldDropdownOptions = [];
         Object.values(FIELD_TYPES).forEach((value) => {
-            options.push(
+            fieldDropdownOptions.push(
                 <option value={value} className="create-field-option">
                     {value}
                 </option>,
             );
         });
 
-        return options;
+        return fieldDropdownOptions;
     };
 
     const saveNewField = () => {

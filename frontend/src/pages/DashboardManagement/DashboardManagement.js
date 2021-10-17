@@ -25,7 +25,6 @@ import {
     generateKeyWithCamelCase,
     checkKeyCollision,
 } from '../../utils/metadataUtils';
-import { a } from 'aws-amplify';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -209,6 +208,7 @@ const SectionTab = () => {
     };
 
     const addNewField = (newFieldData) => {
+        const updatedNewField = _.cloneDeep(newFieldData);
         let updatedMetadata;
 
         errorWrap(
@@ -219,14 +219,14 @@ const SectionTab = () => {
 
                 updatedMetadata = _.cloneDeep(stepMetadata);
 
-                const numFields = updatedMetadata[stepIndex]['fields'].length;
-                newFieldData['fieldNumber'] = numFields;
+                const numFields = updatedMetadata[stepIndex].fields.length;
+                updatedNewField.fieldNumber = numFields;
 
                 let newKey = generateKeyWithCamelCase(
-                    newFieldData['displayName']['EN'],
+                    updatedNewField.displayName.EN,
                 );
 
-                const keyMap = updatedMetadata[stepIndex]['fields'].map(
+                const keyMap = updatedMetadata[stepIndex].fields.map(
                     (field) => field.key,
                 );
                 let keyIncrement = 1;
@@ -236,8 +236,8 @@ const SectionTab = () => {
                     keyIncrement += 1;
                 }
 
-                newFieldData['key'] = newKey;
-                updatedMetadata[stepIndex]['fields'].push(newFieldData);
+                updatedNewField.key = newKey;
+                updatedMetadata[stepIndex].fields.push(updatedNewField);
 
                 await updateMultipleSteps([updatedMetadata[stepIndex]]);
             },

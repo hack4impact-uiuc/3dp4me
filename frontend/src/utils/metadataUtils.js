@@ -7,11 +7,11 @@ import { camelCase } from 'lodash';
  */
 
 const randomAlphanumeric = (length) => {
-    var result = '';
-    var characters =
+    let result = '';
+    const characters =
         'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
         result += characters.charAt(
             Math.floor(Math.random() * charactersLength),
         );
@@ -28,6 +28,7 @@ export const generateKeyWithCamelCase = (input) => {
 };
 
 export const checkKeyCollision = (newKey, otherKeys) => {
-    for (const key of otherKeys) if (key === newKey) return true;
+    for (let i = 0; i < otherKeys.length; i++)
+        if (otherKeys[i] === newKey) return true;
     return false;
 };

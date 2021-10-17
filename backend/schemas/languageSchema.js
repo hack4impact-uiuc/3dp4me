@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const { ERR_LANGUAGE_VALIDATION_FAILED } = require('../utils/constants');
 
 const validateLanguage = (languageScheme) => languageScheme !== '';
