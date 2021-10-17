@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
 import {
-    FormControlLabel,
-    Radio,
-    RadioGroup,
-    Button,
-    Modal,
-    TextField,
+    Button, FormControlLabel, Modal, Radio,
+    RadioGroup, TextField
 } from '@material-ui/core';
-import _ from 'lodash';
 import CloseIcon from '@material-ui/icons/Close';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
-
-import './ManagePatientModal.scss';
-import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
+import React, { useState } from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
+import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
+import './ManagePatientModal.scss';
+
 
 const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
     const [translations, selectedLang] = useTranslations();
@@ -56,7 +52,7 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                         {translations.components.swal.managePatient.firstName}
                     </p>
                     <TextField
-                        value={updatedPatientData?.firstName}
+                        initValue={updatedPatientData?.firstName}
                         name="firstName"
                         onChange={onFieldUpdate}
                     />
@@ -64,7 +60,7 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                         {translations.components.swal.managePatient.fatherName}
                     </p>
                     <TextField
-                        value={updatedPatientData?.fathersName}
+                        initValue={updatedPatientData?.fathersName}
                         name="fathersName"
                         onChange={onFieldUpdate}
                     />
@@ -75,7 +71,7 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                         }
                     </p>
                     <TextField
-                        value={updatedPatientData?.grandfathersName}
+                        initValue={updatedPatientData?.grandfathersName}
                         name="grandfathersName"
                         onChange={onFieldUpdate}
                     />
@@ -83,7 +79,7 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                         {translations.components.swal.managePatient.familyName}
                     </p>
                     <TextField
-                        value={updatedPatientData?.familyName}
+                        initValue={updatedPatientData?.familyName}
                         name="familyName"
                         onChange={onFieldUpdate}
                     />
@@ -152,7 +148,7 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                 </div>
                 <p>{translations.components.swal.managePatient.orderId}</p>
                 <TextField
-                    value={updatedPatientData?.orderId}
+                    initValue={updatedPatientData?.orderId}
                     name="orderId"
                     onChange={onFieldUpdate}
                 />

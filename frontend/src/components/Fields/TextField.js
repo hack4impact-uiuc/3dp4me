@@ -5,6 +5,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'rea
 const TextField = forwardRef(({
     displayName,
     isDisabled,
+    onChange = () => {},
     initValue = '',
     type = '',
     className = '',
@@ -30,7 +31,7 @@ const TextField = forwardRef(({
                 disabled={isDisabled}
                 className={`${inputClassName} ${className}`}
                 variant="outlined"
-                onChange={e => setValue(e.target.value)}
+                onChange={e => {setValue(e.target.value); onChange(e.target.value)}}
                 value={value}
             />
         </div>

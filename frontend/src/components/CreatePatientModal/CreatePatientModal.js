@@ -1,9 +1,9 @@
 import { Button, Modal, TextField } from '@material-ui/core';
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
+import React, { useState } from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
 import './CreatePatientModal.scss';
+
 
 const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
     const translations = useTranslations()[0];
@@ -37,7 +37,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
                         {translations.components.swal.createPatient.firstName}
                     </span>
                     <TextField
-                        value={firstName}
+                        initValue={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         className="create-patient-text-field"
                         size="small"
@@ -49,7 +49,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
                     </span>
                     <div className="create-patient-row">
                         <TextField
-                            value={fathersName}
+                            initValue={fathersName}
                             onChange={(e) => setFathersName(e.target.value)}
                             className="create-patient-text-field"
                             size="small"
@@ -57,7 +57,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
                             fullWidth
                         />
                         <TextField
-                            value={grandfathersName}
+                            initValue={grandfathersName}
                             onChange={(e) =>
                                 setGrandfathersName(e.target.value)
                             }
@@ -71,7 +71,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
                         {translations.components.swal.createPatient.lastName}
                     </span>
                     <TextField
-                        value={familyName}
+                        initValue={familyName}
                         onChange={(e) => setFamilyName(e.target.value)}
                         className="create-patient-text-field"
                         size="small"

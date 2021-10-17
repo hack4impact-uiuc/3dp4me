@@ -103,14 +103,14 @@ const EditRoleModal = ({
                     displayName={translations.accountManagement.username}
                     type="text"
                     isDisabled
-                    value={userData?.userName}
+                    initValue={userData?.userName}
                 />
                 <TextField
                     className="text-field"
                     displayName={translations.accountManagement.email}
                     type="text"
                     isDisabled
-                    value={userData?.userEmail}
+                    initValue={userData?.userEmail}
                 />
                 <MultiSelectField
                     title="Roles"

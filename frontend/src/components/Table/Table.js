@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import MuiAlert from '@material-ui/lab/Alert';
 import { Button, Snackbar, TextField } from '@material-ui/core';
-
+import MuiAlert from '@material-ui/lab/Alert';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import search from '../../assets/search.svg';
-import SimpleTable from '../SimpleTable/SimpleTable';
-import { TableHeaderType, TableRowType } from '../../utils/custom-proptypes';
-import { LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
+import { LANGUAGES } from '../../utils/constants';
+import { TableHeaderType, TableRowType } from '../../utils/custom-proptypes';
+import SimpleTable from '../SimpleTable/SimpleTable';
+
 
 const CLOSE_REASON_CLICKAWAY = 'clickaway';
 
@@ -94,7 +94,7 @@ const Table = ({
                         }}
                         className="patient-list-search-field"
                         onChange={handleSearch}
-                        value={searchQuery}
+                        initValue={searchQuery}
                         size="small"
                         variant="outlined"
                         placeholder={translations.components.search.placeholder}
