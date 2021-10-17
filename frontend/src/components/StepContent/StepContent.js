@@ -39,11 +39,7 @@ const StepContent = ({
     }, [stepData]);
 
     const handleSimpleUpdate = (fieldKey, value) => {
-        setUpdatedData((data) => {
-            const dataCopy = _.cloneDeep(data);
-            _.set(dataCopy, fieldKey, value);
-            return dataCopy;
-        });
+        mergeIntoUpdatedData({[fieldKey]: value})
     };
 
     const handleFileDelete = async (fieldKey, file) => {
@@ -90,29 +86,32 @@ const StepContent = ({
         });
     };
 
+    const mergeIntoUpdatedData = (data) => {
+        const formData = getFormData();
+        const stepData = _.cloneDeep(updatedData)
+        _.merge(stepData, formData, data)
+        setUpdatedData(stepData)
+        return stepData
+    }
+
     const getFormData = () => {
         const data = {};
 
-        for (const [key, ref] of Object.entries(fieldRefs)) {
+        for (const [key, ref] of Object.entries(fieldRefs))
             data[key] = ref.value
-        }
-        // TODO: Last edited, lastEditedBy
 
         return data;
     }
 
     const saveData = () => {
-        const updatedData = getFormData();
-        console.log(updatedData)
-
-
-        // onDataSaved(metaData.key, updatedData);
-        // setEdit(false);
-        // swal(
-        //     translations.components.bottombar.savedMessage.patientInfo,
-        //     '',
-        //     'success',
-        // );
+        const stepData = mergeIntoUpdatedData({})
+        onDataSaved(metaData.key, stepData);
+        setEdit(false);
+        swal(
+            translations.components.bottombar.savedMessage.patientInfo,
+            '',
+            'success',
+        );
     };
 
     const handleQuestionFormatSelect = (e) => {

@@ -85,7 +85,7 @@ const StepField = ({
                     <Files
                         title={displayName}
                         fieldKey={metadata.key}
-                        initValue={initValue}
+                        files={initValue}
                         handleDownload={handleFileDownload}
                         handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}

@@ -35,7 +35,7 @@ const FieldGroup = forwardRef(({
                 const item = {}
 
                 for (const [k, v] of Object.entries(ref)) {
-                   item[k]  = v.value
+                   item[k]  = v?.value
                 }
 
                 data.value.push(item)
