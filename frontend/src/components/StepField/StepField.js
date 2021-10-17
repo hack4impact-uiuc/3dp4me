@@ -9,6 +9,7 @@ import AudioRecorder from '../AudioRecorder/AudioRecorder';
 import DateField from '../Fields/DateField';
 import FieldGroup from '../Fields/FieldGroup';
 import PhoneField from '../Fields/PhoneField';
+import PhotoField from '../Fields/PhotoField';
 import RadioButtonField from '../Fields/RadioButtonField';
 import SignatureField from '../Fields/SignatureField';
 import TextArea from '../Fields/TextArea';
@@ -156,6 +157,18 @@ const StepField = ({
                 );
             case FIELD_TYPES.HEADER:
                 return <h3>{displayName}</h3>;
+            case FIELD_TYPES.PHOTO:
+                return (
+                    <PhotoField
+                        patientId={patientId}
+                        stepKey={stepKey}
+                        value={value}
+                        displayName={displayName}
+                        fieldId={metadata.key}
+                        handleFileUpload={handleFileUpload}
+                        handleSimpleUpdate={handleSimpleUpdate}
+                    />
+                );
             default:
                 return null;
         }

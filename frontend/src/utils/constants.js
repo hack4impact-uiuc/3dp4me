@@ -198,3 +198,5 @@ export const SIGNATURE_STATUS = {
 export const PATIENT_KEY_STATUS = 'status';
 
 export const PEOPLE_PER_PAGE = 14;
+
+export const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 16;
