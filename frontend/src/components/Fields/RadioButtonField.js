@@ -10,7 +10,7 @@ const RadioButtonField = forwardRef(({
     title,
     options,
     isDisabled,
-    initValue,
+    initValue="",
 }, ref) => {
     const selectedLang = useTranslations()[1];
     const [value, setValue] = useState("");

@@ -2,24 +2,21 @@
 /* eslint-disable no-await-in-loop */
 // More readable without this
 /* eslint-disable no-lonely-if */
-import React, { useEffect, useState } from 'react';
-import _ from 'lodash';
 import {
-    Modal,
-    FormControl,
-    InputLabel,
-    Select,
-    Button,
+    Button, FormControl,
+    InputLabel, Modal, Select
 } from '@material-ui/core';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
-
+import React, { useEffect, useState } from 'react';
+import { addUserRole, removeUserRole, setUserAccess } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
-import TextField from '../Fields/TextField';
-import MultiSelectField from '../Fields/MultiSelectField';
-import { ACCESS_LEVELS } from '../../utils/constants';
-import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
-import { removeUserRole, setUserAccess, addUserRole } from '../../api/api';
+import { ACCESS_LEVELS } from '../../utils/constants';
+import MultiSelectField from '../Fields/MultiSelectField';
+import TextField from '../Fields/TextField';
+import './EditRoleModal.scss';
+
 
 const EditRoleModal = ({
     isOpen,
@@ -119,7 +116,7 @@ const EditRoleModal = ({
                     title="Roles"
                     langKey={selectedLang}
                     options={allRoles}
-                    selectedOptions={userData?.roles}
+                    initValue={userData?.roles}
                     onChange={onRolesChange}
                     isDisabled={false}
                 />

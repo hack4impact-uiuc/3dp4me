@@ -13,9 +13,9 @@ const MultiSelectField = forwardRef(({
     title,
     langKey,
     options,
-    selectedOptions,
     fieldId = '',
     initValue,
+    onChange = () => {},
     isDisabled = true,
 }, ref) => {
     const [value, setValue] = useState("");
@@ -34,19 +34,20 @@ const MultiSelectField = forwardRef(({
         let updatedOptions = [];
 
         if (!e.target.checked) {
-            updatedOptions = selectedOptions.filter(
+            updatedOptions = value.filter(
                 (option) => option.toString() !== e.target.name.toString(),
             );
         } else {
-            updatedOptions = selectedOptions.concat([e.target.name.toString()]);
+            updatedOptions = value.concat([e.target.name.toString()]);
         }
 
         setValue(updatedOptions);
+        onChange(fieldId, updatedOptions)
     };
 
     const generateQuestions = () => {
         return options.map((option) => {
-            const isChecked = selectedOptions.includes(option._id.toString());
+            const isChecked = value.includes(option._id.toString());
             if (option.IsHidden && !isChecked) return null;
 
             return (
@@ -82,7 +83,7 @@ MultiSelectField.propTypes = {
     langKey: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool,
     onChange: PropTypes.func,
-    selectedOptions: PropTypes.arrayOf(PropTypes.string),
+    value: PropTypes.arrayOf(PropTypes.string),
     options: FieldOptionsType,
 };
 

@@ -1,21 +1,17 @@
-import './CreateFieldModal.scss';
-import React, { useState } from 'react';
 import {
     Button,
-    Checkbox,
-    Modal,
+    Checkbox, FormControl, InputBase, InputLabel, Modal,
     NativeSelect,
-    withStyles,
-    InputBase,
-    FormControl,
-    InputLabel,
+    withStyles
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
-
-import MultiSelectField from '../Fields/MultiSelectField';
-import { FIELD_TYPES } from '../../utils/constants';
-import LanguageInput from '../LanguageInput/LanguageInput';
+import React, { useState } from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
+import { FIELD_TYPES } from '../../utils/constants';
+import MultiSelectField from '../Fields/MultiSelectField';
+import LanguageInput from '../LanguageInput/LanguageInput';
+import './CreateFieldModal.scss';
+
 
 const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
     const [translations, selectedLang] = useTranslations();
@@ -200,7 +196,7 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
                             langKey={selectedLang}
                             options={allRoles}
                             selectedOptions={selectedRoles}
-                            onChange={onRolesChange}
+                            // onChange={onRolesChange}
                             isDisabled={false}
                         />
                     </div>
