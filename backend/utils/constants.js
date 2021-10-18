@@ -18,6 +18,7 @@ module.exports.FIELDS = {
     DIVIDER: 'Divider',
     HEADER: 'Header',
     RADIO_BUTTON: 'RadioButton',
+    DROPDOWN: 'Dropdown',
     MULTI_SELECT: 'MultiSelect',
     AUDIO: 'Audio',
     SIGNATURE: 'Signature',

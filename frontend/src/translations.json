@@ -152,8 +152,10 @@
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard"
-                    }
+                        "discard": "Discard",
+                        "addChoice": "Add Choice"
+                    },
+                    "option": "Option"
                 }
             }
         },
@@ -323,8 +325,10 @@
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard"
-                    }
+                        "discard": "Discard",
+                        "addChoice": "Add Choice"
+                    },
+                    "option": "Option"
                 }
             }
         },

@@ -102,6 +102,8 @@ module.exports.generateFieldSchema = (field) => {
         return getStringSchema();
     case FIELDS.RADIO_BUTTON:
         return getRadioButtonSchema(field);
+    case FIELDS.DROPDOWN:
+        return getDropdownSchema(field);
     case FIELDS.FILE:
         return getFileSchema();
     case FIELDS.PHOTO:
@@ -135,6 +137,15 @@ const getDateSchema = () => ({
 });
 
 const getRadioButtonSchema = (fieldMetadata) => {
+    if (!fieldMetadata?.options?.length) throw new Error('Radio button must have options');
+
+    return {
+        type: String,
+        default: '',
+    };
+};
+
+const getDropdownSchema = (fieldMetadata) => {
     if (!fieldMetadata?.options?.length) throw new Error('Radio button must have options');
 
     return {

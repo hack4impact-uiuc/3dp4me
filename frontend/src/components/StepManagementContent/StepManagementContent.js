@@ -24,7 +24,7 @@ const StepManagementContent = ({
         );
 
         const roleString = filteredRoles.reduce(
-            (prev, curr) => `${prev  }, ${  curr.Question?.[selectedLang]}`,
+            (prev, curr) => `${prev}, ${curr.Question?.[selectedLang]}`,
             '',
         );
 

@@ -13,6 +13,8 @@
         border-radius: 8px;
         min-width: 40%;
         padding: 10px;
+        max-height: 80vh;
+        overflow-y: scroll;
 
         .create-field-title1 {
             font-weight: 700;
@@ -71,6 +73,24 @@
             height: 38px;
             width: auto;
             font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+            &:hover {
+                background-color: $buttonHighlight;
+            }
+        }
+
+        .add-option-button {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            background-color: $button;
+            color: white;
+            padding: 0 20px 0 20px;
+            height: 30px;
+            width: auto;
+            font-size: 10px;
             font-weight: bold;
             transition: all 0.2s;
             border-radius: 2px;

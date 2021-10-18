@@ -11,6 +11,7 @@ import {
     InputLabel,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import MultiSelectField from '../Fields/MultiSelectField';
 import { FIELD_TYPES } from '../../utils/constants';
@@ -20,7 +21,6 @@ import { useTranslations } from '../../hooks/useTranslations';
 const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
     const [translations, selectedLang] = useTranslations();
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
-    const [numChoices, setNumChoices] = useState(1);
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
@@ -64,36 +64,73 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
     };
 
     const incrementChoices = () => {
-        setNumChoices(numChoices + 1);
+        const updatedOptions = _.cloneDeep(options);
+        updatedOptions.push({ EN: '', AR: '' });
+        setOptions(updatedOptions);
+    };
+
+    const updateChoiceEnglishField = (index, val) => {
+        const updatedOptions = _.cloneDeep(options);
+        updatedOptions[index].EN = val;
+        setOptions(updatedOptions);
+    };
+
+    const updateChoiceArabicField = (index, val) => {
+        const updatedOptions = _.cloneDeep(options);
+        updatedOptions[index].AR = val;
+        setOptions(updatedOptions);
+    };
+
+    const moveChoiceDown = (index) => {
+        if (index < options.length - 1) {
+            const updatedOptions = _.cloneDeep(options);
+            const removedChoice = updatedOptions.splice(index, 1)[0];
+            updatedOptions.splice(index + 1, 0, removedChoice);
+            setOptions(updatedOptions);
+        }
+    };
+
+    const moveChoiceUp = (index) => {
+        if (index > 0) {
+            const updatedOptions = _.cloneDeep(options);
+            const removedChoice = updatedOptions.splice(index, 1)[0];
+            updatedOptions.splice(index - 1, 0, removedChoice);
+            setOptions(updatedOptions);
+        }
+    };
+
+    const deleteChoice = (index) => {
+        const updatedOptions = _.cloneDeep(options);
+        updatedOptions.splice(index, 1);
+        setOptions(updatedOptions);
     };
 
     const generateChoices = () => {
-        // TODO: implement choices (options in state)
-
         const choices = [];
-        for (let i = 0; i < numChoices; i++) {
+        for (let i = 0; i < options.length; i++) {
             choices.push(
                 <div>
                     <span>
-                        {translations.components.swal.createField.arabicChoice +
-                            (i + 1)}
+                        {`${translations.components.swal.createField.option} ${
+                            i + 1
+                        }`}
                     </span>
                     <LanguageInput
-                        fieldValues={{ EN: '', AR: '' }}
-                        handleEnglishFieldChange={() => {
-                            /* TODO: */
+                        fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
+                        handleEnglishFieldChange={(event) => {
+                            updateChoiceEnglishField(i, event.target.value);
                         }}
-                        handleArabicFieldChange={() => {
-                            /* TODO: */
+                        handleArabicFieldChange={(event) => {
+                            updateChoiceArabicField(i, event.target.value);
                         }}
                         onDelete={() => {
-                            /* TODO: */
+                            deleteChoice(i);
                         }}
                         onUpPressed={() => {
-                            /* TODO: */
+                            moveChoiceUp(i);
                         }}
                         onDownPressed={() => {
-                            /* TODO: */
+                            moveChoiceDown(i);
                         }}
                     />
                 </div>,
@@ -139,13 +176,16 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
                             handleEnglishFieldChange={updateEnglishDisplayName}
                             handleArabicFieldChange={updateArabicDislayName}
                         />
-                        {generateChoices()}
-                        <Button onClick={incrementChoices}>
+                        <Button
+                            className="add-option-button"
+                            onClick={incrementChoices}
+                        >
                             {
                                 translations.components.swal.createField.buttons
                                     .addChoice
                             }
                         </Button>
+                        {generateChoices()}
                     </div>
                 );
             case FIELD_TYPES.DIVIDER:
@@ -193,11 +233,15 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
     };
 
     const saveNewField = () => {
+        const formattedOptions = options.map((option, index) => {
+            return { Index: index, Question: option };
+        });
+
         const newFieldData = {
             fieldType,
             isVisibleOnDashboard,
             displayName,
-            options,
+            options: formattedOptions,
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
             subFields: [],
@@ -214,10 +258,10 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
 
     const clearState = () => {
         setSelectedRoles([]);
-        setNumChoices(1);
         setIsVisibleOnDashboard(false);
         setDisplayName({ EN: '', AR: '' });
         setOptions([]);
+        setFieldType(FIELD_TYPES.STRING);
     };
 
     const onDiscard = () => {
