@@ -196,7 +196,7 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
                             langKey={selectedLang}
                             options={allRoles}
                             selectedOptions={selectedRoles}
-                            // onChange={onRolesChange}
+                            onChange={onRolesChange}
                             isDisabled={false}
                         />
                     </div>

@@ -5,49 +5,35 @@ import {
     FormGroup
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import React from 'react';
 import { FieldOptionsType } from '../../utils/custom-proptypes';
 
-
-const MultiSelectField = forwardRef(({
+const MultiSelectField = ({
     title,
     langKey,
     options,
+    selectedOptions,
     fieldId = '',
-    initValue,
-    onChange = () => {},
     isDisabled = true,
-}, ref) => {
-    const [value, setValue] = useState("");
-
-    useEffect(() => {
-        setValue(initValue)
-    }, [initValue])
-
-    useImperativeHandle(ref,
-        () => ({
-            value: value
-        }),
-    )
-
+    onChange = () => {},
+}) => {
     const onSelectionChange = (e) => {
         let updatedOptions = [];
 
         if (!e.target.checked) {
-            updatedOptions = value.filter(
+            updatedOptions = selectedOptions.filter(
                 (option) => option.toString() !== e.target.name.toString(),
             );
         } else {
-            updatedOptions = value.concat([e.target.name.toString()]);
+            updatedOptions = selectedOptions.concat([e.target.name.toString()]);
         }
 
-        setValue(updatedOptions);
-        onChange(fieldId, updatedOptions)
+        onChange(fieldId, updatedOptions);
     };
 
     const generateQuestions = () => {
         return options.map((option) => {
-            const isChecked = value.includes(option._id.toString());
+            const isChecked = selectedOptions.includes(option._id.toString());
             if (option.IsHidden && !isChecked) return null;
 
             return (
@@ -75,7 +61,7 @@ const MultiSelectField = forwardRef(({
             <FormGroup name={fieldId}>{generateQuestions()}</FormGroup>
         </FormControl>
     );
-});
+};
 
 MultiSelectField.propTypes = {
     fieldId: PropTypes.string,
@@ -83,7 +69,7 @@ MultiSelectField.propTypes = {
     langKey: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool,
     onChange: PropTypes.func,
-    value: PropTypes.arrayOf(PropTypes.string).isRequired,
+    selectedOptions: PropTypes.arrayOf(PropTypes.string),
     options: FieldOptionsType,
 };
 
