@@ -162,11 +162,10 @@ const StepField = ({
                     <PhotoField
                         patientId={patientId}
                         stepKey={stepKey}
-                        value={value}
+                        initValue={initValue}
                         displayName={displayName}
                         fieldId={metadata.key}
                         handleFileUpload={handleFileUpload}
-                        handleSimpleUpdate={handleSimpleUpdate}
                     />
                 );
             default:

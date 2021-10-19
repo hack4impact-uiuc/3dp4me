@@ -1,30 +1,32 @@
-import Camera from 'react-html5-camera-photo';
-import ImageGallery from 'react-image-gallery';
 import { Modal } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
-
-import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
-import { StyledButton } from '../StyledButton/StyledButton';
-import { useTranslations } from '../../hooks/useTranslations';
-import './PhotoField.scss';
+import React, { useEffect, useState } from 'react';
+import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
+import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
-
+import { useTranslations } from '../../hooks/useTranslations';
+import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
 import { blobToDataURL, dataURItoBlob } from '../../utils/photoManipulation';
+import { StyledButton } from '../StyledButton/StyledButton';
+import './PhotoField.scss';
 
 const PhotoField = ({
-    value = [],
+    initValue = [],
     displayName,
     fieldId,
-    handleSimpleUpdate,
     handleFileUpload,
 }) => {
+    const [value, setValue] = useState([])
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
     const [dataUri, setUri] = useState('');
     const translations = useTranslations()[0];
+
+    useEffect(() => {
+        setValue(initValue)
+    }, [initValue])
 
     useEffect(() => {
         setImages(
@@ -54,7 +56,7 @@ const PhotoField = ({
         const photoTaken = { uri: dUri };
         const newImages = value;
         newImages.push(photoTaken);
-        handleSimpleUpdate(fieldId, newImages);
+        setValue(newImages);
         resetUpload();
     };
 

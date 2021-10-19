@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import './PatientDetail.scss';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
-
-import StepContent from '../../components/StepContent/StepContent';
-import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
-import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
 import {
     getAllStepsMetadata,
     getPatientById,
     updatePatient,
-    updateStage,
+    updateStage
 } from '../../api/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
-import { sortMetadata } from '../../utils/utils';
+import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
+import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
+import StepContent from '../../components/StepContent/StepContent';
+import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
-import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
-
 import { convertPhotosToURI } from '../../utils/photoManipulation';
+import { sortMetadata } from '../../utils/utils';
+import './PatientDetail.scss';
+
+
 
 /**
  * The detail view for a patient. Shows their information
@@ -77,15 +77,17 @@ const PatientDetail = () => {
             photoPromises = photoPromises.concat(
                 step.fields.map(async (field) => {
                     if (field.fieldType === FIELD_TYPES.PHOTO) {
-                        const photoData = newPatientData[step.key][field.key];
-                        const newPhotoData = await convertPhotosToURI(
-                            photoData,
-                            step.key,
-                            field.key,
-                            patientId,
-                        );
+                        const photoData = newPatientData?.[step.key]?.[field.key];
+                        if (photoData) {
+                            const newPhotoData = await convertPhotosToURI(
+                                photoData,
+                                step.key,
+                                field.key,
+                                patientId,
+                            );
 
-                        newPatientData[step.key][field.key] = newPhotoData;
+                            newPatientData[step.key][field.key] = newPhotoData;
+                        }
                     }
                 }),
             );
