@@ -20,7 +20,6 @@ export const FIELD_TYPES = {
     DIVIDER: 'Divider',
     HEADER: 'Header',
     RADIO_BUTTON: 'RadioButton',
-    DROPDOWN: 'Dropdown',
     AUDIO: 'Audio',
     FIELD_GROUP: 'FieldGroup',
     SIGNATURE: 'Signature',

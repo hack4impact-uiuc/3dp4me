@@ -167,7 +167,6 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
                     </div>
                 );
             case FIELD_TYPES.RADIO_BUTTON:
-            case FIELD_TYPES.DROPDOWN:
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>Question</span>
