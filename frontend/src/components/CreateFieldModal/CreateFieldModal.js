@@ -1,8 +1,12 @@
 import {
     Button,
-    Checkbox, FormControl, InputBase, InputLabel, Modal,
+    Checkbox,
+    FormControl,
+    InputBase,
+    InputLabel,
+    Modal,
     NativeSelect,
-    withStyles
+    withStyles,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -12,7 +16,6 @@ import { FIELD_TYPES } from '../../utils/constants';
 import MultiSelectField from '../Fields/MultiSelectField';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import './CreateFieldModal.scss';
-
 
 const CreateFieldModal = ({ isOpen, onModalClose, allRoles }) => {
     const [translations, selectedLang] = useTranslations();

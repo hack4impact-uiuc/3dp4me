@@ -8,10 +8,9 @@ import React from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
 import './Files.scss';
 
-
 const Files = ({
     title,
-    files=[],
+    files = [],
     fieldKey,
     handleDownload,
     handleDelete,

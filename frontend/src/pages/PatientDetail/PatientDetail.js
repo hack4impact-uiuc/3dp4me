@@ -7,7 +7,7 @@ import {
     getAllStepsMetadata,
     getPatientById,
     updatePatient,
-    updateStage
+    updateStage,
 } from '../../api/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
@@ -20,8 +20,6 @@ import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import { convertPhotosToURI } from '../../utils/photoManipulation';
 import { sortMetadata } from '../../utils/utils';
 import './PatientDetail.scss';
-
-
 
 /**
  * The detail view for a patient. Shows their information
@@ -78,7 +76,8 @@ const PatientDetail = () => {
             photoPromises = photoPromises.concat(
                 step.fields.map(async (field) => {
                     if (field.fieldType === FIELD_TYPES.PHOTO) {
-                        const photoData = newPatientData?.[step.key]?.[field.key];
+                        const photoData =
+                            newPatientData?.[step.key]?.[field.key];
                         if (photoData) {
                             const newPhotoData = await convertPhotosToURI(
                                 photoData,

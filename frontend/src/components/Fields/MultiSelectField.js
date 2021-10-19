@@ -2,7 +2,7 @@ import {
     Checkbox,
     FormControl,
     FormControlLabel,
-    FormGroup
+    FormGroup,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';

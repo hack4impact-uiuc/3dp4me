@@ -1,6 +1,10 @@
 import {
-    Button, FormControlLabel, Modal, Radio,
-    RadioGroup, TextField
+    Button,
+    FormControlLabel,
+    Modal,
+    Radio,
+    RadioGroup,
+    TextField,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import _ from 'lodash';
@@ -10,7 +14,6 @@ import React, { useState } from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
 import './ManagePatientModal.scss';
-
 
 const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
     const [translations, selectedLang] = useTranslations();

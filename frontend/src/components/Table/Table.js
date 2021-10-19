@@ -9,7 +9,6 @@ import { LANGUAGES } from '../../utils/constants';
 import { TableHeaderType, TableRowType } from '../../utils/custom-proptypes';
 import SimpleTable from '../SimpleTable/SimpleTable';
 
-
 const CLOSE_REASON_CLICKAWAY = 'clickaway';
 
 /**

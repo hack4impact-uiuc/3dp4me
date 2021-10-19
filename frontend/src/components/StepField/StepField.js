@@ -17,17 +17,20 @@ import TextArea from '../Fields/TextArea';
 import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
 
-const StepField = ({
-    metadata,
-    patientId = '',
-    displayName,
-    stepKey,
-    isDisabled = true,
-    initValue,
-    handleFileDownload = () => {},
-    handleFileUpload = () => {},
-    handleFileDelete = () => {},
-}, ref) => {
+const StepField = (
+    {
+        metadata,
+        patientId = '',
+        displayName,
+        stepKey,
+        isDisabled = true,
+        initValue,
+        handleFileDownload = () => {},
+        handleFileUpload = () => {},
+        handleFileDelete = () => {},
+    },
+    ref,
+) => {
     const selectedLang = useTranslations()[1];
 
     // Warning: Avoid using default props for initValue inside the field component. Set the initValue

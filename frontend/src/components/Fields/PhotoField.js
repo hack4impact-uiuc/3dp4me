@@ -12,13 +12,8 @@ import { blobToDataURL, dataURItoBlob } from '../../utils/photoManipulation';
 import { StyledButton } from '../StyledButton/StyledButton';
 import './PhotoField.scss';
 
-const PhotoField = ({
-    initValue,
-    displayName,
-    fieldId,
-    handleFileUpload,
-}) => {
-    const [value, setValue] = useState([])
+const PhotoField = ({ initValue, displayName, fieldId, handleFileUpload }) => {
+    const [value, setValue] = useState([]);
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
@@ -26,8 +21,8 @@ const PhotoField = ({
     const translations = useTranslations()[0];
 
     useEffect(() => {
-        setValue(initValue)
-    }, [initValue])
+        setValue(initValue);
+    }, [initValue]);
 
     useEffect(() => {
         setImages(
@@ -125,16 +120,13 @@ const PhotoField = ({
     };
 
     const renderImageGallery = () => {
-        if (!images?.length)
-            return null;
+        if (!images?.length) return null;
 
         return (
             <ImageGallery
                 items={images}
                 className="image-gallery"
-                showBullets={
-                    images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW
-                }
+                showBullets={images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW}
             />
         );
     };

@@ -1,25 +1,27 @@
 import PropTypes from 'prop-types';
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import React, {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useState,
+} from 'react';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { useTranslations } from '../../hooks/useTranslations';
 import './Fields.scss';
 
-
 const DateField = forwardRef(({ displayName, isDisabled, initValue }, ref) => {
     const selectedLang = useTranslations()[1];
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState('');
 
     useEffect(() => {
-        setValue(initValue)
-    }, [initValue])
+        setValue(initValue);
+    }, [initValue]);
 
-    useImperativeHandle(ref,
-        () => ({
-            value
-        }),
-    )
+    useImperativeHandle(ref, () => ({
+        value,
+    }));
 
     const sendChanges = (date) => {
         setValue(date.toString());

@@ -3,8 +3,11 @@
 // More readable without this
 /* eslint-disable no-lonely-if */
 import {
-    Button, FormControl,
-    InputLabel, Modal, Select
+    Button,
+    FormControl,
+    InputLabel,
+    Modal,
+    Select,
 } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -17,7 +20,6 @@ import { ACCESS_LEVELS } from '../../utils/constants';
 import MultiSelectField from '../Fields/MultiSelectField';
 import TextField from '../Fields/TextField';
 import './EditRoleModal.scss';
-
 
 const EditRoleModal = ({
     isOpen,

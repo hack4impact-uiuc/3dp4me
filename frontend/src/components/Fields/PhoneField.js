@@ -1,5 +1,10 @@
 import PropTypes from 'prop-types';
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import React, {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useState,
+} from 'react';
 import PhoneInput from 'react-phone-number-input';
 
 import 'react-phone-number-input/style.css';
@@ -8,22 +13,16 @@ import './Fields.scss';
 
 const DEFAULT_COUNTRY = 'JO';
 
-const PhoneField = forwardRef(({
-    displayName,
-    isDisabled,
-    initValue
-}, ref) => {
-    const [value, setValue] = useState("");
+const PhoneField = forwardRef(({ displayName, isDisabled, initValue }, ref) => {
+    const [value, setValue] = useState('');
 
     useEffect(() => {
-        setValue(initValue)
-    }, [initValue])
+        setValue(initValue);
+    }, [initValue]);
 
-    useImperativeHandle(ref,
-        () => ({
-            value
-        }),
-    )
+    useImperativeHandle(ref, () => ({
+        value,
+    }));
 
     return (
         <div>

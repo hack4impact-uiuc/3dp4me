@@ -3,7 +3,7 @@ import {
     Button,
     CircularProgress,
     MenuItem,
-    Select
+    Select,
 } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -18,7 +18,6 @@ import { formatDate } from '../../utils/date';
 import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
 import './StepContent.scss';
-
 
 const StepContent = ({
     patientId,
@@ -40,7 +39,7 @@ const StepContent = ({
     }, [stepData]);
 
     const handleSimpleUpdate = (fieldKey, value) => {
-        mergeIntoUpdatedData({[fieldKey]: value})
+        mergeIntoUpdatedData({ [fieldKey]: value });
     };
 
     const handleFileDelete = async (fieldKey, file) => {
@@ -89,25 +88,25 @@ const StepContent = ({
 
     const mergeIntoUpdatedData = (data) => {
         const formData = getFormData();
-        const updatedStepData = _.cloneDeep(updatedData)
-        _.merge(updatedStepData, formData, data)
-        setUpdatedData(updatedStepData)
-        return updatedStepData
-    }
+        const updatedStepData = _.cloneDeep(updatedData);
+        _.merge(updatedStepData, formData, data);
+        setUpdatedData(updatedStepData);
+        return updatedStepData;
+    };
 
     const getFormData = () => {
         const data = {};
 
         /* eslint no-restricted-syntax: "off" */
         for (const [key, ref] of Object.entries(fieldRefs))
-            data[key] = ref.value
+            data[key] = ref.value;
         /* eslint no-restricted-syntax: "error" */
 
         return data;
-    }
+    };
 
     const saveData = () => {
-        const updatedStepData = mergeIntoUpdatedData({})
+        const updatedStepData = mergeIntoUpdatedData({});
         onDataSaved(metaData.key, updatedStepData);
         setEdit(false);
         swal(
@@ -154,12 +153,12 @@ const StepContent = ({
 
     const addFieldRef = (fieldKey, ref) => {
         /* eslint no-param-reassign: "off" */
-        setFieldRefs(refs => {
-            refs[fieldKey] = ref
+        setFieldRefs((refs) => {
+            refs[fieldKey] = ref;
             return refs;
-        })
+        });
         /* eslint no-param-reassign: "error" */
-    }
+    };
 
     const genereateFields = () => {
         if (metaData == null || metaData.fields == null) return null;

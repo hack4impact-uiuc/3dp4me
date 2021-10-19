@@ -1,19 +1,22 @@
 import PropTypes from 'prop-types';
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import React, {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useState,
+} from 'react';
 import './TextArea.scss';
 
 const TextArea = forwardRef(({ title, disabled, initValue }, ref) => {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState('');
 
     useEffect(() => {
-        setValue(initValue)
-    }, [initValue])
+        setValue(initValue);
+    }, [initValue]);
 
-    useImperativeHandle(ref,
-        () => ({
-            value
-        }),
-    )
+    useImperativeHandle(ref, () => ({
+        value,
+    }));
 
     return (
         <div className="text-area-wrapper">

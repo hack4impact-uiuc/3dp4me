@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import { useTranslations } from '../../hooks/useTranslations';
 import './CreatePatientModal.scss';
 
-
 const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
     const translations = useTranslations()[0];
     const [firstName, setFirstName] = useState('');
