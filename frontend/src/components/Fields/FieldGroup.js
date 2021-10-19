@@ -11,6 +11,11 @@ import './Fields.scss';
 
 
 
+
+
+
+
+
 const FieldGroup = forwardRef(({
     isDisabled,
     handleFileDownload,
@@ -34,7 +39,8 @@ const FieldGroup = forwardRef(({
             const data = {};
             data.value = []
 
-            for (const [key, r] of Object.entries(refs)) {
+            /* eslint no-restricted-syntax: "off" */
+            for (const r of Object.values(refs)) {
                 const item = {}
 
                 for (const [k, v] of Object.entries(r)) {
@@ -43,12 +49,14 @@ const FieldGroup = forwardRef(({
 
                 data.value.push(item)
             }
+            /* eslint no-restricted-syntax: "error" */
 
             return data;
         },
     )
 
     const addFieldRef = (fieldKey, i, newRef) => {
+        /* eslint no-param-reassign: "off" */
         setRefs(oldRefs => {
             if (!oldRefs[i])
                 oldRefs.push({})
@@ -56,6 +64,7 @@ const FieldGroup = forwardRef(({
             oldRefs[i][fieldKey] = newRef
             return oldRefs;
         })
+        /* eslint no-param-reassign: "error" */
     }
 
     const getKeyBase = (index) => {

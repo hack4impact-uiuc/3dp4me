@@ -20,8 +20,6 @@ import StepField from '../StepField/StepField';
 import './StepContent.scss';
 
 
-
-
 const StepContent = ({
     patientId,
     metaData,
@@ -100,8 +98,10 @@ const StepContent = ({
     const getFormData = () => {
         const data = {};
 
+        /* eslint no-restricted-syntax: "off" */
         for (const [key, ref] of Object.entries(fieldRefs))
             data[key] = ref.value
+        /* eslint no-restricted-syntax: "error" */
 
         return data;
     }
@@ -153,10 +153,12 @@ const StepContent = ({
     };
 
     const addFieldRef = (fieldKey, ref) => {
+        /* eslint no-param-reassign: "off" */
         setFieldRefs(refs => {
             refs[fieldKey] = ref
             return refs;
         })
+        /* eslint no-param-reassign: "error" */
     }
 
     const genereateFields = () => {
