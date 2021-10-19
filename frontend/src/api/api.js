@@ -57,6 +57,10 @@ export const updatePatient = async (patientId, updatedData) => {
 export const getAllStepsMetadata = async () => {
     const requestString = '/metadata/steps';
 
+    /**
+     * In order to test this method and its steps, hardcode an entire object (subFields, displayName, etc.) from the database
+     * and push it to res.data.result[0].fields
+     */
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
     console.log(res.data.result[0]);

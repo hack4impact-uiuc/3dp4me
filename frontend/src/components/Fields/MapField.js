@@ -1,39 +1,41 @@
-import React, { useState, useCallback, mapRef, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
-import Geocoder from "react-map-gl-geocoder";
-import './MapField.scss';
-import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import Geocoder from 'react-map-gl-geocoder';
 
-const MAPBOX_TOKEN = "pk.eyJ1IjoiYXJjaG5hLTEiLCJhIjoiY2t1aHFubjl2Mmg4aDMwcXAyaW94eHYzcSJ9.qSm9IsfWo2G7CWJrX_kyeA"
+import './MapField.scss';
+import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import { COORDINATES, PIN_URL, MAPBOX_TOKEN } from '../../utils/constants';
+import { useTranslations } from '../../hooks/useTranslations';
 
 export default function MapField() {
     const initialViewport = {
-        latitude: 37.7577,
-        longitude: -122.4376,
+        latitude: COORDINATES.DEFAULT_MAP_LAT,
+        longitude: COORDINATES.DEFAULT_MAP_LONG,
         zoom: 8,
         width: '100%',
         height: '100%',
         pitch: 50,
-        transitionDuration: 100
+        transitionDuration: 100,
     };
 
     const [viewport, setViewport] = useState(initialViewport);
 
-    const mapRef = useRef()
+    const mapRef = useRef();
 
-    const handleGeocoderViewportChange = viewport => {
-      const geocoderDefaultOverrides = { transitionDuration: 1000 };
-      console.log("Updating")
+    const handleGeocoderViewportChange = (viewport) => {
+        const geocoderDefaultOverrides = { transitionDuration: 1000 };
 
-      return setViewport({
-          ...viewport,
-          ...geocoderDefaultOverrides
+        return setViewport({
+            ...viewport,
+            ...geocoderDefaultOverrides,
         });
-    }
+    };
+
+    const translations = useTranslations()[0];
 
     return (
         <div className="mapStyling">
-            <h3>Patient Location</h3>
+            <h3>{translations.components.map.patientLocation}</h3>
 
             <ReactMapGL
                 ref={mapRef}
@@ -42,40 +44,40 @@ export default function MapField() {
                 {...viewport}
                 onViewportChange={(newView) => setViewport(newView)}
             >
+                <Marker
+                    latitude={viewport?.latitude}
+                    longitude={viewport?.longitude}
+                    offsetLeft={viewport.zoom * -2.5}
+                    offsetTop={viewport.zoom * -5}
+                >
+                    <img
+                        src={PIN_URL}
+                        width={viewport.zoom * 5}
+                        height={viewport.zoom * 5}
+                        alt="Location marker"
+                    />
+                </Marker>
 
-            <Marker
-                latitude={viewport?.latitude}
-                longitude={viewport?.longitude}
-                offsetLeft={viewport.zoom * -2.5}
-                offsetTop={viewport.zoom * -5}
-            >
-                <img
-                    src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
-                    width={viewport.zoom * 5}
-                    height={viewport.zoom * 5}
-                    alt="Location marker"
+                <button
+                    type="button"
+                    className="resetButton"
+                    onClick={() => setViewport(initialViewport)}
+                >
+                    {translations.components.map.reset}
+                </button>
+
+                <Geocoder
+                    mapRef={mapRef}
+                    onViewportChange={handleGeocoderViewportChange}
+                    mapboxApiAccessToken={MAPBOX_TOKEN}
+                    position="top-left"
                 />
-            </Marker>
-
-            
-              <button
-                  type="button"
-                  className="resetButton"
-                  onClick={() => setViewport(initialViewport)}
-              >
-                  Reset
-              </button>
-
-              <Geocoder
-                  mapRef={mapRef}
-                  onViewportChange={handleGeocoderViewportChange}
-                  mapboxApiAccessToken={MAPBOX_TOKEN}
-                  position='top-left'
-                />
-              </ReactMapGL>
+            </ReactMapGL>
 
             <div className="coordinateLabel">
-                Latitude: {viewport?.latitude.toFixed(4)} Longitude:{' '}
+                {translations.components.map.latitude}:{' '}
+                {viewport?.latitude.toFixed(4)}{' '}
+                {translations.components.map.longitude}:{' '}
                 {viewport?.longitude.toFixed(4)}
             </div>
         </div>

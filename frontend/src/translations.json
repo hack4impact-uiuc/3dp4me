@@ -149,6 +149,12 @@
                         "discard": "Discard"
                     }
                 }
+            },
+            "map": {
+                "patientLocation": "Patient Location",
+                "reset": "Reset",
+                "latitude": "Latitude",
+                "longitude": "Longitude"
             }
         },
         "accountManagement": {
@@ -314,6 +320,12 @@
                         "discard": "Discard"
                     }
                 }
+            },
+            "map": {
+                "patientLocation": "موقع المريض",
+                "reset": "إعادة تعيين",
+                "latitude": "خط العرض",
+                "longitude": "خط الطول"
             }
         },
         "accountManagement": {
