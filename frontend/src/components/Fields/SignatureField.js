@@ -13,7 +13,7 @@ const SignatureField = forwardRef(({
     displayName,
     isDisabled,
     documentURL,
-    initValue
+    initValue,
 }, ref) => {
     const [value, setValue] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -223,7 +223,7 @@ SignatureField.propTypes = {
             EN: PropTypes.string,
             AR: PropTypes.string,
         }),
-    }),
+    }).isRequired,
     onChange: PropTypes.func,
 };
 

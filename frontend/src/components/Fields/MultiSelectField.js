@@ -83,7 +83,7 @@ MultiSelectField.propTypes = {
     langKey: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool,
     onChange: PropTypes.func,
-    value: PropTypes.arrayOf(PropTypes.string),
+    value: PropTypes.arrayOf(PropTypes.string).isRequired,
     options: FieldOptionsType,
 };
 

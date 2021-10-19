@@ -12,7 +12,7 @@ import { StyledButton } from '../StyledButton/StyledButton';
 import './PhotoField.scss';
 
 const PhotoField = ({
-    initValue = [],
+    initValue,
     displayName,
     fieldId,
     handleFileUpload,
@@ -30,10 +30,10 @@ const PhotoField = ({
 
     useEffect(() => {
         setImages(
-            value.map((v) => {
+            value?.map((v) => {
                 return {
-                    original: v.uri,
-                    thumbnail: v.uri,
+                    original: v?.uri,
+                    thumbnail: v?.uri,
                     originalWidth: '700',
                     originalHeight: '300',
                 };
@@ -124,19 +124,18 @@ const PhotoField = ({
     };
 
     const renderImageGallery = () => {
-        if (images.length > 0) {
-            return (
-                <ImageGallery
-                    items={images}
-                    className="image-gallery"
-                    showBullets={
-                        images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW
-                    }
-                />
-            );
-        }
+        if (!images?.length)
+            return null;
 
-        return null;
+        return (
+            <ImageGallery
+                items={images}
+                className="image-gallery"
+                showBullets={
+                    images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW
+                }
+            />
+        );
     };
 
     return (
@@ -162,10 +161,9 @@ const PhotoField = ({
 };
 
 PhotoField.propTypes = {
-    value: PropTypes.array,
+    initValue: PropTypes.array.isRequired,
     displayName: PropTypes.string.isRequired,
     fieldId: PropTypes.string.isRequired,
-    handleSimpleUpdate: PropTypes.func.isRequired,
     handleFileUpload: PropTypes.func.isRequired,
 };
 

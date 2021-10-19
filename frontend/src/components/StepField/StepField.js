@@ -30,6 +30,8 @@ const StepField = ({
 }, ref) => {
     const selectedLang = useTranslations()[1];
 
+    // Warning: Avoid using default props for initValue inside the field component. Set the initValue
+    // in the switch statement to avoid infinite re-renders
     const generateField = () => {
         switch (metadata.fieldType) {
             case FIELD_TYPES.STRING:
@@ -90,7 +92,6 @@ const StepField = ({
                         handleDownload={handleFileDownload}
                         handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}
-                        // ref={ref}
                     />
                 );
 
@@ -117,7 +118,6 @@ const StepField = ({
                         stepKey={stepKey}
                         files={initValue}
                         title={displayName}
-                        // ref={ref}
                     />
                 );
             case FIELD_TYPES.DIVIDER:
@@ -135,7 +135,7 @@ const StepField = ({
                         displayName={displayName}
                         stepKey={stepKey}
                         isDisabled={isDisabled}
-                        initValue={initValue}
+                        initValue={initValue || []}
                         handleFileDownload={handleFileDownload}
                         handleFileUpload={handleFileUpload}
                         handleFileDelete={handleFileDelete}
@@ -147,7 +147,7 @@ const StepField = ({
                     <SignatureField
                         displayName={displayName}
                         isDisabled={isDisabled}
-                        initValue={initValue}
+                        initValue={initValue || {}}
                         fieldId={metadata.key}
                         ref={ref}
                         documentURL={
@@ -162,7 +162,7 @@ const StepField = ({
                     <PhotoField
                         patientId={patientId}
                         stepKey={stepKey}
-                        initValue={initValue}
+                        initValue={initValue || []}
                         displayName={displayName}
                         fieldId={metadata.key}
                         handleFileUpload={handleFileUpload}
