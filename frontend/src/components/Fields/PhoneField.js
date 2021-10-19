@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
+
 import 'react-phone-number-input/style.css';
 import { FLAG_URL } from '../../utils/constants';
 import './Fields.scss';
@@ -20,7 +21,7 @@ const PhoneField = forwardRef(({
 
     useImperativeHandle(ref,
         () => ({
-            value: value
+            value
         }),
     )
 

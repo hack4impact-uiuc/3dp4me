@@ -3,9 +3,12 @@
 import { Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+
 import { useTranslations } from '../../hooks/useTranslations';
 import StepField from '../StepField/StepField';
 import './Fields.scss';
+
+
 
 
 const FieldGroup = forwardRef(({
@@ -31,10 +34,10 @@ const FieldGroup = forwardRef(({
             const data = {};
             data.value = []
 
-            for (const [key, ref] of Object.entries(refs)) {
+            for (const [key, r] of Object.entries(refs)) {
                 const item = {}
 
-                for (const [k, v] of Object.entries(ref)) {
+                for (const [k, v] of Object.entries(r)) {
                    item[k]  = v?.value
                 }
 
@@ -45,13 +48,13 @@ const FieldGroup = forwardRef(({
         },
     )
 
-    const addFieldRef = (fieldKey, i, ref) => {
-        setRefs(refs => {
-            if (!refs[i])
-                refs.push({})
+    const addFieldRef = (fieldKey, i, newRef) => {
+        setRefs(oldRefs => {
+            if (!oldRefs[i])
+                oldRefs.push({})
 
-            refs[i][fieldKey] = ref
-            return refs;
+            oldRefs[i][fieldKey] = newRef
+            return oldRefs;
         })
     }
 
@@ -107,7 +110,7 @@ const FieldGroup = forwardRef(({
                             handleFileDelete={(k, v) =>
                                 onFileDelete(k, v, index)
                             }
-                            ref={(ref) => addFieldRef(field.key, index, ref)}
+                            ref={(r) => addFieldRef(field.key, index, r)}
                         />
                     </div>
                 </div>

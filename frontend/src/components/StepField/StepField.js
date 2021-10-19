@@ -3,6 +3,7 @@
 import { Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { forwardRef } from 'react';
+
 import { useTranslations } from '../../hooks/useTranslations';
 import { FIELD_TYPES } from '../../utils/constants';
 import AudioRecorder from '../AudioRecorder/AudioRecorder';
@@ -15,7 +16,6 @@ import SignatureField from '../Fields/SignatureField';
 import TextArea from '../Fields/TextArea';
 import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
-
 
 const StepField = ({
     metadata,
@@ -177,7 +177,7 @@ const StepField = ({
 };
 
 StepField.propTypes = {
-    value: PropTypes.any,
+    initValue: PropTypes.any,
     isDisabled: PropTypes.bool,
     patientId: PropTypes.string,
     handleFileDownload: PropTypes.func,

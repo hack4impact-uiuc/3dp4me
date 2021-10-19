@@ -11,7 +11,7 @@ const TextArea = forwardRef(({ title, disabled, initValue }, ref) => {
 
     useImperativeHandle(ref,
         () => ({
-            value: value
+            value
         }),
     )
 

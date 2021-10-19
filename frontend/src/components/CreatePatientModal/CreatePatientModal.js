@@ -1,6 +1,7 @@
 import { Button, Modal, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+
 import { useTranslations } from '../../hooks/useTranslations';
 import './CreatePatientModal.scss';
 

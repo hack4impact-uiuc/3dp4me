@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+
 import { useTranslations } from '../../hooks/useTranslations';
 import { FIELD_TYPES } from '../../utils/constants';
 import MultiSelectField from '../Fields/MultiSelectField';

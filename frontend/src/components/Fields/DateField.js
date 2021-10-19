@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import DatePicker from 'react-datepicker';
+
 import 'react-datepicker/dist/react-datepicker.css';
 import { useTranslations } from '../../hooks/useTranslations';
 import './Fields.scss';
@@ -16,7 +17,7 @@ const DateField = forwardRef(({ displayName, isDisabled, initValue }, ref) => {
 
     useImperativeHandle(ref,
         () => ({
-            value: value
+            value
         }),
     )
 

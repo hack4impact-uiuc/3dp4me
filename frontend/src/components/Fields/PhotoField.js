@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
+
 import 'react-image-gallery/styles/css/image-gallery.css';
 import { useTranslations } from '../../hooks/useTranslations';
 import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';

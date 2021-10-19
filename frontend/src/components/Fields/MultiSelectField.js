@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
+
 import { FieldOptionsType } from '../../utils/custom-proptypes';
 
 const MultiSelectField = ({

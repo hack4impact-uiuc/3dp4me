@@ -9,6 +9,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
+
 import { deleteFile, downloadFile, uploadFile } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -17,6 +18,8 @@ import { formatDate } from '../../utils/date';
 import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
 import './StepContent.scss';
+
+
 
 
 const StepContent = ({
@@ -88,10 +91,10 @@ const StepContent = ({
 
     const mergeIntoUpdatedData = (data) => {
         const formData = getFormData();
-        const stepData = _.cloneDeep(updatedData)
-        _.merge(stepData, formData, data)
-        setUpdatedData(stepData)
-        return stepData
+        const updatedStepData = _.cloneDeep(updatedData)
+        _.merge(updatedStepData, formData, data)
+        setUpdatedData(updatedStepData)
+        return updatedStepData
     }
 
     const getFormData = () => {
@@ -104,8 +107,8 @@ const StepContent = ({
     }
 
     const saveData = () => {
-        const stepData = mergeIntoUpdatedData({})
-        onDataSaved(metaData.key, stepData);
+        const updatedStepData = mergeIntoUpdatedData({})
+        onDataSaved(metaData.key, updatedStepData);
         setEdit(false);
         swal(
             translations.components.bottombar.savedMessage.patientInfo,

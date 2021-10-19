@@ -4,6 +4,7 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import React from 'react';
+
 import { useTranslations } from '../../hooks/useTranslations';
 import './Files.scss';
 

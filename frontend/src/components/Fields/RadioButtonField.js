@@ -1,6 +1,7 @@
 import { FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+
 import { useTranslations } from '../../hooks/useTranslations';
 import { FieldOptionsType } from '../../utils/custom-proptypes';
 
@@ -21,7 +22,7 @@ const RadioButtonField = forwardRef(({
 
     useImperativeHandle(ref,
         () => ({
-            value: value
+            value
         }),
     )
 

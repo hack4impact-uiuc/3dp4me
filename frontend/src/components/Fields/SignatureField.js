@@ -6,8 +6,10 @@ import PropTypes from 'prop-types';
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import SignaturePadWrapper from 'react-signature-canvas';
 import SignaturePad from 'signature_pad';
+
 import { useTranslations } from '../../hooks/useTranslations';
 import './SignatureField.scss';
+
 
 const SignatureField = forwardRef(({
     displayName,
@@ -27,7 +29,7 @@ const SignatureField = forwardRef(({
 
     useImperativeHandle(ref,
         () => ({
-            value: value
+            value
         }),
     )
 
@@ -224,7 +226,6 @@ SignatureField.propTypes = {
             AR: PropTypes.string,
         }),
     }).isRequired,
-    onChange: PropTypes.func,
 };
 
 export default SignatureField;

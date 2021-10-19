@@ -6,6 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+
 import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
 import './ManagePatientModal.scss';
