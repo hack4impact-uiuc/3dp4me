@@ -31,8 +31,6 @@
         "react-datepicker": "^4.2.1",
         "react-dom": "^16.13.1",
         "react-flexbox-grid": "^2.1.2",
-        "react-leaflet": "2.7.0",
-        "react-leaflet-search": "^2.0.1",
         "react-map-gl": "^6.1.17",
         "react-map-gl-geocoder": "^2.2.0",
         "react-modal": "^3.12.1",
