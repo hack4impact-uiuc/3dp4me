@@ -21,10 +21,7 @@ import {
 import { resolveMixedObjPath } from '../../utils/object';
 import { useTranslations } from '../../hooks/useTranslations';
 import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
-import {
-    generateKeyWithCamelCase,
-    checkKeyCollision,
-} from '../../utils/metadataUtils';
+import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -193,7 +190,7 @@ const SectionTab = () => {
                 isOpen={fieldModalOpen}
                 onModalClose={onFieldModalClose}
                 allRoles={allRoles}
-                addNewField={addNewField}
+                onAddNewField={addNewField}
             />
         );
     };
@@ -209,7 +206,7 @@ const SectionTab = () => {
 
     const addNewField = (newFieldData) => {
         const updatedNewField = _.cloneDeep(newFieldData);
-        let updatedMetadata;
+        const updatedMetadata = _.cloneDeep(stepMetadata);
 
         errorWrap(
             async () => {
@@ -217,26 +214,17 @@ const SectionTab = () => {
                     return element.key === selectedStep;
                 });
 
-                updatedMetadata = _.cloneDeep(stepMetadata);
+                updatedNewField.fieldNumber =
+                    updatedMetadata[stepIndex].fields.length;
 
-                const numFields = updatedMetadata[stepIndex].fields.length;
-                updatedNewField.fieldNumber = numFields;
-
-                let newKey = generateKeyWithCamelCase(
-                    updatedNewField.displayName.EN,
-                );
-
-                const keyMap = updatedMetadata[stepIndex].fields.map(
+                const currentFieldKeys = updatedMetadata[stepIndex].fields.map(
                     (field) => field.key,
                 );
-                let keyIncrement = 1;
+                updatedNewField.key = generateKeyWithoutCollision(
+                    updatedNewField.displayName.EN,
+                    currentFieldKeys,
+                );
 
-                while (checkKeyCollision(newKey, keyMap)) {
-                    newKey += keyIncrement;
-                    keyIncrement += 1;
-                }
-
-                updatedNewField.key = newKey;
                 updatedMetadata[stepIndex].fields.push(updatedNewField);
 
                 await updateMultipleSteps([updatedMetadata[stepIndex]]);

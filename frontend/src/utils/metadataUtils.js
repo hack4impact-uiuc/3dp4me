@@ -19,7 +19,7 @@ const randomAlphanumeric = (length) => {
     return result;
 };
 
-export const generateKeyWithCamelCase = (input) => {
+const generateKeyWithCamelCase = (input) => {
     if (input === '') {
         return randomAlphanumeric(10);
     }
@@ -27,8 +27,24 @@ export const generateKeyWithCamelCase = (input) => {
     return camelCase(input);
 };
 
-export const checkKeyCollision = (newKey, otherKeys) => {
-    for (let i = 0; i < otherKeys.length; i++)
+const checkKeyCollision = (newKey, otherKeys) => {
+    for (let i = 0; i < otherKeys.length; i++) {
         if (otherKeys[i] === newKey) return true;
+    }
     return false;
+};
+
+export const generateKeyWithoutCollision = (input, otherKeys) => {
+    const newKey = generateKeyWithCamelCase(input);
+
+    let keySuffix = 1;
+
+    let noCollisionKey = newKey;
+
+    while (checkKeyCollision(noCollisionKey, otherKeys)) {
+        noCollisionKey = newKey + keySuffix;
+        keySuffix += 1;
+    }
+
+    return noCollisionKey;
 };

@@ -155,7 +155,10 @@
                         "discard": "Discard",
                         "addChoice": "Add Choice"
                     },
-                    "option": "Option"
+                    "option": "Option",
+                    "question": "Question",
+                    "dividerTitle": "Divider Title",
+                    "headerTitle": "Header Title"
                 }
             }
         },
@@ -328,7 +331,10 @@
                         "discard": "Discard",
                         "addChoice": "Add Choice"
                     },
-                    "option": "Option"
+                    "option": "Option",
+                    "question": "Question",
+                    "dividerTitle": "Divider Title",
+                    "headerTitle": "Header Title"
                 }
             }
         },

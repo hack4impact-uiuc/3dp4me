@@ -16,18 +16,21 @@ const StepManagementContent = ({
     allRoles,
 }) => {
     const selectedLang = useTranslations()[1];
-    const formatRoles = (array) => {
-        if (!array?.length) return 'Admin';
+    const formatRoles = (roles) => {
+        if (!roles?.length) return 'Admin';
 
+        // Filters out all roles that aren't in roles
         const filteredRoles = allRoles.filter(
-            (role) => array.indexOf(role._id) >= 0,
+            (role) => roles.indexOf(role._id) >= 0,
         );
 
+        // Concatenates roles into string separated by comma
         const roleString = filteredRoles.reduce(
             (prev, curr) => `${prev}, ${curr.Question?.[selectedLang]}`,
             '',
         );
 
+        // Removes unnecessary comma at the beginning of roleString
         return roleString.substring(2, roleString.length);
     };
 

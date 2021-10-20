@@ -18,7 +18,12 @@ import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 
-const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
+const CreateFieldModal = ({
+    isOpen,
+    onModalClose,
+    allRoles,
+    onAddNewField,
+}) => {
     const [translations, selectedLang] = useTranslations();
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
     const [selectedRoles, setSelectedRoles] = useState([]);
@@ -63,49 +68,34 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
         setFieldType(e.target.value);
     };
 
-    const incrementChoices = () => {
+    const addOption = () => {
         const updatedOptions = _.cloneDeep(options);
         updatedOptions.push({ EN: '', AR: '' });
         setOptions(updatedOptions);
     };
 
-    const updateChoiceEnglishField = (index, val) => {
+    const updateOptionField = (index, val, language) => {
         const updatedOptions = _.cloneDeep(options);
-        updatedOptions[index].EN = val;
+        updatedOptions[index][language] = val;
         setOptions(updatedOptions);
     };
 
-    const updateChoiceArabicField = (index, val) => {
-        const updatedOptions = _.cloneDeep(options);
-        updatedOptions[index].AR = val;
-        setOptions(updatedOptions);
-    };
-
-    const moveChoiceDown = (index) => {
-        if (index < options.length - 1) {
+    const moveOption = (currIndex, newIndex) => {
+        if (newIndex >= 0 && newIndex < options.length) {
             const updatedOptions = _.cloneDeep(options);
-            const removedChoice = updatedOptions.splice(index, 1)[0];
-            updatedOptions.splice(index + 1, 0, removedChoice);
+            const removedChoice = updatedOptions.splice(currIndex, 1)[0];
+            updatedOptions.splice(newIndex, 0, removedChoice);
             setOptions(updatedOptions);
         }
     };
 
-    const moveChoiceUp = (index) => {
-        if (index > 0) {
-            const updatedOptions = _.cloneDeep(options);
-            const removedChoice = updatedOptions.splice(index, 1)[0];
-            updatedOptions.splice(index - 1, 0, removedChoice);
-            setOptions(updatedOptions);
-        }
-    };
-
-    const deleteChoice = (index) => {
+    const deleteOption = (index) => {
         const updatedOptions = _.cloneDeep(options);
         updatedOptions.splice(index, 1);
         setOptions(updatedOptions);
     };
 
-    const generateChoices = () => {
+    const generateOptions = () => {
         const choices = [];
         for (let i = 0; i < options.length; i++) {
             choices.push(
@@ -118,19 +108,19 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
                     <LanguageInput
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
                         handleEnglishFieldChange={(event) => {
-                            updateChoiceEnglishField(i, event.target.value);
+                            updateOptionField(i, event.target.value, 'EN');
                         }}
                         handleArabicFieldChange={(event) => {
-                            updateChoiceArabicField(i, event.target.value);
+                            updateOptionField(i, event.target.value, 'AR');
                         }}
                         onDelete={() => {
-                            deleteChoice(i);
+                            deleteOption(i);
                         }}
                         onUpPressed={() => {
-                            moveChoiceUp(i);
+                            moveOption(i, i - 1);
                         }}
                         onDownPressed={() => {
-                            moveChoiceDown(i);
+                            moveOption(i, i + 1);
                         }}
                     />
                 </div>,
@@ -143,7 +133,7 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
         setDisplayName({ ...displayName, EN: e.target.value });
     };
 
-    const updateArabicDislayName = (e) => {
+    const updateArabicDisplayName = (e) => {
         setDisplayName({ ...displayName, AR: e.target.value });
     };
 
@@ -158,54 +148,68 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
             case FIELD_TYPES.AUDIO:
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>Question</span>
+                        <span>
+                            {translations.components.swal.createField.question}
+                        </span>
                         <LanguageInput
                             fieldValues={displayName}
                             handleEnglishFieldChange={updateEnglishDisplayName}
-                            handleArabicFieldChange={updateArabicDislayName}
+                            handleArabicFieldChange={updateArabicDisplayName}
                         />
                     </div>
                 );
             case FIELD_TYPES.RADIO_BUTTON:
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>Question</span>
+                        <span>
+                            {translations.components.swal.createField.question}
+                        </span>
                         <LanguageInput
                             fieldValues={displayName}
                             handleEnglishFieldChange={updateEnglishDisplayName}
-                            handleArabicFieldChange={updateArabicDislayName}
+                            handleArabicFieldChange={updateArabicDisplayName}
                         />
                         <Button
                             className="add-option-button"
-                            onClick={incrementChoices}
+                            onClick={addOption}
                         >
                             {
                                 translations.components.swal.createField.buttons
                                     .addChoice
                             }
                         </Button>
-                        {generateChoices()}
+                        {generateOptions()}
                     </div>
                 );
             case FIELD_TYPES.DIVIDER:
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>Divider Title</span>
+                        <span>
+                            {
+                                translations.components.swal.createField
+                                    .dividerTitle
+                            }
+                        </span>
                         <LanguageInput
                             fieldValues={displayName}
                             handleEnglishFieldChange={updateEnglishDisplayName}
-                            handleArabicFieldChange={updateArabicDislayName}
+                            handleArabicFieldChange={updateArabicDisplayName}
                         />
                     </div>
                 );
             case FIELD_TYPES.HEADER:
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>Header Title</span>
+                        <span>
+                            {
+                                translations.components.swal.createField
+                                    .headerTitle
+                            }
+                        </span>
                         <LanguageInput
                             fieldValues={displayName}
                             handleEnglishFieldChange={updateEnglishDisplayName}
-                            handleArabicFieldChange={updateArabicDislayName}
+                            handleArabicFieldChange={updateArabicDisplayName}
                         />
                     </div>
                 );
@@ -246,7 +250,7 @@ const CreateFieldModal = ({ isOpen, onModalClose, allRoles, addNewField }) => {
             subFields: [],
         };
 
-        addNewField(newFieldData);
+        onAddNewField(newFieldData);
         onModalClose();
         clearState();
     };
@@ -369,7 +373,7 @@ CreateFieldModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onModalClose: PropTypes.func.isRequired,
     allRoles: PropTypes.array.isRequired,
-    addNewField: PropTypes.func.isRequired,
+    onAddNewField: PropTypes.func.isRequired,
 };
 
 export default CreateFieldModal;
