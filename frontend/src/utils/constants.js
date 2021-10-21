@@ -25,7 +25,6 @@ export const FIELD_TYPES = {
     DIVIDER: 'Divider',
     HEADER: 'Header',
     RADIO_BUTTON: 'RadioButton',
-    DROPDOWN: 'Dropdown',
     AUDIO: 'Audio',
     FIELD_GROUP: 'FieldGroup',
     SIGNATURE: 'Signature',
@@ -208,3 +207,5 @@ export const COORDINATES = {
     DEFAULT_MAP_LONG: -122.4376,
 };
 export const PEOPLE_PER_PAGE = 14;
+
+export const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 16;

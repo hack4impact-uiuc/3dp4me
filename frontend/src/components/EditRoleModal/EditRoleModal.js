@@ -1,6 +1,6 @@
 // Disabled because we need the role updates to happen sequentially
 /* eslint-disable no-await-in-loop */
-// More readabe without this
+// More readable without this
 /* eslint-disable no-lonely-if */
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';

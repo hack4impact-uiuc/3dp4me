@@ -86,6 +86,7 @@
                 "edit": "Edit Step",
                 "next": "Next",
                 "previous": "Previous",
+                "photo": "Take Photo",
                 "loadMore": "Load More",
                 "discard": {
                     "title": "Discard",
@@ -93,7 +94,9 @@
                     "warningMessage": "You are about to discard your current form changes! This is unchangeable!",
                     "success": "Discarded changes!",
                     "confirmButton": "Ok",
-                    "cancelButton": "Cancel"
+                    "cancelButton": "Cancel",
+                    "saveButton": "Save",
+                    "retakeButton": "Retake"
                 },
                 "managePatient": "Manage Patient",
                 "noMoreUsers": "No More Users"
@@ -144,12 +147,18 @@
                     "title2": "Field Settings",
                     "fieldType": "Field Type",
                     "clearance": "Clearance Level",
+                    "customization": "Customization",
                     "showOnDashBoard": "Show on Dashboard",
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard"
-                    }
+                        "discard": "Discard",
+                        "addChoice": "Add Choice"
+                    },
+                    "option": "Option",
+                    "question": "Question",
+                    "dividerTitle": "Divider Title",
+                    "headerTitle": "Header Title"
                 }
             },
             "map": {
@@ -259,6 +268,7 @@
                 "edit": "\u062a\u062d\u0631\u064a\u0631 \u0627\u0644\u062e\u0637\u0648\u0629",
                 "next": "التالي",
                 "previous": "سابق",
+                "photo": "صورة فوتوغرافية",
                 "loadMore": "تحميل المزيد",
                 "discard": {
                     "title": "\u062a\u062c\u0627\u0647\u0644",
@@ -266,7 +276,9 @@
                     "warningMessage": "\u0623\u0646\u062a \u0639\u0644\u0649 \u0648\u0634\u0643 \u062a\u062c\u0627\u0647\u0644 \u062a\u063a\u064a\u064a\u0631\u0627\u062a \u0627\u0644\u0646\u0645\u0648\u0630\u062c \u0627\u0644\u062d\u0627\u0644\u064a\u0629! \u0647\u0630\u0627 \u063a\u064a\u0631 \u0642\u0627\u0628\u0644 \u0644\u0644\u062a\u063a\u064a\u064a\u0631!",
                     "success": "\u0627\u0644\u062a\u063a\u064a\u064a\u0631\u0627\u062a \u0627\u0644\u0645\u0647\u0645\u0644\u0629!",
                     "confirmButton": "\u062d\u0633\u0646\u0627",
-                    "cancelButton": "\u0625\u0644\u063a\u0627\u0621"
+                    "cancelButton": "\u0625\u0644\u063a\u0627\u0621",
+                    "saveButton": "حفظ",
+                    "retakeButton": "استعادة"
                 },
                 "managePatient": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0631\u064a\u0636",
                 "noMoreUsers": "لا مزيد من المستخدمين"
@@ -317,12 +329,18 @@
                     "title2": "Field Settings",
                     "fieldType": "Field Type",
                     "clearance": "Clearance Level",
+                    "customization": "Customization",
                     "showOnDashBoard": "Show on Dashboard",
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard"
-                    }
+                        "discard": "Discard",
+                        "addChoice": "Add Choice"
+                    },
+                    "option": "Option",
+                    "question": "Question",
+                    "dividerTitle": "Divider Title",
+                    "headerTitle": "Header Title"
                 }
             },
             "map": {
