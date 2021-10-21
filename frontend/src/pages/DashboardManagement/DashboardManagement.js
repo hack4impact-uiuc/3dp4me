@@ -4,7 +4,11 @@ import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 
 import BottomBar from '../../components/BottomBar/BottomBar';
-import { getAllStepsMetadata, getAllRoles } from '../../api/api';
+import {
+    getAllStepsMetadata,
+    getAllRoles,
+    updateMultipleSteps,
+} from '../../api/api';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
@@ -17,6 +21,7 @@ import {
 import { resolveMixedObjPath } from '../../utils/object';
 import { useTranslations } from '../../hooks/useTranslations';
 import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
+import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -38,7 +43,8 @@ const SectionTab = () => {
         setStepModalOpen(true);
     };
 
-    const onAddField = () => {
+    const onAddField = (stepKey) => {
+        setSelectedStep(stepKey);
         setFieldModalOpen(true);
     };
 
@@ -140,6 +146,7 @@ const SectionTab = () => {
                 onUpPressed={onCardUpPressed}
                 stepMetadata={selectedStepMetadata}
                 onEditField={onEditField}
+                allRoles={allRoles}
             />
         );
     }
@@ -148,10 +155,13 @@ const SectionTab = () => {
         errorWrap(async () => {
             const fetchData = async () => {
                 const res = await getAllStepsMetadata();
-                if (res.result.length > 0) {
-                    setSelectedStep(res.result[0].key);
-                }
+
                 const sortedMetadata = sortMetadata(res.result);
+
+                if (sortedMetadata.length > 0) {
+                    setSelectedStep(sortedMetadata[0].key);
+                }
+
                 setStepMetadata(sortedMetadata);
             };
 
@@ -180,6 +190,7 @@ const SectionTab = () => {
                 isOpen={fieldModalOpen}
                 onModalClose={onFieldModalClose}
                 allRoles={allRoles}
+                onAddNewField={addNewField}
             />
         );
     };
@@ -190,6 +201,37 @@ const SectionTab = () => {
                 isOpen={stepModalOpen}
                 onModalClose={onStepModalClose}
             />
+        );
+    };
+
+    const addNewField = (newFieldData) => {
+        const updatedNewField = _.cloneDeep(newFieldData);
+        const updatedMetadata = _.cloneDeep(stepMetadata);
+
+        errorWrap(
+            async () => {
+                const stepIndex = stepMetadata.findIndex((element) => {
+                    return element.key === selectedStep;
+                });
+
+                updatedNewField.fieldNumber =
+                    updatedMetadata[stepIndex].fields.length;
+
+                const currentFieldKeys = updatedMetadata[stepIndex].fields.map(
+                    (field) => field.key,
+                );
+                updatedNewField.key = generateKeyWithoutCollision(
+                    updatedNewField.displayName.EN,
+                    currentFieldKeys,
+                );
+
+                updatedMetadata[stepIndex].fields.push(updatedNewField);
+
+                await updateMultipleSteps([updatedMetadata[stepIndex]]);
+            },
+            () => {
+                setStepMetadata(updatedMetadata);
+            },
         );
     };
 

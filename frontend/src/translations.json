@@ -152,8 +152,13 @@
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard"
-                    }
+                        "discard": "Discard",
+                        "addChoice": "Add Choice"
+                    },
+                    "option": "Option",
+                    "question": "Question",
+                    "dividerTitle": "Divider Title",
+                    "headerTitle": "Header Title"
                 }
             }
         },
@@ -323,8 +328,13 @@
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard"
-                    }
+                        "discard": "Discard",
+                        "addChoice": "Add Choice"
+                    },
+                    "option": "Option",
+                    "question": "Question",
+                    "dividerTitle": "Divider Title",
+                    "headerTitle": "Header Title"
                 }
             }
         },

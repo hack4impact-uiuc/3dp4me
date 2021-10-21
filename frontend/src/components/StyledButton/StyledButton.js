@@ -1,9 +1,11 @@
 import React from 'react';
+
 import './StyledButton.scss';
-import { LANGUAGES } from '../../utils/constants';
 import { Button } from '@material-ui/core';
-import { useTranslations } from '../../hooks/useTranslations';
 import PropTypes from 'prop-types';
+
+import { LANGUAGES } from '../../utils/constants';
+import { useTranslations } from '../../hooks/useTranslations';
 
 const StyledButton = ({ onClick, primary, children }) => {
     const selectedLang = useTranslations()[1];
