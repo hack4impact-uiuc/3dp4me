@@ -1,0 +1,19 @@
+.mapStyling {
+    width: 400px;
+    height: 400px;
+    position: relative;
+}
+
+.resetButton {
+    z-index: 1;
+    margin-top: 6px;
+    margin-left: 79%;
+    width: 80px;
+    height: 36px;
+    position: absolute;
+}
+
+.coordinateLabel {
+    margin-top: 6px;
+    font-size: 18px;
+}

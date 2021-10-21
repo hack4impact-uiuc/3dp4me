@@ -160,6 +160,12 @@
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
                 }
+            },
+            "map": {
+                "patientLocation": "Patient Location",
+                "reset": "Reset",
+                "latitude": "Latitude",
+                "longitude": "Longitude"
             }
         },
         "accountManagement": {
@@ -336,6 +342,12 @@
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
                 }
+            },
+            "map": {
+                "patientLocation": "موقع المريض",
+                "reset": "إعادة تعيين",
+                "latitude": "خط العرض",
+                "longitude": "خط الطول"
             }
         },
         "accountManagement": {
