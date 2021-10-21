@@ -10,6 +10,7 @@ const { ACCESS_LEVELS, ADMIN_ID } = require('../../utils/constants');
 
 let currentAuthenticatedUser = null;
 let lastUploadedFileParams = null;
+let identityServiceParams = null;
 
 /**
  * Creates a user data object with the specified roles. The returned object is similar to what the AWS
@@ -42,6 +43,17 @@ module.exports.initAuthMocker = (AWS) => {
     AWS.mock('CognitoIdentityServiceProvider', 'getUser', () =>
         Promise.reject(),
     );
+};
+
+/**
+ * Initializes the auth mocker for getting the list of users. Must be called once before all tests.
+ * @param {Object} AWS The AWS mocker. An instance of this object can be created with `const AWS = require('aws-sdk-mock')`
+ */
+module.exports.initIdentityServiceMocker = (AWS) => {
+    AWS.mock('CognitoIdentityServiceProvider', 'listUsers', (params) => {
+        identityServiceParams = params;
+        return Promise.resolve();
+    });
 };
 
 /**
@@ -106,3 +118,4 @@ module.exports.getCurrentAuthenticatedUserAttribute = (attribName) =>
     ).Value;
 
 module.exports.getLastUploadedFileParams = () => lastUploadedFileParams;
+module.exports.identityServiceParams = () => identityServiceParams;

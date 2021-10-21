@@ -207,3 +207,4 @@ export const COORDINATES = {
     DEFAULT_MAP_LAT: 37.7577,
     DEFAULT_MAP_LONG: -122.4376,
 };
+export const PEOPLE_PER_PAGE = 14;

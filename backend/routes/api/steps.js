@@ -6,18 +6,19 @@ const mongoose = require('mongoose');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const { PATIENT_STATUS_ENUM } = require('../../utils/constants');
-const { sendResponse } = require('../../utils/response');
+const { sendResponse, getDataFromModelWithPagination } = require('../../utils/response');
 
 /**
  * Returns basic information for all patients that are active in
  * the specified step.
  *
- * TODO: We should paginate this in the future.
+ *
  */
 router.get(
     '/:stepKey',
     errorWrap(async (req, res) => {
         const { stepKey } = req.params;
+
         const steps = await models.Step.find({ key: stepKey });
 
         // Check if step exists
@@ -31,8 +32,7 @@ router.get(
             return sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
-        // Cannot use an aggregation here due to the encryption middleware
-        const patients = await models.Patient.find({
+        const patients = await getDataFromModelWithPagination(req, models.Patient, {
             status: PATIENT_STATUS_ENUM.ACTIVE,
         });
 

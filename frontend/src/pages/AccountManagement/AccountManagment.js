@@ -1,7 +1,11 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
-import { getAllRoles, getAllUsers } from '../../api/api';
+import {
+    getUsersByPageNumber,
+    getUsersByPageNumberAndToken,
+    getAllRoles,
+} from '../../api/api';
 import {
     getAccessLevel,
     getEmail,
@@ -20,11 +24,13 @@ import {
     getUserTableHeaders,
     LANGUAGES,
     USER_TABLE_ROW_DATA,
+    PEOPLE_PER_PAGE,
 } from '../../utils/constants';
 import {
     generateUserTableRowRenderer,
     userTableHeaderRenderer,
 } from '../../utils/table-renderers';
+import './AccountManagement.scss';
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -35,19 +41,60 @@ const AccountManagement = () => {
     const [userMetaData, setUserMetaData] = useState([]);
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [paginationToken, setPaginationToken] = useState('');
+    const [isUserLeft, setIsUserLeft] = useState(true);
+    const [pageNumber, setPageNumber] = useState(0);
+
     const errorWrap = useErrorWrap();
 
+    const fetchMoreUsers = async () => {
+        const userRes = await getUsersByPageNumberAndToken(
+            paginationToken,
+            PEOPLE_PER_PAGE,
+        );
+
+        const totalUserMetaData = userMetaData.concat(userRes.result.Users);
+        setUserMetaData(totalUserMetaData);
+
+        const newPaginationToken = userRes.result.PaginationToken;
+
+        if (newPaginationToken) {
+            setPaginationToken(newPaginationToken);
+        } else {
+            setIsUserLeft(false);
+        }
+
+        setPageNumber(pageNumber + 1);
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            const userRes = await getAllUsers();
-            setUserMetaData(userRes.result.Users);
+        errorWrap(async () => {
+            const fetchRoles = async () => {
+                const rolesRes = await getAllRoles();
+                const roles = rolesToMultiSelectFormat(rolesRes.result);
+                setRolesData(roles);
+            };
 
-            const rolesRes = await getAllRoles();
-            const roles = rolesToMultiSelectFormat(rolesRes.result);
+            const fetchInitialUsers = async () => {
+                const userRes = await getUsersByPageNumber(PEOPLE_PER_PAGE);
 
-            setRolesData(roles);
-        };
-        errorWrap(fetchData);
+                const totalUserMetaData = userRes.result.Users;
+                setUserMetaData(totalUserMetaData);
+
+                const newPaginationToken = userRes.result.PaginationToken;
+
+                if (newPaginationToken) {
+                    setPaginationToken(newPaginationToken);
+                } else {
+                    setIsUserLeft(false);
+                }
+
+                setPageNumber(1);
+            };
+
+            await fetchRoles();
+            await fetchInitialUsers();
+        });
     }, [setUserMetaData, errorWrap]);
 
     /**
@@ -144,6 +191,26 @@ const AccountManagement = () => {
         );
     }
 
+    function generateLoadMoreBtn() {
+        return isUserLeft ? (
+            <div className="load-div">
+                <button
+                    type="button"
+                    className="load-more-btn"
+                    onClick={() => errorWrap(fetchMoreUsers)}
+                >
+                    {translations.components.button.loadMore}
+                </button>
+            </div>
+        ) : (
+            <div className="load-div">
+                <p className="load-more-text">
+                    {translations.components.button.noMoreUsers}
+                </p>
+            </div>
+        );
+    }
+
     const generateUserEditModal = () => {
         return (
             <EditRoleModal
@@ -174,6 +241,7 @@ const AccountManagement = () => {
                     </div>
                 </div>
                 {generateMainUserTable()}
+                {generateLoadMoreBtn()}
             </div>
             {generateUserEditModal()}
         </div>

@@ -1,0 +1,32 @@
+.load-div {
+    display: flex;
+    padding: 4px 12px;
+    flex-wrap: wrap;
+    text-align: center;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0 auto;
+    width: 90%;
+    background-color: #323366;
+    height: auto;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.load-more-btn {
+    height: auto;
+    padding: 6px 24px;
+    background-color: white;
+    border: 3px solid white;
+    color: #323366;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.load-more-text {
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 6px 0px;
+}
