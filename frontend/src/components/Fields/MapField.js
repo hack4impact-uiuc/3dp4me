@@ -22,11 +22,11 @@ export default function MapField() {
 
     const mapRef = useRef();
 
-    const handleGeocoderViewportChange = (viewport) => {
+    const handleGeocoderViewportChange = (newViewPort) => {
         const geocoderDefaultOverrides = { transitionDuration: 1000 };
 
         return setViewport({
-            ...viewport,
+            ...newViewPort,
             ...geocoderDefaultOverrides,
         });
     };
@@ -39,9 +39,15 @@ export default function MapField() {
 
             <ReactMapGL
                 ref={mapRef}
-                mapStyle="mapbox://styles/mapbox/dark-v9"
+                mapStyle="mapbox://styles/mapbox/satellite-v9"
                 mapboxApiAccessToken={MAPBOX_TOKEN}
-                {...viewport}
+                latitiutde={viewport?.latitiude}
+                longitude={viewport?.longitude}
+                zoom={viewport?.zoom}
+                width={viewport?.width}
+                height={viewport?.height}
+                pitch={viewport?.pitch}
+                transitionDuration={viewport?.transitionDuration}
                 onViewportChange={(newView) => setViewport(newView)}
             >
                 <Marker
