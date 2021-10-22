@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
+
 import {
     getAllStepsMetadata,
     getPatientById,

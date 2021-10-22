@@ -1,4 +1,5 @@
 import _ from "lodash";
+
 import { downloadBlobWithoutSaving } from '../api/api';
 
 export const blobToDataURL = (blob) => {

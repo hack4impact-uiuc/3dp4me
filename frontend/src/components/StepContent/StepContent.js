@@ -9,6 +9,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
+
 import { deleteFile, downloadFile, uploadFile } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -38,7 +39,7 @@ const StepContent = ({
     }, [stepData]);
 
     const handleSimpleUpdate = (fieldKey, value) => {
-            console.log(fieldKey + " " + JSON.stringify(value))
+            console.log(`${fieldKey  } ${  JSON.stringify(value)}`)
         setUpdatedData((data) => {
             const dataCopy = _.cloneDeep(data);
             _.set(dataCopy, fieldKey, value);

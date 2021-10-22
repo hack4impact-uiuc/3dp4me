@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
+
 import 'react-image-gallery/styles/css/image-gallery.css';
 import { useTranslations } from '../../hooks/useTranslations';
 import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
@@ -11,8 +12,8 @@ import { blobToDataURL, convertPhotosToURI, dataURItoBlob } from '../../utils/ph
 import { StyledButton } from '../StyledButton/StyledButton';
 import './PhotoField.scss';
 
+
 const PhotoField = ({
-    metadata,
     value,
     displayName,
     patientId,
@@ -27,7 +28,7 @@ const PhotoField = ({
     const translations = useTranslations()[0];
 
     useEffect(() => {
-        updateMetaDataPhotos(metadata, value)
+        updateMetaDataPhotos(value)
     }, [value]);
 
     const updateMetaDataPhotos = async (data) => {
@@ -59,7 +60,6 @@ const PhotoField = ({
         const d = Date.now();
         const fileName = d.toString();
         const photoFile = new File([photoObj], fileName);
-        console.log(photoFile)
         handleFileUpload(fieldId, photoFile);
         const photoTaken = { uri: dUri };
         const newImages = value;
@@ -173,8 +173,9 @@ PhotoField.propTypes = {
     value: PropTypes.array,
     displayName: PropTypes.string.isRequired,
     fieldId: PropTypes.string.isRequired,
-    handleSimpleUpdate: PropTypes.func.isRequired,
+    patientId: PropTypes.string.isRequired,
     handleFileUpload: PropTypes.func.isRequired,
+    stepKey: PropTypes.string.isRequired,
 };
 
 export default PhotoField;

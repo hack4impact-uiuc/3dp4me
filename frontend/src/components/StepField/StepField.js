@@ -3,6 +3,7 @@
 import { Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
+
 import { useTranslations } from '../../hooks/useTranslations';
 import { FIELD_TYPES } from '../../utils/constants';
 import AudioRecorder from '../AudioRecorder/AudioRecorder';
@@ -171,11 +172,8 @@ const StepField = ({
                         patientId={patientId}
                         stepKey={stepKey}
                         value={value || []}
-                        metadata={metadata}
                         displayName={displayName}
                         fieldId={metadata.key}
-                        handleFileUpload={handleFileUpload}
-                        handleSimpleUpdate={handleSimpleUpdate}
                     />
                 );
             default:
