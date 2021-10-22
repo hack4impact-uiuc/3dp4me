@@ -41,7 +41,7 @@ export default function MapField() {
                 ref={mapRef}
                 mapStyle="mapbox://styles/mapbox/satellite-v9"
                 mapboxApiAccessToken={MAPBOX_TOKEN}
-                latitiutde={viewport?.latitiude}
+                latitude={viewport?.latitude}
                 longitude={viewport?.longitude}
                 zoom={viewport?.zoom}
                 width={viewport?.width}
