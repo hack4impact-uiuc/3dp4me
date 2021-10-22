@@ -20,6 +20,7 @@ import StepField from '../StepField/StepField';
 import './StepContent.scss';
 
 
+
 const StepContent = ({
     patientId,
     metaData,
@@ -39,7 +40,6 @@ const StepContent = ({
     }, [stepData]);
 
     const handleSimpleUpdate = (fieldKey, value) => {
-            console.log(`${fieldKey  } ${  JSON.stringify(value)}`)
         setUpdatedData((data) => {
             const dataCopy = _.cloneDeep(data);
             _.set(dataCopy, fieldKey, value);
