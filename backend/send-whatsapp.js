@@ -9,7 +9,7 @@ client.messages
         to: 'whatsapp:+13098319210', // Text this number
         from: 'whatsapp:+14155238886', // From a valid Twilio number
     })
-    .then((message) => console.log(message.sid));
+    .then((message) => console.log(message));
 
 // while (true) {}
 

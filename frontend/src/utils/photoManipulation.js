@@ -1,4 +1,5 @@
 import { downloadBlobWithoutSaving } from '../api/api';
+
 export const blobToDataURL = (blob) => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -16,7 +17,7 @@ export const convertPhotosToURI = async (
     patientId,
 ) => {
     const newPhotoData = photoData.map(async (photoObj) => {
-        let modifiedPhotoObj = photoObj;
+        const modifiedPhotoObj = photoObj;
         modifiedPhotoObj.uri = await photoToURI(
             photoObj,
             stepKey,

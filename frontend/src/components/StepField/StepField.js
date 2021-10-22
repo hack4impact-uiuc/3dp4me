@@ -16,6 +16,7 @@ import SignatureField from '../Fields/SignatureField';
 import PhotoField from '../Fields/PhotoField';
 import { useTranslations } from '../../hooks/useTranslations';
 import TextArea from '../Fields/TextArea';
+import MapField from '../Fields/MapField';
 
 const StepField = ({
     metadata,
@@ -162,6 +163,8 @@ const StepField = ({
                 );
             case FIELD_TYPES.HEADER:
                 return <h3>{displayName}</h3>;
+            case FIELD_TYPES.MAP:
+                return <MapField />;
             case FIELD_TYPES.PHOTO:
                 return (
                     <PhotoField

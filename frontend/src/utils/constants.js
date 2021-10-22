@@ -7,6 +7,11 @@ const PUBLIC_CLOUDFRONT_URL = 'https://d1m40dlonmuszr.cloudfront.net';
  */
 export const FLAG_URL = `${PUBLIC_CLOUDFRONT_URL}/country-flag-icons-gh-pages/3x2/{XX}.svg`;
 
+export const PIN_URL = `${PUBLIC_CLOUDFRONT_URL}/pin.png`;
+
+export const MAPBOX_TOKEN =
+    'pk.eyJ1IjoiYXJjaG5hLTEiLCJhIjoiY2t1eDl3dzgxNnEycDJ3bnoyNzI2bHV3YSJ9.SYNmuMBaIUvJ53tlV5oW5Q';
+
 /**
  * List of possible field types. Must match Metadata.js in the backend.
  */
@@ -20,10 +25,10 @@ export const FIELD_TYPES = {
     DIVIDER: 'Divider',
     HEADER: 'Header',
     RADIO_BUTTON: 'RadioButton',
-    DROPDOWN: 'Dropdown',
     AUDIO: 'Audio',
     FIELD_GROUP: 'FieldGroup',
     SIGNATURE: 'Signature',
+    MAP: 'Map',
     PHOTO: 'Photo',
 
     // These are special fields only used on the frontend for table rendering
@@ -197,6 +202,10 @@ export const SIGNATURE_STATUS = {
  */
 export const PATIENT_KEY_STATUS = 'status';
 
+export const COORDINATES = {
+    DEFAULT_MAP_LAT: 37.7577,
+    DEFAULT_MAP_LONG: -122.4376,
+};
 export const PEOPLE_PER_PAGE = 14;
 
 export const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 16;

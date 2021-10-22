@@ -6,7 +6,10 @@ const mongoose = require('mongoose');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const { PATIENT_STATUS_ENUM } = require('../../utils/constants');
-const { sendResponse, getDataFromModelWithPagination } = require('../../utils/response');
+const {
+    sendResponse,
+    getDataFromModelWithPagination,
+} = require('../../utils/response');
 
 /**
  * Returns basic information for all patients that are active in
@@ -32,9 +35,13 @@ router.get(
             return sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
-        const patients = await getDataFromModelWithPagination(req, models.Patient, {
-            status: PATIENT_STATUS_ENUM.ACTIVE,
-        });
+        const patients = await getDataFromModelWithPagination(
+            req,
+            models.Patient,
+            {
+                status: PATIENT_STATUS_ENUM.ACTIVE,
+            },
+        );
 
         // Create array of promises to speed this up a bit
         const lookups = patients.map(async (p) => {

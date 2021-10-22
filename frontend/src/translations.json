@@ -152,9 +152,20 @@
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard"
-                    }
+                        "discard": "Discard",
+                        "addChoice": "Add Choice"
+                    },
+                    "option": "Option",
+                    "question": "Question",
+                    "dividerTitle": "Divider Title",
+                    "headerTitle": "Header Title"
                 }
+            },
+            "map": {
+                "patientLocation": "Patient Location",
+                "reset": "Reset",
+                "latitude": "Latitude",
+                "longitude": "Longitude"
             }
         },
         "accountManagement": {
@@ -323,9 +334,20 @@
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
-                        "discard": "Discard"
-                    }
+                        "discard": "Discard",
+                        "addChoice": "Add Choice"
+                    },
+                    "option": "Option",
+                    "question": "Question",
+                    "dividerTitle": "Divider Title",
+                    "headerTitle": "Header Title"
                 }
+            },
+            "map": {
+                "patientLocation": "موقع المريض",
+                "reset": "إعادة تعيين",
+                "latitude": "خط العرض",
+                "longitude": "خط الطول"
             }
         },
         "accountManagement": {

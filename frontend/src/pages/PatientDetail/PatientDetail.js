@@ -19,7 +19,6 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar';
-
 import { convertPhotosToURI } from '../../utils/photoManipulation';
 
 /**
