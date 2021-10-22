@@ -19,7 +19,7 @@ const patientSchema = new mongoose.Schema({
     firstName: { type: String, required: false },
     fathersName: { type: String, required: false, default: '' },
     grandfathersName: { type: String, required: false, default: '' },
-    familyName: { type: String, required: true },
+    familyName: { type: String, required: false },
     dateCreated: { type: Date, required: false, default: Date.now },
     orderId: { type: String, required: false, default: '' },
     lastEdited: { type: Date, required: false, default: Date.now },
