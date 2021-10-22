@@ -3,13 +3,12 @@ import {
     Button,
     CircularProgress,
     MenuItem,
-    Select,
+    Select
 } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
-
 import { deleteFile, downloadFile, uploadFile } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -18,6 +17,7 @@ import { formatDate } from '../../utils/date';
 import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
 import './StepContent.scss';
+
 
 const StepContent = ({
     patientId,
@@ -38,6 +38,7 @@ const StepContent = ({
     }, [stepData]);
 
     const handleSimpleUpdate = (fieldKey, value) => {
+            console.log(fieldKey + " " + JSON.stringify(value))
         setUpdatedData((data) => {
             const dataCopy = _.cloneDeep(data);
             _.set(dataCopy, fieldKey, value);
@@ -82,7 +83,8 @@ const StepContent = ({
             };
 
             let files = _.cloneDeep(updatedData[fieldKey]);
-            if (files) files = files.concat(newFile);
+            
+            if (files) files = [...files, newFile]
             else files = [newFile];
 
             handleSimpleUpdate(fieldKey, files);
@@ -90,7 +92,7 @@ const StepContent = ({
     };
 
     const saveData = () => {
-        onDataSaved(metaData.key, updatedData);
+        onDataSaved(metaData.key, _.cloneDeep(updatedData));
         setEdit(false);
         swal(
             translations.components.bottombar.savedMessage.patientInfo,
@@ -143,7 +145,7 @@ const StepContent = ({
                     <StepField
                         displayName={field.displayName[selectedLang]}
                         metadata={field}
-                        value={updatedData ? updatedData[field.key] : null}
+                        value={updatedData ? _.cloneDeep(updatedData[field.key]) : null}
                         key={field.key}
                         langKey={selectedLang}
                         isDisabled={!edit}

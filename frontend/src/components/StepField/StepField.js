@@ -1,22 +1,22 @@
 /* eslint import/no-cycle: "off" */
 
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Divider } from '@material-ui/core';
-
+import PropTypes from 'prop-types';
+import React from 'react';
+import { useTranslations } from '../../hooks/useTranslations';
+import { FIELD_TYPES } from '../../utils/constants';
 import AudioRecorder from '../AudioRecorder/AudioRecorder';
+import DateField from '../Fields/DateField';
+import FieldGroup from '../Fields/FieldGroup';
+import MapField from '../Fields/MapField';
+import PhoneField from '../Fields/PhoneField';
+import PhotoField from '../Fields/PhotoField';
+import RadioButtonField from '../Fields/RadioButtonField';
+import SignatureField from '../Fields/SignatureField';
+import TextArea from '../Fields/TextArea';
 import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
-import { FIELD_TYPES } from '../../utils/constants';
-import RadioButtonField from '../Fields/RadioButtonField';
-import DateField from '../Fields/DateField';
-import PhoneField from '../Fields/PhoneField';
-import FieldGroup from '../Fields/FieldGroup';
-import SignatureField from '../Fields/SignatureField';
-import PhotoField from '../Fields/PhotoField';
-import { useTranslations } from '../../hooks/useTranslations';
-import TextArea from '../Fields/TextArea';
-import MapField from '../Fields/MapField';
+
 
 const StepField = ({
     metadata,
@@ -170,7 +170,8 @@ const StepField = ({
                     <PhotoField
                         patientId={patientId}
                         stepKey={stepKey}
-                        value={value}
+                        value={value || []}
+                        metadata={metadata}
                         displayName={displayName}
                         fieldId={metadata.key}
                         handleFileUpload={handleFileUpload}
