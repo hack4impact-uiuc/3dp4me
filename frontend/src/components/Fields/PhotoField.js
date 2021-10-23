@@ -8,10 +8,13 @@ import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import { useTranslations } from '../../hooks/useTranslations';
 import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
-import { blobToDataURL, convertPhotosToURI, dataURItoBlob } from '../../utils/photoManipulation';
+import {
+    blobToDataURL,
+    convertPhotosToURI,
+    dataURItoBlob,
+} from '../../utils/photoManipulation';
 import { StyledButton } from '../StyledButton/StyledButton';
 import './PhotoField.scss';
-
 
 const PhotoField = ({
     value,
@@ -28,7 +31,7 @@ const PhotoField = ({
     const translations = useTranslations()[0];
 
     useEffect(() => {
-        updateMetaDataPhotos(value)
+        updateMetaDataPhotos(value);
     }, [value]);
 
     const updateMetaDataPhotos = async (data) => {
@@ -39,14 +42,16 @@ const PhotoField = ({
             patientId,
         );
 
-        setImages(newPhotoData.map((v) => {
-            return {
-                original: v.uri,
-                thumbnail: v.uri,
-                originalWidth: '700',
-                originalHeight: '300',
-            };
-        }))
+        setImages(
+            newPhotoData.map((v) => {
+                return {
+                    original: v.uri,
+                    thumbnail: v.uri,
+                    originalWidth: '700',
+                    originalHeight: '300',
+                };
+            }),
+        );
     };
 
     const handleTakePhoto = (uri) => {

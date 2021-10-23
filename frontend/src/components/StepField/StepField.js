@@ -18,7 +18,6 @@ import TextArea from '../Fields/TextArea';
 import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
 
-
 const StepField = ({
     metadata,
     value,
