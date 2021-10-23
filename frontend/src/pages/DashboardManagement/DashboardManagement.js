@@ -12,6 +12,7 @@ import {
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
+import EditFieldModal from '../../components/EditFieldModal/EditFieldModal';
 import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
@@ -33,7 +34,8 @@ const SectionTab = () => {
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
-    const [fieldModalOpen, setFieldModalOpen] = useState(false);
+    const [createFieldModalOpen, setCreateFieldModalOpen] = useState(false);
+    const [editFieldModalOpen, setEditFieldModalOpen] = useState(false);
     const [stepModalOpen, setStepModalOpen] = useState(false);
     const [allRoles, setAllRoles] = useState([]);
 
@@ -45,11 +47,14 @@ const SectionTab = () => {
 
     const onAddField = (stepKey) => {
         setSelectedStep(stepKey);
-        setFieldModalOpen(true);
+        setCreateFieldModalOpen(true);
     };
 
-    const onEditField = () => {
-        // setFieldModalOpen(true);
+    const onEditField = (stepKey, fieldRoot, fieldNumber) => {
+        console.log(key);
+        console.log(fieldNumber);
+
+        // setEditFieldModalOpen(true);
         // TODO
     };
 
@@ -176,8 +181,12 @@ const SectionTab = () => {
         });
     }, [setStepMetadata, errorWrap]);
 
-    const onFieldModalClose = () => {
-        setFieldModalOpen(false);
+    const onCreateFieldModalClose = () => {
+        setCreateFieldModalOpen(false);
+    };
+
+    const onEditFieldModalClose = () => {
+        setEditFieldModalOpen(false);
     };
 
     const onStepModalClose = () => {
@@ -187,8 +196,19 @@ const SectionTab = () => {
     const generateNewFieldPopup = () => {
         return (
             <CreateFieldModal
-                isOpen={fieldModalOpen}
-                onModalClose={onFieldModalClose}
+                isOpen={createFieldModalOpen}
+                onModalClose={onCreateFieldModalClose}
+                allRoles={allRoles}
+                onAddNewField={addNewField}
+            />
+        );
+    };
+
+    const generateEditFieldPopup = () => {
+        return (
+            <EditFieldModal
+                isOpen={editFieldModalOpen}
+                onModalClose={onEditFieldModalClose}
                 allRoles={allRoles}
                 onAddNewField={addNewField}
             />
@@ -282,6 +302,7 @@ const SectionTab = () => {
 
             {generateNewStepPopup()}
             {generateNewFieldPopup()}
+            {generateEditFieldPopup()}
         </div>
     );
 };
