@@ -11,6 +11,7 @@ const StepManagementContent = ({
     onDownPressed,
     onUpPressed,
     onEditField,
+    onDeleteField,
     stepMetadata,
     isEditing,
     allRoles,
@@ -64,6 +65,15 @@ const StepManagementContent = ({
                     }
                 >
                     <i className="pencil alternate icon" />
+                </div>
+
+                <div
+                    className="delete-field-button"
+                    onClick={() =>
+                        onDeleteField(stepMetadata.key, fieldRoot, fieldNumber)
+                    }
+                >
+                    <i className="trash alternate icon"></i>
                 </div>
 
                 <div className="reorder-buttons">
@@ -157,6 +167,7 @@ StepManagementContent.propTypes = {
     isEditing: PropTypes.bool.isRequired,
     onDownPressed: PropTypes.func.isRequired,
     onEditField: PropTypes.func.isRequired,
+    onDeleteField: PropTypes.func.isRequired,
     stepMetadata: PropTypes.object,
     onUpPressed: PropTypes.func.isRequired,
     allRoles: PropTypes.array.isRequired,

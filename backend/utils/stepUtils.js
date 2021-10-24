@@ -66,20 +66,13 @@ const updateStepInTransation = async (stepBody, session) => {
     if (!stepToEdit)
         await abortAndError(session, `No step with key, ${stepKey}`);
 
-    // Build up a list of al the new fields added
+    // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
     const addedFields = await getAddedFields(
         session,
         stepToEdit.fields,
         strippedBody.fields,
     );
-
-    // Checks that fields were not deleted
-    const numUnchangedFields = strippedBody.fields.length - addedFields.length;
-    const currentNumFields = stepToEdit.fields.length;
-
-    if (numUnchangedFields < currentNumFields)
-        await abortAndError(session, 'Cannot delete fields');
 
     // Update the schema
     addFieldsToSchema(stepKey, addedFields);
