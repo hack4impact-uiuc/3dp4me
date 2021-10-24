@@ -17,7 +17,7 @@ const DEFAULT_LONG = 127.2
 // MAP ALL GREYED OUT AFTER MOVE??????
 const MapField = ({ displayName, isDisabled, fieldId, resetValue, value}) => {
 
-    const initialViewport = useMemo(() => {
+    const initialViewport = {
         latitude: value?.latitude || DEFAULT_LAT,
         longitude: value?.longitude || DEFAULT_LONG,
         zoom: 8,
@@ -25,7 +25,7 @@ const MapField = ({ displayName, isDisabled, fieldId, resetValue, value}) => {
         height: '100%',
         pitch: 50,
         transitionDuration: 100
-    }, [value]);
+    };
 
     useEffect(() => {
       initialViewport.latitude = value?.latitude || DEFAULT_LAT; // do i need the or here?
@@ -49,7 +49,7 @@ const MapField = ({ displayName, isDisabled, fieldId, resetValue, value}) => {
         longitude: viewport.longitude
       }
 
-      setValue(coordinates);
+      // setValue(coordinates);
     };
 
     const mapRef = useRef()

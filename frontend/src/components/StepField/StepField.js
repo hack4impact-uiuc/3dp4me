@@ -15,12 +15,8 @@ import PhotoField from '../Fields/PhotoField';
 import RadioButtonField from '../Fields/RadioButtonField';
 import SignatureField from '../Fields/SignatureField';
 import TextArea from '../Fields/TextArea';
-<<<<<<< HEAD
-import MapField from '../Fields/MapField';
-=======
 import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
->>>>>>> 9a1c37dba252f7d3c9fbb9c16ac71cb66eda1b93
 
 const StepField = ({
     metadata,
