@@ -30,6 +30,7 @@ const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
     const [stepMetadata, setStepMetadata] = useState([]);
+    const [originalStepMetadata, setOriginalSetMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [createFieldModalOpen, setCreateFieldModalOpen] = useState(false);
@@ -89,9 +90,7 @@ const SectionTab = () => {
     };
 
     const onDiscardChanges = async () => {
-        const res = await getAllStepsMetadata();
-        const sortedMetadata = sortMetadata(res.result);
-        setStepMetadata(sortedMetadata);
+        setStepMetadata(originalStepMetadata);
         setIsEditing(false);
     };
 
@@ -196,6 +195,7 @@ const SectionTab = () => {
                 }
 
                 setStepMetadata(sortedMetadata);
+                setOriginalSetMetadata(sortedMetadata);
             };
 
             const fetchRoles = async () => {
