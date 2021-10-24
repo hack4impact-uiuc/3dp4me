@@ -1,23 +1,27 @@
-import Camera from 'react-html5-camera-photo';
-import ImageGallery from 'react-image-gallery';
 import { Modal } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
-
-import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
-import { StyledButton } from '../StyledButton/StyledButton';
-import { useTranslations } from '../../hooks/useTranslations';
-import './PhotoField.scss';
+import React, { useEffect, useState } from 'react';
+import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
-import 'react-image-gallery/styles/css/image-gallery.css';
+import ImageGallery from 'react-image-gallery';
 
-import { blobToDataURL, dataURItoBlob } from '../../utils/photoManipulation';
+import 'react-image-gallery/styles/css/image-gallery.css';
+import { useTranslations } from '../../hooks/useTranslations';
+import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
+import {
+    blobToDataURL,
+    convertPhotosToURI,
+    dataURItoBlob,
+} from '../../utils/photoManipulation';
+import { StyledButton } from '../StyledButton/StyledButton';
+import './PhotoField.scss';
 
 const PhotoField = ({
-    value = [],
+    value,
     displayName,
+    patientId,
+    stepKey,
     fieldId,
-    handleSimpleUpdate,
     handleFileUpload,
 }) => {
     const [images, setImages] = useState([]);
@@ -27,8 +31,19 @@ const PhotoField = ({
     const translations = useTranslations()[0];
 
     useEffect(() => {
+        updateMetaDataPhotos(value);
+    }, [value]);
+
+    const updateMetaDataPhotos = async (data) => {
+        const newPhotoData = await convertPhotosToURI(
+            data,
+            stepKey,
+            fieldId,
+            patientId,
+        );
+
         setImages(
-            value.map((v) => {
+            newPhotoData.map((v) => {
                 return {
                     original: v.uri,
                     thumbnail: v.uri,
@@ -37,7 +52,7 @@ const PhotoField = ({
                 };
             }),
         );
-    }, [value]);
+    };
 
     const handleTakePhoto = (uri) => {
         setUri(uri);
@@ -54,7 +69,7 @@ const PhotoField = ({
         const photoTaken = { uri: dUri };
         const newImages = value;
         newImages.push(photoTaken);
-        handleSimpleUpdate(fieldId, newImages);
+        setImages(newImages);
         resetUpload();
     };
 
@@ -163,8 +178,9 @@ PhotoField.propTypes = {
     value: PropTypes.array,
     displayName: PropTypes.string.isRequired,
     fieldId: PropTypes.string.isRequired,
-    handleSimpleUpdate: PropTypes.func.isRequired,
+    patientId: PropTypes.string.isRequired,
     handleFileUpload: PropTypes.func.isRequired,
+    stepKey: PropTypes.string.isRequired,
 };
 
 export default PhotoField;
