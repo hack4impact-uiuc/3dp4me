@@ -1,5 +1,5 @@
 import './EditFieldModal.scss';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Button,
     Checkbox,
@@ -17,14 +17,50 @@ import MultiSelectField from '../Fields/MultiSelectField';
 import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
+import { LANGUAGES } from '../../utils/constants';
 
-const EditFieldModal = ({ isOpen, onModalClose, allRoles, onAddNewField }) => {
+const EditFieldModal = ({
+    isOpen,
+    initialData,
+    onModalClose,
+    allRoles,
+    onEditField,
+}) => {
     const [translations, selectedLang] = useTranslations();
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
     const [options, setOptions] = useState([]);
+
+    useEffect(() => {
+        setFieldType(initialData.fieldType);
+        setIsVisibleOnDashboard(initialData.isVisibleOnDashboard);
+        setDisplayName(initialData.displayName);
+
+        let initialRoles = initialData.readableGroups;
+
+        if (initialRoles.length == 0) {
+            // In the event that the readable groups is empty,
+            // we need to add the Admin role _id. This is because
+            // every field has the Admin role by default.
+            const adminRole = allRoles.find(
+                (role) => role.Question.EN == 'Admin',
+            );
+
+            if (adminRole) {
+                initialRoles.push(adminRole._id);
+            }
+        }
+
+        setSelectedRoles(initialRoles);
+
+        let formattedOptions = initialData.options.map((option) => {
+            return option['Question'];
+        });
+
+        setOptions(formattedOptions);
+    }, [initialData, isOpen]);
 
     const BootstrapInput = withStyles((theme) => ({
         root: {
@@ -103,10 +139,18 @@ const EditFieldModal = ({ isOpen, onModalClose, allRoles, onAddNewField }) => {
                     <LanguageInput
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
                         handleEnglishFieldChange={(event) => {
-                            updateOptionField(i, event.target.value, 'EN');
+                            updateOptionField(
+                                i,
+                                event.target.value,
+                                LANGUAGES.EN,
+                            );
                         }}
                         handleArabicFieldChange={(event) => {
-                            updateOptionField(i, event.target.value, 'AR');
+                            updateOptionField(
+                                i,
+                                event.target.value,
+                                LANGUAGES.AR,
+                            );
                         }}
                         onDelete={() => {
                             deleteOption(i);
@@ -230,7 +274,7 @@ const EditFieldModal = ({ isOpen, onModalClose, allRoles, onAddNewField }) => {
         return fieldDropdownOptions;
     };
 
-    const saveNewField = () => {
+    const editNewField = () => {
         const formattedOptions = options.map((option, index) => {
             return { Index: index, Question: option };
         });
@@ -243,11 +287,12 @@ const EditFieldModal = ({ isOpen, onModalClose, allRoles, onAddNewField }) => {
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
             subFields: [],
+            key: initialData.key,
+            fieldNumber: initialData.fieldNumber,
         };
 
-        onAddNewField(newFieldData);
+        onEditField(newFieldData);
         onModalClose();
-        clearState();
     };
 
     const handleIsVisibleOnDashboard = (event) => {
@@ -263,7 +308,6 @@ const EditFieldModal = ({ isOpen, onModalClose, allRoles, onAddNewField }) => {
     };
 
     const onDiscard = () => {
-        clearState();
         onModalClose();
     };
 
@@ -275,7 +319,7 @@ const EditFieldModal = ({ isOpen, onModalClose, allRoles, onAddNewField }) => {
         >
             <div className="create-field-modal-wrapper">
                 <span className="create-field-title1">
-                    {translations.components.swal.createField.title}
+                    {translations.components.swal.editField.title}
                 </span>
                 <span className="create-field-title2">
                     {translations.components.swal.createField.title2}
@@ -344,7 +388,7 @@ const EditFieldModal = ({ isOpen, onModalClose, allRoles, onAddNewField }) => {
                     }}
                 >
                     <Button
-                        onClick={saveNewField}
+                        onClick={editNewField}
                         className="save-field-button"
                     >
                         {translations.components.swal.createField.buttons.save}
@@ -366,9 +410,10 @@ const EditFieldModal = ({ isOpen, onModalClose, allRoles, onAddNewField }) => {
 
 EditFieldModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
+    initialData: PropTypes.object.isRequired,
     onModalClose: PropTypes.func.isRequired,
     allRoles: PropTypes.array.isRequired,
-    onAddNewField: PropTypes.func.isRequired,
+    onEditField: PropTypes.func.isRequired,
 };
 
 export default EditFieldModal;

@@ -159,6 +159,9 @@
                     "question": "Question",
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
+                },
+                "editField": {
+                    "title": "Edit Field"
                 }
             }
         },
@@ -335,6 +338,9 @@
                     "question": "Question",
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
+                },
+                "editField": {
+                    "title": "Edit Field"
                 }
             }
         },

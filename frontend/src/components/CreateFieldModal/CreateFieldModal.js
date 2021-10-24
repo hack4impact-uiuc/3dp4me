@@ -17,6 +17,7 @@ import MultiSelectField from '../Fields/MultiSelectField';
 import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
+import { LANGUAGES } from '../../utils/constants';
 
 const CreateFieldModal = ({
     isOpen,
@@ -108,10 +109,18 @@ const CreateFieldModal = ({
                     <LanguageInput
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
                         handleEnglishFieldChange={(event) => {
-                            updateOptionField(i, event.target.value, 'EN');
+                            updateOptionField(
+                                i,
+                                event.target.value,
+                                LANGUAGES.EN,
+                            );
                         }}
                         handleArabicFieldChange={(event) => {
-                            updateOptionField(i, event.target.value, 'AR');
+                            updateOptionField(
+                                i,
+                                event.target.value,
+                                LANGUAGES.AR,
+                            );
                         }}
                         onDelete={() => {
                             deleteOption(i);

@@ -38,6 +38,7 @@ const SectionTab = () => {
     const [editFieldModalOpen, setEditFieldModalOpen] = useState(false);
     const [stepModalOpen, setStepModalOpen] = useState(false);
     const [allRoles, setAllRoles] = useState([]);
+    const [selectedField, setSelectedField] = useState(0);
 
     const errorWrap = useErrorWrap();
 
@@ -51,20 +52,25 @@ const SectionTab = () => {
     };
 
     const onEditField = (stepKey, fieldRoot, fieldNumber) => {
-        console.log(key);
-        console.log(fieldNumber);
-
-        // setEditFieldModalOpen(true);
-        // TODO
+        setSelectedField(fieldNumber);
+        setEditFieldModalOpen(true);
     };
 
     const onSaveChanges = () => {
-        // TODO: Send changes to backend
+        errorWrap(async () => {
+            const stepIndex = stepMetadata.findIndex((element) => {
+                return element.key === selectedStep;
+            });
+
+            await updateMultipleSteps([stepMetadata[stepIndex]]);
+        });
         setIsEditing(false);
     };
 
-    const onDiscardChanges = () => {
-        // TODO: Delete changes here
+    const onDiscardChanges = async () => {
+        const res = await getAllStepsMetadata();
+        const sortedMetadata = sortMetadata(res.result);
+        setStepMetadata(sortedMetadata);
         setIsEditing(false);
     };
 
@@ -205,12 +211,21 @@ const SectionTab = () => {
     };
 
     const generateEditFieldPopup = () => {
+        const selectedStepMetadata = stepMetadata.find(
+            (step) => step.key === selectedStep,
+        );
+
+        if (!selectedStepMetadata) return null;
+
+        if (selectedField >= selectedStepMetadata['fields'].length) return null;
+
         return (
             <EditFieldModal
                 isOpen={editFieldModalOpen}
+                initialData={selectedStepMetadata['fields'][selectedField]}
                 onModalClose={onEditFieldModalClose}
                 allRoles={allRoles}
-                onAddNewField={addNewField}
+                onEditField={editField}
             />
         );
     };
@@ -255,6 +270,25 @@ const SectionTab = () => {
         );
     };
 
+    const editField = (updatedFieldData) => {
+        const updatedField = _.cloneDeep(updatedFieldData);
+        const updatedMetadata = _.cloneDeep(stepMetadata);
+
+        errorWrap(
+            async () => {
+                const stepIndex = stepMetadata.findIndex((element) => {
+                    return element.key === selectedStep;
+                });
+
+                updatedMetadata[stepIndex].fields[selectedField] = updatedField;
+                await updateMultipleSteps([updatedMetadata[stepIndex]]);
+            },
+            () => {
+                setStepMetadata(updatedMetadata);
+            },
+        );
+    };
+
     return (
         <div>
             <div className="dashboard section-management-container">
@@ -275,16 +309,14 @@ const SectionTab = () => {
                         onClick={() => {
                             setStepModalOpen(true);
                         }}
-                    >
-                        {translations.components.file.addAnother}
-                    </ListItem>
+                    ></ListItem>
                 </div>
                 <div className="step-management-content-container">
                     {GenerateStepManagementContent()}
                 </div>
 
                 <BottomBar
-                    eisEditing={isEditing}
+                    isEditing={isEditing}
                     onEdit={() => setIsEditing(true)}
                     onSave={onSaveChanges}
                     onDiscard={onDiscardChanges}

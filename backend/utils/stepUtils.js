@@ -19,7 +19,9 @@ module.exports.getReadableSteps = async (req) => {
     // Iterate over fields and remove fields that do not have matching permissions
     for (let i = 0; i < metaData.length; ++i) {
         metaData[i].fields = metaData[i].fields.filter((field) => {
-            const hasPerms = field.readableGroups.some((role) => roles.includes(role));
+            const hasPerms = field.readableGroups.some((role) =>
+                roles.includes(role),
+            );
             return hasPerms;
         });
     }
@@ -61,7 +63,8 @@ const updateStepInTransation = async (stepBody, session) => {
     );
 
     // Abort if can't find step to edit
-    if (!stepToEdit) await abortAndError(session, `No step with key, ${stepKey}`);
+    if (!stepToEdit)
+        await abortAndError(session, `No step with key, ${stepKey}`);
 
     // Build up a list of al the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
@@ -74,7 +77,9 @@ const updateStepInTransation = async (stepBody, session) => {
     // Checks that fields were not deleted
     const numUnchangedFields = strippedBody.fields.length - addedFields.length;
     const currentNumFields = stepToEdit.fields.length;
-    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
+
+    if (numUnchangedFields < currentNumFields)
+        await abortAndError(session, 'Cannot delete fields');
 
     // Update the schema
     addFieldsToSchema(stepKey, addedFields);
