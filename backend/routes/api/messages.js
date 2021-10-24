@@ -6,8 +6,10 @@ const { MessagingResponse } = require('twilio').twiml;
 
 const { models } = require('../../models/index');
 
-const accountSid = process.env.ACCOUNT_SID; // Your Account SID from www.twilio.com/console
-const authToken = process.env.TWILIO_AUTH_TOKEN; // Your Auth Token from www.twilio.com/console
+const accountSid = 'ACc8a4b008fff15841eccd4636574fc564'; // Your Account SID from www.twilio.com/console
+const authToken = '0e007aea37bb8034dc3bb7ff55ce83c7'; // Your Auth Token from www.twilio.com/console
+
+// health check went to ok when I removed babeleslint from package.jsons and when i added the tokens here manually, also need to fix
 
 const client = require('twilio')(accountSid, authToken);
 

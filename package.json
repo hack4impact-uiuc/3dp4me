@@ -43,7 +43,6 @@
         ]
     },
     "dependencies": {
-        "eslint": "^7.32.0",
         "faker": "^5.5.3",
         "fs": "^0.0.1-security",
         "libphonenumber-js": "^1.9.16",
