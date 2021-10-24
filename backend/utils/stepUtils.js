@@ -19,9 +19,7 @@ module.exports.getReadableSteps = async (req) => {
     // Iterate over fields and remove fields that do not have matching permissions
     for (let i = 0; i < metaData.length; ++i) {
         metaData[i].fields = metaData[i].fields.filter((field) => {
-            const hasPerms = field.readableGroups.some((role) =>
-                roles.includes(role),
-            );
+            const hasPerms = field.readableGroups.some((role) => roles.includes(role));
             return hasPerms;
         });
     }
@@ -63,8 +61,7 @@ const updateStepInTransation = async (stepBody, session) => {
     );
 
     // Abort if can't find step to edit
-    if (!stepToEdit)
-        await abortAndError(session, `No step with key, ${stepKey}`);
+    if (!stepToEdit) await abortAndError(session, `No step with key, ${stepKey}`);
 
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
