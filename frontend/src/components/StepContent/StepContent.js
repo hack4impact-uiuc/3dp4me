@@ -3,7 +3,7 @@ import {
     Button,
     CircularProgress,
     MenuItem,
-    Select,
+    Select
 } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -18,6 +18,7 @@ import { formatDate } from '../../utils/date';
 import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
 import './StepContent.scss';
+
 
 const StepContent = ({
     patientId,
@@ -83,7 +84,7 @@ const StepContent = ({
 
             let files = _.cloneDeep(updatedData[fieldKey]);
 
-            if (files) files = [...files, newFile];
+            if (files) files = files.concat(newFile)
             else files = [newFile];
 
             handleSimpleUpdate(fieldKey, files);
