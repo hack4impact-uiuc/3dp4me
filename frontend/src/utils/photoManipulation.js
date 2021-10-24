@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { downloadBlobWithoutSaving } from '../api/api';
 
 export const blobToDataURL = (blob) => {
@@ -17,7 +19,7 @@ export const convertPhotosToURI = async (
     patientId,
 ) => {
     const newPhotoData = photoData.map(async (photoObj) => {
-        const modifiedPhotoObj = photoObj;
+        const modifiedPhotoObj = _.cloneDeep(photoObj);
         modifiedPhotoObj.uri = await photoToURI(
             photoObj,
             stepKey,
