@@ -18,6 +18,7 @@ import TextArea from '../Fields/TextArea';
 import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
 
+
 const StepField = ({
     metadata,
     value,
@@ -168,6 +169,7 @@ const StepField = ({
             case FIELD_TYPES.PHOTO:
                 return (
                     <PhotoField
+                        handleFileUpload={handleFileUpload}
                         patientId={patientId}
                         stepKey={stepKey}
                         value={value || []}
