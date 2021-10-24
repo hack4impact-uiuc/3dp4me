@@ -2,16 +2,28 @@ import instance from './axios-config';
 
 const FileDownload = require('js-file-download');
 
-export const getAllPatients = async () => {
-    const requestString = '/patients';
+export const getPatientsCount = async () => {
+    const requestString = '/patients/count';
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
 
-export const getPatientsByStage = async (stage) => {
-    const requestString = `/stages/${stage}`;
+export const getPatientsByPageNumber = async (pageNumber, nPerPage) => {
+    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
+    const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const getPatientsByStageAndPageNumber = async (
+    stage,
+    pageNumber,
+    nPerPage,
+) => {
+    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
@@ -57,8 +69,12 @@ export const updatePatient = async (patientId, updatedData) => {
 export const getAllStepsMetadata = async () => {
     const requestString = '/metadata/steps';
 
+    /**
+     * In order to test this method and its steps, hardcode an entire object (subFields, displayName, etc.) from the database
+     * and push it to res.data.result[0].fields
+     */
     const res = await instance.get(requestString);
-    if (!res?.data?.success) throw new Error(res?.data?.message);
+    if (!res?.data?.success) throw new Error(res?.data?.message); // TODO: DELETE TEST DATA
     console.log(res.data.result[0]);
     res.data.result[0].fields.push({
         subFields: [],
@@ -150,7 +166,6 @@ export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
 export const getAllRoles = async () => {
     const requestString = `/roles`;
     const res = await instance.get(requestString);
-
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
@@ -174,8 +189,20 @@ export const removeUserRole = async (username, roleName) => {
     return res.data;
 };
 
-export const getAllUsers = async () => {
-    const requestString = `/users`;
+export const getUsersByPageNumber = async (nPerPage) => {
+    const requestString = `/users?nPerPage=${nPerPage}`;
+
+    const res = await instance.get(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const getUsersByPageNumberAndToken = async (token, nPerPage) => {
+    const encodedToken = encodeURIComponent(token);
+    const requestString = `/users?token=${encodedToken}&nPerPage=${nPerPage}`;
+
     const res = await instance.get(requestString);
 
     if (!res?.data?.success) throw new Error(res?.data?.message);

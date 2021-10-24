@@ -58,7 +58,7 @@ const AppContent = ({ username, userEmail }) => {
 
         setLanguage();
         errorWrap(setAdminStatus);
-    }, [dispatch]);
+    }, [dispatch, errorWrap]);
 
     /**
      * Returns true if the given string is a valid language identifier

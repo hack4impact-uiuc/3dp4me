@@ -16,7 +16,7 @@ const {
     STEP_IMMUTABLE_ATTRIBUTES,
     PATIENT_IMMUTABLE_ATTRIBUTES,
 } = require('../../utils/constants');
-const { sendResponse } = require('../../utils/response');
+const { sendResponse, getDataFromModelWithPagination } = require('../../utils/response');
 const { getReadableSteps } = require('../../utils/stepUtils');
 const { getStepBaseSchemaKeys } = require('../../utils/initDb');
 const {
@@ -31,8 +31,20 @@ const {
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        const patients = await models.Patient.find();
+        const patients = await getDataFromModelWithPagination(req, models.Patient);
         await sendResponse(res, 200, '', patients);
+    }),
+);
+
+/**
+ * Returns the count of documents in the patients collection
+ */
+
+router.get(
+    '/count',
+    errorWrap(async (req, res) => {
+        const patientCount = await models.Patient.count();
+        return sendResponse(res, 200, 'success', patientCount);
     }),
 );
 

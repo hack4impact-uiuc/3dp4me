@@ -82,6 +82,7 @@ const StepContent = ({
             };
 
             let files = _.cloneDeep(updatedData[fieldKey]);
+
             if (files) files = files.concat(newFile);
             else files = [newFile];
 
@@ -90,7 +91,7 @@ const StepContent = ({
     };
 
     const saveData = () => {
-        onDataSaved(metaData.key, updatedData);
+        onDataSaved(metaData.key, _.cloneDeep(updatedData));
         setEdit(false);
         swal(
             translations.components.bottombar.savedMessage.patientInfo,
@@ -143,7 +144,11 @@ const StepContent = ({
                     <StepField
                         displayName={field.displayName[selectedLang]}
                         metadata={field}
-                        value={updatedData ? updatedData[field.key] : null}
+                        value={
+                            updatedData
+                                ? _.cloneDeep(updatedData[field.key])
+                                : null
+                        }
                         key={field.key}
                         langKey={selectedLang}
                         isDisabled={!edit}

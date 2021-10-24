@@ -15,27 +15,27 @@ const DEFAULT_LONG = 127.2
 // CURRENTLY, WHEN CALLING RESET ON DISABLED MAP, LAT/LONG UPDATE BUT VIEWPORT DOES NOT
 // RESET NOT REFLECTING SAVED VALS, ARE VALS BEING SAVED
 // MAP ALL GREYED OUT AFTER MOVE??????
-const MapField = forwardRef(({ displayName, isDisabled, fieldId, initValue}, ref) => {
+const MapField = ({ displayName, isDisabled, fieldId, resetValue, value}) => {
 
-    const [value, setValue] = useState([]);
-    useEffect(() => {
-      setValue(initValue); // update viewport
-
-      //const newViewport = _.cloneDeep(viewport); // NEED TO UPDATE INIT_VIEWPORT, THEN UPDATE NORMAL VIEWPORT
-      initialViewport.latitude = value?.latitude || DEFAULT_LAT; // do i need the or here?
-      initialViewport.longitude = value?.longitude || DEFAULT_LONG;
-      setViewport(initialViewport);
-    }, [initValue]);
-
-    const initialViewport = {
-        latitude: initValue?.latitude || DEFAULT_LAT,
-        longitude: initValue?.longitude || DEFAULT_LONG,
+    const initialViewport = useMemo(() => {
+        latitude: value?.latitude || DEFAULT_LAT,
+        longitude: value?.longitude || DEFAULT_LONG,
         zoom: 8,
         width: '100%',
         height: '100%',
         pitch: 50,
         transitionDuration: 100
-    };
+    }, [value]);
+
+    useEffect(() => {
+      initialViewport.latitude = value?.latitude || DEFAULT_LAT; // do i need the or here?
+      initialViewport.longitude = value?.longitude || DEFAULT_LONG;
+
+      const newViewport = _.cloneDeep(viewport);
+      newViewport.latitude = value?.latitude || DEFAULT_LAT; // do i need the or here?
+      newViewport.longitude = value?.longitude || DEFAULT_LONG;
+      setViewport(newViewport);
+    }, [value]);
 
     const [viewport, setViewport] = useState(initialViewport);
 
@@ -63,10 +63,6 @@ const MapField = forwardRef(({ displayName, isDisabled, fieldId, initValue}, ref
           ...geocoderDefaultOverrides
         });
     }
-
-    useImperativeHandle(ref, () => ({
-       value,
-    }));
 
     return (
         <div className="mapStyling">
@@ -97,6 +93,7 @@ const MapField = forwardRef(({ displayName, isDisabled, fieldId, initValue}, ref
               <button
                   type="button"
                   className="resetButton"
+                  disabled = {isDisabled}
                   onClick={() => setViewport(initialViewport)}
               >
                   Reset
@@ -116,6 +113,6 @@ const MapField = forwardRef(({ displayName, isDisabled, fieldId, initValue}, ref
             </div>
         </div>
     );
-})
+}
 
 export default MapField;

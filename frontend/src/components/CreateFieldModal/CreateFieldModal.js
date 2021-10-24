@@ -2,8 +2,6 @@ import './CreateFieldModal.scss';
 import React, { useState } from 'react';
 import {
     Button,
-    Select,
-    MenuItem,
     Checkbox,
     Modal,
     NativeSelect,
@@ -13,15 +11,25 @@ import {
     InputLabel,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
+import MultiSelectField from '../Fields/MultiSelectField';
 import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 
-const CreateFieldModal = ({ isOpen, onModalClose }) => {
-    const translations = useTranslations()[0];
+const CreateFieldModal = ({
+    isOpen,
+    onModalClose,
+    allRoles,
+    onAddNewField,
+}) => {
+    const [translations, selectedLang] = useTranslations();
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
-    const [numChoices, setNumChoices] = useState(1);
+    const [selectedRoles, setSelectedRoles] = useState([]);
+    const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
+    const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
+    const [options, setOptions] = useState([]);
 
     const BootstrapInput = withStyles((theme) => ({
         root: {
@@ -52,38 +60,81 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
         },
     }))(InputBase);
 
+    const onRolesChange = (id, roles) => {
+        setSelectedRoles(roles);
+    };
+
     const handleFieldTypeSelect = (e) => {
         setFieldType(e.target.value);
     };
 
-    const incrementChoices = () => {
-        setNumChoices(numChoices + 1);
+    const addOption = () => {
+        const updatedOptions = _.cloneDeep(options);
+        updatedOptions.push({ EN: '', AR: '' });
+        setOptions(updatedOptions);
     };
 
-    const generateChoices = () => {
+    const updateOptionField = (index, val, language) => {
+        const updatedOptions = _.cloneDeep(options);
+        updatedOptions[index][language] = val;
+        setOptions(updatedOptions);
+    };
+
+    const moveOption = (currIndex, newIndex) => {
+        if (newIndex >= 0 && newIndex < options.length) {
+            const updatedOptions = _.cloneDeep(options);
+            const removedChoice = updatedOptions.splice(currIndex, 1)[0];
+            updatedOptions.splice(newIndex, 0, removedChoice);
+            setOptions(updatedOptions);
+        }
+    };
+
+    const deleteOption = (index) => {
+        const updatedOptions = _.cloneDeep(options);
+        updatedOptions.splice(index, 1);
+        setOptions(updatedOptions);
+    };
+
+    const generateOptions = () => {
         const choices = [];
-        for (let i = 0; i < numChoices; i++) {
+        for (let i = 0; i < options.length; i++) {
             choices.push(
                 <div>
                     <span>
-                        {translations.components.swal.createField.arabicChoice +
-                            (i + 1)}
+                        {`${translations.components.swal.createField.option} ${
+                            i + 1
+                        }`}
                     </span>
                     <LanguageInput
+                        fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
+                        handleEnglishFieldChange={(event) => {
+                            updateOptionField(i, event.target.value, 'EN');
+                        }}
+                        handleArabicFieldChange={(event) => {
+                            updateOptionField(i, event.target.value, 'AR');
+                        }}
                         onDelete={() => {
-                            /* TODO: */
+                            deleteOption(i);
                         }}
                         onUpPressed={() => {
-                            /* TODO: */
+                            moveOption(i, i - 1);
                         }}
                         onDownPressed={() => {
-                            /* TODO: */
+                            moveOption(i, i + 1);
                         }}
                     />
                 </div>,
             );
         }
         return <div>{choices}</div>;
+    };
+
+    const updateEnglishDisplayName = (e) => {
+        setDisplayName({ ...displayName, EN: e.target.value });
+    };
+
+    const updateArabicDisplayName = (e) => {
+        setDisplayName({ ...displayName, AR: e.target.value });
     };
 
     const generateFields = () => {
@@ -97,37 +148,69 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
             case FIELD_TYPES.AUDIO:
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>Question</span>
-                        <LanguageInput />
+                        <span>
+                            {translations.components.swal.createField.question}
+                        </span>
+                        <LanguageInput
+                            fieldValues={displayName}
+                            handleEnglishFieldChange={updateEnglishDisplayName}
+                            handleArabicFieldChange={updateArabicDisplayName}
+                        />
                     </div>
                 );
             case FIELD_TYPES.RADIO_BUTTON:
-            case FIELD_TYPES.DROPDOWN:
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>Question</span>
-                        <LanguageInput />
-                        {generateChoices()}
-                        <Button onClick={incrementChoices}>
+                        <span>
+                            {translations.components.swal.createField.question}
+                        </span>
+                        <LanguageInput
+                            fieldValues={displayName}
+                            handleEnglishFieldChange={updateEnglishDisplayName}
+                            handleArabicFieldChange={updateArabicDisplayName}
+                        />
+                        <Button
+                            className="add-option-button"
+                            onClick={addOption}
+                        >
                             {
                                 translations.components.swal.createField.buttons
                                     .addChoice
                             }
                         </Button>
+                        {generateOptions()}
                     </div>
                 );
             case FIELD_TYPES.DIVIDER:
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>Divider Title</span>
-                        <LanguageInput />
+                        <span>
+                            {
+                                translations.components.swal.createField
+                                    .dividerTitle
+                            }
+                        </span>
+                        <LanguageInput
+                            fieldValues={displayName}
+                            handleEnglishFieldChange={updateEnglishDisplayName}
+                            handleArabicFieldChange={updateArabicDisplayName}
+                        />
                     </div>
                 );
             case FIELD_TYPES.HEADER:
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
-                        <span>Header Title</span>
-                        <LanguageInput />
+                        <span>
+                            {
+                                translations.components.swal.createField
+                                    .headerTitle
+                            }
+                        </span>
+                        <LanguageInput
+                            fieldValues={displayName}
+                            handleEnglishFieldChange={updateEnglishDisplayName}
+                            handleArabicFieldChange={updateArabicDisplayName}
+                        />
                     </div>
                 );
             // case FIELD_TYPES.FIELD_GROUP:
@@ -140,16 +223,53 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
     };
 
     const generateFieldDropdownOptions = () => {
-        const options = [];
+        const fieldDropdownOptions = [];
         Object.values(FIELD_TYPES).forEach((value) => {
-            options.push(
+            fieldDropdownOptions.push(
                 <option value={value} className="create-field-option">
                     {value}
                 </option>,
             );
         });
 
-        return options;
+        return fieldDropdownOptions;
+    };
+
+    const saveNewField = () => {
+        const formattedOptions = options.map((option, index) => {
+            return { Index: index, Question: option };
+        });
+
+        const newFieldData = {
+            fieldType,
+            isVisibleOnDashboard,
+            displayName,
+            options: formattedOptions,
+            readableGroups: selectedRoles,
+            writableGroups: selectedRoles,
+            subFields: [],
+        };
+
+        onAddNewField(newFieldData);
+        onModalClose();
+        clearState();
+    };
+
+    const handleIsVisibleOnDashboard = (event) => {
+        setIsVisibleOnDashboard(event.target.checked);
+    };
+
+    const clearState = () => {
+        setSelectedRoles([]);
+        setIsVisibleOnDashboard(false);
+        setDisplayName({ EN: '', AR: '' });
+        setOptions([]);
+        setFieldType(FIELD_TYPES.STRING);
+    };
+
+    const onDiscard = () => {
+        clearState();
+        onModalClose();
     };
 
     return (
@@ -187,26 +307,28 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
                             </NativeSelect>
                         </FormControl>
                     </div>
+                    <div style={{ padding: 10 }}>
+                        <MultiSelectField
+                            title={
+                                translations.components.swal.createField
+                                    .clearance
+                            }
+                            langKey={selectedLang}
+                            options={allRoles}
+                            selectedOptions={selectedRoles}
+                            onChange={onRolesChange}
+                            isDisabled={false}
+                        />
+                    </div>
                     <span>
-                        {translations.components.swal.createField.clearance}
+                        {translations.components.swal.createField.customization}
                     </span>
                     <div style={{ padding: 10 }}>
-                        <Select
-                            id="demo-simple-select"
-                            MenuProps={{
-                                style: { zIndex: 35001 },
-                            }}
-                            defaultValue="Confidential"
-                        >
-                            <MenuItem value="Confidential">
-                                Confidential
-                            </MenuItem>
-                            <MenuItem value="Secret">Secret</MenuItem>
-                            <MenuItem value="Top Secret">Top Secret</MenuItem>
-                        </Select>
-                    </div>
-                    <div style={{ padding: 10 }}>
-                        <Checkbox size="medium" />
+                        <Checkbox
+                            size="medium"
+                            checked={isVisibleOnDashboard}
+                            onChange={handleIsVisibleOnDashboard}
+                        />
                         <span>
                             {
                                 translations.components.swal.createField
@@ -227,13 +349,13 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
                     }}
                 >
                     <Button
-                        onClick={onModalClose}
+                        onClick={saveNewField}
                         className="save-field-button"
                     >
                         {translations.components.swal.createField.buttons.save}
                     </Button>
                     <Button
-                        onClick={onModalClose}
+                        onClick={onDiscard}
                         className="discard-field-button"
                     >
                         {
@@ -250,6 +372,8 @@ const CreateFieldModal = ({ isOpen, onModalClose }) => {
 CreateFieldModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onModalClose: PropTypes.func.isRequired,
+    allRoles: PropTypes.array.isRequired,
+    onAddNewField: PropTypes.func.isRequired,
 };
 
 export default CreateFieldModal;
