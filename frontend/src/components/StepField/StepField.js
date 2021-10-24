@@ -163,7 +163,15 @@ const StepField = ({
             case FIELD_TYPES.HEADER:
                 return <h3>{displayName}</h3>;
             case FIELD_TYPES.MAP:
-                return <MapField />;
+                return (
+                  <MapField
+                    value={value}
+                    displayName={displayName}
+                    isDisabled={isDisabled}
+                    onChange={handleSimpleUpdate}
+                    fieldId={metadata.key}
+                  />
+                )
             default:
                 return null;
         }

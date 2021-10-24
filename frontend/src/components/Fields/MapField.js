@@ -1,15 +1,35 @@
-import React, { useState, useCallback, mapRef, useRef, useEffect } from 'react';
+import React, { useState, useCallback, mapRef, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+import _ from "lodash";
 import ReactMapGL, { Marker } from 'react-map-gl';
 import Geocoder from "react-map-gl-geocoder";
 import './MapField.scss';
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
 
 const MAPBOX_TOKEN = "pk.eyJ1IjoiYXJjaG5hLTEiLCJhIjoiY2t1aHFubjl2Mmg4aDMwcXAyaW94eHYzcSJ9.qSm9IsfWo2G7CWJrX_kyeA"
+const DEFAULT_LAT = 37.11
+const DEFAULT_LONG = 127.2
 
-export default function MapField() {
+// MARKER NOT IMMEDIATELY DISPLAYING
+// RESET NOT WORKING, ALSO WHEN DISCARDING CHANGES. HOW OFTEN ARE DB VALUES UPDATED?
+// NEED TO DISABLE RESET WHEN isDisabled
+// CURRENTLY, WHEN CALLING RESET ON DISABLED MAP, LAT/LONG UPDATE BUT VIEWPORT DOES NOT
+// RESET NOT REFLECTING SAVED VALS, ARE VALS BEING SAVED
+// MAP ALL GREYED OUT AFTER MOVE??????
+const MapField = forwardRef(({ displayName, isDisabled, fieldId, initValue}, ref) => {
+
+    const [value, setValue] = useState([]);
+    useEffect(() => {
+      setValue(initValue); // update viewport
+
+      //const newViewport = _.cloneDeep(viewport); // NEED TO UPDATE INIT_VIEWPORT, THEN UPDATE NORMAL VIEWPORT
+      initialViewport.latitude = value?.latitude || DEFAULT_LAT; // do i need the or here?
+      initialViewport.longitude = value?.longitude || DEFAULT_LONG;
+      setViewport(initialViewport);
+    }, [initValue]);
+
     const initialViewport = {
-        latitude: 37.7577,
-        longitude: -122.4376,
+        latitude: initValue?.latitude || DEFAULT_LAT,
+        longitude: initValue?.longitude || DEFAULT_LONG,
         zoom: 8,
         width: '100%',
         height: '100%',
@@ -18,6 +38,19 @@ export default function MapField() {
     };
 
     const [viewport, setViewport] = useState(initialViewport);
+
+    const sendChanges = (newView) => {
+      if (isDisabled) return;
+
+      setViewport(newView);
+
+      const coordinates = {
+        latitude: viewport.latitude,
+        longitude: viewport.longitude
+      }
+
+      setValue(coordinates);
+    };
 
     const mapRef = useRef()
 
@@ -31,6 +64,10 @@ export default function MapField() {
         });
     }
 
+    useImperativeHandle(ref, () => ({
+       value,
+    }));
+
     return (
         <div className="mapStyling">
             <h3>Patient Location</h3>
@@ -40,7 +77,7 @@ export default function MapField() {
                 mapStyle="mapbox://styles/mapbox/dark-v9"
                 mapboxApiAccessToken={MAPBOX_TOKEN}
                 {...viewport}
-                onViewportChange={(newView) => setViewport(newView)}
+                onViewportChange={sendChanges}
             >
 
             <Marker
@@ -57,7 +94,6 @@ export default function MapField() {
                 />
             </Marker>
 
-            
               <button
                   type="button"
                   className="resetButton"
@@ -80,4 +116,6 @@ export default function MapField() {
             </div>
         </div>
     );
-}
+})
+
+export default MapField;
