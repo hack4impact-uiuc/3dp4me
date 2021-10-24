@@ -73,7 +73,7 @@ const StepManagementContent = ({
                         onDeleteField(stepMetadata.key, fieldRoot, fieldNumber)
                     }
                 >
-                    <i className="trash alternate icon"></i>
+                    <i className="trash alternate icon" />
                 </div>
 
                 <div className="reorder-buttons">

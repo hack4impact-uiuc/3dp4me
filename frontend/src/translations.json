@@ -142,8 +142,9 @@
                     },
                     "orderId": "Order Id"
                 },
-                "createField": {
-                    "title": "New Field",
+                "field": {
+                    "createFieldTitle": "New Field",
+                    "editFieldTitle": "Edit Field",
                     "title2": "Field Settings",
                     "fieldType": "Field Type",
                     "clearance": "Clearance Level",
@@ -159,9 +160,6 @@
                     "question": "Question",
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
-                },
-                "editField": {
-                    "title": "Edit Field"
                 }
             }
         },

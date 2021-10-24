@@ -42,16 +42,13 @@ const CreateStepModal = ({ isOpen, onModalClose }) => {
 
                 <div>
                     <Button onClick={onModalClose} className="save-step-button">
-                        {translations.components.swal.createField.buttons.save}
+                        {translations.components.swal.field.buttons.save}
                     </Button>
                     <Button
                         onClick={onModalClose}
                         className="discard-step-button"
                     >
-                        {
-                            translations.components.swal.createField.buttons
-                                .discard
-                        }
+                        {translations.components.swal.field.buttons.discard}
                     </Button>
                 </div>
             </div>

@@ -20,7 +20,6 @@ import {
     verticalMovementWidth,
 } from '../../styles/variables.scss';
 import { resolveMixedObjPath } from '../../utils/object';
-import { useTranslations } from '../../hooks/useTranslations';
 import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
 import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 
@@ -30,7 +29,6 @@ const expandedSidebarWidth = `${
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
-    const translations = useTranslations()[0];
     const [stepMetadata, setStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
@@ -83,7 +81,7 @@ const SectionTab = () => {
             },
             () => {},
             () => {
-                //Discard changes when the save fails
+                // Discard changes when the save fails
                 onDiscardChanges();
             },
         );
@@ -241,12 +239,12 @@ const SectionTab = () => {
 
         if (!selectedStepMetadata) return null;
 
-        if (selectedField >= selectedStepMetadata['fields'].length) return null;
+        if (selectedField >= selectedStepMetadata.fields.length) return null;
 
         return (
             <EditFieldModal
                 isOpen={editFieldModalOpen}
-                initialData={selectedStepMetadata['fields'][selectedField]}
+                initialData={selectedStepMetadata.fields[selectedField]}
                 onModalClose={onEditFieldModalClose}
                 allRoles={allRoles}
                 onEditField={editField}
@@ -333,7 +331,7 @@ const SectionTab = () => {
                         onClick={() => {
                             setStepModalOpen(true);
                         }}
-                    ></ListItem>
+                    />
                 </div>
                 <div className="step-management-content-container">
                     {GenerateStepManagementContent()}

@@ -14,10 +14,9 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import MultiSelectField from '../Fields/MultiSelectField';
-import { FIELD_TYPES } from '../../utils/constants';
+import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
-import { LANGUAGES } from '../../utils/constants';
 
 const EditFieldModal = ({
     isOpen,
@@ -38,14 +37,14 @@ const EditFieldModal = ({
         setIsVisibleOnDashboard(initialData.isVisibleOnDashboard);
         setDisplayName(initialData.displayName);
 
-        let initialRoles = initialData.readableGroups;
+        const initialRoles = initialData.readableGroups;
 
-        if (initialRoles.length == 0) {
+        if (initialRoles.length === 0) {
             // In the event that the readable groups is empty,
             // we need to add the Admin role _id. This is because
             // every field has the Admin role by default.
             const adminRole = allRoles.find(
-                (role) => role.Question.EN == 'Admin',
+                (role) => role.Question.EN === 'Admin',
             );
 
             if (adminRole) {
@@ -55,8 +54,8 @@ const EditFieldModal = ({
 
         setSelectedRoles(initialRoles);
 
-        let formattedOptions = initialData.options.map((option) => {
-            return option['Question'];
+        const formattedOptions = initialData.options.map((option) => {
+            return option.Question;
         });
 
         setOptions(formattedOptions);
@@ -132,7 +131,7 @@ const EditFieldModal = ({
             choices.push(
                 <div>
                     <span>
-                        {`${translations.components.swal.createField.option} ${
+                        {`${translations.components.swal.field.option} ${
                             i + 1
                         }`}
                     </span>
@@ -188,7 +187,7 @@ const EditFieldModal = ({
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>
-                            {translations.components.swal.createField.question}
+                            {translations.components.swal.field.question}
                         </span>
                         <LanguageInput
                             fieldValues={displayName}
@@ -201,7 +200,7 @@ const EditFieldModal = ({
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>
-                            {translations.components.swal.createField.question}
+                            {translations.components.swal.field.question}
                         </span>
                         <LanguageInput
                             fieldValues={displayName}
@@ -213,7 +212,7 @@ const EditFieldModal = ({
                             onClick={addOption}
                         >
                             {
-                                translations.components.swal.createField.buttons
+                                translations.components.swal.field.buttons
                                     .addChoice
                             }
                         </Button>
@@ -224,10 +223,7 @@ const EditFieldModal = ({
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>
-                            {
-                                translations.components.swal.createField
-                                    .dividerTitle
-                            }
+                            {translations.components.swal.field.dividerTitle}
                         </span>
                         <LanguageInput
                             fieldValues={displayName}
@@ -240,10 +236,7 @@ const EditFieldModal = ({
                 return (
                     <div style={{ fontSize: '17px', textAlign: 'left' }}>
                         <span>
-                            {
-                                translations.components.swal.createField
-                                    .headerTitle
-                            }
+                            {translations.components.swal.field.headerTitle}
                         </span>
                         <LanguageInput
                             fieldValues={displayName}
@@ -265,7 +258,7 @@ const EditFieldModal = ({
         const fieldDropdownOptions = [];
         Object.values(FIELD_TYPES).forEach((value) => {
             fieldDropdownOptions.push(
-                <option value={value} className="create-field-option">
+                <option value={value} className="edit-field-option">
                     {value}
                 </option>,
             );
@@ -299,14 +292,6 @@ const EditFieldModal = ({
         setIsVisibleOnDashboard(event.target.checked);
     };
 
-    const clearState = () => {
-        setSelectedRoles([]);
-        setIsVisibleOnDashboard(false);
-        setDisplayName({ EN: '', AR: '' });
-        setOptions([]);
-        setFieldType(FIELD_TYPES.STRING);
-    };
-
     const onDiscard = () => {
         onModalClose();
     };
@@ -315,26 +300,23 @@ const EditFieldModal = ({
         <Modal
             open={isOpen}
             onClose={onModalClose}
-            className="create-field-modal"
+            className="edit-field-modal"
         >
-            <div className="create-field-modal-wrapper">
-                <span className="create-field-title1">
-                    {translations.components.swal.editField.title}
+            <div className="edit-field-modal-wrapper">
+                <span className="edit-field-title1">
+                    {translations.components.swal.field.editFieldTitle}
                 </span>
-                <span className="create-field-title2">
-                    {translations.components.swal.createField.title2}
+                <span className="edit-field-title2">
+                    {translations.components.swal.field.title2}
                 </span>
-                <div className="create-field-title3">
+                <div className="edit-field-title3">
                     <div style={{ padding: 10 }}>
                         <FormControl>
-                            <InputLabel htmlFor="create-field-type-dropdown">
-                                {
-                                    translations.components.swal.createField
-                                        .fieldType
-                                }
+                            <InputLabel htmlFor="edit-field-type-dropdown">
+                                {translations.components.swal.field.fieldType}
                             </InputLabel>
                             <NativeSelect
-                                id="create-field-type-dropdown"
+                                id="edit-field-type-dropdown"
                                 onChange={handleFieldTypeSelect}
                                 MenuProps={{
                                     style: { zIndex: 35001 },
@@ -348,10 +330,7 @@ const EditFieldModal = ({
                     </div>
                     <div style={{ padding: 10 }}>
                         <MultiSelectField
-                            title={
-                                translations.components.swal.createField
-                                    .clearance
-                            }
+                            title={translations.components.swal.field.clearance}
                             langKey={selectedLang}
                             options={allRoles}
                             selectedOptions={selectedRoles}
@@ -360,7 +339,7 @@ const EditFieldModal = ({
                         />
                     </div>
                     <span>
-                        {translations.components.swal.createField.customization}
+                        {translations.components.swal.field.customization}
                     </span>
                     <div style={{ padding: 10 }}>
                         <Checkbox
@@ -369,15 +348,12 @@ const EditFieldModal = ({
                             onChange={handleIsVisibleOnDashboard}
                         />
                         <span>
-                            {
-                                translations.components.swal.createField
-                                    .showOnDashBoard
-                            }
+                            {translations.components.swal.field.showOnDashBoard}
                         </span>
                     </div>
                 </div>
-                <span className="create-field-title3">
-                    {translations.components.swal.createField.field}{' '}
+                <span className="edit-field-title3">
+                    {translations.components.swal.field.field}{' '}
                 </span>
                 {generateFields()}
                 <div
@@ -391,16 +367,13 @@ const EditFieldModal = ({
                         onClick={editNewField}
                         className="save-field-button"
                     >
-                        {translations.components.swal.createField.buttons.save}
+                        {translations.components.swal.field.buttons.save}
                     </Button>
                     <Button
                         onClick={onDiscard}
                         className="discard-field-button"
                     >
-                        {
-                            translations.components.swal.createField.buttons
-                                .discard
-                        }
+                        {translations.components.swal.field.buttons.discard}
                     </Button>
                 </div>
             </div>

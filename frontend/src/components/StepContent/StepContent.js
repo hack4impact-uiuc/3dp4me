@@ -220,15 +220,15 @@ const StepContent = ({
 
     const generateLastEditedByAndDate = () => {
         let text =
-            translations.components.step.lastEditedBy +
-            ' ' +
-            (stepData?.lastEditedBy || 'None');
+            `${translations.components.step.lastEditedBy 
+            } ${ 
+            stepData?.lastEditedBy || 'None'}`;
         if (stepData?.lastEdited) {
             text +=
-                ' ' +
-                translations.components.step.on +
-                ' ' +
-                formatDate(new Date(), selectedLang);
+                ` ${ 
+                translations.components.step.on 
+                } ${ 
+                formatDate(new Date(), selectedLang)}`;
         }
 
         return <p>{text}</p>;
