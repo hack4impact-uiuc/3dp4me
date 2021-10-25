@@ -115,7 +115,8 @@ module.exports.generateFieldSchema = (field) => {
     case FIELDS.DIVIDER:
         return null;
     default:
-        throw new Error(`Unrecognized field type, ${field.type}`);
+        log.error(`Unrecognized field type, ${field.fieldType}`);
+        return null;
     }
 };
 
