@@ -224,16 +224,14 @@ const StepContent = ({
     };
 
     const generateLastEditedByAndDate = () => {
-        let text =
-            `${translations.components.step.lastEditedBy 
-            } ${ 
-            stepData?.lastEditedBy || 'None'}`;
+        let text = `${translations.components.step.lastEditedBy} ${
+            stepData?.lastEditedBy || 'None'
+        }`;
         if (stepData?.lastEdited) {
-            text +=
-                ` ${ 
-                translations.components.step.on 
-                } ${ 
-                formatDate(new Date(), selectedLang)}`;
+            text += ` ${translations.components.step.on} ${formatDate(
+                new Date(),
+                selectedLang,
+            )}`;
         }
 
         return <p>{text}</p>;

@@ -18,7 +18,6 @@ import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 import { validateField } from '../../utils/fields';
-
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const EditFieldModal = ({
