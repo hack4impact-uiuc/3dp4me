@@ -14,9 +14,11 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import MultiSelectField from '../Fields/MultiSelectField';
-import { FIELD_TYPES , LANGUAGES } from '../../utils/constants';
+import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
+import { validateField } from '../../utils/fields';
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const CreateFieldModal = ({
     isOpen,
@@ -30,6 +32,8 @@ const CreateFieldModal = ({
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
     const [options, setOptions] = useState([]);
+
+    const errorWrap = useErrorWrap();
 
     const BootstrapInput = withStyles((theme) => ({
         root: {
@@ -252,9 +256,16 @@ const CreateFieldModal = ({
             subFields: [],
         };
 
-        onAddNewField(newFieldData);
-        onModalClose();
-        clearState();
+        errorWrap(
+            () => {
+                validateField(newFieldData);
+            },
+            () => {
+                onAddNewField(newFieldData);
+                onModalClose();
+                clearState();
+            },
+        );
     };
 
     const handleIsVisibleOnDashboard = (event) => {

@@ -17,6 +17,9 @@ import MultiSelectField from '../Fields/MultiSelectField';
 import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
+import { validateField } from '../../utils/fields';
+
+import { useErrorWrap } from '../../hooks/useErrorWrap';
 
 const EditFieldModal = ({
     isOpen,
@@ -31,6 +34,8 @@ const EditFieldModal = ({
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
     const [options, setOptions] = useState([]);
+
+    const errorWrap = useErrorWrap();
 
     useEffect(() => {
         setFieldType(initialData.fieldType);
@@ -284,8 +289,15 @@ const EditFieldModal = ({
             fieldNumber: initialData.fieldNumber,
         };
 
-        onEditField(newFieldData);
-        onModalClose();
+        errorWrap(
+            () => {
+                validateField(newFieldData);
+            },
+            () => {
+                onEditField(newFieldData);
+                onModalClose();
+            },
+        );
     };
 
     const handleIsVisibleOnDashboard = (event) => {

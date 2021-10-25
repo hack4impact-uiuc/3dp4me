@@ -265,50 +265,34 @@ const SectionTab = () => {
         const updatedNewField = _.cloneDeep(newFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        errorWrap(
-            async () => {
-                const stepIndex = stepMetadata.findIndex((element) => {
-                    return element.key === selectedStep;
-                });
+        const stepIndex = stepMetadata.findIndex((element) => {
+            return element.key === selectedStep;
+        });
 
-                updatedNewField.fieldNumber =
-                    updatedMetadata[stepIndex].fields.length;
+        updatedNewField.fieldNumber = updatedMetadata[stepIndex].fields.length;
 
-                const currentFieldKeys = updatedMetadata[stepIndex].fields.map(
-                    (field) => field.key,
-                );
-                updatedNewField.key = generateKeyWithoutCollision(
-                    updatedNewField.displayName.EN,
-                    currentFieldKeys,
-                );
-
-                updatedMetadata[stepIndex].fields.push(updatedNewField);
-
-                await updateMultipleSteps([updatedMetadata[stepIndex]]);
-            },
-            () => {
-                setStepMetadata(updatedMetadata);
-            },
+        const currentFieldKeys = updatedMetadata[stepIndex].fields.map(
+            (field) => field.key,
         );
+        updatedNewField.key = generateKeyWithoutCollision(
+            updatedNewField.displayName.EN,
+            currentFieldKeys,
+        );
+
+        updatedMetadata[stepIndex].fields.push(updatedNewField);
+        setStepMetadata(updatedMetadata);
     };
 
     const editField = (updatedFieldData) => {
         const updatedField = _.cloneDeep(updatedFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        errorWrap(
-            async () => {
-                const stepIndex = stepMetadata.findIndex((element) => {
-                    return element.key === selectedStep;
-                });
+        const stepIndex = stepMetadata.findIndex((element) => {
+            return element.key === selectedStep;
+        });
 
-                updatedMetadata[stepIndex].fields[selectedField] = updatedField;
-                await updateMultipleSteps([updatedMetadata[stepIndex]]);
-            },
-            () => {
-                setStepMetadata(updatedMetadata);
-            },
-        );
+        updatedMetadata[stepIndex].fields[selectedField] = updatedField;
+        setStepMetadata(updatedMetadata);
     };
 
     return (

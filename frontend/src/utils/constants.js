@@ -209,3 +209,11 @@ export const COORDINATES = {
 export const PEOPLE_PER_PAGE = 14;
 
 export const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 16;
+
+/**
+ * Error Messages
+ */
+
+export const ERR_LANGUAGE_VALIDATION_FAILED =
+    'Please submit a field with a question in English and Arabic.';
+export const ERR_OPTION_VALIDATION_FAILED = 'Please enter options.';

@@ -6,6 +6,10 @@ import finishedIcon from '../assets/check.svg';
 import partiallyIcon from '../assets/half-circle.svg';
 import unfinishedIcon from '../assets/exclamation.svg';
 import translations from '../translations.json';
+import {
+    ERR_LANGUAGE_VALIDATION_FAILED,
+    ERR_OPTION_VALIDATION_FAILED,
+} from './constants';
 
 import { formatDate } from './date';
 import {
@@ -287,4 +291,21 @@ export const fieldToJSX = (fieldData, fieldType, selectedLang) => {
     }
 
     return stringifiedField;
+};
+
+/**
+ * Validates a field's data.
+ * @param {JSON} fieldData
+ */
+export const validateField = (fieldData) => {
+    if (fieldData.displayName.EN == '' || fieldData.displayName.AR == '') {
+        throw new Error(ERR_LANGUAGE_VALIDATION_FAILED);
+    }
+
+    if (
+        fieldData.fieldType == FIELD_TYPES.RADIO_BUTTON &&
+        fieldData.options.length == 0
+    ) {
+        throw new Error(ERR_OPTION_VALIDATION_FAILED);
+    }
 };
