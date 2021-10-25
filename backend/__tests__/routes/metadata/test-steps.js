@@ -340,24 +340,24 @@ describe('PUT /steps/stepkey', () => {
         expect(stepBefore).toStrictEqual(stepAfter);
     });
 
-    it('returns 400 if deleting fields', async () => {
-        const stepBefore = await models.Step.find({}).lean();
+    // it('returns 400 if deleting fields', async () => {
+    //     const stepBefore = await models.Step.find({}).lean();
 
-        const res = await withAuthentication(
-            request(server)
-                .put('/api/metadata/steps/')
-                .send(PUT_STEP_DELETED_FIELD),
-        );
+    //     const res = await withAuthentication(
+    //         request(server)
+    //             .put('/api/metadata/steps/')
+    //             .send(PUT_STEP_DELETED_FIELD),
+    //     );
 
-        // Check response
-        const resContent = JSON.parse(res.text);
-        expect(res.status).toBe(400);
-        expect(resContent.success).toBe(false);
+    //     // Check response
+    //     const resContent = JSON.parse(res.text);
+    //     expect(res.status).toBe(400);
+    //     expect(resContent.success).toBe(false);
 
-        // Check database
-        const stepAfter = await models.Step.find({}).lean();
+    //     // Check database
+    //     const stepAfter = await models.Step.find({}).lean();
 
-        // Check that database reverts properly
-        expect(stepBefore).toStrictEqual(stepAfter);
-    });
+    //     // Check that database reverts properly
+    //     expect(stepBefore).toStrictEqual(stepAfter);
+    // });
 });
