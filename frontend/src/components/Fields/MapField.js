@@ -1,6 +1,7 @@
-import React, { useState, useCallback, mapRef, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import Geocoder from "react-map-gl-geocoder";
+import PropTypes from 'prop-types';
 import _ from "lodash";
 
 import './MapField.scss';
@@ -49,12 +50,12 @@ const MapField = ({ displayName, isDisabled, fieldId, initValue, value, onChange
 
     const mapRef = useRef()
 
-    const handleGeocoderViewportChange = viewport => {
+    const handleGeocoderViewportChange = (newView) => {
       const geocoderDefaultOverrides = { transitionDuration: 1000 };
       console.log("Updating")
 
       return setViewport({
-          ...viewport,
+          ...newView,
           ...geocoderDefaultOverrides
         });
     }
@@ -63,7 +64,7 @@ const MapField = ({ displayName, isDisabled, fieldId, initValue, value, onChange
 
     return (
         <div className="mapStyling">
-            <h3>{translations.components.map.patientLocation}</h3>
+            <h3>{displayName}</h3>
 
             <ReactMapGL
                 ref={mapRef}
@@ -72,8 +73,8 @@ const MapField = ({ displayName, isDisabled, fieldId, initValue, value, onChange
                 latitude={viewport?.latitude}
                 longitude={viewport?.longitude}
                 zoom={viewport?.zoom}
-                width={'100%'}
-                height={'100%'}
+                width="100%"
+                height="100%"
                 pitch={50}
                 onViewportChange={updateViewport}
                 onLoad={() => setViewport(initialViewport)}
@@ -122,5 +123,20 @@ const MapField = ({ displayName, isDisabled, fieldId, initValue, value, onChange
         </div>
     );
 }
+
+MapField.propTypes = {
+    displayName: PropTypes.string.isRequired,
+    isDisabled: PropTypes.bool.isRequired,
+    fieldId: PropTypes.string,
+    initValue: PropTypes.shape({
+        latitude: PropTypes.number,
+        longitude: PropTypes.number,
+    }).isRequired,
+    value: PropTypes.shape({
+        latitude: PropTypes.number,
+        longitude: PropTypes.number,
+    }),
+    onChange: PropTypes.func,
+};
 
 export default MapField;
