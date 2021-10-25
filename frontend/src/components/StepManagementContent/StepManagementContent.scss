@@ -44,7 +44,8 @@
                 display: flex;
                 flex-direction: row;
 
-                .edit-field-button, .delete-field-button {
+                .edit-field-button,
+                .delete-field-button {
                     display: flex;
                     align-items: center;
                     font-size: 1.4em;
