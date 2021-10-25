@@ -21,6 +21,7 @@ import Files from '../Files/Files';
 const StepField = ({
     metadata,
     value,
+    initValue,
     patientId = '',
     displayName,
     stepKey,
@@ -167,6 +168,7 @@ const StepField = ({
                 return (
                   <MapField
                     value={value}
+                    initValue={initValue}
                     displayName={displayName}
                     isDisabled={isDisabled}
                     onChange={handleSimpleUpdate}

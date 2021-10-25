@@ -1,55 +1,50 @@
-import React, { useState, useCallback, mapRef, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import _ from "lodash";
+import React, { useState, useCallback, mapRef, useRef, useEffect, useMemo } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import Geocoder from "react-map-gl-geocoder";
+import _ from "lodash";
+
 import './MapField.scss';
 import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import { COORDINATES, PIN_URL, MAPBOX_TOKEN } from '../../utils/constants';
+import { useTranslations } from '../../hooks/useTranslations';
 
-const MAPBOX_TOKEN = "pk.eyJ1IjoiYXJjaG5hLTEiLCJhIjoiY2t1aHFubjl2Mmg4aDMwcXAyaW94eHYzcSJ9.qSm9IsfWo2G7CWJrX_kyeA"
-const DEFAULT_LAT = 37.11
-const DEFAULT_LONG = 127.2
+const MapField = ({ displayName, isDisabled, fieldId, initValue, value, onChange}) => {
 
-// MARKER NOT IMMEDIATELY DISPLAYING
-// RESET NOT WORKING, ALSO WHEN DISCARDING CHANGES. HOW OFTEN ARE DB VALUES UPDATED?
-// NEED TO DISABLE RESET WHEN isDisabled
-// CURRENTLY, WHEN CALLING RESET ON DISABLED MAP, LAT/LONG UPDATE BUT VIEWPORT DOES NOT
-// RESET NOT REFLECTING SAVED VALS, ARE VALS BEING SAVED
-// MAP ALL GREYED OUT AFTER MOVE??????
-const MapField = ({ displayName, isDisabled, fieldId, resetValue, value}) => {
-
-    const initialViewport = {
-        latitude: value?.latitude || DEFAULT_LAT,
-        longitude: value?.longitude || DEFAULT_LONG,
-        zoom: 8,
-        width: '100%',
-        height: '100%',
-        pitch: 50,
+    // Base Viewport, set to location saved in DB
+    const initialViewport = useMemo (() => ({
+        latitude: initValue?.latitude || COORDINATES.DEFAULT_MAP_LAT,
+        longitude: initValue?.longitude || COORDINATES.DEFAULT_MAP_LONG,
+        zoom: 17, // increase zoom?
         transitionDuration: 100
-    };
+    }), [initValue]);
 
+    // Update current viewport as value is updated
     useEffect(() => {
-      initialViewport.latitude = value?.latitude || DEFAULT_LAT; // do i need the or here?
-      initialViewport.longitude = value?.longitude || DEFAULT_LONG;
-
       const newViewport = _.cloneDeep(viewport);
-      newViewport.latitude = value?.latitude || DEFAULT_LAT; // do i need the or here?
-      newViewport.longitude = value?.longitude || DEFAULT_LONG;
+      newViewport.latitude = value?.latitude || COORDINATES.DEFAULT_MAP_LAT; // do i need the or here?
+      newViewport.longitude = value?.longitude || COORDINATES.DEFAULT_MAP_LONG;
       setViewport(newViewport);
     }, [value]);
 
-    const [viewport, setViewport] = useState(initialViewport);
-
-    const sendChanges = (newView) => {
-      if (isDisabled) return;
-
-      setViewport(newView);
+    // Update value after the end of each drag
+    const [isDragging, setIsDragging] = useState(false);
+    useEffect(() => {
+      if (isDragging) return;
 
       const coordinates = {
         latitude: viewport.latitude,
         longitude: viewport.longitude
       }
 
-      // setValue(coordinates);
+      onChange(fieldId, coordinates);
+    }, [isDragging]);
+
+    // Initialize and update viewport (local representation)
+    const [viewport, setViewport] = useState(initialViewport);
+    const updateViewport = (newView) => {
+      if (isDisabled) return;
+
+      setViewport(newView);
     };
 
     const mapRef = useRef()
@@ -64,16 +59,27 @@ const MapField = ({ displayName, isDisabled, fieldId, resetValue, value}) => {
         });
     }
 
+    const translations = useTranslations()[0];
+
     return (
         <div className="mapStyling">
-            <h3>Patient Location</h3>
+            <h3>{translations.components.map.patientLocation}</h3>
 
             <ReactMapGL
                 ref={mapRef}
-                mapStyle="mapbox://styles/mapbox/dark-v9"
+                mapStyle="mapbox://styles/mapbox/satellite-streets-v11"
                 mapboxApiAccessToken={MAPBOX_TOKEN}
-                {...viewport}
-                onViewportChange={sendChanges}
+                latitude={viewport?.latitude}
+                longitude={viewport?.longitude}
+                zoom={viewport?.zoom}
+                width={'100%'}
+                height={'100%'}
+                pitch={50}
+                onViewportChange={updateViewport}
+                onLoad={() => setViewport(initialViewport)}
+                getCursor={(cursor) => {
+                  setIsDragging(cursor.isDragging)
+                }}
             >
 
             <Marker
@@ -83,7 +89,7 @@ const MapField = ({ displayName, isDisabled, fieldId, resetValue, value}) => {
                 offsetTop={viewport.zoom * -5}
             >
                 <img
-                    src="https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png"
+                    src={PIN_URL}
                     width={viewport.zoom * 5}
                     height={viewport.zoom * 5}
                     alt="Location marker"
@@ -96,7 +102,7 @@ const MapField = ({ displayName, isDisabled, fieldId, resetValue, value}) => {
                   disabled = {isDisabled}
                   onClick={() => setViewport(initialViewport)}
               >
-                  Reset
+                  {translations.components.map.reset}
               </button>
 
               <Geocoder
@@ -107,10 +113,12 @@ const MapField = ({ displayName, isDisabled, fieldId, resetValue, value}) => {
                 />
               </ReactMapGL>
 
-            <div className="coordinateLabel">
-                Latitude: {viewport?.latitude.toFixed(4)} Longitude:{' '}
-                {viewport?.longitude.toFixed(4)}
-            </div>
+              <div className="coordinateLabel">
+                  {translations.components.map.latitude}:{' '}
+                  {viewport?.latitude.toFixed(4)}{' '}
+                  {translations.components.map.longitude}:{' '}
+                  {viewport?.longitude.toFixed(4)}
+              </div>
         </div>
     );
 }

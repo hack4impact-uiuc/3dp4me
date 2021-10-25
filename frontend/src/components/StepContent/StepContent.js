@@ -149,6 +149,11 @@ const StepContent = ({
                                 ? _.cloneDeep(updatedData[field.key])
                                 : null
                         }
+                        initValue={
+                          stepData
+                              ? _.cloneDeep(stepData[field.key])
+                              : null
+                        }
                         key={field.key}
                         langKey={selectedLang}
                         isDisabled={!edit}

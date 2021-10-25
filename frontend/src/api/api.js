@@ -74,20 +74,7 @@ export const getAllStepsMetadata = async () => {
      * and push it to res.data.result[0].fields
      */
     const res = await instance.get(requestString);
-    if (!res?.data?.success) throw new Error(res?.data?.message); // TODO: DELETE TEST DATA
-    console.log(res.data.result[0]);
-    res.data.result[0].fields.push({
-        subFields: [],
-        displayName: {
-            EN: 'Number of Disabled People in House',
-            AR: 'عدد المعوقين بالمنزل',
-        },
-        fieldNumber: 7,
-        fieldType: 'Map',
-        isVisibleOnDashboard: true,
-        key: 'locationOfPatient',
-    });
-    console.log(res.data.result[0]);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
     return res.data;
 };
 
