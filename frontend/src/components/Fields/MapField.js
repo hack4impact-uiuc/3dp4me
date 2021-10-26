@@ -1,64 +1,73 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
-import Geocoder from "react-map-gl-geocoder";
+import Geocoder from 'react-map-gl-geocoder';
 import PropTypes from 'prop-types';
-import _ from "lodash";
+import _ from 'lodash';
 
 import './MapField.scss';
-import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { COORDINATES, PIN_URL, MAPBOX_TOKEN } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
-const MapField = ({ displayName, isDisabled, fieldId, initValue, value, onChange}) => {
-
+const MapField = ({
+    displayName,
+    isDisabled,
+    fieldId,
+    initValue,
+    value,
+    onChange,
+}) => {
     // Base Viewport, set to location saved in DB
-    const initialViewport = useMemo (() => ({
-        latitude: initValue?.latitude || COORDINATES.DEFAULT_MAP_LAT,
-        longitude: initValue?.longitude || COORDINATES.DEFAULT_MAP_LONG,
-        zoom: 17, // increase zoom?
-        transitionDuration: 100
-    }), [initValue]);
+    const initialViewport = useMemo(
+        () => ({
+            latitude: initValue?.latitude || COORDINATES.DEFAULT_MAP_LAT,
+            longitude: initValue?.longitude || COORDINATES.DEFAULT_MAP_LONG,
+            zoom: 17, // increase zoom?
+            transitionDuration: 100,
+        }),
+        [initValue],
+    );
 
     // Update current viewport as value is updated
     useEffect(() => {
-      const newViewport = _.cloneDeep(viewport);
-      newViewport.latitude = value?.latitude || COORDINATES.DEFAULT_MAP_LAT; // do i need the or here?
-      newViewport.longitude = value?.longitude || COORDINATES.DEFAULT_MAP_LONG;
-      setViewport(newViewport);
+        const newViewport = _.cloneDeep(viewport);
+        newViewport.latitude = value?.latitude || COORDINATES.DEFAULT_MAP_LAT; // do i need the or here?
+        newViewport.longitude =
+            value?.longitude || COORDINATES.DEFAULT_MAP_LONG;
+        setViewport(newViewport);
     }, [value]);
 
     // Update value after the end of each drag
     const [isDragging, setIsDragging] = useState(false);
     useEffect(() => {
-      if (isDragging) return;
+        if (isDragging) return;
 
-      const coordinates = {
-        latitude: viewport.latitude,
-        longitude: viewport.longitude
-      }
+        const coordinates = {
+            latitude: viewport.latitude,
+            longitude: viewport.longitude,
+        };
 
-      onChange(fieldId, coordinates);
+        onChange(fieldId, coordinates);
     }, [isDragging]);
 
     // Initialize and update viewport (local representation)
     const [viewport, setViewport] = useState(initialViewport);
     const updateViewport = (newView) => {
-      if (isDisabled) return;
+        if (isDisabled) return;
 
-      setViewport(newView);
+        setViewport(newView);
     };
 
-    const mapRef = useRef()
+    const mapRef = useRef();
 
     const handleGeocoderViewportChange = (newView) => {
-      const geocoderDefaultOverrides = { transitionDuration: 1000 };
-      console.log("Updating")
+        const geocoderDefaultOverrides = { transitionDuration: 1000 };
 
-      return setViewport({
-          ...newView,
-          ...geocoderDefaultOverrides
+        return setViewport({
+            ...newView,
+            ...geocoderDefaultOverrides,
         });
-    }
+    };
 
     const translations = useTranslations()[0];
 
@@ -79,50 +88,49 @@ const MapField = ({ displayName, isDisabled, fieldId, initValue, value, onChange
                 onViewportChange={updateViewport}
                 onLoad={() => setViewport(initialViewport)}
                 getCursor={(cursor) => {
-                  setIsDragging(cursor.isDragging)
+                    setIsDragging(cursor.isDragging);
                 }}
             >
+                <Marker
+                    latitude={viewport?.latitude}
+                    longitude={viewport?.longitude}
+                    offsetLeft={viewport.zoom * -2.5}
+                    offsetTop={viewport.zoom * -5}
+                >
+                    <img
+                        src={PIN_URL}
+                        width={viewport.zoom * 5}
+                        height={viewport.zoom * 5}
+                        alt="Location marker"
+                    />
+                </Marker>
 
-            <Marker
-                latitude={viewport?.latitude}
-                longitude={viewport?.longitude}
-                offsetLeft={viewport.zoom * -2.5}
-                offsetTop={viewport.zoom * -5}
-            >
-                <img
-                    src={PIN_URL}
-                    width={viewport.zoom * 5}
-                    height={viewport.zoom * 5}
-                    alt="Location marker"
+                <button
+                    type="button"
+                    className="resetButton"
+                    disabled={isDisabled}
+                    onClick={() => setViewport(initialViewport)}
+                >
+                    {translations.components.map.reset}
+                </button>
+
+                <Geocoder
+                    mapRef={mapRef}
+                    onViewportChange={handleGeocoderViewportChange}
+                    mapboxApiAccessToken={MAPBOX_TOKEN}
+                    position="top-left"
                 />
-            </Marker>
+            </ReactMapGL>
 
-              <button
-                  type="button"
-                  className="resetButton"
-                  disabled = {isDisabled}
-                  onClick={() => setViewport(initialViewport)}
-              >
-                  {translations.components.map.reset}
-              </button>
-
-              <Geocoder
-                  mapRef={mapRef}
-                  onViewportChange={handleGeocoderViewportChange}
-                  mapboxApiAccessToken={MAPBOX_TOKEN}
-                  position='top-left'
-                />
-              </ReactMapGL>
-
-              <div className="coordinateLabel">
-                  {translations.components.map.latitude}:{' '}
-                  {viewport?.latitude.toFixed(4)}{' '}
-                  {translations.components.map.longitude}:{' '}
-                  {viewport?.longitude.toFixed(4)}
-              </div>
+            <div className="coordinateLabel">
+                {translations.components.map.latitude}:{' '}
+                {viewport?.latitude.toFixed(4)}{' '}
+                {translations.components.map.longitude}:{' '}
+                {viewport?.longitude.toFixed(4)}
+            </div>
         </div>
     );
-}
+};
 
 MapField.propTypes = {
     displayName: PropTypes.string.isRequired,

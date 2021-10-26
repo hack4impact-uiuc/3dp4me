@@ -150,9 +150,7 @@ const StepContent = ({
                                 : null
                         }
                         initValue={
-                          stepData
-                              ? _.cloneDeep(stepData[field.key])
-                              : null
+                            stepData ? _.cloneDeep(stepData[field.key]) : null
                         }
                         key={field.key}
                         langKey={selectedLang}

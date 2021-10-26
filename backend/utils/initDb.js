@@ -172,9 +172,9 @@ const getSignatureSchema = (fieldMetadata) => {
 };
 
 const getMapSchema = () => ({
-    type : {
-      latitude: Number,
-      longitude: Number
+    type: {
+        latitude: Number,
+        longitude: Number,
     },
     default: [],
 });
