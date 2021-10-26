@@ -12,7 +12,6 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 
 router.post('/sms', async (req, res) => {
-    console.log(req);
     const phone = req.body.WaId;
     const patientToCreate = { phoneNumber: phone };
 
