@@ -339,25 +339,4 @@ describe('PUT /steps/stepkey', () => {
         // Check that database is rolled back after aborting transaction
         expect(stepBefore).toStrictEqual(stepAfter);
     });
-
-    // it('returns 400 if deleting fields', async () => {
-    //     const stepBefore = await models.Step.find({}).lean();
-
-    //     const res = await withAuthentication(
-    //         request(server)
-    //             .put('/api/metadata/steps/')
-    //             .send(PUT_STEP_DELETED_FIELD),
-    //     );
-
-    //     // Check response
-    //     const resContent = JSON.parse(res.text);
-    //     expect(res.status).toBe(400);
-    //     expect(resContent.success).toBe(false);
-
-    //     // Check database
-    //     const stepAfter = await models.Step.find({}).lean();
-
-    //     // Check that database reverts properly
-    //     expect(stepBefore).toStrictEqual(stepAfter);
-    // });
 });

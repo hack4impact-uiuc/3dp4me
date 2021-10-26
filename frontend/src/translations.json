@@ -145,11 +145,12 @@
                 "field": {
                     "createFieldTitle": "New Field",
                     "editFieldTitle": "Edit Field",
-                    "title2": "Field Settings",
+                    "fieldSettings": "Field Settings",
                     "fieldType": "Field Type",
                     "clearance": "Clearance Level",
                     "customization": "Customization",
                     "showOnDashBoard": "Show on Dashboard",
+                    "showToPatient": "Show to Patient",
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
@@ -325,13 +326,15 @@
                     },
                     "orderId": "رقم التعريف الخاص بالطلب"
                 },
-                "createField": {
-                    "title": "New Field",
-                    "title2": "Field Settings",
+                "field": {
+                    "createFieldTitle": "New Field",
+                    "editFieldTitle": "Edit Field",
+                    "fieldSettings": "Field Settings",
                     "fieldType": "Field Type",
                     "clearance": "Clearance Level",
                     "customization": "Customization",
                     "showOnDashBoard": "Show on Dashboard",
+                    "showToPatient": "Show to Patient",
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
@@ -342,9 +345,6 @@
                     "question": "Question",
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
-                },
-                "editField": {
-                    "title": "Edit Field"
                 }
             },
             "map": {

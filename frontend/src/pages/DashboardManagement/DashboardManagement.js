@@ -55,38 +55,19 @@ const SectionTab = () => {
         setEditFieldModalOpen(true);
     };
 
-    const onDeleteField = (stepKey, fieldRoot, fieldNumber) => {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
-
-        const stepIndex = stepMetadata.findIndex((element) => {
-            return element.key === selectedStep;
-        });
-
-        updatedMetadata[stepIndex].fields.splice(fieldNumber, 1);
-
-        for (
-            let i = fieldNumber;
-            i < updatedMetadata[stepIndex].fields.length;
-            i++
-        ) {
-            updatedMetadata[stepIndex].fields[i].fieldNumber = i;
-        }
-
-        setStepMetadata(updatedMetadata);
-    };
-
     const onSaveChanges = () => {
         errorWrap(
             async () => {
                 await updateMultipleSteps(stepMetadata);
             },
-            () => {},
             () => {
-                // Discard changes when the save fails
-                onDiscardChanges();
+                setIsEditing(false);
+            },
+            () => {
+                // Allow editing when the save fails
+                setIsEditing(true);
             },
         );
-        setIsEditing(false);
     };
 
     const onDiscardChanges = async () => {
@@ -177,7 +158,6 @@ const SectionTab = () => {
                 onUpPressed={onCardUpPressed}
                 stepMetadata={selectedStepMetadata}
                 onEditField={onEditField}
-                onDeleteField={onDeleteField}
                 allRoles={allRoles}
             />
         );

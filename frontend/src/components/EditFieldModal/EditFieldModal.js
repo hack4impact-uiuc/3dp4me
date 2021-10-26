@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import MultiSelectField from '../Fields/MultiSelectField';
-import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
+import { FIELD_TYPES } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 import { validateField } from '../../utils/fields';
@@ -141,19 +141,8 @@ const EditFieldModal = ({
                     </span>
                     <LanguageInput
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
-                        handleEnglishFieldChange={(event) => {
-                            updateOptionField(
-                                i,
-                                event.target.value,
-                                LANGUAGES.EN,
-                            );
-                        }}
-                        handleArabicFieldChange={(event) => {
-                            updateOptionField(
-                                i,
-                                event.target.value,
-                                LANGUAGES.AR,
-                            );
+                        handleFieldChange={(value, language) => {
+                            updateOptionField(i, value, language);
                         }}
                         onDelete={() => {
                             deleteOption(i);
@@ -171,12 +160,11 @@ const EditFieldModal = ({
         return <div>{choices}</div>;
     };
 
-    const updateEnglishDisplayName = (e) => {
-        setDisplayName({ ...displayName, EN: e.target.value });
-    };
+    const updateDisplayName = (value, language) => {
+        const updatedDisplayName = _.clone(displayName);
+        updatedDisplayName[language] = value;
 
-    const updateArabicDisplayName = (e) => {
-        setDisplayName({ ...displayName, AR: e.target.value });
+        setDisplayName(updatedDisplayName);
     };
 
     const generateFields = () => {
@@ -189,27 +177,29 @@ const EditFieldModal = ({
             case FIELD_TYPES.FILE:
             case FIELD_TYPES.AUDIO:
                 return (
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                    <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.question}
                         </span>
                         <LanguageInput
                             fieldValues={displayName}
-                            handleEnglishFieldChange={updateEnglishDisplayName}
-                            handleArabicFieldChange={updateArabicDisplayName}
+                            handleFieldChange={(value, language) => {
+                                updateDisplayName(value, language);
+                            }}
                         />
                     </div>
                 );
             case FIELD_TYPES.RADIO_BUTTON:
                 return (
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                    <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.question}
                         </span>
                         <LanguageInput
                             fieldValues={displayName}
-                            handleEnglishFieldChange={updateEnglishDisplayName}
-                            handleArabicFieldChange={updateArabicDisplayName}
+                            handleFieldChange={(value, language) => {
+                                updateDisplayName(value, language);
+                            }}
                         />
                         <Button
                             className="add-option-button"
@@ -225,34 +215,32 @@ const EditFieldModal = ({
                 );
             case FIELD_TYPES.DIVIDER:
                 return (
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                    <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.dividerTitle}
                         </span>
                         <LanguageInput
                             fieldValues={displayName}
-                            handleEnglishFieldChange={updateEnglishDisplayName}
-                            handleArabicFieldChange={updateArabicDisplayName}
+                            handleFieldChange={(value, language) => {
+                                updateDisplayName(value, language);
+                            }}
                         />
                     </div>
                 );
             case FIELD_TYPES.HEADER:
                 return (
-                    <div style={{ fontSize: '17px', textAlign: 'left' }}>
+                    <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.headerTitle}
                         </span>
                         <LanguageInput
                             fieldValues={displayName}
-                            handleEnglishFieldChange={updateEnglishDisplayName}
-                            handleArabicFieldChange={updateArabicDisplayName}
+                            handleFieldChange={(value, language) => {
+                                updateDisplayName(value, language);
+                            }}
                         />
                     </div>
                 );
-            // case FIELD_TYPES.FIELD_GROUP:
-            //     return (
-            //        <div>Add Field</div>
-            //     )
             default:
                 return <p>This field is not yet supported</p>;
         }
@@ -318,7 +306,7 @@ const EditFieldModal = ({
                     {translations.components.swal.field.editFieldTitle}
                 </span>
                 <span className="edit-field-title2">
-                    {translations.components.swal.field.title2}
+                    {translations.components.swal.field.fieldSettings}
                 </span>
                 <div className="edit-field-title3">
                     <div style={{ padding: 10 }}>
@@ -360,6 +348,15 @@ const EditFieldModal = ({
                         />
                         <span>
                             {translations.components.swal.field.showOnDashBoard}
+                        </span>
+                        <br />
+                        <Checkbox
+                            size="medium"
+                            checked={isVisibleOnDashboard}
+                            onChange={handleIsVisibleOnDashboard}
+                        />
+                        <span>
+                            {translations.components.swal.field.showToPatient}
                         </span>
                     </div>
                 </div>

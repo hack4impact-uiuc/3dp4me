@@ -105,7 +105,8 @@ const fieldSchema = new mongoose.Schema({
     displayName: { type: languageSchema, required: true },
     readableGroups: { type: [String], required: true, default: [] },
     writableGroups: { type: [String], required: true, default: [] },
-
+    isHidden: { type: [Boolean], required: true, default: false },
+    isDeleted: { type: [Boolean], required: true, default: false },
     // This field is for additional data that doesn't fit in this schema. Try to avoid using this.
     // If you must use this, add asserts to generateFieldSchema to ensure this has proper data.
     additionalData: { type: mongoose.Schema.Types.Mixed, required: false },
