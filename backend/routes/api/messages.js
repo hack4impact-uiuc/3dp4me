@@ -13,12 +13,12 @@ const client = require('twilio')(accountSid, authToken);
 
 router.post('/sms', async (req, res) => {
     const phone = req.body.WaId;
-    const patientToCreate = { phoneNumber: phone };
+    const patientInfo = { phoneNumber: phone };
 
     let patient = await models.Patient.findOne({ phoneNumber: phone });
 
     if (!patient) {
-        const newPatient = new models.Patient(patientToCreate);
+        const newPatient = new models.Patient(patientInfo);
         patient = await newPatient.save();
     }
 
