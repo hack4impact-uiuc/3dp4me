@@ -10,11 +10,16 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 
 const client = require('twilio')(accountSid, authToken);
 
+const {
+    TWILIO_RECEIVING_NUMBER,
+    TWILIO_SENDING_NUMBER,
+} = require('../../utils/constants');
+
 router.post('/sms', async (req, res) => {
-    const phone = req.body.WaId;
+    const phone = req?.body?.WaId;
     const patientInfo = { phoneNumber: phone };
 
-    let patient = await models.Patient.findOne({ phoneNumber: phone });
+    let patient = await models.Patient.findOne(patientInfo);
 
     if (!patient) {
         const newPatient = new models.Patient(patientInfo);
@@ -33,8 +38,8 @@ router.get('/sms', async (req, res) => {
     client.messages
         .create({
             body: 'hi',
-            to: 'whatsapp:+13098319210',
-            from: 'whatsapp:+14155238886',
+            to: TWILIO_RECEIVING_NUMBER,
+            from: TWILIO_SENDING_NUMBER,
         })
         .then((message) => console.log(message.sid));
     res.send('HI FREHCN THOSaAST');
