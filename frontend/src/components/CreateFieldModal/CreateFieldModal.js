@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import MultiSelectField from '../Fields/MultiSelectField';
-import { FIELD_TYPES } from '../../utils/constants';
+import { FIELD_TYPES, ADMIN_ID } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 import { validateField } from '../../utils/fields';
@@ -28,7 +28,7 @@ const CreateFieldModal = ({
 }) => {
     const [translations, selectedLang] = useTranslations();
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
-    const [selectedRoles, setSelectedRoles] = useState([]);
+    const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID]); // automatically select the Admin role
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
     const [options, setOptions] = useState([]);
@@ -296,7 +296,7 @@ const CreateFieldModal = ({
                                 id="create-field-type-dropdown"
                                 onChange={handleFieldTypeSelect}
                                 MenuProps={{
-                                    style: { zIndex: 35001 },
+                                    style: { zIndex: 35001 }, // for keeping this component on the top layer
                                 }}
                                 defaultValue={fieldType}
                                 input={<BootstrapInput />}
@@ -313,6 +313,7 @@ const CreateFieldModal = ({
                             selectedOptions={selectedRoles}
                             onChange={onRolesChange}
                             isDisabled={false}
+                            disabledOptions={[ADMIN_ID]}
                         />
                     </div>
                     <span>

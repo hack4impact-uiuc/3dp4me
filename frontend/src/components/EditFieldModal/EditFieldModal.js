@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import MultiSelectField from '../Fields/MultiSelectField';
-import { FIELD_TYPES } from '../../utils/constants';
+import { FIELD_TYPES, ADMIN_ID } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 import { validateField } from '../../utils/fields';
@@ -43,17 +43,9 @@ const EditFieldModal = ({
 
         const initialRoles = initialData.readableGroups;
 
-        if (initialRoles.length === 0) {
-            // In the event that the readable groups is empty,
-            // we need to add the Admin role _id. This is because
-            // every field has the Admin role by default.
-            const adminRole = allRoles.find(
-                (role) => role.Question.EN === 'Admin',
-            );
-
-            if (adminRole) {
-                initialRoles.push(adminRole._id);
-            }
+        // Automatically select the admin role
+        if (initialRoles.indexOf(ADMIN_ID) === -1) {
+            initialRoles.push(ADMIN_ID);
         }
 
         setSelectedRoles(initialRoles);
@@ -318,7 +310,7 @@ const EditFieldModal = ({
                                 id="edit-field-type-dropdown"
                                 onChange={handleFieldTypeSelect}
                                 MenuProps={{
-                                    style: { zIndex: 35001 },
+                                    style: { zIndex: 35001 }, // for keeping this component on the top layer
                                 }}
                                 defaultValue={fieldType}
                                 input={<BootstrapInput />}
@@ -335,6 +327,7 @@ const EditFieldModal = ({
                             selectedOptions={selectedRoles}
                             onChange={onRolesChange}
                             isDisabled={false}
+                            disabledOptions={[ADMIN_ID]}
                         />
                     </div>
                     <span>
@@ -348,15 +341,6 @@ const EditFieldModal = ({
                         />
                         <span>
                             {translations.components.swal.field.showOnDashBoard}
-                        </span>
-                        <br />
-                        <Checkbox
-                            size="medium"
-                            checked={isVisibleOnDashboard}
-                            onChange={handleIsVisibleOnDashboard}
-                        />
-                        <span>
-                            {translations.components.swal.field.showToPatient}
                         </span>
                     </div>
                 </div>

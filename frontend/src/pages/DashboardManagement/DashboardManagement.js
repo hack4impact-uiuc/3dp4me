@@ -30,7 +30,7 @@ const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
     const [stepMetadata, setStepMetadata] = useState([]);
-    const [originalStepMetadata, setOriginalSetMetadata] = useState([]);
+    const [originalStepMetadata, setOriginalStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [createFieldModalOpen, setCreateFieldModalOpen] = useState(false);
@@ -62,6 +62,7 @@ const SectionTab = () => {
             },
             () => {
                 setIsEditing(false);
+                setOriginalStepMetadata(stepMetadata);
             },
             () => {
                 // Allow editing when the save fails
@@ -175,7 +176,7 @@ const SectionTab = () => {
                 }
 
                 setStepMetadata(sortedMetadata);
-                setOriginalSetMetadata(sortedMetadata);
+                setOriginalStepMetadata(sortedMetadata);
             };
 
             const fetchRoles = async () => {

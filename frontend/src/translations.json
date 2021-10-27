@@ -47,7 +47,8 @@
             },
             "step": {
                 "lastEditedBy": "Last edited by",
-                "on": "on"
+                "on": "on",
+                "none": "None"
             },
             "sidebar": {
                 "name": "Name",
@@ -231,7 +232,8 @@
             },
             "step": {
                 "lastEditedBy": "التعديل الأخير بواسطة",
-                "on": "تشغيل"
+                "on": "تشغيل",
+                "none": "None"
             },
             "sidebar": {
                 "name": "\u0627\u0633\u0645",
