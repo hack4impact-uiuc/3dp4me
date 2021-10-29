@@ -125,6 +125,7 @@ module.exports.getAddedFields = async (session, oldFields, newFields) => {
         const hasAddedField = addedFields.some(
             (f) => f.key === requestField.key,
         );
+
         if (!existingField && !hasAddedField) addedFields.push(requestField);
     }
 
