@@ -19,16 +19,20 @@ router.post('/sms', async (req, res) => {
     const phone = req?.body?.WaId;
     const patientInfo = { phoneNumber: phone };
 
-    let patient = await models.Patient.findOne(patientInfo);
+    let patients = await models.Patient.find(patientInfo);
 
-    if (!patient) {
+    if (!patients) {
         const newPatient = new models.Patient(patientInfo);
-        patient = await newPatient.save();
+        patients = await newPatient.save();
     }
 
     const twiml = new MessagingResponse();
 
-    twiml.message(`${patient._id}`);
+    const patientInfoReducer = (prev, curr) => `${prev}, ${curr?.firstName ? curr?.firstName + curr?.familyName : 'Unnamed Patient'} : \n ${curr._id} \n`;
+
+    const messageToPatients = patients.reduce(patientInfoReducer, '');
+
+    twiml.message(messageToPatients);
 
     res.writeHead(200, { 'Content-Type': 'text/xml' });
     res.end(twiml.toString());
