@@ -6,7 +6,12 @@ import _ from 'lodash';
 
 import './MapField.scss';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { COORDINATES, PIN_URL, MAPBOX_TOKEN, MAP_STYLE } from '../../utils/constants';
+import {
+    COORDINATES,
+    PIN_URL,
+    MAPBOX_TOKEN,
+    MAP_STYLE,
+} from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const MapField = ({
@@ -43,7 +48,8 @@ const MapField = ({
     useEffect(() => {
         const newViewport = _.cloneDeep(viewport);
         newViewport.latitude = value?.latitude || COORDINATES.DEFAULT_MAP_LAT;
-        newViewport.longitude = value?.longitude || COORDINATES.DEFAULT_MAP_LONG;
+        newViewport.longitude =
+            value?.longitude || COORDINATES.DEFAULT_MAP_LONG;
         setViewport(newViewport);
     }, [value]);
 
