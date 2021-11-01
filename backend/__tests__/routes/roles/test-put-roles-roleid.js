@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
 const mongoose = require('mongoose');
@@ -14,10 +13,8 @@ const {
 } = require('../../utils/auth');
 
 describe('DELETE /roles/:roleid', () => {
-    const COLLECTION_NAME = 'Role';
-
-    afterAll(async () => await db.closeDatabase());
-    afterEach(async () => await db.resetDatabase());
+    afterAll(async () => db.closeDatabase());
+    afterEach(async () => db.resetDatabase());
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
