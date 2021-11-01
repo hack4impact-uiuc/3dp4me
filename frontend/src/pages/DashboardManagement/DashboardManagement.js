@@ -8,6 +8,7 @@ import {
     getAllStepsMetadata,
     getAllRoles,
     updateMultipleSteps,
+    postNewStep,
 } from '../../api/api';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
@@ -200,6 +201,8 @@ const SectionTab = () => {
             <CreateStepModal
                 isOpen={stepModalOpen}
                 onModalClose={onStepModalClose}
+                allRoles={allRoles}
+                onAddNewStep={addNewStep}
             />
         );
     };
@@ -228,6 +231,34 @@ const SectionTab = () => {
                 updatedMetadata[stepIndex].fields.push(updatedNewField);
 
                 await updateMultipleSteps([updatedMetadata[stepIndex]]);
+            },
+            () => {
+                setStepMetadata(updatedMetadata);
+            },
+        );
+    };
+
+    // 10/28 NOTE: Maybe there is no endpoint to update a step !!
+
+    const addNewStep = (newStepData) => {
+        const updatedNewStep = _.cloneDeep(newStepData);
+        const updatedMetadata = _.cloneDeep(stepMetadata);
+
+        errorWrap(
+            async () => {
+                // Number of elements in list will be new index number
+                updatedNewStep.stepNumber = updatedMetadata.length;
+
+                const currentStepKeys = updatedMetadata.map((step) => step.key);
+
+                updatedNewStep.key = generateKeyWithoutCollision(
+                    updatedNewStep.displayName.EN,
+                    currentStepKeys,
+                );
+                // await updateMultipleSteps([updatedMetadata]);
+                await postNewStep(updatedNewStep);
+
+                // when to set metadata = updatedMetadata?
             },
             () => {
                 setStepMetadata(updatedMetadata);
