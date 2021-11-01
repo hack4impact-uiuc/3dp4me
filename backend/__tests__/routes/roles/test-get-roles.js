@@ -40,7 +40,6 @@ describe('GET /roles', () => {
             .model(COLLECTION_NAME)
             .find({});
 
-        // strict equality or check length?
         expect(actualResult.length).toBe(expectedResult.length);
     });
 });
