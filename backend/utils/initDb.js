@@ -117,7 +117,8 @@ module.exports.generateFieldSchema = (field) => {
     case FIELDS.MAP:
         return getMapSchema(field);
     default:
-        throw new Error(`Unrecognized field type, ${field.type}`);
+        log.error(`Unrecognized field type, ${field.fieldType}`);
+        return null;
     }
 };
 

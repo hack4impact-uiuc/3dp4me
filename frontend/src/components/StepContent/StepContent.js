@@ -135,7 +135,7 @@ const StepContent = ({
         return <h1>{metaData.displayName[selectedLang]}</h1>;
     };
 
-    const genereateFields = () => {
+    const generateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
         // if displaying a single question per page, only return the right numbered question
         return metaData.fields.map((field) => {
@@ -226,6 +226,20 @@ const StepContent = ({
         );
     };
 
+    const generateLastEditedByAndDate = () => {
+        let text = `${translations.components.step.lastEditedBy} ${
+            stepData?.lastEditedBy || translations.components.step.none
+        }`;
+        if (stepData?.lastEdited) {
+            text += ` ${translations.components.step.on} ${formatDate(
+                new Date(),
+                selectedLang,
+            )}`;
+        }
+
+        return <p>{text}</p>;
+    };
+
     return (
         <form className="medical-info">
             <Backdrop className="backdrop" open={loading}>
@@ -249,13 +263,8 @@ const StepContent = ({
                     }
                 </MenuItem>
             </Select>
-            <p>{`${translations.components.step.lastEditedBy} ${
-                stepData?.lastEditedBy
-            } ${translations.components.step.on} ${formatDate(
-                new Date(stepData?.lastEdited),
-                selectedLang,
-            )}`}</p>
-            {genereateFields()}
+            {generateLastEditedByAndDate()}
+            {generateFields()}
             {generateFooter()}
         </form>
     );

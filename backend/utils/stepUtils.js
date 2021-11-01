@@ -63,7 +63,7 @@ const updateStepInTransation = async (stepBody, session) => {
     // Abort if can't find step to edit
     if (!stepToEdit) await abortAndError(session, `No step with key, ${stepKey}`);
 
-    // Build up a list of al the new fields added
+    // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
     const addedFields = await getAddedFields(
         session,
