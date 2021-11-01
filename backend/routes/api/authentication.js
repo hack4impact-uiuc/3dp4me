@@ -4,7 +4,7 @@ const twofactor = require('node-2fa');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const { sendResponse } = require('../../utils/response');
-const { TWO_FACTOR_WINDOW } = require('../../utils/constants');
+const { TWO_FACTOR_WINDOW_MINS } = require('../../utils/constants');
 
 const router = express.Router();
 
@@ -58,9 +58,18 @@ router.post(
 
         const patient = await models.Patient.findById(patientId);
 
+        if (!patient) {
+            sendResponse(res, 404, 'Patient not found');
+            return;
+        }
+
         const patientSecret = patient.secret;
 
-        const isAuthenticated = twofactor.verifyToken(patientSecret, token, TWO_FACTOR_WINDOW);
+        let isAuthenticated = false;
+
+        if (patient.secret) {
+            isAuthenticated = twofactor.verifyToken(patientSecret, token, TWO_FACTOR_WINDOW_MINS);
+        }
 
         if (isAuthenticated) {
             await sendResponse(
