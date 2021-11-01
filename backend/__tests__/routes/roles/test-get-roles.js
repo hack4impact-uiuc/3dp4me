@@ -1,9 +1,8 @@
-const _ = require('lodash');
 const request = require('supertest');
 const AWS = require('aws-sdk-mock');
-const mongoose = require('mongoose');
 
 let server = require('../../../app');
+const { models } = require('../../../models');
 const db = require('../../utils/db');
 const {
     initAuthMocker,
@@ -12,10 +11,8 @@ const {
 } = require('../../utils/auth');
 
 describe('GET /roles', () => {
-    const COLLECTION_NAME = 'Role';
-
-    afterAll(async () => await db.closeDatabase());
-    afterEach(async () => await db.resetDatabase());
+    afterAll(async () => db.closeDatabase());
+    afterEach(async () => db.resetDatabase());
     beforeAll(async () => {
         await db.connect();
         initAuthMocker(AWS);
@@ -28,7 +25,7 @@ describe('GET /roles', () => {
 
     it('Gets all roles', async () => {
         const res = await withAuthentication(
-            request(server).get(`/api/roles`),
+            request(server).get('/api/roles'),
         );
 
         expect(res.status).toBe(200);
@@ -36,8 +33,8 @@ describe('GET /roles', () => {
         expect(resContent.success).toBe(true);
         const actualResult = resContent.result;
 
-        let expectedResult = await mongoose
-            .model(COLLECTION_NAME)
+        const expectedResult = await models
+            .Role
             .find({});
 
         expect(actualResult.length).toBe(expectedResult.length);
