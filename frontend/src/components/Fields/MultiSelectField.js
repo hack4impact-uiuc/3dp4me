@@ -16,6 +16,7 @@ const MultiSelectField = ({
     selectedOptions,
     fieldId = '',
     isDisabled = true,
+    disabledOptions = [],
     onChange = () => {},
 }) => {
     const onSelectionChange = (e) => {
@@ -34,8 +35,13 @@ const MultiSelectField = ({
 
     const generateQuestions = () => {
         return options.map((option) => {
-            const isChecked = selectedOptions.includes(option._id.toString());
-            if (option.IsHidden && !isChecked) return null;
+            const isOptionChecked = selectedOptions.includes(
+                option._id.toString(),
+            );
+            const isOptionDisabled = disabledOptions.includes(
+                option._id.toString(),
+            );
+            if (option.IsHidden && !isOptionChecked) return null;
 
             return (
                 <FormControlLabel
@@ -43,14 +49,14 @@ const MultiSelectField = ({
                     value={option._id}
                     control={
                         <Checkbox
-                            checked={isChecked}
+                            checked={isOptionChecked}
                             name={option._id}
                             value={option._id}
                             onChange={onSelectionChange}
                         />
                     }
                     label={option.Question[langKey]}
-                    disabled={isDisabled}
+                    disabled={isDisabled || isOptionDisabled}
                 />
             );
         });
@@ -72,6 +78,7 @@ MultiSelectField.propTypes = {
     onChange: PropTypes.func,
     selectedOptions: PropTypes.arrayOf(PropTypes.string),
     options: FieldOptionsType,
+    disabledOptions: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default MultiSelectField;

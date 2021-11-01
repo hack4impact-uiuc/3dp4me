@@ -21,6 +21,7 @@ import Files from '../Files/Files';
 const StepField = ({
     metadata,
     value,
+    initValue,
     patientId = '',
     displayName,
     stepKey,
@@ -164,7 +165,16 @@ const StepField = ({
             case FIELD_TYPES.HEADER:
                 return <h3>{displayName}</h3>;
             case FIELD_TYPES.MAP:
-                return <MapField />;
+                return (
+                    <MapField
+                        value={value}
+                        initValue={initValue}
+                        displayName={displayName}
+                        isDisabled={isDisabled}
+                        onChange={handleSimpleUpdate}
+                        fieldId={metadata.key}
+                    />
+                );
             case FIELD_TYPES.PHOTO:
                 return (
                     <PhotoField
@@ -186,6 +196,7 @@ const StepField = ({
 
 StepField.propTypes = {
     value: PropTypes.any,
+    initValue: PropTypes.any,
     isDisabled: PropTypes.bool,
     patientId: PropTypes.string,
     handleSimpleUpdate: PropTypes.func,

@@ -7,14 +7,16 @@ import partiallyIcon from '../assets/half-circle.svg';
 import unfinishedIcon from '../assets/exclamation.svg';
 import translations from '../translations.json';
 
-import { formatDate } from './date';
 import {
+    ERR_LANGUAGE_VALIDATION_FAILED,
+    ERR_OPTION_VALIDATION_FAILED,
     ACCESS_LEVELS,
     FIELD_TYPES,
     PATIENT_STATUS,
     SIGNATURE_STATUS,
     STEP_STATUS,
 } from './constants';
+import { formatDate } from './date';
 
 /**
  * Converts a step status to a string
@@ -287,4 +289,21 @@ export const fieldToJSX = (fieldData, fieldType, selectedLang) => {
     }
 
     return stringifiedField;
+};
+
+/**
+ * Validates a field's data.
+ * @param {JSON} fieldData
+ */
+export const validateField = (fieldData) => {
+    if (fieldData.displayName.EN === '' || fieldData.displayName.AR === '') {
+        throw new Error(ERR_LANGUAGE_VALIDATION_FAILED);
+    }
+
+    if (
+        fieldData.fieldType === FIELD_TYPES.RADIO_BUTTON &&
+        fieldData.options.length === 0
+    ) {
+        throw new Error(ERR_OPTION_VALIDATION_FAILED);
+    }
 };

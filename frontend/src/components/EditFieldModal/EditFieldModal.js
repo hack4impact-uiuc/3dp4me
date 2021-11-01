@@ -1,5 +1,5 @@
-import './CreateFieldModal.scss';
-import React, { useState } from 'react';
+import './EditFieldModal.scss';
+import React, { useState, useEffect } from 'react';
 import {
     Button,
     Checkbox,
@@ -20,20 +20,42 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { validateField } from '../../utils/fields';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
-const CreateFieldModal = ({
+const EditFieldModal = ({
     isOpen,
+    initialData,
     onModalClose,
     allRoles,
-    onAddNewField,
+    onEditField,
 }) => {
     const [translations, selectedLang] = useTranslations();
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
-    const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID]); // automatically select the Admin role
+    const [selectedRoles, setSelectedRoles] = useState([]);
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
     const [options, setOptions] = useState([]);
 
     const errorWrap = useErrorWrap();
+
+    useEffect(() => {
+        setFieldType(initialData.fieldType);
+        setIsVisibleOnDashboard(initialData.isVisibleOnDashboard);
+        setDisplayName(initialData.displayName);
+
+        const initialRoles = initialData.readableGroups;
+
+        // Automatically select the admin role
+        if (initialRoles.indexOf(ADMIN_ID) === -1) {
+            initialRoles.push(ADMIN_ID);
+        }
+
+        setSelectedRoles(initialRoles);
+
+        const formattedOptions = initialData.options.map((option) => {
+            return option.Question;
+        });
+
+        setOptions(formattedOptions);
+    }, [initialData, isOpen]);
 
     const BootstrapInput = withStyles((theme) => ({
         root: {
@@ -147,7 +169,7 @@ const CreateFieldModal = ({
             case FIELD_TYPES.FILE:
             case FIELD_TYPES.AUDIO:
                 return (
-                    <div className="create-field-div">
+                    <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.question}
                         </span>
@@ -161,7 +183,7 @@ const CreateFieldModal = ({
                 );
             case FIELD_TYPES.RADIO_BUTTON:
                 return (
-                    <div className="create-field-div">
+                    <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.question}
                         </span>
@@ -185,7 +207,7 @@ const CreateFieldModal = ({
                 );
             case FIELD_TYPES.DIVIDER:
                 return (
-                    <div className="create-field-div">
+                    <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.dividerTitle}
                         </span>
@@ -199,7 +221,7 @@ const CreateFieldModal = ({
                 );
             case FIELD_TYPES.HEADER:
                 return (
-                    <div className="create-field-div">
+                    <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.headerTitle}
                         </span>
@@ -220,7 +242,7 @@ const CreateFieldModal = ({
         const fieldDropdownOptions = [];
         Object.values(FIELD_TYPES).forEach((value) => {
             fieldDropdownOptions.push(
-                <option value={value} className="create-field-option">
+                <option value={value} className="edit-field-option">
                     {value}
                 </option>,
             );
@@ -229,7 +251,7 @@ const CreateFieldModal = ({
         return fieldDropdownOptions;
     };
 
-    const saveNewField = () => {
+    const editNewField = () => {
         const formattedOptions = options.map((option, index) => {
             return { Index: index, Question: option };
         });
@@ -242,6 +264,8 @@ const CreateFieldModal = ({
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
             subFields: [],
+            key: initialData.key,
+            fieldNumber: initialData.fieldNumber,
         };
 
         errorWrap(
@@ -249,9 +273,8 @@ const CreateFieldModal = ({
                 validateField(newFieldData);
             },
             () => {
-                onAddNewField(newFieldData);
+                onEditField(newFieldData);
                 onModalClose();
-                clearState();
             },
         );
     };
@@ -260,16 +283,7 @@ const CreateFieldModal = ({
         setIsVisibleOnDashboard(event.target.checked);
     };
 
-    const clearState = () => {
-        setSelectedRoles([]);
-        setIsVisibleOnDashboard(false);
-        setDisplayName({ EN: '', AR: '' });
-        setOptions([]);
-        setFieldType(FIELD_TYPES.STRING);
-    };
-
     const onDiscard = () => {
-        clearState();
         onModalClose();
     };
 
@@ -277,23 +291,23 @@ const CreateFieldModal = ({
         <Modal
             open={isOpen}
             onClose={onModalClose}
-            className="create-field-modal"
+            className="edit-field-modal"
         >
-            <div className="create-field-modal-wrapper">
-                <span className="create-field-title1">
-                    {translations.components.swal.field.createFieldTitle}
+            <div className="edit-field-modal-wrapper">
+                <span className="edit-field-title1">
+                    {translations.components.swal.field.editFieldTitle}
                 </span>
-                <span className="create-field-title2">
+                <span className="edit-field-title2">
                     {translations.components.swal.field.fieldSettings}
                 </span>
-                <div className="create-field-title3">
+                <div className="edit-field-title3">
                     <div style={{ padding: 10 }}>
                         <FormControl>
-                            <InputLabel htmlFor="create-field-type-dropdown">
+                            <InputLabel htmlFor="edit-field-type-dropdown">
                                 {translations.components.swal.field.fieldType}
                             </InputLabel>
                             <NativeSelect
-                                id="create-field-type-dropdown"
+                                id="edit-field-type-dropdown"
                                 onChange={handleFieldTypeSelect}
                                 MenuProps={{
                                     style: { zIndex: 35001 }, // for keeping this component on the top layer
@@ -330,7 +344,7 @@ const CreateFieldModal = ({
                         </span>
                     </div>
                 </div>
-                <span className="create-field-title3">
+                <span className="edit-field-title3">
                     {translations.components.swal.field.field}{' '}
                 </span>
                 {generateFields()}
@@ -342,7 +356,7 @@ const CreateFieldModal = ({
                     }}
                 >
                     <Button
-                        onClick={saveNewField}
+                        onClick={editNewField}
                         className="save-field-button"
                     >
                         {translations.components.swal.field.buttons.save}
@@ -359,11 +373,12 @@ const CreateFieldModal = ({
     );
 };
 
-CreateFieldModal.propTypes = {
+EditFieldModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
+    initialData: PropTypes.object.isRequired,
     onModalClose: PropTypes.func.isRequired,
     allRoles: PropTypes.array.isRequired,
-    onAddNewField: PropTypes.func.isRequired,
+    onEditField: PropTypes.func.isRequired,
 };
 
-export default CreateFieldModal;
+export default EditFieldModal;

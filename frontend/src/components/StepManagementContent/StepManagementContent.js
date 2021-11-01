@@ -59,7 +59,9 @@ const StepManagementContent = ({
             <div className="buttons">
                 <div
                     className="edit-field-button"
-                    onClick={() => onEditField(stepMetadata.key, selectedLang)}
+                    onClick={() =>
+                        onEditField(stepMetadata.key, fieldRoot, fieldNumber)
+                    }
                 >
                     <i className="pencil alternate icon" />
                 </div>

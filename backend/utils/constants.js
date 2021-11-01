@@ -23,6 +23,7 @@ module.exports.FIELDS = {
     SIGNATURE: 'Signature',
     PHOTO: 'Photo',
     FIELD_GROUP: 'FieldGroup',
+    MAP: 'Map',
 };
 
 module.exports.PATIENT_STATUS_ENUM = {

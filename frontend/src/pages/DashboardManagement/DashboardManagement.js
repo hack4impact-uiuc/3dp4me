@@ -13,6 +13,7 @@ import {
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
 import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
+import EditFieldModal from '../../components/EditFieldModal/EditFieldModal';
 import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
@@ -20,7 +21,6 @@ import {
     verticalMovementWidth,
 } from '../../styles/variables.scss';
 import { resolveMixedObjPath } from '../../utils/object';
-import { useTranslations } from '../../hooks/useTranslations';
 import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
 import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 
@@ -30,13 +30,15 @@ const expandedSidebarWidth = `${
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
-    const translations = useTranslations()[0];
     const [stepMetadata, setStepMetadata] = useState([]);
+    const [originalStepMetadata, setOriginalStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
-    const [fieldModalOpen, setFieldModalOpen] = useState(false);
+    const [createFieldModalOpen, setCreateFieldModalOpen] = useState(false);
+    const [editFieldModalOpen, setEditFieldModalOpen] = useState(false);
     const [stepModalOpen, setStepModalOpen] = useState(false);
     const [allRoles, setAllRoles] = useState([]);
+    const [selectedField, setSelectedField] = useState(0);
 
     const errorWrap = useErrorWrap();
 
@@ -46,21 +48,32 @@ const SectionTab = () => {
 
     const onAddField = (stepKey) => {
         setSelectedStep(stepKey);
-        setFieldModalOpen(true);
+        setCreateFieldModalOpen(true);
     };
 
-    const onEditField = () => {
-        // setFieldModalOpen(true);
-        // TODO
+    const onEditField = (stepKey, fieldRoot, fieldNumber) => {
+        setSelectedField(fieldNumber);
+        setEditFieldModalOpen(true);
     };
 
     const onSaveChanges = () => {
-        // TODO: Send changes to backend
-        setIsEditing(false);
+        errorWrap(
+            async () => {
+                await updateMultipleSteps(stepMetadata);
+            },
+            () => {
+                setIsEditing(false);
+                setOriginalStepMetadata(stepMetadata);
+            },
+            () => {
+                // Allow editing when the save fails
+                setIsEditing(true);
+            },
+        );
     };
 
-    const onDiscardChanges = () => {
-        // TODO: Delete changes here
+    const onDiscardChanges = async () => {
+        setStepMetadata(originalStepMetadata);
         setIsEditing(false);
     };
 
@@ -164,6 +177,7 @@ const SectionTab = () => {
                 }
 
                 setStepMetadata(sortedMetadata);
+                setOriginalStepMetadata(sortedMetadata);
             };
 
             const fetchRoles = async () => {
@@ -177,8 +191,12 @@ const SectionTab = () => {
         });
     }, [setStepMetadata, errorWrap]);
 
-    const onFieldModalClose = () => {
-        setFieldModalOpen(false);
+    const onCreateFieldModalClose = () => {
+        setCreateFieldModalOpen(false);
+    };
+
+    const onEditFieldModalClose = () => {
+        setEditFieldModalOpen(false);
     };
 
     const onStepModalClose = () => {
@@ -188,10 +206,30 @@ const SectionTab = () => {
     const generateNewFieldPopup = () => {
         return (
             <CreateFieldModal
-                isOpen={fieldModalOpen}
-                onModalClose={onFieldModalClose}
+                isOpen={createFieldModalOpen}
+                onModalClose={onCreateFieldModalClose}
                 allRoles={allRoles}
                 onAddNewField={addNewField}
+            />
+        );
+    };
+
+    const generateEditFieldPopup = () => {
+        const selectedStepMetadata = stepMetadata.find(
+            (step) => step.key === selectedStep,
+        );
+
+        if (!selectedStepMetadata) return null;
+
+        if (selectedField >= selectedStepMetadata.fields.length) return null;
+
+        return (
+            <EditFieldModal
+                isOpen={editFieldModalOpen}
+                initialData={selectedStepMetadata.fields[selectedField]}
+                onModalClose={onEditFieldModalClose}
+                allRoles={allRoles}
+                onEditField={editField}
             />
         );
     };
@@ -211,31 +249,34 @@ const SectionTab = () => {
         const updatedNewField = _.cloneDeep(newFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        errorWrap(
-            async () => {
-                const stepIndex = stepMetadata.findIndex((element) => {
-                    return element.key === selectedStep;
-                });
+        const stepIndex = stepMetadata.findIndex((element) => {
+            return element.key === selectedStep;
+        });
 
-                updatedNewField.fieldNumber =
-                    updatedMetadata[stepIndex].fields.length;
+        updatedNewField.fieldNumber = updatedMetadata[stepIndex].fields.length;
 
-                const currentFieldKeys = updatedMetadata[stepIndex].fields.map(
-                    (field) => field.key,
-                );
-                updatedNewField.key = generateKeyWithoutCollision(
-                    updatedNewField.displayName.EN,
-                    currentFieldKeys,
-                );
-
-                updatedMetadata[stepIndex].fields.push(updatedNewField);
-
-                await updateMultipleSteps([updatedMetadata[stepIndex]]);
-            },
-            () => {
-                setStepMetadata(updatedMetadata);
-            },
+        const currentFieldKeys = updatedMetadata[stepIndex].fields.map(
+            (field) => field.key,
         );
+        updatedNewField.key = generateKeyWithoutCollision(
+            updatedNewField.displayName.EN,
+            currentFieldKeys,
+        );
+
+        updatedMetadata[stepIndex].fields.push(updatedNewField);
+        setStepMetadata(updatedMetadata);
+    };
+
+    const editField = (updatedFieldData) => {
+        const updatedField = _.cloneDeep(updatedFieldData);
+        const updatedMetadata = _.cloneDeep(stepMetadata);
+
+        const stepIndex = stepMetadata.findIndex((element) => {
+            return element.key === selectedStep;
+        });
+
+        updatedMetadata[stepIndex].fields[selectedField] = updatedField;
+        setStepMetadata(updatedMetadata);
     };
 
     // 10/28 NOTE: Maybe there is no endpoint to update a step !!
@@ -286,16 +327,14 @@ const SectionTab = () => {
                         onClick={() => {
                             setStepModalOpen(true);
                         }}
-                    >
-                        {translations.components.file.addAnother}
-                    </ListItem>
+                    />
                 </div>
                 <div className="step-management-content-container">
                     {GenerateStepManagementContent()}
                 </div>
 
                 <BottomBar
-                    eisEditing={isEditing}
+                    isEditing={isEditing}
                     onEdit={() => setIsEditing(true)}
                     onSave={onSaveChanges}
                     onDiscard={onDiscardChanges}
@@ -313,6 +352,7 @@ const SectionTab = () => {
 
             {generateNewStepPopup()}
             {generateNewFieldPopup()}
+            {generateEditFieldPopup()}
         </div>
     );
 };
