@@ -30,6 +30,7 @@ const patientSchema = new mongoose.Schema({
         required: false,
         default: PATIENT_STATUS_ENUM.ACTIVE,
     },
+    secret: { type: String, required: false },
 });
 
 // Encrypt everything personal
