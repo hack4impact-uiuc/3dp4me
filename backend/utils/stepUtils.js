@@ -1,3 +1,4 @@
+const { isUndefined } = require('lodash');
 const _ = require('lodash');
 
 const { removeAttributesFrom } = require('../middleware/requests');
@@ -9,20 +10,40 @@ const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
 const { abortAndError } = require('./transactionUtils');
 
 module.exports.getReadableSteps = async (req) => {
-    if (isAdmin(req.user)) return models.Step.find({});
+    // if (isAdmin(req.user)) return models.Step.find({});
+    const { showHiddenFields } = req.query;
+
+    let searchParams = {
+        // readableGroups: { $in: [req.user.roles.toString()] },
+    };
+
+    //TODO: fix this below
+    console.log(showHiddenFields);
+
+    if (showHiddenFields !== undefined) {
+        //show all fields
+
+        searchParams.isHidden = { $in: [null, false, true] };
+    } else {
+        //show only fields with null and false
+
+        searchParams.isHidden = { $in: [false] };
+    }
+
+    console.log(searchParams);
 
     const roles = [req.user.roles.toString()];
-    const metaData = await models.Step.find({
-        readableGroups: { $in: [req.user.roles.toString()] },
-    });
+    const metaData = await models.Step.find(searchParams);
 
     // Iterate over fields and remove fields that do not have matching permissions
-    for (let i = 0; i < metaData.length; ++i) {
-        metaData[i].fields = metaData[i].fields.filter((field) => {
-            const hasPerms = field.readableGroups.some((role) => roles.includes(role));
-            return hasPerms;
-        });
-    }
+    // for (let i = 0; i < metaData.length; ++i) {
+    //     metaData[i].fields = metaData[i].fields.filter((field) => {
+    //         const hasPerms = field.readableGroups.some((role) =>
+    //             roles.includes(role),
+    //         );
+    //         return hasPerms;
+    //     });
+    // }
 
     return metaData;
 };
@@ -61,7 +82,8 @@ const updateStepInTransation = async (stepBody, session) => {
     );
 
     // Abort if can't find step to edit
-    if (!stepToEdit) await abortAndError(session, `No step with key, ${stepKey}`);
+    if (!stepToEdit)
+        await abortAndError(session, `No step with key, ${stepKey}`);
 
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
@@ -74,7 +96,8 @@ const updateStepInTransation = async (stepBody, session) => {
     // Checks that fields were not deleted
     const numUnchangedFields = strippedBody.fields.length - addedFields.length;
     const currentNumFields = stepToEdit.fields.length;
-    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
+    if (numUnchangedFields < currentNumFields)
+        await abortAndError(session, 'Cannot delete fields');
 
     // Update the schema
     addFieldsToSchema(stepKey, addedFields);

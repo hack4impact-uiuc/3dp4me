@@ -156,7 +156,9 @@
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
-                        "addChoice": "Add Choice"
+                        "addChoice": "Add Choice",
+                        "cancel": "Cancel",
+                        "delete": "Delete"
                     },
                     "option": "Option",
                     "question": "Question",
@@ -341,7 +343,9 @@
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
-                        "addChoice": "Add Choice"
+                        "addChoice": "Add Choice",
+                        "cancel": "Cancel",
+                        "delete": "Delete"
                     },
                     "option": "Option",
                     "question": "Question",

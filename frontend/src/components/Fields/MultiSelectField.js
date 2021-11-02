@@ -64,7 +64,7 @@ const MultiSelectField = ({
 
     return (
         <FormControl>
-            <h3>{title}</h3>
+            <span>{title}</span>
             <FormGroup name={fieldId}>{generateQuestions()}</FormGroup>
         </FormControl>
     );

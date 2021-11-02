@@ -90,7 +90,8 @@ router.delete(
         const { stepkey } = req.params;
         const step = await models.Step.deleteOne({ key: stepkey });
 
-        if (step.deletedCount === 0) await sendResponse(res, 404, 'Step not found');
+        if (step.deletedCount === 0)
+            await sendResponse(res, 404, 'Step not found');
         else await sendResponse(res, 201, 'Step deleted');
     }),
 );

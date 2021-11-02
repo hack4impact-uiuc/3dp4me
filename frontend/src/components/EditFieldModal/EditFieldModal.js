@@ -8,12 +8,14 @@ import {
     withStyles,
     InputBase,
     FormControl,
-    InputLabel,
+    FormControlLabel,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import MultiSelectField from '../Fields/MultiSelectField';
+import CustomSwitch from '../Fields/CustomSwitch';
+
 import { FIELD_TYPES, ADMIN_ID } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -33,6 +35,7 @@ const EditFieldModal = ({
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
     const [options, setOptions] = useState([]);
+    const [isHidden, setIsHidden] = useState(false);
 
     const errorWrap = useErrorWrap();
 
@@ -287,6 +290,19 @@ const EditFieldModal = ({
         onModalClose();
     };
 
+    const handleHiddenFieldSwitchChange = (event) => {
+        setIsHidden(event.target.checked);
+    };
+
+    const generateHiddenFieldSwitch = () => {
+        return (
+            <FormControlLabel
+                className="hidden-field-switch"
+                control={<CustomSwitch initialChecked={isHidden} />}
+            />
+        );
+    };
+
     return (
         <Modal
             open={isOpen}
@@ -294,18 +310,29 @@ const EditFieldModal = ({
             className="edit-field-modal"
         >
             <div className="edit-field-modal-wrapper">
-                <span className="edit-field-title1">
-                    {translations.components.swal.field.editFieldTitle}
-                </span>
-                <span className="edit-field-title2">
-                    {translations.components.swal.field.fieldSettings}
-                </span>
+                <div
+                    style={{
+                        float: 'right',
+                        paddingBottom: '10px',
+                    }}
+                >
+                    <span className="edit-field-title1">
+                        {translations.components.swal.field.editFieldTitle}
+                    </span>
+                    {generateHiddenFieldSwitch()}
+                    <br />
+                    <br />
+                    <span className="edit-field-title2">
+                        {translations.components.swal.field.fieldSettings}
+                    </span>
+                </div>
+
                 <div className="edit-field-title3">
-                    <div style={{ padding: 10 }}>
+                    <div>
                         <FormControl>
-                            <InputLabel htmlFor="edit-field-type-dropdown">
+                            <span>
                                 {translations.components.swal.field.fieldType}
-                            </InputLabel>
+                            </span>
                             <NativeSelect
                                 id="edit-field-type-dropdown"
                                 onChange={handleFieldTypeSelect}
@@ -319,7 +346,7 @@ const EditFieldModal = ({
                             </NativeSelect>
                         </FormControl>
                     </div>
-                    <div style={{ padding: 10 }}>
+                    <div>
                         <MultiSelectField
                             title={translations.components.swal.field.clearance}
                             langKey={selectedLang}
@@ -333,7 +360,7 @@ const EditFieldModal = ({
                     <span>
                         {translations.components.swal.field.customization}
                     </span>
-                    <div style={{ padding: 10 }}>
+                    <div>
                         <Checkbox
                             size="medium"
                             checked={isVisibleOnDashboard}
@@ -350,7 +377,6 @@ const EditFieldModal = ({
                 {generateFields()}
                 <div
                     style={{
-                        display: 'flex',
                         float: 'right',
                         paddingBottom: '10px',
                     }}
@@ -365,7 +391,10 @@ const EditFieldModal = ({
                         onClick={onDiscard}
                         className="discard-field-button"
                     >
-                        {translations.components.swal.field.buttons.discard}
+                        {translations.components.swal.field.buttons.cancel}
+                    </Button>
+                    <Button onClick={onDiscard} className="delete-field-button">
+                        {translations.components.swal.field.buttons.delete}
                     </Button>
                 </div>
             </div>
