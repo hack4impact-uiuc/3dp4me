@@ -12,7 +12,7 @@ const {
     withAuthentication,
 } = require('../../utils/auth');
 
-describe('DELETE /roles/:roleid', () => {
+describe('PUT /roles/:roleid', () => {
     afterAll(async () => db.closeDatabase());
     afterEach(async () => db.resetDatabase());
     beforeAll(async () => {
