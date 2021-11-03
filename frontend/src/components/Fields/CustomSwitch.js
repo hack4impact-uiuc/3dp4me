@@ -4,9 +4,7 @@ import Switch from 'react-switch';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
-const CustomSwitch = ({ initialChecked }) => {
-    const [checked, setChecked] = useState(initialChecked);
-
+const CustomSwitch = ({ checked, setChecked }) => {
     return (
         <label>
             <Switch

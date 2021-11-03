@@ -80,4 +80,76 @@
             padding-inline-start: 10px;
         }
     }
+
+    .hidden-step-field-container {
+        background-color: #a19c9c;
+        border: #f6f6f6 solid 1px;
+        width: 100%;
+        border-radius: 10px;
+        margin: 7px;
+        padding: 1px;
+
+        .content {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            padding: 9px;
+
+            .info {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+
+                .subfield-container {
+                    display: flex;
+                    flex-direction: row;
+                    background: rgba(255, 255, 255, 1);
+                    margin-top: 10px;
+                    padding: 10px;
+                    border-radius: 10px;
+                }
+            }
+
+            .buttons {
+                align-self: flex-start;
+                display: flex;
+                flex-direction: row;
+
+                .edit-field-button {
+                    display: flex;
+                    align-items: center;
+                    font-size: 1.4em;
+                    &:hover {
+                        color: gray;
+                    }
+                }
+
+                .reorder-buttons {
+                    display: flex;
+                    flex-direction: column;
+                    font-size: 1em;
+                }
+
+                .up-button {
+                    &:hover {
+                        color: gray;
+                    }
+                }
+
+                .down-button {
+                    &:hover {
+                        color: gray;
+                    }
+                }
+            }
+        }
+
+        .bottom-container {
+            background-color: white;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding-inline-start: 10px;
+        }
+    }
 }

@@ -111,8 +111,16 @@ const StepManagementContent = ({
         if (!fields) return null;
 
         return fields.map((field) => {
+            if (field.isDeleted) return null; //don't render fields when they are marked as deleted
+
             return (
-                <div className="step-field-container">
+                <div
+                    className={
+                        field.isHidden
+                            ? 'hidden-step-field-container'
+                            : 'step-field-container'
+                    }
+                >
                     <div className="content">
                         <div className="info">
                             <div className="header">

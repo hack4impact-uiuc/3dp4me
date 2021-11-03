@@ -251,6 +251,8 @@ const SectionTab = () => {
         });
 
         updatedNewField.fieldNumber = updatedMetadata[stepIndex].fields.length;
+        updatedNewField.isDeleted = false;
+        updatedNewField.isHidden = false;
 
         const currentFieldKeys = updatedMetadata[stepIndex].fields.map(
             (field) => field.key,
@@ -267,6 +269,8 @@ const SectionTab = () => {
     const editField = (updatedFieldData) => {
         const updatedField = _.cloneDeep(updatedFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
+
+        console.log(updatedField);
 
         const stepIndex = stepMetadata.findIndex((element) => {
             return element.key === selectedStep;

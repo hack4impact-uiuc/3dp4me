@@ -9,25 +9,28 @@ const { isAdmin } = require('./aws/awsUsers');
 const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
 const { abortAndError } = require('./transactionUtils');
 
+const stringToBoolean = (value) => {
+    const trimmedValue = value.toString().trim().toLowerCase();
+    return !(
+        trimmedValue === 'false' ||
+        trimmedValue === '0' ||
+        trimmedValue === ''
+    );
+};
+
 module.exports.getReadableSteps = async (req) => {
     // if (isAdmin(req.user)) return models.Step.find({});
-    const { showHiddenFields } = req.query;
+    let showHiddenFields = req.query.showHiddenFields ?? 'true';
+    showHiddenFields = stringToBoolean(showHiddenFields);
 
     let searchParams = {
         // readableGroups: { $in: [req.user.roles.toString()] },
+        isDeleted: { $in: [null, false] },
     };
 
-    //TODO: fix this below
-    console.log(showHiddenFields);
-
-    if (showHiddenFields !== undefined) {
-        //show all fields
-
-        searchParams.isHidden = { $in: [null, false, true] };
-    } else {
+    if (!showHiddenFields) {
         //show only fields with null and false
-
-        searchParams.isHidden = { $in: [false] };
+        searchParams.isHidden = { $in: [null, false] };
     }
 
     console.log(searchParams);

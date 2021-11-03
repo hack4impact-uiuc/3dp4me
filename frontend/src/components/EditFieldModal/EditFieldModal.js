@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import swal from 'sweetalert';
 
 import MultiSelectField from '../Fields/MultiSelectField';
 import CustomSwitch from '../Fields/CustomSwitch';
@@ -43,6 +44,7 @@ const EditFieldModal = ({
         setFieldType(initialData.fieldType);
         setIsVisibleOnDashboard(initialData.isVisibleOnDashboard);
         setDisplayName(initialData.displayName);
+        setIsHidden(initialData.isHidden);
 
         const initialRoles = initialData.readableGroups;
 
@@ -254,7 +256,7 @@ const EditFieldModal = ({
         return fieldDropdownOptions;
     };
 
-    const editNewField = () => {
+    const getUpdatedData = () => {
         const formattedOptions = options.map((option, index) => {
             return { Index: index, Question: option };
         });
@@ -269,8 +271,19 @@ const EditFieldModal = ({
             subFields: [],
             key: initialData.key,
             fieldNumber: initialData.fieldNumber,
+            isHidden: isHidden,
+            isDeleted: initialData.isDeleted,
         };
 
+        return newFieldData;
+    };
+
+    const saveField = () => {
+        const newFieldData = getUpdatedData();
+        editField(newFieldData);
+    };
+
+    const editField = (newFieldData) => {
         errorWrap(
             () => {
                 validateField(newFieldData);
@@ -290,15 +303,37 @@ const EditFieldModal = ({
         onModalClose();
     };
 
-    const handleHiddenFieldSwitchChange = (event) => {
-        setIsHidden(event.target.checked);
+    const onDelete = () => {
+        swal({
+            title: 'Are you sure?',
+            text: 'Once deleted, you will not be able to see this field. However, it can be recovered in the database.',
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                const deletedFieldData = getUpdatedData();
+                deletedFieldData.isDeleted = true;
+                editField(deletedFieldData);
+            }
+        });
+    };
+
+    const handleHiddenFieldSwitchChange = (isChecked) => {
+        //added the "not" operator because when the switch is on, we want isHidden to be false
+        setIsHidden(!isChecked);
     };
 
     const generateHiddenFieldSwitch = () => {
         return (
             <FormControlLabel
                 className="hidden-field-switch"
-                control={<CustomSwitch initialChecked={isHidden} />}
+                control={
+                    <CustomSwitch
+                        checked={!isHidden}
+                        setChecked={handleHiddenFieldSwitchChange}
+                    />
+                }
             />
         );
     };
@@ -381,10 +416,7 @@ const EditFieldModal = ({
                         paddingBottom: '10px',
                     }}
                 >
-                    <Button
-                        onClick={editNewField}
-                        className="save-field-button"
-                    >
+                    <Button onClick={saveField} className="save-field-button">
                         {translations.components.swal.field.buttons.save}
                     </Button>
                     <Button
@@ -393,7 +425,7 @@ const EditFieldModal = ({
                     >
                         {translations.components.swal.field.buttons.cancel}
                     </Button>
-                    <Button onClick={onDiscard} className="delete-field-button">
+                    <Button onClick={onDelete} className="delete-field-button">
                         {translations.components.swal.field.buttons.delete}
                     </Button>
                 </div>
