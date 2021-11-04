@@ -2,35 +2,37 @@ import './CreateStepModal.scss';
 import React, { useState } from 'react';
 import { Button, Modal } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import { useTranslations } from '../../hooks/useTranslations';
 import MultiSelectField from '../Fields/MultiSelectField';
 import LanguageInput from '../LanguageInput/LanguageInput';
-
-// Need: readableGroups, writeableGroups, key, displayName, stepNumber, fields (empty at first?)
-// key will be dealt with in DashboardManagement!
-// Question: handle step number in DashboardManagement too?
-//      Can loop through the array and add 1 to the highest number
-
-// Next steps: connect to backend
+import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { ERR_LANGUAGE_VALIDATION_FAILED } from '../../utils/constants';
 
 const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
     const [translations, selectedLang] = useTranslations();
     const [selectedRoles, setSelectedRoles] = useState([]);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
 
-    // const [options, setOptions] = useState([]);
+    const errorWrap = useErrorWrap();
 
     const onRolesChange = (id, roles) => {
         setSelectedRoles(roles);
     };
+    const updateDisplayName = (value, language) => {
+        const updatedDisplayName = _.clone(displayName);
+        updatedDisplayName[language] = value;
 
-    const updateEnglishDisplayName = (e) => {
-        setDisplayName({ ...displayName, EN: e.target.value });
+        setDisplayName(updatedDisplayName);
     };
 
-    const updateArabicDisplayName = (e) => {
-        setDisplayName({ ...displayName, AR: e.target.value });
+    // Ashay had this in fields.js, is it ok to just have this
+    // because it's the only one we need?
+    const validateStep = (stepData) => {
+        if (stepData.displayName.EN === '' || stepData.displayName.AR === '') {
+            throw new Error(ERR_LANGUAGE_VALIDATION_FAILED);
+        }
     };
 
     const generateFields = () => {
@@ -39,8 +41,9 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
                 <span>Step Title</span>
                 <LanguageInput
                     fieldValues={displayName}
-                    handleEnglishFieldChange={updateEnglishDisplayName}
-                    handleArabicFieldChange={updateArabicDisplayName}
+                    handleFieldChange={(value, language) => {
+                        updateDisplayName(value, language);
+                    }}
                 />
             </div>
         );
@@ -65,18 +68,25 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
             displayName,
             fields: [],
         };
-        onAddNewStep(newStepData);
-        onModalClose();
-        clearState();
+
+        errorWrap(
+            () => {
+                validateStep(newStepData);
+                // validate step
+            },
+            () => {
+                onAddNewStep(newStepData);
+                onModalClose();
+                clearState();
+            },
+        );
     };
 
-    // Formatting Question: Do we want to use the initial format of the text field inputs or the languageInput styling?
-    //      languageInput
-    // Formatting Question: Should we clear state when clicking out of modal (without clicking discard)?
-    //      No! Don't need to
-    // Question: How should I handle fields upon creation?
-    //      Empty array!
-
+    // TODO: Make sure that the new steps are not uploaded onto the database until it is ready to be (upon save!)
+    // TODO: Have admin auto-selected
+    // QUESTION: Should I hold all the added steps as elements in an array and then upon saving, make a post request for them
+    //           before moving
+    // TODO: use button component!
     return (
         <Modal
             open={isOpen}
@@ -89,9 +99,7 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
 
                 <div style={{ padding: 10 }}>
                     <MultiSelectField
-                        title={
-                            translations.components.swal.createField.clearance
-                        }
+                        title={translations.components.swal.field.clearance}
                         langKey={selectedLang}
                         options={allRoles}
                         selectedOptions={selectedRoles}
@@ -102,13 +110,10 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
 
                 <div>
                     <Button onClick={saveNewStep} className="save-step-button">
-                        {translations.components.swal.createField.buttons.save}
+                        {translations.components.swal.field.buttons.save}
                     </Button>
                     <Button onClick={onDiscard} className="discard-step-button">
-                        {
-                            translations.components.swal.createField.buttons
-                                .discard
-                        }
+                        {translations.components.swal.field.buttons.discard}
                     </Button>
                 </div>
             </div>

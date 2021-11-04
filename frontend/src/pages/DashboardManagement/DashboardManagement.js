@@ -31,6 +31,7 @@ const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
     const [stepMetadata, setStepMetadata] = useState([]);
+    const [addedSteps, setAddedSteps] = useState([]);
     const [originalStepMetadata, setOriginalStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
@@ -59,7 +60,13 @@ const SectionTab = () => {
     const onSaveChanges = () => {
         errorWrap(
             async () => {
+                await Promise.all(
+                    addedSteps.map(async (step) => {
+                        await postNewStep(step);
+                    }),
+                );
                 await updateMultipleSteps(stepMetadata);
+                setAddedSteps([]);
             },
             () => {
                 setIsEditing(false);
@@ -279,32 +286,24 @@ const SectionTab = () => {
         setStepMetadata(updatedMetadata);
     };
 
-    // 10/28 NOTE: Maybe there is no endpoint to update a step !!
-
+    // NOTE: this breaks the main page :sob:
+    // Question: Does it matter that this changes the order of the schema in the DB
     const addNewStep = (newStepData) => {
         const updatedNewStep = _.cloneDeep(newStepData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
+        const updateAddedSteps = _.cloneDeep(addedSteps);
 
-        errorWrap(
-            async () => {
-                // Number of elements in list will be new index number
-                updatedNewStep.stepNumber = updatedMetadata.length;
-
-                const currentStepKeys = updatedMetadata.map((step) => step.key);
-
-                updatedNewStep.key = generateKeyWithoutCollision(
-                    updatedNewStep.displayName.EN,
-                    currentStepKeys,
-                );
-                // await updateMultipleSteps([updatedMetadata]);
-                await postNewStep(updatedNewStep);
-
-                // when to set metadata = updatedMetadata?
-            },
-            () => {
-                setStepMetadata(updatedMetadata);
-            },
+        updatedNewStep.stepNumber = updatedMetadata.length;
+        const currentStepKeys = updatedMetadata.map((step) => step.key);
+        updatedNewStep.key = generateKeyWithoutCollision(
+            updatedNewStep.displayName.EN,
+            currentStepKeys,
         );
+
+        updateAddedSteps.push(updatedNewStep);
+        updatedMetadata.push(updatedNewStep);
+        setAddedSteps(updateAddedSteps);
+        setStepMetadata(updatedMetadata);
     };
 
     return (
