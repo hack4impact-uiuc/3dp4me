@@ -28,7 +28,7 @@ router.post('/sms', async (req, res) => {
 
     const twiml = new MessagingResponse();
 
-    const patientInfoReducer = (prev, curr) => `${prev} ${curr?.firstName ? curr?.firstName + curr?.familyName : 'Unnamed Patient'} : \n ${curr._id} \n`;
+    const patientInfoReducer = (prev, curr) => `${prev} ${curr?.firstName ? `${curr?.firstName} ${curr?.familyName}` : 'Unnamed Patient'} : \n ${curr._id} \n`;
 
     const messageToPatients = patients.reduce(patientInfoReducer, '');
 
