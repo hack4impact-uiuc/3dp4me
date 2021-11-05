@@ -47,7 +47,8 @@
             },
             "step": {
                 "lastEditedBy": "Last edited by",
-                "on": "on"
+                "on": "on",
+                "none": "None"
             },
             "sidebar": {
                 "name": "Name",
@@ -142,13 +143,15 @@
                     },
                     "orderId": "Order Id"
                 },
-                "createField": {
-                    "title": "New Field",
-                    "title2": "Field Settings",
+                "field": {
+                    "createFieldTitle": "New Field",
+                    "editFieldTitle": "Edit Field",
+                    "fieldSettings": "Field Settings",
                     "fieldType": "Field Type",
                     "clearance": "Clearance Level",
                     "customization": "Customization",
                     "showOnDashBoard": "Show on Dashboard",
+                    "showToPatient": "Show to Patient",
                     "field": "Field",
                     "buttons": {
                         "save": "Save",
@@ -229,7 +232,8 @@
             },
             "step": {
                 "lastEditedBy": "التعديل الأخير بواسطة",
-                "on": "تشغيل"
+                "on": "تشغيل",
+                "none": "None"
             },
             "sidebar": {
                 "name": "\u0627\u0633\u0645",
@@ -324,13 +328,15 @@
                     },
                     "orderId": "رقم التعريف الخاص بالطلب"
                 },
-                "createField": {
-                    "title": "New Field",
-                    "title2": "Field Settings",
+                "field": {
+                    "createFieldTitle": "New Field",
+                    "editFieldTitle": "Edit Field",
+                    "fieldSettings": "Field Settings",
                     "fieldType": "Field Type",
                     "clearance": "Clearance Level",
                     "customization": "Customization",
                     "showOnDashBoard": "Show on Dashboard",
+                    "showToPatient": "Show to Patient",
                     "field": "Field",
                     "buttons": {
                         "save": "Save",

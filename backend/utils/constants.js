@@ -23,6 +23,7 @@ module.exports.FIELDS = {
     SIGNATURE: 'Signature',
     PHOTO: 'Photo',
     FIELD_GROUP: 'FieldGroup',
+    MAP: 'Map',
 };
 
 module.exports.PATIENT_STATUS_ENUM = {
@@ -60,3 +61,4 @@ module.exports.PATIENT_IMMUTABLE_ATTRIBUTES = GLOBALLY_IMMUTABLE_ATTRIBUTES.conc
 
 module.exports.DEFAULT_USERS_ON_GET_REQUEST = 0;
 module.exports.DEFAULT_PATIENTS_ON_GET_REQUEST = 1;
+module.exports.TWO_FACTOR_WINDOW_MINS = 5;

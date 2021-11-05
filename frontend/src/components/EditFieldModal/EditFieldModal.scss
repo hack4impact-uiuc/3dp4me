@@ -1,12 +1,12 @@
 @import '../../styles/colors.scss';
 
-.create-field-modal {
+.edit-field-modal {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    .create-field-modal-wrapper {
+    .edit-field-modal-wrapper {
         display: flex;
         flex-direction: column;
         background-color: white;
@@ -16,39 +16,39 @@
         max-height: 80vh;
         overflow-y: scroll;
 
-        .create-field-div {
+        .edit-field-div {
             font-size: 17px;
             text-align: left;
         }
 
-        .create-field-title1 {
+        .edit-field-title1 {
             font-weight: 700;
             font-size: 2em;
         }
 
-        .create-field-title2 {
+        .edit-field-title2 {
             margin-top: 20px;
             font-weight: 700;
             font-size: 1.2em;
         }
 
-        .create-field-title3 {
+        .edit-field-title3 {
             font-weight: 500;
             font-size: 1em;
             color: gray;
         }
 
-        .create-field-option {
+        .edit-field-option {
             color: white;
             background-color: #5253a1;
         }
 
-        .create-step-modal-field-container {
+        .edit-step-modal-field-container {
             display: flex;
             flex-direction: column;
         }
 
-        .create-step-modal-title {
+        .edit-step-modal-title {
             font-weight: 700;
         }
 
@@ -65,7 +65,7 @@
             }
         }
 
-        .create-step-modal-text {
+        .edit-step-modal-text {
             font-size: 1.3em;
             text-align: left;
         }
@@ -105,11 +105,11 @@
             }
         }
 
-        .create-step-modal-field {
+        .edit-step-modal-field {
             margin-bottom: 20px;
         }
 
-        .create-step-modal-subheading {
+        .edit-step-modal-subheading {
             font-size: 0.9em;
         }
     }
