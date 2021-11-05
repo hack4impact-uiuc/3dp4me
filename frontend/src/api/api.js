@@ -66,8 +66,8 @@ export const updatePatient = async (patientId, updatedData) => {
     return res.data;
 };
 
-export const getAllStepsMetadata = async () => {
-    const requestString = `/metadata/steps?showHiddenFields=${false}`;
+export const getAllStepsMetadata = async (showHiddenField = false) => {
+    const requestString = `/metadata/steps?showHiddenFields=${showHiddenField}`;
 
     /**
      * In order to test this method and its steps, hardcode an entire object (subFields, displayName, etc.) from the database

@@ -111,7 +111,7 @@ const StepManagementContent = ({
         if (!fields) return null;
 
         return fields.map((field) => {
-            if (field.isDeleted) return null; //don't render fields when they are marked as deleted
+            if (field.isDeleted) return null; // don't render fields when they are marked as deleted
 
             return (
                 <div

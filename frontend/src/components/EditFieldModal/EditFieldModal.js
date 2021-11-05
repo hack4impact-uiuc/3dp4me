@@ -16,7 +16,6 @@ import swal from 'sweetalert';
 
 import MultiSelectField from '../Fields/MultiSelectField';
 import CustomSwitch from '../Fields/CustomSwitch';
-
 import { FIELD_TYPES, ADMIN_ID } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -271,7 +270,7 @@ const EditFieldModal = ({
             subFields: [],
             key: initialData.key,
             fieldNumber: initialData.fieldNumber,
-            isHidden: isHidden,
+            isHidden,
             isDeleted: initialData.isDeleted,
         };
 
@@ -320,7 +319,7 @@ const EditFieldModal = ({
     };
 
     const handleHiddenFieldSwitchChange = (isChecked) => {
-        //added the "not" operator because when the switch is on, we want isHidden to be false
+        // added the "not" operator because when the switch is on, we want isHidden to be false
         setIsHidden(!isChecked);
     };
 

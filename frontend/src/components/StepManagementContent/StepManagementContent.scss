@@ -82,12 +82,13 @@
     }
 
     .hidden-step-field-container {
-        background-color: #a19c9c;
+        background-color: hsl(0, 4%, 78%);
         border: #f6f6f6 solid 1px;
         width: 100%;
         border-radius: 10px;
         margin: 7px;
         padding: 1px;
+        color: hsla(0, 0%, 0%, 0.466);
 
         .content {
             display: flex;

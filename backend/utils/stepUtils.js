@@ -1,4 +1,3 @@
-const { isUndefined } = require('lodash');
 const _ = require('lodash');
 
 const { removeAttributesFrom } = require('../middleware/requests');
@@ -12,43 +11,52 @@ const { abortAndError } = require('./transactionUtils');
 const stringToBoolean = (value) => {
     const trimmedValue = value.toString().trim().toLowerCase();
     return !(
-        trimmedValue === 'false' ||
-        trimmedValue === '0' ||
-        trimmedValue === ''
+        trimmedValue === 'false'
+        || trimmedValue === '0'
+        || trimmedValue === ''
     );
 };
 
 module.exports.getReadableSteps = async (req) => {
-    // if (isAdmin(req.user)) return models.Step.find({});
-    let showHiddenFields = req.query.showHiddenFields ?? 'true';
+    let showHiddenFields = req.query.showHiddenFields ?? 'false';
     showHiddenFields = stringToBoolean(showHiddenFields);
 
-    let searchParams = {
-        // readableGroups: { $in: [req.user.roles.toString()] },
-        isDeleted: { $in: [null, false] },
-    };
+    const userRole = req.user.roles.toString();
 
-    if (!showHiddenFields) {
-        //show only fields with null and false
-        searchParams.isHidden = { $in: [null, false] };
+    const searchParams = [{ $eq: ['$$field.isDeleted', false] }];
+
+    // If admin, then return all steps and fields
+    if (!isAdmin(req.user)) {
+        searchParams.push({
+            $in: [userRole, '$readableGroups'],
+        });
+        searchParams.push({
+            $in: [userRole, '$$field.readableGroups'],
+        });
     }
 
-    console.log(searchParams);
+    // If we are not returning hidden fields
+    if (!showHiddenFields) {
+        searchParams.push({ $eq: ['$$field.isHidden', false] });
+    }
 
-    const roles = [req.user.roles.toString()];
-    const metaData = await models.Step.find(searchParams);
+    const data = await models.Step.aggregate([
+        {
+            $addFields: {
+                fields: {
+                    $filter: {
+                        input: '$fields',
+                        as: 'field',
+                        cond: {
+                            $and: searchParams,
+                        },
+                    },
+                },
+            },
+        },
+    ]);
 
-    // Iterate over fields and remove fields that do not have matching permissions
-    // for (let i = 0; i < metaData.length; ++i) {
-    //     metaData[i].fields = metaData[i].fields.filter((field) => {
-    //         const hasPerms = field.readableGroups.some((role) =>
-    //             roles.includes(role),
-    //         );
-    //         return hasPerms;
-    //     });
-    // }
-
-    return metaData;
+    return data;
 };
 
 /* eslint-disable no-restricted-syntax, no-await-in-loop */
@@ -85,8 +93,7 @@ const updateStepInTransation = async (stepBody, session) => {
     );
 
     // Abort if can't find step to edit
-    if (!stepToEdit)
-        await abortAndError(session, `No step with key, ${stepKey}`);
+    if (!stepToEdit) await abortAndError(session, `No step with key, ${stepKey}`);
 
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
@@ -97,13 +104,20 @@ const updateStepInTransation = async (stepBody, session) => {
     );
 
     // Checks that fields were not deleted
+    const deletedFields = getDeletedFields(stepToEdit.fields);
+    const numDeletedFields = deletedFields.length;
     const numUnchangedFields = strippedBody.fields.length - addedFields.length;
-    const currentNumFields = stepToEdit.fields.length;
-    if (numUnchangedFields < currentNumFields)
-        await abortAndError(session, 'Cannot delete fields');
+
+    const currentNumFields = stepToEdit.fields.length - numDeletedFields;
+    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
 
     // Update the schema
     addFieldsToSchema(stepKey, addedFields);
+
+    // Add deleted fields so they will be remain in the database
+    for (let i = 0; i < deletedFields.length; i++) {
+        strippedBody.fields.push(deletedFields[i]);
+    }
 
     // Finally, update the metadata for this step
     const step = await models.Step.findOne({ key: stepKey }).session(session);
@@ -112,6 +126,18 @@ const updateStepInTransation = async (stepBody, session) => {
 
     // Return the model so that we can do validation later
     return step;
+};
+
+const getDeletedFields = (fields) => {
+    const deletedFields = [];
+
+    fields.forEach((field) => {
+        if (field.isDeleted) {
+            deletedFields.push(field);
+        }
+    });
+
+    return deletedFields;
 };
 
 const validateSteps = async (steps, session) => {

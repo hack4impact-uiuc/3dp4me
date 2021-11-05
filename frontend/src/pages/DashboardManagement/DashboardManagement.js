@@ -167,7 +167,7 @@ const SectionTab = () => {
     useEffect(() => {
         errorWrap(async () => {
             const fetchData = async () => {
-                const res = await getAllStepsMetadata();
+                const res = await getAllStepsMetadata(true); // want to get hidden field
 
                 const sortedMetadata = sortMetadata(res.result);
 
@@ -269,8 +269,6 @@ const SectionTab = () => {
     const editField = (updatedFieldData) => {
         const updatedField = _.cloneDeep(updatedFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
-
-        console.log(updatedField);
 
         const stepIndex = stepMetadata.findIndex((element) => {
             return element.key === selectedStep;
