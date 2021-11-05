@@ -206,6 +206,23 @@ export const COORDINATES = {
     DEFAULT_MAP_LAT: 37.7577,
     DEFAULT_MAP_LONG: -122.4376,
 };
+
+export const MAP_STYLE = 'mapbox://styles/mapbox/satellite-streets-v11';
+
 export const PEOPLE_PER_PAGE = 14;
 
 export const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 16;
+
+/**
+ * Error Messages
+ */
+
+export const ERR_LANGUAGE_VALIDATION_FAILED =
+    'Please submit a field with a question in English and Arabic.';
+export const ERR_OPTION_VALIDATION_FAILED = 'Please enter options.';
+
+/**
+ * The id of the Admin role in the database.
+ */
+
+export const ADMIN_ID = '60e496fa7398681e9c82e0f5';

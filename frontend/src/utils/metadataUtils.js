@@ -1,11 +1,6 @@
 import { camelCase } from 'lodash';
 
-/**
- * Converts input into camelCase
- * @param {String} input
- * @returns input in camelCase
- */
-
+/* Returns a string of specified length composed of random alphanumeric characters */
 const randomAlphanumeric = (length) => {
     let result = '';
     const characters =
@@ -19,6 +14,7 @@ const randomAlphanumeric = (length) => {
     return result;
 };
 
+/* Converts input into camel case */
 const generateKeyWithCamelCase = (input) => {
     if (input === '') {
         return randomAlphanumeric(10);
