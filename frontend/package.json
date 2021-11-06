@@ -73,7 +73,7 @@
         ]
     },
     "devDependencies": {
-        "cypress": "^8.4.0",
+        "cypress": "^8.7.0",
         "react-app-env": "^1.2.3"
     }
 }
