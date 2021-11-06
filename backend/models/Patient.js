@@ -9,6 +9,7 @@ const UNECRYPTED_FIELDS = [
     'lastEdited',
     'lastEditedBy',
     'status',
+    'phoneNumber',
 ];
 
 /**
@@ -16,20 +17,21 @@ const UNECRYPTED_FIELDS = [
  * to put a patient into the system.
  */
 const patientSchema = new mongoose.Schema({
-    firstName: { type: String, required: true },
+    firstName: { type: String, required: false },
     fathersName: { type: String, required: false, default: '' },
     grandfathersName: { type: String, required: false, default: '' },
-    familyName: { type: String, required: true },
+    familyName: { type: String, required: false },
     dateCreated: { type: Date, required: false, default: Date.now },
     orderId: { type: String, required: false, default: '' },
     lastEdited: { type: Date, required: false, default: Date.now },
-    lastEditedBy: { type: String, required: true },
+    lastEditedBy: { type: String, required: false },
     status: {
         type: String,
         enum: Object.values(PATIENT_STATUS_ENUM),
         required: false,
         default: PATIENT_STATUS_ENUM.ACTIVE,
     },
+    phoneNumber: { type: String, required: false },
     secret: { type: String, required: false },
 });
 
