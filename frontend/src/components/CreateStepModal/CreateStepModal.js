@@ -8,11 +8,14 @@ import { useTranslations } from '../../hooks/useTranslations';
 import MultiSelectField from '../Fields/MultiSelectField';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
-import { ERR_LANGUAGE_VALIDATION_FAILED } from '../../utils/constants';
+import {
+    ERR_LANGUAGE_VALIDATION_FAILED,
+    ADMIN_ID,
+} from '../../utils/constants';
 
 const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
     const [translations, selectedLang] = useTranslations();
-    const [selectedRoles, setSelectedRoles] = useState([]);
+    const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID]); // automatically select the Admin role
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
 
     const errorWrap = useErrorWrap();
@@ -50,7 +53,7 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
     };
 
     const clearState = () => {
-        setSelectedRoles([]);
+        setSelectedRoles([ADMIN_ID]);
         setDisplayName({ EN: '', AR: '' });
     };
 
@@ -60,8 +63,6 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
     };
 
     const saveNewStep = () => {
-        // add key later
-        // add stepNumber later
         const newStepData = {
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
@@ -72,7 +73,6 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
         errorWrap(
             () => {
                 validateStep(newStepData);
-                // validate step
             },
             () => {
                 onAddNewStep(newStepData);
@@ -82,10 +82,6 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
         );
     };
 
-    // TODO: Make sure that the new steps are not uploaded onto the database until it is ready to be (upon save!)
-    // TODO: Have admin auto-selected
-    // QUESTION: Should I hold all the added steps as elements in an array and then upon saving, make a post request for them
-    //           before moving
     // TODO: use button component!
     return (
         <Modal
@@ -105,6 +101,7 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
                         selectedOptions={selectedRoles}
                         onChange={onRolesChange}
                         isDisabled={false}
+                        disabledOptions={[ADMIN_ID]}
                     />
                 </div>
 
