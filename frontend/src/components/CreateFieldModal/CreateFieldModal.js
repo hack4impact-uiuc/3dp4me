@@ -261,7 +261,7 @@ const CreateFieldModal = ({
     };
 
     const clearState = () => {
-        setSelectedRoles([]);
+        setSelectedRoles([ADMIN_ID]);
         setIsVisibleOnDashboard(false);
         setDisplayName({ EN: '', AR: '' });
         setOptions([]);
