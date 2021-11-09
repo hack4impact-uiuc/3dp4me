@@ -12,9 +12,9 @@ const { generateKeyWithoutCollision } = require('./keyUtils');
 const stringToBoolean = (value) => {
     const trimmedValue = value.toString().trim().toLowerCase();
     return !(
-        trimmedValue === 'false' ||
-        trimmedValue === '0' ||
-        trimmedValue === ''
+        trimmedValue === 'false'
+        || trimmedValue === '0'
+        || trimmedValue === ''
     );
 };
 
@@ -101,8 +101,7 @@ const updateStepInTransation = async (stepBody, session) => {
     );
 
     // Abort if can't find step to edit
-    if (!stepToEdit)
-        await abortAndError(session, `No step with key, ${stepKey}`);
+    if (!stepToEdit) await abortAndError(session, `No step with key, ${stepKey}`);
 
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
@@ -119,8 +118,7 @@ const updateStepInTransation = async (stepBody, session) => {
     const numUnchangedFields = strippedBody.fields.length - addedFields.length;
 
     const currentNumFields = stepToEdit.fields.length - numDeletedFields;
-    if (numUnchangedFields < currentNumFields)
-        await abortAndError(session, 'Cannot delete fields');
+    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
 
     // Update the schema
     addFieldsToSchema(stepKey, addedFields);
@@ -139,13 +137,12 @@ const updateStepInTransation = async (stepBody, session) => {
 
     while (currFieldNumber < numTotalFields) {
         if (
-            deletedFieldPointer < deletedFields.length &&
-            currFieldNumber === deletedFields[deletedFieldPointer].fieldNumber
+            deletedFieldPointer < deletedFields.length
+            && currFieldNumber === deletedFields[deletedFieldPointer].fieldNumber
         ) {
             deletedFieldPointer += 1; // Skip over since deleted fields have priority
         } else {
-            strippedBody.fields[strippedFieldsPointer].fieldNumber =
-                currFieldNumber;
+            strippedBody.fields[strippedFieldsPointer].fieldNumber = currFieldNumber;
             strippedFieldsPointer += 1;
         }
         currFieldNumber += 1; // Move onto the next field number to assign

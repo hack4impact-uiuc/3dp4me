@@ -106,11 +106,13 @@ const SectionTab = () => {
 
     // Swaps the value of two elements in an array given their indices and attribute key
     function swapValuesInArrayByKey(arr, key, firstIndex, secondIndex) {
-        const temp = arr[firstIndex][key];
-        arr[firstIndex][key] = arr[secondIndex][key];
-        arr[secondIndex][key] = temp;
+        const arrCopy = _.cloneDeep(arr);
 
-        return arr;
+        const temp = arrCopy[firstIndex][key];
+        arrCopy[firstIndex][key] = arrCopy[secondIndex][key];
+        arrCopy[secondIndex][key] = temp;
+
+        return arrCopy;
     }
 
     /**
@@ -120,7 +122,7 @@ const SectionTab = () => {
      */
     function moveStep(stepKey, direction) {
         // Bad parameters
-        if (direction != -1 && direction != 1) return;
+        if (direction !== -1 && direction !== 1) return;
 
         let updatedMetadata = _.cloneDeep(stepMetadata);
 
@@ -136,7 +138,7 @@ const SectionTab = () => {
 
         if (nextStepIndex < 0) return;
 
-        //Perform field number swap
+        // Perform field number swap
         updatedMetadata = swapValuesInArrayByKey(
             updatedMetadata,
             'stepNumber',
@@ -166,7 +168,7 @@ const SectionTab = () => {
      */
     function moveField(stepKey, fieldNumber, direction) {
         // Bad parameters
-        if (direction != -1 && direction != 1) return;
+        if (direction !== -1 && direction !== 1) return;
 
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
@@ -187,7 +189,7 @@ const SectionTab = () => {
 
         if (prevFieldIndex < 0) return;
 
-        //Perform field number swap
+        // Perform field number swap
         updatedMetadata[foundStepIndex].fields = swapValuesInArrayByKey(
             updatedMetadata[foundStepIndex].fields,
             'fieldNumber',
