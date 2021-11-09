@@ -39,12 +39,12 @@
     }
 }
 
-.two-factor-authentication-button {
+.verification-button {
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 30%;
     background-color: $button;
     color: white;
     font-weight: bold;
@@ -57,16 +57,12 @@
     cursor: pointer;
     transition: background-color 0.2s;
     height: 40px;
+    margin-bottom: 10px;
+    margin-top: 10px;
 
     &:hover {
         background-color: $buttonHighlight;
     }
-}
-
-p {
-    color: #B6B6B6;
-    font-weight: bold;
-    font-size: 14px !important;
 }
 
 h4 {
@@ -75,4 +71,36 @@ h4 {
     font-size: 16px;
     margin-bottom: 2px;
     margin-top: 0px;
+}
+
+h5 {
+    margin-top: 0px;
+    color: #B6B6B6;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+p {
+    color: #B6B6B6;
+    font-weight: bold;
+    font-size: 12px !important;
+}
+
+.centered-token-content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.code-input {
+    display: flex;
+    align-self: center;
+    background-color: #babcfe;
+    font-family: monospace;
+    margin: 4px;
+    width: 15px;
+    border-radius: 1px;
+    font-size: 14px;
+    height: 26px;
+    padding-left: 7px;
 }
