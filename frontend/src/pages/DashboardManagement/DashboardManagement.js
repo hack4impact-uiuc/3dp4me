@@ -81,119 +81,132 @@ const SectionTab = () => {
         setSelectedStep(stepKey);
     }
 
-    function onDownPressed(stepKey) {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
-
-        const currStepIndex = updatedMetadata.findIndex((step) => {
-            return step.key === stepKey;
-        });
-
-        if (currStepIndex >= 0 && currStepIndex < updatedMetadata.length - 1) {
-            const tempStepNumber = updatedMetadata[currStepIndex].stepNumber;
-            updatedMetadata[currStepIndex].stepNumber =
-                updatedMetadata[currStepIndex + 1].stepNumber;
-            updatedMetadata[currStepIndex + 1].stepNumber = tempStepNumber;
-            const sortedMetadata = sortMetadata(updatedMetadata);
-            setStepMetadata(sortedMetadata);
-        }
-    }
-
-    function onUpPressed(stepKey) {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
-
-        const currStepIndex = updatedMetadata.findIndex((step) => {
-            return step.key === stepKey;
-        });
-
-        if (currStepIndex > 0 && currStepIndex < updatedMetadata.length) {
-            const tempStepNumber = updatedMetadata[currStepIndex].stepNumber;
-            updatedMetadata[currStepIndex].stepNumber =
-                updatedMetadata[currStepIndex - 1].stepNumber;
-            updatedMetadata[currStepIndex - 1].stepNumber = tempStepNumber;
-            const sortedMetadata = sortMetadata(updatedMetadata);
-            setStepMetadata(sortedMetadata);
-        }
-    }
-
     // Inclusive min and exclusive max
     function checkBounds(min, max, num) {
         return num >= min && num < max;
     }
 
-    // Returns the field before or after a given field based on index
-    function getPrevNextField(fields, currIndex, change) {
+    // Returns a non-deleted element before or after a given element based on index
+    function getPrevNextElement(arr, currIndex, change) {
         let prevNextIndex = currIndex + change;
 
         while (
-            checkBounds(0, fields.length, prevNextIndex) &&
-            fields[prevNextIndex].isDeleted
+            checkBounds(0, arr.length, prevNextIndex) &&
+            arr[prevNextIndex].isDeleted
         ) {
             prevNextIndex += change;
         }
 
-        if (prevNextIndex === -1 || prevNextIndex === fields.length) {
-            return null;
+        if (prevNextIndex === -1 || prevNextIndex === arr.length) {
+            return -1;
         }
 
         return prevNextIndex;
     }
 
-    function onCardDownPressed(stepKey, fieldRoot, fieldNumber) {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
+    // Swaps the value of two elements in an array given their indices and attribute key
+    function swapValuesInArrayByKey(arr, key, firstIndex, secondIndex) {
+        const temp = arr[firstIndex][key];
+        arr[firstIndex][key] = arr[secondIndex][key];
+        arr[secondIndex][key] = temp;
 
-        const foundStep = updatedMetadata.find(
-            (field) => field.key === stepKey,
+        return arr;
+    }
+
+    /**
+     * Moves a step up or down by changing its stepNumber
+     * @param {String} stepKey
+     * @param {Number} direction 1 indicates increasing stepNumber, -1 indicates decreasing fieldNumber
+     */
+    function moveStep(stepKey, direction) {
+        // Bad parameters
+        if (direction != -1 && direction != 1) return;
+
+        let updatedMetadata = _.cloneDeep(stepMetadata);
+
+        const currStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
+
+        if (currStepIndex < 0) return;
+
+        const nextStepIndex = getPrevNextElement(
+            updatedMetadata[currStepIndex],
+            currStepIndex,
+            direction,
         );
 
-        const currFieldIndex = foundStep.fields.findIndex((field) => {
-            return field.fieldNumber === fieldNumber;
-        });
+        if (nextStepIndex < 0) return;
 
-        const prevFieldIndex = getPrevNextField(
-            foundStep.fields,
-            currFieldIndex,
-            1,
+        //Perform field number swap
+        updatedMetadata = swapValuesInArrayByKey(
+            updatedMetadata,
+            'stepNumber',
+            currStepIndex,
+            nextStepIndex,
         );
 
-        if (prevFieldIndex == null) {
-            return;
-        }
-
-        const tempFieldNumber = foundStep.fields[currFieldIndex].fieldNumber;
-        foundStep.fields[currFieldIndex].fieldNumber =
-            foundStep.fields[prevFieldIndex].fieldNumber;
-        foundStep.fields[prevFieldIndex].fieldNumber = tempFieldNumber;
         const sortedMetadata = sortMetadata(updatedMetadata);
         setStepMetadata(sortedMetadata);
     }
 
-    function onCardUpPressed(stepKey, fieldRoot, fieldNumber) {
+    // Handles moving a step down
+    function onDownPressed(stepKey) {
+        moveStep(stepKey, 1);
+    }
+
+    // Handles moving a step up
+    function onUpPressed(stepKey) {
+        moveStep(stepKey, -1);
+    }
+
+    /**
+     * Moves a field up or down for a given step's fields
+     * @param {String} stepKey Step whose fields will be changed
+     * @param {Number} fieldNumber The number of the field that we have to move
+     * @param {Number} direction 1 indicates moving down (increasing fieldNumber), -1 indicates moving up (decreasing fieldNumber)
+     */
+    function moveField(stepKey, fieldNumber, direction) {
+        // Bad parameters
+        if (direction != -1 && direction != 1) return;
+
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        const foundStep = updatedMetadata.find(
-            (field) => field.key === stepKey,
+        const foundStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
+
+        if (foundStepIndex < 0) return;
+
+        const currFieldIndex = getFieldIndexByNumber(
+            updatedMetadata[foundStepIndex],
+            fieldNumber,
         );
 
-        const currFieldIndex = foundStep.fields.findIndex((field) => {
-            return field.fieldNumber === fieldNumber;
-        });
-
-        const prevFieldIndex = getPrevNextField(
-            foundStep.fields,
+        const prevFieldIndex = getPrevNextElement(
+            updatedMetadata[foundStepIndex].fields,
             currFieldIndex,
-            -1,
+            direction,
         );
 
-        if (prevFieldIndex === null) {
-            return;
-        }
+        if (prevFieldIndex < 0) return;
 
-        const tempFieldNumber = foundStep.fields[currFieldIndex].fieldNumber;
-        foundStep.fields[currFieldIndex].fieldNumber =
-            foundStep.fields[prevFieldIndex].fieldNumber;
-        foundStep.fields[prevFieldIndex].fieldNumber = tempFieldNumber;
+        //Perform field number swap
+        updatedMetadata[foundStepIndex].fields = swapValuesInArrayByKey(
+            updatedMetadata[foundStepIndex].fields,
+            'fieldNumber',
+            currFieldIndex,
+            prevFieldIndex,
+        );
+
         const sortedMetadata = sortMetadata(updatedMetadata);
         setStepMetadata(sortedMetadata);
+    }
+
+    // Handles moving a field down
+    function onCardDownPressed(stepKey, fieldNumber) {
+        moveField(stepKey, fieldNumber, 1);
+    }
+
+    // Handles moving a field up
+    function onCardUpPressed(stepKey, fieldNumber) {
+        moveField(stepKey, fieldNumber, -1);
     }
 
     function GenerateStepManagementContent() {

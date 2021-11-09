@@ -69,11 +69,7 @@ const StepManagementContent = ({
                 <div className="reorder-buttons">
                     <div
                         onClick={() =>
-                            onUpPressed(
-                                stepMetadata.key,
-                                fieldRoot,
-                                fieldNumber,
-                            )
+                            onUpPressed(stepMetadata.key, fieldNumber)
                         }
                         className="up-button"
                     >
@@ -81,11 +77,7 @@ const StepManagementContent = ({
                     </div>
                     <div
                         onClick={() =>
-                            onDownPressed(
-                                stepMetadata.key,
-                                fieldRoot,
-                                fieldNumber,
-                            )
+                            onDownPressed(stepMetadata.key, fieldNumber)
                         }
                         className="down-button"
                     >
