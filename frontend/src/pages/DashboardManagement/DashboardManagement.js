@@ -63,7 +63,7 @@ const SectionTab = () => {
                 setIsEditing(false);
                 await Promise.all(
                     addedSteps.map(async (step) => {
-                        await postNewStep(step);
+                        await postNewStep(step); // Question: Adding to highest level of db?
                     }),
                 );
                 await updateMultipleSteps(stepMetadata);
