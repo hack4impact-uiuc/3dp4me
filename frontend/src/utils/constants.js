@@ -165,7 +165,7 @@ export const STEP_STATUS = {
  */
 export const PATIENT_STATUS = {
     FEEDBACK: 'Feedback',
-    ARCHIVE: 'Archive',
+    ARCHIVE: 'Archived',
     ACTIVE: 'Active',
 };
 
