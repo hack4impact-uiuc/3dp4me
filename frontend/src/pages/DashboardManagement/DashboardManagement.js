@@ -58,6 +58,7 @@ const SectionTab = () => {
     const onSaveChanges = () => {
         errorWrap(
             async () => {
+                console.log(stepMetadata);
                 await updateMultipleSteps(stepMetadata);
             },
             () => {
@@ -82,32 +83,16 @@ const SectionTab = () => {
 
     function onDownPressed(stepKey) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
-        const foundField = updatedMetadata.find(
-            (field) => field.key === stepKey,
-        );
-        const afterField = updatedMetadata.find(
-            (field) => field.stepNumber === foundField.stepNumber + 1,
-        );
-        if (foundField.stepNumber !== updatedMetadata.length - 1) {
-            foundField.stepNumber++;
-            afterField.stepNumber--;
-            const sortedMetadata = sortMetadata(updatedMetadata);
-            setStepMetadata(sortedMetadata);
-        }
-    }
 
-    function onCardDownPressed(stepKey, fieldRoot, fieldNumber) {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
-        const foundStep = updatedMetadata.find(
-            (field) => field.key === stepKey,
-        );
-        const root = resolveMixedObjPath(foundStep, fieldRoot);
-        const foundField = root.find((f) => f.fieldNumber === fieldNumber);
-        const afterField = root.find((f) => f.fieldNumber === fieldNumber + 1);
+        let currStepIndex = updatedMetadata.findIndex((step) => {
+            return step.key == stepKey;
+        });
 
-        if (foundField && afterField) {
-            foundField.fieldNumber++;
-            afterField.fieldNumber--;
+        if (currStepIndex >= 0 && currStepIndex < updatedMetadata.length - 1) {
+            let tempStepNumber = updatedMetadata[currStepIndex].stepNumber;
+            updatedMetadata[currStepIndex].stepNumber =
+                updatedMetadata[currStepIndex + 1].stepNumber;
+            updatedMetadata[currStepIndex + 1].stepNumber = tempStepNumber;
             const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
@@ -115,16 +100,40 @@ const SectionTab = () => {
 
     function onUpPressed(stepKey) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
-        const foundField = updatedMetadata.find(
+
+        let currStepIndex = updatedMetadata.findIndex((step) => {
+            return step.key == stepKey;
+        });
+
+        if (currStepIndex > 0 && currStepIndex < updatedMetadata.length) {
+            let tempStepNumber = updatedMetadata[currStepIndex].stepNumber;
+            updatedMetadata[currStepIndex].stepNumber =
+                updatedMetadata[currStepIndex - 1].stepNumber;
+            updatedMetadata[currStepIndex - 1].stepNumber = tempStepNumber;
+            const sortedMetadata = sortMetadata(updatedMetadata);
+            setStepMetadata(sortedMetadata);
+        }
+    }
+
+    function onCardDownPressed(stepKey, fieldRoot, fieldNumber) {
+        const updatedMetadata = _.cloneDeep(stepMetadata);
+
+        const foundStep = updatedMetadata.find(
             (field) => field.key === stepKey,
         );
-        const beforeField = updatedMetadata.find(
-            (field) => field.stepNumber === foundField.stepNumber - 1,
-        );
 
-        if (foundField && beforeField) {
-            foundField.stepNumber--;
-            beforeField.stepNumber++;
+        const currFieldIndex = foundStep.fields.findIndex((field) => {
+            return field.fieldNumber == fieldNumber;
+        });
+
+        if (
+            currFieldIndex >= 0 &&
+            currFieldIndex < foundStep.fields.length - 1
+        ) {
+            let tempFieldNumber = foundStep.fields[currFieldIndex].fieldNumber;
+            foundStep.fields[currFieldIndex].fieldNumber =
+                foundStep.fields[currFieldIndex + 1].fieldNumber;
+            foundStep.fields[currFieldIndex + 1].fieldNumber = tempFieldNumber;
             const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
@@ -132,15 +141,20 @@ const SectionTab = () => {
 
     function onCardUpPressed(stepKey, fieldRoot, fieldNumber) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
+
         const foundStep = updatedMetadata.find(
             (field) => field.key === stepKey,
         );
-        const root = resolveMixedObjPath(foundStep, fieldRoot);
-        const foundField = root.find((f) => f.fieldNumber === fieldNumber);
-        const beforeField = root.find((f) => f.fieldNumber === fieldNumber - 1);
-        if (foundField.fieldNumber !== 0) {
-            foundField.fieldNumber--;
-            beforeField.fieldNumber++;
+
+        const currFieldIndex = foundStep.fields.findIndex((field) => {
+            return field.fieldNumber == fieldNumber;
+        });
+
+        if (currFieldIndex > 0 && currFieldIndex < foundStep.fields.length) {
+            let tempFieldNumber = foundStep.fields[currFieldIndex].fieldNumber;
+            foundStep.fields[currFieldIndex].fieldNumber =
+                foundStep.fields[currFieldIndex - 1].fieldNumber;
+            foundStep.fields[currFieldIndex - 1].fieldNumber = tempFieldNumber;
             const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
@@ -167,7 +181,7 @@ const SectionTab = () => {
     useEffect(() => {
         errorWrap(async () => {
             const fetchData = async () => {
-                const res = await getAllStepsMetadata(true); // want to get hidden field
+                const res = await getAllStepsMetadata(true); // true indicates that we want to get hidden field
 
                 const sortedMetadata = sortMetadata(res.result);
 

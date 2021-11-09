@@ -11,9 +11,9 @@ const { abortAndError } = require('./transactionUtils');
 const stringToBoolean = (value) => {
     const trimmedValue = value.toString().trim().toLowerCase();
     return !(
-        trimmedValue === 'false'
-        || trimmedValue === '0'
-        || trimmedValue === ''
+        trimmedValue === 'false' ||
+        trimmedValue === '0' ||
+        trimmedValue === ''
     );
 };
 
@@ -23,7 +23,33 @@ module.exports.getReadableSteps = async (req) => {
 
     const userRole = req.user.roles.toString();
 
-    const searchParams = [{ $eq: ['$$field.isDeleted', false] }];
+    const searchParams = [
+        {
+            $or: [
+                { $eq: ['$$field.isDeleted', false] },
+                { $ifNull: ['$field.isDeleted', true] },
+            ],
+        },
+    ]; // don't return any deleted fields
+
+    // If not admin, then return limit what steps/fields can be returned using readableGroups
+    if (!isAdmin(req.user)) {
+        aggregation.push({
+            $match: { $expr: { $in: [userRole, '$readableGroups'] } }, // limit returning steps that don't contain the user role
+        });
+        searchParams.push({
+            $in: [userRole, '$$field.readableGroups'], // limit returning fields that don't contain the user role
+        });
+    }
+
+    if (!showHiddenFields) {
+        searchParams.push({
+            $or: [
+                { $eq: ['$$field.isHidden', false] },
+                { $ifNull: ['$field.isHidden', true] },
+            ],
+        }); // limit returning fields that are hidden
+    }
 
     const aggregation = [
         {
@@ -40,21 +66,6 @@ module.exports.getReadableSteps = async (req) => {
             },
         },
     ];
-
-    // If not admin, then return limit what steps/fields can be returned using readableGroups
-    if (!isAdmin(req.user)) {
-        aggregation.push({
-            $match: { $expr: { $in: [userRole, '$readableGroups'] } },
-        });
-        searchParams.push({
-            $in: [userRole, '$$field.readableGroups'],
-        });
-    }
-
-    // If we are not returning hidden fields
-    if (!showHiddenFields) {
-        searchParams.push({ $eq: ['$$field.isHidden', false] });
-    }
 
     const data = await models.Step.aggregate(aggregation);
 
@@ -95,7 +106,8 @@ const updateStepInTransation = async (stepBody, session) => {
     );
 
     // Abort if can't find step to edit
-    if (!stepToEdit) await abortAndError(session, `No step with key, ${stepKey}`);
+    if (!stepToEdit)
+        await abortAndError(session, `No step with key, ${stepKey}`);
 
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
@@ -111,7 +123,8 @@ const updateStepInTransation = async (stepBody, session) => {
     const numUnchangedFields = strippedBody.fields.length - addedFields.length;
 
     const currentNumFields = stepToEdit.fields.length - numDeletedFields;
-    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
+    if (numUnchangedFields < currentNumFields)
+        await abortAndError(session, 'Cannot delete fields');
 
     // Update the schema
     addFieldsToSchema(stepKey, addedFields);
@@ -124,6 +137,7 @@ const updateStepInTransation = async (stepBody, session) => {
     // Finally, update the metadata for this step
     const step = await models.Step.findOne({ key: stepKey }).session(session);
     _.assign(step, strippedBody);
+
     await step.save({ session, validateBeforeSave: false });
 
     // Return the model so that we can do validation later
