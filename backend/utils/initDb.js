@@ -114,6 +114,8 @@ module.exports.generateFieldSchema = (field) => {
         return getSignatureSchema(field);
     case FIELDS.DIVIDER:
         return null;
+    case FIELDS.MAP:
+        return getMapSchema(field);
     default:
         log.error(`Unrecognized field type, ${field.fieldType}`);
         return null;
@@ -169,6 +171,14 @@ const getSignatureSchema = (fieldMetadata) => {
 
     return { type: signatureSchema };
 };
+
+const getMapSchema = () => ({
+    type: {
+        latitude: Number,
+        longitude: Number,
+    },
+    default: [],
+});
 
 const generateFieldsFromMetadata = (fieldsMetadata, schema = {}) => {
     const updatedSchema = _.cloneDeep(schema);
