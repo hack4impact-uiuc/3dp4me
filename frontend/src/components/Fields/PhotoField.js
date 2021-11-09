@@ -5,9 +5,11 @@ import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
 
+import prompt from '../../assets/camera-prompt-instructions-en.gif';
+import promptAR from '../../assets/camera-prompt-instructions-ar.gif'
 import 'react-image-gallery/styles/css/image-gallery.css';
 import { useTranslations } from '../../hooks/useTranslations';
-import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
+import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW ,LANGUAGES} from '../../utils/constants';
 import {
     blobToDataURL,
     convertPhotosToURI,
@@ -27,12 +29,27 @@ const PhotoField = ({
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
+    const [promptCameraAccess, setPromptCameraAccess] = useState(false);
     const [dataUri, setUri] = useState('');
-    const translations = useTranslations()[0];
+    const [translations, selectedLang] = useTranslations();
 
     useEffect(() => {
         updateMetaDataPhotos(value);
     }, [value]);
+
+    useEffect(() => {
+        const constraints = { video: true };
+        getMedia(constraints);
+    }, []);
+
+    const getMedia = async (constraints) => {
+        try {
+            setPromptCameraAccess(false);
+            await navigator.mediaDevices.getUserMedia(constraints);
+        } catch (err) {
+            setPromptCameraAccess(true);
+        }
+    }
 
     const updateMetaDataPhotos = async (data) => {
         const newPhotoData = await convertPhotosToURI(
@@ -152,6 +169,21 @@ const PhotoField = ({
         return null;
     };
 
+    const renderCamera = () => {
+        if (promptCameraAccess) {
+            return (
+                <>
+                    <h1>{translations.components.camera.promptInstructions}</h1>
+                    <img src={selectedLang === LANGUAGES.EN ? prompt : promptAR} alt="instructions" />
+                </> 
+            ); 
+        } 
+            return <> 
+            {renderPhotoModal()}
+            {renderImagePreviewButtons()}
+            </>
+    }
+
     return (
         <div>
             <h3>{displayName}</h3>
@@ -164,10 +196,10 @@ const PhotoField = ({
                 onClose={handleOnClose}
                 className="take-photo-modal"
             >
-                <div className="take-photo-modal-wrapper">
-                    {renderPhotoModal()}
-                    {renderImagePreviewButtons()}
-                </div>
+                
+                    <div className="take-photo-modal-wrapper">
+                        {renderCamera()}
+                    </div>
             </Modal>
             {renderImageGallery()}
         </div>
