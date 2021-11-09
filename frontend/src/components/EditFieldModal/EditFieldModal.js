@@ -15,7 +15,7 @@ import _ from 'lodash';
 import swal from 'sweetalert';
 
 import MultiSelectField from '../Fields/MultiSelectField';
-import CustomSwitch from '../Fields/CustomSwitch';
+import CustomSwitch from '../CustomSwitch/CustomSwitch';
 import { FIELD_TYPES, ADMIN_ID } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
