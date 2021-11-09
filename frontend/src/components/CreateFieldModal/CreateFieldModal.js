@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-
 import MultiSelectField from '../Fields/MultiSelectField';
 import { FIELD_TYPES, ADMIN_ID } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
@@ -260,7 +259,7 @@ const CreateFieldModal = ({
     };
 
     const clearState = () => {
-        setSelectedRoles([]);
+        setSelectedRoles([ADMIN_ID]);
         setIsVisibleOnDashboard(false);
         setDisplayName({ EN: '', AR: '' });
         setOptions([]);

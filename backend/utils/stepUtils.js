@@ -25,10 +25,7 @@ module.exports.getReadableSteps = async (req) => {
 
     const searchParams = [
         {
-            $or: [
-                { $eq: ['$$field.isDeleted', false] },
-                { $ifNull: ['$field.isDeleted', true] },
-            ],
+            $or: [{ $ne: ['$$field.isDeleted', true] }],
         },
     ]; // don't return any deleted fields
 
@@ -44,10 +41,7 @@ module.exports.getReadableSteps = async (req) => {
 
     if (!showHiddenFields) {
         searchParams.push({
-            $or: [
-                { $eq: ['$$field.isHidden', false] },
-                { $ifNull: ['$field.isHidden', true] },
-            ],
+            $or: [{ $ne: ['$$field.isHidden', true] }],
         }); // limit returning fields that are hidden
     }
 
@@ -129,7 +123,35 @@ const updateStepInTransation = async (stepBody, session) => {
     // Update the schema
     addFieldsToSchema(stepKey, addedFields);
 
-    // Add deleted fields so they will be remain in the database
+    // We need to update the fieldNumber for each field in order to prevent duplicates.
+    // In order to do this, we iterate through the deletedFields and strippedBody fields.
+    // We store two pointers for both arrays, and we move them forward after updating the field
+    // number for the field that it is pointing at. The fields in deletedFields get priority,
+    // meaning they always keep the same field number.
+
+    let currFieldNumber = 0;
+    let deletedFieldPointer = 0;
+    let strippedFieldsPointer = 0;
+
+    const numTotalFields = deletedFields.length + strippedBody.fields.length;
+
+    while (currFieldNumber < numTotalFields) {
+        if (
+            deletedFieldPointer < deletedFields.length &&
+            currFieldNumber === deletedFields[deletedFieldPointer].fieldNumber
+        ) {
+            deletedFieldPointer += 1; // Skip over since deleted fields have priority
+        } else {
+            strippedBody.fields[strippedFieldsPointer].fieldNumber =
+                currFieldNumber;
+            strippedFieldsPointer += 1;
+        }
+        currFieldNumber += 1; // Move onto the next field number to assign
+    }
+
+    // Add deleted fields so they will be remain in the database.
+    // They are added to the end in order to give easy access when
+    // restoring them manually.
     for (let i = 0; i < deletedFields.length; i++) {
         strippedBody.fields.push(deletedFields[i]);
     }
