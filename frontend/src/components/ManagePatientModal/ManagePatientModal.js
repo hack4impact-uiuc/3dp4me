@@ -1,13 +1,11 @@
-import {
-    Button, Modal
-} from '@material-ui/core';
+import { Button, Modal } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
 import { useTranslations } from '../../hooks/useTranslations';
-import language from "../../translations.json";
+import language from '../../translations.json';
 import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
 import RadioButtonField from '../Fields/RadioButtonField';
 import TextField from '../Fields/TextField';
@@ -33,7 +31,7 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
             Question: {
                 [LANGUAGES.EN]: language[LANGUAGES.EN].status.active,
                 [LANGUAGES.AR]: language[LANGUAGES.EN].status.active,
-            }
+            },
         },
         {
             _id: PATIENT_STATUS.FEEDBACK,
@@ -41,7 +39,7 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
             Question: {
                 [LANGUAGES.EN]: language[LANGUAGES.EN].status.feedback,
                 [LANGUAGES.AR]: language[LANGUAGES.EN].status.feedback,
-            }
+            },
         },
         {
             _id: PATIENT_STATUS.ARCHIVE,
@@ -49,10 +47,9 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
             Question: {
                 [LANGUAGES.EN]: language[LANGUAGES.EN].status.archive,
                 [LANGUAGES.AR]: language[LANGUAGES.EN].status.archive,
-            }
-        }
-    ]
-
+            },
+        },
+    ];
 
     return (
         <Modal open={isOpen} onClose={onClose} className="manage-patient-modal">
@@ -81,27 +78,38 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                         className="text-field"
                         value={updatedPatientData?.orderId}
                         fieldId="orderId"
-                        displayName={translations.components.swal.managePatient.orderId}
-                        onChange={onFieldUpdate}/>
+                        displayName={
+                            translations.components.swal.managePatient.orderId
+                        }
+                        onChange={onFieldUpdate}
+                    />
 
                     <TextField
                         className="text-field"
                         value={updatedPatientData?.firstName}
                         fieldId="firstName"
-                        displayName={translations.components.swal.managePatient.firstName}
+                        displayName={
+                            translations.components.swal.managePatient.firstName
+                        }
                         onChange={onFieldUpdate}
                     />
                     <TextField
                         className="text-field"
                         value={updatedPatientData?.fathersName}
                         fieldId="fathersName"
-                        displayName={translations.components.swal.managePatient.fatherName}
+                        displayName={
+                            translations.components.swal.managePatient
+                                .fatherName
+                        }
                         onChange={onFieldUpdate}
                     />
                     <TextField
                         className="text-field"
                         value={updatedPatientData?.grandfathersName}
-                        displayName={translations.components.swal.managePatient.grandfatherName}
+                        displayName={
+                            translations.components.swal.managePatient
+                                .grandfatherName
+                        }
                         fieldId="grandfathersName"
                         onChange={onFieldUpdate}
                     />
@@ -109,7 +117,10 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                         className="text-field"
                         value={updatedPatientData?.familyName}
                         fieldId="familyName"
-                        displayName={translations.components.swal.managePatient.familyName}
+                        displayName={
+                            translations.components.swal.managePatient
+                                .familyName
+                        }
                         onChange={onFieldUpdate}
                     />
 
@@ -118,9 +129,13 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                         value={updatedPatientData?.status}
                         fieldId="status"
                         langKey={selectedLang}
-                        title={translations.components.swal.managePatient.radioTitle}
+                        title={
+                            translations.components.swal.managePatient
+                                .radioTitle
+                        }
                         options={patientStatusOptions}
-                        onChange={onFieldUpdate}/>
+                        onChange={onFieldUpdate}
+                    />
                 </div>
 
                 <div className="manage-patient-footer">
@@ -135,7 +150,7 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                                 .save
                         }
                     </Button>
-                </div> 
+                </div>
             </div>
         </Modal>
     );
