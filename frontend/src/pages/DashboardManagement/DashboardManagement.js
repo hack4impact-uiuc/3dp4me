@@ -63,7 +63,7 @@ const SectionTab = () => {
                 setIsEditing(false);
                 await Promise.all(
                     addedSteps.map(async (step) => {
-                        await postNewStep(step); // Question: Adding to highest level of db?
+                        await postNewStep(step);
                     }),
                 );
                 await updateMultipleSteps(stepMetadata);
@@ -78,24 +78,6 @@ const SectionTab = () => {
                 setIsEditing(true);
             },
         );
-    };
-
-    const addNewStep = (newStepData) => {
-        const updatedNewStep = _.cloneDeep(newStepData);
-        const updatedMetadata = _.cloneDeep(stepMetadata);
-        const updateAddedSteps = _.cloneDeep(addedSteps);
-
-        updatedNewStep.stepNumber = updatedMetadata.length;
-        const currentStepKeys = updatedMetadata.map((step) => step.key);
-        updatedNewStep.key = generateKeyWithoutCollision(
-            updatedNewStep.displayName.EN,
-            currentStepKeys,
-        );
-
-        updateAddedSteps.push(updatedNewStep);
-        updatedMetadata.push(updatedNewStep);
-        setAddedSteps(updateAddedSteps);
-        setStepMetadata(updatedMetadata);
     };
 
     const onDiscardChanges = async () => {
@@ -305,8 +287,23 @@ const SectionTab = () => {
         setStepMetadata(updatedMetadata);
     };
 
-    // TODO: Move back here
-    // Question: Does it matter that this changes the order of the schema in the DB
+    const addNewStep = (newStepData) => {
+        const updatedNewStep = _.cloneDeep(newStepData);
+        const updatedMetadata = _.cloneDeep(stepMetadata);
+        const updateAddedSteps = _.cloneDeep(addedSteps);
+
+        updatedNewStep.stepNumber = updatedMetadata.length;
+        const currentStepKeys = updatedMetadata.map((step) => step.key);
+        updatedNewStep.key = generateKeyWithoutCollision(
+            updatedNewStep.displayName.EN,
+            currentStepKeys,
+        );
+
+        updateAddedSteps.push(updatedNewStep);
+        updatedMetadata.push(updatedNewStep);
+        setAddedSteps(updateAddedSteps);
+        setStepMetadata(updatedMetadata);
+    };
 
     return (
         <div>

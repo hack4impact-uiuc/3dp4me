@@ -15,7 +15,7 @@ import {
 
 const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
     const [translations, selectedLang] = useTranslations();
-    const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID]); // automatically select the Admin role
+    const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID]);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
 
     const errorWrap = useErrorWrap();
@@ -30,8 +30,6 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
         setDisplayName(updatedDisplayName);
     };
 
-    // Ashay had this in fields.js, is it ok to just have this
-    // because it's the only one we need?
     const validateStep = (stepData) => {
         if (stepData.displayName.EN === '' || stepData.displayName.AR === '') {
             throw new Error(ERR_LANGUAGE_VALIDATION_FAILED);
@@ -82,7 +80,6 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
         );
     };
 
-    // TODO: use button component!
     return (
         <Modal
             open={isOpen}
