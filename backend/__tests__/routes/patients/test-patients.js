@@ -35,9 +35,9 @@ describe('POST /patients', () => {
         server = require('../../../app');
     });
 
-    it('returns 400 when missing required fields', (done) => {
+    it('returns 201 when creating empty patient', (done) => {
         withAuthentication(request(server).post('/api/patients/', {})).expect(
-            400,
+            201,
             done,
         );
     });
