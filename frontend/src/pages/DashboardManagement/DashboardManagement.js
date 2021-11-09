@@ -19,9 +19,7 @@ import {
     drawerWidth,
     verticalMovementWidth,
 } from '../../styles/variables.scss';
-import { resolveMixedObjPath } from '../../utils/object';
 import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
-import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -56,14 +54,16 @@ const SectionTab = () => {
     };
 
     const onSaveChanges = () => {
+        let updateResponse;
+
         errorWrap(
             async () => {
-                console.log(stepMetadata);
-                await updateMultipleSteps(stepMetadata);
+                updateResponse = await updateMultipleSteps(stepMetadata);
             },
             () => {
                 setIsEditing(false);
-                setOriginalStepMetadata(stepMetadata);
+                setOriginalStepMetadata(updateResponse.result);
+                setStepMetadata(updateResponse.result);
             },
             () => {
                 // Allow editing when the save fails
@@ -84,12 +84,12 @@ const SectionTab = () => {
     function onDownPressed(stepKey) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        let currStepIndex = updatedMetadata.findIndex((step) => {
-            return step.key == stepKey;
+        const currStepIndex = updatedMetadata.findIndex((step) => {
+            return step.key === stepKey;
         });
 
         if (currStepIndex >= 0 && currStepIndex < updatedMetadata.length - 1) {
-            let tempStepNumber = updatedMetadata[currStepIndex].stepNumber;
+            const tempStepNumber = updatedMetadata[currStepIndex].stepNumber;
             updatedMetadata[currStepIndex].stepNumber =
                 updatedMetadata[currStepIndex + 1].stepNumber;
             updatedMetadata[currStepIndex + 1].stepNumber = tempStepNumber;
@@ -101,18 +101,41 @@ const SectionTab = () => {
     function onUpPressed(stepKey) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        let currStepIndex = updatedMetadata.findIndex((step) => {
-            return step.key == stepKey;
+        const currStepIndex = updatedMetadata.findIndex((step) => {
+            return step.key === stepKey;
         });
 
         if (currStepIndex > 0 && currStepIndex < updatedMetadata.length) {
-            let tempStepNumber = updatedMetadata[currStepIndex].stepNumber;
+            const tempStepNumber = updatedMetadata[currStepIndex].stepNumber;
             updatedMetadata[currStepIndex].stepNumber =
                 updatedMetadata[currStepIndex - 1].stepNumber;
             updatedMetadata[currStepIndex - 1].stepNumber = tempStepNumber;
             const sortedMetadata = sortMetadata(updatedMetadata);
             setStepMetadata(sortedMetadata);
         }
+    }
+
+    // Inclusive min and exclusive max
+    function checkBounds(min, max, num) {
+        return num >= min && num < max;
+    }
+
+    // Returns the field before or after a given field based on index
+    function getPrevNextField(fields, currIndex, change) {
+        let prevNextIndex = currIndex + change;
+
+        while (
+            checkBounds(0, fields.length, prevNextIndex) &&
+            fields[prevNextIndex].isDeleted
+        ) {
+            prevNextIndex += change;
+        }
+
+        if (prevNextIndex === -1 || prevNextIndex === fields.length) {
+            return null;
+        }
+
+        return prevNextIndex;
     }
 
     function onCardDownPressed(stepKey, fieldRoot, fieldNumber) {
@@ -123,20 +146,25 @@ const SectionTab = () => {
         );
 
         const currFieldIndex = foundStep.fields.findIndex((field) => {
-            return field.fieldNumber == fieldNumber;
+            return field.fieldNumber === fieldNumber;
         });
 
-        if (
-            currFieldIndex >= 0 &&
-            currFieldIndex < foundStep.fields.length - 1
-        ) {
-            let tempFieldNumber = foundStep.fields[currFieldIndex].fieldNumber;
-            foundStep.fields[currFieldIndex].fieldNumber =
-                foundStep.fields[currFieldIndex + 1].fieldNumber;
-            foundStep.fields[currFieldIndex + 1].fieldNumber = tempFieldNumber;
-            const sortedMetadata = sortMetadata(updatedMetadata);
-            setStepMetadata(sortedMetadata);
+        const prevFieldIndex = getPrevNextField(
+            foundStep.fields,
+            currFieldIndex,
+            1,
+        );
+
+        if (prevFieldIndex == null) {
+            return;
         }
+
+        const tempFieldNumber = foundStep.fields[currFieldIndex].fieldNumber;
+        foundStep.fields[currFieldIndex].fieldNumber =
+            foundStep.fields[prevFieldIndex].fieldNumber;
+        foundStep.fields[prevFieldIndex].fieldNumber = tempFieldNumber;
+        const sortedMetadata = sortMetadata(updatedMetadata);
+        setStepMetadata(sortedMetadata);
     }
 
     function onCardUpPressed(stepKey, fieldRoot, fieldNumber) {
@@ -147,17 +175,25 @@ const SectionTab = () => {
         );
 
         const currFieldIndex = foundStep.fields.findIndex((field) => {
-            return field.fieldNumber == fieldNumber;
+            return field.fieldNumber === fieldNumber;
         });
 
-        if (currFieldIndex > 0 && currFieldIndex < foundStep.fields.length) {
-            let tempFieldNumber = foundStep.fields[currFieldIndex].fieldNumber;
-            foundStep.fields[currFieldIndex].fieldNumber =
-                foundStep.fields[currFieldIndex - 1].fieldNumber;
-            foundStep.fields[currFieldIndex - 1].fieldNumber = tempFieldNumber;
-            const sortedMetadata = sortMetadata(updatedMetadata);
-            setStepMetadata(sortedMetadata);
+        const prevFieldIndex = getPrevNextField(
+            foundStep.fields,
+            currFieldIndex,
+            -1,
+        );
+
+        if (prevFieldIndex === null) {
+            return;
         }
+
+        const tempFieldNumber = foundStep.fields[currFieldIndex].fieldNumber;
+        foundStep.fields[currFieldIndex].fieldNumber =
+            foundStep.fields[prevFieldIndex].fieldNumber;
+        foundStep.fields[prevFieldIndex].fieldNumber = tempFieldNumber;
+        const sortedMetadata = sortMetadata(updatedMetadata);
+        setStepMetadata(sortedMetadata);
     }
 
     function GenerateStepManagementContent() {
@@ -227,19 +263,41 @@ const SectionTab = () => {
         );
     };
 
+    // Returns the index for a step given its key
+    const getStepIndexGivenKey = (stepData, key) => {
+        if (!stepData) return -1;
+        return stepData.findIndex((step) => step.key === key);
+    };
+
+    // This function is needed because the field number doesn't correspond to the index of a field in
+    // the fields array. There can be fields with field numbers 1, 2, 4, 5, but no 3, in the fields array.
+    const getFieldIndexByNumber = (step, fieldNumber) => {
+        if (!step) return -1;
+        return step.fields.findIndex(
+            (field) => field.fieldNumber === fieldNumber,
+        );
+    };
+
     const generateEditFieldPopup = () => {
-        const selectedStepMetadata = stepMetadata.find(
-            (step) => step.key === selectedStep,
+        const stepIndex = getStepIndexGivenKey(stepMetadata, selectedStep);
+
+        if (stepIndex < 0) return null;
+
+        const fieldIndex = getFieldIndexByNumber(
+            stepMetadata[stepIndex],
+            selectedField,
         );
 
-        if (!selectedStepMetadata) return null;
+        if (fieldIndex < 0) return null;
 
-        if (selectedField >= selectedStepMetadata.fields.length) return null;
+        const fieldData = stepMetadata[stepIndex].fields[fieldIndex];
+
+        if (!fieldData) return null;
 
         return (
             <EditFieldModal
                 isOpen={editFieldModalOpen}
-                initialData={selectedStepMetadata.fields[selectedField]}
+                initialData={fieldData}
                 onModalClose={onEditFieldModalClose}
                 allRoles={allRoles}
                 onEditField={editField}
@@ -267,15 +325,6 @@ const SectionTab = () => {
         updatedNewField.fieldNumber = updatedMetadata[stepIndex].fields.length;
         updatedNewField.isDeleted = false;
         updatedNewField.isHidden = false;
-
-        const currentFieldKeys = updatedMetadata[stepIndex].fields.map(
-            (field) => field.key,
-        );
-        updatedNewField.key = generateKeyWithoutCollision(
-            updatedNewField.displayName.EN,
-            currentFieldKeys,
-        );
-
         updatedMetadata[stepIndex].fields.push(updatedNewField);
         setStepMetadata(updatedMetadata);
     };
@@ -284,11 +333,19 @@ const SectionTab = () => {
         const updatedField = _.cloneDeep(updatedFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        const stepIndex = stepMetadata.findIndex((element) => {
-            return element.key === selectedStep;
-        });
+        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep);
 
-        updatedMetadata[stepIndex].fields[selectedField] = updatedField;
+        if (stepIndex < 0) return;
+
+        const fieldIndex = getFieldIndexByNumber(
+            updatedMetadata[stepIndex],
+            selectedField,
+        );
+
+        if (fieldIndex < 0) return;
+
+        updatedMetadata[stepIndex].fields[fieldIndex] = updatedField;
+
         setStepMetadata(updatedMetadata);
     };
 

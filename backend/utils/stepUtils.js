@@ -7,13 +7,14 @@ const { isUniqueStepNumber } = require('../models/Metadata');
 const { isAdmin } = require('./aws/awsUsers');
 const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
 const { abortAndError } = require('./transactionUtils');
+const { generateKeyWithoutCollision } = require('./keyUtils');
 
 const stringToBoolean = (value) => {
     const trimmedValue = value.toString().trim().toLowerCase();
     return !(
-        trimmedValue === 'false' ||
-        trimmedValue === '0' ||
-        trimmedValue === ''
+        trimmedValue === 'false'
+        || trimmedValue === '0'
+        || trimmedValue === ''
     );
 };
 
@@ -100,8 +101,7 @@ const updateStepInTransation = async (stepBody, session) => {
     );
 
     // Abort if can't find step to edit
-    if (!stepToEdit)
-        await abortAndError(session, `No step with key, ${stepKey}`);
+    if (!stepToEdit) await abortAndError(session, `No step with key, ${stepKey}`);
 
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
@@ -113,12 +113,12 @@ const updateStepInTransation = async (stepBody, session) => {
 
     // Checks that fields were not deleted
     const deletedFields = getDeletedFields(stepToEdit.fields);
+
     const numDeletedFields = deletedFields.length;
     const numUnchangedFields = strippedBody.fields.length - addedFields.length;
 
     const currentNumFields = stepToEdit.fields.length - numDeletedFields;
-    if (numUnchangedFields < currentNumFields)
-        await abortAndError(session, 'Cannot delete fields');
+    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
 
     // Update the schema
     addFieldsToSchema(stepKey, addedFields);
@@ -137,13 +137,12 @@ const updateStepInTransation = async (stepBody, session) => {
 
     while (currFieldNumber < numTotalFields) {
         if (
-            deletedFieldPointer < deletedFields.length &&
-            currFieldNumber === deletedFields[deletedFieldPointer].fieldNumber
+            deletedFieldPointer < deletedFields.length
+            && currFieldNumber === deletedFields[deletedFieldPointer].fieldNumber
         ) {
             deletedFieldPointer += 1; // Skip over since deleted fields have priority
         } else {
-            strippedBody.fields[strippedFieldsPointer].fieldNumber =
-                currFieldNumber;
+            strippedBody.fields[strippedFieldsPointer].fieldNumber = currFieldNumber;
             strippedFieldsPointer += 1;
         }
         currFieldNumber += 1; // Move onto the next field number to assign
@@ -154,6 +153,25 @@ const updateStepInTransation = async (stepBody, session) => {
     // restoring them manually.
     for (let i = 0; i < deletedFields.length; i++) {
         strippedBody.fields.push(deletedFields[i]);
+    }
+
+    // Generate keys for the fields that do not have a key
+
+    const currentFieldKeys = strippedBody.fields.map(
+        (field) => field.key ?? '',
+    );
+
+    for (let i = 0; i < strippedBody.fields.length; i++) {
+        const currentField = strippedBody.fields[i];
+        const currentKey = currentField.key;
+        if (typeof currentKey === 'undefined' || currentKey === null) {
+            const generatedKey = generateKeyWithoutCollision(
+                currentField.displayName.EN,
+                currentFieldKeys,
+            );
+            currentField.key = generatedKey;
+            currentFieldKeys.push(generatedKey);
+        }
     }
 
     // Finally, update the metadata for this step
@@ -175,7 +193,12 @@ const getDeletedFields = (fields) => {
         }
     });
 
-    return deletedFields;
+    // Returns the deleted fields in ascending order of field number
+    const sortedFields = deletedFields.sort(
+        (a, b) => a.fieldNumber - b.fieldNumber,
+    );
+
+    return sortedFields;
 };
 
 const validateSteps = async (steps, session) => {

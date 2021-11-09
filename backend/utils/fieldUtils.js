@@ -111,22 +111,36 @@ module.exports.getAddedFields = async (session, oldFields, newFields) => {
     const addedFields = [];
     for (let i = 0; i < newFields.length; ++i) {
         const requestField = newFields[i];
-        const existingField = this.getFieldByKey(oldFields, requestField.key);
 
-        // If both fields are the same but fieldtypes are not the same
-        if (existingField && !areFieldTypesSame(requestField, existingField)) {
-            await abortAndError(
-                session,
-                `Cannot change the type of ${existingField.key}`,
+        if (requestField.key) {
+            const existingField = this.getFieldByKey(
+                oldFields,
+                requestField.key,
             );
+
+            // If both fields are the same but fieldtypes are not the same
+            if (
+                existingField
+                && !areFieldTypesSame(requestField, existingField)
+            ) {
+                await abortAndError(
+                    session,
+                    `Cannot change the type of ${existingField.key}`,
+                );
+            }
+
+            // If this is a new field that we haven't seen yet, add it to the list of new fields
+            const hasAddedField = addedFields.some(
+                (f) => f.key === requestField.key,
+            );
+
+            if (!existingField && !hasAddedField) {
+                addedFields.push(requestField);
+            }
+        } else {
+            // Add the field since a key doesn't exist for it
+            addedFields.push(requestField);
         }
-
-        // If this is a new field that we haven't seen yet, add it to the list of new fields
-        const hasAddedField = addedFields.some(
-            (f) => f.key === requestField.key,
-        );
-
-        if (!existingField && !hasAddedField) addedFields.push(requestField);
     }
 
     return addedFields;
