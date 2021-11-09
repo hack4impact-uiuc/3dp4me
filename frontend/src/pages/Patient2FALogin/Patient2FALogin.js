@@ -10,7 +10,7 @@ const Patient2FALogin = ({ setTokenSent }) => {
     const params = useParams();
     const { patientId } = params;
     const sentToken = false;
-        
+
     return (
         <div className="wrapper login-body">
             <div className="centered">
@@ -26,11 +26,10 @@ const Patient2FALogin = ({ setTokenSent }) => {
                     <button
                         className="two-factor-authentication-button"
                         type="submit"
-                        onClick ={() => setTokenSent(!sentToken)}
+                        onClick={() => setTokenSent(!sentToken)}
                     >
                         Send Two-Factor Code
                     </button>
-
                 </div>
             </div>
         </div>
@@ -41,4 +40,4 @@ Patient2FALogin.propTypes = {
     setTokenSent: PropTypes.func,
 };
 
-export default Patient2FALogin
+export default Patient2FALogin;

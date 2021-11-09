@@ -13,8 +13,8 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import DashboardManagement from './pages/DashboardManagement/DashboardManagement';
 import PatientDetail from './pages/PatientDetail/PatientDetail';
 import Patients from './pages/Patients/Patients';
-import Patient2FA from './pages/Patient2FALogin/Patient2FALogin'
-import Patient2FAVerification from './pages/Patient2FAVerification/Patient2FAVerification'
+import Patient2FA from './pages/Patient2FALogin/Patient2FALogin';
+import Patient2FAVerification from './pages/Patient2FAVerification/Patient2FAVerification';
 import { Context } from './store/Store';
 import {
     COGNITO_ATTRIBUTES,
@@ -105,7 +105,9 @@ const AppContent = ({ username, userEmail }) => {
                             <DashboardManagement />
                         </Route>
                         <Route exact path={ROUTES.PATIENT_2FA}>
-                            {!tokenSent && <Patient2FA setTokenSent={setTokenSent} />}
+                            {!tokenSent && (
+                                <Patient2FA setTokenSent={setTokenSent} />
+                            )}
                             {tokenSent && <Patient2FAVerification />}
                         </Route>
                         <Route

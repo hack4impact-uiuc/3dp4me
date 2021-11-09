@@ -5,7 +5,7 @@ import ReactCodeInput from 'react-code-input';
 import Logo from '../../assets/3dp4me_logo.png';
 
 import './Patient2FAVerification.scss';
-import './TokenInput.scss'
+import './TokenInput.scss';
 
 const Patient2FALogin = () => {
     const params = useParams();
@@ -25,7 +25,7 @@ const Patient2FALogin = () => {
         fontSize: '32px',
         boxSizing: 'border-box',
         backgroundColor: '#DEDFFB',
-    }
+    };
 
     return (
         <div className="wrapper login-body">
@@ -43,11 +43,8 @@ const Patient2FALogin = () => {
 
                     <div className="centered-token-content">
                         <ReactCodeInput fields={6} inputStyle={inputStyle} />
-                    
-                        <button
-                            className="verification-button"
-                            type="submit"
-                        >
+
+                        <button className="verification-button" type="submit">
                             Verify
                         </button>
                         <p>Send code again</p>
@@ -58,4 +55,4 @@ const Patient2FALogin = () => {
     );
 };
 
-export default Patient2FALogin
+export default Patient2FALogin;
