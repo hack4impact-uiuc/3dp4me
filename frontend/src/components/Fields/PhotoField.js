@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
+import { update } from 'lodash';
 
 import prompt from '../../assets/camera-prompt-instructions-en.gif';
 import promptAR from '../../assets/camera-prompt-instructions-ar.gif'
@@ -29,7 +30,7 @@ const PhotoField = ({
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
-    const [promptCameraAccess, setPromptCameraAccess] = useState(false);
+    const [promptCameraAccess, setPromptCameraAccess] = useState(false); // change to true after the feature works
     const [dataUri, setUri] = useState('');
     const [translations, selectedLang] = useTranslations();
 
@@ -40,6 +41,18 @@ const PhotoField = ({
     useEffect(() => {
         const constraints = { video: true };
         getMedia(constraints);
+        navigator.permissions
+            .query({ name: 'camera' })
+            .then(function (permissionStatus) {
+                permissionStatus.onchange = 
+                function () {
+                    if (this.state === 'denied') {
+                        setPromptCameraAccess(true);
+                    } else {
+                        setPromptCameraAccess(false);
+                    }
+                };
+            });
     }, []);
 
     const getMedia = async (constraints) => {
@@ -50,6 +63,8 @@ const PhotoField = ({
             setPromptCameraAccess(true);
         }
     }
+
+    
 
     const updateMetaDataPhotos = async (data) => {
         const newPhotoData = await convertPhotosToURI(
