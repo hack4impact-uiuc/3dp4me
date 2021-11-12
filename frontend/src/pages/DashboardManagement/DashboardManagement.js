@@ -8,7 +8,6 @@ import {
     getAllStepsMetadata,
     getAllRoles,
     updateMultipleSteps,
-    postNewStep,
 } from '../../api/api';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
@@ -61,11 +60,6 @@ const SectionTab = () => {
         errorWrap(
             async () => {
                 setIsEditing(false);
-                await Promise.all(
-                    addedSteps.map(async (step) => {
-                        await postNewStep(step); // Question: Adding to highest level of db?
-                    }),
-                );
                 await updateMultipleSteps(stepMetadata);
                 setAddedSteps([]);
             },

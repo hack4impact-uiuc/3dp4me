@@ -39,7 +39,7 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
     const generateFields = () => {
         return (
             <div className="create-step-modal-field-container">
-                <span>Step Title</span>
+                <span>{translations.components.swal.step.createStepTitle}</span>
                 <LanguageInput
                     fieldValues={displayName}
                     handleFieldChange={(value, language) => {
@@ -87,12 +87,14 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
             className="create-step-modal"
         >
             <div className="create-step-modal-wrapper">
-                <h2 className="create-step-modal-title">New Step</h2>
+                <h2 className="create-step-modal-title">
+                    {translations.components.swal.step.createStepHeader}
+                </h2>
                 <div className="create-step-modal-text">{generateFields()}</div>
 
-                <div style={{ padding: 10 }}>
+                <div className="create-step-multiselect">
                     <MultiSelectField
-                        title={translations.components.swal.field.clearance}
+                        title={translations.components.swal.step.clearance}
                         langKey={selectedLang}
                         options={allRoles}
                         selectedOptions={selectedRoles}
@@ -104,10 +106,10 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
 
                 <div>
                     <Button onClick={saveNewStep} className="save-step-button">
-                        {translations.components.swal.field.buttons.save}
+                        {translations.components.swal.step.buttons.save}
                     </Button>
                     <Button onClick={onDiscard} className="discard-step-button">
-                        {translations.components.swal.field.buttons.discard}
+                        {translations.components.swal.step.buttons.discard}
                     </Button>
                 </div>
             </div>
