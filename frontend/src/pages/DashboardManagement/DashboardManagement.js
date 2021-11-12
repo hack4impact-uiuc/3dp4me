@@ -21,14 +21,13 @@ import {
 } from '../../styles/variables.scss';
 import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
 import {
-    direction,
+    DIRECTION,
     getValidAdjacentElement,
     swapValuesInArrayByKey,
 } from '../../utils/dashboard-utils';
 
-const expandedSidebarWidth = `${
-    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
-}px`;
+const expandedSidebarWidth = `${parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+    }px`;
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
@@ -121,12 +120,12 @@ const SectionTab = () => {
 
     // Handles moving a step down
     function onDownPressed(stepKey) {
-        moveStep(stepKey, direction.DOWN);
+        moveStep(stepKey, DIRECTION.DOWN);
     }
 
     // Handles moving a step up
     function onUpPressed(stepKey) {
-        moveStep(stepKey, direction.UP);
+        moveStep(stepKey, DIRECTION.UP);
     }
 
     /**
@@ -169,12 +168,12 @@ const SectionTab = () => {
 
     // Handles moving a field down
     function onCardDownPressed(stepKey, fieldNumber) {
-        moveField(stepKey, fieldNumber, direction.DOWN);
+        moveField(stepKey, fieldNumber, DIRECTION.DOWN);
     }
 
     // Handles moving a field up
     function onCardUpPressed(stepKey, fieldNumber) {
-        moveField(stepKey, fieldNumber, direction.UP);
+        moveField(stepKey, fieldNumber, DIRECTION.UP);
     }
 
     function GenerateStepManagementContent() {
@@ -363,11 +362,10 @@ const SectionTab = () => {
                     onDiscard={onDiscardChanges}
                     style={{
                         editorSection: {
-                            marginLeft: `${
-                                isEditing
-                                    ? expandedSidebarWidth
-                                    : retractedSidebarWidth
-                            }`,
+                            marginLeft: `${isEditing
+                                ? expandedSidebarWidth
+                                : retractedSidebarWidth
+                                }`,
                         },
                     }}
                 />

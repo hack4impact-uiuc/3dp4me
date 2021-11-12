@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export const direction = {
+export const DIRECTION = {
     UP: -1,
     DOWN: 1,
 };
