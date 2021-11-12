@@ -114,6 +114,7 @@ export const defaultTableHeaderRenderer = (
  * at the end that links to patient data
  */
 export const patientTableRowRenderer = (rowData, patient, selectedLang) => {
+    // console.log(patient);
     // Construct the base row
     const row = defaultTableRowRenderer(rowData, patient, selectedLang);
 
@@ -126,7 +127,7 @@ export const patientTableRowRenderer = (rowData, patient, selectedLang) => {
         >
             <Link
                 className="table-view-link"
-                to={`/patient-info/${patient._id}`}
+                to={`/patient-info/${patient._id}?stepKey=${patient.stepKey}`}
             >
                 <IconButton>
                     <img alt="status icon" width="18px" src={Eyecon} />

@@ -26,6 +26,7 @@ const PatientTable = ({
     headers,
     rowData,
 }) => {
+    console.log(patients);
     const errorWrap = useErrorWrap();
     const translations = useTranslations()[0];
     const [isCreatePatientModalOpen, setCreatePatientModalOpen] =
@@ -63,7 +64,7 @@ const PatientTable = ({
     const onSaveAndEditPatient = async (patientData) => {
         const patientId = await onSavePatient(patientData);
         const currentRoute = window.location.href;
-        let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}`;
+        let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}?stepKey=${patients[0]?.stepKey}`;
 
         // Remove doulbe '/'
         if (
@@ -73,6 +74,7 @@ const PatientTable = ({
             relativeRoute = relativeRoute.substr(1, relativeRoute.length - 1);
 
         if (patientId) window.location.href = currentRoute + relativeRoute;
+
     };
 
     /**

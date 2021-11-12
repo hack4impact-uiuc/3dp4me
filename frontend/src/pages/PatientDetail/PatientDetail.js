@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
+import { useQueryParam, StringParam } from 'use-query-params';
 
 import {
     getAllStepsMetadata,
@@ -20,6 +21,7 @@ import { LANGUAGES } from '../../utils/constants';
 import { sortMetadata } from '../../utils/utils';
 import './PatientDetail.scss';
 
+
 /**
  * The detail view for a patient. Shows their information
  * for each step.
@@ -35,6 +37,10 @@ const PatientDetail = () => {
     const [patientData, setPatientData] = useState(null);
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
+    const initStepKey = useQueryParam('stepKey', StringParam)[0];
+    const [stepKeyParam, setStepKey] = useState(initStepKey);
+    console.log(initStepKey);
+
 
     /**
      * Fetch metadata for all steps and the patient's data.
@@ -53,7 +59,8 @@ const PatientDetail = () => {
 
                 // Sort it
                 metaData = sortMetadata(metaData);
-                if (metaData.length > 0) setSelectedStep(metaData[0].key);
+                
+                setSelectedStep(stepKeyParam);
 
                 setStepMetaData(metaData);
                 setPatientData(data);
@@ -63,6 +70,10 @@ const PatientDetail = () => {
 
         getData();
     }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
+
+    useEffect(() => {
+        setStepKey(initStepKey);
+    }, [initStepKey]);
 
     /**
      * Called when the patient data for a step is saved
@@ -113,8 +124,9 @@ const PatientDetail = () => {
 
     const onStepChange = (newStep) => {
         if (newStep === null) return;
-
         setSelectedStep(newStep);
+        window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
+
     };
 
     /**
