@@ -19,7 +19,6 @@ import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
 import './StepContent.scss';
 
-
 const StepContent = ({
     patientId,
     metaData,
