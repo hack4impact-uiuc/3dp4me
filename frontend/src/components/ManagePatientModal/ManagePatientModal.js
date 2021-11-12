@@ -1,19 +1,15 @@
-import React, { useState } from 'react';
-import {
-    FormControlLabel,
-    Radio,
-    RadioGroup,
-    Button,
-    Modal,
-    TextField,
-} from '@material-ui/core';
-import _ from 'lodash';
+import { Button, Modal } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
-import './ManagePatientModal.scss';
-import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
+import language from '../../translations.json';
+import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
+import RadioButtonField from '../Fields/RadioButtonField';
+import TextField from '../Fields/TextField';
+import './ManagePatientModal.scss';
 
 const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
     const [translations, selectedLang] = useTranslations();
@@ -21,16 +17,42 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
         _.cloneDeep(patientData),
     );
 
-    const onFieldUpdate = (e) => {
-        e.persist();
+    const onFieldUpdate = (key, value) => {
         setUpdatedPatientData((data) => ({
             ...data,
-            [e.target.name]: e.target.value,
+            [key]: value,
         }));
     };
 
+    const patientStatusOptions = [
+        {
+            _id: PATIENT_STATUS.ACTIVE,
+            IsHidden: false,
+            Question: {
+                [LANGUAGES.EN]: language[LANGUAGES.EN].status.active,
+                [LANGUAGES.AR]: language[LANGUAGES.EN].status.active,
+            },
+        },
+        {
+            _id: PATIENT_STATUS.FEEDBACK,
+            IsHidden: false,
+            Question: {
+                [LANGUAGES.EN]: language[LANGUAGES.EN].status.feedback,
+                [LANGUAGES.AR]: language[LANGUAGES.EN].status.feedback,
+            },
+        },
+        {
+            _id: PATIENT_STATUS.ARCHIVE,
+            IsHidden: false,
+            Question: {
+                [LANGUAGES.EN]: language[LANGUAGES.EN].status.archive,
+                [LANGUAGES.AR]: language[LANGUAGES.EN].status.archive,
+            },
+        },
+    ];
+
     return (
-        <Modal open={isOpen} onClose={onClose}>
+        <Modal open={isOpen} onClose={onClose} className="manage-patient-modal">
             <div
                 className={`controller-manage-patient-wrapper ${
                     selectedLang === LANGUAGES.AR
@@ -52,89 +74,68 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                                 .profileInformation
                         }
                     </h3>
-                    <p>
-                        {translations.components.swal.managePatient.firstName}
-                    </p>
                     <TextField
+                        className="text-field"
+                        value={updatedPatientData?.orderId}
+                        fieldId="orderId"
+                        displayName={
+                            translations.components.swal.managePatient.orderId
+                        }
+                        onChange={onFieldUpdate}
+                    />
+
+                    <TextField
+                        className="text-field"
                         value={updatedPatientData?.firstName}
-                        name="firstName"
+                        fieldId="firstName"
+                        displayName={
+                            translations.components.swal.managePatient.firstName
+                        }
                         onChange={onFieldUpdate}
                     />
-                    <p>
-                        {translations.components.swal.managePatient.fatherName}
-                    </p>
                     <TextField
+                        className="text-field"
                         value={updatedPatientData?.fathersName}
-                        name="fathersName"
+                        fieldId="fathersName"
+                        displayName={
+                            translations.components.swal.managePatient
+                                .fatherName
+                        }
                         onChange={onFieldUpdate}
                     />
-                    <p>
-                        {
+                    <TextField
+                        className="text-field"
+                        value={updatedPatientData?.grandfathersName}
+                        displayName={
                             translations.components.swal.managePatient
                                 .grandfatherName
                         }
-                    </p>
-                    <TextField
-                        value={updatedPatientData?.grandfathersName}
-                        name="grandfathersName"
+                        fieldId="grandfathersName"
                         onChange={onFieldUpdate}
                     />
-                    <p>
-                        {translations.components.swal.managePatient.familyName}
-                    </p>
                     <TextField
+                        className="text-field"
                         value={updatedPatientData?.familyName}
-                        name="familyName"
+                        fieldId="familyName"
+                        displayName={
+                            translations.components.swal.managePatient
+                                .familyName
+                        }
                         onChange={onFieldUpdate}
                     />
-                </div>
-                <div className="profile-management-wrapper">
-                    <h3>
-                        {
+
+                    <RadioButtonField
+                        className="text-field"
+                        value={updatedPatientData?.status}
+                        fieldId="status"
+                        langKey={selectedLang}
+                        title={
                             translations.components.swal.managePatient
-                                .profileManagement
+                                .radioTitle
                         }
-                    </h3>
-                    <p>
-                        {
-                            translations.components.swal.managePatient
-                                .archiveInformation
-                        }
-                    </p>
-                    <div className="profile-management-radio-button-group">
-                        <div>
-                            <RadioGroup
-                                name="status"
-                                onChange={onFieldUpdate}
-                                value={updatedPatientData?.status}
-                            >
-                                <FormControlLabel
-                                    value={PATIENT_STATUS.ACTIVE}
-                                    control={<Radio />}
-                                    label={
-                                        translations.components.swal
-                                            .managePatient.active
-                                    }
-                                />
-                                <FormControlLabel
-                                    value={PATIENT_STATUS.FEEDBACK}
-                                    control={<Radio />}
-                                    label={
-                                        translations.components.swal
-                                            .managePatient.feedback
-                                    }
-                                />
-                                <FormControlLabel
-                                    value={PATIENT_STATUS.ARCHIVE}
-                                    control={<Radio />}
-                                    label={
-                                        translations.components.swal
-                                            .managePatient.archive
-                                    }
-                                />
-                            </RadioGroup>
-                        </div>
-                    </div>
+                        options={patientStatusOptions}
+                        onChange={onFieldUpdate}
+                    />
                 </div>
 
                 <div className="manage-patient-footer">
@@ -150,12 +151,6 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                         }
                     </Button>
                 </div>
-                <p>{translations.components.swal.managePatient.orderId}</p>
-                <TextField
-                    value={updatedPatientData?.orderId}
-                    name="orderId"
-                    onChange={onFieldUpdate}
-                />
             </div>
         </Modal>
     );
