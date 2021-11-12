@@ -94,10 +94,6 @@ const EditFieldModal = ({
         setSelectedRoles(roles);
     };
 
-    const handleFieldTypeSelect = (e) => {
-        setFieldType(e.target.value);
-    };
-
     const addOption = () => {
         const updatedOptions = _.cloneDeep(options);
         updatedOptions.push({ EN: '', AR: '' });
@@ -131,9 +127,8 @@ const EditFieldModal = ({
             choices.push(
                 <div>
                     <span>
-                        {`${translations.components.swal.field.option} ${
-                            i + 1
-                        }`}
+                        {`${translations.components.swal.field.option} ${i + 1
+                            }`}
                     </span>
                     <LanguageInput
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
@@ -172,6 +167,8 @@ const EditFieldModal = ({
             case FIELD_TYPES.NUMBER:
             case FIELD_TYPES.FILE:
             case FIELD_TYPES.AUDIO:
+            case FIELD_TYPES.MAP:
+            case FIELD_TYPES.PHOTO:
                 return (
                     <div className="edit-field-div">
                         <span>
@@ -369,12 +366,12 @@ const EditFieldModal = ({
                             </span>
                             <NativeSelect
                                 id="edit-field-type-dropdown"
-                                onChange={handleFieldTypeSelect}
                                 MenuProps={{
                                     style: { zIndex: 35001 }, // for keeping this component on the top layer
                                 }}
                                 defaultValue={fieldType}
                                 input={<BootstrapInput />}
+                                disabled={true}
                             >
                                 {generateFieldDropdownOptions()}
                             </NativeSelect>
