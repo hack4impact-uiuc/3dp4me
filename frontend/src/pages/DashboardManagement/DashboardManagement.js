@@ -26,8 +26,9 @@ import {
     swapValuesInArrayByKey,
 } from '../../utils/dashboard-utils';
 
-const expandedSidebarWidth = `${parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
-    }px`;
+const expandedSidebarWidth = `${
+    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+}px`;
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
@@ -302,7 +303,10 @@ const SectionTab = () => {
             return element.key === selectedStep;
         });
 
-        updatedNewField.fieldNumber = updatedMetadata[stepIndex].fields[updatedMetadata[stepIndex].fields.length - 1].fieldNumber + 1;
+        updatedNewField.fieldNumber =
+            updatedMetadata[stepIndex].fields[
+                updatedMetadata[stepIndex].fields.length - 1
+            ].fieldNumber + 1;
         updatedNewField.isDeleted = false;
         updatedNewField.isHidden = false;
         updatedMetadata[stepIndex].fields.push(updatedNewField);
@@ -362,10 +366,11 @@ const SectionTab = () => {
                     onDiscard={onDiscardChanges}
                     style={{
                         editorSection: {
-                            marginLeft: `${isEditing
-                                ? expandedSidebarWidth
-                                : retractedSidebarWidth
-                                }`,
+                            marginLeft: `${
+                                isEditing
+                                    ? expandedSidebarWidth
+                                    : retractedSidebarWidth
+                            }`,
                         },
                     }}
                 />
