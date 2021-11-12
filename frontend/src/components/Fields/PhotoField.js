@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
-import { update } from 'lodash';
 
 import prompt from '../../assets/camera-prompt-instructions-en.gif';
 import promptAR from '../../assets/camera-prompt-instructions-ar.gif'
@@ -38,12 +37,7 @@ const PhotoField = ({
         updateMetaDataPhotos(value);
     }, [value]);
 
-    useEffect(() => {
-        const constraints = { video: true };
-        getMedia(constraints);
-        navigator.permissions
-            .query({ name: 'camera' })
-            .then(function (permissionStatus) {
+    const setPermissionListener = (permissionStatus) => {
                 permissionStatus.onchange = 
                 function () {
                     if (this.state === 'denied') {
@@ -52,7 +46,15 @@ const PhotoField = ({
                         setPromptCameraAccess(false);
                     }
                 };
-            });
+            };
+
+    useEffect(async () => {
+        const constraints = { video: true };
+        getMedia(constraints);
+        const permissionStatus = await navigator.permissions
+            .query({ name: 'camera' });
+        setPermissionListener(permissionStatus);
+            
     }, []);
 
     const getMedia = async (constraints) => {
