@@ -69,11 +69,7 @@ const StepManagementContent = ({
                 <div className="reorder-buttons">
                     <div
                         onClick={() =>
-                            onUpPressed(
-                                stepMetadata.key,
-                                fieldRoot,
-                                fieldNumber,
-                            )
+                            onUpPressed(stepMetadata.key, fieldNumber)
                         }
                         className="up-button"
                     >
@@ -81,11 +77,7 @@ const StepManagementContent = ({
                     </div>
                     <div
                         onClick={() =>
-                            onDownPressed(
-                                stepMetadata.key,
-                                fieldRoot,
-                                fieldNumber,
-                            )
+                            onDownPressed(stepMetadata.key, fieldNumber)
                         }
                         className="down-button"
                     >
@@ -111,8 +103,16 @@ const StepManagementContent = ({
         if (!fields) return null;
 
         return fields.map((field) => {
+            if (field.isDeleted) return null; // don't render fields when they are marked as deleted
+
             return (
-                <div className="step-field-container">
+                <div
+                    className={
+                        field.isHidden
+                            ? 'hidden-step-field-container'
+                            : 'step-field-container'
+                    }
+                >
                     <div className="content">
                         <div className="info">
                             <div className="header">

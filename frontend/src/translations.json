@@ -17,6 +17,10 @@
             "login": {
                 "signOut": "Sign Out"
             },
+            "modal": {
+                "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
+            },
             "signature": {
                 "save": "Save",
                 "clear": "Clear",
@@ -156,7 +160,9 @@
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
-                        "addChoice": "Add Choice"
+                        "addChoice": "Add Choice",
+                        "cancel": "Cancel",
+                        "delete": "Delete"
                     },
                     "option": "Option",
                     "question": "Question",
@@ -201,6 +207,10 @@
         "components": {
             "login": {
                 "signOut": "خروج"
+            },
+            "modal": {
+                "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
             },
             "signature": {
                 "save": "يحفظ",
@@ -341,7 +351,9 @@
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
-                        "addChoice": "Add Choice"
+                        "addChoice": "Add Choice",
+                        "cancel": "Cancel",
+                        "delete": "Delete"
                     },
                     "option": "Option",
                     "question": "Question",
