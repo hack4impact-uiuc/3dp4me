@@ -72,7 +72,9 @@ router.put(
                 stepData = await updateStepsInTransaction(req, session);
             });
 
-            // Filter out fields that are hidden
+            // The step data will be sent in the response in order to
+            // update the frontend's step data. We are filtering out deleted fields
+            // since they should not be sent to the frontend.
             for (let i = 0; i < stepData.length; i++) {
                 const step = stepData[i];
                 for (let j = 0; j < step.fields.length; j++) {
@@ -101,7 +103,8 @@ router.delete(
         const { stepkey } = req.params;
         const step = await models.Step.deleteOne({ key: stepkey });
 
-        if (step.deletedCount === 0) await sendResponse(res, 404, 'Step not found');
+        if (step.deletedCount === 0)
+            await sendResponse(res, 404, 'Step not found');
         else await sendResponse(res, 201, 'Step deleted');
     }),
 );

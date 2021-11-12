@@ -20,6 +20,11 @@ import {
     verticalMovementWidth,
 } from '../../styles/variables.scss';
 import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
+import {
+    direction,
+    getValidAdjacentElement,
+    swapValuesInArrayByKey,
+} from '../../utils/dashboard-utils';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -81,40 +86,6 @@ const SectionTab = () => {
         setSelectedStep(stepKey);
     }
 
-    // Inclusive min and exclusive max
-    function checkBounds(min, max, num) {
-        return num >= min && num < max;
-    }
-
-    // Returns a non-deleted element before or after a given element based on index
-    function getPrevNextElement(arr, currIndex, change) {
-        let prevNextIndex = currIndex + change;
-
-        while (
-            checkBounds(0, arr.length, prevNextIndex) &&
-            arr[prevNextIndex].isDeleted
-        ) {
-            prevNextIndex += change;
-        }
-
-        if (prevNextIndex === -1 || prevNextIndex === arr.length) {
-            return -1;
-        }
-
-        return prevNextIndex;
-    }
-
-    // Swaps the value of two elements in an array given their indices and attribute key
-    function swapValuesInArrayByKey(arr, key, firstIndex, secondIndex) {
-        const arrCopy = _.cloneDeep(arr);
-
-        const temp = arrCopy[firstIndex][key];
-        arrCopy[firstIndex][key] = arrCopy[secondIndex][key];
-        arrCopy[secondIndex][key] = temp;
-
-        return arrCopy;
-    }
-
     /**
      * Moves a step up or down by changing its stepNumber
      * @param {String} stepKey
@@ -122,15 +93,13 @@ const SectionTab = () => {
      */
     function moveStep(stepKey, direction) {
         // Bad parameters
-        if (direction !== -1 && direction !== 1) return;
-
         let updatedMetadata = _.cloneDeep(stepMetadata);
 
         const currStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
 
         if (currStepIndex < 0) return;
 
-        const nextStepIndex = getPrevNextElement(
+        const nextStepIndex = getValidAdjacentElement(
             updatedMetadata[currStepIndex],
             currStepIndex,
             direction,
@@ -152,12 +121,12 @@ const SectionTab = () => {
 
     // Handles moving a step down
     function onDownPressed(stepKey) {
-        moveStep(stepKey, 1);
+        moveStep(stepKey, direction.DOWN);
     }
 
     // Handles moving a step up
     function onUpPressed(stepKey) {
-        moveStep(stepKey, -1);
+        moveStep(stepKey, direction.UP);
     }
 
     /**
@@ -167,9 +136,6 @@ const SectionTab = () => {
      * @param {Number} direction 1 indicates moving down (increasing fieldNumber), -1 indicates moving up (decreasing fieldNumber)
      */
     function moveField(stepKey, fieldNumber, direction) {
-        // Bad parameters
-        if (direction !== -1 && direction !== 1) return;
-
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
         const foundStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
@@ -181,7 +147,7 @@ const SectionTab = () => {
             fieldNumber,
         );
 
-        const prevFieldIndex = getPrevNextElement(
+        const prevFieldIndex = getValidAdjacentElement(
             updatedMetadata[foundStepIndex].fields,
             currFieldIndex,
             direction,
@@ -203,12 +169,12 @@ const SectionTab = () => {
 
     // Handles moving a field down
     function onCardDownPressed(stepKey, fieldNumber) {
-        moveField(stepKey, fieldNumber, 1);
+        moveField(stepKey, fieldNumber, direction.DOWN);
     }
 
     // Handles moving a field up
     function onCardUpPressed(stepKey, fieldNumber) {
-        moveField(stepKey, fieldNumber, -1);
+        moveField(stepKey, fieldNumber, direction.UP);
     }
 
     function GenerateStepManagementContent() {
@@ -337,7 +303,7 @@ const SectionTab = () => {
             return element.key === selectedStep;
         });
 
-        updatedNewField.fieldNumber = updatedMetadata[stepIndex].fields.length;
+        updatedNewField.fieldNumber = updatedMetadata[stepIndex].fields[updatedMetadata[stepIndex].fields.length - 1].fieldNumber + 1;
         updatedNewField.isDeleted = false;
         updatedNewField.isHidden = false;
         updatedMetadata[stepIndex].fields.push(updatedNewField);

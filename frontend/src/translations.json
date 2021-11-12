@@ -17,6 +17,10 @@
             "login": {
                 "signOut": "Sign Out"
             },
+            "modal": {
+                "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
+            },
             "signature": {
                 "save": "Save",
                 "clear": "Clear",
@@ -203,6 +207,10 @@
         "components": {
             "login": {
                 "signOut": "خروج"
+            },
+            "modal": {
+                "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
             },
             "signature": {
                 "save": "يحفظ",

@@ -304,8 +304,8 @@ const EditFieldModal = ({
 
     const onDelete = () => {
         swal({
-            title: 'Are you sure?',
-            text: 'Once deleted, you will not be able to see this field. However, it can be recovered in the database.',
+            title: translations.components.modal.deleteTitle,
+            text: translations.components.modal.deleteConfirmation,
             icon: 'warning',
             buttons: true,
             dangerMode: true,

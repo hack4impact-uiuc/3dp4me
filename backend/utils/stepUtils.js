@@ -12,9 +12,9 @@ const { generateKeyWithoutCollision } = require('./keyUtils');
 const stringToBoolean = (value) => {
     const trimmedValue = value.toString().trim().toLowerCase();
     return !(
-        trimmedValue === 'false'
-        || trimmedValue === '0'
-        || trimmedValue === ''
+        trimmedValue === 'false' ||
+        trimmedValue === '0' ||
+        trimmedValue === ''
     );
 };
 
@@ -88,6 +88,59 @@ module.exports.updateStepsInTransaction = async (req, session) => {
     await validateSteps(stepData, session);
     return stepData;
 };
+
+const updateFieldNumbers = (goodFields, deletedFields) => {
+    // We need to update the fieldNumber for each field in order to prevent duplicates.
+    // In order to do this, we iterate through the deletedFields and strippedBody fields.
+    // We store two pointers for both arrays, and we move them forward after updating the field
+    // number for the field that it is pointing at. The fields in deletedFields get priority,
+    // meaning they always keep the same field number.
+
+    const updatedFields = _.cloneDeep(goodFields);
+
+    let currFieldNumber = 0;
+    let deletedFieldPointer = 0;
+    let strippedFieldsPointer = 0;
+
+    const numTotalFields = deletedFields.length + updatedFields.length;
+
+    while (currFieldNumber < numTotalFields) {
+        if (
+            deletedFieldPointer < deletedFields.length &&
+            currFieldNumber === deletedFields[deletedFieldPointer].fieldNumber
+        ) {
+            deletedFieldPointer += 1; // Skip over since deleted fields have priority
+        } else {
+            updatedFields[strippedFieldsPointer].fieldNumber = currFieldNumber;
+            strippedFieldsPointer += 1;
+        }
+        currFieldNumber += 1; // Move onto the next field number to assign
+    }
+
+    return updatedFields;
+};
+
+const updateFieldKeys = (fields) => {
+    let clonedFields = _.cloneDeep(fields);
+
+    const currentFieldKeys = clonedFields.map((field) => field.key ?? '');
+
+    for (let i = 0; i < clonedFields.length; i++) {
+        const currentField = clonedFields[i];
+        const currentKey = currentField.key;
+        if (typeof currentKey === 'undefined' || currentKey === null) {
+            const generatedKey = generateKeyWithoutCollision(
+                currentField.displayName.EN,
+                currentFieldKeys,
+            );
+            currentField.key = generatedKey;
+            currentFieldKeys.push(generatedKey);
+        }
+    }
+
+    return clonedFields;
+};
+
 /* eslint-enable no-restricted-syntax, no-await-in-loop */
 
 const updateStepInTransation = async (stepBody, session) => {
@@ -101,7 +154,8 @@ const updateStepInTransation = async (stepBody, session) => {
     );
 
     // Abort if can't find step to edit
-    if (!stepToEdit) await abortAndError(session, `No step with key, ${stepKey}`);
+    if (!stepToEdit)
+        await abortAndError(session, `No step with key, ${stepKey}`);
 
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
@@ -118,35 +172,17 @@ const updateStepInTransation = async (stepBody, session) => {
     const numUnchangedFields = strippedBody.fields.length - addedFields.length;
 
     const currentNumFields = stepToEdit.fields.length - numDeletedFields;
-    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
+    if (numUnchangedFields < currentNumFields)
+        await abortAndError(session, 'Cannot delete fields');
 
     // Update the schema
     addFieldsToSchema(stepKey, addedFields);
 
-    // We need to update the fieldNumber for each field in order to prevent duplicates.
-    // In order to do this, we iterate through the deletedFields and strippedBody fields.
-    // We store two pointers for both arrays, and we move them forward after updating the field
-    // number for the field that it is pointing at. The fields in deletedFields get priority,
-    // meaning they always keep the same field number.
-
-    let currFieldNumber = 0;
-    let deletedFieldPointer = 0;
-    let strippedFieldsPointer = 0;
-
-    const numTotalFields = deletedFields.length + strippedBody.fields.length;
-
-    while (currFieldNumber < numTotalFields) {
-        if (
-            deletedFieldPointer < deletedFields.length
-            && currFieldNumber === deletedFields[deletedFieldPointer].fieldNumber
-        ) {
-            deletedFieldPointer += 1; // Skip over since deleted fields have priority
-        } else {
-            strippedBody.fields[strippedFieldsPointer].fieldNumber = currFieldNumber;
-            strippedFieldsPointer += 1;
-        }
-        currFieldNumber += 1; // Move onto the next field number to assign
-    }
+    // Update the field numbers in order to account for deleted fields
+    strippedBody.fields = updateFieldNumbers(
+        strippedBody.fields,
+        deletedFields,
+    );
 
     // Add deleted fields so they will be remain in the database.
     // They are added to the end in order to give easy access when
@@ -156,23 +192,7 @@ const updateStepInTransation = async (stepBody, session) => {
     }
 
     // Generate keys for the fields that do not have a key
-
-    const currentFieldKeys = strippedBody.fields.map(
-        (field) => field.key ?? '',
-    );
-
-    for (let i = 0; i < strippedBody.fields.length; i++) {
-        const currentField = strippedBody.fields[i];
-        const currentKey = currentField.key;
-        if (typeof currentKey === 'undefined' || currentKey === null) {
-            const generatedKey = generateKeyWithoutCollision(
-                currentField.displayName.EN,
-                currentFieldKeys,
-            );
-            currentField.key = generatedKey;
-            currentFieldKeys.push(generatedKey);
-        }
-    }
+    strippedBody.fields = updateFieldKeys(strippedBody.fields);
 
     // Finally, update the metadata for this step
     const step = await models.Step.findOne({ key: stepKey }).session(session);
