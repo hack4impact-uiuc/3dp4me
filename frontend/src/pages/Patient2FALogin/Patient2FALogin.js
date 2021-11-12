@@ -33,42 +33,62 @@ const Patient2FALogin = () => {
     return (
         <div className="wrapper login-body">
             <div className="centered">
-                
                 <div className="login-header">
                     <img src={Logo} alt="3DP4ME logo" />
                     <h3>{translations.patient2FA.patientLogin}</h3>
                 </div>
 
-                {!isTokenSent && <div>
-                    <h4 className="sub-header">{translations.patient2FA.patientID}</h4>
-                    <h5 className="details">{patientId}</h5>
+                {!isTokenSent && (
+                    <div>
+                        <h4 className="sub-header">
+                            {translations.patient2FA.patientID}
+                        </h4>
+                        <h5 className="details">{patientId}</h5>
 
-                    <button
-                        className="two-factor-authentication-button"
-                        type="submit"
-                        onClick={() => setIsTokenSent(true)}
-                    >
-                        {translations.patient2FA.sendCode}
-                    </button>
-                </div>}
-
-                {isTokenSent && <div >
-                    <h4 className="sub-header">{translations.patient2FA.patientID}</h4>
-                    <h5 className="details">{patientId}</h5>
-                    <h4 className="sub-header">{translations.patient2FA.twoFactorAuth}</h4>
-                    <h5 className="details">{translations.patient2FA.enterDigits}</h5>
-
-                    <div className="centered-token-content">
-                        <ReactCodeInput fields={6} inputStyle={inputStyle} />
-
-                        <button className="verification-button" type="submit">
-                            {translations.patient2FA.verify}
+                        <button
+                            className="two-factor-authentication-button"
+                            type="submit"
+                            onClick={() => setIsTokenSent(true)}
+                        >
+                            {translations.patient2FA.sendCode}
                         </button>
-                        <div className="new-token-link" onClick={() => setIsTokenSent(false)}>
-                            {translations.patient2FA.resendCode}
+                    </div>
+                )}
+
+                {isTokenSent && (
+                    <div>
+                        <h4 className="sub-header">
+                            {translations.patient2FA.patientID}
+                        </h4>
+                        <h5 className="details">{patientId}</h5>
+                        <h4 className="sub-header">
+                            {translations.patient2FA.twoFactorAuth}
+                        </h4>
+                        <h5 className="details">
+                            {translations.patient2FA.enterDigits}
+                        </h5>
+
+                        <div className="centered-token-content">
+                            <ReactCodeInput
+                                fields={6}
+                                inputStyle={inputStyle}
+                            />
+
+                            <button
+                                className="verification-button"
+                                type="submit"
+                            >
+                                {translations.patient2FA.verify}
+                            </button>
+                            <div
+                                className="new-token-link"
+                                onClick={() => setIsTokenSent(false)}
+                            >
+                                {translations.patient2FA.resendCode}
+                            </div>
                         </div>
                     </div>
-                </div>}
+                )}
             </div>
         </div>
     );
