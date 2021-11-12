@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import { getSelf } from './api/api';
@@ -14,7 +14,6 @@ import DashboardManagement from './pages/DashboardManagement/DashboardManagement
 import PatientDetail from './pages/PatientDetail/PatientDetail';
 import Patients from './pages/Patients/Patients';
 import Patient2FA from './pages/Patient2FALogin/Patient2FALogin';
-import Patient2FAVerification from './pages/Patient2FAVerification/Patient2FAVerification';
 import { Context } from './store/Store';
 import {
     COGNITO_ATTRIBUTES,
@@ -26,7 +25,6 @@ import {
 const AppContent = ({ username, userEmail }) => {
     const errorWrap = useErrorWrap();
     const [state, dispatch] = useContext(Context);
-    const [tokenSent, setTokenSent] = useState();
     const selectedLang = useTranslations()[1];
     const contentClassNames =
         selectedLang === LANGUAGES.AR ? 'flip content' : 'content';
@@ -104,11 +102,8 @@ const AppContent = ({ username, userEmail }) => {
                         <Route exact path={ROUTES.DASHBOARD_MANAGEMENT}>
                             <DashboardManagement />
                         </Route>
-                        <Route exact path={ROUTES.PATIENT_2FA}>
-                            {!tokenSent && (
-                                <Patient2FA setTokenSent={setTokenSent} />
-                            )}
-                            {tokenSent && <Patient2FAVerification />}
+                        <Route exact path={`${ROUTES.PATIENT_2FA}/:patientId`}>
+                            <Patient2FA />
                         </Route>
                         <Route
                             exact
