@@ -6,12 +6,13 @@ import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
 
 import 'react-image-gallery/styles/css/image-gallery.css';
-import promptAR from '../../assets/camera-prompt-instructions-ar.gif';
-import prompt from '../../assets/camera-prompt-instructions-en.gif';
+import promptInstructionsAR from '../../assets/camera-prompt-instructions-ar.gif';
+import promptInstructions from '../../assets/camera-prompt-instructions-en.gif';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
     LANGUAGES,
     NUMBER_OF_PHOTOS_FOR_BULLET_VIEW,
+    PERMISSION_CONSTRAINTS
 } from '../../utils/constants';
 import {
     blobToDataURL,
@@ -32,7 +33,7 @@ const PhotoField = ({
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
-    const [promptCameraAccess, setPromptCameraAccess] = useState(false); // change to true after the feature works
+    const [promptCameraAccess, setPromptCameraAccess] = useState(false);
     const [dataUri, setUri] = useState('');
     const [translations, selectedLang] = useTranslations();
 
@@ -53,8 +54,7 @@ const PhotoField = ({
     };
 
     useEffect(async () => {
-        const constraints = { video: true };
-        getMedia(constraints);
+        getMedia(PERMISSION_CONSTRAINTS);
         const permissionStatus = await navigator.permissions.query({
             name: 'camera',
         });
@@ -194,7 +194,7 @@ const PhotoField = ({
                 <>
                     <h1>{translations.components.camera.promptInstructions}</h1>
                     <img
-                        src={selectedLang === LANGUAGES.EN ? prompt : promptAR}
+                        src={selectedLang === LANGUAGES.EN ? promptInstructions : promptInstructionsAR}
                         alt="instructions"
                     />
                 </>
