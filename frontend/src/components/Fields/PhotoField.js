@@ -5,18 +5,19 @@ import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
 
-import prompt from '../../assets/camera-prompt-instructions-en.gif';
-import promptAR from '../../assets/camera-prompt-instructions-ar.gif'
 import 'react-image-gallery/styles/css/image-gallery.css';
+import promptAR from '../../assets/camera-prompt-instructions-ar.gif';
+import prompt from '../../assets/camera-prompt-instructions-en.gif';
 import { useTranslations } from '../../hooks/useTranslations';
-import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW ,LANGUAGES} from '../../utils/constants';
+import { LANGUAGES, NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
 import {
     blobToDataURL,
     convertPhotosToURI,
-    dataURItoBlob,
+    dataURItoBlob
 } from '../../utils/photoManipulation';
 import { StyledButton } from '../StyledButton/StyledButton';
 import './PhotoField.scss';
+
 
 const PhotoField = ({
     value,
@@ -37,16 +38,18 @@ const PhotoField = ({
         updateMetaDataPhotos(value);
     }, [value]);
 
+    // Must disable these for the permission listener to work
+    /* eslint no-param-reassign: "off", react/no-this-in-sfc: "off" */
     const setPermissionListener = (permissionStatus) => {
-                permissionStatus.onchange = 
-                function () {
-                    if (this.state === 'denied') {
-                        setPromptCameraAccess(true);
-                    } else {
-                        setPromptCameraAccess(false);
-                    }
-                };
+        permissionStatus.onchange = 
+            function () {
+                if (this.state === 'denied') {
+                    setPromptCameraAccess(true);
+                } else {
+                    setPromptCameraAccess(false);
+                }
             };
+    };
 
     useEffect(async () => {
         const constraints = { video: true };
