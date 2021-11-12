@@ -114,7 +114,6 @@ export const defaultTableHeaderRenderer = (
  * at the end that links to patient data
  */
 export const patientTableRowRenderer = (rowData, patient, selectedLang) => {
-    // console.log(patient);
     // Construct the base row
     const row = defaultTableRowRenderer(rowData, patient, selectedLang);
 

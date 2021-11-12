@@ -26,7 +26,6 @@ const PatientTable = ({
     headers,
     rowData,
 }) => {
-    console.log(patients);
     const errorWrap = useErrorWrap();
     const translations = useTranslations()[0];
     const [isCreatePatientModalOpen, setCreatePatientModalOpen] =
@@ -66,7 +65,7 @@ const PatientTable = ({
         const currentRoute = window.location.href;
         let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}?stepKey=${patients[0]?.stepKey}`;
 
-        // Remove doulbe '/'
+        // Remove double '/'
         if (
             relativeRoute[0] === '/' &&
             currentRoute[currentRoute.length - 1] === '/'
@@ -74,7 +73,6 @@ const PatientTable = ({
             relativeRoute = relativeRoute.substr(1, relativeRoute.length - 1);
 
         if (patientId) window.location.href = currentRoute + relativeRoute;
-
     };
 
     /**

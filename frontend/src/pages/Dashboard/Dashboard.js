@@ -43,11 +43,11 @@ const Dashboard = () => {
     const [patientsCount, setPatientsCount] = useState(0);
 
     const addStepKeyToPatients = (step) => {
-        console.log("here");
         setPatients((initPatients) =>
-        initPatients.map((patient) => ({...patient, stepKey: step})));
+            initPatients.map((patient) => ({ ...patient, stepKey: step })),
+        );
         // patients.forEach((patient) => {patient.stepKey = step;})
-    }
+    };
 
     /**
      * Gets patient data based on page number and step
@@ -73,14 +73,11 @@ const Dashboard = () => {
         const loadMetadataAndPatientData = async () => {
             const res = await getAllStepsMetadata(false);
 
-            // HERE iterate through 
-
             const metaData = sortMetadata(res.result);
             setStepsMetaData(metaData);
             if (metaData.length > 0) {
                 setSelectedStep(metaData[0].key);
                 await loadPatientData(metaData[0].key, selectedPageNumber);
-                // addStepKeyToPatients(metaData[0].key);
             } else {
                 throw new Error(translations.errors.noMetadata);
             }
@@ -96,7 +93,6 @@ const Dashboard = () => {
         };
 
         loadAllDashboardData();
-
     }, [
         setSelectedStep,
         selectedPageNumber,
@@ -119,7 +115,6 @@ const Dashboard = () => {
      * and refetches patient data for this step
      */
     const onStepSelected = async (stepKey) => {
-
         if (!stepKey) return;
 
         // TODO: Put the patient data in a store
@@ -129,8 +124,6 @@ const Dashboard = () => {
         errorWrap(async () => {
             await loadPatientData(stepKey, selectedPageNumber);
         });
-        // addStepKeyToPatients(stepKey);
-        console.log(patients);
     };
 
     const onPageNumberChanged = async (newPageNumber) => {
@@ -141,7 +134,6 @@ const Dashboard = () => {
         errorWrap(async () => {
             await loadPatientData(selectedStep, newPageNumber);
             addStepKeyToPatients(selectedStep);
-
         });
     };
 
@@ -220,7 +212,6 @@ const Dashboard = () => {
 
         return stepsMetaData.map((element) => {
             if (selectedStep !== element.key) return null;
-            console.log(patients);
 
             return (
                 <PatientTable

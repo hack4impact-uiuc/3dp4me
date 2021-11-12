@@ -21,7 +21,6 @@ import { LANGUAGES } from '../../utils/constants';
 import { sortMetadata } from '../../utils/utils';
 import './PatientDetail.scss';
 
-
 /**
  * The detail view for a patient. Shows their information
  * for each step.
@@ -39,8 +38,6 @@ const PatientDetail = () => {
         useState(false);
     const initStepKey = useQueryParam('stepKey', StringParam)[0];
     const [stepKeyParam, setStepKey] = useState(initStepKey);
-    console.log(initStepKey);
-
 
     /**
      * Fetch metadata for all steps and the patient's data.
@@ -59,7 +56,7 @@ const PatientDetail = () => {
 
                 // Sort it
                 metaData = sortMetadata(metaData);
-                
+
                 setSelectedStep(stepKeyParam);
 
                 setStepMetaData(metaData);
@@ -126,7 +123,6 @@ const PatientDetail = () => {
         if (newStep === null) return;
         setSelectedStep(newStep);
         window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
-
     };
 
     /**
