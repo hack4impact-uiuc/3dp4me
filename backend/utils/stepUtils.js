@@ -30,22 +30,6 @@ module.exports.getReadableSteps = async (req) => {
         },
     ]; // don't return any deleted fields
 
-    // If not admin, then return limit what steps/fields can be returned using readableGroups
-    if (!isAdmin(req.user)) {
-        aggregation.push({
-            $match: { $expr: { $in: [userRole, '$readableGroups'] } }, // limit returning steps that don't contain the user role
-        });
-        searchParams.push({
-            $in: [userRole, '$$field.readableGroups'], // limit returning fields that don't contain the user role
-        });
-    }
-
-    if (!showHiddenFields) {
-        searchParams.push({
-            $or: [{ $ne: ['$$field.isHidden', true] }],
-        }); // limit returning fields that are hidden
-    }
-
     const aggregation = [
         {
             $addFields: {
@@ -61,6 +45,22 @@ module.exports.getReadableSteps = async (req) => {
             },
         },
     ];
+
+    // If not admin, then return limit what steps/fields can be returned using readableGroups
+    if (!isAdmin(req.user)) {
+        aggregation.push({
+            $match: { $expr: { $in: [userRole, '$readableGroups'] } }, // limit returning steps that don't contain the user role
+        });
+        searchParams.push({
+            $in: [userRole, '$$field.readableGroups'], // limit returning fields that don't contain the user role
+        });
+    }
+
+    if (!showHiddenFields) {
+        searchParams.push({
+            $or: [{ $ne: ['$$field.isHidden', true] }],
+        }); // limit returning fields that are hidden
+    }
 
     const data = await models.Step.aggregate(aggregation);
 
