@@ -63,7 +63,6 @@ const updateStepInTransaction = async (stepBody, session) => {
 
     // Add a step if can't find step to edit
     if (!stepToEdit) {
-        // await abortAndError(session, `No step with key, ${stepKey}`);
         const newStep = new models.Step(stepBody);
 
         await newStep.save({ session });
