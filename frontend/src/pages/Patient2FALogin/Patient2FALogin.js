@@ -23,9 +23,9 @@ const Patient2FALogin = () => {
         margin: '4px',
         paddingLeft: '6px',
         paddingRight: 0,
-        width: '30px',
-        height: '45px',
-        fontSize: '32px',
+        width: '0.95em',
+        height: '1.5em',
+        fontSize: '2.2em',
         boxSizing: 'border-box',
         backgroundColor: '#DEDFFB',
     };
