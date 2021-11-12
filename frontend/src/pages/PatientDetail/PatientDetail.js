@@ -50,7 +50,7 @@ const PatientDetail = () => {
         const getData = async () => {
             errorWrap(async () => {
                 // Step metadata
-                let res = await getAllStepsMetadata();
+                let res = await getAllStepsMetadata(false);
                 let metaData = res.result;
 
                 // Patient data

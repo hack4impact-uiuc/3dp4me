@@ -71,7 +71,7 @@ const Dashboard = () => {
          * Gets metadata for all steps, only called once
          */
         const loadMetadataAndPatientData = async () => {
-            const res = await getAllStepsMetadata();
+            const res = await getAllStepsMetadata(false);
 
             // HERE iterate through 
 

@@ -22,7 +22,9 @@
                 },
                 "fieldNumber": "0",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "String",
@@ -36,7 +38,9 @@
                 },
                 "fieldNumber": "1",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Phone",
@@ -50,7 +54,9 @@
                 },
                 "fieldNumber": "2",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Phone",
@@ -64,7 +70,9 @@
                 },
                 "fieldNumber": "3",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Number",
@@ -78,7 +86,9 @@
                 },
                 "fieldNumber": "4",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "RadioButton",
@@ -92,6 +102,8 @@
                     "EN": "Gender",
                     "AR": "جنس تذكير أو تأنيث"
                 },
+                "isHidden": false,
+                "isDeleted": false,
                 "options": [
                     {
                         "IsHidden": false,
@@ -137,7 +149,9 @@
                 },
                 "fieldNumber": "6",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Number",
@@ -151,7 +165,9 @@
                 },
                 "fieldNumber": "7",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             }
         ],
         "__v": "0"
@@ -179,7 +195,9 @@
                 },
                 "fieldNumber": "0",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "RadioButton",
@@ -193,6 +211,8 @@
                     "EN": "Household Income Range",
                     "AR": "نطاق دخل الأسرة"
                 },
+                "isHidden": false,
+                "isDeleted": false,
                 "options": [
                     {
                         "IsHidden": false,
@@ -268,7 +288,9 @@
                 },
                 "fieldNumber": "2",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Number",
@@ -282,7 +304,9 @@
                 },
                 "fieldNumber": "3",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "RadioButton",
@@ -296,6 +320,8 @@
                     "EN": "Type of Insurance",
                     "AR": "نوع التأمين"
                 },
+                "isHidden": false,
+                "isDeleted": false,
                 "options": [
                     {
                         "IsHidden": false,
@@ -341,7 +367,9 @@
                 },
                 "fieldNumber": "5",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Number",
@@ -355,7 +383,9 @@
                 },
                 "fieldNumber": "6",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             }
         ],
         "__v": "0"
@@ -386,7 +416,9 @@
                 },
                 "fieldNumber": "0",
                 "isVisibleOnDashboard": true,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "RadioButton",
@@ -400,6 +432,8 @@
                     "EN": "Radio Button",
                     "AR": "نطاق دخل الأسرة"
                 },
+                "isHidden": false,
+                "isDeleted": false,
                 "options": [
                     {
                         "IsHidden": false,
@@ -435,7 +469,9 @@
                 },
                 "fieldNumber": "2",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "File",
@@ -449,7 +485,9 @@
                 },
                 "fieldNumber": "3",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Number",
@@ -463,7 +501,9 @@
                     "EN": "Number Field",
                     "AR": "نوع التأمين"
                 },
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Date",
@@ -477,7 +517,9 @@
                 },
                 "fieldNumber": "5",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Phone",
@@ -491,7 +533,9 @@
                 },
                 "fieldNumber": "6",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Divider",
@@ -505,7 +549,9 @@
                 },
                 "fieldNumber": "7",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             },
             {
                 "fieldType": "Audio",
@@ -519,7 +565,9 @@
                 },
                 "fieldNumber": "8",
                 "isVisibleOnDashboard": false,
-                "options": []
+                "options": [],
+                "isHidden": false,
+                "isDeleted": false
             }
         ],
         "__v": "0"
