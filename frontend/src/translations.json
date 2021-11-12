@@ -82,7 +82,7 @@
                 "add": "Add"
             },
             "camera": {
-                "promptInstructions":"Please allow camera access following the steps below"
+                "promptInstructions": "Please allow camera access following the steps below"
             },
             "button": {
                 "createPatient": "Create Patient",

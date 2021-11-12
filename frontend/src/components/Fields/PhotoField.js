@@ -9,15 +9,17 @@ import 'react-image-gallery/styles/css/image-gallery.css';
 import promptAR from '../../assets/camera-prompt-instructions-ar.gif';
 import prompt from '../../assets/camera-prompt-instructions-en.gif';
 import { useTranslations } from '../../hooks/useTranslations';
-import { LANGUAGES, NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
+import {
+    LANGUAGES,
+    NUMBER_OF_PHOTOS_FOR_BULLET_VIEW,
+} from '../../utils/constants';
 import {
     blobToDataURL,
     convertPhotosToURI,
-    dataURItoBlob
+    dataURItoBlob,
 } from '../../utils/photoManipulation';
 import { StyledButton } from '../StyledButton/StyledButton';
 import './PhotoField.scss';
-
 
 const PhotoField = ({
     value,
@@ -41,23 +43,22 @@ const PhotoField = ({
     // Must disable these for the permission listener to work
     /* eslint no-param-reassign: "off", react/no-this-in-sfc: "off" */
     const setPermissionListener = (permissionStatus) => {
-        permissionStatus.onchange = 
-            function () {
-                if (this.state === 'denied') {
-                    setPromptCameraAccess(true);
-                } else {
-                    setPromptCameraAccess(false);
-                }
-            };
+        permissionStatus.onchange = function () {
+            if (this.state === 'denied') {
+                setPromptCameraAccess(true);
+            } else {
+                setPromptCameraAccess(false);
+            }
+        };
     };
 
     useEffect(async () => {
         const constraints = { video: true };
         getMedia(constraints);
-        const permissionStatus = await navigator.permissions
-            .query({ name: 'camera' });
+        const permissionStatus = await navigator.permissions.query({
+            name: 'camera',
+        });
         setPermissionListener(permissionStatus);
-            
     }, []);
 
     const getMedia = async (constraints) => {
@@ -67,9 +68,7 @@ const PhotoField = ({
         } catch (err) {
             setPromptCameraAccess(true);
         }
-    }
-
-    
+    };
 
     const updateMetaDataPhotos = async (data) => {
         const newPhotoData = await convertPhotosToURI(
@@ -194,15 +193,20 @@ const PhotoField = ({
             return (
                 <>
                     <h1>{translations.components.camera.promptInstructions}</h1>
-                    <img src={selectedLang === LANGUAGES.EN ? prompt : promptAR} alt="instructions" />
-                </> 
-            ); 
-        } 
-            return <> 
-            {renderPhotoModal()}
-            {renderImagePreviewButtons()}
+                    <img
+                        src={selectedLang === LANGUAGES.EN ? prompt : promptAR}
+                        alt="instructions"
+                    />
+                </>
+            );
+        }
+        return (
+            <>
+                {renderPhotoModal()}
+                {renderImagePreviewButtons()}
             </>
-    }
+        );
+    };
 
     return (
         <div>
@@ -216,10 +220,7 @@ const PhotoField = ({
                 onClose={handleOnClose}
                 className="take-photo-modal"
             >
-                
-                    <div className="take-photo-modal-wrapper">
-                        {renderCamera()}
-                    </div>
+                <div className="take-photo-modal-wrapper">{renderCamera()}</div>
             </Modal>
             {renderImageGallery()}
         </div>
