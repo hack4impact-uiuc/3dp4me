@@ -12,7 +12,7 @@ import { useTranslations } from '../../hooks/useTranslations';
 import {
     LANGUAGES,
     NUMBER_OF_PHOTOS_FOR_BULLET_VIEW,
-    PERMISSION_CONSTRAINTS
+    PERMISSION_CONSTRAINTS,
 } from '../../utils/constants';
 import {
     blobToDataURL,
@@ -194,7 +194,11 @@ const PhotoField = ({
                 <>
                     <h1>{translations.components.camera.promptInstructions}</h1>
                     <img
-                        src={selectedLang === LANGUAGES.EN ? promptInstructions : promptInstructionsAR}
+                        src={
+                            selectedLang === LANGUAGES.EN
+                                ? promptInstructions
+                                : promptInstructionsAR
+                        }
                         alt="instructions"
                     />
                 </>
