@@ -145,6 +145,8 @@ const CreateFieldModal = ({
             case FIELD_TYPES.NUMBER:
             case FIELD_TYPES.FILE:
             case FIELD_TYPES.AUDIO:
+            case FIELD_TYPES.MAP:
+            case FIELD_TYPES.PHOTO:
                 return (
                     <div className="create-field-div">
                         <span>
