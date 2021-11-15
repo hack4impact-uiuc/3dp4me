@@ -46,7 +46,6 @@ const Dashboard = () => {
         setPatients((initPatients) =>
             initPatients.map((patient) => ({ ...patient, stepKey: step })),
         );
-        // patients.forEach((patient) => {patient.stepKey = step;})
     };
 
     /**

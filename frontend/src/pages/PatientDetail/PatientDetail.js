@@ -36,8 +36,7 @@ const PatientDetail = () => {
     const [patientData, setPatientData] = useState(null);
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
-    const initStepKey = useQueryParam('stepKey', StringParam)[0];
-    const [stepKeyParam, setStepKey] = useState(initStepKey);
+    const stepKeyParam = useQueryParam('stepKey', StringParam)[0];
 
     /**
      * Fetch metadata for all steps and the patient's data.
@@ -67,10 +66,6 @@ const PatientDetail = () => {
 
         getData();
     }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId]);
-
-    useEffect(() => {
-        setStepKey(initStepKey);
-    }, [initStepKey]);
 
     /**
      * Called when the patient data for a step is saved
