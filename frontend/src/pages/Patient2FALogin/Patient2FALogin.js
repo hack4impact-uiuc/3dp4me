@@ -34,20 +34,20 @@ const Patient2FALogin = () => {
         if (!isTokenSent) {
             return (
                 <div>
-                        <h4 className="sub-header">
-                            {translations.patient2FA.patientID}
-                        </h4>
-                        <h5 className="details">{patientId}</h5>
+                    <h4 className="sub-header">
+                        {translations.patient2FA.patientID}
+                    </h4>
+                    <h5 className="details">{patientId}</h5>
 
-                        <button
-                            className="two-factor-authentication-button"
-                            type="submit"
-                            onClick={() => setIsTokenSent(true)}
-                        >
-                            {translations.patient2FA.sendCode}
-                        </button>
-                    </div>
-            )
+                    <button
+                        className="two-factor-authentication-button"
+                        type="submit"
+                        onClick={() => setIsTokenSent(true)}
+                    >
+                        {translations.patient2FA.sendCode}
+                    </button>
+                </div>
+            );
         }
 
         return (
@@ -66,19 +66,19 @@ const Patient2FALogin = () => {
                 <div className="centered-token-content">
                     <ReactCodeInput fields={6} inputStyle={inputStyle} />
 
-                    <button
-                        className="verification-button"
-                        type="submit"
-                    >
+                    <button className="verification-button" type="submit">
                         {translations.patient2FA.verify}
                     </button>
-                <div className="new-token-link" onClick={() => setIsTokenSent(false)} >
+                    <div
+                        className="new-token-link"
+                        onClick={() => setIsTokenSent(false)}
+                    >
                         {translations.patient2FA.resendCode}
                     </div>
                 </div>
             </div>
-        )
-    }
+        );
+    };
 
     return (
         <div className="wrapper login-body">
@@ -87,7 +87,7 @@ const Patient2FALogin = () => {
                     <img src={Logo} alt="3DP4ME logo" />
                     <h3>{translations.patient2FA.patientLogin}</h3>
                 </div>
-                    {displayAuthPage()}
+                {displayAuthPage()}
             </div>
         </div>
     );
