@@ -30,16 +30,10 @@ const Patient2FALogin = () => {
         backgroundColor: '#DEDFFB',
     };
 
-    return (
-        <div className="wrapper login-body">
-            <div className="centered">
-                <div className="login-header">
-                    <img src={Logo} alt="3DP4ME logo" />
-                    <h3>{translations.patient2FA.patientLogin}</h3>
-                </div>
-
-                {!isTokenSent && (
-                    <div>
+    const displayAuthPage = () => {
+        if (!isTokenSent) {
+            return (
+                <div>
                         <h4 className="sub-header">
                             {translations.patient2FA.patientID}
                         </h4>
@@ -53,42 +47,47 @@ const Patient2FALogin = () => {
                             {translations.patient2FA.sendCode}
                         </button>
                     </div>
-                )}
+            )
+        }
 
-                {isTokenSent && (
-                    <div>
-                        <h4 className="sub-header">
-                            {translations.patient2FA.patientID}
-                        </h4>
-                        <h5 className="details">{patientId}</h5>
-                        <h4 className="sub-header">
-                            {translations.patient2FA.twoFactorAuth}
-                        </h4>
-                        <h5 className="details">
-                            {translations.patient2FA.enterDigits}
-                        </h5>
+        return (
+            <div>
+                <h4 className="sub-header">
+                    {translations.patient2FA.patientID}
+                </h4>
+                <h5 className="details">{patientId}</h5>
+                <h4 className="sub-header">
+                    {translations.patient2FA.twoFactorAuth}
+                </h4>
+                <h5 className="details">
+                    {translations.patient2FA.enterDigits}
+                </h5>
 
-                        <div className="centered-token-content">
-                            <ReactCodeInput
-                                fields={6}
-                                inputStyle={inputStyle}
-                            />
+                <div className="centered-token-content">
+                    <ReactCodeInput fields={6} inputStyle={inputStyle} />
 
-                            <button
-                                className="verification-button"
-                                type="submit"
-                            >
-                                {translations.patient2FA.verify}
-                            </button>
-                            <div
-                                className="new-token-link"
-                                onClick={() => setIsTokenSent(false)}
-                            >
-                                {translations.patient2FA.resendCode}
-                            </div>
-                        </div>
+                    <button
+                        className="verification-button"
+                        type="submit"
+                    >
+                        {translations.patient2FA.verify}
+                    </button>
+                <div className="new-token-link" onClick={() => setIsTokenSent(false)} >
+                        {translations.patient2FA.resendCode}
                     </div>
-                )}
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className="wrapper login-body">
+            <div className="centered">
+                <div className="login-header">
+                    <img src={Logo} alt="3DP4ME logo" />
+                    <h3>{translations.patient2FA.patientLogin}</h3>
+                </div>
+                    {displayAuthPage()}
             </div>
         </div>
     );
