@@ -1,69 +1,58 @@
 @import '../../styles/colors.scss';
 
-.controller-manage-patient-wrapper {
-    text-align: left;
-    background-color: white;
+.manage-patient-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    &.controller-manage-patient-wrapper-ar {
-        text-align: right;
-    }
+    .controller-manage-patient-wrapper {
+        background-color: white;
+        border-radius: 5px;
+        padding: 30px;
+        width: 80%;
 
-    .manage-patient-header {
-        height: 30px;
-        margin-bottom: 30px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .profile-information-wrapper {
-        margin-bottom: 30px;
-    }
-
-    .profile-management-wrapper {
-        margin-bottom: 30px;
-    }
-
-    .manage-patient-delete {
-        width: fit-content;
-        margin-bottom: 30px;
-        padding: 12px;
-        color: red;
-        border: solid;
-        border-radius: 4px;
-        p {
-            margin: 0;
+        .text-field {
+            margin-bottom: 20px;
         }
 
-        &.manage-patient-delete-ar {
-            margin-left: auto;
+        &.controller-manage-patient-wrapper-ar {
+            text-align: right;
         }
 
-        .manage-patient-delete-button {
-            background-color: red;
-            color: white;
-            padding: 10px 30px;
-            margin-top: 8px;
+        .manage-patient-header {
+            height: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
         }
-    }
 
-    .manage-patient-footer {
-        display: flex;
-        justify-content: flex-end;
-        .manage-patient-save-button {
-            background-color: $button;
-            color: white;
-            padding: 0 24px 0 24px;
-            height: 38px;
-            width: auto;
-            font-size: 12px;
-            font-weight: bold;
-            transition: all 0.2s;
-            border-radius: 2px;
-            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
-            &:hover {
-                background-color: $buttonHighlight;
+        .profile-information-wrapper {
+            margin-bottom: 30px;
+        }
+
+        .profile-management-wrapper {
+            margin-bottom: 30px;
+        }
+
+        .manage-patient-footer {
+            display: flex;
+            justify-content: flex-end;
+            .manage-patient-save-button {
+                background-color: $button;
+                color: white;
+                padding: 0 24px 0 24px;
+                height: 38px;
+                width: auto;
+                font-size: 12px;
+                font-weight: bold;
+                transition: all 0.2s;
+                border-radius: 2px;
+                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+                &:hover {
+                    background-color: $buttonHighlight;
+                }
             }
         }
     }

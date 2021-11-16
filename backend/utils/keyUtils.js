@@ -1,10 +1,9 @@
-import { camelCase } from 'lodash';
+const _ = require('lodash');
 
 /* Returns a string of specified length composed of random alphanumeric characters */
 const randomAlphanumeric = (length) => {
     let result = '';
-    const characters =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
         result += characters.charAt(
@@ -20,7 +19,7 @@ const generateKeyWithCamelCase = (input) => {
         return randomAlphanumeric(10);
     }
 
-    return camelCase(input);
+    return _.camelCase(input);
 };
 
 const checkKeyCollision = (newKey, otherKeys) => {
@@ -30,7 +29,7 @@ const checkKeyCollision = (newKey, otherKeys) => {
     return false;
 };
 
-export const generateKeyWithoutCollision = (input, otherKeys) => {
+module.exports.generateKeyWithoutCollision = (input, otherKeys) => {
     const newKey = generateKeyWithCamelCase(input);
 
     let keySuffix = 1;

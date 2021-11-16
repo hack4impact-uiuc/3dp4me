@@ -22,9 +22,18 @@
             "roles": "Roles",
             "access": "Access"
         },
+        "status": {
+            "active": "Active",
+            "feedback": "Feedback",
+            "archive": "Archive"
+        },
         "components": {
             "login": {
                 "signOut": "Sign Out"
+            },
+            "modal": {
+                "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
             },
             "signature": {
                 "save": "Save",
@@ -142,6 +151,7 @@
                 },
                 "managePatient": {
                     "title": "Manage Patient",
+                    "radioTitle": "Patient Status",
                     "firstName": "First Name",
                     "fatherName": "Father Name",
                     "grandfatherName": "Grandfather Name",
@@ -165,7 +175,9 @@
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
-                        "addChoice": "Add Choice"
+                        "addChoice": "Add Choice",
+                        "cancel": "Cancel",
+                        "delete": "Delete"
                     },
                     "option": "Option",
                     "question": "Question",
@@ -206,6 +218,11 @@
         "errors": {
             "noMetadata": "لا يُسمح لك بمشاهدة أي خطوات. اتصل بالمسؤول لمنحك الأدوار المناسبة."
         },
+        "status": {
+            "active": "نشيط",
+            "feedback": "استجابة",
+            "archive": "أرشيف"
+        },
         "tableHeaders": {
             "firstName": "الاسم الاول",
             "familyName": "اسم العائلة",
@@ -219,6 +236,10 @@
         "components": {
             "login": {
                 "signOut": "خروج"
+            },
+            "modal": {
+                "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
             },
             "signature": {
                 "save": "يحفظ",
@@ -336,6 +357,7 @@
                 },
                 "managePatient": {
                     "title": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0631\u064a\u0636",
+                    "radioTitle": "حالة المريض",
                     "firstName": "الاسم الأول",
                     "fatherName": "اسم الأب",
                     "grandfatherName": "اسم جده",
@@ -359,7 +381,9 @@
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
-                        "addChoice": "Add Choice"
+                        "addChoice": "Add Choice",
+                        "cancel": "Cancel",
+                        "delete": "Delete"
                     },
                     "option": "Option",
                     "question": "Question",

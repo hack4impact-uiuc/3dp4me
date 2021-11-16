@@ -8,7 +8,6 @@ import {
     withStyles,
     InputBase,
     FormControl,
-    InputLabel,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -146,6 +145,8 @@ const CreateFieldModal = ({
             case FIELD_TYPES.NUMBER:
             case FIELD_TYPES.FILE:
             case FIELD_TYPES.AUDIO:
+            case FIELD_TYPES.MAP:
+            case FIELD_TYPES.PHOTO:
                 return (
                     <div className="create-field-div">
                         <span>
@@ -261,7 +262,7 @@ const CreateFieldModal = ({
     };
 
     const clearState = () => {
-        setSelectedRoles([]);
+        setSelectedRoles([ADMIN_ID]);
         setIsVisibleOnDashboard(false);
         setDisplayName({ EN: '', AR: '' });
         setOptions([]);
@@ -287,11 +288,11 @@ const CreateFieldModal = ({
                     {translations.components.swal.field.fieldSettings}
                 </span>
                 <div className="create-field-title3">
-                    <div style={{ padding: 10 }}>
+                    <div>
                         <FormControl>
-                            <InputLabel htmlFor="create-field-type-dropdown">
+                            <span htmlFor="create-field-type-dropdown">
                                 {translations.components.swal.field.fieldType}
-                            </InputLabel>
+                            </span>
                             <NativeSelect
                                 id="create-field-type-dropdown"
                                 onChange={handleFieldTypeSelect}
@@ -305,7 +306,7 @@ const CreateFieldModal = ({
                             </NativeSelect>
                         </FormControl>
                     </div>
-                    <div style={{ padding: 10 }}>
+                    <div>
                         <MultiSelectField
                             title={translations.components.swal.field.clearance}
                             langKey={selectedLang}
@@ -319,7 +320,7 @@ const CreateFieldModal = ({
                     <span>
                         {translations.components.swal.field.customization}
                     </span>
-                    <div style={{ padding: 10 }}>
+                    <div>
                         <Checkbox
                             size="medium"
                             checked={isVisibleOnDashboard}
@@ -336,7 +337,6 @@ const CreateFieldModal = ({
                 {generateFields()}
                 <div
                     style={{
-                        display: 'flex',
                         float: 'right',
                         paddingBottom: '10px',
                     }}
@@ -351,7 +351,7 @@ const CreateFieldModal = ({
                         onClick={onDiscard}
                         className="discard-field-button"
                     >
-                        {translations.components.swal.field.buttons.discard}
+                        {translations.components.swal.field.buttons.cancel}
                     </Button>
                 </div>
             </div>
