@@ -72,6 +72,19 @@ router.put(
                 stepData = await updateStepsInTransaction(req, session);
             });
 
+            // The step data will be sent in the response in order to
+            // update the frontend's step data. We are filtering out deleted fields
+            // since they should not be sent to the frontend.
+            for (let i = 0; i < stepData.length; i++) {
+                const step = stepData[i];
+                for (let j = 0; j < step.fields.length; j++) {
+                    if (step.fields[j].isDeleted) {
+                        step.fields.splice(j, 1);
+                        j -= 1;
+                    }
+                }
+            }
+
             await sendResponse(res, 200, 'Step(s) edited', stepData);
         } catch (error) {
             log.error(error);

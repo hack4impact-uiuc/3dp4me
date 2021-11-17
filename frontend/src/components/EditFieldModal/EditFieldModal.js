@@ -8,12 +8,14 @@ import {
     withStyles,
     InputBase,
     FormControl,
-    InputLabel,
+    FormControlLabel,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import swal from 'sweetalert';
 
 import MultiSelectField from '../Fields/MultiSelectField';
+import CustomSwitch from '../CustomSwitch/CustomSwitch';
 import { FIELD_TYPES, ADMIN_ID } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -33,6 +35,7 @@ const EditFieldModal = ({
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
     const [options, setOptions] = useState([]);
+    const [isHidden, setIsHidden] = useState(false);
 
     const errorWrap = useErrorWrap();
 
@@ -40,6 +43,7 @@ const EditFieldModal = ({
         setFieldType(initialData.fieldType);
         setIsVisibleOnDashboard(initialData.isVisibleOnDashboard);
         setDisplayName(initialData.displayName);
+        setIsHidden(initialData.isHidden);
 
         const initialRoles = initialData.readableGroups;
 
@@ -88,10 +92,6 @@ const EditFieldModal = ({
 
     const onRolesChange = (id, roles) => {
         setSelectedRoles(roles);
-    };
-
-    const handleFieldTypeSelect = (e) => {
-        setFieldType(e.target.value);
     };
 
     const addOption = () => {
@@ -168,6 +168,8 @@ const EditFieldModal = ({
             case FIELD_TYPES.NUMBER:
             case FIELD_TYPES.FILE:
             case FIELD_TYPES.AUDIO:
+            case FIELD_TYPES.MAP:
+            case FIELD_TYPES.PHOTO:
                 return (
                     <div className="edit-field-div">
                         <span>
@@ -251,7 +253,7 @@ const EditFieldModal = ({
         return fieldDropdownOptions;
     };
 
-    const editNewField = () => {
+    const getUpdatedData = () => {
         const formattedOptions = options.map((option, index) => {
             return { Index: index, Question: option };
         });
@@ -266,8 +268,19 @@ const EditFieldModal = ({
             subFields: [],
             key: initialData.key,
             fieldNumber: initialData.fieldNumber,
+            isHidden,
+            isDeleted: initialData.isDeleted,
         };
 
+        return newFieldData;
+    };
+
+    const saveField = () => {
+        const newFieldData = getUpdatedData();
+        editField(newFieldData);
+    };
+
+    const editField = (newFieldData) => {
         errorWrap(
             () => {
                 validateField(newFieldData);
@@ -287,6 +300,41 @@ const EditFieldModal = ({
         onModalClose();
     };
 
+    const onDelete = () => {
+        swal({
+            title: translations.components.modal.deleteTitle,
+            text: translations.components.modal.deleteConfirmation,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                const deletedFieldData = getUpdatedData();
+                deletedFieldData.isDeleted = true;
+                editField(deletedFieldData);
+            }
+        });
+    };
+
+    const handleHiddenFieldSwitchChange = (isChecked) => {
+        // added the "not" operator because when the switch is on, we want isHidden to be false
+        setIsHidden(!isChecked);
+    };
+
+    const generateHiddenFieldSwitch = () => {
+        return (
+            <FormControlLabel
+                className="hidden-field-switch"
+                control={
+                    <CustomSwitch
+                        checked={!isHidden}
+                        setChecked={handleHiddenFieldSwitchChange}
+                    />
+                }
+            />
+        );
+    };
+
     return (
         <Modal
             open={isOpen}
@@ -294,32 +342,43 @@ const EditFieldModal = ({
             className="edit-field-modal"
         >
             <div className="edit-field-modal-wrapper">
-                <span className="edit-field-title1">
-                    {translations.components.swal.field.editFieldTitle}
-                </span>
-                <span className="edit-field-title2">
-                    {translations.components.swal.field.fieldSettings}
-                </span>
+                <div
+                    style={{
+                        float: 'right',
+                        paddingBottom: '10px',
+                    }}
+                >
+                    <span className="edit-field-title1">
+                        {translations.components.swal.field.editFieldTitle}
+                    </span>
+                    {generateHiddenFieldSwitch()}
+                    <br />
+                    <br />
+                    <span className="edit-field-title2">
+                        {translations.components.swal.field.fieldSettings}
+                    </span>
+                </div>
+
                 <div className="edit-field-title3">
-                    <div style={{ padding: 10 }}>
+                    <div>
                         <FormControl>
-                            <InputLabel htmlFor="edit-field-type-dropdown">
+                            <span>
                                 {translations.components.swal.field.fieldType}
-                            </InputLabel>
+                            </span>
                             <NativeSelect
                                 id="edit-field-type-dropdown"
-                                onChange={handleFieldTypeSelect}
                                 MenuProps={{
                                     style: { zIndex: 35001 }, // for keeping this component on the top layer
                                 }}
                                 defaultValue={fieldType}
                                 input={<BootstrapInput />}
+                                disabled
                             >
                                 {generateFieldDropdownOptions()}
                             </NativeSelect>
                         </FormControl>
                     </div>
-                    <div style={{ padding: 10 }}>
+                    <div>
                         <MultiSelectField
                             title={translations.components.swal.field.clearance}
                             langKey={selectedLang}
@@ -333,7 +392,7 @@ const EditFieldModal = ({
                     <span>
                         {translations.components.swal.field.customization}
                     </span>
-                    <div style={{ padding: 10 }}>
+                    <div>
                         <Checkbox
                             size="medium"
                             checked={isVisibleOnDashboard}
@@ -350,22 +409,21 @@ const EditFieldModal = ({
                 {generateFields()}
                 <div
                     style={{
-                        display: 'flex',
                         float: 'right',
                         paddingBottom: '10px',
                     }}
                 >
-                    <Button
-                        onClick={editNewField}
-                        className="save-field-button"
-                    >
+                    <Button onClick={saveField} className="save-field-button">
                         {translations.components.swal.field.buttons.save}
                     </Button>
                     <Button
                         onClick={onDiscard}
                         className="discard-field-button"
                     >
-                        {translations.components.swal.field.buttons.discard}
+                        {translations.components.swal.field.buttons.cancel}
+                    </Button>
+                    <Button onClick={onDelete} className="delete-field-button">
+                        {translations.components.swal.field.buttons.delete}
                     </Button>
                 </div>
             </div>

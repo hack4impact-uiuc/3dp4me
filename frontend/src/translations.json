@@ -1,5 +1,14 @@
 {
     "EN": {
+        "patient2FA": {
+            "patientLogin": "Patient Login",
+            "patientID": "Patient ID:",
+            "sendCode": "Send Two-Factor Code",
+            "twoFactorAuth": "Two Factor Authentication:",
+            "enterDigits": "Enter 6-Digit Code from ****",
+            "verify": "Verify",
+            "resendCode": "Send code again"
+        },
         "errors": {
             "noMetadata": "You aren't allowed to view any steps. Contact an administrator to give you the proper roles."
         },
@@ -13,9 +22,18 @@
             "roles": "Roles",
             "access": "Access"
         },
+        "status": {
+            "active": "Active",
+            "feedback": "Feedback",
+            "archive": "Archive"
+        },
         "components": {
             "login": {
                 "signOut": "Sign Out"
+            },
+            "modal": {
+                "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
             },
             "signature": {
                 "save": "Save",
@@ -136,6 +154,7 @@
                 },
                 "managePatient": {
                     "title": "Manage Patient",
+                    "radioTitle": "Patient Status",
                     "firstName": "First Name",
                     "fatherName": "Father Name",
                     "grandfatherName": "Grandfather Name",
@@ -159,7 +178,9 @@
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
-                        "addChoice": "Add Choice"
+                        "addChoice": "Add Choice",
+                        "cancel": "Cancel",
+                        "delete": "Delete"
                     },
                     "option": "Option",
                     "question": "Question",
@@ -188,8 +209,22 @@
         }
     },
     "AR": {
+        "patient2FA": {
+            "patientLogin": "تسجيل دخول المريض",
+            "sendCode": "إرسال رمز ثنائي المعامل",
+            "patientID": "رقم المريض:",
+            "twoFactorAuth": "توثيق ذو عاملين:",
+            "enterDigits": "أدخل رمز مكون من 6 أرقام من ****",
+            "verify": "التحقق",
+            "resendCode": "ارسل الرمز مجددا"
+        },
         "errors": {
             "noMetadata": "لا يُسمح لك بمشاهدة أي خطوات. اتصل بالمسؤول لمنحك الأدوار المناسبة."
+        },
+        "status": {
+            "active": "نشيط",
+            "feedback": "استجابة",
+            "archive": "أرشيف"
         },
         "tableHeaders": {
             "firstName": "الاسم الاول",
@@ -204,6 +239,10 @@
         "components": {
             "login": {
                 "signOut": "خروج"
+            },
+            "modal": {
+                "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
             },
             "signature": {
                 "save": "يحفظ",
@@ -324,6 +363,7 @@
                 },
                 "managePatient": {
                     "title": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0631\u064a\u0636",
+                    "radioTitle": "حالة المريض",
                     "firstName": "الاسم الأول",
                     "fatherName": "اسم الأب",
                     "grandfatherName": "اسم جده",
@@ -347,7 +387,9 @@
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
-                        "addChoice": "Add Choice"
+                        "addChoice": "Add Choice",
+                        "cancel": "Cancel",
+                        "delete": "Delete"
                     },
                     "option": "Option",
                     "question": "Question",

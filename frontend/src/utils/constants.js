@@ -46,6 +46,7 @@ export const ROUTES = {
     ACCOUNT: '/account',
     DASHBOARD_MANAGEMENT: '/dashboard-management',
     PATIENT_DETAIL: '/patient-info',
+    PATIENT_2FA: '/patient-2fa',
 };
 
 /**
@@ -165,7 +166,7 @@ export const STEP_STATUS = {
  */
 export const PATIENT_STATUS = {
     FEEDBACK: 'Feedback',
-    ARCHIVE: 'Archive',
+    ARCHIVE: 'Archived',
     ACTIVE: 'Active',
 };
 

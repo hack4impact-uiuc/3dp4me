@@ -233,7 +233,6 @@ module.exports.EXPECTED_GET_RESTRICTED_DATA = {
         AR: 'استطلاع',
     },
     readableGroups: ['606e0a4602b23d02bc77673a', '606e0a4602b23d02bc77673d'],
-
     writableGroups: ['606e0a4602b23d02bc77673c'],
     defaultToListView: true,
     _id: '6092c289e0912601bbc5d85e',
@@ -254,6 +253,8 @@ module.exports.EXPECTED_GET_RESTRICTED_DATA = {
             isVisibleOnDashboard: true,
             options: [],
             subFields: [],
+            isDeleted: false,
+            isHidden: false,
         },
     ],
 };
