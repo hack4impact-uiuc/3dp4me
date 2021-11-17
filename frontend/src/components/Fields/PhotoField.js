@@ -9,12 +9,12 @@ import 'react-image-gallery/styles/css/image-gallery.css';
 import { useTranslations } from '../../hooks/useTranslations';
 import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
 import {
-    blobToDataURL,
     convertPhotosToURI,
-    dataURItoBlob,
+    dataURItoBlob
 } from '../../utils/photoManipulation';
 import { StyledButton } from '../StyledButton/StyledButton';
 import './PhotoField.scss';
+
 
 const PhotoField = ({
     value,
@@ -61,15 +61,10 @@ const PhotoField = ({
 
     const confirmUpload = async () => {
         const photoObj = dataURItoBlob(dataUri);
-        const dUri = await blobToDataURL(photoObj);
-        const d = Date.now();
-        const fileName = d.toString();
+        const date = Date.now();
+        const fileName = date.toString();
         const photoFile = new File([photoObj], fileName);
         handleFileUpload(fieldId, photoFile);
-        const photoTaken = { uri: dUri };
-        const newImages = value;
-        newImages.push(photoTaken);
-        setImages(newImages);
         resetUpload();
     };
 
