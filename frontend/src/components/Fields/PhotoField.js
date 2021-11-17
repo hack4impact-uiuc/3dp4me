@@ -56,14 +56,14 @@ const PhotoField = ({
     };
 
     useEffect(() => {
-        const getPermissionStatus = async () => {
+        const updatePermissionStatus = async () => {
             getMedia(PERMISSION_CONSTRAINTS);
             const permissionStatus = await navigator.permissions.query({
                 name: 'camera',
             });
             setPermissionListener(permissionStatus);
         };
-        getPermissionStatus();
+        updatePermissionStatus();
     }, []);
 
     const getMedia = async (constraints) => {
