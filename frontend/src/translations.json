@@ -1,5 +1,14 @@
 {
     "EN": {
+        "patient2FA": {
+            "patientLogin": "Patient Login",
+            "patientID": "Patient ID:",
+            "sendCode": "Send Two-Factor Code",
+            "twoFactorAuth": "Two Factor Authentication:",
+            "enterDigits": "Enter 6-Digit Code from ****",
+            "verify": "Verify",
+            "resendCode": "Send code again"
+        },
         "errors": {
             "noMetadata": "You aren't allowed to view any steps. Contact an administrator to give you the proper roles."
         },
@@ -197,6 +206,15 @@
         }
     },
     "AR": {
+        "patient2FA": {
+            "patientLogin": "تسجيل دخول المريض",
+            "sendCode": "إرسال رمز ثنائي المعامل",
+            "patientID": "رقم المريض:",
+            "twoFactorAuth": "توثيق ذو عاملين:",
+            "enterDigits": "أدخل رمز مكون من 6 أرقام من ****",
+            "verify": "التحقق",
+            "resendCode": "ارسل الرمز مجددا"
+        },
         "errors": {
             "noMetadata": "لا يُسمح لك بمشاهدة أي خطوات. اتصل بالمسؤول لمنحك الأدوار المناسبة."
         },

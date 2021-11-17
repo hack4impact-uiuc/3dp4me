@@ -372,7 +372,7 @@ const EditFieldModal = ({
                                 }}
                                 defaultValue={fieldType}
                                 input={<BootstrapInput />}
-                                disabled={true}
+                                disabled
                             >
                                 {generateFieldDropdownOptions()}
                             </NativeSelect>
