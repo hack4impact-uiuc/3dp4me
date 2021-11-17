@@ -34,7 +34,8 @@ const PhotoField = ({
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
-    const [shouldPromptCameraAccess, setShouldPromptCameraAccess] = useState(false);
+    const [shouldPromptCameraAccess, setShouldPromptCameraAccess] =
+        useState(false);
     const [dataUri, setUri] = useState('');
     const [translations, selectedLang] = useTranslations();
 
