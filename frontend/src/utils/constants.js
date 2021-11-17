@@ -228,3 +228,5 @@ export const ERR_OPTION_VALIDATION_FAILED = 'Please enter options.';
 export const ADMIN_ID = '60e496fa7398681e9c82e0f5';
 
 export const PERMISSION_CONSTRAINTS = { video: true };
+
+export const PERMISSION_STATUS_DENIED = 'denied';

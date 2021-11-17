@@ -13,6 +13,7 @@ import {
     LANGUAGES,
     NUMBER_OF_PHOTOS_FOR_BULLET_VIEW,
     PERMISSION_CONSTRAINTS,
+    PERMISSION_STATUS_DENIED,
 } from '../../utils/constants';
 import {
     blobToDataURL,
@@ -33,7 +34,7 @@ const PhotoField = ({
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
-    const [promptCameraAccess, setPromptCameraAccess] = useState(false);
+    const [shouldPromptCameraAccess, setShouldPromptCameraAccess] = useState(false);
     const [dataUri, setUri] = useState('');
     const [translations, selectedLang] = useTranslations();
 
@@ -45,10 +46,10 @@ const PhotoField = ({
     /* eslint no-param-reassign: "off", react/no-this-in-sfc: "off" */
     const setPermissionListener = (permissionStatus) => {
         permissionStatus.onchange = function () {
-            if (this.state === 'denied') {
-                setPromptCameraAccess(true);
+            if (this.state === PERMISSION_STATUS_DENIED) {
+                setShouldPromptCameraAccess(true);
             } else {
-                setPromptCameraAccess(false);
+                setShouldPromptCameraAccess(false);
             }
         };
     };
@@ -63,10 +64,10 @@ const PhotoField = ({
 
     const getMedia = async (constraints) => {
         try {
-            setPromptCameraAccess(false);
+            setShouldPromptCameraAccess(false);
             await navigator.mediaDevices.getUserMedia(constraints);
         } catch (err) {
-            setPromptCameraAccess(true);
+            setShouldPromptCameraAccess(true);
         }
     };
 
@@ -189,7 +190,7 @@ const PhotoField = ({
     };
 
     const renderCamera = () => {
-        if (promptCameraAccess) {
+        if (shouldPromptCameraAccess) {
             return (
                 <>
                     <h1>{translations.components.camera.promptInstructions}</h1>
