@@ -1,15 +1,13 @@
 const express = require('express');
-
-const router = express.Router();
 const { MessagingResponse } = require('twilio').twiml;
 
-const { models } = require('../../models/index');
-
+const router = express.Router();
 const accountSid = process.env.ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
 const client = require('twilio')(accountSid, authToken);
 
+const { models } = require('../../models/index');
 const {
     TWILIO_RECEIVING_NUMBER,
     TWILIO_SENDING_NUMBER,
