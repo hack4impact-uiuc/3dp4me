@@ -10,11 +10,10 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
 import {
     convertPhotosToURI,
-    dataURItoBlob
+    dataURItoBlob,
 } from '../../utils/photoManipulation';
 import { StyledButton } from '../StyledButton/StyledButton';
 import './PhotoField.scss';
-
 
 const PhotoField = ({
     value,
