@@ -31,7 +31,10 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
     };
 
     const validateStep = (stepData) => {
-        if (stepData.displayName.EN === '' || stepData.displayName.AR === '') {
+        if (
+            stepData.displayName.EN.trim() === '' ||
+            stepData.displayName.AR.trim() === ''
+        ) {
             throw new Error(ERR_LANGUAGE_VALIDATION_FAILED);
         }
     };

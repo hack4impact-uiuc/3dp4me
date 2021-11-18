@@ -34,7 +34,6 @@ const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
     const [stepMetadata, setStepMetadata] = useState([]);
-    const [addedSteps, setAddedSteps] = useState([]);
     const [originalStepMetadata, setOriginalStepMetadata] = useState([]);
     const [selectedStep, setSelectedStep] = useState('');
     const [isEditing, setIsEditing] = useState(false);
@@ -67,7 +66,6 @@ const SectionTab = () => {
             async () => {
                 setIsEditing(false);
                 updateResponse = await updateMultipleSteps(stepMetadata);
-                setAddedSteps([]);
             },
             () => {
                 setIsEditing(false);
@@ -342,7 +340,6 @@ const SectionTab = () => {
     const addNewStep = (newStepData) => {
         const updatedNewStep = _.cloneDeep(newStepData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
-        const updateAddedSteps = _.cloneDeep(addedSteps);
 
         updatedNewStep.stepNumber = updatedMetadata.length;
         const currentStepKeys = updatedMetadata.map((step) => step.key);
@@ -351,9 +348,7 @@ const SectionTab = () => {
             currentStepKeys,
         );
 
-        updateAddedSteps.push(updatedNewStep);
         updatedMetadata.push(updatedNewStep);
-        setAddedSteps(updateAddedSteps);
         setStepMetadata(updatedMetadata);
     };
 
