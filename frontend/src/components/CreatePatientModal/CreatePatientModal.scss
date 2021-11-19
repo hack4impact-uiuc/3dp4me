@@ -25,7 +25,6 @@
         .create-patient-button {
             padding: 0 24px 0 24px;
             height: 38px;
-            flex: 1;
             font-size: 12px;
             font-weight: bold;
         }
@@ -40,8 +39,7 @@
         }
 
         .create-patient-button-container {
-            display: flex;
-            float: right;
+            display: block;
             padding-bottom: 10px;
 
             .create-patient-edit-button {
@@ -57,14 +55,27 @@
             }
 
             .create-patient-close-button {
-                background-color: 'white';
-                color: 'black';
-                margin-block-start: '10px';
+                background-color: white;
+                color: black;
 
                 &:hover {
-                    background-color: '#D3D3D3';
+                    background-color: #D3D3D3;
                 }
             }
+
+            .create-patient-delete-button {
+                background-color: #ca0909;
+                color: white;
+
+                &:hover {
+                    background-color: #ca0909;
+                }
+            }
+        }
+
+        .close-delete-button-container {
+            display: flex;
+            justify-content: space-between;
         }
     }
 }

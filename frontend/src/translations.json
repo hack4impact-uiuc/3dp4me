@@ -146,7 +146,8 @@
                     "successMsg": "Created Patient",
                     "buttons": {
                         "noEdit": "Save and Close",
-                        "edit": "Save and Continue Editing"
+                        "edit": "Save and Continue Editing",
+                        "close": "Close"
                     }
                 },
                 "managePatient": {
@@ -352,7 +353,8 @@
                     "successMsg": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",
                     "buttons": {
                         "noEdit": "\u0627\u062d\u0641\u0638 \u0648\u0623\u063a\u0644\u0642",
-                        "edit": "\u0627\u062d\u0641\u0638 \u0648\u062a\u0627\u0628\u0639 \u0627\u0644\u062a\u062d\u0631\u064a\u0631"
+                        "edit": "\u0627\u062d\u0641\u0638 \u0648\u062a\u0627\u0628\u0639 \u0627\u0644\u062a\u062d\u0631\u064a\u0631",
+                        "close": "Close"
                     }
                 },
                 "managePatient": {
