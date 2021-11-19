@@ -113,7 +113,12 @@ export const defaultTableHeaderRenderer = (
  * Renders a single row of patient data. Uses the default render and adds a column
  * at the end that links to patient data
  */
-export const patientTableRowRenderer = (rowData, patient, selectedLang) => {
+export const patientTableRowRenderer = (
+    rowData,
+    patient,
+    selectedLang,
+    stepKey,
+) => {
     // Construct the base row
     const row = defaultTableRowRenderer(rowData, patient, selectedLang);
 
@@ -126,7 +131,7 @@ export const patientTableRowRenderer = (rowData, patient, selectedLang) => {
         >
             <Link
                 className="table-view-link"
-                to={`/patient-info/${patient._id}?stepKey=${patient.stepKey}`}
+                to={`/patient-info/${patient._id}?stepKey=${stepKey}`}
             >
                 <IconButton>
                     <img alt="status icon" width="18px" src={Eyecon} />

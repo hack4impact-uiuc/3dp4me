@@ -42,12 +42,6 @@ const Dashboard = () => {
     // Number of total patients in the database
     const [patientsCount, setPatientsCount] = useState(0);
 
-    const addStepKeyToPatients = (step) => {
-        setPatients((initPatients) =>
-            initPatients.map((patient) => ({ ...patient, stepKey: step })),
-        );
-    };
-
     /**
      * Gets patient data based on page number and step
      */
@@ -59,7 +53,6 @@ const Dashboard = () => {
             PEOPLE_PER_PAGE,
         );
         setPatients(res.result);
-        addStepKeyToPatients(stepKey);
     };
 
     /**
@@ -106,7 +99,6 @@ const Dashboard = () => {
      */
     const onAddPatient = (patientData) => {
         setPatients((oldPatients) => oldPatients.concat(patientData));
-        addStepKeyToPatients(selectedStep);
     };
 
     /**
@@ -132,7 +124,6 @@ const Dashboard = () => {
 
         errorWrap(async () => {
             await loadPatientData(selectedStep, newPageNumber);
-            addStepKeyToPatients(selectedStep);
         });
     };
 
@@ -220,6 +211,7 @@ const Dashboard = () => {
                     headers={generateHeaders(element.key, element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
                     patients={patients}
+                    stepKey={selectedStep}
                 />
             );
         });

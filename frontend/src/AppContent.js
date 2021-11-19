@@ -14,6 +14,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import DashboardManagement from './pages/DashboardManagement/DashboardManagement';
 import PatientDetail from './pages/PatientDetail/PatientDetail';
 import Patients from './pages/Patients/Patients';
+import Patient2FA from './pages/Patient2FALogin/Patient2FALogin';
 import { Context } from './store/Store';
 import {
     COGNITO_ATTRIBUTES,
@@ -102,6 +103,12 @@ const AppContent = ({ username, userEmail }) => {
                             </Route>
                             <Route exact path={ROUTES.DASHBOARD_MANAGEMENT}>
                                 <DashboardManagement />
+                            </Route>
+                            <Route
+                                exact
+                                path={`${ROUTES.PATIENT_2FA}/:patientId`}
+                            >
+                                <Patient2FA />
                             </Route>
                             <Route
                                 exact

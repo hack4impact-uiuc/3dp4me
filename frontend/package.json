@@ -29,6 +29,7 @@
         "prop-types": "^15.6.0",
         "query-string": "^7.0.1",
         "react": "^16.13.1",
+        "react-code-input": "^3.10.1",
         "react-datepicker": "^4.2.1",
         "react-dom": "^16.13.1",
         "react-flexbox-grid": "^2.1.2",
