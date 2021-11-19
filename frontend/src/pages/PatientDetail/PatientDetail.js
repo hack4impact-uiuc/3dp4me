@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
+import { useQueryParam, StringParam } from 'use-query-params';
 
 import {
     getAllStepsMetadata,
@@ -35,6 +36,7 @@ const PatientDetail = () => {
     const [patientData, setPatientData] = useState(null);
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
+    const stepKeyParam = useQueryParam('stepKey', StringParam)[0];
 
     /**
      * Fetch metadata for all steps and the patient's data.
@@ -53,7 +55,8 @@ const PatientDetail = () => {
 
                 // Sort it
                 metaData = sortMetadata(metaData);
-                if (metaData.length > 0) setSelectedStep(metaData[0].key);
+
+                setSelectedStep(stepKeyParam);
 
                 setStepMetaData(metaData);
                 setPatientData(data);
@@ -113,8 +116,8 @@ const PatientDetail = () => {
 
     const onStepChange = (newStep) => {
         if (newStep === null) return;
-
         setSelectedStep(newStep);
+        window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
     };
 
     /**

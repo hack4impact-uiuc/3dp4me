@@ -25,6 +25,7 @@ const PatientTable = ({
     patients,
     headers,
     rowData,
+    stepKey,
 }) => {
     const errorWrap = useErrorWrap();
     const translations = useTranslations()[0];
@@ -63,9 +64,9 @@ const PatientTable = ({
     const onSaveAndEditPatient = async (patientData) => {
         const patientId = await onSavePatient(patientData);
         const currentRoute = window.location.href;
-        let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}`;
+        let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}?stepKey=${stepKey}`;
 
-        // Remove doulbe '/'
+        // Remove double '/'
         if (
             relativeRoute[0] === '/' &&
             currentRoute[currentRoute.length - 1] === '/'
@@ -93,6 +94,19 @@ const PatientTable = ({
         return false;
     };
 
+    const PatientTableRowRendererForStep = (
+        patientRowData,
+        patient,
+        selectedLang,
+    ) => {
+        return patientTableRowRenderer(
+            patientRowData,
+            patient,
+            selectedLang,
+            stepKey,
+        );
+    };
+
     return (
         <div>
             <CreatePatientModal
@@ -108,7 +122,7 @@ const PatientTable = ({
                 doesRowMatchQuery={doesPatientMatchQuery}
                 addRowButtonTitle={translations.components.button.createPatient}
                 renderHeader={patientTableHeaderRenderer}
-                renderTableRow={patientTableRowRenderer}
+                renderTableRow={PatientTableRowRendererForStep}
                 headers={headers}
                 rowData={rowData}
                 data={patients}
@@ -123,6 +137,7 @@ PatientTable.propTypes = {
     patients: PropTypes.arrayOf(PropTypes.object),
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
     rowData: PropTypes.arrayOf(TableRowType).isRequired,
+    stepKey: PropTypes.string,
 };
 
 export default PatientTable;

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { QueryParamProvider } from 'use-query-params';
 
 import { getSelf } from './api/api';
 import { getCurrentUserInfo } from './aws/aws-helper';
@@ -78,41 +79,46 @@ const AppContent = ({ username, userEmail }) => {
     return (
         <div dir={selectedLang === LANGUAGES.AR ? 'rtl' : 'ltr'}>
             <Router>
-                <Navbar username={username} userEmail={userEmail} />
+                <QueryParamProvider ReactRouterRoute={Route}>
+                    <Navbar username={username} userEmail={userEmail} />
 
-                {/* Global error popup */}
-                <ErrorModal
-                    message={state.error}
-                    isOpen={state.isErrorVisible}
-                    onClose={handleErrorModalClose}
-                />
+                    {/* Global error popup */}
+                    <ErrorModal
+                        message={state.error}
+                        isOpen={state.isErrorVisible}
+                        onClose={handleErrorModalClose}
+                    />
 
-                {/* Routes */}
-                <div className={contentClassNames}>
-                    <Switch>
-                        <Route exact path={ROUTES.DASHBOARD}>
-                            <Dashboard />
-                        </Route>
-                        <Route exact path={ROUTES.ACCOUNT}>
-                            <AccountManagement />
-                        </Route>
-                        <Route exact path={ROUTES.PATIENTS}>
-                            <Patients />
-                        </Route>
-                        <Route exact path={ROUTES.DASHBOARD_MANAGEMENT}>
-                            <DashboardManagement />
-                        </Route>
-                        <Route exact path={`${ROUTES.PATIENT_2FA}/:patientId`}>
-                            <Patient2FA />
-                        </Route>
-                        <Route
-                            exact
-                            path={`${ROUTES.PATIENT_DETAIL}/:patientId`}
-                        >
-                            <PatientDetail />
-                        </Route>
-                    </Switch>
-                </div>
+                    {/* Routes */}
+                    <div className={contentClassNames}>
+                        <Switch>
+                            <Route exact path={ROUTES.DASHBOARD}>
+                                <Dashboard />
+                            </Route>
+                            <Route exact path={ROUTES.ACCOUNT}>
+                                <AccountManagement />
+                            </Route>
+                            <Route exact path={ROUTES.PATIENTS}>
+                                <Patients />
+                            </Route>
+                            <Route exact path={ROUTES.DASHBOARD_MANAGEMENT}>
+                                <DashboardManagement />
+                            </Route>
+                            <Route
+                                exact
+                                path={`${ROUTES.PATIENT_2FA}/:patientId`}
+                            >
+                                <Patient2FA />
+                            </Route>
+                            <Route
+                                exact
+                                path={`${ROUTES.PATIENT_DETAIL}/:patientId`}
+                            >
+                                <PatientDetail />
+                            </Route>
+                        </Switch>
+                    </div>
+                </QueryParamProvider>
             </Router>
         </div>
     );
