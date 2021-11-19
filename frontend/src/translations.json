@@ -183,6 +183,15 @@
                     "question": "Question",
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
+                },
+                "step": {
+                    "createStepHeader": "New Step",
+                    "createStepTitle": "Step Title",
+                    "clearance": "Clearance Level",
+                    "buttons": {
+                        "save": "Save",
+                        "discard": "Discard"
+                    }
                 }
             },
             "map": {
@@ -389,6 +398,15 @@
                     "question": "Question",
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
+                },
+                "step": {
+                    "createStepHeader": "خطوة جديدة",
+                    "createStepTitle": "عنوان الخطوة",
+                    "clearance": "مستوى التخليص",
+                    "buttons": {
+                        "save": "يحفظ",
+                        "discard": "تجاهل"
+                    }
                 }
             },
             "map": {
