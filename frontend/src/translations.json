@@ -99,6 +99,9 @@
             "fieldGroup": {
                 "add": "Add"
             },
+            "camera": {
+                "promptInstructions": "Please allow camera access following the steps below"
+            },
             "button": {
                 "createPatient": "Create Patient",
                 "save": "Save",
@@ -313,6 +316,9 @@
             },
             "fieldGroup": {
                 "add": "يضيف"
+            },
+            "camera": {
+                "promptInstructions": "يرجى السماح بالوصول إلى الكاميرا باتباع الخطوات أدناه"
             },
             "button": {
                 "createPatient": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",

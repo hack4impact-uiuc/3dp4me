@@ -80,6 +80,7 @@ const PatientTable = ({
      * Given a query and patient data, return true if this patient should
      * be included in the search results
      */
+
     const doesPatientMatchQuery = (patient, query) => {
         const patientName = getPatientName(patient).toLowerCase();
         const patientId = patient?._id?.toLowerCase();
