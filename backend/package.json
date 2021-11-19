@@ -35,7 +35,7 @@
         "lodash": "^4.17.21",
         "loglevel": "^1.7.1",
         "mongodb-memory-server": "^7.4.0",
-        "mongoose": "^6.0.6",
+        "mongoose": "^6.0.13",
         "mongoose-encryption": "^2.1.0",
         "node": "^16.9.1",
         "node-2fa": "^2.0.2",
