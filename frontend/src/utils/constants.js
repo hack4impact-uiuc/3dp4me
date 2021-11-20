@@ -132,6 +132,13 @@ export const getUserTableHeaders = (langKey) => {
     ];
 };
 
+// TODO: add documentations
+export const getRoleTableHeaders = (langKey) => {
+    const t = translations[langKey].tableHeaders;
+
+    return [{ title: t.name, sortKey: 'Name' }];
+};
+
 /**
  * List of row data that the user table has.
  * 'id' must match 'sortKey' in the headers
@@ -141,6 +148,11 @@ export const USER_TABLE_ROW_DATA = [
     { id: 'Email', dataType: FIELD_TYPES.STRING },
     { id: 'Roles', dataType: FIELD_TYPES.STRING },
     { id: 'Access', dataType: FIELD_TYPES.ACCESS },
+];
+
+// TODO: Add docs
+export const ROLE_TABLE_ROW_DATA = [
+    { id: 'Name', dataType: FIELD_TYPES.STRING },
 ];
 
 /**

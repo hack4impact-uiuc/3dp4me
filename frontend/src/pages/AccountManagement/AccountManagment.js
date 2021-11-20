@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
+import { ColorTabs } from '../../components/Tabs';
 import {
     getUsersByPageNumber,
     getUsersByPageNumberAndToken,
@@ -15,15 +16,20 @@ import {
     getRolesValue,
     getUsername,
 } from '../../aws/aws-users';
+import { StyledButton } from '../../components/StyledButton/StyledButton';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
+import AddRoleModal from '../../components/AddRoleModal/AddRoleModal';
+import ManageRoleModal from '../../components/ManageRoleModal/ManageRoleModal';
 import SimpleTable from '../../components/SimpleTable/SimpleTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
     COGNITO_ATTRIBUTES,
     getUserTableHeaders,
+    getRoleTableHeaders,
     LANGUAGES,
     USER_TABLE_ROW_DATA,
+    ROLE_TABLE_ROW_DATA,
     PEOPLE_PER_PAGE,
 } from '../../utils/constants';
 import { rolesToMultiSelectFormat } from '../../utils/utils';
@@ -42,9 +48,12 @@ const AccountManagement = () => {
     const [userMetaData, setUserMetaData] = useState([]);
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedRole, setSelectedRole] = useState(null);
     const [paginationToken, setPaginationToken] = useState('');
     const [isUserLeft, setIsUserLeft] = useState(true);
     const [pageNumber, setPageNumber] = useState(0);
+    const [selectedTab, setSelectedTab] = useState('one');
+    const [isAddRoleModalOpen, setIsAddRoleModalOpen] = useState(false);
 
     const errorWrap = useErrorWrap();
 
@@ -111,6 +120,13 @@ const AccountManagement = () => {
         };
     };
 
+    // TODO: What is the isHidden field? Is that the same thing as isMutable??
+    const roleToRoleModalFormat = (user) => {
+        return {
+            name: user.Question[selectedLang],
+        };
+    };
+
     /**
      * Formats the users response to be useable by the table
      */
@@ -124,6 +140,13 @@ const AccountManagement = () => {
         }));
     };
 
+    // TODO: write docs
+    const rolesToTableFormat = (roles) => {
+        return roles.map((role) => ({
+            Name: role.Question[selectedLang],
+        }));
+    };
+
     /**
      * Called when a user row is clicked on
      */
@@ -132,6 +155,23 @@ const AccountManagement = () => {
 
         setSelectedUser(userToRoleModalFormat(userData));
     };
+
+    /**
+     * Called when a role row is clicked on
+     */
+    const onRoleSelected = (user) => {
+        const userData = rolesData.find(
+            (u) => u.Question[selectedLang] === user.Name,
+        );
+
+        console.log(roleToRoleModalFormat(userData));
+
+        setSelectedRole(roleToRoleModalFormat(userData));
+    };
+
+    // TODO: Handle case where both modals might be open, handling conditional rendering
+    // TODO: Write documentation for all of the functions
+    // TODO: Extract Modal Component with CSS or create folder for modals
 
     /**
      * Called when a user's data is updated
@@ -169,6 +209,9 @@ const AccountManagement = () => {
         });
     };
 
+    // TODO: convert this to arrow functions / standardize
+    // TODO: Create folder for Modal
+    // TODO: Generalize components
     function generateMainUserTable() {
         return (
             <SimpleTable
@@ -177,6 +220,18 @@ const AccountManagement = () => {
                 rowData={USER_TABLE_ROW_DATA}
                 renderHeader={userTableHeaderRenderer}
                 renderTableRow={generateUserTableRowRenderer(onUserSelected)}
+            />
+        );
+    }
+
+    function generateMainRoleTable() {
+        return (
+            <SimpleTable
+                data={rolesToTableFormat(rolesData)}
+                headers={getRoleTableHeaders(selectedLang)}
+                rowData={ROLE_TABLE_ROW_DATA}
+                renderHeader={userTableHeaderRenderer}
+                renderTableRow={generateUserTableRowRenderer(onRoleSelected)}
             />
         );
     }
@@ -213,10 +268,67 @@ const AccountManagement = () => {
         );
     };
 
+    // TODO: create onRoleEdited for updated roles asap maybe don't need it since rolesData is derived from userEdited functions' metaData, maybe create the function
+    const generateRoleEditModal = () => {
+        return (
+            <ManageRoleModal
+                isOpen={selectedRole !== null}
+                roleInfo={selectedRole}
+                onClose={() => setSelectedRole(null)}
+            />
+        );
+    };
+
+    const generateAddRoleModal = () => {
+        return (
+            <AddRoleModal
+                isOpen={isAddRoleModalOpen}
+                onClose={() => setIsAddRoleModalOpen(false)}
+            />
+        );
+    };
+
+    const generateTable = () => {
+        if (selectedTab === 'one') {
+            return generateMainUserTable();
+        }
+        if (selectedTab === 'two') {
+            return generateMainRoleTable();
+        }
+    };
+
+    const generateDatabaseTitle = () => {
+        if (selectedTab === 'one') {
+            return translations.accountManagement.userDatabase;
+        }
+        if (selectedTab === 'two') {
+            return translations.roleManagement.roleDatabase;
+        }
+    };
+
+    const generateButton = () => {
+        if (selectedTab === 'two') {
+            return (
+                <StyledButton primary onClick={onRoleButtonClick}>
+                    {translations.roleManagement.addRole}
+                </StyledButton>
+            );
+        }
+    };
+
+    const onRoleButtonClick = () => {
+        setIsAddRoleModalOpen(true);
+    };
+
+    // TODO: Rename Color Tabs
+    // TODO: Relook conditional rendering below
+    // TODO: change selectedTab names and generalize with arrays
+
     return (
         <div>
             <div className="dashboard" />
             <div className="patient-list">
+                <ColorTabs value={selectedTab} setValue={setSelectedTab} />
                 <div className="header">
                     <div className="section">
                         <h2
@@ -226,14 +338,18 @@ const AccountManagement = () => {
                                     : 'patient-list-title'
                             }
                         >
-                            {translations.accountManagement.userDatabase}
+                            {generateDatabaseTitle()}
                         </h2>
+                        {generateButton()}
                     </div>
                 </div>
-                {generateMainUserTable()}
+                {generateTable()}
                 {generateLoadMoreBtn()}
             </div>
             {generateUserEditModal()}
+            {generateRoleEditModal()}
+            {generateAddRoleModal()}
+            {/* Should I make this conditionally rendered so not all functions are called */}
         </div>
     );
 };
