@@ -172,6 +172,7 @@ const AccountManagement = () => {
     // TODO: Handle case where both modals might be open, handling conditional rendering
     // TODO: Write documentation for all of the functions
     // TODO: Extract Modal Component with CSS or create folder for modals
+    // TODO: Change eye icons to pencils
 
     /**
      * Called when a user's data is updated
