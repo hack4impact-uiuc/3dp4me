@@ -46,6 +46,9 @@ import './AccountManagement.scss';
 const AccountManagement = () => {
     const [translations, selectedLang] = useTranslations();
     const [userMetaData, setUserMetaData] = useState([]);
+    const [rolesForModal, setRoles] = useState([]);
+
+    // TODO: Ask about conversion between these two (rolesData and roles);
     const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectedRole, setSelectedRole] = useState(null);
@@ -81,6 +84,7 @@ const AccountManagement = () => {
         errorWrap(async () => {
             const fetchRoles = async () => {
                 const rolesRes = await getAllRoles();
+                setRoles(rolesRes.result);
                 const roles = rolesToMultiSelectFormat(rolesRes.result);
                 setRolesData(roles);
             };
@@ -122,8 +126,11 @@ const AccountManagement = () => {
 
     // TODO: What is the isHidden field? Is that the same thing as isMutable??
     const roleToRoleModalFormat = (user) => {
+        // console.log(user);
         return {
-            name: user.Question[selectedLang],
+            name: user?.roleName[selectedLang],
+            description: user?.roleDescription[selectedLang],
+            id: user?._id,
         };
     };
 
@@ -142,8 +149,16 @@ const AccountManagement = () => {
 
     // TODO: write docs
     const rolesToTableFormat = (roles) => {
+        // console.log(roles);
+        // console.log(
+        //     roles.map((role) => ({
+        //         Name: role?.roleName[selectedLang],
+        //         // Description: role?.roleDescription[selectedLang],
+        //     })),
+        // );
         return roles.map((role) => ({
-            Name: role.Question[selectedLang],
+            Name: role?.roleName[selectedLang],
+            // Description: role?.roleDescription[selectedLang],
         }));
     };
 
@@ -160,19 +175,22 @@ const AccountManagement = () => {
      * Called when a role row is clicked on
      */
     const onRoleSelected = (user) => {
-        const userData = rolesData.find(
-            (u) => u.Question[selectedLang] === user.Name,
+        // console.log(rolesForModal);
+        const roleData = rolesForModal.find(
+            (u) => u.roleName[selectedLang] === user.Name,
         );
 
-        console.log(roleToRoleModalFormat(userData));
+        // console.log(roleData);
+        // console.log(roleToRoleModalFormat(roleData));
 
-        setSelectedRole(roleToRoleModalFormat(userData));
+        setSelectedRole(roleToRoleModalFormat(roleData));
     };
 
     // TODO: Handle case where both modals might be open, handling conditional rendering
     // TODO: Write documentation for all of the functions
     // TODO: Extract Modal Component with CSS or create folder for modals
     // TODO: Change eye icons to pencils
+    // TODO: is Using the roles returned from this enough? Considering that I need to get all of the Roles and their IDs
 
     /**
      * Called when a user's data is updated
@@ -225,10 +243,11 @@ const AccountManagement = () => {
         );
     }
 
+    // Can add role descriptions here
     function generateMainRoleTable() {
         return (
             <SimpleTable
-                data={rolesToTableFormat(rolesData)}
+                data={rolesToTableFormat(rolesForModal)}
                 headers={getRoleTableHeaders(selectedLang)}
                 rowData={ROLE_TABLE_ROW_DATA}
                 renderHeader={userTableHeaderRenderer}

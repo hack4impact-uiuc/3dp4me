@@ -7,7 +7,7 @@ const ColorTabs = ({ value, setValue }) => {
         setValue(newValue);
     };
 
-    // TODO: Pass in labels as prop, values can also be the same thing , map all tabs
+    // TODO: Pass in labels as prop, values can also be the same thing , map all tabs, need to handle translations for labels
 
     return (
         <Box sx={{ width: '100%' }}>

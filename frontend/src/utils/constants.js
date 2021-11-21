@@ -153,6 +153,7 @@ export const USER_TABLE_ROW_DATA = [
 // TODO: Add docs
 export const ROLE_TABLE_ROW_DATA = [
     { id: 'Name', dataType: FIELD_TYPES.STRING },
+    // { id: 'Description', dataType: FIELD_TYPES.STRING },
 ];
 
 /**
