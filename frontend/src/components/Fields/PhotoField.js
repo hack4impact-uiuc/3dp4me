@@ -6,8 +6,15 @@ import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery from 'react-image-gallery';
 
 import 'react-image-gallery/styles/css/image-gallery.css';
+import promptInstructionsAR from '../../assets/camera-prompt-instructions-ar.gif';
+import promptInstructions from '../../assets/camera-prompt-instructions-en.gif';
 import { useTranslations } from '../../hooks/useTranslations';
-import { NUMBER_OF_PHOTOS_FOR_BULLET_VIEW } from '../../utils/constants';
+import {
+    LANGUAGES,
+    NUMBER_OF_PHOTOS_FOR_BULLET_VIEW,
+    PERMISSION_CONSTRAINTS,
+    PERMISSION_STATUS_DENIED,
+} from '../../utils/constants';
 import {
     blobToDataURL,
     convertPhotosToURI,
@@ -27,12 +34,46 @@ const PhotoField = ({
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
+    const [shouldPromptCameraAccess, setShouldPromptCameraAccess] =
+        useState(false);
     const [dataUri, setUri] = useState('');
-    const translations = useTranslations()[0];
+    const [translations, selectedLang] = useTranslations();
 
     useEffect(() => {
         updateMetaDataPhotos(value);
     }, [value]);
+
+    // Must disable these for the permission listener to work
+    /* eslint no-param-reassign: "off", react/no-this-in-sfc: "off" */
+    const setPermissionListener = (permissionStatus) => {
+        permissionStatus.onchange = function () {
+            if (this.state === PERMISSION_STATUS_DENIED) {
+                setShouldPromptCameraAccess(true);
+            } else {
+                setShouldPromptCameraAccess(false);
+            }
+        };
+    };
+
+    useEffect(() => {
+        const updatePermissionStatus = async () => {
+            getMedia(PERMISSION_CONSTRAINTS);
+            const permissionStatus = await navigator.permissions.query({
+                name: 'camera',
+            });
+            setPermissionListener(permissionStatus);
+        };
+        updatePermissionStatus();
+    }, []);
+
+    const getMedia = async (constraints) => {
+        try {
+            setShouldPromptCameraAccess(false);
+            await navigator.mediaDevices.getUserMedia(constraints);
+        } catch (err) {
+            setShouldPromptCameraAccess(true);
+        }
+    };
 
     const updateMetaDataPhotos = async (data) => {
         const newPhotoData = await convertPhotosToURI(
@@ -152,6 +193,30 @@ const PhotoField = ({
         return null;
     };
 
+    const renderCamera = () => {
+        if (shouldPromptCameraAccess) {
+            return (
+                <>
+                    <h1>{translations.components.camera.promptInstructions}</h1>
+                    <img
+                        src={
+                            selectedLang === LANGUAGES.EN
+                                ? promptInstructions
+                                : promptInstructionsAR
+                        }
+                        alt="instructions"
+                    />
+                </>
+            );
+        }
+        return (
+            <>
+                {renderPhotoModal()}
+                {renderImagePreviewButtons()}
+            </>
+        );
+    };
+
     return (
         <div>
             <h3>{displayName}</h3>
@@ -164,10 +229,7 @@ const PhotoField = ({
                 onClose={handleOnClose}
                 className="take-photo-modal"
             >
-                <div className="take-photo-modal-wrapper">
-                    {renderPhotoModal()}
-                    {renderImagePreviewButtons()}
-                </div>
+                <div className="take-photo-modal-wrapper">{renderCamera()}</div>
             </Modal>
             {renderImageGallery()}
         </div>
