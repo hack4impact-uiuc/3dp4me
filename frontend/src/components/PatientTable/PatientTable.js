@@ -77,26 +77,6 @@ const PatientTable = ({
         if (patientId) window.location.href = currentRoute + relativeRoute;
     };
 
-
-    /**
-     * Given a query and patient data, return true if this patient should
-     * be included in the search results
-     */
-
-    const doesPatientMatchQuery = (patient, query) => {
-        const patientName = getPatientName(patient).toLowerCase();
-        const patientId = patient?._id?.toLowerCase();
-        const lowercaseQuery = query?.toLowerCase();
-
-        // If query is contained in patient name
-        if (patientName.indexOf(lowercaseQuery) !== -1) return true;
-
-        // If query is contained in patient's ID
-        if (patientId.indexOf(lowercaseQuery) !== -1) return true;
-
-        return false;
-    };
-
     const PatientTableRowRendererForStep = (
         patientRowData,
         patient,
@@ -142,7 +122,7 @@ PatientTable.propTypes = {
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
     rowData: PropTypes.arrayOf(TableRowType).isRequired,
     handleSearchQuery: PropTypes.func.isRequired,
-    initialSearchQuery: PropTypes.string.isRequired
+    initialSearchQuery: PropTypes.string.isRequired,
     stepKey: PropTypes.string,
 };
 
