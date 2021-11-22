@@ -16,7 +16,7 @@ const {
     STEP_IMMUTABLE_ATTRIBUTES,
     PATIENT_IMMUTABLE_ATTRIBUTES,
 } = require('../../utils/constants');
-const { sendResponse, getDataFromModelWithPagination } = require('../../utils/response');
+const { sendResponse, getDataFromModelWithPaginationAndSearch } = require('../../utils/response');
 const { getReadableSteps } = require('../../utils/stepUtils');
 const { getStepBaseSchemaKeys } = require('../../utils/initDb');
 const {
@@ -31,8 +31,8 @@ const {
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        const patients = await getDataFromModelWithPagination(req, models.Patient);
-        await sendResponse(res, 200, '', patients);
+        const patientData = await getDataFromModelWithPaginationAndSearch(req, models.Patient);
+        await sendResponse(res, 200, '', patientData);
     }),
 );
 

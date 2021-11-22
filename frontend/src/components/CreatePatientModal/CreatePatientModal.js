@@ -108,7 +108,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
                         >
                             {
                                 translations.components.swal.createPatient.buttons
-                                    .close
+                                    .discard
                             }
                         </Button>
                     </div>

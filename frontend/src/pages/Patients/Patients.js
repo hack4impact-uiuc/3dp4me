@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { getPatientsCount, getPatientsByPageNumber } from '../../api/api';
+import { getPatientsCount, getPatientsByPageNumberAndSearch } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
@@ -20,14 +20,35 @@ const Patients = () => {
     const [allPatients, setAllPatients] = useState([]);
     const [patientsCount, setPatientsCount] = useState(0);
 
+    // Currently selected page
+    const [selectedPageNumber, setSelectedPageNumber] = useState(1);
+
+    // Words to filter out patients by
+    const [searchQuery, setSearchQuery] = useState('');
+
     const errorWrap = useErrorWrap();
 
+    const loadPatientData = async (pageNumber, searchBy) => {
+        const res = await getPatientsByPageNumberAndSearch(pageNumber, PEOPLE_PER_PAGE, searchBy);
+        setAllPatients(res.result.data);
+        setPatientsCount(res.result.count);
+    };
+
     const updatePage = async (newPage) => {
+        setSelectedPageNumber(newPage);
+
         errorWrap(async () => {
-            const res = await getPatientsByPageNumber(newPage, PEOPLE_PER_PAGE);
-            setAllPatients(res.result);
+            loadPatientData(newPage, searchQuery);
         });
     };
+
+    const onSearchQueryChanged = (newSearchQuery) => {
+        setSearchQuery(newSearchQuery);
+
+        errorWrap(async () => {
+            loadPatientData(selectedPageNumber, newSearchQuery);
+        });
+    }
 
     /**
      * Fetch data on all patients
@@ -36,8 +57,9 @@ const Patients = () => {
         const getInitialPage = async () => {
             errorWrap(async () => {
                 // page number starts at 1
-                const res = await getPatientsByPageNumber(1, PEOPLE_PER_PAGE);
-                setAllPatients(res.result);
+                const res = await getPatientsByPageNumberAndSearch(1, PEOPLE_PER_PAGE);
+                setAllPatients(res.result.data);
+                setPatientsCount(res.result.count);
             });
         };
 
@@ -72,6 +94,8 @@ const Patients = () => {
                     headers={getPatientDashboardHeaders(selectedLang)}
                     rowData={ALL_PATIENT_DASHBOARD_ROW_DATA}
                     patients={allPatients}
+                    handleSearchQuery={onSearchQueryChanged}
+                    initialSearchQuery={searchQuery}
                 />
 
                 <PaginateBar
