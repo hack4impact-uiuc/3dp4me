@@ -1,16 +1,18 @@
-import React from 'react';
+import { IconButton } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { IconButton } from '@material-ui/core';
 
-import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
 import Eyecon from '../assets/view.svg';
+import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
 import translations from '../translations.json';
 
-import { resolveObjPath } from './object';
-import { fieldToJSX } from './fields';
 import { LANGUAGES, SORT_DIRECTIONS } from './constants';
+import { fieldToJSX } from './fields';
+import { resolveObjPath } from './object';
+
+
 
 /**
  * Given item data, a field key, and a field type, this function finds
@@ -121,6 +123,7 @@ export const patientTableRowRenderer = (
 ) => {
     // Construct the base row
     const row = defaultTableRowRenderer(rowData, patient, selectedLang);
+    const link = stepKey ? `/patient-info/${patient._id}?stepKey=${stepKey}` : `/patient-info/${patient._id}`
 
     // Add a link to the patient's page
     row.push(
@@ -131,7 +134,7 @@ export const patientTableRowRenderer = (
         >
             <Link
                 className="table-view-link"
-                to={`/patient-info/${patient._id}?stepKey=${stepKey}`}
+                to={link}
             >
                 <IconButton>
                     <img alt="status icon" width="18px" src={Eyecon} />

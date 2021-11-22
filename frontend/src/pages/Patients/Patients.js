@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-import { getPatientsCount, getPatientsByPageNumber } from '../../api/api';
+import { getPatientsByPageNumber, getPatientsCount } from '../../api/api';
+import PaginateBar from '../../components/PaginateBar/PaginateBar';
+import PatientTable from '../../components/PatientTable/PatientTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
-import PatientTable from '../../components/PatientTable/PatientTable';
 import {
-    getPatientDashboardHeaders,
-    ALL_PATIENT_DASHBOARD_ROW_DATA,
-    PEOPLE_PER_PAGE,
+    ALL_PATIENT_DASHBOARD_ROW_DATA, getPatientDashboardHeaders, PEOPLE_PER_PAGE
 } from '../../utils/constants';
 import './Patients.scss';
-import PaginateBar from '../../components/PaginateBar/PaginateBar';
+
 
 /**
  * Shows a table of all patients within the system
