@@ -3,6 +3,7 @@ import { Modal, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
 import TextField from '../Fields/TextField';
+import TextArea from '../Fields/TextArea';
 import './AddRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { addRole } from '../../api/api';
@@ -14,14 +15,14 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
     const errorWrap = useErrorWrap();
 
     const onSave = async () => {
-        // TODO: how to add error wrap
+        // TODO: how to add error wrap?
         const res = await addRole(role);
         onRoleAdded(res.result);
         onClose();
     };
 
     // TODO: how to make this required or need to make fields required?
-    // TODO: Design of these modals' fields
+    // TODO: Design of these modals' fields (ask Evan)
     // TODO: Leave comments
 
     const handleRoleUpdate = (key, value, lang) => {
@@ -53,23 +54,23 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
                     }
                     fieldId="roleName"
                 />
-                <TextField
+                <TextArea
                     value={role?.roleDescription?.EN}
-                    className="text-field"
-                    displayName={`${translations.roleManagement.roleDescription} (EN)`}
+                    title={`${translations.roleManagement.roleDescription} (EN)`}
                     onChange={(key, value) =>
                         handleRoleUpdate(key, value, 'EN')
                     }
                     fieldId="roleDescription"
+                    disabled={false}
                 />
-                <TextField
+                <TextArea
                     value={role?.roleDescription?.AR}
-                    className="text-field"
-                    displayName={`${translations.roleManagement.roleDescription} (AR)`}
+                    title={`${translations.roleManagement.roleDescription} (AR)`}
                     onChange={(key, value) =>
                         handleRoleUpdate(key, value, 'AR')
                     }
                     fieldId="roleDescription"
+                    disabled={false}
                 />
 
                 <div>
