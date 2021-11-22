@@ -48,7 +48,7 @@ describe('GET /stages', () => {
         expect(resContent.success).toBe(true);
 
         // Check that the number of patients recieved is correct
-        const allPatients = resContent.result;
+        const allPatients = resContent.result.data;
         expect(allPatients.length).toBe(DEFAULT_PATIENTS_ON_GET_REQUEST);
     });
 
@@ -66,7 +66,7 @@ describe('GET /stages', () => {
         expect(resContent.success).toBe(true);
 
         // Check that the number of patients recieved is correct
-        const allPatients = resContent.result;
+        const allPatients = resContent.result.data;
         expect(allPatients.length).toBe(DEFAULT_PATIENTS_ON_GET_REQUEST);
     });
 
@@ -85,7 +85,7 @@ describe('GET /stages', () => {
         expect(resContent.success).toBe(true);
 
         // Check that the number of patients recieved is correct
-        const allPatients = resContent.result;
+        const allPatients = resContent.result.data;
         expect(allPatients.length).toBe(nPerPage);
     });
 });

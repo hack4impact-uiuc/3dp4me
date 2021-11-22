@@ -9,7 +9,6 @@ import {
     patientTableHeaderRenderer,
     patientTableRowRenderer,
 } from '../../utils/table-renderers';
-import { getPatientName } from '../../utils/utils';
 import CreatePatientModal from '../CreatePatientModal/CreatePatientModal';
 import Table from '../Table/Table';
 import { TableRowType, TableHeaderType } from '../../utils/custom-proptypes';

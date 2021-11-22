@@ -49,8 +49,8 @@ module.exports.getDataFromModelWithPaginationAndSearch = async (req, model, find
 
         for (let dataIdx = 0; dataIdx < data.length; dataIdx++) {
             for (let fieldsIdx = 0; fieldsIdx < fieldsToCheck.length; fieldsIdx++) {
-                const patientField = data[dataIdx][fieldsToCheck[fieldsIdx]] || '';
-                if (patientField.toLowerCase().includes(lowerCaseSearchBy)) {
+                const patientDataByField = data[dataIdx][fieldsToCheck[fieldsIdx]] || '';
+                if (patientDataByField.toLowerCase().includes(lowerCaseSearchBy)) {
                     filteredData.push(data[dataIdx]);
                     break;
                 }

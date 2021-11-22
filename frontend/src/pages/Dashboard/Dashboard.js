@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
+import MuiAlert from '@material-ui/lab/Alert';
+import { Snackbar } from '@material-ui/core';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
@@ -8,8 +10,6 @@ import {
     FIELD_TYPES,
     PEOPLE_PER_PAGE,
 } from '../../utils/constants';
-import MuiAlert from '@material-ui/lab/Alert';
-import { Snackbar } from '@material-ui/core';
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import {
     getAllStepsMetadata,
