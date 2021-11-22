@@ -59,7 +59,7 @@ const Dashboard = () => {
             stepKey,
             pageNumber,
             PEOPLE_PER_PAGE,
-            searchBy
+            searchBy,
         );
         setPatients(res.result.data);
         setPatientsCount(res.result.count);
@@ -96,12 +96,7 @@ const Dashboard = () => {
         };
 
         loadAllDashboardData();
-    }, [
-        translations,
-        setSelectedStep,
-        setStepsMetaData,
-        errorWrap,
-    ]);
+    }, [translations, setSelectedStep, setStepsMetaData, errorWrap]);
 
     /**
      * Called when a patient is successfully added to the backend
@@ -147,7 +142,7 @@ const Dashboard = () => {
         errorWrap(async () => {
             await loadPatientData(selectedStep, 1, newSearchQuery);
         });
-    }
+    };
 
     /**
      * Gets the display name of the currently selected step

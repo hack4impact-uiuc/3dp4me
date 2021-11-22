@@ -86,8 +86,8 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
                             onClick={() => onSavePatient(true)}
                         >
                             {
-                                translations.components.swal.createPatient.buttons
-                                    .edit
+                                translations.components.swal.createPatient
+                                    .buttons.edit
                             }
                         </Button>
                     </div>
@@ -97,8 +97,8 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
                             onClick={() => onSavePatient(false)}
                         >
                             {
-                                translations.components.swal.createPatient.buttons
-                                    .noEdit
+                                translations.components.swal.createPatient
+                                    .buttons.noEdit
                             }
                         </Button>
 
@@ -107,8 +107,8 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
                             onClick={onClose}
                         >
                             {
-                                translations.components.swal.createPatient.buttons
-                                    .discard
+                                translations.components.swal.createPatient
+                                    .buttons.discard
                             }
                         </Button>
                     </div>

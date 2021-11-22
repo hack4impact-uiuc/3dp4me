@@ -42,7 +42,7 @@ const PaginateBar = ({ pageCount, onPageChange, currentPage }) => {
 PaginateBar.propTypes = {
     pageCount: PropTypes.number,
     onPageChange: PropTypes.func.isRequired,
-    currentPage: PropTypes.number
+    currentPage: PropTypes.number,
 };
 
 export default PaginateBar;

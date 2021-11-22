@@ -38,15 +38,15 @@ const Table = ({
             if (isSearchQueryUpdated) {
                 handleSearchQuery(searchQuery);
             }
-        }, 1000)
+        }, 1000);
 
-        return () => clearTimeout(delayDebounceFn)
-    }, [searchQuery, isSearchQueryUpdated])
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchQuery, isSearchQueryUpdated]);
 
     const updateSearchQuery = (event) => {
         setSearchQuery(event.target.value);
         setIsSearchQueryUpdated(true);
-    }
+    };
 
     return (
         <div>

@@ -10,7 +10,11 @@ export const getPatientsCount = async () => {
     return res.data;
 };
 
-export const getPatientsByPageNumberAndSearch = async (pageNumber, nPerPage, searchBy = '') => {
+export const getPatientsByPageNumberAndSearch = async (
+    pageNumber,
+    nPerPage,
+    searchBy = '',
+) => {
     const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchBy=${searchBy}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
@@ -22,7 +26,7 @@ export const getPatientsByStageAndPageNumberAndSearch = async (
     stage,
     pageNumber,
     nPerPage,
-    searchBy = ''
+    searchBy = '',
 ) => {
     const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchBy=${searchBy}`;
     const res = await instance.get(requestString);
