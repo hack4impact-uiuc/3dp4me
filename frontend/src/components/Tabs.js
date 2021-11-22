@@ -2,7 +2,7 @@ import { Tabs, Tab, Box } from '@material-ui/core';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ColorTabs = ({ value, setValue }) => {
+const NavTabs = ({ value, setValue }) => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -24,9 +24,9 @@ const ColorTabs = ({ value, setValue }) => {
     );
 };
 
-ColorTabs.propTypes = {
+NavTabs.propTypes = {
     value: PropTypes.string,
     setValue: PropTypes.func,
 };
 
-export { ColorTabs };
+export { NavTabs };

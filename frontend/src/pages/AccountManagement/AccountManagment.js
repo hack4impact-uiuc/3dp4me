@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 
-import { ColorTabs } from '../../components/Tabs';
+import { NavTabs } from '../../components/Tabs';
 import {
     getUsersByPageNumber,
     getUsersByPageNumberAndToken,
@@ -46,10 +46,8 @@ import './AccountManagement.scss';
 const AccountManagement = () => {
     const [translations, selectedLang] = useTranslations();
     const [userMetaData, setUserMetaData] = useState([]);
-    const [rolesForModal, setRoles] = useState([]);
+    const [roles, setRoles] = useState([]);
 
-    // TODO: Ask about conversion between these two (rolesData and roles);
-    const [rolesData, setRolesData] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectedRole, setSelectedRole] = useState(null);
     const [paginationToken, setPaginationToken] = useState('');
@@ -57,6 +55,10 @@ const AccountManagement = () => {
     const [pageNumber, setPageNumber] = useState(0);
     const [selectedTab, setSelectedTab] = useState('one');
     const [isAddRoleModalOpen, setIsAddRoleModalOpen] = useState(false);
+    const memoizedMultiSelectRoles = useMemo(
+        () => rolesToMultiSelectFormat(roles),
+        [roles],
+    );
 
     const errorWrap = useErrorWrap();
 
@@ -85,8 +87,6 @@ const AccountManagement = () => {
             const fetchRoles = async () => {
                 const rolesRes = await getAllRoles();
                 setRoles(rolesRes.result);
-                const roles = rolesToMultiSelectFormat(rolesRes.result);
-                setRolesData(roles);
             };
 
             const fetchInitialUsers = async () => {
@@ -109,7 +109,8 @@ const AccountManagement = () => {
             await fetchRoles();
             await fetchInitialUsers();
         });
-    }, [setUserMetaData, errorWrap]);
+    }, [setUserMetaData, errorWrap, setRoles]);
+    // TODO: Should I add setRoles as dependency?
 
     /**
      * Formats a user to a format useable by the EditRoleModal
@@ -124,16 +125,6 @@ const AccountManagement = () => {
         };
     };
 
-    // TODO: What is the isHidden field? Is that the same thing as isMutable??
-    const roleToRoleModalFormat = (user) => {
-        // console.log(user);
-        return {
-            name: user?.roleName[selectedLang],
-            description: user?.roleDescription[selectedLang],
-            id: user?._id,
-        };
-    };
-
     /**
      * Formats the users response to be useable by the table
      */
@@ -142,21 +133,15 @@ const AccountManagement = () => {
             Username: getUsername(user),
             Name: getName(user),
             Email: getEmail(user),
-            Roles: getRoles(user, rolesData, selectedLang),
+            Roles: getRoles(user, memoizedMultiSelectRoles, selectedLang),
             Access: getAccessLevel(user),
         }));
     };
 
     // TODO: write docs
-    const rolesToTableFormat = (roles) => {
-        // console.log(roles);
-        // console.log(
-        //     roles.map((role) => ({
-        //         Name: role?.roleName[selectedLang],
-        //         // Description: role?.roleDescription[selectedLang],
-        //     })),
-        // );
-        return roles.map((role) => ({
+    // TODO: Can add role descriptions here
+    const rolesToTableFormat = (rolesData) => {
+        return rolesData.map((role) => ({
             Name: role?.roleName[selectedLang],
             // Description: role?.roleDescription[selectedLang],
         }));
@@ -175,27 +160,20 @@ const AccountManagement = () => {
      * Called when a role row is clicked on
      */
     const onRoleSelected = (user) => {
-        // console.log(rolesForModal);
-        const roleData = rolesForModal.find(
+        const roleData = roles.find(
             (u) => u.roleName[selectedLang] === user.Name,
         );
 
-        // console.log(roleData);
-        // console.log(roleToRoleModalFormat(roleData));
-
-        setSelectedRole(roleToRoleModalFormat(roleData));
+        setSelectedRole(roleData);
     };
 
-    // TODO: Handle case where both modals might be open, handling conditional rendering
     // TODO: Write documentation for all of the functions
     // TODO: Extract Modal Component with CSS or create folder for modals
-    // TODO: Change eye icons to pencils
-    // TODO: is Using the roles returned from this enough? Considering that I need to get all of the Roles and their IDs
 
     /**
      * Called when a user's data is updated
      */
-    const onUserEdited = (username, accessLevel, roles) => {
+    const onUserEdited = (username, accessLevel, rolesData) => {
         setUserMetaData((metaData) => {
             // Create updated access attribute
             const updatedAccess = {
@@ -206,7 +184,7 @@ const AccountManagement = () => {
             // Create update role attribute
             const updatedRoles = {
                 Name: COGNITO_ATTRIBUTES.ROLES,
-                Value: JSON.stringify(roles),
+                Value: JSON.stringify(rolesData),
             };
 
             // Clone the structure and find user
@@ -228,10 +206,28 @@ const AccountManagement = () => {
         });
     };
 
-    // TODO: convert this to arrow functions / standardize
-    // TODO: Create folder for Modal
-    // TODO: Generalize components
-    function generateMainUserTable() {
+    // TODO: add docs, better way to do this?
+    const onRoleDeleted = (roleId) => {
+        const updatedRoles = roles.filter((role) => role._id !== roleId);
+        setRoles(updatedRoles);
+    };
+
+    // TODO: add docs, better way to do this?
+    const onRoleEdited = (roleId, roleData) => {
+        const updatedRoles = _.cloneDeep(roles);
+        const updatedRole = updatedRoles.find((role) => role._id === roleId);
+        updatedRole.roleName = roleData.roleName;
+        updatedRole.roleDescription = roleData.roleDescription;
+        setRoles(updatedRoles);
+    };
+
+    // TODO: add docs, ask if there's a better way to do this
+    const onRoleAdded = (role) => {
+        const updatedRoles = roles.concat([role]);
+        setRoles(updatedRoles);
+    };
+
+    const generateMainUserTable = () => {
         return (
             <SimpleTable
                 data={usersToTableFormat(userMetaData)}
@@ -241,22 +237,21 @@ const AccountManagement = () => {
                 renderTableRow={generateUserTableRowRenderer(onUserSelected)}
             />
         );
-    }
+    };
 
-    // Can add role descriptions here
-    function generateMainRoleTable() {
+    const generateMainRoleTable = () => {
         return (
             <SimpleTable
-                data={rolesToTableFormat(rolesForModal)}
+                data={rolesToTableFormat(roles)}
                 headers={getRoleTableHeaders(selectedLang)}
                 rowData={ROLE_TABLE_ROW_DATA}
                 renderHeader={userTableHeaderRenderer}
                 renderTableRow={generateUserTableRowRenderer(onRoleSelected)}
             />
         );
-    }
+    };
 
-    function generateLoadMoreBtn() {
+    const generateLoadMoreBtn = () => {
         return isUserLeft ? (
             <div className="load-div">
                 <button
@@ -274,27 +269,28 @@ const AccountManagement = () => {
                 </p>
             </div>
         );
-    }
+    };
 
     const generateUserEditModal = () => {
         return (
             <EditRoleModal
                 isOpen={selectedUser !== null}
                 userInfo={selectedUser}
-                allRoles={rolesData}
+                allRoles={memoizedMultiSelectRoles}
                 onClose={() => setSelectedUser(null)}
                 onUserEdited={onUserEdited}
             />
         );
     };
 
-    // TODO: create onRoleEdited for updated roles asap maybe don't need it since rolesData is derived from userEdited functions' metaData, maybe create the function
     const generateRoleEditModal = () => {
         return (
             <ManageRoleModal
                 isOpen={selectedRole !== null}
                 roleInfo={selectedRole}
                 onClose={() => setSelectedRole(null)}
+                onRoleDeleted={onRoleDeleted}
+                onRoleEdited={onRoleEdited}
             />
         );
     };
@@ -304,6 +300,7 @@ const AccountManagement = () => {
             <AddRoleModal
                 isOpen={isAddRoleModalOpen}
                 onClose={() => setIsAddRoleModalOpen(false)}
+                onRoleAdded={onRoleAdded}
             />
         );
     };
@@ -340,15 +337,13 @@ const AccountManagement = () => {
         setIsAddRoleModalOpen(true);
     };
 
-    // TODO: Rename Color Tabs
-    // TODO: Relook conditional rendering below
     // TODO: change selectedTab names and generalize with arrays
 
     return (
         <div>
             <div className="dashboard" />
             <div className="patient-list">
-                <ColorTabs value={selectedTab} setValue={setSelectedTab} />
+                <NavTabs value={selectedTab} setValue={setSelectedTab} />
                 <div className="header">
                     <div className="section">
                         <h2
@@ -369,7 +364,6 @@ const AccountManagement = () => {
             {generateUserEditModal()}
             {generateRoleEditModal()}
             {generateAddRoleModal()}
-            {/* Should I make this conditionally rendered so not all functions are called */}
         </div>
     );
 };

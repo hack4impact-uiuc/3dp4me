@@ -8,53 +8,26 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { addRole } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
-// TODO: check duplicate roles
-// TODO: Do we need to figure out if role is immutable?
-// Should I have isHidden or isMutable?
-
-const AddRoleModal = ({ isOpen, onClose }) => {
-    const [role, setRole] = useState(null);
+const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
+    const [role, setRole] = useState({});
     const translations = useTranslations()[0];
     const errorWrap = useErrorWrap();
 
     const onSave = async () => {
-        await errorWrap(async () => addRole(role));
+        // TODO: how to add error wrap
+        const res = await addRole(role);
+        onRoleAdded(res.result);
         onClose();
-        // onUserEdited(userData.userId, userData.accessLevel, userData.roles);
     };
 
-    // TODO: General Modal Component
-
-    // TODO: Ask about key param
-    // TODO: Should state just be one role object to be updated? Is this best way to write handlers?
-    // TODO: onUserEdited
     // TODO: how to make this required or need to make fields required?
+    // TODO: Design of these modals' fields
+    // TODO: Leave comments
 
-    const handleNameENChange = (key, value) => {
+    const handleRoleUpdate = (key, value, lang) => {
         setRole((prevState) => ({
             ...prevState,
-            roleName: { ...prevState?.roleName, EN: value },
-        }));
-    };
-
-    const handleNameARChange = (key, value) => {
-        setRole((prevState) => ({
-            ...prevState,
-            roleName: { ...prevState?.roleName, AR: value },
-        }));
-    };
-
-    const handleDescENChange = (key, value) => {
-        setRole((prevState) => ({
-            ...prevState,
-            roleDescription: { ...prevState?.roleDescription, EN: value },
-        }));
-    };
-
-    const handleDescARChange = (key, value) => {
-        setRole((prevState) => ({
-            ...prevState,
-            roleDescription: { ...prevState?.roleDescription, AR: value },
+            [key]: { ...prevState?.[key], [lang]: value },
         }));
     };
 
@@ -66,25 +39,37 @@ const AddRoleModal = ({ isOpen, onClose }) => {
                     value={role?.roleName?.EN}
                     className="text-field"
                     displayName={`${translations.roleManagement.roleName} (EN)`}
-                    onChange={handleNameENChange}
+                    onChange={(key, value) =>
+                        handleRoleUpdate(key, value, 'EN')
+                    }
+                    fieldId="roleName"
                 />
                 <TextField
                     value={role?.roleName?.AR}
                     className="text-field"
                     displayName={`${translations.roleManagement.roleName} (AR)`}
-                    onChange={handleNameARChange}
+                    onChange={(key, value) =>
+                        handleRoleUpdate(key, value, 'AR')
+                    }
+                    fieldId="roleName"
                 />
                 <TextField
                     value={role?.roleDescription?.EN}
                     className="text-field"
                     displayName={`${translations.roleManagement.roleDescription} (EN)`}
-                    onChange={handleDescENChange}
+                    onChange={(key, value) =>
+                        handleRoleUpdate(key, value, 'EN')
+                    }
+                    fieldId="roleDescription"
                 />
                 <TextField
                     value={role?.roleDescription?.AR}
                     className="text-field"
                     displayName={`${translations.roleManagement.roleDescription} (AR)`}
-                    onChange={handleDescARChange}
+                    onChange={(key, value) =>
+                        handleRoleUpdate(key, value, 'AR')
+                    }
+                    fieldId="roleDescription"
                 />
 
                 <div>
@@ -103,6 +88,7 @@ const AddRoleModal = ({ isOpen, onClose }) => {
 AddRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    onRoleAdded: PropTypes.func.isRequired,
 };
 
 export default AddRoleModal;

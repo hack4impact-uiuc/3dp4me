@@ -1,59 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import TextField from '../Fields/TextField';
-import TextArea from '../Fields/TextField';
-
+import TextArea from '../Fields/TextArea';
 import './ManageRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { deleteRole, editRole } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 
-// TODO: check duplicate roles
-// TODO: Do we need to figure out if role is immutable?
-
-const ManageRoleModal = ({ isOpen, onClose, roleInfo }) => {
-    // console.log(roleInfo);
-    // const [roleToAdd, setRoleToAdd] = useState('');
-
+const ManageRoleModal = ({
+    isOpen,
+    onClose,
+    onRoleDeleted,
+    onRoleEdited,
+    roleInfo,
+}) => {
     const [translations, selectedLang] = useTranslations();
-    // TODO: use Effect here?
-    // TODO:  how to get initial desc inside
-    const [role, setRole] = useState({
-        [`roleDescription.${selectedLang}`]: roleInfo?.description,
-    });
+
+    const [role, setRole] = useState({});
     const errorWrap = useErrorWrap();
 
+    useEffect(() => {
+        setRole(_.cloneDeep(roleInfo));
+    }, [roleInfo]);
+
     const onDelete = async () => {
-        await errorWrap(async () => deleteRole(roleInfo?.id));
+        await errorWrap(async () => deleteRole(roleInfo?._id));
+        onRoleDeleted(roleInfo?._id);
         onClose();
-        // onUserEdited(userData.userId, userData.accessLevel, userData.roles);
     };
 
     const onSave = async () => {
-        // TODO: add Edit Role here, input put method
-        await errorWrap(async () => editRole(roleInfo?.id, role));
+        await errorWrap(async () => editRole(roleInfo?._id, role));
+        onRoleEdited(roleInfo?._id, role);
         onClose();
-        // onUserEdited(userData.userId, userData.accessLevel, userData.roles);
     };
 
-    const onDescriptionChange = async (fieldId, roleDesc) => {
-        // console.log(role);
-        // TODO: add Edit Role here, input put method
+    const onRoleChange = async (fieldId, value) => {
         setRole((prevState) => ({
             ...prevState,
-            [`roleDescription.${selectedLang}`]: roleDesc,
+            [fieldId]: { ...prevState?.[fieldId], [selectedLang]: value },
         }));
-        // onUserEdited(userData.userId, userData.accessLevel, userData.roles);
     };
-
-    // TODO: General Modal Component
-
-    // TODO: Deleting Roles, Adding Role Descriptions to Table, Adding more roles to edit to table over just adding and removing buttons
-
-    // TODO: onUserEdited, getting the modal to change based on selected lang? or should there be fields to modify values in both languages
-    // TODO: Should the role name be able to be modified?
 
     return (
         <Modal open={isOpen} onClose={onClose} className="manage-role-modal">
@@ -63,17 +53,17 @@ const ManageRoleModal = ({ isOpen, onClose, roleInfo }) => {
                     className="text-field"
                     displayName={translations.roleManagement.roleName}
                     type="text"
-                    isDisabled
-                    value={roleInfo?.name}
-                />
-                {/* TODO: Text Area isn't any bigger */}
-                <TextField
-                    className="text-field"
-                    displayName={translations.roleManagement.roleDescription}
-                    type="text"
                     isDisabled={false}
-                    value={role?.[`roleDescription.${selectedLang}`]}
-                    onChange={onDescriptionChange}
+                    value={role?.roleName?.[selectedLang]}
+                    onChange={onRoleChange}
+                    fieldId="roleName"
+                />
+                <TextArea
+                    title={translations.roleManagement.roleDescription}
+                    disabled={false}
+                    fieldId="roleDescription"
+                    value={role?.roleDescription?.[selectedLang]}
+                    onChange={onRoleChange}
                 />
                 <p>{translations.roleManagement.warning}</p>
                 <div>
@@ -98,10 +88,12 @@ const ManageRoleModal = ({ isOpen, onClose, roleInfo }) => {
 ManageRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    onRoleDeleted: PropTypes.func.isRequired,
+    onRoleEdited: PropTypes.func.isRequired,
     roleInfo: PropTypes.shape({
-        name: PropTypes.string,
-        id: PropTypes.string,
-        description: PropTypes.string,
+        roleName: PropTypes.string,
+        _id: PropTypes.string,
+        roleDescription: PropTypes.string,
     }),
 };
 
