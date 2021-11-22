@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
-import { useQueryParam, StringParam } from 'use-query-params';
+import { StringParam, useQueryParam } from 'use-query-params';
 
 import {
     getAllStepsMetadata,
@@ -56,7 +56,8 @@ const PatientDetail = () => {
                 // Sort it
                 metaData = sortMetadata(metaData);
 
-                setSelectedStep(stepKeyParam);
+                if (stepKeyParam) setSelectedStep(stepKeyParam);
+                else if (metaData?.length) setSelectedStep(metaData[0].key);
 
                 setStepMetaData(metaData);
                 setPatientData(data);
