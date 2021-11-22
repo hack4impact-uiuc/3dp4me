@@ -139,8 +139,12 @@ const Dashboard = () => {
     const onSearchQueryChanged = (newSearchQuery) => {
         setSearchQuery(newSearchQuery);
 
+        // The page number needs to be updated because the search query might filter the patient data
+        // such that there aren't as many pages as the one the user is currently on.
+        setSelectedPageNumber(1);
+
         errorWrap(async () => {
-            await loadPatientData(selectedStep, selectedPageNumber, newSearchQuery);
+            await loadPatientData(selectedStep, 1, newSearchQuery);
         });
     }
 
@@ -271,6 +275,7 @@ const Dashboard = () => {
             <PaginateBar
                 pageCount={Math.ceil(patientsCount / PEOPLE_PER_PAGE, 10)}
                 onPageChange={onPageNumberChanged}
+                currentPage={selectedPageNumber - 1}
             />
         </div>
     );

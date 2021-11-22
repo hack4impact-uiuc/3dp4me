@@ -10,13 +10,13 @@ import LeftArrow from '../../assets/left-arrow.svg';
 /**
  * Shows a pagination component with arrows and page numbers
  */
-const PaginateBar = ({ pageCount, onPageChange }) => {
+const PaginateBar = ({ pageCount, onPageChange, currentPage }) => {
     const nextLabel = <img className="arrow" alt="" src={RightArrow} />;
     const previousLabel = <img className="arrow" alt="" src={LeftArrow} />;
 
     return (
         <ReactPaginate
-            initialPage={0}
+            forcePage={currentPage}
             breakLabel="..."
             breakClassName="break-me"
             pageCount={pageCount}
@@ -42,6 +42,7 @@ const PaginateBar = ({ pageCount, onPageChange }) => {
 PaginateBar.propTypes = {
     pageCount: PropTypes.number,
     onPageChange: PropTypes.func.isRequired,
+    currentPage: PropTypes.number
 };
 
 export default PaginateBar;

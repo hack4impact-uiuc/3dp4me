@@ -27,6 +27,7 @@
         "mic-recorder-to-mp3": "^2.2.2",
         "prettier": "^2.4.1",
         "prop-types": "^15.6.0",
+        "query-string": "^7.0.1",
         "react": "^16.13.1",
         "react-code-input": "^3.10.1",
         "react-datepicker": "^4.2.1",
@@ -47,7 +48,8 @@
         "semantic-ui-css": "^2.4.1",
         "semantic-ui-react": "^2.0.3",
         "signature_pad": "^3.0.0-beta.4",
-        "sweetalert": "^2.1.2"
+        "sweetalert": "^2.1.2",
+        "use-query-params": "^1.2.3"
     },
     "scripts": {
         "start": "react-app-env start",
