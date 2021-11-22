@@ -13,9 +13,9 @@ export const getPatientsCount = async () => {
 export const getPatientsByPageNumberAndSearch = async (
     pageNumber,
     nPerPage,
-    searchBy = '',
+    searchQuery = '',
 ) => {
-    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchBy=${searchBy}`;
+    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
@@ -26,9 +26,9 @@ export const getPatientsByStageAndPageNumberAndSearch = async (
     stage,
     pageNumber,
     nPerPage,
-    searchBy = '',
+    searchQuery = '',
 ) => {
-    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchBy=${searchBy}`;
+    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 

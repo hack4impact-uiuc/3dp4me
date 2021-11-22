@@ -54,12 +54,12 @@ const Dashboard = () => {
      * Gets patient data based on page number and step
      */
 
-    const loadPatientData = async (stepKey, pageNumber, searchBy) => {
+    const loadPatientData = async (stepKey, pageNumber, query) => {
         const res = await getPatientsByStageAndPageNumberAndSearch(
             stepKey,
             pageNumber,
             PEOPLE_PER_PAGE,
-            searchBy,
+            query,
         );
         setPatients(res.result.data);
         setPatientsCount(res.result.count);

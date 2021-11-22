@@ -31,11 +31,11 @@ const Patients = () => {
 
     const errorWrap = useErrorWrap();
 
-    const loadPatientData = async (pageNumber, searchBy) => {
+    const loadPatientData = async (pageNumber, query) => {
         const res = await getPatientsByPageNumberAndSearch(
             pageNumber,
             PEOPLE_PER_PAGE,
-            searchBy,
+            query,
         );
         setAllPatients(res.result.data);
         setPatientsCount(res.result.count);

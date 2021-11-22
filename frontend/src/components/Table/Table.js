@@ -5,7 +5,7 @@ import { Button, TextField } from '@material-ui/core';
 import search from '../../assets/search.svg';
 import SimpleTable from '../SimpleTable/SimpleTable';
 import { TableHeaderType, TableRowType } from '../../utils/custom-proptypes';
-import { LANGUAGES } from '../../utils/constants';
+import { LANGUAGES, PATIENT_TABLE_SEARCH_DELAY } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
 /**
@@ -34,13 +34,13 @@ const Table = ({
     const [isSearchQueryUpdated, setIsSearchQueryUpdated] = useState(false);
 
     useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
+        const searchDelay = setTimeout(() => {
             if (isSearchQueryUpdated) {
                 handleSearchQuery(searchQuery);
             }
-        }, 1000);
+        }, PATIENT_TABLE_SEARCH_DELAY);
 
-        return () => clearTimeout(delayDebounceFn);
+        return () => clearTimeout(searchDelay);
     }, [searchQuery, isSearchQueryUpdated]);
 
     const updateSearchQuery = (event) => {

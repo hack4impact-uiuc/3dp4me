@@ -18,6 +18,40 @@ module.exports.sendResponse = async (res, code, message, data = {}) => {
 };
 
 /**
+ * Removes patients whose name, phone nunber, or unique _id contains the searchQuery
+ * @param {List} patients A list of patients
+ * @param {String} searchQuery A word or phrase related to a specific patient/group of patients
+ * @returns a List containing the filtering patients
+ */
+const filterPatientsBySearchQuery = (patients, searchQuery) => {
+    if (searchQuery === '') {
+        return patients;
+    }
+
+    const filteredData = [];
+
+    if (searchQuery !== '') {
+        /* The following fields below will be considered during the search.
+           All of the fields are encrypted in the database.
+           If the data associated with any one of these fields
+           contains the search query, we will return it. */
+        const fieldsToCheckList = ['_id', 'firstName', 'fathersName', 'grandfathersName', 'familyName', 'phoneNumber'];
+
+        for (let dataIdx = 0; dataIdx < patients.length; dataIdx++) {
+            for (let fieldsIdx = 0; fieldsIdx < fieldsToCheckList.length; fieldsIdx++) {
+                const fieldToCheck = fieldsToCheckList[fieldsIdx];
+                const patientDataByField = patients[dataIdx][fieldToCheck] || '';
+                if (patientDataByField.toString().toLowerCase().includes(searchQuery)) {
+                    filteredData.push(patients[dataIdx]);
+                    break;
+                }
+            }
+        }
+    }
+    return filteredData;
+};
+
+/**
  * Convienience function getting data from a model with pagination
  * @param {Obect} req The request object
  * @param {MongoDB Collection} model The mongoDB model
@@ -28,38 +62,17 @@ module.exports.sendResponse = async (res, code, message, data = {}) => {
 module.exports.getDataFromModelWithPaginationAndSearch = async (req, model, findParameters = {}) => {
     // The default values below will get the first user in the database
     const {
-        pageNumber = 1, nPerPage = DEFAULT_PATIENTS_ON_GET_REQUEST, searchBy = '',
+        pageNumber = 1, nPerPage = DEFAULT_PATIENTS_ON_GET_REQUEST, searchQuery = '',
     } = req.query;
     const intPageNumber = parseInt(pageNumber, 10);
     const intPatientsPerPage = parseInt(nPerPage, 10);
-    const lowerCaseSearchBy = searchBy.toLowerCase();
+    const lowerCaseSearchQuery = searchQuery.toLowerCase();
 
     const data = await model.find(findParameters).sort({ lastEdited: -1 });
 
     /* Filter by search */
 
-    let filteredData = [];
-
-    if (lowerCaseSearchBy !== '') {
-        /* The following fields below will be considered during the search.
-           All of the fields are encrypted in the database.
-           If the data associated with any one of these fields
-           contains lowerCaseSearchBy, we will return it. */
-        const fieldsToCheck = ['firstName', 'fathersName', 'grandfathersName', 'familyName', 'phoneNumber'];
-
-        for (let dataIdx = 0; dataIdx < data.length; dataIdx++) {
-            for (let fieldsIdx = 0; fieldsIdx < fieldsToCheck.length; fieldsIdx++) {
-                const patientDataByField = data[dataIdx][fieldsToCheck[fieldsIdx]] || '';
-                if (patientDataByField.toLowerCase().includes(lowerCaseSearchBy)) {
-                    filteredData.push(data[dataIdx]);
-                    break;
-                }
-            }
-        }
-    } else {
-        // No filtering is needed
-        filteredData = data;
-    }
+    const filteredData = filterPatientsBySearchQuery(data, lowerCaseSearchQuery);
 
     /* Filter by page number */
 
