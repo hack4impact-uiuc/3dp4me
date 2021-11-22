@@ -8,7 +8,7 @@ import {
     getAllStepsMetadata,
     getPatientById,
     updatePatient,
-    updateStage
+    updateStage,
 } from '../../api/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
@@ -20,7 +20,6 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
 import { sortMetadata } from '../../utils/utils';
 import './PatientDetail.scss';
-
 
 /**
  * The detail view for a patient. Shows their information
@@ -57,10 +56,8 @@ const PatientDetail = () => {
                 // Sort it
                 metaData = sortMetadata(metaData);
 
-                if (stepKeyParam)
-                    setSelectedStep(stepKeyParam);
-                else if (metaData?.length)
-                    setSelectedStep(metaData[0].key)
+                if (stepKeyParam) setSelectedStep(stepKeyParam);
+                else if (metaData?.length) setSelectedStep(metaData[0].key);
 
                 setStepMetaData(metaData);
                 setPatientData(data);

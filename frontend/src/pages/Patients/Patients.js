@@ -6,10 +6,11 @@ import PatientTable from '../../components/PatientTable/PatientTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
-    ALL_PATIENT_DASHBOARD_ROW_DATA, getPatientDashboardHeaders, PEOPLE_PER_PAGE
+    ALL_PATIENT_DASHBOARD_ROW_DATA,
+    getPatientDashboardHeaders,
+    PEOPLE_PER_PAGE,
 } from '../../utils/constants';
 import './Patients.scss';
-
 
 /**
  * Shows a table of all patients within the system

@@ -12,8 +12,6 @@ import { LANGUAGES, SORT_DIRECTIONS } from './constants';
 import { fieldToJSX } from './fields';
 import { resolveObjPath } from './object';
 
-
-
 /**
  * Given item data, a field key, and a field type, this function finds
  * the data and formats it accordingly.
@@ -123,7 +121,9 @@ export const patientTableRowRenderer = (
 ) => {
     // Construct the base row
     const row = defaultTableRowRenderer(rowData, patient, selectedLang);
-    const link = stepKey ? `/patient-info/${patient._id}?stepKey=${stepKey}` : `/patient-info/${patient._id}`
+    const link = stepKey
+        ? `/patient-info/${patient._id}?stepKey=${stepKey}`
+        : `/patient-info/${patient._id}`;
 
     // Add a link to the patient's page
     row.push(
@@ -132,10 +132,7 @@ export const patientTableRowRenderer = (
             className="cell"
             align="center"
         >
-            <Link
-                className="table-view-link"
-                to={link}
-            >
+            <Link className="table-view-link" to={link}>
                 <IconButton>
                     <img alt="status icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
