@@ -7,6 +7,7 @@ const { isUniqueStepNumber } = require('../models/Metadata');
 const { isAdmin } = require('./aws/awsUsers');
 const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
 const { abortAndError } = require('./transactionUtils');
+const { generateSchemaFromMetadata } = require('./initDb');
 const { generateKeyWithoutCollision } = require('./keyUtils');
 
 const stringToBoolean = (value) => {
@@ -80,7 +81,7 @@ module.exports.updateStepsInTransaction = async (req, session) => {
 
     // Go through all of the step updates in the request body and apply them
     for (const step of req.body) {
-        const updatedStepModel = await updateStepInTransation(step, session);
+        const updatedStepModel = await updateStepInTransaction(step, session);
         stepData.push(updatedStepModel);
     }
 
@@ -143,7 +144,7 @@ const updateFieldKeys = (fields) => {
 
 /* eslint-enable no-restricted-syntax, no-await-in-loop */
 
-const updateStepInTransation = async (stepBody, session) => {
+const updateStepInTransaction = async (stepBody, session) => {
     // Cannot find step
     if (!stepBody?.key) await abortAndError(session, 'stepKey missing');
 
@@ -153,8 +154,14 @@ const updateStepInTransation = async (stepBody, session) => {
         session,
     );
 
-    // Abort if can't find step to edit
-    if (!stepToEdit) await abortAndError(session, `No step with key, ${stepKey}`);
+    // Add a step if can't find step to edit
+    if (!stepToEdit) {
+        const newStep = new models.Step(stepBody);
+
+        await newStep.save({ session });
+        generateSchemaFromMetadata(stepBody);
+        return newStep;
+    }
 
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);

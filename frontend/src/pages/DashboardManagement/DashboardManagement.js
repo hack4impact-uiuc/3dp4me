@@ -20,6 +20,7 @@ import {
     verticalMovementWidth,
 } from '../../styles/variables.scss';
 import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
+import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 import {
     DIRECTION,
     getValidAdjacentElement,
@@ -63,6 +64,7 @@ const SectionTab = () => {
 
         errorWrap(
             async () => {
+                setIsEditing(false);
                 updateResponse = await updateMultipleSteps(stepMetadata);
             },
             () => {
@@ -291,6 +293,8 @@ const SectionTab = () => {
             <CreateStepModal
                 isOpen={stepModalOpen}
                 onModalClose={onStepModalClose}
+                allRoles={allRoles}
+                onAddNewStep={addNewStep}
             />
         );
     };
@@ -330,6 +334,21 @@ const SectionTab = () => {
 
         updatedMetadata[stepIndex].fields[fieldIndex] = updatedField;
 
+        setStepMetadata(updatedMetadata);
+    };
+
+    const addNewStep = (newStepData) => {
+        const updatedNewStep = _.cloneDeep(newStepData);
+        const updatedMetadata = _.cloneDeep(stepMetadata);
+
+        updatedNewStep.stepNumber = updatedMetadata.length;
+        const currentStepKeys = updatedMetadata.map((step) => step.key);
+        updatedNewStep.key = generateKeyWithoutCollision(
+            updatedNewStep.displayName.EN,
+            currentStepKeys,
+        );
+
+        updatedMetadata.push(updatedNewStep);
         setStepMetadata(updatedMetadata);
     };
 

@@ -26,6 +26,7 @@ const PatientTable = ({
     rowData,
     initialSearchQuery,
     handleSearchQuery,
+    stepKey,
 }) => {
     const errorWrap = useErrorWrap();
     const translations = useTranslations()[0];
@@ -64,9 +65,9 @@ const PatientTable = ({
     const onSaveAndEditPatient = async (patientData) => {
         const patientId = await onSavePatient(patientData);
         const currentRoute = window.location.href;
-        let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}`;
+        let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}?stepKey=${stepKey}`;
 
-        // Remove doulbe '/'
+        // Remove double '/'
         if (
             relativeRoute[0] === '/' &&
             currentRoute[currentRoute.length - 1] === '/'
@@ -74,6 +75,39 @@ const PatientTable = ({
             relativeRoute = relativeRoute.substr(1, relativeRoute.length - 1);
 
         if (patientId) window.location.href = currentRoute + relativeRoute;
+    };
+
+
+    /**
+     * Given a query and patient data, return true if this patient should
+     * be included in the search results
+     */
+
+    const doesPatientMatchQuery = (patient, query) => {
+        const patientName = getPatientName(patient).toLowerCase();
+        const patientId = patient?._id?.toLowerCase();
+        const lowercaseQuery = query?.toLowerCase();
+
+        // If query is contained in patient name
+        if (patientName.indexOf(lowercaseQuery) !== -1) return true;
+
+        // If query is contained in patient's ID
+        if (patientId.indexOf(lowercaseQuery) !== -1) return true;
+
+        return false;
+    };
+
+    const PatientTableRowRendererForStep = (
+        patientRowData,
+        patient,
+        selectedLang,
+    ) => {
+        return patientTableRowRenderer(
+            patientRowData,
+            patient,
+            selectedLang,
+            stepKey,
+        );
     };
 
     return (
@@ -90,7 +124,7 @@ const PatientTable = ({
                 tableTitle={tableTitle}
                 addRowButtonTitle={translations.components.button.createPatient}
                 renderHeader={patientTableHeaderRenderer}
-                renderTableRow={patientTableRowRenderer}
+                renderTableRow={PatientTableRowRendererForStep}
                 initialSearchQuery={initialSearchQuery}
                 handleSearchQuery={handleSearchQuery}
                 headers={headers}
@@ -109,6 +143,7 @@ PatientTable.propTypes = {
     rowData: PropTypes.arrayOf(TableRowType).isRequired,
     handleSearchQuery: PropTypes.func.isRequired,
     initialSearchQuery: PropTypes.string.isRequired
+    stepKey: PropTypes.string,
 };
 
 export default PatientTable;

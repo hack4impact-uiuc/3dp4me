@@ -119,6 +119,7 @@ const Dashboard = () => {
         if (!stepKey) return;
 
         // TODO: Put the patient data in a store
+
         setSelectedStep(stepKey);
 
         errorWrap(async () => {
@@ -234,6 +235,7 @@ const Dashboard = () => {
                     patients={patients}
                     handleSearchQuery={onSearchQueryChanged}
                     initialSearchQuery={searchQuery}
+                    stepKey={selectedStep}
                 />
             );
         });
