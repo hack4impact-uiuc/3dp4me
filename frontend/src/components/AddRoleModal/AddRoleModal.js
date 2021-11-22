@@ -8,6 +8,7 @@ import './AddRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { addRole } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { ERR_ROLE_INPUT_VALIDATION_FAILED } from '../../utils/constants';
 
 const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
     const [role, setRole] = useState({});
@@ -15,21 +16,32 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
     const errorWrap = useErrorWrap();
 
     const onSave = async () => {
-        // TODO: how to add error wrap?
-        const res = await addRole(role);
-        onRoleAdded(res.result);
-        onClose();
+        errorWrap(async () => {
+            validateRole();
+            const res = await addRole(role);
+            onRoleAdded(res.result);
+            onClose();
+        });
     };
 
-    // TODO: how to make this required or need to make fields required?
     // TODO: Design of these modals' fields (ask Evan)
-    // TODO: Leave comments
 
     const handleRoleUpdate = (key, value, lang) => {
         setRole((prevState) => ({
             ...prevState,
             [key]: { ...prevState?.[key], [lang]: value },
         }));
+    };
+
+    const validateRole = () => {
+        if (
+            role.roleName.EN.trim() === '' ||
+            role.roleName.AR.trim() === '' ||
+            role.roleDescription.EN.trim() === '' ||
+            role.roleDescription.AR.trim() === ''
+        ) {
+            throw new Error(ERR_ROLE_INPUT_VALIDATION_FAILED);
+        }
     };
 
     return (

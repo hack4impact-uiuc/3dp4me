@@ -9,6 +9,7 @@ import './ManageRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { deleteRole, editRole } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { ERR_ROLE_INPUT_VALIDATION_FAILED } from '../../utils/constants';
 
 const ManageRoleModal = ({
     isOpen,
@@ -27,15 +28,30 @@ const ManageRoleModal = ({
     }, [roleInfo]);
 
     const onDelete = async () => {
-        await errorWrap(async () => deleteRole(roleInfo?._id));
+        // TODO: handle deleting immutable roles, don't delete temporarily
+        const res = await errorWrap(async () => deleteRole(roleInfo?._id));
+        console.log(res);
         onRoleDeleted(roleInfo?._id);
         onClose();
     };
 
+    const validateRole = () => {
+        if (
+            role.roleName[selectedLang].trim() === '' ||
+            role.roleDescription[selectedLang].trim() === ''
+        ) {
+            throw new Error(ERR_ROLE_INPUT_VALIDATION_FAILED);
+        }
+    };
+
     const onSave = async () => {
-        await errorWrap(async () => editRole(roleInfo?._id, role));
-        onRoleEdited(roleInfo?._id, role);
-        onClose();
+        // TODO: handle editing immutable roles, don't delete temporarily
+        errorWrap(async () => {
+            validateRole();
+            await errorWrap(async () => editRole(roleInfo?._id, role));
+            onRoleEdited(roleInfo?._id, role);
+            onClose();
+        });
     };
 
     const onRoleChange = async (fieldId, value) => {

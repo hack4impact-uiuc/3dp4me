@@ -24,6 +24,7 @@ import SimpleTable from '../../components/SimpleTable/SimpleTable';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
+    ACCOUNT_MANAGEMENT_TAB_NAMES,
     COGNITO_ATTRIBUTES,
     getUserTableHeaders,
     getRoleTableHeaders,
@@ -53,7 +54,7 @@ const AccountManagement = () => {
     const [paginationToken, setPaginationToken] = useState('');
     const [isUserLeft, setIsUserLeft] = useState(true);
     const [pageNumber, setPageNumber] = useState(0);
-    const [selectedTab, setSelectedTab] = useState('one');
+    const [selectedTab, setSelectedTab] = useState('USERS');
     const [isAddRoleModalOpen, setIsAddRoleModalOpen] = useState(false);
     const memoizedMultiSelectRoles = useMemo(
         () => rolesToMultiSelectFormat(roles),
@@ -110,7 +111,6 @@ const AccountManagement = () => {
             await fetchInitialUsers();
         });
     }, [setUserMetaData, errorWrap, setRoles]);
-    // TODO: Should I add setRoles as dependency?
 
     /**
      * Formats a user to a format useable by the EditRoleModal
@@ -138,11 +138,14 @@ const AccountManagement = () => {
         }));
     };
 
-    // TODO: write docs
-    // TODO: Can add role descriptions here
+    // TODO: Can add role descriptions here, uncomment line 147 to view
+    /**
+     * Formats the roles response to be useable by the table
+     */
     const rolesToTableFormat = (rolesData) => {
         return rolesData.map((role) => ({
             Name: role?.roleName[selectedLang],
+            _id: role?._id,
             // Description: role?.roleDescription[selectedLang],
         }));
     };
@@ -160,15 +163,12 @@ const AccountManagement = () => {
      * Called when a role row is clicked on
      */
     const onRoleSelected = (user) => {
-        const roleData = roles.find(
-            (u) => u.roleName[selectedLang] === user.Name,
-        );
+        console.log(user);
+        const roleData = roles.find((u) => u._id === user._id);
+        console.log(roleData);
 
         setSelectedRole(roleData);
     };
-
-    // TODO: Write documentation for all of the functions
-    // TODO: Extract Modal Component with CSS or create folder for modals
 
     /**
      * Called when a user's data is updated
@@ -206,25 +206,41 @@ const AccountManagement = () => {
         });
     };
 
-    // TODO: add docs, better way to do this?
+    /**
+     * Called when a role's data is deleted
+     */
     const onRoleDeleted = (roleId) => {
-        const updatedRoles = roles.filter((role) => role._id !== roleId);
-        setRoles(updatedRoles);
+        setRoles((rolesData) => {
+            const updatedRoles = rolesData.filter(
+                (role) => role._id !== roleId,
+            );
+            return updatedRoles;
+        });
     };
 
-    // TODO: add docs, better way to do this?
+    /**
+     * Called when a role's data is modified
+     */
     const onRoleEdited = (roleId, roleData) => {
-        const updatedRoles = _.cloneDeep(roles);
-        const updatedRole = updatedRoles.find((role) => role._id === roleId);
-        updatedRole.roleName = roleData.roleName;
-        updatedRole.roleDescription = roleData.roleDescription;
-        setRoles(updatedRoles);
+        setRoles((rolesData) => {
+            const updatedRoles = _.cloneDeep(rolesData);
+            const updatedRole = updatedRoles.find(
+                (role) => role._id === roleId,
+            );
+            updatedRole.roleName = roleData.roleName;
+            updatedRole.roleDescription = roleData.roleDescription;
+            return updatedRoles;
+        });
     };
 
-    // TODO: add docs, ask if there's a better way to do this
+    /**
+     * Called when a role's data is added
+     */
     const onRoleAdded = (role) => {
-        const updatedRoles = roles.concat([role]);
-        setRoles(updatedRoles);
+        setRoles((rolesData) => {
+            const updatedRoles = rolesData.concat([role]);
+            return updatedRoles;
+        });
     };
 
     const generateMainUserTable = () => {
@@ -306,25 +322,25 @@ const AccountManagement = () => {
     };
 
     const generateTable = () => {
-        if (selectedTab === 'one') {
+        if (selectedTab === 'USERS') {
             return generateMainUserTable();
         }
-        if (selectedTab === 'two') {
+        if (selectedTab === 'ROLES') {
             return generateMainRoleTable();
         }
     };
 
     const generateDatabaseTitle = () => {
-        if (selectedTab === 'one') {
+        if (selectedTab === 'USERS') {
             return translations.accountManagement.userDatabase;
         }
-        if (selectedTab === 'two') {
+        if (selectedTab === 'ROLES') {
             return translations.roleManagement.roleDatabase;
         }
     };
 
     const generateButton = () => {
-        if (selectedTab === 'two') {
+        if (selectedTab === 'ROLES') {
             return (
                 <StyledButton primary onClick={onRoleButtonClick}>
                     {translations.roleManagement.addRole}
@@ -337,13 +353,15 @@ const AccountManagement = () => {
         setIsAddRoleModalOpen(true);
     };
 
-    // TODO: change selectedTab names and generalize with arrays
-
     return (
         <div>
             <div className="dashboard" />
             <div className="patient-list">
-                <NavTabs value={selectedTab} setValue={setSelectedTab} />
+                <NavTabs
+                    value={selectedTab}
+                    setValue={setSelectedTab}
+                    labels={ACCOUNT_MANAGEMENT_TAB_NAMES}
+                />
                 <div className="header">
                     <div className="section">
                         <h2

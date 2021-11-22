@@ -235,6 +235,9 @@ export const ERR_LANGUAGE_VALIDATION_FAILED =
     'Please submit a field with a question in English and Arabic.';
 export const ERR_OPTION_VALIDATION_FAILED = 'Please enter options.';
 
+export const ERR_ROLE_INPUT_VALIDATION_FAILED =
+    'Do not leave role name and description fields empty, please enter values.';
+
 /**
  * The id of the Admin role in the database.
  */
@@ -244,3 +247,5 @@ export const ADMIN_ID = '60e496fa7398681e9c82e0f5';
 export const PERMISSION_CONSTRAINTS = { video: true };
 
 export const PERMISSION_STATUS_DENIED = 'denied';
+
+export const ACCOUNT_MANAGEMENT_TAB_NAMES = ['USERS', 'ROLES'];
