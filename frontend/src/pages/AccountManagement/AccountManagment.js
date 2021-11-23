@@ -325,6 +325,7 @@ const AccountManagement = () => {
         if (selectedTab === 'ROLES') {
             return generateMainRoleTable();
         }
+        return <></>;
     };
 
     const generateDatabaseTitle = () => {
@@ -334,6 +335,7 @@ const AccountManagement = () => {
         if (selectedTab === 'ROLES') {
             return translations.roleManagement.roleDatabase;
         }
+        return <></>;
     };
 
     const generateButton = () => {
@@ -344,6 +346,7 @@ const AccountManagement = () => {
                 </StyledButton>
             );
         }
+        return <></>;
     };
 
     const onRoleButtonClick = () => {
