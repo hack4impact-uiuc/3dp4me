@@ -9,7 +9,10 @@ import './ManageRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { deleteRole, editRole } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
-import { ERR_ROLE_INPUT_VALIDATION_FAILED } from '../../utils/constants';
+import {
+    ERR_ROLE_INPUT_VALIDATION_FAILED,
+    ERR_ROLE_IS_IMMUTABLE,
+} from '../../utils/constants';
 
 const ManageRoleModal = ({
     isOpen,
@@ -19,7 +22,6 @@ const ManageRoleModal = ({
     roleInfo,
 }) => {
     const [translations, selectedLang] = useTranslations();
-
     const [role, setRole] = useState({});
     const errorWrap = useErrorWrap();
 
@@ -28,11 +30,15 @@ const ManageRoleModal = ({
     }, [roleInfo]);
 
     const onDelete = async () => {
-        // TODO: handle deleting immutable roles, don't delete temporarily
-        const res = await errorWrap(async () => deleteRole(roleInfo?._id));
-        console.log(res);
-        onRoleDeleted(roleInfo?._id);
-        onClose();
+        errorWrap(async () => {
+            if (roleInfo?.isMutable) {
+                await errorWrap(async () => deleteRole(roleInfo?._id));
+                onRoleDeleted(roleInfo?._id);
+                onClose();
+            } else {
+                throw new Error(ERR_ROLE_IS_IMMUTABLE);
+            }
+        });
     };
 
     const validateRole = () => {
@@ -45,12 +51,15 @@ const ManageRoleModal = ({
     };
 
     const onSave = async () => {
-        // TODO: handle editing immutable roles, don't delete temporarily
         errorWrap(async () => {
             validateRole();
-            await errorWrap(async () => editRole(roleInfo?._id, role));
-            onRoleEdited(roleInfo?._id, role);
-            onClose();
+            if (roleInfo?.isMutable) {
+                await errorWrap(async () => editRole(roleInfo?._id, role));
+                onRoleEdited(roleInfo?._id, role);
+                onClose();
+            } else {
+                throw new Error(ERR_ROLE_IS_IMMUTABLE);
+            }
         });
     };
 
@@ -110,6 +119,7 @@ ManageRoleModal.propTypes = {
         roleName: PropTypes.string,
         _id: PropTypes.string,
         roleDescription: PropTypes.string,
+        isMutable: PropTypes.bool,
     }),
 };
 

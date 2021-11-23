@@ -163,10 +163,7 @@ const AccountManagement = () => {
      * Called when a role row is clicked on
      */
     const onRoleSelected = (user) => {
-        console.log(user);
         const roleData = roles.find((u) => u._id === user._id);
-        console.log(roleData);
-
         setSelectedRole(roleData);
     };
 

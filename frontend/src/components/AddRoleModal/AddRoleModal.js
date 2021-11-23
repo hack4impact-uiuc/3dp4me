@@ -24,8 +24,6 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
         });
     };
 
-    // TODO: Design of these modals' fields (ask Evan)
-
     const handleRoleUpdate = (key, value, lang) => {
         setRole((prevState) => ({
             ...prevState,

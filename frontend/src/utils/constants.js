@@ -249,3 +249,5 @@ export const PERMISSION_CONSTRAINTS = { video: true };
 export const PERMISSION_STATUS_DENIED = 'denied';
 
 export const ACCOUNT_MANAGEMENT_TAB_NAMES = ['USERS', 'ROLES'];
+
+export const ERR_ROLE_IS_IMMUTABLE = 'Role is immutable';
