@@ -1,6 +1,6 @@
-import { Tabs, Tab, Box } from '@material-ui/core';
-import React from 'react';
+import { Box, Tab, Tabs } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 const NavTabs = ({ value, setValue, labels }) => {
     const handleChange = (event, newValue) => {

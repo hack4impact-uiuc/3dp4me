@@ -1,11 +1,9 @@
 import _ from 'lodash';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import { NavTabs } from '../../components/Tabs';
 import {
-    getUsersByPageNumber,
-    getUsersByPageNumberAndToken,
-    getAllRoles,
+    getAllRoles, getUsersByPageNumber,
+    getUsersByPageNumberAndToken
 } from '../../api/api';
 import {
     getAccessLevel,
@@ -14,31 +12,27 @@ import {
     getName,
     getRoles,
     getRolesValue,
-    getUsername,
+    getUsername
 } from '../../aws/aws-users';
-import { StyledButton } from '../../components/StyledButton/StyledButton';
-import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import AddRoleModal from '../../components/AddRoleModal/AddRoleModal';
+import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import ManageRoleModal from '../../components/ManageRoleModal/ManageRoleModal';
 import SimpleTable from '../../components/SimpleTable/SimpleTable';
+import { StyledButton } from '../../components/StyledButton/StyledButton';
+import { NavTabs } from '../../components/Tabs';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
     ACCOUNT_MANAGEMENT_TAB_NAMES,
-    COGNITO_ATTRIBUTES,
-    getUserTableHeaders,
-    getRoleTableHeaders,
-    LANGUAGES,
-    USER_TABLE_ROW_DATA,
-    ROLE_TABLE_ROW_DATA,
-    PEOPLE_PER_PAGE,
+    COGNITO_ATTRIBUTES, getRoleTableHeaders, getUserTableHeaders, PEOPLE_PER_PAGE, ROLE_TABLE_ROW_DATA, USER_TABLE_ROW_DATA
 } from '../../utils/constants';
-import { rolesToMultiSelectFormat } from '../../utils/utils';
 import {
     generateUserTableRowRenderer,
-    userTableHeaderRenderer,
+    userTableHeaderRenderer
 } from '../../utils/table-renderers';
+import { rolesToMultiSelectFormat } from '../../utils/utils';
 import './AccountManagement.scss';
+
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -356,25 +350,23 @@ const AccountManagement = () => {
     return (
         <div>
             <div className="dashboard" />
-            <div className="patient-list">
-                <NavTabs
-                    value={selectedTab}
-                    setValue={setSelectedTab}
-                    labels={ACCOUNT_MANAGEMENT_TAB_NAMES}
-                />
-                <div className="header">
+            <div className="patient-list"> 
+                <div className="header account-header">
                     <div className="section">
                         <h2
-                            className={
-                                selectedLang === LANGUAGES.AR
-                                    ? 'patient-list-title-ar'
-                                    : 'patient-list-title'
-                            }
+                            className="patient-list-title"
                         >
                             {generateDatabaseTitle()}
                         </h2>
                         {generateButton()}
                     </div>
+                </div>
+                <div className="tab-container">
+                    <NavTabs
+                        value={selectedTab}
+                        setValue={setSelectedTab}
+                        labels={ACCOUNT_MANAGEMENT_TAB_NAMES}
+                    />
                 </div>
                 {generateTable()}
                 {generateLoadMoreBtn()}
