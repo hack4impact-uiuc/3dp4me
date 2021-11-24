@@ -78,14 +78,14 @@ const ManageRoleModal = ({
                     className="text-field"
                     displayName={translations.roleManagement.roleName}
                     type="text"
-                    isDisabled={false}
+                    isDisabled={!role?.isMutable}
                     value={role?.roleName?.[selectedLang]}
                     onChange={onRoleChange}
                     fieldId="roleName"
                 />
                 <TextArea
                     title={translations.roleManagement.roleDescription}
-                    disabled={false}
+                    disabled={!role?.isMutable}
                     fieldId="roleDescription"
                     value={role?.roleDescription?.[selectedLang]}
                     onChange={onRoleChange}

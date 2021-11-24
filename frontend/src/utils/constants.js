@@ -132,7 +132,10 @@ export const getUserTableHeaders = (langKey) => {
     ];
 };
 
-// TODO: add documentations
+/**
+ * List of headers that the role table has. These are
+ * the columns on the 'manage roles' screen.
+ */
 export const getRoleTableHeaders = (langKey) => {
     const t = translations[langKey].tableHeaders;
 
@@ -150,10 +153,12 @@ export const USER_TABLE_ROW_DATA = [
     { id: 'Access', dataType: FIELD_TYPES.ACCESS },
 ];
 
-// TODO: Add docs
+/**
+ * List of row data that the role table has.
+ * 'id' must match 'sortKey' in the headers
+ */
 export const ROLE_TABLE_ROW_DATA = [
     { id: 'Name', dataType: FIELD_TYPES.STRING },
-    // { id: 'Description', dataType: FIELD_TYPES.STRING },
 ];
 
 /**
@@ -237,6 +242,7 @@ export const ERR_OPTION_VALIDATION_FAILED = 'Please enter options.';
 
 export const ERR_ROLE_INPUT_VALIDATION_FAILED =
     'Do not leave role name and description fields empty, please enter values.';
+export const ERR_ROLE_IS_IMMUTABLE = 'This role cannot be edited';
 
 /**
  * The id of the Admin role in the database.
@@ -250,4 +256,7 @@ export const PERMISSION_STATUS_DENIED = 'denied';
 
 export const ACCOUNT_MANAGEMENT_TAB_NAMES = ['USERS', 'ROLES'];
 
-export const ERR_ROLE_IS_IMMUTABLE = 'Role is immutable';
+export const ACCOUNT_MANAGEMENT_TABS = {
+    USERS: 'USERS',
+    ROLES: 'ROLES',
+};

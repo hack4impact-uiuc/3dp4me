@@ -8,8 +8,6 @@ const NavTabs = ({ value, setValue, labels }) => {
         setValue(newValue);
     };
 
-    // TODO: Need to handle translations for labels
-
     return (
         <Box sx={{ width: '100%' }}>
             <Tabs
@@ -29,7 +27,7 @@ const NavTabs = ({ value, setValue, labels }) => {
 NavTabs.propTypes = {
     value: PropTypes.string,
     setValue: PropTypes.func,
-    labels: PropTypes.array,
+    labels: PropTypes.array.isRequired,
 };
 
 export { NavTabs };

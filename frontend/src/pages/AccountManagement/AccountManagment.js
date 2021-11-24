@@ -24,6 +24,7 @@ import { StyledButton } from '../../components/StyledButton/StyledButton';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
+    ACCOUNT_MANAGEMENT_TABS,
     ACCOUNT_MANAGEMENT_TAB_NAMES,
     COGNITO_ATTRIBUTES,
     getRoleTableHeaders,
@@ -53,7 +54,9 @@ const AccountManagement = () => {
     const [paginationToken, setPaginationToken] = useState('');
     const [isUserLeft, setIsUserLeft] = useState(true);
     const [pageNumber, setPageNumber] = useState(0);
-    const [selectedTab, setSelectedTab] = useState('USERS');
+    const [selectedTab, setSelectedTab] = useState(
+        ACCOUNT_MANAGEMENT_TABS.USERS,
+    );
     const [isAddRoleModalOpen, setIsAddRoleModalOpen] = useState(false);
     const memoizedMultiSelectRoles = useMemo(
         () => rolesToMultiSelectFormat(roles),
@@ -137,7 +140,6 @@ const AccountManagement = () => {
         }));
     };
 
-    // TODO: Can add role descriptions here, uncomment line 147 to view
     /**
      * Formats the roles response to be useable by the table
      */
@@ -145,7 +147,6 @@ const AccountManagement = () => {
         return rolesData.map((role) => ({
             Name: role?.roleName[selectedLang],
             _id: role?._id,
-            // Description: role?.roleDescription[selectedLang],
         }));
     };
 
@@ -264,6 +265,9 @@ const AccountManagement = () => {
     };
 
     const generateLoadMoreBtn = () => {
+        if (selectedTab === ACCOUNT_MANAGEMENT_TABS.ROLES) {
+            return <></>;
+        }
         return isUserLeft ? (
             <div className="load-div">
                 <button
@@ -318,27 +322,27 @@ const AccountManagement = () => {
     };
 
     const generateTable = () => {
-        if (selectedTab === 'USERS') {
+        if (selectedTab === ACCOUNT_MANAGEMENT_TABS.USERS) {
             return generateMainUserTable();
         }
-        if (selectedTab === 'ROLES') {
+        if (selectedTab === ACCOUNT_MANAGEMENT_TABS.ROLES) {
             return generateMainRoleTable();
         }
         return <></>;
     };
 
     const generateDatabaseTitle = () => {
-        if (selectedTab === 'USERS') {
+        if (selectedTab === ACCOUNT_MANAGEMENT_TABS.USERS) {
             return translations.accountManagement.userDatabase;
         }
-        if (selectedTab === 'ROLES') {
+        if (selectedTab === ACCOUNT_MANAGEMENT_TABS.ROLES) {
             return translations.roleManagement.roleDatabase;
         }
         return <></>;
     };
 
     const generateButton = () => {
-        if (selectedTab === 'ROLES') {
+        if (selectedTab === ACCOUNT_MANAGEMENT_TABS.ROLES) {
             return (
                 <StyledButton primary onClick={onRoleButtonClick}>
                     {translations.roleManagement.addRole}

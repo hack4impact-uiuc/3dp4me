@@ -8,7 +8,10 @@ import './AddRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { addRole } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
-import { ERR_ROLE_INPUT_VALIDATION_FAILED } from '../../utils/constants';
+import {
+    ERR_ROLE_INPUT_VALIDATION_FAILED,
+    LANGUAGES,
+} from '../../utils/constants';
 
 const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
     const [role, setRole] = useState({});
@@ -33,10 +36,12 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
 
     const validateRole = () => {
         if (
-            role.roleName.EN.trim() === '' ||
-            role.roleName.AR.trim() === '' ||
-            role.roleDescription.EN.trim() === '' ||
-            role.roleDescription.AR.trim() === ''
+            !role?.roleName ||
+            !role?.roleDescription ||
+            role?.roleName?.[LANGUAGES.EN].trim() === '' ||
+            role?.roleName?.[LANGUAGES.AR].trim() === '' ||
+            role?.roleDescription?.[LANGUAGES.EN].trim() === '' ||
+            role?.roleDescription?.[LANGUAGES.AR].trim() === ''
         ) {
             throw new Error(ERR_ROLE_INPUT_VALIDATION_FAILED);
         }
@@ -47,37 +52,37 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
             <div className="add-role-modal-wrapper">
                 <h2>{translations.roleManagement.addRole}</h2>
                 <TextField
-                    value={role?.roleName?.EN}
+                    value={role?.roleName?.[LANGUAGES.EN]}
                     className="text-field"
                     displayName={`${translations.roleManagement.roleName} (EN)`}
                     onChange={(key, value) =>
-                        handleRoleUpdate(key, value, 'EN')
+                        handleRoleUpdate(key, value, LANGUAGES.EN)
                     }
                     fieldId="roleName"
                 />
                 <TextField
-                    value={role?.roleName?.AR}
+                    value={role?.roleName?.[LANGUAGES.AR]}
                     className="text-field"
                     displayName={`${translations.roleManagement.roleName} (AR)`}
                     onChange={(key, value) =>
-                        handleRoleUpdate(key, value, 'AR')
+                        handleRoleUpdate(key, value, LANGUAGES.AR)
                     }
                     fieldId="roleName"
                 />
                 <TextArea
-                    value={role?.roleDescription?.EN}
+                    value={role?.roleDescription?.[LANGUAGES.EN]}
                     title={`${translations.roleManagement.roleDescription} (EN)`}
                     onChange={(key, value) =>
-                        handleRoleUpdate(key, value, 'EN')
+                        handleRoleUpdate(key, value, LANGUAGES.EN)
                     }
                     fieldId="roleDescription"
                     disabled={false}
                 />
                 <TextArea
-                    value={role?.roleDescription?.AR}
+                    value={role?.roleDescription?.[LANGUAGES.AR]}
                     title={`${translations.roleManagement.roleDescription} (AR)`}
                     onChange={(key, value) =>
-                        handleRoleUpdate(key, value, 'AR')
+                        handleRoleUpdate(key, value, LANGUAGES.AR)
                     }
                     fieldId="roleDescription"
                     disabled={false}
