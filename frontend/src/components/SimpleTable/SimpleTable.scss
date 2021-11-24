@@ -30,12 +30,16 @@
         padding-bottom: 6px;
     }
 
+    .cell-right {
+        padding-right: 2% !important;
+        text-align: end;
+    }
+
     .table-view-link {
         text-decoration: none;
         display: flex;
-        margin-right: 8%;
         float: right;
-        text-align: right;
+        margin-right: 20%;
         align-items: center;
         color: $button;
         font-size: 13px;

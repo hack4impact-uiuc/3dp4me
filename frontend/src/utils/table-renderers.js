@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import Eyecon from '../assets/view.svg';
 import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
+import translations from '../translations.json';
 
 import { LANGUAGES, SORT_DIRECTIONS } from './constants';
 import { fieldToJSX } from './fields';
@@ -137,6 +138,7 @@ export const patientTableRowRenderer = (
                 <IconButton>
                     <img alt="status icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
+                {translations[selectedLang].components.table.view}
             </Link>
         </StyledTableCell>,
     );
@@ -191,12 +193,13 @@ const userTableRowRenderer = {
         row.push(
             <StyledTableCell
                 key="view-user-data"
-                className="cell table-view-link"
+                className="cell cell-right"
                 align="center"
             >
                 <IconButton onClick={() => this.onSelected(user)}>
-                    <img alt="status icon" width="18px" src={Eyecon} />
+                    <img alt="status icon view-icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
+                {translations[selectedLang].components.table.edit}
             </StyledTableCell>,
         );
 
