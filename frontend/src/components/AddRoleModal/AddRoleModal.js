@@ -38,10 +38,10 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
         if (
             !role?.roleName ||
             !role?.roleDescription ||
-            role?.roleName?.[LANGUAGES.EN].trim() === '' ||
-            role?.roleName?.[LANGUAGES.AR].trim() === '' ||
-            role?.roleDescription?.[LANGUAGES.EN].trim() === '' ||
-            role?.roleDescription?.[LANGUAGES.AR].trim() === ''
+            role?.roleName?.[LANGUAGES.EN]?.trim() === '' ||
+            role?.roleName?.[LANGUAGES.AR]?.trim() === '' ||
+            role?.roleDescription?.[LANGUAGES.EN]?.trim() === '' ||
+            role?.roleDescription?.[LANGUAGES.AR]?.trim() === ''
         ) {
             throw new Error(ERR_ROLE_INPUT_VALIDATION_FAILED);
         }
