@@ -17,9 +17,9 @@ import {
 import AddRoleModal from '../../components/AddRoleModal/AddRoleModal';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
 import ManageRoleModal from '../../components/ManageRoleModal/ManageRoleModal';
+import { NavTabs } from '../../components/NavTabs/NavTabs';
 import SimpleTable from '../../components/SimpleTable/SimpleTable';
 import { StyledButton } from '../../components/StyledButton/StyledButton';
-import { NavTabs } from '../../components/Tabs';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
@@ -32,6 +32,7 @@ import {
 } from '../../utils/table-renderers';
 import { rolesToMultiSelectFormat } from '../../utils/utils';
 import './AccountManagement.scss';
+
 
 
 /**

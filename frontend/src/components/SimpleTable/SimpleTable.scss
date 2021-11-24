@@ -33,8 +33,9 @@
     .table-view-link {
         text-decoration: none;
         display: flex;
+        margin-right: 8%;
         float: right;
-        margin-right: 20%;
+        text-align: right;
         align-items: center;
         color: $button;
         font-size: 13px;

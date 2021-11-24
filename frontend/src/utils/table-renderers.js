@@ -6,11 +6,12 @@ import { Link } from 'react-router-dom';
 
 import Eyecon from '../assets/view.svg';
 import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
-import translations from '../translations.json';
 
 import { LANGUAGES, SORT_DIRECTIONS } from './constants';
 import { fieldToJSX } from './fields';
 import { resolveObjPath } from './object';
+
+
 
 /**
  * Given item data, a field key, and a field type, this function finds
@@ -136,7 +137,6 @@ export const patientTableRowRenderer = (
                 <IconButton>
                     <img alt="status icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
-                {translations[selectedLang].components.table.view}
             </Link>
         </StyledTableCell>,
     );
@@ -191,13 +191,12 @@ const userTableRowRenderer = {
         row.push(
             <StyledTableCell
                 key="view-user-data"
-                className="cell"
+                className="cell table-view-link"
                 align="center"
             >
                 <IconButton onClick={() => this.onSelected(user)}>
                     <img alt="status icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
-                {translations[selectedLang].components.table.edit}
             </StyledTableCell>,
         );
 
