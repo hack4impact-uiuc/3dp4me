@@ -2,8 +2,9 @@ import _ from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import {
-    getAllRoles, getUsersByPageNumber,
-    getUsersByPageNumberAndToken
+    getAllRoles,
+    getUsersByPageNumber,
+    getUsersByPageNumberAndToken,
 } from '../../api/api';
 import {
     getAccessLevel,
@@ -12,7 +13,7 @@ import {
     getName,
     getRoles,
     getRolesValue,
-    getUsername
+    getUsername,
 } from '../../aws/aws-users';
 import AddRoleModal from '../../components/AddRoleModal/AddRoleModal';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
@@ -24,16 +25,19 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
     ACCOUNT_MANAGEMENT_TAB_NAMES,
-    COGNITO_ATTRIBUTES, getRoleTableHeaders, getUserTableHeaders, PEOPLE_PER_PAGE, ROLE_TABLE_ROW_DATA, USER_TABLE_ROW_DATA
+    COGNITO_ATTRIBUTES,
+    getRoleTableHeaders,
+    getUserTableHeaders,
+    PEOPLE_PER_PAGE,
+    ROLE_TABLE_ROW_DATA,
+    USER_TABLE_ROW_DATA,
 } from '../../utils/constants';
 import {
     generateUserTableRowRenderer,
-    userTableHeaderRenderer
+    userTableHeaderRenderer,
 } from '../../utils/table-renderers';
 import { rolesToMultiSelectFormat } from '../../utils/utils';
 import './AccountManagement.scss';
-
-
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -351,12 +355,10 @@ const AccountManagement = () => {
     return (
         <div>
             <div className="dashboard" />
-            <div className="patient-list"> 
+            <div className="patient-list">
                 <div className="header account-header">
                     <div className="section">
-                        <h2
-                            className="patient-list-title"
-                        >
+                        <h2 className="patient-list-title">
                             {generateDatabaseTitle()}
                         </h2>
                         {generateButton()}

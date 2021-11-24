@@ -12,8 +12,6 @@ import { LANGUAGES, SORT_DIRECTIONS } from './constants';
 import { fieldToJSX } from './fields';
 import { resolveObjPath } from './object';
 
-
-
 /**
  * Given item data, a field key, and a field type, this function finds
  * the data and formats it accordingly.
@@ -197,7 +195,11 @@ const userTableRowRenderer = {
                 align="center"
             >
                 <IconButton onClick={() => this.onSelected(user)}>
-                    <img alt="status icon view-icon" width="18px" src={Eyecon} />
+                    <img
+                        alt="status icon view-icon"
+                        width="18px"
+                        src={Eyecon}
+                    />
                 </IconButton>{' '}
                 {translations[selectedLang].components.table.edit}
             </StyledTableCell>,
