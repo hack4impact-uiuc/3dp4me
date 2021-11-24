@@ -16,7 +16,6 @@ import {
     PERMISSION_STATUS_DENIED,
 } from '../../utils/constants';
 import {
-    blobToDataURL,
     convertPhotosToURI,
     dataURItoBlob,
 } from '../../utils/photoManipulation';
@@ -102,15 +101,10 @@ const PhotoField = ({
 
     const confirmUpload = async () => {
         const photoObj = dataURItoBlob(dataUri);
-        const dUri = await blobToDataURL(photoObj);
-        const d = Date.now();
-        const fileName = d.toString();
+        const date = Date.now();
+        const fileName = date.toString();
         const photoFile = new File([photoObj], fileName);
         handleFileUpload(fieldId, photoFile);
-        const photoTaken = { uri: dUri };
-        const newImages = value;
-        newImages.push(photoTaken);
-        setImages(newImages);
         resetUpload();
     };
 
