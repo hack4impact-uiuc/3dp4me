@@ -3,11 +3,13 @@ require('dotenv').config({ path: `${process.env.NODE_ENV}.env` });
 require('./utils/aws/awsSetup');
 const path = require('path');
 
+const passport = require('passport');
 const log = require('loglevel');
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 
 const { errorHandler } = require('./utils');
 const { requireAuthentication } = require('./middleware/authentication');
@@ -48,7 +50,13 @@ app.get('/*', (req, res, next) => {
     }
 });
 
-app.use(requireAuthentication);
+// app.use(requireAuthentication);
+
+app.use(session({ secret: 'cats' }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(logRequest);
 app.use(require('./routes'));
 

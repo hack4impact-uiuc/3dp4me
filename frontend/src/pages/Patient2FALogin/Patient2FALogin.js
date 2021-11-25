@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactCodeInput from 'react-code-input';
 import { useParams } from 'react-router-dom';
 
+import { authenticatePatient } from '../../api/api';
 import Logo from '../../assets/3dp4me_logo.png';
 import { useTranslations } from '../../hooks/useTranslations';
 
@@ -9,6 +10,7 @@ import './Patient2FALogin.scss';
 import './TokenInput.scss';
 
 const Patient2FALogin = () => {
+    const [token, setToken] = useState();
     const [isTokenSent, setIsTokenSent] = useState();
     const translations = useTranslations()[0];
     const params = useParams();
@@ -64,9 +66,9 @@ const Patient2FALogin = () => {
                 </h5>
 
                 <div className="centered-token-content">
-                    <ReactCodeInput fields={6} inputStyle={inputStyle} />
+                    <ReactCodeInput fields={6} inputStyle={inputStyle} onChange={(tokenInput) => setToken(tokenInput)}/>
 
-                    <button className="verification-button" type="submit">
+                    <button className="verification-button" type="submit" onClick={() => authenticatePatient(patientId, token)}>
                         {translations.patient2FA.verify}
                     </button>
                     <div

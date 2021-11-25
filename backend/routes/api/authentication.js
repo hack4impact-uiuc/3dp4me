@@ -1,5 +1,7 @@
 const express = require('express');
 const twofactor = require('node-2fa');
+const passport = require('passport');
+require('express-session');
 
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
@@ -7,6 +9,16 @@ const { sendResponse } = require('../../utils/response');
 const { TWO_FACTOR_WINDOW_MINS } = require('../../utils/constants');
 
 const router = express.Router();
+
+require('../../middleware/patientAuthentication');
+
+router.post('/2fa', passport.authenticate('passport-local'), async (req, res) => {
+    await sendResponse(
+        res,
+        200,
+        'Successfully authenticated patient',
+    );
+});
 
 /**
  * Get secret, generate the token, then return the token
@@ -39,6 +51,7 @@ router.get(
 
         const newToken = twofactor.generateToken(patient.secret);
 
+        // take out token & send through messages.js // twilio
         await sendResponse(
             res,
             200,
@@ -88,5 +101,17 @@ router.post(
         }
     }),
 );
+
+// router.set('trust proxy', 1); // trust first proxy
+/* router.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+})); */
+
+// router.use(express.session({ secret: 'keyboard cat' })); // TODO
+
+// router.use(passport.session());
 
 module.exports = router;
