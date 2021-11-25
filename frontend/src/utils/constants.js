@@ -254,7 +254,10 @@ export const PERMISSION_CONSTRAINTS = { video: true };
 
 export const PERMISSION_STATUS_DENIED = 'denied';
 
-export const ACCOUNT_MANAGEMENT_TAB_NAMES = ['USERS', 'ROLES'];
+export const ACCOUNT_MANAGEMENT_TAB_NAMES = {
+    EN: ['USERS', 'ROLES'],
+    AR: ['المستخدمون', 'الأدوار']
+};
 
 export const ACCOUNT_MANAGEMENT_TABS = {
     USERS: 'USERS',

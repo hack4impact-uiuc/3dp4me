@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
     getAllRoles,
     getUsersByPageNumber,
-    getUsersByPageNumberAndToken,
+    getUsersByPageNumberAndToken
 } from '../../api/api';
 import {
     getAccessLevel,
@@ -13,7 +13,7 @@ import {
     getName,
     getRoles,
     getRolesValue,
-    getUsername,
+    getUsername
 } from '../../aws/aws-users';
 import AddRoleModal from '../../components/AddRoleModal/AddRoleModal';
 import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
@@ -31,14 +31,15 @@ import {
     getUserTableHeaders,
     PEOPLE_PER_PAGE,
     ROLE_TABLE_ROW_DATA,
-    USER_TABLE_ROW_DATA,
+    USER_TABLE_ROW_DATA
 } from '../../utils/constants';
 import {
     generateUserTableRowRenderer,
-    userTableHeaderRenderer,
+    userTableHeaderRenderer
 } from '../../utils/table-renderers';
 import { rolesToMultiSelectFormat } from '../../utils/utils';
 import './AccountManagement.scss';
+
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -372,7 +373,8 @@ const AccountManagement = () => {
                     <NavTabs
                         value={selectedTab}
                         setValue={setSelectedTab}
-                        labels={ACCOUNT_MANAGEMENT_TAB_NAMES}
+                        labels={ACCOUNT_MANAGEMENT_TAB_NAMES[selectedLang]}
+                        labelValues={Object.values(ACCOUNT_MANAGEMENT_TABS)}
                     />
                 </div>
                 {generateTable()}

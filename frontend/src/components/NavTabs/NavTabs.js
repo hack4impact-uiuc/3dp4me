@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import './NavTabs.scss';
 
-const NavTabs = ({ value, setValue, labels }) => {
+const NavTabs = ({ value, setValue, labels, labelValues }) => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -16,8 +16,8 @@ const NavTabs = ({ value, setValue, labels }) => {
                 textColor="primary"
                 indicatorColor="primary"
             >
-                {labels.map((tabName) => (
-                    <Tab value={tabName} label={tabName} className="tab" />
+                {labels.map((tabName ,i) => (
+                    <Tab value={labelValues[i]} label={tabName} className="tab" />
                 ))}
             </Tabs>
         </Box>
@@ -28,6 +28,7 @@ NavTabs.propTypes = {
     value: PropTypes.string,
     setValue: PropTypes.func,
     labels: PropTypes.array.isRequired,
+    labelValues: PropTypes.array.isRequired,
 };
 
 export { NavTabs };
