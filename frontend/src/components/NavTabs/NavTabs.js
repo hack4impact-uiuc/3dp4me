@@ -16,8 +16,12 @@ const NavTabs = ({ value, setValue, labels, labelValues }) => {
                 textColor="primary"
                 indicatorColor="primary"
             >
-                {labels.map((tabName ,i) => (
-                    <Tab value={labelValues[i]} label={tabName} className="tab" />
+                {labels.map((tabName, i) => (
+                    <Tab
+                        value={labelValues[i]}
+                        label={tabName}
+                        className="tab"
+                    />
                 ))}
             </Tabs>
         </Box>

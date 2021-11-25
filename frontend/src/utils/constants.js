@@ -256,7 +256,7 @@ export const PERMISSION_STATUS_DENIED = 'denied';
 
 export const ACCOUNT_MANAGEMENT_TAB_NAMES = {
     EN: ['USERS', 'ROLES'],
-    AR: ['المستخدمون', 'الأدوار']
+    AR: ['المستخدمون', 'الأدوار'],
 };
 
 export const ACCOUNT_MANAGEMENT_TABS = {
