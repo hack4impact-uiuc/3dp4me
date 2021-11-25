@@ -10,7 +10,7 @@
         "@material/tabs": "^2.3.0",
         "@sweetalert/with-react": "^0.1.1",
         "@types/date-fns": "^2.6.0",
-        "aws-amplify": "^4.2.9",
+        "aws-amplify": "^4.3.8",
         "axios": "^0.21.1",
         "babel-eslint": "^10.1.0",
         "compose": "^0.1.2",
