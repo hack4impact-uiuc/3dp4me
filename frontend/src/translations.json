@@ -215,6 +215,19 @@
             "Pending": "Pending",
             "Save": "Save",
             "Discard": "Discard"
+        },
+        "roleManagement": {
+            "roleDatabase": "Role Database",
+            "addRole": "Add Role",
+            "roleName": "Role Name",
+            "manageRole": "Manage Role",
+            "deleteRole": "Delete Role",
+            "warning": "Warning: If this role is deleted, accounts need to be reassigned to another role",
+            "roleDescription": "Role Description"
+        },
+        "tabs": {
+            "Roles": "ROLES",
+            "Users": "USERS"
         }
     },
     "AR": {
@@ -433,6 +446,19 @@
             "Discard": "ينبذ",
             "username": "اسم المستخدم",
             "email": "بريد إلكتروني"
+        },
+        "roleManagement": {
+            "roleDatabase": "قاعدة بيانات الدور",
+            "addRole": "أضف دورًا",
+            "roleName": "اسم الدور",
+            "manageRole": "إدارة الدور",
+            "deleteRole": "حذف الدور",
+            "warning": "تحذير: إذا تم حذف هذا الدور ، فيجب إعادة تعيين الحسابات إلى دور آخر",
+            "roleDescription": "وصف الدور"
+        },
+        "tabs": {
+            "Roles": "الأدوار",
+            "Users": "المستخدمين"
         }
     }
 }

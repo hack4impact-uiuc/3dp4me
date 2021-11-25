@@ -191,11 +191,15 @@ const userTableRowRenderer = {
         row.push(
             <StyledTableCell
                 key="view-user-data"
-                className="cell"
+                className="cell cell-right"
                 align="center"
             >
                 <IconButton onClick={() => this.onSelected(user)}>
-                    <img alt="status icon" width="18px" src={Eyecon} />
+                    <img
+                        alt="status icon view-icon"
+                        width="18px"
+                        src={Eyecon}
+                    />
                 </IconButton>{' '}
                 {translations[selectedLang].components.table.edit}
             </StyledTableCell>,
