@@ -9,7 +9,6 @@ import {
     patientTableHeaderRenderer,
     patientTableRowRenderer,
 } from '../../utils/table-renderers';
-import { getPatientName } from '../../utils/utils';
 import CreatePatientModal from '../CreatePatientModal/CreatePatientModal';
 import Table from '../Table/Table';
 import { TableRowType, TableHeaderType } from '../../utils/custom-proptypes';
@@ -25,6 +24,8 @@ const PatientTable = ({
     patients,
     headers,
     rowData,
+    initialSearchQuery,
+    handleSearchQuery,
     stepKey,
 }) => {
     const errorWrap = useErrorWrap();
@@ -76,25 +77,6 @@ const PatientTable = ({
         if (patientId) window.location.href = currentRoute + relativeRoute;
     };
 
-    /**
-     * Given a query and patient data, return true if this patient should
-     * be included in the search results
-     */
-
-    const doesPatientMatchQuery = (patient, query) => {
-        const patientName = getPatientName(patient).toLowerCase();
-        const patientId = patient?._id?.toLowerCase();
-        const lowercaseQuery = query?.toLowerCase();
-
-        // If query is contained in patient name
-        if (patientName.indexOf(lowercaseQuery) !== -1) return true;
-
-        // If query is contained in patient's ID
-        if (patientId.indexOf(lowercaseQuery) !== -1) return true;
-
-        return false;
-    };
-
     const PatientTableRowRendererForStep = (
         patientRowData,
         patient,
@@ -120,10 +102,11 @@ const PatientTable = ({
             <Table
                 onCreateRow={() => setCreatePatientModalOpen(true)}
                 tableTitle={tableTitle}
-                doesRowMatchQuery={doesPatientMatchQuery}
                 addRowButtonTitle={translations.components.button.createPatient}
                 renderHeader={patientTableHeaderRenderer}
                 renderTableRow={PatientTableRowRendererForStep}
+                initialSearchQuery={initialSearchQuery}
+                handleSearchQuery={handleSearchQuery}
                 headers={headers}
                 rowData={rowData}
                 data={patients}
@@ -138,6 +121,8 @@ PatientTable.propTypes = {
     patients: PropTypes.arrayOf(PropTypes.object),
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
     rowData: PropTypes.arrayOf(TableRowType).isRequired,
+    handleSearchQuery: PropTypes.func.isRequired,
+    initialSearchQuery: PropTypes.string.isRequired,
     stepKey: PropTypes.string,
 };
 

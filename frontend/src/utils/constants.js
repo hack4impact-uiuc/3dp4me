@@ -254,6 +254,8 @@ export const PERMISSION_CONSTRAINTS = { video: true };
 
 export const PERMISSION_STATUS_DENIED = 'denied';
 
+export const PATIENT_TABLE_SEARCH_DELAY = 1000;
+
 export const ACCOUNT_MANAGEMENT_TAB_NAMES = {
     EN: ['USERS', 'ROLES'],
     AR: ['المستخدمون', 'الأدوار'],
