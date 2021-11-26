@@ -68,16 +68,29 @@ module.exports.getDataFromModelWithPaginationAndSearch = async (req, model, find
     const intPatientsPerPage = parseInt(nPerPage, 10);
     const lowerCaseSearchQuery = searchQuery.toLowerCase();
 
+    // Calculates the number of patients to skip based on the request paramaters
+    const documentsToSkip = intPageNumber > 0 ? ((intPageNumber - 1) * intPatientsPerPage) : 0;
+
+    // Perform pagination while doing .find() if there isn't a search query
+    if (lowerCaseSearchQuery === '') {
+        const patientCount = await model.count(findParameters);
+        const data = await model.find(findParameters)
+            .sort({ lastEdited: -1 }).skip(documentsToSkip)
+            .limit(intPatientsPerPage);
+
+        return ({
+            data,
+            count: patientCount,
+        });
+    }
+
     const data = await model.find(findParameters).sort({ lastEdited: -1 });
 
-    /* Filter by search */
-
+    // Filter by search
     const filteredData = filterPatientsBySearchQuery(data, lowerCaseSearchQuery);
 
-    /* Filter by page number */
-
+    // Filter by page number
     const countTotalPatients = filteredData.length;
-    const documentsToSkip = intPageNumber > 0 ? ((intPageNumber - 1) * intPatientsPerPage) : 0;
 
     const paginatedData = filteredData.splice(documentsToSkip, intPatientsPerPage);
 
