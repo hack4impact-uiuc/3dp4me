@@ -3222,6 +3222,76 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
+"@material/animation@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@material/animation/-/animation-1.0.0.tgz#dfd8575c8b031203917dc838ac0e3c0fe0f6709b"
+  integrity sha512-Ed5/vggn6ZhSJ87yn3ZS1d826VJNFz73jHF2bSsgRtHDoB8KCuOwQMfdgAgDa4lKDF6CDIPCKBZPKrs2ubehdw==
+  dependencies:
+    tslib "^1.9.3"
+
+"@material/base@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@material/base/-/base-1.0.0.tgz#e4ef0b22c54aa887af94f5988fb1c0cb3245beba"
+  integrity sha512-5dxFp46x5FA+Epg6YHLzN+5zRt9S2wR84UdvVAEJ1egea94m9UHUg7y9tAnNSN16aexRSywmzyLwPr+i8PGEYA==
+  dependencies:
+    tslib "^1.9.3"
+
+"@material/dom@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@material/dom/-/dom-1.1.0.tgz#3bd3d1a3415b4181118fecb182d93beda56a6f8c"
+  integrity sha512-+HWW38ZaM2UBPu4+7QCusLDSf4tFT31rsEXHkTkxYSg/QpDivfPx6YDz4OmYtafmhPR1d1YjqB3MYysUHdodyw==
+  dependencies:
+    tslib "^1.9.3"
+
+"@material/feature-targeting@^0.44.1":
+  version "0.44.1"
+  resolved "https://registry.yarnpkg.com/@material/feature-targeting/-/feature-targeting-0.44.1.tgz#afafc80294e5efab94bee31a187273d43d34979a"
+  integrity sha512-90cc7njn4aHbH9UxY8qgZth1W5JgOgcEdWdubH1t7sFkwqFxS5g3zgxSBt46TygFBVIXNZNq35Xmg80wgqO7Pg==
+
+"@material/ripple@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@material/ripple/-/ripple-2.3.0.tgz#4701b2cfecddc4c83ae62c777ae2bf9607988705"
+  integrity sha512-ejXR0nstERofFhssRyFlwOLgebwm2uGbarHtWZ2/+7QY2Th/Z1wOqNb2h/WRoShsJXK11RUsochb6BJrg30u7w==
+  dependencies:
+    "@material/animation" "^1.0.0"
+    "@material/base" "^1.0.0"
+    "@material/dom" "^1.1.0"
+    "@material/feature-targeting" "^0.44.1"
+    "@material/theme" "^1.1.0"
+    tslib "^1.9.3"
+
+"@material/rtl@^0.42.0":
+  version "0.42.0"
+  resolved "https://registry.yarnpkg.com/@material/rtl/-/rtl-0.42.0.tgz#1836e78186c2d8b996f6fbf97adab203535335bc"
+  integrity sha512-VrnrKJzhmspsN8WXHuxxBZ69yM5IwhCUqWr1t1eNfw3ZEvEj7i1g3P31HGowKThIN1dc1Wh4LE14rCISWCtv5w==
+
+"@material/tabs@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@material/tabs/-/tabs-2.3.0.tgz#b1f9fe0be6e2e6f3945910e75b9bb7be93f01f02"
+  integrity sha512-EeLy/w8foV3+NT1K0hb86CZk+Z4zatamfDUQICYyNeEDSytq4INaMwzw0n2By1Zy0mM4e0fRrnSeSgznyXqRdg==
+  dependencies:
+    "@material/animation" "^1.0.0"
+    "@material/base" "^1.0.0"
+    "@material/ripple" "^2.3.0"
+    "@material/rtl" "^0.42.0"
+    "@material/theme" "^1.1.0"
+    "@material/typography" "^2.3.0"
+    tslib "^1.9.3"
+
+"@material/theme@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@material/theme/-/theme-1.1.0.tgz#9c95dd804168c23c30589fcf09ecc5af5b3d1adc"
+  integrity sha512-YYUV9Rhbx4r/EMb/zoOYJUWjhXChNaLlH1rqt3vpNVyxRcxGqoVMGp5u1XALBCFiD9dACPKLIkKyRYa928nmPQ==
+  dependencies:
+    "@material/feature-targeting" "^0.44.1"
+
+"@material/typography@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@material/typography/-/typography-2.3.0.tgz#fe2180c697172227f0745cda684ecafdaba3f8dd"
+  integrity sha512-NtWVVvwG9Te6/kuIl4fEwDcXGCS7mfPgo5CKPyxcK6y0hJHv6yRHpipJT9D4ZlXw0sQx9B33doOK7iYJtwBBZw==
+  dependencies:
+    "@material/feature-targeting" "^0.44.1"
+
 "@math.gl/core@3.5.6", "@math.gl/core@^3.5.0", "@math.gl/core@^3.5.1":
   version "3.5.6"
   resolved "https://registry.npmjs.org/@math.gl/core/-/core-3.5.6.tgz"

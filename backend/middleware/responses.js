@@ -1,7 +1,7 @@
 const helmet = require('helmet');
 
 // Describes the same origin
-const SRC_SELF = ["'self'", 'blob:'];
+const SRC_SELF = ["'self'", 'blob:', 'data:'];
 
 // Describes cognito origins
 const SRC_COGNITO = [
@@ -15,6 +15,12 @@ const SRC_S3 = [
     'https://3dp4me-public.s3.eu-north-1.amazonaws.com/',
     'https://3dp4me-patient-data.s3.eu-north-1.amazonaws.com/',
     'https://d1m40dlonmuszr.cloudfront.net/',
+];
+
+const SRC_MAPBOX = [
+    'https://*.tiles.mapbox.com',
+    'https://api.mapbox.com',
+    'https://events.mapbox.com',
 ];
 
 /**
@@ -35,10 +41,12 @@ module.exports.configureHelment = () => helmet({
     contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-            'connect-src': [...SRC_SELF, ...SRC_COGNITO],
+            'connect-src': [...SRC_SELF, ...SRC_COGNITO, ...SRC_MAPBOX],
             'img-src': [...SRC_SELF, ...SRC_S3],
             'media-src': [...SRC_SELF, ...SRC_S3],
             'object-src': [...SRC_SELF],
+            'worker-src': [...SRC_SELF],
+            'child-src': [...SRC_SELF],
         },
     },
 });
