@@ -19,6 +19,8 @@ import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
 import { sortMetadata } from '../../utils/utils';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
+import { trackPromise } from 'react-promise-tracker';
+import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
 
 /**
  * Shows a table of active patients, with a different table for each step
@@ -63,7 +65,7 @@ const Dashboard = () => {
          * Gets metadata for all steps, only called once
          */
         const loadMetadataAndPatientData = async () => {
-            const res = await getAllStepsMetadata(false);
+            const res = await trackPromise(getAllStepsMetadata(false));
 
             const metaData = sortMetadata(res.result);
             setStepsMetaData(metaData);
@@ -77,10 +79,10 @@ const Dashboard = () => {
 
         const loadAllDashboardData = async () => {
             errorWrap(async () => {
-                const res = await getPatientsCount();
+                const res = await trackPromise(getPatientsCount());
                 setPatientsCount(res.result);
 
-                await loadMetadataAndPatientData();
+                await trackPromise(loadMetadataAndPatientData());
             });
         };
 
@@ -226,7 +228,10 @@ const Dashboard = () => {
                     handleStep={onStepSelected}
                 />
             </div>
-            <div className="patient-list">{generateMainTable()}</div>
+            <div className="patient-list">
+                {generateMainTable()}
+                <LoadingIndicator />
+            </div>
             <PaginateBar
                 pageCount={Math.ceil(patientsCount / PEOPLE_PER_PAGE, 10)}
                 onPageChange={onPageNumberChanged}

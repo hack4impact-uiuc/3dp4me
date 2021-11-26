@@ -22,6 +22,8 @@ import {
     REDUCER_ACTIONS,
     ROUTES,
 } from './utils/constants';
+import { trackPromise } from 'react-promise-tracker';
+import LoadingIndicator from './components/LoadingIndicator/LoadingIndicator';
 
 const AppContent = ({ username, userEmail }) => {
     const errorWrap = useErrorWrap();
@@ -51,7 +53,7 @@ const AppContent = ({ username, userEmail }) => {
         };
 
         const setAdminStatus = async () => {
-            const selfRes = await getSelf();
+            const selfRes = await trackPromise(getSelf());
             dispatch({
                 type: REDUCER_ACTIONS.SET_ADMIN_STATUS,
                 isAdmin: selfRes?.result?.isAdmin,
@@ -78,6 +80,7 @@ const AppContent = ({ username, userEmail }) => {
 
     return (
         <div dir={selectedLang === LANGUAGES.AR ? 'rtl' : 'ltr'}>
+            <LoadingIndicator />
             <Router>
                 <QueryParamProvider ReactRouterRoute={Route}>
                     <Navbar username={username} userEmail={userEmail} />

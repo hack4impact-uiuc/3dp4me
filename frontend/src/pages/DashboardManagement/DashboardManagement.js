@@ -27,9 +27,8 @@ import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 import { rolesToMultiSelectFormat, sortMetadata } from '../../utils/utils';
 import './DashboardManagement.scss';
 
-const expandedSidebarWidth = `${
-    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
-}px`;
+const expandedSidebarWidth = `${parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+    }px`;
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
@@ -390,11 +389,10 @@ const SectionTab = () => {
                     onDiscard={onDiscardChanges}
                     style={{
                         editorSection: {
-                            marginLeft: `${
-                                isEditing
-                                    ? expandedSidebarWidth
-                                    : retractedSidebarWidth
-                            }`,
+                            marginLeft: `${isEditing
+                                ? expandedSidebarWidth
+                                : retractedSidebarWidth
+                                }`,
                         },
                     }}
                 />
