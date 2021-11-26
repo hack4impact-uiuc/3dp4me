@@ -99,6 +99,9 @@
             "fieldGroup": {
                 "add": "Add"
             },
+            "camera": {
+                "promptInstructions": "Please allow camera access following the steps below"
+            },
             "button": {
                 "createPatient": "Create Patient",
                 "save": "Save",
@@ -183,6 +186,15 @@
                     "question": "Question",
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
+                },
+                "step": {
+                    "createStepHeader": "New Step",
+                    "createStepTitle": "Step Title",
+                    "clearance": "Clearance Level",
+                    "buttons": {
+                        "save": "Save",
+                        "discard": "Discard"
+                    }
                 }
             },
             "map": {
@@ -203,6 +215,19 @@
             "Pending": "Pending",
             "Save": "Save",
             "Discard": "Discard"
+        },
+        "roleManagement": {
+            "roleDatabase": "Role Database",
+            "addRole": "Add Role",
+            "roleName": "Role Name",
+            "manageRole": "Manage Role",
+            "deleteRole": "Delete Role",
+            "warning": "Warning: If this role is deleted, accounts need to be reassigned to another role",
+            "roleDescription": "Role Description"
+        },
+        "tabs": {
+            "Roles": "ROLES",
+            "Users": "USERS"
         }
     },
     "AR": {
@@ -305,6 +330,9 @@
             "fieldGroup": {
                 "add": "يضيف"
             },
+            "camera": {
+                "promptInstructions": "يرجى السماح بالوصول إلى الكاميرا باتباع الخطوات أدناه"
+            },
             "button": {
                 "createPatient": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",
                 "save": "\u062d\u0641\u0638",
@@ -389,6 +417,15 @@
                     "question": "Question",
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
+                },
+                "step": {
+                    "createStepHeader": "خطوة جديدة",
+                    "createStepTitle": "عنوان الخطوة",
+                    "clearance": "مستوى التخليص",
+                    "buttons": {
+                        "save": "يحفظ",
+                        "discard": "تجاهل"
+                    }
                 }
             },
             "map": {
@@ -409,6 +446,19 @@
             "Discard": "ينبذ",
             "username": "اسم المستخدم",
             "email": "بريد إلكتروني"
+        },
+        "roleManagement": {
+            "roleDatabase": "قاعدة بيانات الدور",
+            "addRole": "أضف دورًا",
+            "roleName": "اسم الدور",
+            "manageRole": "إدارة الدور",
+            "deleteRole": "حذف الدور",
+            "warning": "تحذير: إذا تم حذف هذا الدور ، فيجب إعادة تعيين الحسابات إلى دور آخر",
+            "roleDescription": "وصف الدور"
+        },
+        "tabs": {
+            "Roles": "الأدوار",
+            "Users": "المستخدمين"
         }
     }
 }

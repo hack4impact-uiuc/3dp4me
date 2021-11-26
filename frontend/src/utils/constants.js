@@ -133,6 +133,16 @@ export const getUserTableHeaders = (langKey) => {
 };
 
 /**
+ * List of headers that the role table has. These are
+ * the columns on the 'manage roles' screen.
+ */
+export const getRoleTableHeaders = (langKey) => {
+    const t = translations[langKey].tableHeaders;
+
+    return [{ title: t.name, sortKey: 'Name' }];
+};
+
+/**
  * List of row data that the user table has.
  * 'id' must match 'sortKey' in the headers
  */
@@ -141,6 +151,14 @@ export const USER_TABLE_ROW_DATA = [
     { id: 'Email', dataType: FIELD_TYPES.STRING },
     { id: 'Roles', dataType: FIELD_TYPES.STRING },
     { id: 'Access', dataType: FIELD_TYPES.ACCESS },
+];
+
+/**
+ * List of row data that the role table has.
+ * 'id' must match 'sortKey' in the headers
+ */
+export const ROLE_TABLE_ROW_DATA = [
+    { id: 'Name', dataType: FIELD_TYPES.STRING },
 ];
 
 /**
@@ -222,8 +240,26 @@ export const ERR_LANGUAGE_VALIDATION_FAILED =
     'Please submit a field with a question in English and Arabic.';
 export const ERR_OPTION_VALIDATION_FAILED = 'Please enter options.';
 
+export const ERR_ROLE_INPUT_VALIDATION_FAILED =
+    'Do not leave role name and description fields empty, please enter values.';
+export const ERR_ROLE_IS_IMMUTABLE = 'This role cannot be edited';
+
 /**
  * The id of the Admin role in the database.
  */
 
 export const ADMIN_ID = '60e496fa7398681e9c82e0f5';
+
+export const PERMISSION_CONSTRAINTS = { video: true };
+
+export const PERMISSION_STATUS_DENIED = 'denied';
+
+export const ACCOUNT_MANAGEMENT_TAB_NAMES = {
+    EN: ['USERS', 'ROLES'],
+    AR: ['المستخدمون', 'الأدوار'],
+};
+
+export const ACCOUNT_MANAGEMENT_TABS = {
+    USERS: 'USERS',
+    ROLES: 'ROLES',
+};

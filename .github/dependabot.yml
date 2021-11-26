@@ -6,21 +6,21 @@ updates:
           schedule:
                   interval: "daily"
 
-          # Maintain updates for root npm
-        - package-ecosystem: "npm"
-          directory: "/"
-          schedule:
-                  interval: "daily"
+#           # Maintain updates for root npm
+#         - package-ecosystem: "npm"
+#           directory: "/"
+#           schedule:
+#                   interval: "daily"
 
-          # Maintain updates for backend npm
-        - package-ecosystem: "npm"
-          directory: "/backend"
-          schedule:
-                  interval: "daily"
+#           # Maintain updates for backend npm
+#         - package-ecosystem: "npm"
+#           directory: "/backend"
+#           schedule:
+#                   interval: "daily"
 
-          # Maintain updates for frontend npm
-        - package-ecosystem: "npm"
-          directory: "/frontend"
-          schedule:
-                  interval: "daily"
+#           # Maintain updates for frontend npm
+#         - package-ecosystem: "npm"
+#           directory: "/frontend"
+#           schedule:
+#                   interval: "daily"
 

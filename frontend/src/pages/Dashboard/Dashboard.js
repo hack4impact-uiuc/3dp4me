@@ -109,6 +109,7 @@ const Dashboard = () => {
         if (!stepKey) return;
 
         // TODO: Put the patient data in a store
+
         setSelectedStep(stepKey);
 
         errorWrap(async () => {
@@ -210,6 +211,7 @@ const Dashboard = () => {
                     headers={generateHeaders(element.key, element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
                     patients={patients}
+                    stepKey={selectedStep}
                 />
             );
         });
