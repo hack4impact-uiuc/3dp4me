@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -19,7 +20,7 @@ const {
  * If a user isn't allowed to view step, it isn't returned to them.
  */
 router.get(
-    '/steps',
+    '/steps', passport.authenticate('passport-local'),
     errorWrap(async (req, res) => {
         const metaData = await getReadableSteps(req);
 

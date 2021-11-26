@@ -3,6 +3,15 @@ const twofactor = require('node-2fa');
 const passport = require('passport');
 require('express-session');
 
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+
+const client = require('twilio')(accountSid, authToken);
+
+const {
+    TWILIO_RECEIVING_NUMBER,
+    TWILIO_SENDING_NUMBER,
+} = require('../../utils/constants');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const { sendResponse } = require('../../utils/response');
@@ -12,6 +21,7 @@ const router = express.Router();
 
 require('../../middleware/patientAuthentication');
 
+// TODO: Switch path to be /2fa/authenticated
 router.post('/2fa', passport.authenticate('passport-local'), async (req, res) => {
     await sendResponse(
         res,
@@ -52,12 +62,23 @@ router.get(
         const newToken = twofactor.generateToken(patient.secret);
 
         // take out token & send through messages.js // twilio
-        await sendResponse(
+        // follow this example, replace w/ patient's phone number, body = token
+
+        client.messages
+            .create({
+                body: newToken,
+                to: TWILIO_RECEIVING_NUMBER,
+                from: TWILIO_SENDING_NUMBER,
+            })
+            .then((message) => console.log(message.sid));
+        res.send('Authentication token sent.');
+
+        /* await sendResponse(
             res,
             200,
             'New authentication key generated',
             newToken,
-        );
+        ); */
     }),
 );
 
@@ -110,7 +131,7 @@ router.post(
     cookie: { secure: true },
 })); */
 
-// router.use(express.session({ secret: 'keyboard cat' })); // TODO
+// router.use(express.session({ secret: 'keyboard cat' })); // TODO // set secret to patient secret
 
 // router.use(passport.session());
 

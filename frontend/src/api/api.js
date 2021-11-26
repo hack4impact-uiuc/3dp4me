@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import instance from './axios-config';
 
 const FileDownload = require('js-file-download');
@@ -220,6 +222,33 @@ export const getSelf = async () => {
     const res = await instance.get(requestString);
 
     if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const send2FAPatientCode = async (_id) => {
+    const bodyFormData = new FormData();
+    bodyFormData.append('username', _id);
+    const res = await instance({
+        method: "get",
+        url: "/authentication/:patientId/",
+        data: bodyFormData,
+        headers: { "Content-Type": "multipart/form-data" },
+    })
+
+    return res.data;
+};
+
+export const authenticatePatient = async (_id, token) => {
+    const bodyFormData = new FormData();
+    bodyFormData.append('username', _id);
+    bodyFormData.append('password', token);
+    const res = await instance({
+        method: "post",
+        url: "/authentication/2fa/",
+        data: bodyFormData,
+        headers: { "Content-Type": "multipart/form-data" },
+    })
 
     return res.data;
 };

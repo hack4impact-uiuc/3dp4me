@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 const router = express.Router();
 const _ = require('lodash');
@@ -52,6 +53,7 @@ router.get(
  * Returns all of our data on a specific patient. Gets both the basic info
  * from the Patient collection and the data from each step.
  * */
+// todo
 router.get(
     '/:id',
     errorWrap(async (req, res) => {
@@ -122,6 +124,7 @@ router.post(
  * Updates the patients information in the Patient collection.
  * Note: This DOES NOT update the info for individual steps.
  */
+// todo
 router.put(
     '/:id',
     removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
@@ -188,7 +191,7 @@ router.get(
  * done manually through the AWS website.
  */
 router.delete(
-    '/:id/files/:stepKey/:fieldKey/:fileName',
+    '/:id/files/:stepKey/:fieldKey/:fileName', passport.authenticate('passport-local'),
     errorWrap(async (req, res) => {
         const {
             id, stepKey, fieldKey, fileName,
@@ -246,8 +249,9 @@ router.delete(
  * Uploads an individual file to S3 and records it in the DB.
  * URL format similar to GET file.
  */
+// todo upload/delete/etc. w/ files; did 2, unsure about the other
 router.post(
-    '/:id/files/:stepKey/:fieldKey/:fileName',
+    '/:id/files/:stepKey/:fieldKey/:fileName', passport.authenticate('passport-local'),
     errorWrap(async (req, res) => {
         // TODO during refactoring: We upload file name in form data, is this even needed???
         const {

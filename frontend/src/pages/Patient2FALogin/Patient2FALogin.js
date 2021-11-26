@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactCodeInput from 'react-code-input';
 import { useParams } from 'react-router-dom';
 
-import { authenticatePatient } from '../../api/api';
+import { authenticatePatient, send2FAPatientCode } from '../../api/api';
 import Logo from '../../assets/3dp4me_logo.png';
 import { useTranslations } from '../../hooks/useTranslations';
 
@@ -32,6 +32,11 @@ const Patient2FALogin = () => {
         backgroundColor: '#DEDFFB',
     };
 
+    const onTokenSend = () => {
+        send2FAPatientCode(patientId);
+        setIsTokenSent(true)
+    };
+
     const displayAuthPage = () => {
         if (!isTokenSent) {
             return (
@@ -44,7 +49,8 @@ const Patient2FALogin = () => {
                     <button
                         className="two-factor-authentication-button"
                         type="submit"
-                        onClick={() => setIsTokenSent(true)}
+                        // Todo: get rid of lambda expressions
+                        onClick={() => onTokenSend}
                     >
                         {translations.patient2FA.sendCode}
                     </button>
