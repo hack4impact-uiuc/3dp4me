@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
+import MuiAlert from '@material-ui/lab/Alert';
+import { Snackbar } from '@material-ui/core';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
@@ -11,8 +13,7 @@ import {
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons';
 import {
     getAllStepsMetadata,
-    getPatientsByStageAndPageNumber,
-    getPatientsCount,
+    getPatientsByStageAndPageNumberAndSearch,
 } from '../../api/api';
 import './Dashboard.scss';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -20,7 +21,8 @@ import PatientTable from '../../components/PatientTable/PatientTable';
 import { sortMetadata } from '../../utils/utils';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
 import { trackPromise } from 'react-promise-tracker';
-import LoadingIndicator from '../../components/LoadingIndicator/LoadingIndicator';
+
+const CLOSE_REASON_CLICKAWAY = 'clickaway';
 
 /**
  * Shows a table of active patients, with a different table for each step
@@ -39,22 +41,33 @@ const Dashboard = () => {
     const [selectedStep, setSelectedStep] = useState('');
 
     // Currently selected page
-    const [selectedPageNumber, setPageNumber] = useState(1);
+    const [selectedPageNumber, setSelectedPageNumber] = useState(1);
 
     // Number of total patients in the database
     const [patientsCount, setPatientsCount] = useState(0);
+
+    // Words to filter out patients by
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const [isSnackbarOpen, setSnackbarOpen] = useState(false);
 
     /**
      * Gets patient data based on page number and step
      */
 
-    const loadPatientData = async (stepKey, pageNumber) => {
-        const res = await getPatientsByStageAndPageNumber(
+    const loadPatientData = async (stepKey, pageNumber, query) => {
+        const res = await trackPromise(getPatientsByStageAndPageNumberAndSearch(
             stepKey,
             pageNumber,
             PEOPLE_PER_PAGE,
-        );
-        setPatients(res.result);
+            query,
+        ));
+        setPatients(res.result.data);
+        setPatientsCount(res.result.count);
+
+        if (res.result.data.length === 0) {
+            setSnackbarOpen(true);
+        }
     };
 
     /**
@@ -71,7 +84,7 @@ const Dashboard = () => {
             setStepsMetaData(metaData);
             if (metaData.length > 0) {
                 setSelectedStep(metaData[0].key);
-                await loadPatientData(metaData[0].key, selectedPageNumber);
+                await loadPatientData(metaData[0].key, 1, '');
             } else {
                 throw new Error(translations.errors.noMetadata);
             }
@@ -79,21 +92,12 @@ const Dashboard = () => {
 
         const loadAllDashboardData = async () => {
             errorWrap(async () => {
-                const res = await trackPromise(getPatientsCount());
-                setPatientsCount(res.result);
-
-                await trackPromise(loadMetadataAndPatientData());
+                await loadMetadataAndPatientData();
             });
         };
 
         loadAllDashboardData();
-    }, [
-        setSelectedStep,
-        selectedPageNumber,
-        setStepsMetaData,
-        errorWrap,
-        translations,
-    ]);
+    }, [translations, setSelectedStep, setStepsMetaData, errorWrap]);
 
     /**
      * Called when a patient is successfully added to the backend
@@ -115,17 +119,29 @@ const Dashboard = () => {
         setSelectedStep(stepKey);
 
         errorWrap(async () => {
-            await loadPatientData(stepKey, selectedPageNumber);
+            await loadPatientData(stepKey, selectedPageNumber, searchQuery);
         });
     };
 
     const onPageNumberChanged = async (newPageNumber) => {
         if (selectedStep === '') return;
 
-        setPageNumber(newPageNumber);
+        setSelectedPageNumber(newPageNumber);
 
         errorWrap(async () => {
-            await loadPatientData(selectedStep, newPageNumber);
+            await loadPatientData(selectedStep, newPageNumber, searchQuery);
+        });
+    };
+
+    const onSearchQueryChanged = (newSearchQuery) => {
+        setSearchQuery(newSearchQuery);
+
+        // The page number needs to be updated because the search query might filter the patient data
+        // such that there aren't as many pages as the one the user is currently on.
+        setSelectedPageNumber(1);
+
+        errorWrap(async () => {
+            await loadPatientData(selectedStep, 1, newSearchQuery);
         });
     };
 
@@ -213,11 +229,22 @@ const Dashboard = () => {
                     headers={generateHeaders(element.key, element.fields)}
                     rowData={generateRowData(element.key, element.fields)}
                     patients={patients}
+                    handleSearchQuery={onSearchQueryChanged}
+                    initialSearchQuery={searchQuery}
                     stepKey={selectedStep}
                 />
             );
         });
     }
+
+    /**
+     * Only close snackbar if the 'x' button is pressed
+     */
+    const onCloseSnackbar = (event, reason) => {
+        if (reason === CLOSE_REASON_CLICKAWAY) return;
+
+        setSnackbarOpen(false);
+    };
 
     return (
         <div className="dashboard">
@@ -228,13 +255,25 @@ const Dashboard = () => {
                     handleStep={onStepSelected}
                 />
             </div>
-            <div className="patient-list">
-                {generateMainTable()}
-                <LoadingIndicator />
-            </div>
+            <Snackbar
+                open={isSnackbarOpen}
+                autoHideDuration={3000}
+                onClose={onCloseSnackbar}
+            >
+                <MuiAlert
+                    onClose={onCloseSnackbar}
+                    severity="error"
+                    elevation={6}
+                    variant="filled"
+                >
+                    {translations.components.table.noPatientsFound}
+                </MuiAlert>
+            </Snackbar>
+            <div className="patient-list">{generateMainTable()}</div>
             <PaginateBar
                 pageCount={Math.ceil(patientsCount / PEOPLE_PER_PAGE, 10)}
                 onPageChange={onPageNumberChanged}
+                currentPage={selectedPageNumber - 1}
             />
         </div>
     );

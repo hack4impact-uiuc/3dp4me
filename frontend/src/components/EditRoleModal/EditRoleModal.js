@@ -20,6 +20,7 @@ import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { removeUserRole, setUserAccess, addUserRole } from '../../api/api';
+import { trackPromise } from 'react-promise-tracker';
 
 const EditRoleModal = ({
     isOpen,
@@ -54,14 +55,14 @@ const EditRoleModal = ({
                 // If user didn't have role before, make request to backend
                 if (!userInfo.roles.find((r) => r === role._id)) {
                     await errorWrap(async () =>
-                        addUserRole(userData.userId, role._id),
+                        trackPromise(addUserRole(userData.userId, role._id)),
                     );
                 }
             } else {
                 // If user did have role before, make request to backend
                 if (userInfo.roles.find((r) => r === role._id)) {
                     await errorWrap(async () =>
-                        removeUserRole(userData.userId, role._id),
+                        trackPromise(removeUserRole(userData.userId, role._id)),
                     );
                 }
             }
@@ -69,7 +70,7 @@ const EditRoleModal = ({
 
         // Update user access level
         await errorWrap(async () =>
-            setUserAccess(userData.userId, userData.accessLevel),
+            trackPromise(setUserAccess(userData.userId, userData.accessLevel)),
         );
 
         // Close modal and update local data

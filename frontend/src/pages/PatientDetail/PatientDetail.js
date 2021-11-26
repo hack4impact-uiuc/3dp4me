@@ -20,6 +20,7 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
 import { sortMetadata } from '../../utils/utils';
 import './PatientDetail.scss';
+import { trackPromise } from 'react-promise-tracker';
 
 /**
  * The detail view for a patient. Shows their information
@@ -46,11 +47,11 @@ const PatientDetail = () => {
         const getData = async () => {
             errorWrap(async () => {
                 // Step metadata
-                let res = await getAllStepsMetadata(false);
+                let res = await trackPromise(getAllStepsMetadata(false));
                 let metaData = res.result;
 
                 // Patient data
-                res = await getPatientById(patientId);
+                res = await trackPromise(getPatientById(patientId));
                 const data = res.result;
 
                 // Sort it
@@ -76,7 +77,7 @@ const PatientDetail = () => {
         errorWrap(async () => {
             const newPatientData = _.cloneDeep(patientData);
             newPatientData[stepKey] = _.cloneDeep(stepData);
-            await updateStage(patientId, stepKey, stepData);
+            await trackPromise(updateStage(patientId, stepKey, stepData));
             setPatientData(newPatientData);
         });
     };
@@ -89,7 +90,7 @@ const PatientDetail = () => {
         const patientDataCopy = _.cloneDeep(patientData);
         Object.assign(patientDataCopy, newPatientData);
         await errorWrap(async () => {
-            await updatePatient(patientId, patientDataCopy);
+            await trackPromise(updatePatient(patientId, patientDataCopy));
             setPatientData(patientDataCopy);
             swal(
                 translations.components.swal.managePatient.successMsg,
@@ -171,11 +172,10 @@ const PatientDetail = () => {
                 />
 
                 <div
-                    className={`controller-content ${
-                        selectedLang === LANGUAGES.AR
-                            ? 'controller-content-ar'
-                            : ''
-                    }`}
+                    className={`controller-content ${selectedLang === LANGUAGES.AR
+                        ? 'controller-content-ar'
+                        : ''
+                        }`}
                 >
                     <ToggleButtons
                         step={selectedStep}

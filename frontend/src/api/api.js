@@ -10,20 +10,25 @@ export const getPatientsCount = async () => {
     return res.data;
 };
 
-export const getPatientsByPageNumber = async (pageNumber, nPerPage) => {
-    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
+export const getPatientsByPageNumberAndSearch = async (
+    pageNumber,
+    nPerPage,
+    searchQuery = '',
+) => {
+    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
 
-export const getPatientsByStageAndPageNumber = async (
+export const getPatientsByStageAndPageNumberAndSearch = async (
     stage,
     pageNumber,
     nPerPage,
+    searchQuery = '',
 ) => {
-    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
+    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 

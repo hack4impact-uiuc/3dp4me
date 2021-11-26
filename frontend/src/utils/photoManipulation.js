@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import { downloadBlobWithoutSaving } from '../api/api';
+import { trackPromise } from 'react-promise-tracker';
 
 export const blobToDataURL = (blob) => {
     return new Promise((resolve, reject) => {
@@ -33,12 +34,12 @@ export const convertPhotosToURI = async (
 };
 
 export const photoToURI = async (photoObj, stepKey, fieldKey, patientId) => {
-    const blob = await downloadBlobWithoutSaving(
+    const blob = await trackPromise(downloadBlobWithoutSaving(
         patientId,
         stepKey,
         fieldKey,
         photoObj.filename,
-    );
+    ));
     const uri = await blobToDataURL(blob);
     return uri;
 };

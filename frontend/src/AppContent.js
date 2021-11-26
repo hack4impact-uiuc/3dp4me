@@ -80,6 +80,7 @@ const AppContent = ({ username, userEmail }) => {
 
     return (
         <div dir={selectedLang === LANGUAGES.AR ? 'rtl' : 'ltr'}>
+            {/* Shown when making a network request */}
             <LoadingIndicator />
             <Router>
                 <QueryParamProvider ReactRouterRoute={Route}>

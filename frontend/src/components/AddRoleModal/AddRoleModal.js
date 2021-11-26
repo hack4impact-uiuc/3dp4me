@@ -12,6 +12,7 @@ import {
     ERR_ROLE_INPUT_VALIDATION_FAILED,
     LANGUAGES,
 } from '../../utils/constants';
+import { trackPromise } from 'react-promise-tracker';
 
 const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
     const [role, setRole] = useState({});
@@ -21,7 +22,7 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
     const onSave = async () => {
         errorWrap(async () => {
             validateRole();
-            const res = await addRole(role);
+            const res = await trackPromise(addRole(role));
             onRoleAdded(res.result);
             onClose();
         });

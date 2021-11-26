@@ -39,6 +39,7 @@ import {
 } from '../../utils/table-renderers';
 import { rolesToMultiSelectFormat } from '../../utils/utils';
 import './AccountManagement.scss';
+import { trackPromise } from 'react-promise-tracker';
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -66,10 +67,10 @@ const AccountManagement = () => {
     const errorWrap = useErrorWrap();
 
     const fetchMoreUsers = async () => {
-        const userRes = await getUsersByPageNumberAndToken(
+        const userRes = await trackPromise(getUsersByPageNumberAndToken(
             paginationToken,
             PEOPLE_PER_PAGE,
-        );
+        ));
 
         const totalUserMetaData = userMetaData.concat(userRes.result.Users);
         setUserMetaData(totalUserMetaData);
@@ -88,12 +89,12 @@ const AccountManagement = () => {
     useEffect(() => {
         errorWrap(async () => {
             const fetchRoles = async () => {
-                const rolesRes = await getAllRoles();
+                const rolesRes = await trackPromise(getAllRoles());
                 setRoles(rolesRes.result);
             };
 
             const fetchInitialUsers = async () => {
-                const userRes = await getUsersByPageNumber(PEOPLE_PER_PAGE);
+                const userRes = await trackPromise(getUsersByPageNumber(PEOPLE_PER_PAGE));
 
                 const totalUserMetaData = userRes.result.Users;
                 setUserMetaData(totalUserMetaData);
