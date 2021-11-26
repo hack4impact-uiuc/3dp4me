@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
+import { trackPromise } from 'react-promise-tracker';
 
 import { getSelf } from './api/api';
 import { getCurrentUserInfo } from './aws/aws-helper';
@@ -22,7 +23,6 @@ import {
     REDUCER_ACTIONS,
     ROUTES,
 } from './utils/constants';
-import { trackPromise } from 'react-promise-tracker';
 import LoadingIndicator from './components/LoadingIndicator/LoadingIndicator';
 
 const AppContent = ({ username, userEmail }) => {

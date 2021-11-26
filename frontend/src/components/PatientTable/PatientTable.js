@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import swal from 'sweetalert';
+import { trackPromise } from 'react-promise-tracker';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -13,7 +14,6 @@ import CreatePatientModal from '../CreatePatientModal/CreatePatientModal';
 import Table from '../Table/Table';
 import { TableRowType, TableHeaderType } from '../../utils/custom-proptypes';
 import { ROUTES } from '../../utils/constants';
-import { trackPromise } from 'react-promise-tracker';
 
 /**
  * A table to be used with patient data. Same as a normal <Table/> element,

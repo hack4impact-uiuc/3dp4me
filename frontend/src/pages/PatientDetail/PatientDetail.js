@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import { StringParam, useQueryParam } from 'use-query-params';
+import { trackPromise } from 'react-promise-tracker';
 
 import {
     getAllStepsMetadata,
@@ -20,7 +21,6 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
 import { sortMetadata } from '../../utils/utils';
 import './PatientDetail.scss';
-import { trackPromise } from 'react-promise-tracker';
 
 /**
  * The detail view for a patient. Shows their information
@@ -172,10 +172,11 @@ const PatientDetail = () => {
                 />
 
                 <div
-                    className={`controller-content ${selectedLang === LANGUAGES.AR
-                        ? 'controller-content-ar'
-                        : ''
-                        }`}
+                    className={`controller-content ${
+                        selectedLang === LANGUAGES.AR
+                            ? 'controller-content-ar'
+                            : ''
+                    }`}
                 >
                     <ToggleButtons
                         step={selectedStep}

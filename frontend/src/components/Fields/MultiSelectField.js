@@ -17,7 +17,7 @@ const MultiSelectField = ({
     fieldId = '',
     isDisabled = true,
     disabledOptions = [],
-    onChange = () => { },
+    onChange = () => {},
 }) => {
     const onSelectionChange = (e) => {
         let updatedOptions = [];

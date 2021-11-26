@@ -31,12 +31,12 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
         setFathersName('');
         setGrandfathersName('');
         setFamilyName('');
-    }
+    };
 
     const onDiscard = () => {
         clearState();
         onClose();
-    }
+    };
 
     return (
         <Modal className="create-patient-modal" open={isOpen} onClose={onClose}>

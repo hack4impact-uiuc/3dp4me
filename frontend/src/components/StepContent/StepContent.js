@@ -9,6 +9,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
+import { trackPromise } from 'react-promise-tracker';
 
 import { deleteFile, downloadFile, uploadFile } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
@@ -18,7 +19,6 @@ import { formatDate } from '../../utils/date';
 import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
 import './StepContent.scss';
-import { trackPromise } from 'react-promise-tracker';
 
 const StepContent = ({
     patientId,
@@ -48,7 +48,9 @@ const StepContent = ({
 
     const handleFileDelete = async (fieldKey, file) => {
         errorWrap(async () => {
-            await trackPromise(deleteFile(patientId, metaData.key, fieldKey, file.filename));
+            await trackPromise(
+                deleteFile(patientId, metaData.key, fieldKey, file.filename),
+            );
             if (!updatedData[fieldKey]) return;
 
             let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
@@ -62,19 +64,17 @@ const StepContent = ({
 
     const handleFileDownload = (fieldKey, filename) => {
         errorWrap(async () => {
-            await trackPromise(downloadFile(patientId, metaData.key, fieldKey, filename));
+            await trackPromise(
+                downloadFile(patientId, metaData.key, fieldKey, filename),
+            );
         });
     };
 
     const handleFileUpload = async (fieldKey, file) => {
         errorWrap(async () => {
-            const res = await trackPromise(uploadFile(
-                patientId,
-                metaData.key,
-                fieldKey,
-                file.name,
-                file,
-            ));
+            const res = await trackPromise(
+                uploadFile(patientId, metaData.key, fieldKey, file.name, file),
+            );
 
             const newFile = {
                 filename: res.result.name,
@@ -228,8 +228,9 @@ const StepContent = ({
     };
 
     const generateLastEditedByAndDate = () => {
-        let text = `${translations.components.step.lastEditedBy} ${stepData?.lastEditedBy || translations.components.step.none
-            }`;
+        let text = `${translations.components.step.lastEditedBy} ${
+            stepData?.lastEditedBy || translations.components.step.none
+        }`;
         if (stepData?.lastEdited) {
             text += ` ${translations.components.step.on} ${formatDate(
                 new Date(),

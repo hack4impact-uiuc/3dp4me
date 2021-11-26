@@ -1,6 +1,7 @@
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
+import { trackPromise } from 'react-promise-tracker';
 
 import {
     getAllRoles,
@@ -26,10 +27,10 @@ import {
 import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 import { rolesToMultiSelectFormat, sortMetadata } from '../../utils/utils';
 import './DashboardManagement.scss';
-import { trackPromise } from 'react-promise-tracker';
 
-const expandedSidebarWidth = `${parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
-    }px`;
+const expandedSidebarWidth = `${
+    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+}px`;
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
@@ -65,7 +66,9 @@ const SectionTab = () => {
         errorWrap(
             async () => {
                 setIsEditing(false);
-                updateResponse = await trackPromise(updateMultipleSteps(stepMetadata));
+                updateResponse = await trackPromise(
+                    updateMultipleSteps(stepMetadata),
+                );
             },
             () => {
                 setIsEditing(false);
@@ -391,10 +394,11 @@ const SectionTab = () => {
                     onDiscard={onDiscardChanges}
                     style={{
                         editorSection: {
-                            marginLeft: `${isEditing
-                                ? expandedSidebarWidth
-                                : retractedSidebarWidth
-                                }`,
+                            marginLeft: `${
+                                isEditing
+                                    ? expandedSidebarWidth
+                                    : retractedSidebarWidth
+                            }`,
                         },
                     }}
                 />

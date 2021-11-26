@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Snackbar } from '@material-ui/core';
+import { trackPromise } from 'react-promise-tracker';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
@@ -20,7 +21,6 @@ import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
 import { sortMetadata } from '../../utils/utils';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
-import { trackPromise } from 'react-promise-tracker';
 
 const CLOSE_REASON_CLICKAWAY = 'clickaway';
 
@@ -56,12 +56,14 @@ const Dashboard = () => {
      */
 
     const loadPatientData = async (stepKey, pageNumber, query) => {
-        const res = await trackPromise(getPatientsByStageAndPageNumberAndSearch(
-            stepKey,
-            pageNumber,
-            PEOPLE_PER_PAGE,
-            query,
-        ));
+        const res = await trackPromise(
+            getPatientsByStageAndPageNumberAndSearch(
+                stepKey,
+                pageNumber,
+                PEOPLE_PER_PAGE,
+                query,
+            ),
+        );
         setPatients(res.result.data);
         setPatientsCount(res.result.count);
 

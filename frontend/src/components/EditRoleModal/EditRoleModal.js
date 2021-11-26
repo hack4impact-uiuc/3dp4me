@@ -12,6 +12,7 @@ import {
     Button,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { trackPromise } from 'react-promise-tracker';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import TextField from '../Fields/TextField';
@@ -20,7 +21,6 @@ import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { removeUserRole, setUserAccess, addUserRole } from '../../api/api';
-import { trackPromise } from 'react-promise-tracker';
 
 const EditRoleModal = ({
     isOpen,

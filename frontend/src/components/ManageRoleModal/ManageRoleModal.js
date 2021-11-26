@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { trackPromise } from 'react-promise-tracker';
 
 import TextField from '../Fields/TextField';
 import TextArea from '../Fields/TextArea';
@@ -13,7 +14,6 @@ import {
     ERR_ROLE_INPUT_VALIDATION_FAILED,
     ERR_ROLE_IS_IMMUTABLE,
 } from '../../utils/constants';
-import { trackPromise } from 'react-promise-tracker';
 
 const ManageRoleModal = ({
     isOpen,
@@ -33,7 +33,9 @@ const ManageRoleModal = ({
     const onDelete = async () => {
         errorWrap(async () => {
             if (roleInfo?.isMutable) {
-                await errorWrap(async () => trackPromise(deleteRole(roleInfo?._id)));
+                await errorWrap(async () =>
+                    trackPromise(deleteRole(roleInfo?._id)),
+                );
                 onRoleDeleted(roleInfo?._id);
                 onClose();
             } else {
@@ -55,7 +57,9 @@ const ManageRoleModal = ({
         errorWrap(async () => {
             validateRole();
             if (roleInfo?.isMutable) {
-                await errorWrap(async () => trackPromise(editRole(roleInfo?._id, role)));
+                await errorWrap(async () =>
+                    trackPromise(editRole(roleInfo?._id, role)),
+                );
                 onRoleEdited(roleInfo?._id, role);
                 onClose();
             } else {

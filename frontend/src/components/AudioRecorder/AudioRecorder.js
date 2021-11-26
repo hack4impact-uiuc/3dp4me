@@ -136,12 +136,14 @@ class AudioRecorder extends React.Component {
     };
 
     handlePlay = async (file) => {
-        const blob = await trackPromise(downloadBlobWithoutSaving(
-            this.props.patientId,
-            this.props.stepKey,
-            this.props.fieldKey,
-            file.filename,
-        ));
+        const blob = await trackPromise(
+            downloadBlobWithoutSaving(
+                this.props.patientId,
+                this.props.stepKey,
+                this.props.fieldKey,
+                file.filename,
+            ),
+        );
         const blobURL = URL.createObjectURL(blob);
         this.setState({
             isPlaybackModalOpen: true,
