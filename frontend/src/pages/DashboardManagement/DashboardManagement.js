@@ -1,6 +1,7 @@
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
+import { trackPromise } from 'react-promise-tracker';
 
 import {
     getAllRoles,
@@ -65,7 +66,9 @@ const SectionTab = () => {
         errorWrap(
             async () => {
                 setIsEditing(false);
-                updateResponse = await updateMultipleSteps(stepMetadata);
+                updateResponse = await trackPromise(
+                    updateMultipleSteps(stepMetadata),
+                );
             },
             () => {
                 setIsEditing(false);
@@ -200,7 +203,7 @@ const SectionTab = () => {
     useEffect(() => {
         errorWrap(async () => {
             const fetchData = async () => {
-                const res = await getAllStepsMetadata(true); // true indicates that we want to get hidden field
+                const res = await trackPromise(getAllStepsMetadata(true)); // true indicates that we want to get hidden field
 
                 const sortedMetadata = sortMetadata(res.result);
 
@@ -213,7 +216,8 @@ const SectionTab = () => {
             };
 
             const fetchRoles = async () => {
-                const rolesRes = await getAllRoles();
+                const rolesRes = await trackPromise(getAllRoles());
+                console.log(rolesRes);
                 const roles = rolesToMultiSelectFormat(rolesRes.result);
                 setAllRoles(roles);
             };

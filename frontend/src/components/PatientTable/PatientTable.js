@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import swal from 'sweetalert';
+import { trackPromise } from 'react-promise-tracker';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -41,7 +42,7 @@ const PatientTable = ({
 
         await errorWrap(async () => {
             // Make the request
-            const res = await postNewPatient(patientData);
+            const res = await trackPromise(postNewPatient(patientData));
             patient = res?.result;
         });
 

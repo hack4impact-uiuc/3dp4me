@@ -26,6 +26,18 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
         onClose();
     };
 
+    const clearState = () => {
+        setFirstName('');
+        setFathersName('');
+        setGrandfathersName('');
+        setFamilyName('');
+    };
+
+    const onDiscard = () => {
+        clearState();
+        onClose();
+    };
+
     return (
         <Modal className="create-patient-modal" open={isOpen} onClose={onClose}>
             <div className="create-patient-modal-wrapper">
@@ -104,7 +116,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
 
                         <Button
                             className="create-patient-button create-patient-delete-button"
-                            onClick={onClose}
+                            onClick={onDiscard}
                         >
                             {
                                 translations.components.swal.createPatient

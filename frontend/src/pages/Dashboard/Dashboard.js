@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Snackbar } from '@material-ui/core';
+import { trackPromise } from 'react-promise-tracker';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
@@ -55,11 +56,13 @@ const Dashboard = () => {
      */
 
     const loadPatientData = async (stepKey, pageNumber, query) => {
-        const res = await getPatientsByStageAndPageNumberAndSearch(
-            stepKey,
-            pageNumber,
-            PEOPLE_PER_PAGE,
-            query,
+        const res = await trackPromise(
+            getPatientsByStageAndPageNumberAndSearch(
+                stepKey,
+                pageNumber,
+                PEOPLE_PER_PAGE,
+                query,
+            ),
         );
         setPatients(res.result.data);
         setPatientsCount(res.result.count);
@@ -77,7 +80,7 @@ const Dashboard = () => {
          * Gets metadata for all steps, only called once
          */
         const loadMetadataAndPatientData = async () => {
-            const res = await getAllStepsMetadata(false);
+            const res = await trackPromise(getAllStepsMetadata(false));
 
             const metaData = sortMetadata(res.result);
             setStepsMetaData(metaData);

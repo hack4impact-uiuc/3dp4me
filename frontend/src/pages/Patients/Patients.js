@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import {
-    getPatientsCount,
-    getPatientsByPageNumberAndSearch,
-} from '../../api/api';
+import { getPatientsByPageNumberAndSearch } from '../../api/api';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
 import PatientTable from '../../components/PatientTable/PatientTable';
-
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
@@ -14,7 +10,9 @@ import {
     getPatientDashboardHeaders,
     PEOPLE_PER_PAGE,
 } from '../../utils/constants';
+
 import './Patients.scss';
+import { trackPromise } from 'react-promise-tracker';
 
 /**
  * Shows a table of all patients within the system
@@ -33,10 +31,12 @@ const Patients = () => {
     const errorWrap = useErrorWrap();
 
     const loadPatientData = async (pageNumber, query) => {
-        const res = await getPatientsByPageNumberAndSearch(
-            pageNumber,
-            PEOPLE_PER_PAGE,
-            query,
+        const res = await trackPromise(
+            getPatientsByPageNumberAndSearch(
+                pageNumber,
+                PEOPLE_PER_PAGE,
+                query,
+            ),
         );
         setAllPatients(res.result.data);
         setPatientsCount(res.result.count);
@@ -69,25 +69,15 @@ const Patients = () => {
         const getInitialPage = async () => {
             errorWrap(async () => {
                 // page number starts at 1
-                const res = await getPatientsByPageNumberAndSearch(
-                    1,
-                    PEOPLE_PER_PAGE,
+                const res = await trackPromise(
+                    getPatientsByPageNumberAndSearch(1, PEOPLE_PER_PAGE),
                 );
                 setAllPatients(res.result.data);
                 setPatientsCount(res.result.count);
             });
         };
 
-        const getCount = async () => {
-            errorWrap(async () => {
-                const res = await getPatientsCount();
-
-                setPatientsCount(res.result);
-                getInitialPage();
-            });
-        };
-
-        getCount();
+        getInitialPage();
     }, [setPatientsCount, setAllPatients, errorWrap]);
 
     /**

@@ -10,6 +10,7 @@ import React from 'react';
 import './AudioRecorder.scss';
 import { downloadBlobWithoutSaving } from '../../api/api';
 import AudioRecordImg from '../../assets/microphone.svg';
+import { trackPromise } from 'react-promise-tracker';
 
 /*
  * For whatever reason, this component cannot be written functionally.
@@ -135,11 +136,13 @@ class AudioRecorder extends React.Component {
     };
 
     handlePlay = async (file) => {
-        const blob = await downloadBlobWithoutSaving(
-            this.props.patientId,
-            this.props.stepKey,
-            this.props.fieldKey,
-            file.filename,
+        const blob = await trackPromise(
+            downloadBlobWithoutSaving(
+                this.props.patientId,
+                this.props.stepKey,
+                this.props.fieldKey,
+                file.filename,
+            ),
         );
         const blobURL = URL.createObjectURL(blob);
         this.setState({

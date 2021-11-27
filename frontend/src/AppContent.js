@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
+import { trackPromise } from 'react-promise-tracker';
 
 import { getSelf } from './api/api';
 import { getCurrentUserInfo } from './aws/aws-helper';
@@ -22,6 +23,7 @@ import {
     REDUCER_ACTIONS,
     ROUTES,
 } from './utils/constants';
+import LoadingIndicator from './components/LoadingIndicator/LoadingIndicator';
 
 const AppContent = ({ username, userEmail }) => {
     const errorWrap = useErrorWrap();
@@ -51,7 +53,7 @@ const AppContent = ({ username, userEmail }) => {
         };
 
         const setAdminStatus = async () => {
-            const selfRes = await getSelf();
+            const selfRes = await trackPromise(getSelf());
             dispatch({
                 type: REDUCER_ACTIONS.SET_ADMIN_STATUS,
                 isAdmin: selfRes?.result?.isAdmin,
@@ -78,6 +80,8 @@ const AppContent = ({ username, userEmail }) => {
 
     return (
         <div dir={selectedLang === LANGUAGES.AR ? 'rtl' : 'ltr'}>
+            {/* Shown when making a network request */}
+            <LoadingIndicator />
             <Router>
                 <QueryParamProvider ReactRouterRoute={Route}>
                     <Navbar username={username} userEmail={userEmail} />
