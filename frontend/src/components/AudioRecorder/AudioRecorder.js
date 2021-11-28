@@ -154,16 +154,18 @@ class AudioRecorder extends React.Component {
     getDeleteFileButton = () => {
         if (this.props.isDisabled) return null;
 
-        return <button
-            className="file-close-button"
-            type="button"
-            onClick={() =>
-                this.props.handleDelete(this.props.fieldKey, file)
-            }
-        >
-            <CloseIcon />
-        </button>
-    }
+        return (
+            <button
+                className="file-close-button"
+                type="button"
+                onClick={() =>
+                    this.props.handleDelete(this.props.fieldKey, file)
+                }
+            >
+                <CloseIcon />
+            </button>
+        );
+    };
 
     RenderExistingFiles = () => {
         if (this.props.files == null) return null;
@@ -217,34 +219,29 @@ class AudioRecorder extends React.Component {
     getAddAudioButton = () => {
         if (this.props.isDisabled) return null;
 
-        return <label
-            htmlFor={`upload-file-input-${this.props.title}`}
-        >
-            <input
-                id={`upload-file-input-${this.props.title}`}
-                className="upload-file-input"
-                type="button"
-                onClick={this.onModalOpen}
-                onChange={(e) => {
-                    this.props.handleUpload(
-                        this.props.fieldKey,
-                        e.target.files[0],
-                    );
-                }}
-            />
-            <Button className="file-button" component="span">
-                <AddIcon />
-                <Typography align="left">
-                    <b>
-                        {
-                            this.state.lang.components.audio
-                                .addAnother
-                        }
-                    </b>
-                </Typography>
-            </Button>
-        </label>
-    }
+        return (
+            <label htmlFor={`upload-file-input-${this.props.title}`}>
+                <input
+                    id={`upload-file-input-${this.props.title}`}
+                    className="upload-file-input"
+                    type="button"
+                    onClick={this.onModalOpen}
+                    onChange={(e) => {
+                        this.props.handleUpload(
+                            this.props.fieldKey,
+                            e.target.files[0],
+                        );
+                    }}
+                />
+                <Button className="file-button" component="span">
+                    <AddIcon />
+                    <Typography align="left">
+                        <b>{this.state.lang.components.audio.addAnother}</b>
+                    </Typography>
+                </Button>
+            </label>
+        );
+    };
 
     render() {
         const { isRecording } = this.state;

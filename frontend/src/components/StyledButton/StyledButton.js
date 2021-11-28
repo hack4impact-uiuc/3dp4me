@@ -18,7 +18,11 @@ const StyledButton = ({ onClick, primary, children, isDisabled = false }) => {
                 primary ? 'button-wrapper-primary' : 'button-wrapper-secondary'
             }
         >
-            <Button className={saveBtnClassName} onClick={onClick} disabled={isDisabled}>
+            <Button
+                className={saveBtnClassName}
+                onClick={onClick}
+                disabled={isDisabled}
+            >
                 {children}
             </Button>
         </div>
@@ -29,7 +33,7 @@ StyledButton.propTypes = {
     onClick: PropTypes.func.isRequired,
     primary: PropTypes.bool.isRequired,
     children: PropTypes.node,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
 };
 
 export { StyledButton };

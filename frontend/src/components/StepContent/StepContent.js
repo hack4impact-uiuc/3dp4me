@@ -228,8 +228,9 @@ const StepContent = ({
     };
 
     const generateLastEditedByAndDate = () => {
-        let text = `${translations.components.step.lastEditedBy} ${stepData?.lastEditedBy || translations.components.step.none
-            }`;
+        let text = `${translations.components.step.lastEditedBy} ${
+            stepData?.lastEditedBy || translations.components.step.none
+        }`;
         if (stepData?.lastEdited) {
             text += ` ${translations.components.step.on} ${formatDate(
                 new Date(),
