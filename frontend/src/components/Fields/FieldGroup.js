@@ -90,9 +90,8 @@ const FieldGroup = ({
         const groups = [];
 
         for (let i = 0; i < numFieldGroups; i++) {
-            const displayName = `${metadata?.displayName[selectedLang]} ${
-                i + 1
-            }`;
+            const displayName = `${metadata?.displayName[selectedLang]} ${i + 1
+                }`;
             groups.push(<h3 key={displayName}>{displayName}</h3>);
             groups.push(generateSingleGroup(i));
         }
@@ -103,7 +102,7 @@ const FieldGroup = ({
     return (
         <div className="field-container">
             {generateAllGroups()}
-            <Button className="field-group-button" onClick={onAddGroup}>
+            <Button className="field-group-button" onClick={onAddGroup} disabled={isDisabled}>
                 {`${translations.components.fieldGroup.add} ${metadata?.displayName[selectedLang]}`}
             </Button>
         </div>

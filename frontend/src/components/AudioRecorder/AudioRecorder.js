@@ -216,6 +216,7 @@ class AudioRecorder extends React.Component {
 
     getAddAudioButton = () => {
         if (this.props.isDisabled) return null;
+
         return <label
             htmlFor={`upload-file-input-${this.props.title}`}
         >

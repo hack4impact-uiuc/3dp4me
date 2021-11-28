@@ -71,8 +71,6 @@ const StepContent = ({
     };
 
     const handleFileUpload = async (fieldKey, file) => {
-        alert("hi");
-
         errorWrap(async () => {
             const res = await trackPromise(
                 uploadFile(patientId, metaData.key, fieldKey, file.name, file),
