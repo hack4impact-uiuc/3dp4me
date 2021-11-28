@@ -15,8 +15,22 @@ const Files = ({
     handleDownload,
     handleDelete,
     handleUpload,
+    isDisabled = false
 }) => {
     const translations = useTranslations()[0];
+
+    const getDeleteFileButton = (file) => {
+        if (isDisabled) return null;
+        return <button
+            className="file-close-button"
+            type="button"
+            onClick={() => {
+                handleDelete(fieldKey, file);
+            }}
+        >
+            <CloseIcon />
+        </button>
+    }
 
     const RenderExistingFiles = () => {
         if (files == null) return null;
@@ -41,18 +55,31 @@ const Files = ({
                         </div>
                     </div>
                 </Button>
-                <button
-                    className="file-close-button"
-                    type="button"
-                    onClick={() => {
-                        handleDelete(fieldKey, file);
-                    }}
-                >
-                    <CloseIcon />
-                </button>
+                {getDeleteFileButton(file)}
             </div>
         ));
     };
+
+    const getAddFileButton = () => {
+        if (isDisabled) return null;
+
+        return <label htmlFor={`upload-file-input-${title}`}>
+            <input
+                id={`upload-file-input-${title}`}
+                className="upload-file-input"
+                type="file"
+                onChange={(e) => {
+                    handleUpload(fieldKey, e.target.files[0]);
+                }}
+            />
+            <Button className="file-button" component="span">
+                <AddIcon />
+                <Typography align="left">
+                    <b>{translations.components.file.addAnother}</b>
+                </Typography>
+            </Button>
+        </label>
+    }
 
     return (
         <div className="files-wrapper">
@@ -61,22 +88,7 @@ const Files = ({
             </div>
             <div className="files-table">
                 {RenderExistingFiles()}
-                <label htmlFor={`upload-file-input-${title}`}>
-                    <input
-                        id={`upload-file-input-${title}`}
-                        className="upload-file-input"
-                        type="file"
-                        onChange={(e) => {
-                            handleUpload(fieldKey, e.target.files[0]);
-                        }}
-                    />
-                    <Button className="file-button" component="span">
-                        <AddIcon />
-                        <Typography align="left">
-                            <b>{translations.components.file.addAnother}</b>
-                        </Typography>
-                    </Button>
-                </label>
+                {getAddFileButton()}
             </div>
         </div>
     );
@@ -94,6 +106,7 @@ Files.propTypes = {
             uploadDate: PropTypes.instanceOf(Date).isRequired,
         }),
     ).isRequired,
+    isDisabled: PropTypes.bool
 };
 
 export default Files;

@@ -29,6 +29,7 @@ const PhotoField = ({
     stepKey,
     fieldId,
     handleFileUpload,
+    isDisabled = false
 }) => {
     const [images, setImages] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -214,7 +215,7 @@ const PhotoField = ({
     return (
         <div>
             <h3>{displayName}</h3>
-            <StyledButton onClick={handleOpenCamera} primary>
+            <StyledButton onClick={handleOpenCamera} primary isDisabled={isDisabled}>
                 {translations.components.button.photo}
             </StyledButton>
             <br />
@@ -237,6 +238,7 @@ PhotoField.propTypes = {
     patientId: PropTypes.string.isRequired,
     handleFileUpload: PropTypes.func.isRequired,
     stepKey: PropTypes.string.isRequired,
+    isDisabled: PropTypes.bool
 };
 
 export default PhotoField;
