@@ -141,6 +141,7 @@ const PhotoField = ({
                 onTakePhoto={(uri) => {
                     handleTakePhoto(uri);
                 }}
+                isDisplayStartCameraError={true}
             />
         );
     };
