@@ -34,7 +34,7 @@ const Patient2FALogin = () => {
 
     const onTokenSend = () => {
         send2FAPatientCode(patientId);
-        setIsTokenSent(true)
+        setIsTokenSent(true);
     };
 
     const displayAuthPage = () => {
@@ -49,8 +49,7 @@ const Patient2FALogin = () => {
                     <button
                         className="two-factor-authentication-button"
                         type="submit"
-                        // Todo: get rid of lambda expressions
-                        onClick={() => onTokenSend}
+                        onClick={() => onTokenSend()}
                     >
                         {translations.patient2FA.sendCode}
                     </button>
@@ -73,7 +72,6 @@ const Patient2FALogin = () => {
 
                 <div className="centered-token-content">
                     <ReactCodeInput fields={6} inputStyle={inputStyle} onChange={(tokenInput) => setToken(tokenInput)}/>
-
                     <button className="verification-button" type="submit" onClick={() => authenticatePatient(patientId, token)}>
                         {translations.patient2FA.verify}
                     </button>

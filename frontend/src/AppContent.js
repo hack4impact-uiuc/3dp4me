@@ -15,6 +15,7 @@ import DashboardManagement from './pages/DashboardManagement/DashboardManagement
 import PatientDetail from './pages/PatientDetail/PatientDetail';
 import Patients from './pages/Patients/Patients';
 import Patient2FA from './pages/Patient2FALogin/Patient2FALogin';
+import PatientPortal from './pages/PatientPortal/PatientPortal';
 import { Context } from './store/Store';
 import {
     COGNITO_ATTRIBUTES,
@@ -116,6 +117,10 @@ const AppContent = ({ username, userEmail }) => {
                             >
                                 <PatientDetail />
                             </Route>
+                            <Route exact
+                                path={`${ROUTES.PATIENT_PORTAL}/:patientId`}>
+                                    <PatientPortal />
+                                </Route>
                         </Switch>
                     </div>
                 </QueryParamProvider>

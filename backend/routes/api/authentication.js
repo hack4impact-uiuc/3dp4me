@@ -33,6 +33,7 @@ router.post('/2fa', passport.authenticate('passport-local'), async (req, res) =>
 /**
  * Get secret, generate the token, then return the token
  * If a patient's secret does not already exist, generate a new secret, then also return the token
+ * Send the patient token through Twilio to Whatsapp
  */
 router.get(
     '/:patientId',
@@ -61,24 +62,14 @@ router.get(
 
         const newToken = twofactor.generateToken(patient.secret);
 
-        // take out token & send through messages.js // twilio
-        // follow this example, replace w/ patient's phone number, body = token
-
         client.messages
             .create({
-                body: newToken,
+                body: `Your one time token is ${newToken.token}`,
                 to: TWILIO_RECEIVING_NUMBER,
                 from: TWILIO_SENDING_NUMBER,
             })
-            .then((message) => console.log(message.sid));
-        res.send('Authentication token sent.');
-
-        /* await sendResponse(
-            res,
-            200,
-            'New authentication key generated',
-            newToken,
-        ); */
+            .then((message) => console.log(message.sid))
+            .catch((err) => console.log(err));
     }),
 );
 
