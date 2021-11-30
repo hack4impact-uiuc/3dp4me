@@ -1,18 +1,17 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
 
-import './MapField.scss';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import {
-    COORDINATES,
-    PIN_URL,
-    MAPBOX_TOKEN,
-    MAP_STYLE,
-} from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
+import {
+    COORDINATES, MAPBOX_TOKEN,
+    MAP_STYLE, PIN_URL
+} from '../../utils/constants';
+import './MapField.scss';
+
 
 const MapField = ({
     value,
@@ -99,7 +98,7 @@ const MapField = ({
                 longitude={viewport?.longitude}
                 zoom={viewport?.zoom}
                 width="100%"
-                height="100%"
+                height="85%"
                 pitch={50}
                 onViewportChange={updateViewport}
                 onLoad={() => setViewport(initialViewport)}
