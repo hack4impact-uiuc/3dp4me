@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { authenticatePatient, send2FAPatientCode } from '../../api/api';
 import Logo from '../../assets/3dp4me_logo.png';
 import { useTranslations } from '../../hooks/useTranslations';
+import { ROUTES } from '../../utils/constants';
 
 import './Patient2FALogin.scss';
 import './TokenInput.scss';
@@ -36,6 +37,13 @@ const Patient2FALogin = () => {
         send2FAPatientCode(patientId);
         setIsTokenSent(true);
     };
+
+    const checkIsAuthenticated = async() => {
+        const res = await authenticatePatient(patientId, token);
+        if (res.success) {
+            window.location = `${ window.location.protocol }//${ window.location.hostname }:3000${ ROUTES.PATIENT_PORTAL }/${patientId}`;
+        }
+    }
 
     const displayAuthPage = () => {
         if (!isTokenSent) {
@@ -72,7 +80,7 @@ const Patient2FALogin = () => {
 
                 <div className="centered-token-content">
                     <ReactCodeInput fields={6} inputStyle={inputStyle} onChange={(tokenInput) => setToken(tokenInput)}/>
-                    <button className="verification-button" type="submit" onClick={() => authenticatePatient(patientId, token)}>
+                    <button className="verification-button" type="submit" onClick={() => checkIsAuthenticated()}>
                         {translations.patient2FA.verify}
                     </button>
                     <div

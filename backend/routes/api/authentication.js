@@ -63,6 +63,7 @@ router.get(
 
         client.messages
             .create({
+                // todo: constants
                 body: `Your one time token is ${newToken.token}`,
                 to: `whatsapp:+${patient.phoneNumber}`,
                 from: TWILIO_SENDING_NUMBER,
