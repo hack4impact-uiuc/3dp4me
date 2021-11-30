@@ -7,6 +7,24 @@
 .medical-info {
     margin-bottom: 20px;
 
+    .last-edited-formatting {
+        margin: 0 0 0;
+        align-self: center;
+    }
+
+    .last-edited-and-view-selection {
+        display: flex;
+        justify-content: space-between;
+        margin-right: 24px;
+
+        .left-item {
+            padding-right: 10px;
+        }
+        .right-item {
+            padding-left: 10px;
+        }
+    }
+
     .backdrop {
         z-index: 1;
         color: white;
