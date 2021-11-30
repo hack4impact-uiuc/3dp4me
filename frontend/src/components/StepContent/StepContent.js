@@ -13,7 +13,7 @@ import swal from 'sweetalert';
 import { deleteFile, downloadFile, uploadFile } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
-import { FIELD_TYPES, STEP_STATUS } from '../../utils/constants';
+import { FIELD_TYPES, STEP_STATUS , LANGUAGES } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
 import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
@@ -247,11 +247,27 @@ const StepContent = ({
             </Backdrop>
             {generateHeader()}
 
-            {/* start */}
-            <div className="last-edited-and-view-selection">
-                <div className="left-item">{generateLastEditedByAndDate()}</div>
+            <div
+                className={
+                    `last-edited-and-view-selection-${ 
+                    selectedLang === LANGUAGES.EN ? 'english' : 'arabic'}`
+                }
+            >
+                <div
+                    className={
+                        `last-edited-${ 
+                        selectedLang === LANGUAGES.EN ? 'english' : 'arabic'}`
+                    }
+                >
+                    {generateLastEditedByAndDate()}
+                </div>
 
-                <div className="right-item">
+                <div
+                    className={
+                        `view-selection-${ 
+                        selectedLang === LANGUAGES.EN ? 'english' : 'arabic'}`
+                    }
+                >
                     <Select
                         MenuProps={{
                             style: { zIndex: 35001 },
@@ -274,7 +290,6 @@ const StepContent = ({
                     </Select>
                 </div>
             </div>
-            {/* end */}
 
             {generateFields()}
             {generateFooter()}

@@ -12,16 +12,28 @@
         align-self: center;
     }
 
-    .last-edited-and-view-selection {
+    .last-edited-and-view-selection-english {
         display: flex;
         justify-content: space-between;
         margin-right: 24px;
 
-        .left-item {
+        .last-edited-english {
             padding-right: 10px;
         }
-        .right-item {
+        .view-selection-english {
             padding-left: 10px;
+        }
+    }
+    .last-edited-and-view-selection-arabic {
+        display: flex;
+        justify-content: space-between;
+        margin-left: 24px;
+
+        .last-edited-arabic {
+            padding-left: 10px;
+        }
+        .view-selection-arabic {
+            padding-right: 10px;
         }
     }
 
