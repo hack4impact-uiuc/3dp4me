@@ -9,7 +9,6 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 
 const {
-    TWILIO_RECEIVING_NUMBER,
     TWILIO_SENDING_NUMBER,
 } = require('../../utils/constants');
 const { errorWrap } = require('../../utils');
@@ -65,7 +64,7 @@ router.get(
         client.messages
             .create({
                 body: `Your one time token is ${newToken.token}`,
-                to: TWILIO_RECEIVING_NUMBER,
+                to: `whatsapp:+${patient.phoneNumber}`,
                 from: TWILIO_SENDING_NUMBER,
             })
             .then((message) => console.log(message.sid))
