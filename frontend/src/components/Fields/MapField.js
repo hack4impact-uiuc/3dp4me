@@ -7,11 +7,12 @@ import Geocoder from 'react-map-gl-geocoder';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
-    COORDINATES, MAPBOX_TOKEN,
-    MAP_STYLE, PIN_URL
+    COORDINATES,
+    MAPBOX_TOKEN,
+    MAP_STYLE,
+    PIN_URL,
 } from '../../utils/constants';
 import './MapField.scss';
-
 
 const MapField = ({
     value,
