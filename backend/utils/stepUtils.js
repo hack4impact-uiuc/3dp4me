@@ -156,10 +156,13 @@ const updateStepInTransaction = async (stepBody, session) => {
 
     // Add a step if can't find step to edit
     if (!stepToEdit) {
-        const newStep = new models.Step(stepBody);
+        const newStepBody = _.cloneDeep(stepBody);
+        newStepBody.fields = updateFieldKeys(stepBody.fields);
+        const newStep = new models.Step(newStepBody);
 
         await newStep.save({ session });
         generateSchemaFromMetadata(stepBody);
+
         return newStep;
     }
 
