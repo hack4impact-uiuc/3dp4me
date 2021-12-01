@@ -8,7 +8,7 @@ const { models } = require('../../models');
 const { PATIENT_STATUS_ENUM } = require('../../utils/constants');
 const {
     sendResponse,
-    getDataFromModelWithPagination,
+    getDataFromModelWithPaginationAndSearch,
 } = require('../../utils/response');
 
 /**
@@ -35,13 +35,16 @@ router.get(
             return sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
-        const patients = await getDataFromModelWithPagination(
+        const getPatientDataResponse = await getDataFromModelWithPaginationAndSearch(
             req,
             models.Patient,
             {
                 status: PATIENT_STATUS_ENUM.ACTIVE,
             },
         );
+
+        const patients = getPatientDataResponse.data;
+        const countTotalPatients = getPatientDataResponse.count;
 
         // Create array of promises to speed this up a bit
         const lookups = patients.map(async (p) => {
@@ -56,7 +59,7 @@ router.get(
         });
 
         const patientData = await Promise.all(lookups);
-        return sendResponse(res, 200, '', patientData);
+        return sendResponse(res, 200, '', { data: patientData, count: countTotalPatients });
     }),
 );
 

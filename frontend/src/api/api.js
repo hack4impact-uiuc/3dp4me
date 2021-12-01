@@ -10,20 +10,25 @@ export const getPatientsCount = async () => {
     return res.data;
 };
 
-export const getPatientsByPageNumber = async (pageNumber, nPerPage) => {
-    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
+export const getPatientsByPageNumberAndSearch = async (
+    pageNumber,
+    nPerPage,
+    searchQuery = '',
+) => {
+    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
 
-export const getPatientsByStageAndPageNumber = async (
+export const getPatientsByStageAndPageNumberAndSearch = async (
     stage,
     pageNumber,
     nPerPage,
+    searchQuery = '',
 ) => {
-    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
+    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
@@ -162,6 +167,30 @@ export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
 export const getAllRoles = async () => {
     const requestString = `/roles`;
     const res = await instance.get(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const addRole = async (roleInfo) => {
+    const requestString = `/roles`;
+    const res = await instance.post(requestString, roleInfo);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const deleteRole = async (userId) => {
+    const requestString = `/roles/${userId}`;
+    const res = await instance.delete(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const editRole = async (userId, updatedRoleInfo) => {
+    const requestString = `/roles/${userId}`;
+    const res = await instance.put(requestString, updatedRoleInfo);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;

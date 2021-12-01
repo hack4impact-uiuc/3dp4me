@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import swal from 'sweetalert';
+import { trackPromise } from 'react-promise-tracker';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -9,7 +10,6 @@ import {
     patientTableHeaderRenderer,
     patientTableRowRenderer,
 } from '../../utils/table-renderers';
-import { getPatientName } from '../../utils/utils';
 import CreatePatientModal from '../CreatePatientModal/CreatePatientModal';
 import Table from '../Table/Table';
 import { TableRowType, TableHeaderType } from '../../utils/custom-proptypes';
@@ -25,6 +25,9 @@ const PatientTable = ({
     patients,
     headers,
     rowData,
+    initialSearchQuery,
+    handleSearchQuery,
+    stepKey,
 }) => {
     const errorWrap = useErrorWrap();
     const translations = useTranslations()[0];
@@ -39,7 +42,7 @@ const PatientTable = ({
 
         await errorWrap(async () => {
             // Make the request
-            const res = await postNewPatient(patientData);
+            const res = await trackPromise(postNewPatient(patientData));
             patient = res?.result;
         });
 
@@ -63,9 +66,9 @@ const PatientTable = ({
     const onSaveAndEditPatient = async (patientData) => {
         const patientId = await onSavePatient(patientData);
         const currentRoute = window.location.href;
-        let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}`;
+        let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}?stepKey=${stepKey}`;
 
-        // Remove doulbe '/'
+        // Remove double '/'
         if (
             relativeRoute[0] === '/' &&
             currentRoute[currentRoute.length - 1] === '/'
@@ -75,22 +78,17 @@ const PatientTable = ({
         if (patientId) window.location.href = currentRoute + relativeRoute;
     };
 
-    /**
-     * Given a query and patient data, return true if this patient should
-     * be included in the search results
-     */
-    const doesPatientMatchQuery = (patient, query) => {
-        const patientName = getPatientName(patient).toLowerCase();
-        const patientId = patient?._id?.toLowerCase();
-        const lowercaseQuery = query?.toLowerCase();
-
-        // If query is contained in patient name
-        if (patientName.indexOf(lowercaseQuery) !== -1) return true;
-
-        // If query is contained in patient's ID
-        if (patientId.indexOf(lowercaseQuery) !== -1) return true;
-
-        return false;
+    const PatientTableRowRendererForStep = (
+        patientRowData,
+        patient,
+        selectedLang,
+    ) => {
+        return patientTableRowRenderer(
+            patientRowData,
+            patient,
+            selectedLang,
+            stepKey,
+        );
     };
 
     return (
@@ -105,10 +103,11 @@ const PatientTable = ({
             <Table
                 onCreateRow={() => setCreatePatientModalOpen(true)}
                 tableTitle={tableTitle}
-                doesRowMatchQuery={doesPatientMatchQuery}
                 addRowButtonTitle={translations.components.button.createPatient}
                 renderHeader={patientTableHeaderRenderer}
-                renderTableRow={patientTableRowRenderer}
+                renderTableRow={PatientTableRowRendererForStep}
+                initialSearchQuery={initialSearchQuery}
+                handleSearchQuery={handleSearchQuery}
                 headers={headers}
                 rowData={rowData}
                 data={patients}
@@ -123,6 +122,9 @@ PatientTable.propTypes = {
     patients: PropTypes.arrayOf(PropTypes.object),
     headers: PropTypes.arrayOf(TableHeaderType).isRequired,
     rowData: PropTypes.arrayOf(TableRowType).isRequired,
+    handleSearchQuery: PropTypes.func.isRequired,
+    initialSearchQuery: PropTypes.string.isRequired,
+    stepKey: PropTypes.string,
 };
 
 export default PatientTable;

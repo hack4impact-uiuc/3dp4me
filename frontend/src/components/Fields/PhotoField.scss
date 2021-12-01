@@ -12,6 +12,7 @@
         border-radius: 8px;
         min-width: 40%;
         padding: 10px;
+        z-index: 0; // This z-index value prevents the react-html5-camera-photo Camera component from being placed under the .take-photo-modal-wrapper div
 
         .button-wrapper {
             display: flex;

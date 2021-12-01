@@ -99,6 +99,9 @@
             "fieldGroup": {
                 "add": "Add"
             },
+            "camera": {
+                "promptInstructions": "Please allow camera access following the steps below"
+            },
             "button": {
                 "createPatient": "Create Patient",
                 "save": "Save",
@@ -146,7 +149,8 @@
                     "successMsg": "Created Patient",
                     "buttons": {
                         "noEdit": "Save and Close",
-                        "edit": "Save and Continue Editing"
+                        "edit": "Save and Continue Editing",
+                        "discard": "Discard"
                     }
                 },
                 "managePatient": {
@@ -212,6 +216,19 @@
             "Pending": "Pending",
             "Save": "Save",
             "Discard": "Discard"
+        },
+        "roleManagement": {
+            "roleDatabase": "Role Database",
+            "addRole": "Add Role",
+            "roleName": "Role Name",
+            "manageRole": "Manage Role",
+            "deleteRole": "Delete Role",
+            "warning": "Warning: If this role is deleted, accounts need to be reassigned to another role",
+            "roleDescription": "Role Description"
+        },
+        "tabs": {
+            "Roles": "ROLES",
+            "Users": "USERS"
         }
     },
     "AR": {
@@ -314,6 +331,9 @@
             "fieldGroup": {
                 "add": "يضيف"
             },
+            "camera": {
+                "promptInstructions": "يرجى السماح بالوصول إلى الكاميرا باتباع الخطوات أدناه"
+            },
             "button": {
                 "createPatient": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",
                 "save": "\u062d\u0641\u0638",
@@ -361,7 +381,8 @@
                     "successMsg": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",
                     "buttons": {
                         "noEdit": "\u0627\u062d\u0641\u0638 \u0648\u0623\u063a\u0644\u0642",
-                        "edit": "\u0627\u062d\u0641\u0638 \u0648\u062a\u0627\u0628\u0639 \u0627\u0644\u062a\u062d\u0631\u064a\u0631"
+                        "edit": "\u0627\u062d\u0641\u0638 \u0648\u062a\u0627\u0628\u0639 \u0627\u0644\u062a\u062d\u0631\u064a\u0631",
+                        "discard": "Discard"
                     }
                 },
                 "managePatient": {
@@ -427,6 +448,19 @@
             "Discard": "ينبذ",
             "username": "اسم المستخدم",
             "email": "بريد إلكتروني"
+        },
+        "roleManagement": {
+            "roleDatabase": "قاعدة بيانات الدور",
+            "addRole": "أضف دورًا",
+            "roleName": "اسم الدور",
+            "manageRole": "إدارة الدور",
+            "deleteRole": "حذف الدور",
+            "warning": "تحذير: إذا تم حذف هذا الدور ، فيجب إعادة تعيين الحسابات إلى دور آخر",
+            "roleDescription": "وصف الدور"
+        },
+        "tabs": {
+            "Roles": "الأدوار",
+            "Users": "المستخدمين"
         }
     }
 }

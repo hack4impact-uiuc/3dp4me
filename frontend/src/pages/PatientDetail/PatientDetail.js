@@ -2,6 +2,8 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
+import { StringParam, useQueryParam } from 'use-query-params';
+import { trackPromise } from 'react-promise-tracker';
 
 import {
     getAllStepsMetadata,
@@ -35,6 +37,7 @@ const PatientDetail = () => {
     const [patientData, setPatientData] = useState(null);
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
+    const stepKeyParam = useQueryParam('stepKey', StringParam)[0];
 
     /**
      * Fetch metadata for all steps and the patient's data.
@@ -44,16 +47,18 @@ const PatientDetail = () => {
         const getData = async () => {
             errorWrap(async () => {
                 // Step metadata
-                let res = await getAllStepsMetadata(false);
+                let res = await trackPromise(getAllStepsMetadata(false));
                 let metaData = res.result;
 
                 // Patient data
-                res = await getPatientById(patientId);
+                res = await trackPromise(getPatientById(patientId));
                 const data = res.result;
 
                 // Sort it
                 metaData = sortMetadata(metaData);
-                if (metaData.length > 0) setSelectedStep(metaData[0].key);
+
+                if (stepKeyParam) setSelectedStep(stepKeyParam);
+                else if (metaData?.length) setSelectedStep(metaData[0].key);
 
                 setStepMetaData(metaData);
                 setPatientData(data);
@@ -72,7 +77,7 @@ const PatientDetail = () => {
         errorWrap(async () => {
             const newPatientData = _.cloneDeep(patientData);
             newPatientData[stepKey] = _.cloneDeep(stepData);
-            await updateStage(patientId, stepKey, stepData);
+            await trackPromise(updateStage(patientId, stepKey, stepData));
             setPatientData(newPatientData);
         });
     };
@@ -85,7 +90,7 @@ const PatientDetail = () => {
         const patientDataCopy = _.cloneDeep(patientData);
         Object.assign(patientDataCopy, newPatientData);
         await errorWrap(async () => {
-            await updatePatient(patientId, patientDataCopy);
+            await trackPromise(updatePatient(patientId, patientDataCopy));
             setPatientData(patientDataCopy);
             swal(
                 translations.components.swal.managePatient.successMsg,
@@ -113,8 +118,8 @@ const PatientDetail = () => {
 
     const onStepChange = (newStep) => {
         if (newStep === null) return;
-
         setSelectedStep(newStep);
+        window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
     };
 
     /**

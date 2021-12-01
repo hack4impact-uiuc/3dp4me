@@ -1,31 +1,32 @@
-import './DashboardManagement.scss';
-import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { trackPromise } from 'react-promise-tracker';
 
-import BottomBar from '../../components/BottomBar/BottomBar';
 import {
-    getAllStepsMetadata,
     getAllRoles,
+    getAllStepsMetadata,
     updateMultipleSteps,
 } from '../../api/api';
+import BottomBar from '../../components/BottomBar/BottomBar';
+import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
+import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
+import EditFieldModal from '../../components/EditFieldModal/EditFieldModal';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
-import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
-import EditFieldModal from '../../components/EditFieldModal/EditFieldModal';
-import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
     drawerWidth,
     verticalMovementWidth,
 } from '../../styles/variables.scss';
-import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
-import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 import {
     DIRECTION,
     getValidAdjacentElement,
     swapValuesInArrayByKey,
 } from '../../utils/dashboard-utils';
+import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
+import { rolesToMultiSelectFormat, sortMetadata } from '../../utils/utils';
+import './DashboardManagement.scss';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -65,7 +66,9 @@ const SectionTab = () => {
         errorWrap(
             async () => {
                 setIsEditing(false);
-                updateResponse = await updateMultipleSteps(stepMetadata);
+                updateResponse = await trackPromise(
+                    updateMultipleSteps(stepMetadata),
+                );
             },
             () => {
                 setIsEditing(false);
@@ -200,7 +203,7 @@ const SectionTab = () => {
     useEffect(() => {
         errorWrap(async () => {
             const fetchData = async () => {
-                const res = await getAllStepsMetadata(true); // true indicates that we want to get hidden field
+                const res = await trackPromise(getAllStepsMetadata(true)); // true indicates that we want to get hidden field
 
                 const sortedMetadata = sortMetadata(res.result);
 
@@ -213,7 +216,8 @@ const SectionTab = () => {
             };
 
             const fetchRoles = async () => {
-                const rolesRes = await getAllRoles();
+                const rolesRes = await trackPromise(getAllRoles());
+                console.log(rolesRes);
                 const roles = rolesToMultiSelectFormat(rolesRes.result);
                 setAllRoles(roles);
             };
@@ -307,10 +311,15 @@ const SectionTab = () => {
             return element.key === selectedStep;
         });
 
-        updatedNewField.fieldNumber =
-            updatedMetadata[stepIndex].fields[
-                updatedMetadata[stepIndex].fields.length - 1
-            ].fieldNumber + 1;
+        if (updatedMetadata[stepIndex].fields.length) {
+            updatedNewField.fieldNumber =
+                updatedMetadata[stepIndex].fields[
+                    updatedMetadata[stepIndex].fields.length - 1
+                ].fieldNumber + 1;
+        } else {
+            updatedNewField.fieldNumber = 1;
+        }
+
         updatedNewField.isDeleted = false;
         updatedNewField.isHidden = false;
         updatedMetadata[stepIndex].fields.push(updatedNewField);
