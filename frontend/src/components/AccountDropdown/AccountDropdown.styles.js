@@ -15,7 +15,7 @@ export const useStyles = makeStyles({
     },
     signOutButton: {
         height: '38px',
-        fontSize: '12px',
+        fontSize: '1em',
         fontWeight: 'bold',
         backgroundColor: '#ca0909',
         color: 'white',
