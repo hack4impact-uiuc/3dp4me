@@ -32,30 +32,24 @@ const Sidebar = ({
         );
     };
 
-    const generateReorderButtons = (stepKey) => {
+    const generateReorderButtons = (stepKey, className) => {
         if (!isEditing) return null;
 
         return [
             <div
-                className={`button order-button ${
-                    stepKey === selectedStep ? 'selected' : 'unselected'
-                }`}
+                className={`button order-button ${className}`}
                 onClick={() => onAddField(stepKey)}
             >
                 <i className="plus icon" />
             </div>,
             <div
-                className={`button order-button ${
-                    stepKey === selectedStep ? 'selected' : 'unselected'
-                }`}
+                className={`button order-button ${className}`}
                 onClick={() => onDownPressed(stepKey)}
             >
                 <i className="chevron down icon" />
             </div>,
             <div
-                className={`button order-button ${
-                    stepKey === selectedStep ? 'selected' : 'unselected'
-                }`}
+                className={`button order-button ${className}`}
                 onClick={() => onUpPressed(stepKey)}
             >
                 <i className="chevron up icon" />
@@ -63,21 +57,25 @@ const Sidebar = ({
         ];
     };
 
+    const getButtonClassname = (stepKey, isHidden) => {
+        if (selectedStep == stepKey)
+            return 'selected'
+        return isHidden ? 'hidden' : 'unselected';
+    }
+
     const generateButtons = () => {
+
+
         return stepMetadata.map((element) => {
             return (
                 <div className="sidebar-button-container">
                     <div
-                        className={`button main-button ${
-                            element.key === selectedStep
-                                ? 'selected'
-                                : 'unselected'
-                        }`}
+                        className={`button main-button ${getButtonClassname(element.key, element.isHidden || false)}`}
                         onClick={() => onButtonClick(element.key)}
                     >
                         {element.displayName[selectedLang]}
                     </div>
-                    {generateReorderButtons(element.key)}
+                    {generateReorderButtons(element.key, getButtonClassname(element.key, element.isHidden || false))}
                 </div>
             );
         });
@@ -85,9 +83,8 @@ const Sidebar = ({
 
     return (
         <Drawer
-            className={`sidebar ${
-                isEditing ? 'sidebar-expanded' : 'sidebar-retracted'
-            }`}
+            className={`sidebar ${isEditing ? 'sidebar-expanded' : 'sidebar-retracted'
+                }`}
             variant="permanent"
         >
             <div className="sidebar-container">
