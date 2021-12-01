@@ -12,27 +12,28 @@
         align-self: center;
     }
 
-    .last-edited-and-view-selection-english {
+    .last-edited-and-view-selection-EN {
         display: flex;
         justify-content: space-between;
         margin-right: 24px;
 
-        .last-edited-english {
+        .last-edited-EN {
             padding-right: 10px;
         }
-        .view-selection-english {
+        .view-selection-EN {
             padding-left: 10px;
         }
     }
-    .last-edited-and-view-selection-arabic {
+
+    .last-edited-and-view-selection-AR {
         display: flex;
         justify-content: space-between;
         margin-left: 24px;
 
-        .last-edited-arabic {
+        .last-edited-AR {
             padding-left: 10px;
         }
-        .view-selection-arabic {
+        .view-selection-AR {
             padding-right: 10px;
         }
     }
