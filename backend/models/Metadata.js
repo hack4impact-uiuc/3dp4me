@@ -142,6 +142,8 @@ const stepSchema = new mongoose.Schema({
             message: ERR_FIELD_VALIDATION_FAILED,
         },
     },
+    isHidden: { type: Boolean, required: false, default: false },
+    isDeleted: { type: Boolean, required: false, default: false },
 });
 
 // Run validator when stepNumber is changed.

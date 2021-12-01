@@ -21,7 +21,9 @@ const stringToBoolean = (value) => {
 
 module.exports.getReadableSteps = async (req) => {
     let showHiddenFields = req.query.showHiddenFields ?? 'false';
+    let showHiddenSteps = req.query.showHiddenSteps ?? 'false';
     showHiddenFields = stringToBoolean(showHiddenFields);
+    showHiddenSteps = stringToBoolean(showHiddenSteps);
 
     const userRole = req.user.roles.toString();
 
@@ -29,23 +31,10 @@ module.exports.getReadableSteps = async (req) => {
         {
             $or: [{ $ne: ['$$field.isDeleted', true] }],
         },
-    ]; // don't return any deleted fields
+    ]; // Don't return any deleted fields
 
-    const aggregation = [
-        {
-            $addFields: {
-                fields: {
-                    $filter: {
-                        input: '$fields',
-                        as: 'field',
-                        cond: {
-                            $and: searchParams,
-                        },
-                    },
-                },
-            },
-        },
-    ];
+    // Don't return any deleted steps
+    const aggregation = [{ $match: { isDeleted: { $ne: true } } }];
 
     // If not admin, then return limit what steps/fields can be returned using readableGroups
     if (!isAdmin(req.user)) {
@@ -62,6 +51,24 @@ module.exports.getReadableSteps = async (req) => {
             $or: [{ $ne: ['$$field.isHidden', true] }],
         }); // limit returning fields that are hidden
     }
+
+    if (!showHiddenSteps) {
+        aggregation.push({ $match: { isHidden: { $ne: true } } });
+    }
+
+    aggregation.push({
+        $addFields: {
+            fields: {
+                $filter: {
+                    input: '$fields',
+                    as: 'field',
+                    cond: {
+                        $and: searchParams,
+                    },
+                },
+            },
+        },
+    });
 
     const data = await models.Step.aggregate(aggregation);
 
