@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import DashboardManagement from './pages/DashboardManagement/DashboardManagement';
 import PatientDetail from './pages/PatientDetail/PatientDetail';
 import Patients from './pages/Patients/Patients';
+import PatientUpload from "./pages/PatientUpload/PatientUpload";
 import { Context } from './store/Store';
 import {
     COGNITO_ATTRIBUTES,
@@ -106,6 +107,12 @@ const AppContent = ({ username, userEmail }) => {
                             path={`${ROUTES.PATIENT_DETAIL}/:patientId`}
                         >
                             <PatientDetail />
+                        </Route>
+                        <Route
+                            exact
+                            path={`${ROUTES.PATIENT_UPLOAD}/:patientId`}
+                        >
+                            <PatientUpload />
                         </Route>
                     </Switch>
                 </div>
