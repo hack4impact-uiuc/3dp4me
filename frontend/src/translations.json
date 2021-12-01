@@ -45,7 +45,7 @@
             },
             "navbar": {
                 "dropdown": {
-                    "language": "language",
+                    "language": "Language",
                     "EN": "EN",
                     "AR": "AR"
                 },
