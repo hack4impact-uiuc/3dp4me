@@ -248,12 +248,12 @@ const StepContent = ({
             </Backdrop>
             {generateHeader()}
 
-            <div className={`last-edited-and-view-selection-${  selectedLang}`}>
-                <div className={`last-edited-${  selectedLang}`}>
+            <div className={`last-edited-and-view-selection-${selectedLang}`}>
+                <div className={`last-edited-${selectedLang}`}>
                     {generateLastEditedByAndDate()}
                 </div>
 
-                <div className={`view-selection-${  selectedLang}`}>
+                <div className={`view-selection-${selectedLang}`}>
                     <Select
                         MenuProps={{
                             style: { zIndex: 35001 },
