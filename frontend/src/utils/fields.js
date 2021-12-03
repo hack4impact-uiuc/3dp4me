@@ -296,7 +296,10 @@ export const fieldToJSX = (fieldData, fieldType, selectedLang) => {
  * @param {JSON} fieldData
  */
 export const validateField = (fieldData) => {
-    if (fieldData.displayName.EN === '' || fieldData.displayName.AR === '') {
+    if (
+        fieldData.displayName.EN.trim() === '' ||
+        fieldData.displayName.AR.trim() === ''
+    ) {
         throw new Error(ERR_LANGUAGE_VALIDATION_FAILED);
     }
 

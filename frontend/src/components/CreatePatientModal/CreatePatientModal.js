@@ -26,6 +26,18 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
         onClose();
     };
 
+    const clearState = () => {
+        setFirstName('');
+        setFathersName('');
+        setGrandfathersName('');
+        setFamilyName('');
+    };
+
+    const onDiscard = () => {
+        clearState();
+        onClose();
+    };
+
     return (
         <Modal className="create-patient-modal" open={isOpen} onClose={onClose}>
             <div className="create-patient-modal-wrapper">
@@ -80,24 +92,38 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
                     />
                 </div>
                 <div className="create-patient-button-container">
-                    <Button
-                        className="create-patient-button create-patient-edit-button"
-                        onClick={() => onSavePatient(true)}
-                    >
-                        {
-                            translations.components.swal.createPatient.buttons
-                                .edit
-                        }
-                    </Button>
-                    <Button
-                        className="create-patient-button create-patient-close-button"
-                        onClick={() => onSavePatient(false)}
-                    >
-                        {
-                            translations.components.swal.createPatient.buttons
-                                .noEdit
-                        }
-                    </Button>
+                    <div>
+                        <Button
+                            className="create-patient-button create-patient-edit-button"
+                            onClick={() => onSavePatient(true)}
+                        >
+                            {
+                                translations.components.swal.createPatient
+                                    .buttons.edit
+                            }
+                        </Button>
+                    </div>
+                    <div className="close-delete-button-container">
+                        <Button
+                            className="create-patient-button create-patient-close-button"
+                            onClick={() => onSavePatient(false)}
+                        >
+                            {
+                                translations.components.swal.createPatient
+                                    .buttons.noEdit
+                            }
+                        </Button>
+
+                        <Button
+                            className="create-patient-button create-patient-delete-button"
+                            onClick={onDiscard}
+                        >
+                            {
+                                translations.components.swal.createPatient
+                                    .buttons.discard
+                            }
+                        </Button>
+                    </div>
                 </div>
             </div>
         </Modal>

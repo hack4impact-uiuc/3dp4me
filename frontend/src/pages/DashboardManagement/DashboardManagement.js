@@ -1,27 +1,32 @@
-import './DashboardManagement.scss';
-import React, { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { trackPromise } from 'react-promise-tracker';
 
-import BottomBar from '../../components/BottomBar/BottomBar';
 import {
-    getAllStepsMetadata,
     getAllRoles,
+    getAllStepsMetadata,
     updateMultipleSteps,
 } from '../../api/api';
+import BottomBar from '../../components/BottomBar/BottomBar';
+import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
+import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
+import EditFieldModal from '../../components/EditFieldModal/EditFieldModal';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
-import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
-import EditFieldModal from '../../components/EditFieldModal/EditFieldModal';
-import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
     drawerWidth,
     verticalMovementWidth,
 } from '../../styles/variables.scss';
-import { resolveMixedObjPath } from '../../utils/object';
-import { sortMetadata, rolesToMultiSelectFormat } from '../../utils/utils';
+import {
+    DIRECTION,
+    getValidAdjacentElement,
+    swapValuesInArrayByKey,
+} from '../../utils/dashboard-utils';
 import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
+import { rolesToMultiSelectFormat, sortMetadata } from '../../utils/utils';
+import './DashboardManagement.scss';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
@@ -56,13 +61,19 @@ const SectionTab = () => {
     };
 
     const onSaveChanges = () => {
+        let updateResponse;
+
         errorWrap(
             async () => {
-                await updateMultipleSteps(stepMetadata);
+                setIsEditing(false);
+                updateResponse = await trackPromise(
+                    updateMultipleSteps(stepMetadata),
+                );
             },
             () => {
                 setIsEditing(false);
-                setOriginalStepMetadata(stepMetadata);
+                setOriginalStepMetadata(updateResponse.result);
+                setStepMetadata(updateResponse.result);
             },
             () => {
                 // Allow editing when the save fails
@@ -80,70 +91,95 @@ const SectionTab = () => {
         setSelectedStep(stepKey);
     }
 
+    /**
+     * Moves a step up or down by changing its stepNumber
+     * @param {String} stepKey
+     * @param {Number} direction 1 indicates increasing stepNumber, -1 indicates decreasing fieldNumber
+     */
+    function moveStep(stepKey, direction) {
+        // Bad parameters
+        let updatedMetadata = _.cloneDeep(stepMetadata);
+
+        const currStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
+
+        if (currStepIndex < 0) return;
+
+        const nextStepIndex = getValidAdjacentElement(
+            updatedMetadata[currStepIndex],
+            currStepIndex,
+            direction,
+        );
+
+        if (nextStepIndex < 0) return;
+
+        // Perform field number swap
+        updatedMetadata = swapValuesInArrayByKey(
+            updatedMetadata,
+            'stepNumber',
+            currStepIndex,
+            nextStepIndex,
+        );
+
+        const sortedMetadata = sortMetadata(updatedMetadata);
+        setStepMetadata(sortedMetadata);
+    }
+
+    // Handles moving a step down
     function onDownPressed(stepKey) {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
-        const foundField = updatedMetadata.find(
-            (field) => field.key === stepKey,
-        );
-        const afterField = updatedMetadata.find(
-            (field) => field.stepNumber === foundField.stepNumber + 1,
-        );
-        if (foundField.stepNumber !== updatedMetadata.length - 1) {
-            foundField.stepNumber++;
-            afterField.stepNumber--;
-            const sortedMetadata = sortMetadata(updatedMetadata);
-            setStepMetadata(sortedMetadata);
-        }
+        moveStep(stepKey, DIRECTION.DOWN);
     }
 
-    function onCardDownPressed(stepKey, fieldRoot, fieldNumber) {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
-        const foundStep = updatedMetadata.find(
-            (field) => field.key === stepKey,
-        );
-        const root = resolveMixedObjPath(foundStep, fieldRoot);
-        const foundField = root.find((f) => f.fieldNumber === fieldNumber);
-        const afterField = root.find((f) => f.fieldNumber === fieldNumber + 1);
-
-        if (foundField && afterField) {
-            foundField.fieldNumber++;
-            afterField.fieldNumber--;
-            const sortedMetadata = sortMetadata(updatedMetadata);
-            setStepMetadata(sortedMetadata);
-        }
-    }
-
+    // Handles moving a step up
     function onUpPressed(stepKey) {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
-        const foundField = updatedMetadata.find(
-            (field) => field.key === stepKey,
-        );
-        const beforeField = updatedMetadata.find(
-            (field) => field.stepNumber === foundField.stepNumber - 1,
-        );
-
-        if (foundField && beforeField) {
-            foundField.stepNumber--;
-            beforeField.stepNumber++;
-            const sortedMetadata = sortMetadata(updatedMetadata);
-            setStepMetadata(sortedMetadata);
-        }
+        moveStep(stepKey, DIRECTION.UP);
     }
 
-    function onCardUpPressed(stepKey, fieldRoot, fieldNumber) {
+    /**
+     * Moves a field up or down for a given step's fields
+     * @param {String} stepKey Step whose fields will be changed
+     * @param {Number} fieldNumber The number of the field that we have to move
+     * @param {Number} direction 1 indicates moving down (increasing fieldNumber), -1 indicates moving up (decreasing fieldNumber)
+     */
+    function moveField(stepKey, fieldNumber, direction) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
-        const foundStep = updatedMetadata.find(
-            (field) => field.key === stepKey,
+
+        const foundStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
+
+        if (foundStepIndex < 0) return;
+
+        const currFieldIndex = getFieldIndexByNumber(
+            updatedMetadata[foundStepIndex],
+            fieldNumber,
         );
-        const root = resolveMixedObjPath(foundStep, fieldRoot);
-        const foundField = root.find((f) => f.fieldNumber === fieldNumber);
-        const beforeField = root.find((f) => f.fieldNumber === fieldNumber - 1);
-        if (foundField.fieldNumber !== 0) {
-            foundField.fieldNumber--;
-            beforeField.fieldNumber++;
-            const sortedMetadata = sortMetadata(updatedMetadata);
-            setStepMetadata(sortedMetadata);
-        }
+
+        const prevFieldIndex = getValidAdjacentElement(
+            updatedMetadata[foundStepIndex].fields,
+            currFieldIndex,
+            direction,
+        );
+
+        if (prevFieldIndex < 0) return;
+
+        // Perform field number swap
+        updatedMetadata[foundStepIndex].fields = swapValuesInArrayByKey(
+            updatedMetadata[foundStepIndex].fields,
+            'fieldNumber',
+            currFieldIndex,
+            prevFieldIndex,
+        );
+
+        const sortedMetadata = sortMetadata(updatedMetadata);
+        setStepMetadata(sortedMetadata);
+    }
+
+    // Handles moving a field down
+    function onCardDownPressed(stepKey, fieldNumber) {
+        moveField(stepKey, fieldNumber, DIRECTION.DOWN);
+    }
+
+    // Handles moving a field up
+    function onCardUpPressed(stepKey, fieldNumber) {
+        moveField(stepKey, fieldNumber, DIRECTION.UP);
     }
 
     function GenerateStepManagementContent() {
@@ -167,7 +203,7 @@ const SectionTab = () => {
     useEffect(() => {
         errorWrap(async () => {
             const fetchData = async () => {
-                const res = await getAllStepsMetadata();
+                const res = await trackPromise(getAllStepsMetadata(true)); // true indicates that we want to get hidden field
 
                 const sortedMetadata = sortMetadata(res.result);
 
@@ -180,7 +216,8 @@ const SectionTab = () => {
             };
 
             const fetchRoles = async () => {
-                const rolesRes = await getAllRoles();
+                const rolesRes = await trackPromise(getAllRoles());
+                console.log(rolesRes);
                 const roles = rolesToMultiSelectFormat(rolesRes.result);
                 setAllRoles(roles);
             };
@@ -213,19 +250,41 @@ const SectionTab = () => {
         );
     };
 
+    // Returns the index for a step given its key
+    const getStepIndexGivenKey = (stepData, key) => {
+        if (!stepData) return -1;
+        return stepData.findIndex((step) => step.key === key);
+    };
+
+    // This function is needed because the field number doesn't correspond to the index of a field in
+    // the fields array. There can be fields with field numbers 1, 2, 4, 5, but no 3, in the fields array.
+    const getFieldIndexByNumber = (step, fieldNumber) => {
+        if (!step) return -1;
+        return step.fields.findIndex(
+            (field) => field.fieldNumber === fieldNumber,
+        );
+    };
+
     const generateEditFieldPopup = () => {
-        const selectedStepMetadata = stepMetadata.find(
-            (step) => step.key === selectedStep,
+        const stepIndex = getStepIndexGivenKey(stepMetadata, selectedStep);
+
+        if (stepIndex < 0) return null;
+
+        const fieldIndex = getFieldIndexByNumber(
+            stepMetadata[stepIndex],
+            selectedField,
         );
 
-        if (!selectedStepMetadata) return null;
+        if (fieldIndex < 0) return null;
 
-        if (selectedField >= selectedStepMetadata.fields.length) return null;
+        const fieldData = stepMetadata[stepIndex].fields[fieldIndex];
+
+        if (!fieldData) return null;
 
         return (
             <EditFieldModal
                 isOpen={editFieldModalOpen}
-                initialData={selectedStepMetadata.fields[selectedField]}
+                initialData={fieldData}
                 onModalClose={onEditFieldModalClose}
                 allRoles={allRoles}
                 onEditField={editField}
@@ -238,6 +297,8 @@ const SectionTab = () => {
             <CreateStepModal
                 isOpen={stepModalOpen}
                 onModalClose={onStepModalClose}
+                allRoles={allRoles}
+                onAddNewStep={addNewStep}
             />
         );
     };
@@ -250,16 +311,17 @@ const SectionTab = () => {
             return element.key === selectedStep;
         });
 
-        updatedNewField.fieldNumber = updatedMetadata[stepIndex].fields.length;
+        if (updatedMetadata[stepIndex].fields.length) {
+            updatedNewField.fieldNumber =
+                updatedMetadata[stepIndex].fields[
+                    updatedMetadata[stepIndex].fields.length - 1
+                ].fieldNumber + 1;
+        } else {
+            updatedNewField.fieldNumber = 1;
+        }
 
-        const currentFieldKeys = updatedMetadata[stepIndex].fields.map(
-            (field) => field.key,
-        );
-        updatedNewField.key = generateKeyWithoutCollision(
-            updatedNewField.displayName.EN,
-            currentFieldKeys,
-        );
-
+        updatedNewField.isDeleted = false;
+        updatedNewField.isHidden = false;
         updatedMetadata[stepIndex].fields.push(updatedNewField);
         setStepMetadata(updatedMetadata);
     };
@@ -268,11 +330,34 @@ const SectionTab = () => {
         const updatedField = _.cloneDeep(updatedFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        const stepIndex = stepMetadata.findIndex((element) => {
-            return element.key === selectedStep;
-        });
+        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep);
 
-        updatedMetadata[stepIndex].fields[selectedField] = updatedField;
+        if (stepIndex < 0) return;
+
+        const fieldIndex = getFieldIndexByNumber(
+            updatedMetadata[stepIndex],
+            selectedField,
+        );
+
+        if (fieldIndex < 0) return;
+
+        updatedMetadata[stepIndex].fields[fieldIndex] = updatedField;
+
+        setStepMetadata(updatedMetadata);
+    };
+
+    const addNewStep = (newStepData) => {
+        const updatedNewStep = _.cloneDeep(newStepData);
+        const updatedMetadata = _.cloneDeep(stepMetadata);
+
+        updatedNewStep.stepNumber = updatedMetadata.length;
+        const currentStepKeys = updatedMetadata.map((step) => step.key);
+        updatedNewStep.key = generateKeyWithoutCollision(
+            updatedNewStep.displayName.EN,
+            currentStepKeys,
+        );
+
+        updatedMetadata.push(updatedNewStep);
         setStepMetadata(updatedMetadata);
     };
 

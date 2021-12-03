@@ -1,21 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import MuiAlert from '@material-ui/lab/Alert';
-import { Button, Snackbar, TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 
 import search from '../../assets/search.svg';
 import SimpleTable from '../SimpleTable/SimpleTable';
 import { TableHeaderType, TableRowType } from '../../utils/custom-proptypes';
-import { LANGUAGES } from '../../utils/constants';
+import { LANGUAGES, PATIENT_TABLE_SEARCH_DELAY } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
-
-const CLOSE_REASON_CLICKAWAY = 'clickaway';
 
 /**
  * Wraps <SimpleTable />, adding search and the ability to add items
  */
 const Table = ({
-    doesRowMatchQuery,
     tableTitle,
     addRowButtonTitle,
     onCreateRow,
@@ -24,52 +20,36 @@ const Table = ({
     rowData,
     renderHeader,
     renderTableRow,
+    initialSearchQuery,
+    handleSearchQuery,
 }) => {
     const [translations, selectedLang] = useTranslations();
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filteredData, setFilteredData] = useState([]);
-    const [isSnackbarOpen, setSnackbarOpen] = useState(false);
 
-    /**
-     * Updates the search bar and filtered patients
-     */
-    const handleSearch = (e) => {
-        setSearchQuery(e.target.value);
+    /* The search query is set to an initial value passed down from Dashboard.js. 
+       This prevents the search query from resetting after switching the stage/step. */
+    const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
 
-        const filtered = data.filter((row) =>
-            doesRowMatchQuery(row, e.target.value),
-        );
+    /* This boolean is set to true when the user types in a new search query. 
+       This prevents fetching patient twice on load or after swiching the stage/step. */
+    const [isSearchQueryUpdated, setIsSearchQueryUpdated] = useState(false);
 
-        setSnackbarOpen(filtered.length === 0);
-        setFilteredData(filtered);
-    };
+    useEffect(() => {
+        const searchDelay = setTimeout(() => {
+            if (isSearchQueryUpdated) {
+                handleSearchQuery(searchQuery);
+            }
+        }, PATIENT_TABLE_SEARCH_DELAY);
 
-    /**
-     * Only close snackbar if the 'x' button is pressed
-     */
-    const onCloseSnackbar = (event, reason) => {
-        if (reason === CLOSE_REASON_CLICKAWAY) return;
+        return () => clearTimeout(searchDelay);
+    }, [searchQuery, isSearchQueryUpdated]);
 
-        setSnackbarOpen(false);
+    const updateSearchQuery = (event) => {
+        setSearchQuery(event.target.value);
+        setIsSearchQueryUpdated(true);
     };
 
     return (
         <div>
-            <Snackbar
-                open={isSnackbarOpen}
-                autoHideDuration={3000}
-                onClose={onCloseSnackbar}
-            >
-                <MuiAlert
-                    onClose={onCloseSnackbar}
-                    severity="error"
-                    elevation={6}
-                    variant="filled"
-                >
-                    {translations.components.table.noPatientsFound}
-                </MuiAlert>
-            </Snackbar>
-
             <div className="header">
                 <div className="section">
                     <h2
@@ -93,7 +73,7 @@ const Table = ({
                             ),
                         }}
                         className="patient-list-search-field"
-                        onChange={handleSearch}
+                        onChange={updateSearchQuery}
                         value={searchQuery}
                         size="small"
                         variant="outlined"
@@ -108,7 +88,7 @@ const Table = ({
                 </div>
             </div>
             <SimpleTable
-                data={searchQuery?.length ? filteredData : data}
+                data={data}
                 headers={headers}
                 rowData={rowData}
                 renderHeader={renderHeader}
@@ -119,7 +99,6 @@ const Table = ({
 };
 
 Table.propTypes = {
-    doesRowMatchQuery: PropTypes.func.isRequired,
     tableTitle: PropTypes.string,
     addRowButtonTitle: PropTypes.string.isRequired,
     onCreateRow: PropTypes.func.isRequired,
@@ -128,6 +107,8 @@ Table.propTypes = {
     renderTableRow: PropTypes.func.isRequired,
     data: PropTypes.arrayOf(PropTypes.object),
     rowData: PropTypes.arrayOf(TableRowType).isRequired,
+    initialSearchQuery: PropTypes.string.isRequired,
+    handleSearchQuery: PropTypes.func.isRequired,
 };
 
 export default Table;

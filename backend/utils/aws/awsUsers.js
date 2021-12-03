@@ -88,11 +88,11 @@ const getUser = async (accessToken) => {
         AccessToken: accessToken,
     };
 
-    const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider(
-        { region: COGNITO_REGION },
-    );
+    const region = { region: COGNITO_REGION };
 
-    return cognitoidentityserviceprovider.getUser(params).promise();
+    const cip = new AWS.CognitoIdentityServiceProvider(region);
+
+    return cip.getUser(params).promise();
 };
 
 const parseUserAccess = (user) => {

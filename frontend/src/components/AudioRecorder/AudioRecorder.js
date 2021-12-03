@@ -10,6 +10,7 @@ import React from 'react';
 import './AudioRecorder.scss';
 import { downloadBlobWithoutSaving } from '../../api/api';
 import AudioRecordImg from '../../assets/microphone.svg';
+import { trackPromise } from 'react-promise-tracker';
 
 /*
  * For whatever reason, this component cannot be written functionally.
@@ -135,17 +136,35 @@ class AudioRecorder extends React.Component {
     };
 
     handlePlay = async (file) => {
-        const blob = await downloadBlobWithoutSaving(
-            this.props.patientId,
-            this.props.stepKey,
-            this.props.fieldKey,
-            file.filename,
+        const blob = await trackPromise(
+            downloadBlobWithoutSaving(
+                this.props.patientId,
+                this.props.stepKey,
+                this.props.fieldKey,
+                file.filename,
+            ),
         );
         const blobURL = URL.createObjectURL(blob);
         this.setState({
             isPlaybackModalOpen: true,
             playbackBlobURL: blobURL,
         });
+    };
+
+    getDeleteFileButton = () => {
+        if (this.props.isDisabled) return null;
+
+        return (
+            <button
+                className="file-close-button"
+                type="button"
+                onClick={() =>
+                    this.props.handleDelete(this.props.fieldKey, file)
+                }
+            >
+                <CloseIcon />
+            </button>
+        );
     };
 
     RenderExistingFiles = () => {
@@ -171,15 +190,7 @@ class AudioRecorder extends React.Component {
                         </div>
                     </div>
                 </Button>
-                <button
-                    className="file-close-button"
-                    type="button"
-                    onClick={() =>
-                        this.props.handleDelete(this.props.fieldKey, file)
-                    }
-                >
-                    <CloseIcon />
-                </button>
+                {this.getDeleteFileButton()}
             </div>
         ));
     };
@@ -205,6 +216,33 @@ class AudioRecorder extends React.Component {
         });
     };
 
+    getAddAudioButton = () => {
+        if (this.props.isDisabled) return null;
+
+        return (
+            <label htmlFor={`upload-file-input-${this.props.title}`}>
+                <input
+                    id={`upload-file-input-${this.props.title}`}
+                    className="upload-file-input"
+                    type="button"
+                    onClick={this.onModalOpen}
+                    onChange={(e) => {
+                        this.props.handleUpload(
+                            this.props.fieldKey,
+                            e.target.files[0],
+                        );
+                    }}
+                />
+                <Button className="file-button" component="span">
+                    <AddIcon />
+                    <Typography align="left">
+                        <b>{this.state.lang.components.audio.addAnother}</b>
+                    </Typography>
+                </Button>
+            </label>
+        );
+    };
+
     render() {
         const { isRecording } = this.state;
         return (
@@ -215,33 +253,7 @@ class AudioRecorder extends React.Component {
                     </div>
                     <div className="files-table">
                         {this.RenderExistingFiles()}
-                        <label
-                            htmlFor={`upload-file-input-${this.props.title}`}
-                        >
-                            <input
-                                id={`upload-file-input-${this.props.title}`}
-                                className="upload-file-input"
-                                type="button"
-                                onClick={this.onModalOpen}
-                                onChange={(e) => {
-                                    this.props.handleUpload(
-                                        this.props.fieldKey,
-                                        e.target.files[0],
-                                    );
-                                }}
-                            />
-                            <Button className="file-button" component="span">
-                                <AddIcon />
-                                <Typography align="left">
-                                    <b>
-                                        {
-                                            this.state.lang.components.audio
-                                                .addAnother
-                                        }
-                                    </b>
-                                </Typography>
-                            </Button>
-                        </label>
+                        {this.getAddAudioButton()}
                     </div>
                 </div>
 

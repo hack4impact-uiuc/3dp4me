@@ -138,7 +138,9 @@ const getDateSchema = () => ({
 });
 
 const getRadioButtonSchema = (fieldMetadata) => {
-    if (!fieldMetadata?.options?.length) throw new Error('Radio button must have options');
+    if (!fieldMetadata?.options?.length) {
+        throw new Error('Radio button must have options');
+    }
 
     return {
         type: String,
@@ -147,7 +149,9 @@ const getRadioButtonSchema = (fieldMetadata) => {
 };
 
 const getFieldGroupSchema = (fieldMetadata) => {
-    if (!fieldMetadata?.subFields?.length) throw new Error('Field groups must have sub fields');
+    if (!fieldMetadata?.subFields?.length) {
+        throw new Error('Field groups must have sub fields');
+    }
 
     return {
         type: [generateFieldsFromMetadata(fieldMetadata.subFields)],
@@ -158,7 +162,6 @@ const getFieldGroupSchema = (fieldMetadata) => {
 
 const getFileSchema = () => ({
     type: [fileSchema],
-    default: [],
 });
 
 const getSignatureSchema = (fieldMetadata) => {
@@ -177,7 +180,6 @@ const getMapSchema = () => ({
         latitude: Number,
         longitude: Number,
     },
-    default: [],
 });
 
 const generateFieldsFromMetadata = (fieldsMetadata, schema = {}) => {

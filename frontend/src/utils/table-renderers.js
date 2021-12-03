@@ -1,16 +1,16 @@
-import React from 'react';
+import { IconButton } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { IconButton } from '@material-ui/core';
 
-import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
 import Eyecon from '../assets/view.svg';
+import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
 import translations from '../translations.json';
 
-import { resolveObjPath } from './object';
-import { fieldToJSX } from './fields';
 import { LANGUAGES, SORT_DIRECTIONS } from './constants';
+import { fieldToJSX } from './fields';
+import { resolveObjPath } from './object';
 
 /**
  * Given item data, a field key, and a field type, this function finds
@@ -113,9 +113,17 @@ export const defaultTableHeaderRenderer = (
  * Renders a single row of patient data. Uses the default render and adds a column
  * at the end that links to patient data
  */
-export const patientTableRowRenderer = (rowData, patient, selectedLang) => {
+export const patientTableRowRenderer = (
+    rowData,
+    patient,
+    selectedLang,
+    stepKey,
+) => {
     // Construct the base row
     const row = defaultTableRowRenderer(rowData, patient, selectedLang);
+    const link = stepKey
+        ? `/patient-info/${patient._id}?stepKey=${stepKey}`
+        : `/patient-info/${patient._id}`;
 
     // Add a link to the patient's page
     row.push(
@@ -124,10 +132,7 @@ export const patientTableRowRenderer = (rowData, patient, selectedLang) => {
             className="cell"
             align="center"
         >
-            <Link
-                className="table-view-link"
-                to={`/patient-info/${patient._id}`}
-            >
+            <Link className="table-view-link" to={link}>
                 <IconButton>
                     <img alt="status icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
@@ -186,11 +191,15 @@ const userTableRowRenderer = {
         row.push(
             <StyledTableCell
                 key="view-user-data"
-                className="cell"
+                className="cell cell-right"
                 align="center"
             >
                 <IconButton onClick={() => this.onSelected(user)}>
-                    <img alt="status icon" width="18px" src={Eyecon} />
+                    <img
+                        alt="status icon view-icon"
+                        width="18px"
+                        src={Eyecon}
+                    />
                 </IconButton>{' '}
                 {translations[selectedLang].components.table.edit}
             </StyledTableCell>,

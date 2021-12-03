@@ -1,5 +1,14 @@
 {
     "EN": {
+        "patient2FA": {
+            "patientLogin": "Patient Login",
+            "patientID": "Patient ID:",
+            "sendCode": "Send Two-Factor Code",
+            "twoFactorAuth": "Two Factor Authentication:",
+            "enterDigits": "Enter 6-Digit Code from ****",
+            "verify": "Verify",
+            "resendCode": "Send code again"
+        },
         "errors": {
             "noMetadata": "You aren't allowed to view any steps. Contact an administrator to give you the proper roles."
         },
@@ -13,9 +22,18 @@
             "roles": "Roles",
             "access": "Access"
         },
+        "status": {
+            "active": "Active",
+            "feedback": "Feedback",
+            "archive": "Archive"
+        },
         "components": {
             "login": {
                 "signOut": "Sign Out"
+            },
+            "modal": {
+                "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
             },
             "signature": {
                 "save": "Save",
@@ -81,6 +99,9 @@
             "fieldGroup": {
                 "add": "Add"
             },
+            "camera": {
+                "promptInstructions": "Please allow camera access following the steps below"
+            },
             "button": {
                 "createPatient": "Create Patient",
                 "save": "Save",
@@ -128,11 +149,13 @@
                     "successMsg": "Created Patient",
                     "buttons": {
                         "noEdit": "Save and Close",
-                        "edit": "Save and Continue Editing"
+                        "edit": "Save and Continue Editing",
+                        "discard": "Discard"
                     }
                 },
                 "managePatient": {
                     "title": "Manage Patient",
+                    "radioTitle": "Patient Status",
                     "firstName": "First Name",
                     "fatherName": "Father Name",
                     "grandfatherName": "Grandfather Name",
@@ -156,12 +179,23 @@
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
-                        "addChoice": "Add Choice"
+                        "addChoice": "Add Choice",
+                        "cancel": "Cancel",
+                        "delete": "Delete"
                     },
                     "option": "Option",
                     "question": "Question",
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
+                },
+                "step": {
+                    "createStepHeader": "New Step",
+                    "createStepTitle": "Step Title",
+                    "clearance": "Clearance Level",
+                    "buttons": {
+                        "save": "Save",
+                        "discard": "Discard"
+                    }
                 }
             },
             "map": {
@@ -182,11 +216,38 @@
             "Pending": "Pending",
             "Save": "Save",
             "Discard": "Discard"
+        },
+        "roleManagement": {
+            "roleDatabase": "Role Database",
+            "addRole": "Add Role",
+            "roleName": "Role Name",
+            "manageRole": "Manage Role",
+            "deleteRole": "Delete Role",
+            "warning": "Warning: If this role is deleted, accounts need to be reassigned to another role",
+            "roleDescription": "Role Description"
+        },
+        "tabs": {
+            "Roles": "ROLES",
+            "Users": "USERS"
         }
     },
     "AR": {
+        "patient2FA": {
+            "patientLogin": "تسجيل دخول المريض",
+            "sendCode": "إرسال رمز ثنائي المعامل",
+            "patientID": "رقم المريض:",
+            "twoFactorAuth": "توثيق ذو عاملين:",
+            "enterDigits": "أدخل رمز مكون من 6 أرقام من ****",
+            "verify": "التحقق",
+            "resendCode": "ارسل الرمز مجددا"
+        },
         "errors": {
             "noMetadata": "لا يُسمح لك بمشاهدة أي خطوات. اتصل بالمسؤول لمنحك الأدوار المناسبة."
+        },
+        "status": {
+            "active": "نشيط",
+            "feedback": "استجابة",
+            "archive": "أرشيف"
         },
         "tableHeaders": {
             "firstName": "الاسم الاول",
@@ -201,6 +262,10 @@
         "components": {
             "login": {
                 "signOut": "خروج"
+            },
+            "modal": {
+                "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
             },
             "signature": {
                 "save": "يحفظ",
@@ -266,6 +331,9 @@
             "fieldGroup": {
                 "add": "يضيف"
             },
+            "camera": {
+                "promptInstructions": "يرجى السماح بالوصول إلى الكاميرا باتباع الخطوات أدناه"
+            },
             "button": {
                 "createPatient": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",
                 "save": "\u062d\u0641\u0638",
@@ -313,11 +381,13 @@
                     "successMsg": "\u062e\u0644\u0642 \u0627\u0644\u0645\u0631\u064a\u0636",
                     "buttons": {
                         "noEdit": "\u0627\u062d\u0641\u0638 \u0648\u0623\u063a\u0644\u0642",
-                        "edit": "\u0627\u062d\u0641\u0638 \u0648\u062a\u0627\u0628\u0639 \u0627\u0644\u062a\u062d\u0631\u064a\u0631"
+                        "edit": "\u0627\u062d\u0641\u0638 \u0648\u062a\u0627\u0628\u0639 \u0627\u0644\u062a\u062d\u0631\u064a\u0631",
+                        "discard": "Discard"
                     }
                 },
                 "managePatient": {
                     "title": "\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u0631\u064a\u0636",
+                    "radioTitle": "حالة المريض",
                     "firstName": "الاسم الأول",
                     "fatherName": "اسم الأب",
                     "grandfatherName": "اسم جده",
@@ -341,12 +411,23 @@
                     "buttons": {
                         "save": "Save",
                         "discard": "Discard",
-                        "addChoice": "Add Choice"
+                        "addChoice": "Add Choice",
+                        "cancel": "Cancel",
+                        "delete": "Delete"
                     },
                     "option": "Option",
                     "question": "Question",
                     "dividerTitle": "Divider Title",
                     "headerTitle": "Header Title"
+                },
+                "step": {
+                    "createStepHeader": "خطوة جديدة",
+                    "createStepTitle": "عنوان الخطوة",
+                    "clearance": "مستوى التخليص",
+                    "buttons": {
+                        "save": "يحفظ",
+                        "discard": "تجاهل"
+                    }
                 }
             },
             "map": {
@@ -367,6 +448,19 @@
             "Discard": "ينبذ",
             "username": "اسم المستخدم",
             "email": "بريد إلكتروني"
+        },
+        "roleManagement": {
+            "roleDatabase": "قاعدة بيانات الدور",
+            "addRole": "أضف دورًا",
+            "roleName": "اسم الدور",
+            "manageRole": "إدارة الدور",
+            "deleteRole": "حذف الدور",
+            "warning": "تحذير: إذا تم حذف هذا الدور ، فيجب إعادة تعيين الحسابات إلى دور آخر",
+            "roleDescription": "وصف الدور"
+        },
+        "tabs": {
+            "Roles": "الأدوار",
+            "Users": "المستخدمين"
         }
     }
 }

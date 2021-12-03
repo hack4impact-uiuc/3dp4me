@@ -47,6 +47,7 @@ export const ROUTES = {
     DASHBOARD_MANAGEMENT: '/dashboard-management',
     PATIENT_DETAIL: '/patient-info',
     PATIENT_UPLOAD: '/patient-upload',
+    PATIENT_2FA: '/patient-2fa',
 };
 
 /**
@@ -133,6 +134,16 @@ export const getUserTableHeaders = (langKey) => {
 };
 
 /**
+ * List of headers that the role table has. These are
+ * the columns on the 'manage roles' screen.
+ */
+export const getRoleTableHeaders = (langKey) => {
+    const t = translations[langKey].tableHeaders;
+
+    return [{ title: t.name, sortKey: 'Name' }];
+};
+
+/**
  * List of row data that the user table has.
  * 'id' must match 'sortKey' in the headers
  */
@@ -141,6 +152,14 @@ export const USER_TABLE_ROW_DATA = [
     { id: 'Email', dataType: FIELD_TYPES.STRING },
     { id: 'Roles', dataType: FIELD_TYPES.STRING },
     { id: 'Access', dataType: FIELD_TYPES.ACCESS },
+];
+
+/**
+ * List of row data that the role table has.
+ * 'id' must match 'sortKey' in the headers
+ */
+export const ROLE_TABLE_ROW_DATA = [
+    { id: 'Name', dataType: FIELD_TYPES.STRING },
 ];
 
 /**
@@ -166,7 +185,7 @@ export const STEP_STATUS = {
  */
 export const PATIENT_STATUS = {
     FEEDBACK: 'Feedback',
-    ARCHIVE: 'Archive',
+    ARCHIVE: 'Archived',
     ACTIVE: 'Active',
 };
 
@@ -219,11 +238,31 @@ export const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 16;
  */
 
 export const ERR_LANGUAGE_VALIDATION_FAILED =
-    'Please submit a field with a question in English and Arabic.';
+    'Please submit a field in English and Arabic.';
 export const ERR_OPTION_VALIDATION_FAILED = 'Please enter options.';
+
+export const ERR_ROLE_INPUT_VALIDATION_FAILED =
+    'Do not leave role name and description fields empty, please enter values.';
+export const ERR_ROLE_IS_IMMUTABLE = 'This role cannot be edited';
 
 /**
  * The id of the Admin role in the database.
  */
 
 export const ADMIN_ID = '60e496fa7398681e9c82e0f5';
+
+export const PERMISSION_CONSTRAINTS = { video: true };
+
+export const PERMISSION_STATUS_DENIED = 'denied';
+
+export const PATIENT_TABLE_SEARCH_DELAY = 1000;
+
+export const ACCOUNT_MANAGEMENT_TAB_NAMES = {
+    EN: ['USERS', 'ROLES'],
+    AR: ['المستخدمون', 'الأدوار'],
+};
+
+export const ACCOUNT_MANAGEMENT_TABS = {
+    USERS: 'USERS',
+    ROLES: 'ROLES',
+};

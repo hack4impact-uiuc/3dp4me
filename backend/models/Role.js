@@ -16,7 +16,7 @@ const roleSchema = new mongoose.Schema({
         type: languageSchema,
         required: false,
     },
-    isHidden: { type: Boolean, required: false, default: true },
+    isHidden: { type: Boolean, required: false, default: false },
     isMutable: { type: Boolean, required: false, default: true },
 });
 
