@@ -12,8 +12,8 @@ import { downloadBlobWithoutSaving } from '../../api/api';
 import AudioRecordImg from '../../assets/microphone.svg';
 import { trackPromise } from 'react-promise-tracker';
 import { LANGUAGES } from '../../utils/constants';
-import promptInstructionsAR from '../../assets/camera-prompt-instructions-ar.gif';
-import promptInstructions from '../../assets/camera-prompt-instructions-en.gif';
+import promptInstructionsAR from '../../assets/audio-prompt-instructions-ar.gif';
+import promptInstructions from '../../assets/audio-prompt-instructions-en.gif';
 import {
     PERMISSION_CONSTRAINTS,
     PERMISSION_STATUS_DENIED,
@@ -84,7 +84,10 @@ class AudioRecorder extends React.Component {
             return (
                 <>
                     <h1>
-                        {this.state.lang.components.camera.promptInstructions}
+                        {
+                            this.state.lang.components.microphone
+                                .promptInstructions
+                        }
                     </h1>
                     <img
                         src={
