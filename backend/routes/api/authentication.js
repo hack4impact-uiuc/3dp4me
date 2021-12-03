@@ -10,6 +10,7 @@ const client = require('twilio')(accountSid, authToken);
 
 const {
     TWILIO_SENDING_NUMBER,
+    TWILIO_WHATSAPP_PREFIX,
 } = require('../../utils/constants');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
@@ -20,13 +21,29 @@ const router = express.Router();
 
 require('../../middleware/patientAuthentication');
 
-// TODO: Switch path to be /2fa/authenticated
-router.post('/2fa', passport.authenticate('passport-local'), async (req, res) => {
+// Path is now /patient-2fa/authenticated
+router.post('/authenticated', passport.authenticate('passport-local'), async (req, res) => {
     await sendResponse(
         res,
         200,
         'Successfully authenticated patient',
     );
+});
+
+router.get('/isAuth', passport.authenticate('passport-local'), async (req, res) => {
+    if (req.user) {
+        await sendResponse(
+            res,
+            200,
+            'Successfully authenticated patient',
+        );
+    } else {
+        await sendResponse(
+            res,
+            500,
+            'Successfully authenticated patient',
+        );
+    }
 });
 
 /**
@@ -63,9 +80,9 @@ router.get(
 
         client.messages
             .create({
-                // todo: constants
+                // TODO: Backend translations
                 body: `Your one time token is ${newToken.token}`,
-                to: `whatsapp:+${patient.phoneNumber}`,
+                to: `${TWILIO_WHATSAPP_PREFIX}${patient.phoneNumber}`,
                 from: TWILIO_SENDING_NUMBER,
             })
             .then((message) => console.log(message.sid))

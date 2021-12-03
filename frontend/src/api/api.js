@@ -249,7 +249,7 @@ export const getSelf = async () => {
 };
 
 export const send2FAPatientCode = async (_id) => {
-    const requestString = `/authentication/${_id}`;
+    const requestString = `/patient-2fa/${_id}`;
     const res = await instance.get(requestString);
 
     // Need to handle case of invalid patient id
@@ -264,7 +264,7 @@ export const authenticatePatient = async (_id, token) => {
     bodyFormData.append('password', token);
     const res = await instance({
         method: "post",
-        url: "/authentication/2fa/",
+        url: "/patient-2fa/authenticated/",
         data: bodyFormData,
         headers: { "Content-Type": "multipart/form-data" },
     })
