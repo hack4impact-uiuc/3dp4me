@@ -237,7 +237,7 @@ export const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 16;
  */
 
 export const ERR_LANGUAGE_VALIDATION_FAILED =
-    'Please submit a field with a question in English and Arabic.';
+    'Please submit a field in English and Arabic.';
 export const ERR_OPTION_VALIDATION_FAILED = 'Please enter options.';
 
 export const ERR_ROLE_INPUT_VALIDATION_FAILED =
