@@ -1,5 +1,5 @@
-import './CreateStepModal.scss';
-import React, { useState } from 'react';
+import './EditStepModal.scss';
+import React, { useState, useEffect } from 'react';
 import { Button, Modal } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -12,13 +12,30 @@ import {
     ERR_LANGUAGE_VALIDATION_FAILED,
     ADMIN_ID,
 } from '../../utils/constants';
+import swal from 'sweetalert';
 
-const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
+const EditStepModal = ({ isOpen, onModalClose, allRoles, initialData, onEditStep }) => {
     const [translations, selectedLang] = useTranslations();
     const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID]);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
+    const [isHidden, setIsHidden] = useState(false);
 
     const errorWrap = useErrorWrap();
+
+    useEffect(() => {
+
+        setDisplayName(initialData.displayName);
+        setIsHidden(initialData.isHidden);
+
+        const initialRoles = initialData.readableGroups;
+
+        // Automatically select the admin role
+        if (initialRoles.indexOf(ADMIN_ID) === -1) {
+            initialRoles.push(ADMIN_ID);
+        }
+
+        setSelectedRoles(initialRoles);
+    }, [initialData, isOpen]);
 
     const onRolesChange = (id, roles) => {
         setSelectedRoles(roles);
@@ -42,7 +59,7 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
     const generateFields = () => {
         return (
             <div className="create-step-modal-field-container">
-                <span>{translations.components.swal.step.stepTitle}</span>
+                <span>{translations.components.swal.step.createStepTitle}</span>
                 <LanguageInput
                     fieldValues={displayName}
                     handleFieldChange={(value, language) => {
@@ -63,39 +80,68 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
         onModalClose();
     };
 
-    const saveNewStep = () => {
-        const newStepData = {
+    const getUpdatedData = () => {
+        const editStepData = {
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
             displayName,
-            fields: [],
+            fields: initialData.fields,
+            stepNumber: initialData.stepNumber,
+            key: initialData.key,
+            isHidden,
+            isDeleted: initialData.isDeleted,
         };
 
+        return editStepData;
+    };
+
+    const saveField = () => {
+        const newFieldData = getUpdatedData();
+        updateStep(newFieldData);
+    };
+
+    const updateStep = (editStepData) => {
         errorWrap(
             () => {
-                validateStep(newStepData);
+                validateStep(editStepData);
             },
             () => {
-                onAddNewStep(newStepData);
+                onEditStep(editStepData);
                 onModalClose();
                 clearState();
             },
         );
     };
 
+    const onDelete = () => {
+        swal({
+            title: translations.components.modal.deleteTitle,
+            text: translations.components.modal.deleteConfirmation,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                const deletedFieldData = getUpdatedData();
+                deletedFieldData.isDeleted = true;
+                updateStep(deletedFieldData);
+            }
+        });
+    };
+
     return (
         <Modal
             open={isOpen}
             onClose={onModalClose}
-            className="create-step-modal"
+            className="edit-step-modal"
         >
-            <div className="create-step-modal-wrapper">
-                <h2 className="create-step-modal-title">
-                    {translations.components.swal.step.createStepHeader}
+            <div className="edit-step-modal-wrapper">
+                <h2 className="edit-step-modal-title">
+                    {translations.components.swal.step.editStepHeader}
                 </h2>
-                <div className="create-step-modal-text">{generateFields()}</div>
+                <div className="edit-step-modal-text">{generateFields()}</div>
 
-                <div className="create-step-multiselect">
+                <div className="edit-step-multiselect">
                     <MultiSelectField
                         title={translations.components.swal.step.clearance}
                         langKey={selectedLang}
@@ -107,12 +153,20 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
                     />
                 </div>
 
-                <div>
-                    <Button onClick={saveNewStep} className="save-step-button">
+                <div
+                    style={{
+                        float: 'right',
+                        paddingBottom: '10px',
+                    }}
+                >
+                    <Button onClick={saveField} className="save-step-button">
                         {translations.components.swal.step.buttons.save}
                     </Button>
                     <Button onClick={onDiscard} className="discard-step-button">
                         {translations.components.swal.step.buttons.discard}
+                    </Button>
+                    <Button onClick={onDelete} className="delete-field-button">
+                        {translations.components.swal.field.buttons.delete}
                     </Button>
                 </div>
             </div>
@@ -120,11 +174,12 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
     );
 };
 
-CreateStepModal.propTypes = {
+EditStepModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onModalClose: PropTypes.func.isRequired,
     allRoles: PropTypes.array.isRequired,
-    onAddNewStep: PropTypes.func.isRequired,
+    initialData: PropTypes.object.isRequired,
+    onEditStep: PropTypes.func.isRequired,
 };
 
-export default CreateStepModal;
+export default EditStepModal;

@@ -12,6 +12,7 @@ import { useTranslations } from '../../hooks/useTranslations';
 
 const BottomBar = ({
     isEditing,
+    onAddField,
     lastEdited,
     lastEditedBy,
     onStatusChange,
@@ -20,6 +21,7 @@ const BottomBar = ({
     onEdit,
     status = null,
     style = null,
+    selectedStep,
 }) => {
     const [translations, selectedLang] = useTranslations();
 
@@ -108,7 +110,7 @@ const BottomBar = ({
     };
 
     /**
-     * Renders all of the controls for the bottom bar (status selector, save, discard)
+     * Renders the edit controls for the bottom bar (status selector, save, discard)
      */
     const renderToolbarControls = () => {
         if (isEditing) {
@@ -129,6 +131,24 @@ const BottomBar = ({
             </div>
         );
     };
+
+    /**
+     * 
+     * @returns Renders the controls for adding a field
+     */
+
+    const renderAddFieldButton = () => {
+        if (isEditing) {
+            return (<div className="add-field-div">
+                <Button className="add-field-button" onClick={() => onAddField(selectedStep)}>
+                    Add Field
+                </Button>
+            </div>)
+        }
+
+        return null;
+    };
+
 
     const getLastEditedString = () => {
         if (!lastEdited || !lastEditedBy) return '';
@@ -151,6 +171,7 @@ const BottomBar = ({
                 <div className="editor-section" style={style?.editorSection}>
                     {getLastEditedString()}
                 </div>
+                {/* {renderAddFieldButton()} */}
                 {renderToolbarControls()}
             </Toolbar>
         </AppBar>
@@ -159,6 +180,7 @@ const BottomBar = ({
 
 BottomBar.propTypes = {
     style: PropTypes.object,
+    onAddField: PropTypes.func.isRequired,
     isEditing: PropTypes.bool.isRequired,
     lastEdited: PropTypes.string,
     lastEditedBy: PropTypes.string,
@@ -167,6 +189,7 @@ BottomBar.propTypes = {
     onSave: PropTypes.func.isRequired,
     onDiscard: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
+    selectedStep: PropTypes.string.isRequired,
 };
 
 export default BottomBar;

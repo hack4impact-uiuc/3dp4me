@@ -104,9 +104,8 @@ const CreateFieldModal = ({
             choices.push(
                 <div>
                     <span>
-                        {`${translations.components.swal.field.option} ${
-                            i + 1
-                        }`}
+                        {`${translations.components.swal.field.option} ${i + 1
+                            }`}
                     </span>
                     <LanguageInput
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
@@ -351,7 +350,7 @@ const CreateFieldModal = ({
                         onClick={onDiscard}
                         className="discard-field-button"
                     >
-                        {translations.components.swal.field.buttons.cancel}
+                        {translations.components.swal.field.buttons.discard}
                     </Button>
                 </div>
             </div>

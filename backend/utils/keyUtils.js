@@ -22,14 +22,9 @@ const generateKeyWithCamelCase = (input) => {
     return _.camelCase(input);
 };
 
-const checkKeyCollision = (newKey, otherKeys) => {
-    for (let i = 0; i < otherKeys.length; i++) {
-        if (otherKeys[i] === newKey) return true;
-    }
-    return false;
-};
+const checkKeyCollision = (newKey, otherKeys) => checkNumOccurencesInList(newKey, otherKeys) >= 1;
 
-module.exports.generateKeyWithoutCollision = (input, otherKeys) => {
+const generateKeyWithoutCollision = (input, otherKeys) => {
     const newKey = generateKeyWithCamelCase(input);
 
     let keySuffix = 1;
@@ -42,4 +37,21 @@ module.exports.generateKeyWithoutCollision = (input, otherKeys) => {
     }
 
     return noCollisionKey;
+};
+
+// Checks the number of occurences of an element in a list.
+// Used for detecting multiple occurences of keys in a list of step keys.
+const checkNumOccurencesInList = (input, list) => {
+    let count = 0;
+    for (let i = 0; i < list.length; i++) {
+        if (list[i] === input) {
+            count += 1;
+        }
+    }
+    return count;
+};
+
+module.exports = {
+    generateKeyWithoutCollision,
+    checkNumOccurencesInList,
 };

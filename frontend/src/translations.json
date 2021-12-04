@@ -190,7 +190,8 @@
                 },
                 "step": {
                     "createStepHeader": "New Step",
-                    "createStepTitle": "Step Title",
+                    "editStepHeader": "Edit Step",
+                    "stepTitle": "Step Title",
                     "clearance": "Clearance Level",
                     "buttons": {
                         "save": "Save",
@@ -422,7 +423,8 @@
                 },
                 "step": {
                     "createStepHeader": "خطوة جديدة",
-                    "createStepTitle": "عنوان الخطوة",
+                    "editStepHeader": "Edit Step",
+                    "stepTitle": "عنوان الخطوة",
                     "clearance": "مستوى التخليص",
                     "buttons": {
                         "save": "يحفظ",

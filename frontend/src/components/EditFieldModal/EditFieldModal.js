@@ -127,9 +127,8 @@ const EditFieldModal = ({
             choices.push(
                 <div>
                     <span>
-                        {`${translations.components.swal.field.option} ${
-                            i + 1
-                        }`}
+                        {`${translations.components.swal.field.option} ${i + 1
+                            }`}
                     </span>
                     <LanguageInput
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
@@ -242,9 +241,10 @@ const EditFieldModal = ({
 
     const generateFieldDropdownOptions = () => {
         const fieldDropdownOptions = [];
+        let keyVal = 0;
         Object.values(FIELD_TYPES).forEach((value) => {
             fieldDropdownOptions.push(
-                <option value={value} className="edit-field-option">
+                <option key={keyVal++} value={value} className="edit-field-option">
                     {value}
                 </option>,
             );
@@ -258,7 +258,7 @@ const EditFieldModal = ({
             return { Index: index, Question: option };
         });
 
-        const newFieldData = {
+        const updatedFieldData = {
             fieldType,
             isVisibleOnDashboard,
             displayName,
@@ -272,7 +272,7 @@ const EditFieldModal = ({
             isDeleted: initialData.isDeleted,
         };
 
-        return newFieldData;
+        return updatedFieldData;
     };
 
     const saveField = () => {
@@ -420,7 +420,7 @@ const EditFieldModal = ({
                         onClick={onDiscard}
                         className="discard-field-button"
                     >
-                        {translations.components.swal.field.buttons.cancel}
+                        {translations.components.swal.field.buttons.discard}
                     </Button>
                     <Button onClick={onDelete} className="delete-field-button">
                         {translations.components.swal.field.buttons.delete}

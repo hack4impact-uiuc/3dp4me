@@ -11,6 +11,7 @@ import {
 import BottomBar from '../../components/BottomBar/BottomBar';
 import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
 import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
+import EditStepModal from '../../components/EditStepModal.js/EditStepModal';
 import EditFieldModal from '../../components/EditFieldModal/EditFieldModal';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
@@ -28,9 +29,8 @@ import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 import { rolesToMultiSelectFormat, sortMetadata } from '../../utils/utils';
 import './DashboardManagement.scss';
 
-const expandedSidebarWidth = `${
-    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
-}px`;
+const expandedSidebarWidth = `${parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+    }px`;
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
@@ -40,14 +40,16 @@ const SectionTab = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [createFieldModalOpen, setCreateFieldModalOpen] = useState(false);
     const [editFieldModalOpen, setEditFieldModalOpen] = useState(false);
-    const [stepModalOpen, setStepModalOpen] = useState(false);
+    const [editStepModalOpen, setEditStepModalOpen] = useState(false);
+    const [createStepModalOpen, setCreateStepModalOpen] = useState(false);
     const [allRoles, setAllRoles] = useState([]);
-    const [selectedField, setSelectedField] = useState(0);
+    const [selectedFieldForEditing, setSelectedFieldForEditing] = useState(0);
+    const [selectedStepForEditing, setSelectedStepForEditing] = useState(0);
 
     const errorWrap = useErrorWrap();
 
     const onAddStep = () => {
-        setStepModalOpen(true);
+        setCreateStepModalOpen(true);
     };
 
     const onAddField = (stepKey) => {
@@ -56,8 +58,16 @@ const SectionTab = () => {
     };
 
     const onEditField = (stepKey, fieldRoot, fieldNumber) => {
-        setSelectedField(fieldNumber);
+        setSelectedFieldForEditing(fieldNumber);
         setEditFieldModalOpen(true);
+    };
+
+    const onEditStep = (stepKey) => {
+        setSelectedStepForEditing(stepKey);
+
+        const stepIndex = getStepIndexGivenKey(stepMetadata, stepKey);
+        setSelectedStep(stepMetadata[stepIndex].key);
+        setEditStepModalOpen(true);
     };
 
     const onSaveChanges = () => {
@@ -97,27 +107,26 @@ const SectionTab = () => {
      * @param {Number} direction 1 indicates increasing stepNumber, -1 indicates decreasing fieldNumber
      */
     function moveStep(stepKey, direction) {
-        // Bad parameters
         let updatedMetadata = _.cloneDeep(stepMetadata);
 
         const currStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
 
         if (currStepIndex < 0) return;
 
-        const nextStepIndex = getValidAdjacentElement(
-            updatedMetadata[currStepIndex],
+        const adjStepIndex = getValidAdjacentElement(
+            updatedMetadata,
             currStepIndex,
             direction,
         );
 
-        if (nextStepIndex < 0) return;
+        if (adjStepIndex < 0) return;
 
         // Perform field number swap
         updatedMetadata = swapValuesInArrayByKey(
             updatedMetadata,
             'stepNumber',
             currStepIndex,
-            nextStepIndex,
+            adjStepIndex,
         );
 
         const sortedMetadata = sortMetadata(updatedMetadata);
@@ -152,20 +161,20 @@ const SectionTab = () => {
             fieldNumber,
         );
 
-        const prevFieldIndex = getValidAdjacentElement(
+        const adjFieldIndex = getValidAdjacentElement(
             updatedMetadata[foundStepIndex].fields,
             currFieldIndex,
             direction,
         );
 
-        if (prevFieldIndex < 0) return;
+        if (adjFieldIndex < 0) return;
 
         // Perform field number swap
         updatedMetadata[foundStepIndex].fields = swapValuesInArrayByKey(
             updatedMetadata[foundStepIndex].fields,
             'fieldNumber',
             currFieldIndex,
-            prevFieldIndex,
+            adjFieldIndex,
         );
 
         const sortedMetadata = sortMetadata(updatedMetadata);
@@ -217,7 +226,6 @@ const SectionTab = () => {
 
             const fetchRoles = async () => {
                 const rolesRes = await trackPromise(getAllRoles());
-                console.log(rolesRes);
                 const roles = rolesToMultiSelectFormat(rolesRes.result);
                 setAllRoles(roles);
             };
@@ -233,10 +241,6 @@ const SectionTab = () => {
 
     const onEditFieldModalClose = () => {
         setEditFieldModalOpen(false);
-    };
-
-    const onStepModalClose = () => {
-        setStepModalOpen(false);
     };
 
     const generateNewFieldPopup = () => {
@@ -272,7 +276,7 @@ const SectionTab = () => {
 
         const fieldIndex = getFieldIndexByNumber(
             stepMetadata[stepIndex],
-            selectedField,
+            selectedFieldForEditing,
         );
 
         if (fieldIndex < 0) return null;
@@ -295,13 +299,32 @@ const SectionTab = () => {
     const generateNewStepPopup = () => {
         return (
             <CreateStepModal
-                isOpen={stepModalOpen}
-                onModalClose={onStepModalClose}
+                isOpen={createStepModalOpen}
+                onModalClose={() => setCreateStepModalOpen(false)}
                 allRoles={allRoles}
                 onAddNewStep={addNewStep}
             />
         );
     };
+
+    const generateEditStepPopup = () => {
+        const updatedMetadata = _.cloneDeep(stepMetadata);
+
+        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStepForEditing);
+        const stepData = updatedMetadata[stepIndex];
+
+        if (!stepData) return null;
+
+        return (
+            <EditStepModal
+                initialData={stepData}
+                isOpen={editStepModalOpen}
+                onModalClose={() => setEditStepModalOpen(false)}
+                allRoles={allRoles}
+                onEditStep={editStep}
+            />
+        );
+    }
 
     const addNewField = (newFieldData) => {
         const updatedNewField = _.cloneDeep(newFieldData);
@@ -311,6 +334,8 @@ const SectionTab = () => {
             return element.key === selectedStep;
         });
 
+        // Set the field number to one more than the field number of the 
+        // last field for the selected step.
         if (updatedMetadata[stepIndex].fields.length) {
             updatedNewField.fieldNumber =
                 updatedMetadata[stepIndex].fields[
@@ -319,12 +344,19 @@ const SectionTab = () => {
         } else {
             updatedNewField.fieldNumber = 1;
         }
-
+        // Mark as not being deleted and not hidden
         updatedNewField.isDeleted = false;
         updatedNewField.isHidden = false;
         updatedMetadata[stepIndex].fields.push(updatedNewField);
         setStepMetadata(updatedMetadata);
     };
+
+    const editStep = (updatedStepData) => {
+        const updatedMetadata = _.cloneDeep(stepMetadata);
+        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep);
+        updatedMetadata[stepIndex] = updatedStepData;
+        setStepMetadata(updatedMetadata);
+    }
 
     const editField = (updatedFieldData) => {
         const updatedField = _.cloneDeep(updatedFieldData);
@@ -336,7 +368,7 @@ const SectionTab = () => {
 
         const fieldIndex = getFieldIndexByNumber(
             updatedMetadata[stepIndex],
-            selectedField,
+            selectedFieldForEditing,
         );
 
         if (fieldIndex < 0) return;
@@ -350,12 +382,25 @@ const SectionTab = () => {
         const updatedNewStep = _.cloneDeep(newStepData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        updatedNewStep.stepNumber = updatedMetadata.length;
+        // Set the step number to one more than the step number of the 
+        // last step in updatedMetadata.
+        if (updatedMetadata.length) {
+            updatedNewStep.stepNumber =
+                updatedMetadata[updatedMetadata.length - 1].stepNumber + 1;
+        } else {
+            updatedNewStep.stepNumber = 1;
+        }
+
+        // Generate a key for this step
         const currentStepKeys = updatedMetadata.map((step) => step.key);
         updatedNewStep.key = generateKeyWithoutCollision(
             updatedNewStep.displayName.EN,
             currentStepKeys,
         );
+
+        // Mark as not being deleted and not hidden
+        updatedNewStep.isDeleted = false;
+        updatedNewStep.isHidden = false;
 
         updatedMetadata.push(updatedNewStep);
         setStepMetadata(updatedMetadata);
@@ -371,6 +416,7 @@ const SectionTab = () => {
                         onUpPressed={onUpPressed}
                         onAddStep={onAddStep}
                         onAddField={onAddField}
+                        onEditStep={onEditStep}
                         stepMetadata={stepMetadata}
                         onEditSteps={() => setIsEditing(true)}
                         isEditing={isEditing}
@@ -379,7 +425,7 @@ const SectionTab = () => {
                     <ListItem
                         button
                         onClick={() => {
-                            setStepModalOpen(true);
+                            setCreateStepModalOpen(false);
                         }}
                     />
                 </div>
@@ -390,22 +436,24 @@ const SectionTab = () => {
                 <BottomBar
                     isEditing={isEditing}
                     onEdit={() => setIsEditing(true)}
+                    onAddField={onAddField}
                     onSave={onSaveChanges}
                     onDiscard={onDiscardChanges}
                     style={{
                         editorSection: {
-                            marginLeft: `${
-                                isEditing
-                                    ? expandedSidebarWidth
-                                    : retractedSidebarWidth
-                            }`,
+                            marginLeft: `${isEditing
+                                ? expandedSidebarWidth
+                                : retractedSidebarWidth
+                                }`,
                         },
                     }}
+                    selectedStep={selectedStep}
                 />
             </div>
 
             {generateNewStepPopup()}
             {generateNewFieldPopup()}
+            {generateEditStepPopup()}
             {generateEditFieldPopup()}
         </div>
     );

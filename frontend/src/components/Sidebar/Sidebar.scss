@@ -18,6 +18,7 @@
         margin-top: $navHeight;
         padding: 0;
         background-color: $dashboardManagementSidebarBackground;
+        height: 500px;
 
         .sidebar-button-container {
             overflow: 'auto';
@@ -56,19 +57,37 @@
 
             .hidden {
                 background-color: #5253a141;
-                color: #474878;
+                color: #00000077;
             }
         }
+    }
+}
+
+.side-bottom-bar-retracted {
+    width: $drawerWidth + 10px !important ;
+}
+
+.side-bottom-bar-expanded {
+    width: $drawerWidth + 3 * $verticalMovementWidth + 10px !important;
+}
+
+.side-bottom-bar-wrapper {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    background-color: #dddef2 !important;
+    z-index: 100;
+
+    .side-bottom-bar-toolbar {
+        min-height: 56px;
 
         .edit-steps-button {
             background-color: $button;
             color: white;
             padding: 0 24px 0 24px;
             height: 38px;
-            width: 95%;
-            margin-inline-start: 2.5%;
+            width: 90%;
             position: absolute;
-            bottom: 1%;
             font-size: 12px;
             font-weight: bold;
             transition: all 0.2s;
@@ -80,3 +99,5 @@
         }
     }
 }
+
+
