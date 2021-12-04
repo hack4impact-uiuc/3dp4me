@@ -94,6 +94,7 @@ const EditStepModal = ({ isOpen, onModalClose, allRoles, initialData, onEditStep
             key: initialData.key,
             isHidden,
             isDeleted: initialData.isDeleted,
+            defaultToListView: initialData.defaultToListView
         };
 
         return editStepData;

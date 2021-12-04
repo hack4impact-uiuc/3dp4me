@@ -75,19 +75,6 @@ module.exports.getReadableSteps = async (req) => {
     return data;
 };
 
-const getDeletedSteps = async (session) => {
-    const deletedSteps = await models.Step.find({ isDeleted: true }).session(
-        session,
-    );
-
-    // Returns the deleted fields in ascending order of field number
-    const sortedDeletedSteps = deletedSteps.sort(
-        (a, b) => a.stepNumber - b.stepNumber,
-    );
-
-    return sortedDeletedSteps;
-};
-
 /* eslint-disable no-restricted-syntax, no-await-in-loop */
 /**
  * Performs an update on a step in a transaction session. It is expected that req.body
@@ -108,7 +95,7 @@ module.exports.updateStepsInTransaction = async (updatedSteps, session) => {
     let stepsToNotChange = [];
     const requestStepKeys = updatedSteps.map((step) => step.key);
 
-    // Build up a list of steps that were not included in the request.
+    // Build up a list of steps that were not included in the request or are deleted.
     // The stepNumbers of these steps won't be changed.
     for (let i = 0; i < currentStepsInDB.length; i++) {
         if (currentStepsInDB[i].isDeleted || !requestStepKeys.includes(currentStepsInDB[i].key)) {
@@ -237,10 +224,11 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
             stepBody.fields = [];
         }
 
+        generateSchemaFromMetadata(stepBody);
+
         const newStep = new models.Step(stepBody);
 
         await newStep.save({ session, validateBeforeSave: false });
-        generateSchemaFromMetadata(stepBody);
         return newStep;
     }
 

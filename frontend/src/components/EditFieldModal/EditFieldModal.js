@@ -258,7 +258,7 @@ const EditFieldModal = ({
             return { Index: index, Question: option };
         });
 
-        const updatedFieldData = {
+        let updatedFieldData = {
             fieldType,
             isVisibleOnDashboard,
             displayName,
@@ -271,6 +271,11 @@ const EditFieldModal = ({
             isHidden,
             isDeleted: initialData.isDeleted,
         };
+
+        // Add sub fields if they exist
+        if (initialData.subFields) {
+            updatedFieldData.subFields = initialData.subFields;
+        }
 
         return updatedFieldData;
     };
