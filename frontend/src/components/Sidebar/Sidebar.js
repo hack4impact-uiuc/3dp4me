@@ -9,7 +9,7 @@ import { useTranslations } from '../../hooks/useTranslations';
 const useStyles = makeStyles({
     paper: {
         background: '#dddef2',
-    }
+    },
 });
 
 const Sidebar = ({
@@ -43,7 +43,10 @@ const Sidebar = ({
         if (!isEditing) return null;
 
         return [
-            <div className={`button order-button ${className}`} onClick={() => onEditStep(stepKey)}>
+            <div
+                className={`button order-button ${className}`}
+                onClick={() => onEditStep(stepKey)}
+            >
                 <i className="pencil alternate icon" />
             </div>,
             <div
@@ -62,10 +65,9 @@ const Sidebar = ({
     };
 
     const getButtonClassname = (stepKey, isHidden) => {
-        if (selectedStep == stepKey)
-            return 'selected'
+        if (selectedStep === stepKey) return 'selected';
         return isHidden ? 'hidden' : 'unselected';
-    }
+    };
 
     const generateButtons = () => {
         return stepMetadata.map((element) => {
@@ -74,7 +76,10 @@ const Sidebar = ({
                 return null;
             }
 
-            const buttonClassName = getButtonClassname(element.key, element.isHidden || false);
+            const buttonClassName = getButtonClassname(
+                element.key,
+                element.isHidden || false,
+            );
 
             return (
                 <div className="sidebar-button-container">
@@ -92,17 +97,19 @@ const Sidebar = ({
 
     return (
         <Drawer
-            className={`sidebar ${isEditing ? 'sidebar-expanded' : 'sidebar-retracted'
-                }`}
+            className={`sidebar ${
+                isEditing ? 'sidebar-expanded' : 'sidebar-retracted'
+            }`}
             variant="permanent"
             classes={{ paper: styles.paper }}
         >
-            <div className="sidebar-container">
-                {generateButtons()}
-            </div>
+            <div className="sidebar-container">{generateButtons()}</div>
             <AppBar
-                className={`side-bottom-bar-wrapper ${isEditing ? 'side-bottom-bar-expanded' : 'side-bottom-bar-retracted'
-                    }`}
+                className={`side-bottom-bar-wrapper ${
+                    isEditing
+                        ? 'side-bottom-bar-expanded'
+                        : 'side-bottom-bar-retracted'
+                }`}
                 color="inherit"
                 style={{
                     top: 'auto',

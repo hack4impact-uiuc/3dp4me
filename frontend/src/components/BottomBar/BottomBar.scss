@@ -2,15 +2,14 @@
 @import '../../styles/variables.scss';
 
 .bottom-bar-wrapper {
-
     .add-field-retracted-width {
         margin-inline-start: $drawerWidth;
         margin-left: $drawerWidth;
     }
 
     .add-field-expanded-width {
-        margin-inline-start: $drawerWidth + 3 * $verticalMovementWidth;;
-        margin-left: $drawerWidth + 3 * $verticalMovementWidth;;
+        margin-inline-start: $drawerWidth + 3 * $verticalMovementWidth;
+        margin-left: $drawerWidth + 3 * $verticalMovementWidth;
     }
 
     .add-field-div {

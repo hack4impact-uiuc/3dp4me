@@ -7,7 +7,6 @@ const log = require('loglevel');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const { requireAdmin } = require('../../middleware/authentication');
-const { generateSchemaFromMetadata } = require('../../utils/initDb');
 const { sendResponse } = require('../../utils/response');
 const {
     updateStepsInTransaction,

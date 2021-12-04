@@ -1,11 +1,9 @@
 import './EditStepModal.scss';
 import React, { useState, useEffect } from 'react';
-import {
-    Button, Modal,
-    FormControlLabel,
-} from '@material-ui/core';
+import { Button, Modal, FormControlLabel } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import swal from 'sweetalert';
 
 import CustomSwitch from '../CustomSwitch/CustomSwitch';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -16,9 +14,14 @@ import {
     ERR_LANGUAGE_VALIDATION_FAILED,
     ADMIN_ID,
 } from '../../utils/constants';
-import swal from 'sweetalert';
 
-const EditStepModal = ({ isOpen, onModalClose, allRoles, initialData, onEditStep }) => {
+const EditStepModal = ({
+    isOpen,
+    onModalClose,
+    allRoles,
+    initialData,
+    onEditStep,
+}) => {
     const [translations, selectedLang] = useTranslations();
     const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID]);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
@@ -27,7 +30,6 @@ const EditStepModal = ({ isOpen, onModalClose, allRoles, initialData, onEditStep
     const errorWrap = useErrorWrap();
 
     useEffect(() => {
-
         setDisplayName(initialData.displayName);
         setIsHidden(initialData.isHidden);
 
@@ -94,7 +96,7 @@ const EditStepModal = ({ isOpen, onModalClose, allRoles, initialData, onEditStep
             key: initialData.key,
             isHidden,
             isDeleted: initialData.isDeleted,
-            defaultToListView: initialData.defaultToListView
+            defaultToListView: initialData.defaultToListView,
         };
 
         return editStepData;
@@ -154,11 +156,7 @@ const EditStepModal = ({ isOpen, onModalClose, allRoles, initialData, onEditStep
     };
 
     return (
-        <Modal
-            open={isOpen}
-            onClose={onModalClose}
-            className="edit-step-modal"
-        >
+        <Modal open={isOpen} onClose={onModalClose} className="edit-step-modal">
             <div className="edit-step-modal-wrapper">
                 <div className="edit-step-modal-title-div">
                     <h2 className="edit-step-modal-title">

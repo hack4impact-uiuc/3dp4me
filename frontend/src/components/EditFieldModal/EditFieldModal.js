@@ -127,8 +127,9 @@ const EditFieldModal = ({
             choices.push(
                 <div>
                     <span>
-                        {`${translations.components.swal.field.option} ${i + 1
-                            }`}
+                        {`${translations.components.swal.field.option} ${
+                            i + 1
+                        }`}
                     </span>
                     <LanguageInput
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
@@ -244,7 +245,11 @@ const EditFieldModal = ({
         let keyVal = 0;
         Object.values(FIELD_TYPES).forEach((value) => {
             fieldDropdownOptions.push(
-                <option key={keyVal++} value={value} className="edit-field-option">
+                <option
+                    key={keyVal++}
+                    value={value}
+                    className="edit-field-option"
+                >
                     {value}
                 </option>,
             );
@@ -258,7 +263,7 @@ const EditFieldModal = ({
             return { Index: index, Question: option };
         });
 
-        let updatedFieldData = {
+        const updatedFieldData = {
             fieldType,
             isVisibleOnDashboard,
             displayName,

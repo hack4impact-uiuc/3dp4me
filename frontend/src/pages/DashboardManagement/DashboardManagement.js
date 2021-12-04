@@ -29,8 +29,9 @@ import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 import { rolesToMultiSelectFormat, sortMetadata } from '../../utils/utils';
 import './DashboardManagement.scss';
 
-const expandedSidebarWidth = `${parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
-    }px`;
+const expandedSidebarWidth = `${
+    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+}px`;
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
@@ -310,7 +311,10 @@ const SectionTab = () => {
     const generateEditStepPopup = () => {
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStepForEditing);
+        const stepIndex = getStepIndexGivenKey(
+            updatedMetadata,
+            selectedStepForEditing,
+        );
         const stepData = updatedMetadata[stepIndex];
 
         if (!stepData) return null;
@@ -324,7 +328,7 @@ const SectionTab = () => {
                 onEditStep={editStep}
             />
         );
-    }
+    };
 
     const addNewField = (newFieldData) => {
         const updatedNewField = _.cloneDeep(newFieldData);
@@ -334,7 +338,7 @@ const SectionTab = () => {
             return element.key === selectedStep;
         });
 
-        // Set the field number to one more than the field number of the 
+        // Set the field number to one more than the field number of the
         // last field for the selected step.
         if (updatedMetadata[stepIndex].fields.length) {
             updatedNewField.fieldNumber =
@@ -356,7 +360,7 @@ const SectionTab = () => {
         const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep);
         updatedMetadata[stepIndex] = updatedStepData;
         setStepMetadata(updatedMetadata);
-    }
+    };
 
     const editField = (updatedFieldData) => {
         const updatedField = _.cloneDeep(updatedFieldData);
@@ -382,7 +386,7 @@ const SectionTab = () => {
         const updatedNewStep = _.cloneDeep(newStepData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
-        // Set the step number to one more than the step number of the 
+        // Set the step number to one more than the step number of the
         // last step in updatedMetadata.
         if (updatedMetadata.length) {
             updatedNewStep.stepNumber =
@@ -442,10 +446,11 @@ const SectionTab = () => {
                     onDiscard={onDiscardChanges}
                     style={{
                         editorSection: {
-                            marginLeft: `${isEditing
-                                ? expandedSidebarWidth
-                                : retractedSidebarWidth
-                                }`,
+                            marginLeft: `${
+                                isEditing
+                                    ? expandedSidebarWidth
+                                    : retractedSidebarWidth
+                            }`,
                         },
                     }}
                     selectedStep={selectedStep}

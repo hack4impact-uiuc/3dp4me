@@ -1,9 +1,7 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
-
 import PropTypes from 'prop-types';
 
-import { formatDate } from '../../utils/date';
 import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
@@ -11,18 +9,14 @@ import halfCircle from '../../assets/half-circle.svg';
 import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
-
 const BottomBar = ({
     isEditing,
     onAddField,
-    lastEdited,
-    lastEditedBy,
     onStatusChange,
     onSave,
     onDiscard,
     onEdit,
     status = null,
-    style = null,
     selectedStep,
 }) => {
     const [translations, selectedLang] = useTranslations();
@@ -135,24 +129,29 @@ const BottomBar = ({
     };
 
     /**
-     * 
+     *
      * @returns Renders the controls for adding a field
      */
 
     const renderAddFieldButton = () => {
-
         let button = null;
 
         if (isEditing) {
-            button = <Button className={`add-field-button ${isEditing ? 'add-field-expanded-width' : 'add-field-retracted-width'
-                }`} onClick={() => onAddField(selectedStep)}>
-                Add Field
-            </Button>
+            button = (
+                <Button
+                    className={`add-field-button ${
+                        isEditing
+                            ? 'add-field-expanded-width'
+                            : 'add-field-retracted-width'
+                    }`}
+                    onClick={() => onAddField(selectedStep)}
+                >
+                    Add Field
+                </Button>
+            );
         }
 
-        return (<div className="add-field-div">
-            {button}
-        </div>)
+        return <div className="add-field-div">{button}</div>;
     };
 
     return (
@@ -174,11 +173,8 @@ const BottomBar = ({
 };
 
 BottomBar.propTypes = {
-    style: PropTypes.object,
     onAddField: PropTypes.func.isRequired,
     isEditing: PropTypes.bool.isRequired,
-    lastEdited: PropTypes.string,
-    lastEditedBy: PropTypes.string,
     status: PropTypes.string,
     onStatusChange: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
