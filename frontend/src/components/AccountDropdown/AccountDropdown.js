@@ -45,32 +45,24 @@ const AccountDropdown = ({
                 <div className={styles.menuWrapper}>
                     <p>{username}</p>
                     <p className={styles.accountEmail}>{userEmail}</p>
-                    <div className={styles.languageSelectorWrapper}>
-                        <p>
-                            {translations.components.navbar.dropdown.language}
-                        </p>
-                        <FormControl
-                            variant="outlined"
+                    <p>{translations.components.navbar.dropdown.language}</p>
+                    <FormControl fullWidth variant="outlined">
+                        <Select
+                            value={selectedLang}
+                            onChange={handleLanguageSelect}
                             className={styles.languageSelector}
                         >
-                            <Select
-                                value={selectedLang}
-                                onChange={handleLanguageSelect}
-                            >
-                                <MenuItem value={LANGUAGES.EN}>
-                                    {translations.components.navbar.dropdown.EN}
-                                </MenuItem>
-                                <MenuItem value={LANGUAGES.AR}>
-                                    {translations.components.navbar.dropdown.AR}
-                                </MenuItem>
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <div className={styles.signOutButton}>
-                        <Button onClick={signOut}>
-                            {translations.components.login.signOut}
-                        </Button>
-                    </div>
+                            <MenuItem value={LANGUAGES.EN}>
+                                {translations.components.navbar.dropdown.EN}
+                            </MenuItem>
+                            <MenuItem value={LANGUAGES.AR}>
+                                {translations.components.navbar.dropdown.AR}
+                            </MenuItem>
+                        </Select>
+                    </FormControl>
+                    <Button onClick={signOut} className={styles.signOutButton}>
+                        {translations.components.login.signOut}
+                    </Button>
                 </div>
             </Menu>
         </div>
