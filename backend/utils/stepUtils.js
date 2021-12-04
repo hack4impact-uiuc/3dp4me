@@ -158,7 +158,7 @@ const updateElementNumbers = (goodElements, deletedElements, numberKey) => {
             && currElementNumber === parseInt(deletedElements[deletedElementPointer][numberKey], 10)
         ) {
             deletedElementPointer += 1; // Skip over since deleted fields have priority
-        } else {
+        } else if (goodElementPointer < updatedElements.length) {
             updatedElements[goodElementPointer][numberKey] = currElementNumber;
             goodElementPointer += 1;
         }
