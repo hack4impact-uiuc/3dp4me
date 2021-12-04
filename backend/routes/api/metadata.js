@@ -39,13 +39,12 @@ router.post(
     '/steps',
     requireAdmin,
     errorWrap(async (req, res) => {
-        const step = req.body;
-        const newStep = new models.Step(step);
-
         try {
+            const stepToCreate = req.body;
+            let newStep;
+
             await mongoose.connection.transaction(async (session) => {
-                await newStep.save({ session });
-                generateSchemaFromMetadata(step);
+                newStep = await updateStepsInTransaction([stepToCreate], session);
             });
 
             await sendResponse(res, 200, 'Step created', newStep);
@@ -69,7 +68,7 @@ router.put(
         try {
             let stepData = [];
             await mongoose.connection.transaction(async (session) => {
-                stepData = await updateStepsInTransaction(req, session);
+                stepData = await updateStepsInTransaction(req.body, session);
             });
 
             // The step data will be sent in the response in order to

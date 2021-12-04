@@ -3,12 +3,12 @@
 
 .bottom-bar-wrapper {
 
-    .retracted-width {
+    .add-field-retracted-width {
         margin-inline-start: $drawerWidth;
         margin-left: $drawerWidth;
     }
 
-    .expanded-width {
+    .add-field-expanded-width {
         margin-inline-start: $drawerWidth + 3 * $verticalMovementWidth;;
         margin-left: $drawerWidth + 3 * $verticalMovementWidth;;
     }

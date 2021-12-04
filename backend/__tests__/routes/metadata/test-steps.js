@@ -118,25 +118,6 @@ describe('POST /steps', () => {
             400,
         );
     });
-
-    it('successfully registers a new step when given good request', async () => {
-        const body = POST_STEP_WITH_OPTIONS;
-        const res = await withAuthentication(
-            request(server).post('/api/metadata/steps').send(body),
-        );
-
-        // Check response
-        expect(res.status).toBe(200);
-        const resContent = JSON.parse(res.text);
-        expect(resContent.success).toBe(true);
-
-        // Check that DB is correct
-        let step = await models.Step.findOne({ key: body.key }).lean();
-        expect(step).not.toBeNull();
-        step = omitDeep(step, '_id', '__v');
-        expect(step).toStrictEqual(body);
-        expect(mongoose.connection.models[body.key]).not.toBe(null);
-    });
 });
 
 describe('PUT /steps/stepkey', () => {
@@ -299,25 +280,6 @@ describe('PUT /steps/stepkey', () => {
         steps.sort((a, b) => a.stepNumber - b.stepNumber);
         steps = omitDeep(steps, '_id', '__v');
         expect(steps).toStrictEqual(PUT_STEPS_SWAPPED_STEPNUMBER);
-    });
-
-    it('returns 400 for request with duplicate stepKey or stepNumber', async () => {
-        const stepsBefore = await models.Step.find({}).lean();
-
-        const res = await withAuthentication(
-            request(server)
-                .put('/api/metadata/steps')
-                .send(PUT_DUPLICATE_STEPS),
-        );
-
-        const stepsAfter = await models.Step.find({}).lean();
-
-        // Check response
-        const resContent = JSON.parse(res.text);
-        expect(res.status).toBe(400);
-        expect(resContent.success).toBe(false);
-
-        expect(stepsBefore).toStrictEqual(stepsAfter);
     });
 
     it('returns 400 for fieldType edits', async () => {

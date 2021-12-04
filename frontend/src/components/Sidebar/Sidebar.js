@@ -2,8 +2,15 @@ import './Sidebar.scss';
 import React from 'react';
 import { Button, Drawer, AppBar, Toolbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { useTranslations } from '../../hooks/useTranslations';
+
+const useStyles = makeStyles({
+    paper: {
+        background: '#dddef2',
+    }
+});
 
 const Sidebar = ({
     onClick,
@@ -16,6 +23,7 @@ const Sidebar = ({
     selectedStep,
 }) => {
     const selectedLang = useTranslations()[1];
+    const styles = useStyles();
 
     function onButtonClick(stepKey) {
         onClick(stepKey);
@@ -87,6 +95,7 @@ const Sidebar = ({
             className={`sidebar ${isEditing ? 'sidebar-expanded' : 'sidebar-retracted'
                 }`}
             variant="permanent"
+            classes={{ paper: styles.paper }}
         >
             <div className="sidebar-container">
                 {generateButtons()}
@@ -99,6 +108,7 @@ const Sidebar = ({
                     top: 'auto',
                     bottom: '0',
                     boxShadow: '0 0px 4px 2px rgba(0, 0, 0, 0.15)',
+                    zIndex: '100',
                 }}
             >
                 <Toolbar className="side-bottom-bar-toolbar">

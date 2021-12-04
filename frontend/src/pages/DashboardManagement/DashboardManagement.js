@@ -404,6 +404,7 @@ const SectionTab = () => {
 
         updatedMetadata.push(updatedNewStep);
         setStepMetadata(updatedMetadata);
+        setSelectedStep(updatedNewStep.key);
     };
 
     return (
@@ -450,7 +451,6 @@ const SectionTab = () => {
                     selectedStep={selectedStep}
                 />
             </div>
-
             {generateNewStepPopup()}
             {generateNewFieldPopup()}
             {generateEditStepPopup()}

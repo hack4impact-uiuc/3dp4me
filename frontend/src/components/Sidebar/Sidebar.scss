@@ -13,18 +13,20 @@
     display: flex;
     flex-shrink: 0;
     padding: 0;
+    background-color: $dashboardManagementSidebarBackground;
 
     .sidebar-container {
         margin-top: $navHeight;
         padding: 0;
         background-color: $dashboardManagementSidebarBackground;
-        height: 500px;
+        margin-bottom: $navHeight;
 
         .sidebar-button-container {
             overflow: 'auto';
             display: flex;
             height: $navHeight;
             justify-content: space-between;
+            flex-direction: row;
 
             .button {
                 display: inline-block;
@@ -64,11 +66,11 @@
 }
 
 .side-bottom-bar-retracted {
-    width: $drawerWidth + 10px !important ;
+    width: $drawerWidth !important ;
 }
 
 .side-bottom-bar-expanded {
-    width: $drawerWidth + 3 * $verticalMovementWidth + 10px !important;
+    width: $drawerWidth + 3 * $verticalMovementWidth !important;
 }
 
 .side-bottom-bar-wrapper {
@@ -99,5 +101,3 @@
         }
     }
 }
-
-

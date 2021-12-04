@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
+
 import PropTypes from 'prop-types';
 
 import { formatDate } from '../../utils/date';
@@ -9,6 +10,7 @@ import exclamation from '../../assets/exclamation.svg';
 import halfCircle from '../../assets/half-circle.svg';
 import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
+
 
 const BottomBar = ({
     isEditing,
@@ -142,7 +144,7 @@ const BottomBar = ({
         let button = null;
 
         if (isEditing) {
-            button = <Button className={`add-field-button ${isEditing ? 'expanded-width' : 'retracted-width'
+            button = <Button className={`add-field-button ${isEditing ? 'add-field-expanded-width' : 'add-field-retracted-width'
                 }`} onClick={() => onAddField(selectedStep)}>
                 Add Field
             </Button>
@@ -151,14 +153,6 @@ const BottomBar = ({
         return (<div className="add-field-div">
             {button}
         </div>)
-    };
-
-
-    const getLastEditedString = () => {
-        if (!lastEdited || !lastEditedBy) return '';
-
-        const lastEditedDate = formatDate(new Date(lastEdited), selectedLang);
-        return `${translations.components.bottombar.lastEditedBy} ${lastEditedBy} ${translations.components.bottombar.on} ${lastEditedDate}`;
     };
 
     return (
@@ -172,9 +166,6 @@ const BottomBar = ({
             }}
         >
             <Toolbar className="bottom-toolbar">
-                {/* <div className="editor-section" style={style?.editorSection}>
-                    {getLastEditedString()}
-                </div> */}
                 {renderAddFieldButton()}
                 {renderToolbarControls()}
             </Toolbar>

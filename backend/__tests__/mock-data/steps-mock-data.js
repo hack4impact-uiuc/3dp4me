@@ -3,7 +3,16 @@ const { FIELDS } = require('../../utils/constants');
 module.exports.PUT_STEP_REORDERED_FIELDS = [
     {
         key: 'survey',
-        stepNumber: 1,
+        stepNumber: 0,
+        isHidden: false,
+        isDeleted: false,
+        displayName: {
+            EN: 'Survey',
+            AR: 'استطلاع',
+        },
+        readableGroups: [],
+        writableGroups: [],
+        defaultToListView: true,
         fields: [
             {
                 fieldType: 'Number',
@@ -219,6 +228,8 @@ module.exports.POST_STEP_WITHOUT_OPTIONS = {
         EN: 'Medical Information',
         AR: 'المعلومات الطبية',
     },
+    isHidden: false,
+    isDeleted: false,
     stepNumber: 5,
     fields: [
         {
@@ -255,6 +266,8 @@ module.exports.POST_STEP_WITH_EMPTY_OPTIONS = {
         AR: 'المعلومات الطبية',
     },
     stepNumber: 5,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',
@@ -293,7 +306,9 @@ module.exports.POST_STEP_WITH_OPTIONS = {
     readableGroups: [],
     defaultToListView: true,
     writableGroups: [],
-    stepNumber: 5,
+    stepNumber: 0,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',
@@ -408,6 +423,8 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
             AR: 'استطلاع',
         },
         stepNumber: 1,
+        isHidden: false,
+        isDeleted: false,
         fields: [
             {
                 fieldType: 'Number',
@@ -628,6 +645,11 @@ module.exports.PUT_STEP_REORDERED_FIELDS_EXPECTED = [
 module.exports.PUT_STEP_SUBFIELD_MISSING_FIELDS = [
     {
         key: 'survey',
+        isHidden: false,
+        isDeleted: false,
+        readableGroups: [],
+        writableGroups: [],
+        stepNumber: 0,
         fields: [
             {
                 fieldType: 'Number',
@@ -860,6 +882,11 @@ module.exports.PUT_STEP_SUBFIELD_MISSING_FIELDS = [
 module.exports.PUT_STEP_EDIT_FIELDTYPE = [
     {
         key: 'survey',
+        isHidden: false,
+        isDeleted: false,
+        readableGroups: [],
+        writableGroups: [],
+        stepNumber: 0,
         fields: [
             {
                 fieldType: 'Number',
@@ -1041,6 +1068,11 @@ module.exports.PUT_STEP_EDIT_FIELDTYPE = [
 module.exports.PUT_STEP_ADDED_FIELD = [
     {
         key: 'survey',
+        isHidden: false,
+        isDeleted: false,
+        readableGroups: [],
+        writableGroups: [],
+        stepNumber: 0,
         fields: [
             {
                 fieldType: 'Number',
@@ -1279,6 +1311,8 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
             AR: 'استطلاع',
         },
         stepNumber: 1,
+        isHidden: false,
+        isDeleted: false,
         fields: [
             {
                 fieldType: 'Number',
@@ -1499,6 +1533,11 @@ module.exports.PUT_STEP_EDITED_FIELDS = [
 module.exports.PUT_STEP_DELETED_FIELD = [
     {
         key: 'survey',
+        isHidden: false,
+        isDeleted: false,
+        readableGroups: [],
+        writableGroups: [],
+        stepNumber: 0,
         fields: [
             {
                 fieldType: 'Number',
@@ -1695,6 +1734,11 @@ module.exports.PUT_STEP_DELETED_FIELD = [
 module.exports.PUT_STEP_DUPLICATE_FIELD = [
     {
         key: 'survey',
+        isHidden: false,
+        isDeleted: false,
+        readableGroups: [],
+        writableGroups: [],
+        stepNumber: 0,
         fields: [
             {
                 fieldType: 'Number',
@@ -1922,6 +1966,10 @@ module.exports.PUT_DUPLICATE_STEPS = [
     {
         key: 'survey',
         stepNumber: 0,
+        isHidden: false,
+        isDeleted: false,
+        readableGroups: [],
+        writableGroups: [],
         fields: [
             {
                 fieldType: 'Number',
@@ -2142,6 +2190,8 @@ module.exports.PUT_STEP_ADDED_FIELD_EXPECTED = [
             AR: 'استطلاع',
         },
         stepNumber: 1,
+        isHidden: false,
+        isDeleted: false,
         fields: [
             {
                 fieldType: 'Number',
@@ -2387,6 +2437,8 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
             AR: 'استطلاع',
         },
         stepNumber: 0,
+        isHidden: false,
+        isDeleted: false,
         fields: [
             {
                 fieldType: 'String',
@@ -2561,6 +2613,8 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
             AR: 'المعلومات الطبية',
         },
         stepNumber: 1,
+        isHidden: false,
+        isDeleted: false,
         fields: [
             {
                 fieldType: 'Divider',
@@ -2727,6 +2781,8 @@ module.exports.PUT_STEPS_SWAPPED_STEPNUMBER = [
             AR: 'استطلاع',
         },
         stepNumber: 2,
+        isHidden: false,
+        isDeleted: false,
         fields: [
             {
                 fieldType: 'Number',
@@ -2925,6 +2981,8 @@ module.exports.POST_STEP_WITH_BAD_FIELD = {
         AR: 'المعلومات الطبية',
     },
     stepNumber: 5,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',
@@ -2948,6 +3006,8 @@ module.exports.POST_STEP_WITH_DUPLICATE_KEY = {
         AR: 'المعلومات الطبية',
     },
     stepNumber: 5,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',
@@ -2971,6 +3031,8 @@ module.exports.POST_STEP_WITH_DUPLICATE_STEP_NUMBER = {
         AR: 'المعلومات الطبية',
     },
     stepNumber: 0,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',
@@ -3011,6 +3073,8 @@ module.exports.POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS = {
         AR: 'المعلومات الطبية',
     },
     stepNumber: 10,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',
@@ -3034,6 +3098,8 @@ module.exports.POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS = {
         AR: 'المعلومات الطبية',
     },
     stepNumber: 10,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',
@@ -3058,6 +3124,8 @@ module.exports.POST_SUB_FIELD_WITHOUT_OPTIONS = {
         AR: 'المعلومات الطبية',
     },
     stepNumber: 10,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',
@@ -3082,6 +3150,8 @@ module.exports.POST_SUB_FIELD_WITH_EMPTY_OPTIONS = {
         AR: 'المعلومات الطبية',
     },
     stepNumber: 10,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',
@@ -3106,6 +3176,8 @@ module.exports.POST_STEP_WITH_BAD_SUB_FIELD = {
         AR: 'المعلومات الطبية',
     },
     stepNumber: 10,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',
@@ -3130,6 +3202,8 @@ module.exports.POST_STEP_WITH_DUPLICATE_SUB_FIELDKEY = {
         AR: 'المعلومات الطبية',
     },
     stepNumber: 10,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             key: 'demographicDivider',

@@ -1,9 +1,13 @@
 import './EditStepModal.scss';
 import React, { useState, useEffect } from 'react';
-import { Button, Modal } from '@material-ui/core';
+import {
+    Button, Modal,
+    FormControlLabel,
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
+import CustomSwitch from '../CustomSwitch/CustomSwitch';
 import { useTranslations } from '../../hooks/useTranslations';
 import MultiSelectField from '../Fields/MultiSelectField';
 import LanguageInput from '../LanguageInput/LanguageInput';
@@ -129,6 +133,25 @@ const EditStepModal = ({ isOpen, onModalClose, allRoles, initialData, onEditStep
         });
     };
 
+    const handleHiddenFieldSwitchChange = (isChecked) => {
+        // added the "not" operator because when the switch is on, we want isHidden to be false
+        setIsHidden(!isChecked);
+    };
+
+    const generateHiddenFieldSwitch = () => {
+        return (
+            <FormControlLabel
+                className="hidden-field-switch"
+                control={
+                    <CustomSwitch
+                        checked={!isHidden}
+                        setChecked={handleHiddenFieldSwitchChange}
+                    />
+                }
+            />
+        );
+    };
+
     return (
         <Modal
             open={isOpen}
@@ -136,9 +159,13 @@ const EditStepModal = ({ isOpen, onModalClose, allRoles, initialData, onEditStep
             className="edit-step-modal"
         >
             <div className="edit-step-modal-wrapper">
-                <h2 className="edit-step-modal-title">
-                    {translations.components.swal.step.editStepHeader}
-                </h2>
+                <div className="edit-step-modal-title-div">
+                    <h2 className="edit-step-modal-title">
+                        {translations.components.swal.step.editStepHeader}
+                    </h2>
+                    {generateHiddenFieldSwitch()}
+                </div>
+
                 <div className="edit-step-modal-text">{generateFields()}</div>
 
                 <div className="edit-step-multiselect">

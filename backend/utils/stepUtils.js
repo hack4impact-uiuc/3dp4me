@@ -92,11 +92,11 @@ const getDeletedSteps = async (session) => {
 /**
  * Performs an update on a step in a transaction session. It is expected that req.body
  * contains an array of step updates.
- * @param {Object} req The incoming request. Should be an array of steps.
+ * @param {Object} An array of steps.
  * @param {Object} session The session for the transaction.
  * @returns Returns the updated step array.
  */
-module.exports.updateStepsInTransaction = async (req, session) => {
+module.exports.updateStepsInTransaction = async (updatedSteps, session) => {
     const stepData = [];
 
     /* Steps in the database cannot have keys that are the same. If that is the
@@ -104,28 +104,40 @@ module.exports.updateStepsInTransaction = async (req, session) => {
        Let's assume that none of the saved steps in the database don't have keys that collide.
        Then, we would only need to check new steps being created for key collision. */
 
-    const deletedSteps = await getDeletedSteps(session);
+    const currentStepsInDB = await models.Step.find({}).session(session);
+    let stepsToNotChange = [];
+    const requestStepKeys = updatedSteps.map((step) => step.key);
+
+    // Build up a list of steps that were not included in the request.
+    // The stepNumbers of these steps won't be changed.
+    for (let i = 0; i < currentStepsInDB.length; i++) {
+        if (currentStepsInDB[i].isDeleted || !requestStepKeys.includes(currentStepsInDB[i].key)) {
+            stepsToNotChange.push(currentStepsInDB[i]);
+        }
+    }
+
+    stepsToNotChange = stepsToNotChange.sort(
+        (a, b) => a.stepNumber - b.stepNumber,
+    );
 
     // Get a list of the key
-    const deletedStepKeys = deletedSteps.map((step) => step.key);
-    const requestStepKeys = req.body.map((step) => step.key);
+    const stepsToNotChangeKeys = stepsToNotChange.map((step) => step.key);
 
     // Combine to create a list of all keys that will be used to check for.
     // key collision.
-    const combinedKeys = requestStepKeys.concat(deletedStepKeys);
+    const combinedKeys = requestStepKeys.concat(stepsToNotChangeKeys);
 
     /* We also need to update step field numbers before saving each step.
        This is because step field numbers were generated without considering
        deleted steps. */
 
     const requestSteps = updateElementNumbers(
-        req.body,
-        deletedSteps,
+        updatedSteps,
+        stepsToNotChange,
         'stepNumber',
     );
 
     // Go through all of the step updates in the request body and apply them
-
     for (let stepIdx = 0; stepIdx < requestSteps.length; stepIdx++) {
         // eslint-disable-next-line max-len
         const updatedStepModel = await updateStepInTransaction(requestSteps[stepIdx], session, combinedKeys);
@@ -156,7 +168,7 @@ const updateElementNumbers = (goodElements, deletedElements, numberKey) => {
     while (currElementNumber < numTotalFields) {
         if (
             deletedElementPointer < deletedElements.length
-            && currElementNumber === deletedElements[deletedElementPointer][numberKey]
+            && currElementNumber === parseInt(deletedElements[deletedElementPointer][numberKey], 10)
         ) {
             deletedElementPointer += 1; // Skip over since deleted fields have priority
         } else {
@@ -217,8 +229,15 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
             combinedKeys.push(newKey);
         }
 
+        if (stepBody.fields) {
+            // eslint-disable-next-line no-param-reassign
+            stepBody.fields = updateFieldKeys(stepBody.fields);
+        } else {
+            // eslint-disable-next-line no-param-reassign
+            stepBody.fields = [];
+        }
+
         const newStep = new models.Step(stepBody);
-        newStep.fields = updateFieldKeys(stepBody.fields);
 
         await newStep.save({ session, validateBeforeSave: false });
         generateSchemaFromMetadata(stepBody);
