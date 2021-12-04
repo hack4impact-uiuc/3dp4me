@@ -126,6 +126,8 @@ const StepField = ({
                         files={value}
                         title={displayName}
                         isDisabled={isDisabled}
+                        selectedLang={selectedLang}
+                        key={stepKey}
                     />
                 );
             case FIELD_TYPES.DIVIDER:
