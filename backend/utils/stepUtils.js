@@ -227,7 +227,6 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
         generateSchemaFromMetadata(stepBody);
 
         const newStep = new models.Step(stepBody);
-
         await newStep.save({ session, validateBeforeSave: false });
         return newStep;
     }

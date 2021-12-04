@@ -238,7 +238,7 @@ const StepContent = ({
             )}`;
         }
 
-        return <p>{text}</p>;
+        return <p className="last-edited-formatting">{text}</p>;
     };
 
     return (
@@ -247,24 +247,36 @@ const StepContent = ({
                 <CircularProgress color="inherit" />
             </Backdrop>
             {generateHeader()}
-            <Select
-                MenuProps={{
-                    style: { zIndex: 35001 },
-                }}
-                defaultValue={false}
-                onChange={handleQuestionFormatSelect}
-            >
-                <MenuItem value={false}>
-                    {translations.components.selectQuestionFormat.allQuestions}
-                </MenuItem>
-                <MenuItem value>
-                    {
-                        translations.components.selectQuestionFormat
-                            .singleQuestion
-                    }
-                </MenuItem>
-            </Select>
-            {generateLastEditedByAndDate()}
+
+            <div className={`last-edited-and-view-selection-${selectedLang}`}>
+                <div className={`last-edited-${selectedLang}`}>
+                    {generateLastEditedByAndDate()}
+                </div>
+
+                <div className={`view-selection-${selectedLang}`}>
+                    <Select
+                        MenuProps={{
+                            style: { zIndex: 35001 },
+                        }}
+                        defaultValue={false}
+                        onChange={handleQuestionFormatSelect}
+                    >
+                        <MenuItem value={false}>
+                            {
+                                translations.components.selectQuestionFormat
+                                    .allQuestions
+                            }
+                        </MenuItem>
+                        <MenuItem value>
+                            {
+                                translations.components.selectQuestionFormat
+                                    .singleQuestion
+                            }
+                        </MenuItem>
+                    </Select>
+                </div>
+            </div>
+
             {generateFields()}
             {generateFooter()}
         </form>
