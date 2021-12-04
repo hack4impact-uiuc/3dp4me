@@ -13,7 +13,7 @@ import AudioRecordImg from '../../assets/microphone.svg';
 import { trackPromise } from 'react-promise-tracker';
 import { LANGUAGES } from '../../utils/constants';
 import promptInstructionsAR from '../../assets/audio-prompt-instructions-ar.gif';
-import promptInstructions from '../../assets/audio-prompt-instructions-en.gif';
+import promptInstructionsEN from '../../assets/audio-prompt-instructions-en.gif';
 import {
     PERMISSION_CONSTRAINTS,
     PERMISSION_STATUS_DENIED,
@@ -92,7 +92,7 @@ class AudioRecorder extends React.Component {
                     <img
                         src={
                             this.props.selectedLang === LANGUAGES.EN
-                                ? promptInstructions
+                                ? promptInstructionsEN
                                 : promptInstructionsAR
                         }
                         alt="instructions"
@@ -148,7 +148,6 @@ class AudioRecorder extends React.Component {
                 this.setState({ isRecording: true });
             })
             .catch((e) => console.error(e));
-        // }
     };
 
     stopRecording = () => {
