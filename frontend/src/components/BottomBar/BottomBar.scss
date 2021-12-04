@@ -2,6 +2,17 @@
 @import '../../styles/variables.scss';
 
 .bottom-bar-wrapper {
+
+    .retracted-width {
+        margin-inline-start: $drawerWidth;
+        margin-left: $drawerWidth;
+    }
+
+    .expanded-width {
+        margin-inline-start: $drawerWidth + 3 * $verticalMovementWidth;;
+        margin-left: $drawerWidth + 3 * $verticalMovementWidth;;
+    }
+
     .add-field-div {
         flex-grow: 1;
     }
@@ -11,7 +22,7 @@
         color: white;
         padding: 0 24px 0 24px;
         height: 38px;
-        width: 25vw;
+        width: 150px;
         bottom: 1%;
         font-size: 12px;
         font-weight: bold;

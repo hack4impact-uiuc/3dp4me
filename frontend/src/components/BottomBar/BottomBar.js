@@ -138,15 +138,19 @@ const BottomBar = ({
      */
 
     const renderAddFieldButton = () => {
+
+        let button = null;
+
         if (isEditing) {
-            return (<div className="add-field-div">
-                <Button className="add-field-button" onClick={() => onAddField(selectedStep)}>
-                    Add Field
-                </Button>
-            </div>)
+            button = <Button className={`add-field-button ${isEditing ? 'expanded-width' : 'retracted-width'
+                }`} onClick={() => onAddField(selectedStep)}>
+                Add Field
+            </Button>
         }
 
-        return null;
+        return (<div className="add-field-div">
+            {button}
+        </div>)
     };
 
 
@@ -168,10 +172,10 @@ const BottomBar = ({
             }}
         >
             <Toolbar className="bottom-toolbar">
-                <div className="editor-section" style={style?.editorSection}>
+                {/* <div className="editor-section" style={style?.editorSection}>
                     {getLastEditedString()}
-                </div>
-                {/* {renderAddFieldButton()} */}
+                </div> */}
+                {renderAddFieldButton()}
                 {renderToolbarControls()}
             </Toolbar>
         </AppBar>
