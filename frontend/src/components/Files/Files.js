@@ -7,6 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { useTranslations } from '../../hooks/useTranslations';
+import { formatDate } from '../../utils/date';
 
 const Files = ({
     title,
@@ -17,7 +18,7 @@ const Files = ({
     handleUpload,
     isDisabled = false,
 }) => {
-    const translations = useTranslations()[0];
+    const [translations, selectedLang] = useTranslations();
 
     const getDeleteFileButton = (file) => {
         if (isDisabled) return null;
@@ -47,12 +48,16 @@ const Files = ({
                 >
                     <div className="file-info-wrapper">
                         <ArrowDownwardIcon />
-                        <div>
+                        <div
+                            className={
+                                isDisabled ? `file-info-view` : `file-info-edit`
+                            }
+                        >
                             <Typography align="left">
                                 {`${file.filename}`}
                             </Typography>
                             <p id="file-upload-timestamp">
-                                {file.uploadDate.toString()}
+                                {formatDate(file.uploadDate, selectedLang)}
                             </p>
                         </div>
                     </div>
