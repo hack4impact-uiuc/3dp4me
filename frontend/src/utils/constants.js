@@ -250,7 +250,7 @@ export const ERR_ROLE_IS_IMMUTABLE = 'This role cannot be edited';
 
 export const ADMIN_ID = '60e496fa7398681e9c82e0f5';
 
-export const PERMISSION_CONSTRAINTS = { video: true };
+export const PERMISSION_CONSTRAINTS = { audio: true, video: true };
 
 export const PERMISSION_STATUS_DENIED = 'denied';
 
