@@ -136,7 +136,7 @@ const BottomBar = ({
     const renderAddFieldButton = () => {
         let button = null;
 
-        if (isEditing) {
+        if (isEditing && onAddField) {
             button = (
                 <Button
                     className={`add-field-button ${
@@ -146,7 +146,7 @@ const BottomBar = ({
                     }`}
                     onClick={() => onAddField(selectedStep)}
                 >
-                    Add Field
+                    {translations.components.bottombar.addField}
                 </Button>
             );
         }

@@ -242,14 +242,9 @@ const EditFieldModal = ({
 
     const generateFieldDropdownOptions = () => {
         const fieldDropdownOptions = [];
-        let keyVal = 0;
         Object.values(FIELD_TYPES).forEach((value) => {
             fieldDropdownOptions.push(
-                <option
-                    key={keyVal++}
-                    value={value}
-                    className="edit-field-option"
-                >
+                <option key={value} value={value} className="edit-field-option">
                     {value}
                 </option>,
             );
@@ -264,6 +259,7 @@ const EditFieldModal = ({
         });
 
         const updatedFieldData = {
+            ...initialData,
             fieldType,
             isVisibleOnDashboard,
             displayName,
@@ -271,10 +267,7 @@ const EditFieldModal = ({
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
             subFields: [],
-            key: initialData.key,
-            fieldNumber: initialData.fieldNumber,
             isHidden,
-            isDeleted: initialData.isDeleted,
         };
 
         // Add sub fields if they exist

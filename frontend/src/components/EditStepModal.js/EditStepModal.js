@@ -88,15 +88,11 @@ const EditStepModal = ({
 
     const getUpdatedData = () => {
         const editStepData = {
+            ...initialData,
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
             displayName,
-            fields: initialData.fields,
-            stepNumber: initialData.stepNumber,
-            key: initialData.key,
             isHidden,
-            isDeleted: initialData.isDeleted,
-            defaultToListView: initialData.defaultToListView,
         };
 
         return editStepData;

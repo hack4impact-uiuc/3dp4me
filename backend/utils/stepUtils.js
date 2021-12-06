@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 const { removeAttributesFrom } = require('../middleware/requests');
 const { models } = require('../models');
-const { isUniqueStepNumber } = require('../models/Metadata');
+const { isUniqueStepNumber, FIELD_NUMBER_KEY, STEP_NUMBER_KEY } = require('../models/Metadata');
 
 const { isAdmin } = require('./aws/awsUsers');
 const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
@@ -104,7 +104,7 @@ module.exports.updateStepsInTransaction = async (updatedSteps, session) => {
     }
 
     stepsToNotChange = stepsToNotChange.sort(
-        (a, b) => a.stepNumber - b.stepNumber,
+        (a, b) => a[STEP_NUMBER_KEY] - b[STEP_NUMBER_KEY],
     );
 
     // Get a list of the key
@@ -121,7 +121,7 @@ module.exports.updateStepsInTransaction = async (updatedSteps, session) => {
     const requestSteps = updateElementNumbers(
         updatedSteps,
         stepsToNotChange,
-        'stepNumber',
+        STEP_NUMBER_KEY,
     );
 
     // Go through all of the step updates in the request body and apply them
@@ -155,7 +155,7 @@ const updateElementNumbers = (goodElements, deletedElements, numberKey) => {
     while (currElementNumber < numTotalFields) {
         if (
             deletedElementPointer < deletedElements.length
-            && currElementNumber === parseInt(deletedElements[deletedElementPointer][numberKey], 10)
+            && currElementNumber === deletedElements[deletedElementPointer][numberKey]
         ) {
             deletedElementPointer += 1; // Skip over since deleted fields have priority
         } else if (goodElementPointer < updatedElements.length) {
@@ -210,10 +210,13 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
         // Using the value 2 since the key should be in combinedKeys at least once.
         if (checkNumOccurencesInList(stepBody.key, combinedKeys) >= 2) {
             const newKey = generateKeyWithoutCollision(stepBody.displayName.EN || '', combinedKeys);
+            const oldKey = stepBody.key;
             // eslint-disable-next-line no-param-reassign
             stepBody.key = newKey;
             // Add the new key to the list of keys
             combinedKeys.push(newKey);
+            // Remove the old key
+            combinedKeys.splice(combinedKeys.indexOf(oldKey), 1);
         }
 
         if (stepBody.fields) {
@@ -255,7 +258,7 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
     strippedBody.fields = updateElementNumbers(
         strippedBody.fields,
         deletedFields,
-        'fieldNumber',
+        FIELD_NUMBER_KEY,
     );
 
     // Add deleted fields so they will be remain in the database.
@@ -289,7 +292,7 @@ const getDeletedFields = (fields) => {
 
     // Returns the deleted fields in ascending order of field number
     const sortedFields = deletedFields.sort(
-        (a, b) => a.fieldNumber - b.fieldNumber,
+        (a, b) => a[FIELD_NUMBER_KEY] - b[FIELD_NUMBER_KEY],
     );
 
     return sortedFields;

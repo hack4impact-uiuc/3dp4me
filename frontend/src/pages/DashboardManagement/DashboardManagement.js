@@ -44,8 +44,10 @@ const SectionTab = () => {
     const [editStepModalOpen, setEditStepModalOpen] = useState(false);
     const [createStepModalOpen, setCreateStepModalOpen] = useState(false);
     const [allRoles, setAllRoles] = useState([]);
-    const [selectedFieldForEditing, setSelectedFieldForEditing] = useState(0);
-    const [selectedStepForEditing, setSelectedStepForEditing] = useState(0);
+    const [selectedFieldNumberForEditing, setSelectedFieldNumberForEditing] =
+        useState(0);
+    const [selectedStepNumberForEditing, setSelectedStepNumberForEditing] =
+        useState(0);
 
     const errorWrap = useErrorWrap();
 
@@ -59,12 +61,12 @@ const SectionTab = () => {
     };
 
     const onEditField = (stepKey, fieldRoot, fieldNumber) => {
-        setSelectedFieldForEditing(fieldNumber);
+        setSelectedFieldNumberForEditing(fieldNumber);
         setEditFieldModalOpen(true);
     };
 
     const onEditStep = (stepKey) => {
-        setSelectedStepForEditing(stepKey);
+        setSelectedStepNumberForEditing(stepKey);
 
         const stepIndex = getStepIndexGivenKey(stepMetadata, stepKey);
         setSelectedStep(stepMetadata[stepIndex].key);
@@ -284,7 +286,7 @@ const SectionTab = () => {
 
         const fieldIndex = getFieldIndexByNumber(
             stepMetadata[stepIndex],
-            selectedFieldForEditing,
+            selectedFieldNumberForEditing,
         );
 
         if (fieldIndex < 0) return null;
@@ -320,7 +322,7 @@ const SectionTab = () => {
 
         const stepIndex = getStepIndexGivenKey(
             updatedMetadata,
-            selectedStepForEditing,
+            selectedStepNumberForEditing,
         );
         const stepData = updatedMetadata[stepIndex];
 
@@ -379,7 +381,7 @@ const SectionTab = () => {
 
         const fieldIndex = getFieldIndexByNumber(
             updatedMetadata[stepIndex],
-            selectedFieldForEditing,
+            selectedFieldNumberForEditing,
         );
 
         if (fieldIndex < 0) return;
@@ -399,7 +401,8 @@ const SectionTab = () => {
             updatedNewStep.stepNumber =
                 updatedMetadata[updatedMetadata.length - 1].stepNumber + 1;
         } else {
-            updatedNewStep.stepNumber = 1;
+            // Default step number is 0
+            updatedNewStep.stepNumber = 0;
         }
 
         // Generate a key for this step

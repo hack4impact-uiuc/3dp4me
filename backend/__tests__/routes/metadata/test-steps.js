@@ -282,6 +282,17 @@ describe('PUT /steps/stepkey', () => {
         expect(steps).toStrictEqual(PUT_STEPS_SWAPPED_STEPNUMBER);
     });
 
+    /* This is allowed because the endpoint reorders stepNumbers after each request. This
+    works even when stepNumbers in the request are duplicated. */
+    it('returns 200 for request with duplicate stepKey or stepNumber', async () => {
+        const res = await withAuthentication(
+            request(server)
+                .put('/api/metadata/steps')
+                .send(PUT_DUPLICATE_STEPS),
+        );
+        expect(res.status).toBe(200);
+    });
+
     it('returns 400 for fieldType edits', async () => {
         const stepBefore = await models.Step.find({}).lean();
 

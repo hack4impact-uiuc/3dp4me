@@ -154,3 +154,6 @@ stepSchema.path('stepNumber').validate(async function () {
 // This must be at end of file so that isUniqueStepNumber is bound in the stepNumber validator
 module.exports.isUniqueStepNumber = isUniqueStepNumber;
 module.exports.Step = mongoose.model(STEPS_COLLECTION_NAME, stepSchema);
+
+module.exports.FIELD_NUMBER_KEY = 'fieldNumber';
+module.exports.STEP_NUMBER_KEY = 'stepNumber';
