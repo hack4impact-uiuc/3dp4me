@@ -26,8 +26,10 @@ const StepContent = ({
     loading,
     stepData,
     onDataSaved,
+    edit,
+    setEdit,
 }) => {
-    const [edit, setEdit] = useState(false);
+    // const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
@@ -37,6 +39,37 @@ const StepContent = ({
     useEffect(() => {
         setUpdatedData(_.cloneDeep(stepData));
     }, [stepData]);
+
+    // useEffect(() => {
+    //     window.history.pushState = new Proxy(window.history.pushState, {
+    //         apply: (target, thisArg, argArray) => {
+    //             console.log('activated');
+    //             if (edit) {
+    //             } else {
+    //                 return target.apply(thisArg, argArray);
+    //             }
+    //             // trigger here what you need
+    //         },
+    //     });
+    // });
+
+    useEffect(() => {
+        const determinePreventDefault = (e) => {
+            console.log(metaData.displayName);
+            console.log(edit);
+            // Check if any of the input fields are filled
+            if (edit) {
+                // Cancel the event and show alert that
+                // the unsaved changes would be lost
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        };
+        console.log('hi');
+        window.addEventListener('beforeunload', determinePreventDefault);
+        return () =>
+            window.removeEventListener('beforeunload', determinePreventDefault);
+    }, [edit]);
 
     const handleSimpleUpdate = (fieldKey, value) => {
         setUpdatedData((data) => {

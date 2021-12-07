@@ -38,6 +38,26 @@ const PatientDetail = () => {
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
     const stepKeyParam = useQueryParam('stepKey', StringParam)[0];
+    const [edit, setEdit] = useState(false);
+    // const [willChangeStep, setWillChangeStep] = useState(false);
+
+    useEffect(() => {
+        const determinePreventDefault = (e) => {
+            // console.log(metaData.displayName);
+            console.log(edit);
+            // Check if any of the input fields are filled
+            if (edit) {
+                // Cancel the event and show alert that
+                // the unsaved changes would be lost
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        };
+        console.log('hi');
+        window.addEventListener('beforeunload', determinePreventDefault);
+        return () =>
+            window.removeEventListener('beforeunload', determinePreventDefault);
+    }, [edit]);
 
     /**
      * Fetch metadata for all steps and the patient's data.
@@ -116,10 +136,52 @@ const PatientDetail = () => {
         };
     };
 
+    // swal({
+    //     title: translations.components.button.discard.question,
+    //     text: translations.components.button.discard.warningMessage,
+    //     icon: 'warning',
+    //     dangerMode: true,
+    //     buttons: [
+    //         translations.components.button.discard.cancelButton,
+    //         translations.components.button.discard.confirmButton,
+    //     ],
+    // }).then((isDeleteConfirmed) => {
+    //     if (isDeleteConfirmed) {
+    //         swal({
+    //             title: translations.components.button.discard.success,
+    //             icon: 'success',
+    //             buttons: translations.components.button.discard.confirmButton,
+    //         });
+    //         // TODO: Nonexistent values don't get reset.
+    //         setUpdatedData(_.cloneDeep(stepData));
+    //         setEdit(false);
+    //     }
+    // });
+
     const onStepChange = (newStep) => {
-        if (newStep === null) return;
-        setSelectedStep(newStep);
-        window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
+        if (edit) {
+            swal({
+                title: 'You have unsaved changes. Do you want to leave this page?',
+                buttons: ['Stay', 'Leave'],
+            }).then((isLeaveConfirmed) => {
+                console.log('here is result');
+                /* Read more about isConfirmed, isDenied below */
+                if (isLeaveConfirmed) {
+                    if (newStep === null) return;
+                    setSelectedStep(newStep);
+                    setEdit(false);
+                    window.history.pushState(
+                        {},
+                        '',
+                        `${patientId}?stepKey=${newStep}`,
+                    );
+                }
+            });
+        } else {
+            setSelectedStep(newStep);
+            setEdit(false);
+            window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
+        }
     };
 
     /**
@@ -148,6 +210,8 @@ const PatientDetail = () => {
                             )}
                             stepData={patientData[step.key] ?? {}}
                             loading={loading}
+                            edit={edit}
+                            setEdit={setEdit}
                         />
                     );
                 })}
