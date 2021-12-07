@@ -117,32 +117,33 @@ const PatientDetail = () => {
         };
     };
 
+    const displayUnsavedDataAlert = (newStep) => {
+        swal({
+            title: translations.components.swal.dataDiscarding
+                .confirmationQuestion,
+            buttons: [
+                translations.components.swal.dataDiscarding.save,
+                translations.components.swal.dataDiscarding.leave,
+            ],
+        }).then((isLeaveConfirmed) => {
+            if (isLeaveConfirmed) {
+                switchStep(newStep);
+            }
+        });
+    };
+
+    const switchStep = (newStep) => {
+        if (newStep === null) return;
+        setSelectedStep(newStep);
+        setEdit(false);
+        window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
+    };
+
     const onStepChange = (newStep) => {
         if (edit) {
-            swal({
-                title: translations.components.swal.dataDiscarding
-                    .confirmationQuestion,
-                buttons: [
-                    translations.components.swal.dataDiscarding.save,
-                    translations.components.swal.dataDiscarding.leave,
-                ],
-            }).then((isLeaveConfirmed) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (isLeaveConfirmed) {
-                    if (newStep === null) return;
-                    setSelectedStep(newStep);
-                    setEdit(false);
-                    window.history.pushState(
-                        {},
-                        '',
-                        `${patientId}?stepKey=${newStep}`,
-                    );
-                }
-            });
+            displayUnsavedDataAlert(newStep);
         } else {
-            setSelectedStep(newStep);
-            setEdit(false);
-            window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
+            switchStep(newStep);
         }
     };
 
