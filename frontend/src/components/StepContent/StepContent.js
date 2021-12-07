@@ -29,7 +29,6 @@ const StepContent = ({
     edit,
     setEdit,
 }) => {
-    // const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
@@ -42,10 +41,8 @@ const StepContent = ({
 
     useEffect(() => {
         const determinePreventDefault = (e) => {
-            // Check if any of the input fields are filled
+            // Check if any of the step is being edited
             if (edit) {
-                // Cancel the event and show alert that
-                // the unsaved changes would be lost
                 e.preventDefault();
                 e.returnValue = '';
             }
