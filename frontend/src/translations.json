@@ -145,7 +145,7 @@
             },
             "swal": {
                 "dataDiscarding": {
-                    "save": "Save",
+                    "stay": "Stay",
                     "leave": "Leave",
                     "confirmationQuestion": "You have unsaved changes. Do you want to leave this page?"
                 },
@@ -385,7 +385,7 @@
             },
             "swal": {
                 "dataDiscarding": {
-                    "save": "يحفظ",
+                    "stay": "البقاء",
                     "leave": "يترك",
                     "confirmationQuestion": "لم تحفظ التغييرات. هل تريد مغادرة هذه الصفحة؟"
                 },

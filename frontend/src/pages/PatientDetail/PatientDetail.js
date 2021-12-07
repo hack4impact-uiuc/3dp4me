@@ -122,7 +122,7 @@ const PatientDetail = () => {
             title: translations.components.swal.dataDiscarding
                 .confirmationQuestion,
             buttons: [
-                translations.components.swal.dataDiscarding.save,
+                translations.components.swal.dataDiscarding.stay,
                 translations.components.swal.dataDiscarding.leave,
             ],
         }).then((isLeaveConfirmed) => {
