@@ -40,23 +40,8 @@ const StepContent = ({
         setUpdatedData(_.cloneDeep(stepData));
     }, [stepData]);
 
-    // useEffect(() => {
-    //     window.history.pushState = new Proxy(window.history.pushState, {
-    //         apply: (target, thisArg, argArray) => {
-    //             console.log('activated');
-    //             if (edit) {
-    //             } else {
-    //                 return target.apply(thisArg, argArray);
-    //             }
-    //             // trigger here what you need
-    //         },
-    //     });
-    // });
-
     useEffect(() => {
         const determinePreventDefault = (e) => {
-            console.log(metaData.displayName);
-            console.log(edit);
             // Check if any of the input fields are filled
             if (edit) {
                 // Cancel the event and show alert that
@@ -65,7 +50,6 @@ const StepContent = ({
                 e.returnValue = '';
             }
         };
-        console.log('hi');
         window.addEventListener('beforeunload', determinePreventDefault);
         return () =>
             window.removeEventListener('beforeunload', determinePreventDefault);
@@ -322,6 +306,8 @@ StepContent.propTypes = {
     loading: PropTypes.bool.isRequired,
     stepData: PropTypes.object.isRequired,
     onDataSaved: PropTypes.func.isRequired,
+    edit: PropTypes.bool.isRequired,
+    setEdit: PropTypes.func.isRequired,
 };
 
 export default StepContent;
