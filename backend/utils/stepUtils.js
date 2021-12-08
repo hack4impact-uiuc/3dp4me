@@ -2,13 +2,13 @@ const _ = require('lodash');
 
 const { removeAttributesFrom } = require('../middleware/requests');
 const { models } = require('../models');
-const { isUniqueStepNumber } = require('../models/Metadata');
+const { isUniqueStepNumber, FIELD_NUMBER_KEY, STEP_NUMBER_KEY } = require('../models/Metadata');
 
 const { isAdmin } = require('./aws/awsUsers');
 const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
 const { abortAndError } = require('./transactionUtils');
 const { generateSchemaFromMetadata } = require('./initDb');
-const { generateKeyWithoutCollision } = require('./keyUtils');
+const { generateKeyWithoutCollision, checkNumOccurencesInList } = require('./keyUtils');
 
 const stringToBoolean = (value) => {
     const trimmedValue = value.toString().trim().toLowerCase();
@@ -21,7 +21,9 @@ const stringToBoolean = (value) => {
 
 module.exports.getReadableSteps = async (req) => {
     let showHiddenFields = req.query.showHiddenFields ?? 'false';
+    let showHiddenSteps = req.query.showHiddenSteps ?? 'false';
     showHiddenFields = stringToBoolean(showHiddenFields);
+    showHiddenSteps = stringToBoolean(showHiddenSteps);
 
     const userRole = req.user.roles.toString();
 
@@ -29,23 +31,10 @@ module.exports.getReadableSteps = async (req) => {
         {
             $or: [{ $ne: ['$$field.isDeleted', true] }],
         },
-    ]; // don't return any deleted fields
+    ]; // Don't return any deleted fields
 
-    const aggregation = [
-        {
-            $addFields: {
-                fields: {
-                    $filter: {
-                        input: '$fields',
-                        as: 'field',
-                        cond: {
-                            $and: searchParams,
-                        },
-                    },
-                },
-            },
-        },
-    ];
+    // Don't return any deleted steps
+    const aggregation = [{ $match: { isDeleted: { $ne: true } } }];
 
     // If not admin, then return limit what steps/fields can be returned using readableGroups
     if (!isAdmin(req.user)) {
@@ -63,6 +52,24 @@ module.exports.getReadableSteps = async (req) => {
         }); // limit returning fields that are hidden
     }
 
+    if (!showHiddenSteps) {
+        aggregation.push({ $match: { isHidden: { $ne: true } } });
+    }
+
+    aggregation.push({
+        $addFields: {
+            fields: {
+                $filter: {
+                    input: '$fields',
+                    as: 'field',
+                    cond: {
+                        $and: searchParams,
+                    },
+                },
+            },
+        },
+    });
+
     const data = await models.Step.aggregate(aggregation);
 
     return data;
@@ -72,16 +79,55 @@ module.exports.getReadableSteps = async (req) => {
 /**
  * Performs an update on a step in a transaction session. It is expected that req.body
  * contains an array of step updates.
- * @param {Object} req The incoming request. Should be an array of steps.
+ * @param {Object} An array of steps.
  * @param {Object} session The session for the transaction.
  * @returns Returns the updated step array.
  */
-module.exports.updateStepsInTransaction = async (req, session) => {
+module.exports.updateStepsInTransaction = async (updatedSteps, session) => {
     const stepData = [];
 
+    /* Steps in the database cannot have keys that are the same. If that is the
+       case, then they have collided.
+       Let's assume that none of the saved steps in the database don't have keys that collide.
+       Then, we would only need to check new steps being created for key collision. */
+
+    const currentStepsInDB = await models.Step.find({}).session(session);
+    let stepsToNotChange = [];
+    const requestStepKeys = updatedSteps.map((step) => step.key);
+
+    // Build up a list of steps that were not included in the request or are deleted.
+    // The stepNumbers of these steps won't be changed.
+    for (let i = 0; i < currentStepsInDB.length; i++) {
+        if (currentStepsInDB[i].isDeleted || !requestStepKeys.includes(currentStepsInDB[i].key)) {
+            stepsToNotChange.push(currentStepsInDB[i]);
+        }
+    }
+
+    stepsToNotChange = stepsToNotChange.sort(
+        (a, b) => a[STEP_NUMBER_KEY] - b[STEP_NUMBER_KEY],
+    );
+
+    // Get a list of the key
+    const stepsToNotChangeKeys = stepsToNotChange.map((step) => step.key);
+
+    // Combine to create a list of all keys that will be used to check for.
+    // key collision.
+    const combinedKeys = requestStepKeys.concat(stepsToNotChangeKeys);
+
+    /* We also need to update step field numbers before saving each step.
+       This is because step field numbers were generated without considering
+       deleted steps. */
+
+    const requestSteps = updateElementNumbers(
+        updatedSteps,
+        stepsToNotChange,
+        STEP_NUMBER_KEY,
+    );
+
     // Go through all of the step updates in the request body and apply them
-    for (const step of req.body) {
-        const updatedStepModel = await updateStepInTransaction(step, session);
+    for (let stepIdx = 0; stepIdx < requestSteps.length; stepIdx++) {
+        // eslint-disable-next-line max-len
+        const updatedStepModel = await updateStepInTransaction(requestSteps[stepIdx], session, combinedKeys);
         stepData.push(updatedStepModel);
     }
 
@@ -90,35 +136,36 @@ module.exports.updateStepsInTransaction = async (req, session) => {
     return stepData;
 };
 
-const updateFieldNumbers = (goodFields, deletedFields) => {
+const updateElementNumbers = (goodElements, deletedElements, numberKey) => {
     // We need to update the fieldNumber for each field in order to prevent duplicates.
-    // In order to do this, we iterate through the deletedFields and strippedBody fields.
+    // The same goes for updating the stepNumber for each step.
+    // In order to do this, we iterate through the goodElements and deletedElements fields.
     // We store two pointers for both arrays, and we move them forward after updating the field
-    // number for the field that it is pointing at. The fields in deletedFields get priority,
+    // number for the field that it is pointing at. The elements in deletedElements get priority,
     // meaning they always keep the same field number.
 
-    const updatedFields = _.cloneDeep(goodFields);
+    const updatedElements = _.cloneDeep(goodElements);
 
-    let currFieldNumber = 0;
-    let deletedFieldPointer = 0;
-    let strippedFieldsPointer = 0;
+    let currElementNumber = 0;
+    let deletedElementPointer = 0;
+    let goodElementPointer = 0;
 
-    const numTotalFields = deletedFields.length + updatedFields.length;
+    const numTotalFields = deletedElements.length + updatedElements.length;
 
-    while (currFieldNumber < numTotalFields) {
+    while (currElementNumber < numTotalFields) {
         if (
-            deletedFieldPointer < deletedFields.length
-            && currFieldNumber === deletedFields[deletedFieldPointer].fieldNumber
+            deletedElementPointer < deletedElements.length
+            && currElementNumber === deletedElements[deletedElementPointer][numberKey]
         ) {
-            deletedFieldPointer += 1; // Skip over since deleted fields have priority
-        } else {
-            updatedFields[strippedFieldsPointer].fieldNumber = currFieldNumber;
-            strippedFieldsPointer += 1;
+            deletedElementPointer += 1; // Skip over since deleted fields have priority
+        } else if (goodElementPointer < updatedElements.length) {
+            updatedElements[goodElementPointer][numberKey] = currElementNumber;
+            goodElementPointer += 1;
         }
-        currFieldNumber += 1; // Move onto the next field number to assign
+        currElementNumber += 1; // Move onto the next field number to assign
     }
 
-    return updatedFields;
+    return updatedElements;
 };
 
 const updateFieldKeys = (fields) => {
@@ -144,7 +191,7 @@ const updateFieldKeys = (fields) => {
 
 /* eslint-enable no-restricted-syntax, no-await-in-loop */
 
-const updateStepInTransaction = async (stepBody, session) => {
+const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
     // Cannot find step
     if (!stepBody?.key) await abortAndError(session, 'stepKey missing');
 
@@ -154,15 +201,36 @@ const updateStepInTransaction = async (stepBody, session) => {
         session,
     );
 
-    // Add a step if can't find step to edit
-    if (!stepToEdit) {
-        const newStepBody = _.cloneDeep(stepBody);
-        newStepBody.fields = updateFieldKeys(stepBody.fields);
-        const newStep = new models.Step(newStepBody);
+    // Treat a field as new if it doesn't show up in the database
+    // or it is marked as deleted in the database. This based on the assumption
+    // that updateStepInTransaction won't be called on deleted fields.
 
-        await newStep.save({ session });
+    if (!stepToEdit || stepToEdit.isDeleted) {
+        // Make sure the key for this new step won't collide with any deleted steps
+        // Using the value 2 since the key should be in combinedKeys at least once.
+        if (checkNumOccurencesInList(stepBody.key, combinedKeys) >= 2) {
+            const newKey = generateKeyWithoutCollision(stepBody.displayName.EN || '', combinedKeys);
+            const oldKey = stepBody.key;
+            // eslint-disable-next-line no-param-reassign
+            stepBody.key = newKey;
+            // Add the new key to the list of keys
+            combinedKeys.push(newKey);
+            // Remove the old key
+            combinedKeys.splice(combinedKeys.indexOf(oldKey), 1);
+        }
+
+        if (stepBody.fields) {
+            // eslint-disable-next-line no-param-reassign
+            stepBody.fields = updateFieldKeys(stepBody.fields);
+        } else {
+            // eslint-disable-next-line no-param-reassign
+            stepBody.fields = [];
+        }
+
         generateSchemaFromMetadata(stepBody);
 
+        const newStep = new models.Step(stepBody);
+        await newStep.save({ session, validateBeforeSave: false });
         return newStep;
     }
 
@@ -187,9 +255,10 @@ const updateStepInTransaction = async (stepBody, session) => {
     addFieldsToSchema(stepKey, addedFields);
 
     // Update the field numbers in order to account for deleted fields
-    strippedBody.fields = updateFieldNumbers(
+    strippedBody.fields = updateElementNumbers(
         strippedBody.fields,
         deletedFields,
+        FIELD_NUMBER_KEY,
     );
 
     // Add deleted fields so they will be remain in the database.
@@ -223,7 +292,7 @@ const getDeletedFields = (fields) => {
 
     // Returns the deleted fields in ascending order of field number
     const sortedFields = deletedFields.sort(
-        (a, b) => a.fieldNumber - b.fieldNumber,
+        (a, b) => a[FIELD_NUMBER_KEY] - b[FIELD_NUMBER_KEY],
     );
 
     return sortedFields;

@@ -244,7 +244,7 @@ const EditFieldModal = ({
         const fieldDropdownOptions = [];
         Object.values(FIELD_TYPES).forEach((value) => {
             fieldDropdownOptions.push(
-                <option value={value} className="edit-field-option">
+                <option key={value} value={value} className="edit-field-option">
                     {value}
                 </option>,
             );
@@ -258,7 +258,8 @@ const EditFieldModal = ({
             return { Index: index, Question: option };
         });
 
-        const newFieldData = {
+        const updatedFieldData = {
+            ...initialData,
             fieldType,
             isVisibleOnDashboard,
             displayName,
@@ -266,13 +267,15 @@ const EditFieldModal = ({
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
             subFields: [],
-            key: initialData.key,
-            fieldNumber: initialData.fieldNumber,
             isHidden,
-            isDeleted: initialData.isDeleted,
         };
 
-        return newFieldData;
+        // Add sub fields if they exist
+        if (initialData.subFields) {
+            updatedFieldData.subFields = initialData.subFields;
+        }
+
+        return updatedFieldData;
     };
 
     const saveField = () => {
@@ -420,7 +423,7 @@ const EditFieldModal = ({
                         onClick={onDiscard}
                         className="discard-field-button"
                     >
-                        {translations.components.swal.field.buttons.cancel}
+                        {translations.components.swal.field.buttons.discard}
                     </Button>
                     <Button onClick={onDelete} className="delete-field-button">
                         {translations.components.swal.field.buttons.delete}

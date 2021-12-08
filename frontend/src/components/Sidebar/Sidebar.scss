@@ -13,17 +13,20 @@
     display: flex;
     flex-shrink: 0;
     padding: 0;
+    background-color: $dashboardManagementSidebarBackground;
 
     .sidebar-container {
         margin-top: $navHeight;
         padding: 0;
         background-color: $dashboardManagementSidebarBackground;
+        margin-bottom: $navHeight;
 
         .sidebar-button-container {
             overflow: 'auto';
             display: flex;
             height: $navHeight;
             justify-content: space-between;
+            flex-direction: row;
 
             .button {
                 display: inline-block;
@@ -53,17 +56,40 @@
                 background-color: #5253a1;
                 color: white;
             }
+
+            .hidden {
+                background-color: #5253a141;
+                color: #00000077;
+            }
         }
+    }
+}
+
+.side-bottom-bar-retracted {
+    width: $drawerWidth !important ;
+}
+
+.side-bottom-bar-expanded {
+    width: $drawerWidth + 3 * $verticalMovementWidth !important;
+}
+
+.side-bottom-bar-wrapper {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    background-color: #dddef2 !important;
+    z-index: 100;
+
+    .side-bottom-bar-toolbar {
+        min-height: 56px;
 
         .edit-steps-button {
             background-color: $button;
             color: white;
             padding: 0 24px 0 24px;
             height: 38px;
-            width: 95%;
-            margin-inline-start: 2.5%;
+            width: 90%;
             position: absolute;
-            bottom: 1%;
             font-size: 12px;
             font-weight: bold;
             transition: all 0.2s;

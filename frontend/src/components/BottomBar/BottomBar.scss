@@ -2,6 +2,37 @@
 @import '../../styles/variables.scss';
 
 .bottom-bar-wrapper {
+    .add-field-retracted-width {
+        margin-inline-start: $drawerWidth;
+        margin-left: $drawerWidth;
+    }
+
+    .add-field-expanded-width {
+        margin-inline-start: $drawerWidth + 3 * $verticalMovementWidth;
+        margin-left: $drawerWidth + 3 * $verticalMovementWidth;
+    }
+
+    .add-field-div {
+        flex-grow: 1;
+    }
+
+    .add-field-button {
+        background-color: $button;
+        color: white;
+        padding: 0 24px 0 24px;
+        height: 38px;
+        width: 150px;
+        bottom: 1%;
+        font-size: 12px;
+        font-weight: bold;
+        transition: all 0.2s;
+        border-radius: 2px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+        &:hover {
+            background-color: $buttonHighlight;
+        }
+    }
+
     .bottom-toolbar {
         min-height: 56px;
     }

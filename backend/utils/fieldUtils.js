@@ -131,6 +131,7 @@ module.exports.getAddedFields = async (session, oldFields, newFields) => {
 
             // If this is a new field that we haven't seen yet, add it to the list of new fields
             const hasAddedField = addedFields.some(
+                // the key of the requestField may be undefined if the field is new
                 (f) => f.key === requestField.key,
             );
 

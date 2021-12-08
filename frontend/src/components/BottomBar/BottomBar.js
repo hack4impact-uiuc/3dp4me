@@ -2,7 +2,6 @@ import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-import { formatDate } from '../../utils/date';
 import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
@@ -12,14 +11,13 @@ import { useTranslations } from '../../hooks/useTranslations';
 
 const BottomBar = ({
     isEditing,
-    lastEdited,
-    lastEditedBy,
+    onAddField,
     onStatusChange,
     onSave,
     onDiscard,
     onEdit,
     status = null,
-    style = null,
+    selectedStep,
 }) => {
     const [translations, selectedLang] = useTranslations();
 
@@ -108,7 +106,7 @@ const BottomBar = ({
     };
 
     /**
-     * Renders all of the controls for the bottom bar (status selector, save, discard)
+     * Renders the edit controls for the bottom bar (status selector, save, discard)
      */
     const renderToolbarControls = () => {
         if (isEditing) {
@@ -130,11 +128,30 @@ const BottomBar = ({
         );
     };
 
-    const getLastEditedString = () => {
-        if (!lastEdited || !lastEditedBy) return '';
+    /**
+     *
+     * @returns Renders the controls for adding a field
+     */
 
-        const lastEditedDate = formatDate(new Date(lastEdited), selectedLang);
-        return `${translations.components.bottombar.lastEditedBy} ${lastEditedBy} ${translations.components.bottombar.on} ${lastEditedDate}`;
+    const renderAddFieldButton = () => {
+        let button = null;
+
+        if (isEditing && onAddField) {
+            button = (
+                <Button
+                    className={`add-field-button ${
+                        isEditing
+                            ? 'add-field-expanded-width'
+                            : 'add-field-retracted-width'
+                    }`}
+                    onClick={() => onAddField(selectedStep)}
+                >
+                    {translations.components.bottombar.addField}
+                </Button>
+            );
+        }
+
+        return <div className="add-field-div">{button}</div>;
     };
 
     return (
@@ -148,9 +165,7 @@ const BottomBar = ({
             }}
         >
             <Toolbar className="bottom-toolbar">
-                <div className="editor-section" style={style?.editorSection}>
-                    {getLastEditedString()}
-                </div>
+                {renderAddFieldButton()}
                 {renderToolbarControls()}
             </Toolbar>
         </AppBar>
@@ -158,15 +173,14 @@ const BottomBar = ({
 };
 
 BottomBar.propTypes = {
-    style: PropTypes.object,
+    onAddField: PropTypes.func.isRequired,
     isEditing: PropTypes.bool.isRequired,
-    lastEdited: PropTypes.string,
-    lastEditedBy: PropTypes.string,
     status: PropTypes.string,
     onStatusChange: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     onDiscard: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
+    selectedStep: PropTypes.string.isRequired,
 };
 
 export default BottomBar;

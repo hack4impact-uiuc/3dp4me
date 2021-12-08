@@ -238,6 +238,8 @@ module.exports.EXPECTED_GET_RESTRICTED_DATA = {
     _id: '6092c289e0912601bbc5d85e',
     key: 'example',
     stepNumber: 2,
+    isHidden: false,
+    isDeleted: false,
     fields: [
         {
             displayName: {
