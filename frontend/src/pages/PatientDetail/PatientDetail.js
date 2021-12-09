@@ -38,6 +38,7 @@ const PatientDetail = () => {
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
     const stepKeyParam = useQueryParam('stepKey', StringParam)[0];
+    const [edit, setEdit] = useState(false);
 
     /**
      * Fetch metadata for all steps and the patient's data.
@@ -116,10 +117,34 @@ const PatientDetail = () => {
         };
     };
 
-    const onStepChange = (newStep) => {
+    const displayUnsavedDataAlert = (newStep) => {
+        swal({
+            title: translations.components.swal.dataDiscarding
+                .confirmationQuestion,
+            buttons: [
+                translations.components.swal.dataDiscarding.stay,
+                translations.components.swal.dataDiscarding.leave,
+            ],
+        }).then((isLeaveConfirmed) => {
+            if (isLeaveConfirmed) {
+                switchStep(newStep);
+            }
+        });
+    };
+
+    const switchStep = (newStep) => {
         if (newStep === null) return;
         setSelectedStep(newStep);
+        setEdit(false);
         window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
+    };
+
+    const onStepChange = (newStep) => {
+        if (edit) {
+            displayUnsavedDataAlert(newStep);
+        } else {
+            switchStep(newStep);
+        }
     };
 
     /**
@@ -148,6 +173,8 @@ const PatientDetail = () => {
                             )}
                             stepData={patientData[step.key] ?? {}}
                             loading={loading}
+                            edit={edit}
+                            setEdit={setEdit}
                         />
                     );
                 })}

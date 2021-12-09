@@ -26,8 +26,9 @@ const StepContent = ({
     loading,
     stepData,
     onDataSaved,
+    edit,
+    setEdit,
 }) => {
-    const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
@@ -37,6 +38,19 @@ const StepContent = ({
     useEffect(() => {
         setUpdatedData(_.cloneDeep(stepData));
     }, [stepData]);
+
+    useEffect(() => {
+        const determinePreventDefault = (e) => {
+            // Check if any of the step is being edited
+            if (edit) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        };
+        window.addEventListener('beforeunload', determinePreventDefault);
+        return () =>
+            window.removeEventListener('beforeunload', determinePreventDefault);
+    }, [edit]);
 
     const handleSimpleUpdate = (fieldKey, value) => {
         setUpdatedData((data) => {
@@ -289,6 +303,8 @@ StepContent.propTypes = {
     loading: PropTypes.bool.isRequired,
     stepData: PropTypes.object.isRequired,
     onDataSaved: PropTypes.func.isRequired,
+    edit: PropTypes.bool.isRequired,
+    setEdit: PropTypes.func.isRequired,
 };
 
 export default StepContent;
