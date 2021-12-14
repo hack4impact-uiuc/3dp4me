@@ -9,6 +9,14 @@
         font-weight: 700;
     }
 
+    .retracted-arabic-field-container {
+        margin-right: -$drawerWidth !important;
+    }
+
+    .expanded-arabic-field-container {
+        margin-right: -($drawerWidth + 3 * $verticalMovementWidth) !important;
+    }
+
     .step-field-container {
         background-color: #f6f6f6;
         border: #f6f6f6 solid 1px;

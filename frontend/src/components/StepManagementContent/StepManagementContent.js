@@ -4,7 +4,7 @@ import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
 
 import RadioButtonField from '../Fields/RadioButtonField';
-import { FIELD_TYPES } from '../../utils/constants';
+import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const StepManagementContent = ({
@@ -99,6 +99,23 @@ const StepManagementContent = ({
         );
     }
 
+    function getFieldClassName(field) {
+
+        let fieldClassName = (field.isHidden
+            ? 'hidden-step-field-container'
+            : 'step-field-container');
+
+        if (selectedLang === LANGUAGES.AR) {
+            if (isEditing) {
+                fieldClassName += " " + 'expanded-arabic-field-container ';
+            } else {
+                fieldClassName += " " + 'retracted-arabic-field-container ';
+            }
+        }
+
+        return fieldClassName
+    }
+
     function generateButtonInfo(fields, fieldRoot) {
         if (!fields) return null;
 
@@ -107,11 +124,7 @@ const StepManagementContent = ({
 
             return (
                 <div
-                    className={
-                        field.isHidden
-                            ? 'hidden-step-field-container'
-                            : 'step-field-container'
-                    }
+                    className={getFieldClassName(field)}
                 >
                     <div className="content">
                         <div className="info">
