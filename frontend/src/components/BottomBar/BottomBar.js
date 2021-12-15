@@ -88,7 +88,9 @@ const BottomBar = ({
             selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button';
 
         const discardBtnClassName =
-            selectedLang === LANGUAGES.AR ? 'discard-button-ar' : 'discard-button';
+            selectedLang === LANGUAGES.AR
+                ? 'discard-button-ar'
+                : 'discard-button';
 
         return [
             <Button
@@ -114,9 +116,13 @@ const BottomBar = ({
     const renderToolbarControls = () => {
         if (isEditing) {
             return (
-                <div className={selectedLang === LANGUAGES.AR
-                    ? 'toolbar-editing-div-ar'
-                    : 'toolbar-editing-div'}>
+                <div
+                    className={
+                        selectedLang === LANGUAGES.AR
+                            ? 'toolbar-editing-div-ar'
+                            : 'toolbar-editing-div'
+                    }
+                >
                     {renderStatusSelector()}
                     {renderDiscardAndSaveButtons()}
                 </div>
@@ -144,7 +150,11 @@ const BottomBar = ({
         let buttonClassName = 'add-field-button';
 
         if (selectedLang !== LANGUAGES.AR) {
-            buttonClassName += " " + (isEditing ? 'add-field-expanded-width' : 'add-field-retracted-width');
+            buttonClassName += ` ${
+                isEditing
+                    ? 'add-field-expanded-width'
+                    : 'add-field-retracted-width'
+            }`;
         }
 
         if (isEditing && onAddField) {
@@ -158,23 +168,28 @@ const BottomBar = ({
             );
         }
 
-        const divClassName = selectedLang !== LANGUAGES.AR ? 'add-field-div' : 'add-field-div'
+        const divClassName =
+            selectedLang !== LANGUAGES.AR ? 'add-field-div' : 'add-field-div';
         return <div className={divClassName}>{button}</div>;
     };
 
     // The edit steps and discard button needs to remain in the same location on the screen,
-    // regardless of the language. This allows the user to keep the mouse in the same position when 
-    // switching between the Editing-Not Editing state. In order to allow this, the order of the 
-    // add field button and toolbar controls needs to flip below. This counters the flip in left-right 
+    // regardless of the language. This allows the user to keep the mouse in the same position when
+    // switching between the Editing-Not Editing state. In order to allow this, the order of the
+    // add field button and toolbar controls needs to flip below. This counters the flip in left-right
     // orientation made to the entire website when the language switches to Arabic.
-    const controlToolbar = selectedLang !== LANGUAGES.AR ? <>
-        {renderAddFieldButton()}
-        {renderToolbarControls()}
-    </> : <>
-        {renderToolbarControls()}
-        {renderAddFieldButton()}
-    </>
-
+    const controlToolbar =
+        selectedLang !== LANGUAGES.AR ? (
+            <>
+                {renderAddFieldButton()}
+                {renderToolbarControls()}
+            </>
+        ) : (
+            <>
+                {renderToolbarControls()}
+                {renderAddFieldButton()}
+            </>
+        );
 
     return (
         <AppBar
@@ -186,9 +201,7 @@ const BottomBar = ({
                 boxShadow: '0 0px 4px 2px rgba(0, 0, 0, 0.15)',
             }}
         >
-            <Toolbar className="bottom-toolbar">
-                {controlToolbar}
-            </Toolbar>
+            <Toolbar className="bottom-toolbar">{controlToolbar}</Toolbar>
         </AppBar>
     );
 };

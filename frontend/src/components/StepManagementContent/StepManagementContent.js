@@ -100,20 +100,21 @@ const StepManagementContent = ({
     }
 
     function getFieldClassName(field) {
-
-        let fieldClassName = (field.isHidden
+        let fieldClassName = field.isHidden
             ? 'hidden-step-field-container'
-            : 'step-field-container');
+            : 'step-field-container';
 
+        // Handles case when the user has the language set to Arabic
         if (selectedLang === LANGUAGES.AR) {
+            fieldClassName += ' ';
             if (isEditing) {
-                fieldClassName += " " + 'expanded-arabic-field-container ';
+                fieldClassName += 'expanded-arabic-field-container';
             } else {
-                fieldClassName += " " + 'retracted-arabic-field-container ';
+                fieldClassName += 'retracted-arabic-field-container';
             }
         }
 
-        return fieldClassName
+        return fieldClassName;
     }
 
     function generateButtonInfo(fields, fieldRoot) {
@@ -123,9 +124,7 @@ const StepManagementContent = ({
             if (field.isDeleted) return null; // don't render fields when they are marked as deleted
 
             return (
-                <div
-                    className={getFieldClassName(field)}
-                >
+                <div className={getFieldClassName(field)}>
                     <div className="content">
                         <div className="info">
                             <div className="header">
