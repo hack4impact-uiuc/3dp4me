@@ -118,7 +118,7 @@ const BottomBar = ({
             return (
                 <div
                     className={
-                        selectedLang === LANGUAGES.AR
+                        selectedLang === LANGUAGES.AR && onAddField
                             ? 'toolbar-editing-div-ar'
                             : 'toolbar-editing-div'
                     }
@@ -179,15 +179,15 @@ const BottomBar = ({
     // add field button and toolbar controls needs to flip below. This counters the flip in left-right
     // orientation made to the entire website when the language switches to Arabic.
     const controlToolbar =
-        selectedLang !== LANGUAGES.AR ? (
+        selectedLang === LANGUAGES.AR && onAddField ? (
             <>
-                {renderAddFieldButton()}
                 {renderToolbarControls()}
+                {renderAddFieldButton()}
             </>
         ) : (
             <>
-                {renderToolbarControls()}
                 {renderAddFieldButton()}
+                {renderToolbarControls()}
             </>
         );
 
