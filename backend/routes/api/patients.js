@@ -362,6 +362,13 @@ router.post(
     }),
 );
 
+router.delete(
+    '/:id',
+    errorWrap(async (req, res) => {
+
+    }),
+);
+
 const updatePatientStepData = async (patientId, StepModel, data) => {
     let patientStepData = await StepModel.findOne({ patientId });
 
