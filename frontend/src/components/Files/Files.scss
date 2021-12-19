@@ -28,19 +28,34 @@
         .file-row-wrapper {
             display: inherit;
             justify-content: space-between;
+            align-items: center;
             width: 100%;
         }
 
         .file-button {
             justify-content: flex-start;
             width: 100%;
+            overflow: hidden;
         }
 
         .file-info-wrapper {
             display: flex;
             flex-direction: row;
+            display: inherit;
+
+            .file-info-edit {
+                width: 315px;
+            }
+
+            .file-info-view {
+                width: 350px;
+                padding-right: 0.4em;
+            }
+
             #file-upload-timestamp {
                 line-height: 0;
+                margin-top: 0.3em;
+                text-align-last: end;
                 color: grey;
             }
         }
