@@ -1,12 +1,14 @@
 /* eslint import/no-cycle: "off" */
 // Unfortunately, there has to be an import cycle, because this is by nature, recursive
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
-
+import PropTypes from 'prop-types';
+import React from 'react';
+import swal from 'sweetalert';
+import XIcon from '../../assets/x-icon.png';
+import { useTranslations } from '../../hooks/useTranslations';
 import StepField from '../StepField/StepField';
 import './Fields.scss';
-import { useTranslations } from '../../hooks/useTranslations';
+
 
 const FieldGroup = ({
     isDisabled,
@@ -53,11 +55,43 @@ const FieldGroup = ({
         handleSimpleUpdate(getKeyBase(getNumFields()), {});
     };
 
+    const onRemoveGroup = (groupNumber) => {
+        if (isDisabled)
+            return;
+
+        swal({
+            title: translations.components.button.discard.question,
+            text: translations.components.button.discard.warningMessage,
+            icon: 'warning',
+            dangerMode: true,
+            buttons: [
+                translations.components.button.discard.cancelButton,
+                translations.components.button.discard.confirmButton,
+            ],
+        }).then((isDeleteConfirmed) => {
+            if (isDeleteConfirmed) doRemoveGroup(groupNumber);
+        })
+            
+    }
+
+    const doRemoveGroup = (groupNumber) => {
+        const newData = []
+        const numFields = getNumFields();
+        for (let i = 0; i < numFields; ++i) {
+            if (i == groupNumber)
+                continue;
+
+            newData.push(value[i]);
+        }
+
+        handleSimpleUpdate(metadata.key, newData);
+    }
+
     const generateSingleGroup = (index) => {
         return metadata?.subFields?.map((field) => {
             return (
                 <div key={`${getCompleteSubFieldKey(field.key)}.${index}`}>
-                    <div className="step-field">
+                    <div className="step-field"> 
                         <StepField
                             displayName={field.displayName[selectedLang]}
                             metadata={field}
@@ -85,6 +119,17 @@ const FieldGroup = ({
         });
     };
 
+    const generateHeader = (groupNumber, displayName) => {
+        const buttonClass = `button-${isDisabled ? 'disabled' : 'active'}`
+
+        return (
+            <div className={`group-title-container-base group-title-container-${selectedLang}`}>
+                <img src={XIcon} className={`xicon-base xicon-${selectedLang} ${buttonClass}`} onClick={() => onRemoveGroup(groupNumber)}/>
+                <h3 key={displayName}>{displayName}</h3>
+            </div>
+        )
+    }
+
     const generateAllGroups = () => {
         const numFieldGroups = getNumFields();
         const groups = [];
@@ -93,7 +138,7 @@ const FieldGroup = ({
             const displayName = `${metadata?.displayName[selectedLang]} ${
                 i + 1
             }`;
-            groups.push(<h3 key={displayName}>{displayName}</h3>);
+            groups.push(generateHeader(i, displayName));
             groups.push(generateSingleGroup(i));
         }
 
