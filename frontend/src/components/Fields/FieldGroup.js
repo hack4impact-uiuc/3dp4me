@@ -4,10 +4,12 @@ import { Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import swal from 'sweetalert';
+
 import XIcon from '../../assets/x-icon.png';
 import { useTranslations } from '../../hooks/useTranslations';
 import StepField from '../StepField/StepField';
 import './Fields.scss';
+
 
 
 const FieldGroup = ({
@@ -78,7 +80,7 @@ const FieldGroup = ({
         const newData = []
         const numFields = getNumFields();
         for (let i = 0; i < numFields; ++i) {
-            if (i == groupNumber)
+            if (i === groupNumber)
                 continue;
 
             newData.push(value[i]);
@@ -124,7 +126,7 @@ const FieldGroup = ({
 
         return (
             <div className={`group-title-container-base group-title-container-${selectedLang}`}>
-                <img src={XIcon} className={`xicon-base xicon-${selectedLang} ${buttonClass}`} onClick={() => onRemoveGroup(groupNumber)}/>
+                <img src={XIcon} alt="delete item" className={`xicon-base xicon-${selectedLang} ${buttonClass}`} onClick={() => onRemoveGroup(groupNumber)}/>
                 <h3 key={displayName}>{displayName}</h3>
             </div>
         )
