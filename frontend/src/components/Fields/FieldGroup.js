@@ -10,8 +10,6 @@ import { useTranslations } from '../../hooks/useTranslations';
 import StepField from '../StepField/StepField';
 import './Fields.scss';
 
-
-
 const FieldGroup = ({
     isDisabled,
     handleSimpleUpdate,
@@ -58,8 +56,7 @@ const FieldGroup = ({
     };
 
     const onRemoveGroup = (groupNumber) => {
-        if (isDisabled)
-            return;
+        if (isDisabled) return;
 
         swal({
             title: translations.components.button.discard.question,
@@ -72,28 +69,26 @@ const FieldGroup = ({
             ],
         }).then((isDeleteConfirmed) => {
             if (isDeleteConfirmed) doRemoveGroup(groupNumber);
-        })
-            
-    }
+        });
+    };
 
     const doRemoveGroup = (groupNumber) => {
-        const newData = []
+        const newData = [];
         const numFields = getNumFields();
         for (let i = 0; i < numFields; ++i) {
-            if (i === groupNumber)
-                continue;
+            if (i === groupNumber) continue;
 
             newData.push(value[i]);
         }
 
         handleSimpleUpdate(metadata.key, newData);
-    }
+    };
 
     const generateSingleGroup = (index) => {
         return metadata?.subFields?.map((field) => {
             return (
                 <div key={`${getCompleteSubFieldKey(field.key)}.${index}`}>
-                    <div className="step-field"> 
+                    <div className="step-field">
                         <StepField
                             displayName={field.displayName[selectedLang]}
                             metadata={field}
@@ -122,15 +117,22 @@ const FieldGroup = ({
     };
 
     const generateHeader = (groupNumber, displayName) => {
-        const buttonClass = `button-${isDisabled ? 'disabled' : 'active'}`
+        const buttonClass = `button-${isDisabled ? 'disabled' : 'active'}`;
 
         return (
-            <div className={`group-title-container-base group-title-container-${selectedLang}`}>
-                <img src={XIcon} alt="delete item" className={`xicon-base xicon-${selectedLang} ${buttonClass}`} onClick={() => onRemoveGroup(groupNumber)}/>
+            <div
+                className={`group-title-container-base group-title-container-${selectedLang}`}
+            >
+                <img
+                    src={XIcon}
+                    alt="delete item"
+                    className={`xicon-base xicon-${selectedLang} ${buttonClass}`}
+                    onClick={() => onRemoveGroup(groupNumber)}
+                />
                 <h3 key={displayName}>{displayName}</h3>
             </div>
-        )
-    }
+        );
+    };
 
     const generateAllGroups = () => {
         const numFieldGroups = getNumFields();
