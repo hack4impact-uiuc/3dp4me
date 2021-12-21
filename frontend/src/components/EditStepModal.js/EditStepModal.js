@@ -119,7 +119,7 @@ const EditStepModal = ({
     const onDelete = () => {
         swal({
             title: translations.components.modal.deleteTitle,
-            text: translations.components.modal.deleteConfirmation,
+            text: translations.components.modal.deleteStepConfirmation,
             icon: 'warning',
             buttons: true,
             dangerMode: true,

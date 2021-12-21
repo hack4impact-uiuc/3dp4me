@@ -127,9 +127,8 @@ const EditFieldModal = ({
             choices.push(
                 <div>
                     <span>
-                        {`${translations.components.swal.field.option} ${
-                            i + 1
-                        }`}
+                        {`${translations.components.swal.field.option} ${i + 1
+                            }`}
                     </span>
                     <LanguageInput
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
@@ -305,8 +304,8 @@ const EditFieldModal = ({
 
     const onDelete = () => {
         swal({
-            title: translations.components.modal.deleteTitle,
-            text: translations.components.modal.deleteConfirmation,
+            title: translations.components.modal.delete,
+            text: translations.components.modal.deleteFieldConfirmation,
             icon: 'warning',
             buttons: true,
             dangerMode: true,

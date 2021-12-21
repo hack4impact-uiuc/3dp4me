@@ -10,6 +10,7 @@ import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
 import RadioButtonField from '../Fields/RadioButtonField';
 import TextField from '../Fields/TextField';
 import './ManagePatientModal.scss';
+import swal from 'sweetalert';
 
 const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
     const [translations, selectedLang] = useTranslations();
@@ -51,14 +52,31 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
         },
     ];
 
+    const deletePatient = () => {
+        swal({
+            title: translations.components.modal.deleteTitle,
+            text: translations.components.modal.deletePatientConfirmation,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                alert("deleting");
+                //TODO: 
+                // make request
+                // close modal
+                // go back to dashbaord
+            }
+        });
+    }
+
     return (
         <Modal open={isOpen} onClose={onClose} className="manage-patient-modal">
             <div
-                className={`controller-manage-patient-wrapper ${
-                    selectedLang === LANGUAGES.AR
-                        ? 'controller-manage-patient-wrapper-ar'
-                        : ''
-                }`}
+                className={`controller-manage-patient-wrapper ${selectedLang === LANGUAGES.AR
+                    ? 'controller-manage-patient-wrapper-ar'
+                    : ''
+                    }`}
             >
                 <div className="manage-patient-header">
                     <h2>{translations.components.swal.managePatient.title}</h2>
@@ -148,6 +166,15 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                         {
                             translations.components.swal.managePatient.buttons
                                 .save
+                        }
+                    </Button>
+                    <Button
+                        className="manage-patient-delete-button"
+                        onClick={deletePatient}
+                    >
+                        {
+                            translations.components.swal.managePatient.buttons
+                                .delete
                         }
                     </Button>
                 </div>

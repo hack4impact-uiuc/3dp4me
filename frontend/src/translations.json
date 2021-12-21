@@ -33,8 +33,9 @@
             },
             "modal": {
                 "deleteTitle": "Are you sure?",
-                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
-            },
+                "deleteFieldConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
+                "deleteStepConfirmation":  "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
+                "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."            },
             "signature": {
                 "save": "Save",
                 "clear": "Clear",
@@ -171,7 +172,8 @@
                     "familyName": "Family Name",
                     "successMsg": "Updated Patient",
                     "buttons": {
-                        "save": "Save"
+                        "save": "Save",
+                        "delete": "Delete"
                     },
                     "orderId": "Order Id"
                 },
@@ -275,7 +277,9 @@
             },
             "modal": {
                 "deleteTitle": "Are you sure?",
-                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
+                "deleteFieldConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
+                "deleteStepConfirmation":  "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
+                "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."
             },
             "signature": {
                 "save": "يحفظ",
@@ -413,7 +417,8 @@
                     "familyName": "اسم العائلة",
                     "successMsg": "\u0627\u0644\u0645\u0631\u064a\u0636 \u0627\u0644\u0645\u062d\u062f\u062b",
                     "buttons": {
-                        "save": "\u062d\u0641\u0638"
+                        "save": "\u062d\u0641\u0638",
+                        "delete": "Delete"
                     },
                     "orderId": "رقم التعريف الخاص بالطلب"
                 },
