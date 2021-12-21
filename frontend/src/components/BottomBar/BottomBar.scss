@@ -2,6 +2,13 @@
 @import '../../styles/variables.scss';
 
 .bottom-bar-wrapper {
+    // This calculates the width of the step management container, minus a couple of pixels.
+    // It is used for positioning the add field button when the user is editing and has the language
+    // set to Arabic.
+    .toolbar-editing-div-ar {
+        width: calc(100vw - $drawerWidth - 3 * $verticalMovementWidth - 190px);
+    }
+
     .add-field-retracted-width {
         margin-inline-start: $drawerWidth;
         margin-left: $drawerWidth;
@@ -82,6 +89,18 @@
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
         &:hover {
             background-color: $buttonHighlight;
+        }
+    }
+
+    .discard-button-ar {
+        background-color: white;
+        color: #5f5f5f;
+        font-size: 12px;
+        padding: 6px 24px 6px 24px;
+        transition: all 0.2s;
+        &:hover {
+            color: black;
+            background-color: white;
         }
     }
 

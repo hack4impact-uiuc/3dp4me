@@ -42,9 +42,18 @@
                 }
             }
 
-            .main-button {
+            .main-button,
+            .main-button-ar {
                 padding-left: 10px;
                 min-width: $drawerWidth;
+            }
+
+            .main-button {
+                padding-left: 10px;
+            }
+
+            .main-button-ar {
+                padding-right: 10px;
             }
 
             .order-button {

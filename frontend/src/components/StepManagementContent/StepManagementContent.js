@@ -4,7 +4,7 @@ import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
 
 import RadioButtonField from '../Fields/RadioButtonField';
-import { FIELD_TYPES } from '../../utils/constants';
+import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const StepManagementContent = ({
@@ -99,6 +99,24 @@ const StepManagementContent = ({
         );
     }
 
+    function getFieldClassName(field) {
+        let fieldClassName = field.isHidden
+            ? 'hidden-step-field-container'
+            : 'step-field-container';
+
+        // Handles case when the user has the language set to Arabic
+        if (selectedLang === LANGUAGES.AR) {
+            fieldClassName += ' ';
+            if (isEditing) {
+                fieldClassName += 'expanded-arabic-field-container';
+            } else {
+                fieldClassName += 'retracted-arabic-field-container';
+            }
+        }
+
+        return fieldClassName;
+    }
+
     function generateButtonInfo(fields, fieldRoot) {
         if (!fields) return null;
 
@@ -106,13 +124,7 @@ const StepManagementContent = ({
             if (field.isDeleted) return null; // don't render fields when they are marked as deleted
 
             return (
-                <div
-                    className={
-                        field.isHidden
-                            ? 'hidden-step-field-container'
-                            : 'step-field-container'
-                    }
-                >
+                <div className={getFieldClassName(field)}>
                     <div className="content">
                         <div className="info">
                             <div className="header">

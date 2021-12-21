@@ -4,6 +4,7 @@ import { Button, Drawer, AppBar, Toolbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 
 const useStyles = makeStyles({
@@ -65,8 +66,14 @@ const Sidebar = ({
     };
 
     const getButtonClassname = (stepKey, isHidden) => {
-        if (selectedStep === stepKey) return 'selected';
-        return isHidden ? 'hidden' : 'unselected';
+        let buttonClassNameByLanguage =
+            selectedLang === LANGUAGES.AR ? 'main-button-ar' : 'main-button';
+        if (selectedStep === stepKey) {
+            buttonClassNameByLanguage += ' selected';
+        } else {
+            buttonClassNameByLanguage += isHidden ? ' hidden' : ' unselected';
+        }
+        return buttonClassNameByLanguage;
     };
 
     const generateButtons = () => {
@@ -84,7 +91,7 @@ const Sidebar = ({
             return (
                 <div className="sidebar-button-container">
                     <div
-                        className={`button main-button ${buttonClassName}`}
+                        className={`button ${buttonClassName}`}
                         onClick={() => onButtonClick(element.key)}
                     >
                         {element.displayName[selectedLang]}
