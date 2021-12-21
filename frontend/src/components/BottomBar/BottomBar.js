@@ -168,9 +168,7 @@ const BottomBar = ({
             );
         }
 
-        const divClassName =
-            selectedLang !== LANGUAGES.AR ? 'add-field-div' : 'add-field-div';
-        return <div className={divClassName}>{button}</div>;
+        return <div className="add-field-div">{button}</div>;
     };
 
     // The edit steps and discard button needs to remain in the same location on the screen,
