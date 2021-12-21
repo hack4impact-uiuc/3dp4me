@@ -362,9 +362,30 @@ router.post(
     }),
 );
 
+/**
+ * Deletes all of the patient's data from the database.
+ */
 router.delete(
     '/:id',
     errorWrap(async (req, res) => {
+        const { id } = req.params;
+
+        // Make sure patient exists
+        const patient = await models.Patient.findById(id);
+        if (!patient) return sendResponse(res, 404, `Patient "${id}" not found`);
+
+        // Delete the patient from the Patient Collection
+        models.Patient.deleteOne({ id: ObjectID() })
+
+        //TODO:
+        // Patient Collection
+        // Steps Collection
+        // AWS
+
+
+
+        // Delete the patient from each Step's Collectiom
+
 
     }),
 );
