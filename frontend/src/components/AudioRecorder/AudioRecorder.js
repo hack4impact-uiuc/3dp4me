@@ -256,10 +256,10 @@ class AudioRecorder extends React.Component {
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                this.props.handleDelete(fieldKey, file)
+                this.props.handleDelete(fieldKey, file);
             }
         });
-    }
+    };
 
     getDeleteFileButton = (file) => {
         if (this.props.isDisabled) return null;
@@ -268,9 +268,7 @@ class AudioRecorder extends React.Component {
             <button
                 className="file-close-button"
                 type="button"
-                onClick={() =>
-                    this.onDeleteFile(this.props.fieldKey, file)
-                }
+                onClick={() => this.onDeleteFile(this.props.fieldKey, file)}
             >
                 <CloseIcon />
             </button>

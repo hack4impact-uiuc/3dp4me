@@ -4,12 +4,13 @@ import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { trackPromise } from 'react-promise-tracker';
+
 import {
     getAllStepsMetadata,
     getPatientById,
     updatePatient,
     updateStage,
-    deletePatientById
+    deletePatientById,
 } from '../../api/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
@@ -108,7 +109,7 @@ const PatientDetail = () => {
         await trackPromise(deletePatientById(patientId));
         // Go back to the home page
         window.location.href = '/';
-    }
+    };
 
     /**
      * Gets the current patient model data. (Removes all of the step data)
@@ -207,10 +208,11 @@ const PatientDetail = () => {
                 />
 
                 <div
-                    className={`controller-content ${selectedLang === LANGUAGES.AR
-                        ? 'controller-content-ar'
-                        : ''
-                        }`}
+                    className={`controller-content ${
+                        selectedLang === LANGUAGES.AR
+                            ? 'controller-content-ar'
+                            : ''
+                    }`}
                 >
                     <ToggleButtons
                         step={selectedStep}

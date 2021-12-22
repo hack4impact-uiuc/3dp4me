@@ -20,7 +20,7 @@ const Files = ({
 }) => {
     const translations = useTranslations()[0];
 
-    const onDeleteFile = (fieldKey, file) => {
+    const onDeleteFile = (file) => {
         swal({
             title: translations.components.file.deleteTitle,
             text: translations.components.file.deleteWarning,
@@ -32,7 +32,7 @@ const Files = ({
                 handleDelete(fieldKey, file);
             }
         });
-    }
+    };
 
     const getDeleteFileButton = (file) => {
         if (isDisabled) return null;
@@ -41,7 +41,7 @@ const Files = ({
                 className="file-close-button"
                 type="button"
                 onClick={() => {
-                    onDeleteFile(fieldKey, file);
+                    onDeleteFile(file);
                 }}
             >
                 <CloseIcon />

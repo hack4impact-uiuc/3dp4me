@@ -3,6 +3,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import swal from 'sweetalert';
 
 import { useTranslations } from '../../hooks/useTranslations';
 import language from '../../translations.json';
@@ -10,9 +11,14 @@ import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
 import RadioButtonField from '../Fields/RadioButtonField';
 import TextField from '../Fields/TextField';
 import './ManagePatientModal.scss';
-import swal from 'sweetalert';
 
-const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave, onDeleted }) => {
+const ManagePatientModal = ({
+    patientData,
+    isOpen,
+    onClose,
+    onDataSave,
+    onDeleted,
+}) => {
     const [translations, selectedLang] = useTranslations();
     const [updatedPatientData, setUpdatedPatientData] = useState(
         _.cloneDeep(patientData),
@@ -65,15 +71,16 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave, onDelete
                 onDeleted();
             }
         });
-    }
+    };
 
     return (
         <Modal open={isOpen} onClose={onClose} className="manage-patient-modal">
             <div
-                className={`controller-manage-patient-wrapper ${selectedLang === LANGUAGES.AR
-                    ? 'controller-manage-patient-wrapper-ar'
-                    : ''
-                    }`}
+                className={`controller-manage-patient-wrapper ${
+                    selectedLang === LANGUAGES.AR
+                        ? 'controller-manage-patient-wrapper-ar'
+                        : ''
+                }`}
             >
                 <div className="manage-patient-header">
                     <h2>{translations.components.swal.managePatient.title}</h2>

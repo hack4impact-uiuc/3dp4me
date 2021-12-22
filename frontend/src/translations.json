@@ -34,8 +34,9 @@
             "modal": {
                 "deleteTitle": "Are you sure?",
                 "deleteFieldConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
-                "deleteStepConfirmation":  "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
-                "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."            },
+                "deleteStepConfirmation": "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
+                "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."
+            },
             "signature": {
                 "save": "Save",
                 "clear": "Clear",
@@ -282,7 +283,7 @@
             "modal": {
                 "deleteTitle": "Are you sure?",
                 "deleteFieldConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
-                "deleteStepConfirmation":  "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
+                "deleteStepConfirmation": "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
                 "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."
             },
             "signature": {
@@ -396,7 +397,7 @@
                 "close": "أغلق",
                 "discard": "تجاهل",
                 "deleteTitle": "Are you sure?",
-                "deleteWarning": "Once deleted, this audio recording will be lost forever. This is unchangeable!" 
+                "deleteWarning": "Once deleted, this audio recording will be lost forever. This is unchangeable!"
             },
             "swal": {
                 "dataDiscarding": {

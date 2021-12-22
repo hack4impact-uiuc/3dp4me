@@ -41,7 +41,8 @@
         .manage-patient-footer {
             display: flex;
             justify-content: space-between;
-            .manage-patient-save-button, .manage-patient-delete-button {
+            .manage-patient-save-button,
+            .manage-patient-delete-button {
                 color: white;
                 padding: 0 24px 0 24px;
                 height: 38px;

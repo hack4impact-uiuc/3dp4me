@@ -6,7 +6,9 @@ const _ = require('lodash');
 
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
-const { uploadFile, downloadFile, deleteFile, deleteFolder } = require('../../utils/aws/awsS3Helpers');
+const {
+    uploadFile, downloadFile, deleteFile, deleteFolder,
+} = require('../../utils/aws/awsS3Helpers');
 const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
@@ -401,6 +403,7 @@ router.delete(
                 // eslint-disable-next-line no-await-in-loop
                 await Model.findOneAndDelete({ patientId: id });
             } catch (error) {
+                // eslint-disable-next-line no-console
                 console.error(`DELETE /patients/:id - step ${stepKey} not found`);
             }
         }
