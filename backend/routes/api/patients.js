@@ -6,7 +6,7 @@ const _ = require('lodash');
 
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
-const { uploadFile, downloadFile } = require('../../utils/aws/awsS3Helpers');
+const { uploadFile, downloadFile, deleteFolder } = require('../../utils/aws/awsS3Helpers');
 const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
@@ -370,23 +370,37 @@ router.delete(
     errorWrap(async (req, res) => {
         const { id } = req.params;
 
-        // Make sure patient exists
+        // Makes sure patient exists
         const patient = await models.Patient.findById(id);
         if (!patient) return sendResponse(res, 404, `Patient "${id}" not found`);
 
-        // Delete the patient from the Patient Collection
-        models.Patient.deleteOne({ id: ObjectID() })
+        // Deletes the patient from the Patient Collection
+        await models.Patient.findOneAndDelete({ _id: mongoose.Types.ObjectId(id) });
 
-        //TODO:
-        // Patient Collection
-        // Steps Collection
-        // AWS
+        const allStepKeys = await models.Step.find({}, 'key');
 
+        // Deletes the patient from each Steps's Collection
+        for (let keyIdx = 0; keyIdx < allStepKeys.length; keyIdx++) {
+            let Model;
+            const stepKey = allStepKeys[keyIdx].key;
+            try {
+                Model = mongoose.model(stepKey);
+                // eslint-disable-next-line no-await-in-loop
+                await Model.findOneAndDelete({ patientId: id });
+            } catch (error) {
+                console.error(`DELETE /patients/:id - step ${stepKey} not found`);
+            }
+        }
 
+        const awsCredentials = {
+            accessKeyId: ACCESS_KEY_ID,
+            secretAccessKey: SECRET_ACCESS_KEY,
+        };
 
-        // Delete the patient from each Step's Collectiom
+        // Deletes the patient's files from the AWS S3 bucket
+        await deleteFolder(id, awsCredentials);
 
-
+        return sendResponse(res, 200, 'Deleted patient');
     }),
 );
 

@@ -12,7 +12,7 @@ import TextField from '../Fields/TextField';
 import './ManagePatientModal.scss';
 import swal from 'sweetalert';
 
-const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
+const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave, onDeleted }) => {
     const [translations, selectedLang] = useTranslations();
     const [updatedPatientData, setUpdatedPatientData] = useState(
         _.cloneDeep(patientData),
@@ -59,13 +59,9 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then((willDelete) => {
+        }).then(async (willDelete) => {
             if (willDelete) {
-                alert("deleting");
-                //TODO: 
-                // make request
-                // close modal
-                // go back to dashbaord
+                onDeleted();
             }
         });
     }
@@ -188,6 +184,7 @@ ManagePatientModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onDataSave: PropTypes.func.isRequired,
+    onDeleted: PropTypes.func.isRequired,
 };
 
 export default ManagePatientModal;
