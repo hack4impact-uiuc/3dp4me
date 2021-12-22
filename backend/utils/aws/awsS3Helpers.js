@@ -39,6 +39,16 @@ const downloadFile = (objectKey, credentials) => {
     return object;
 };
 
+const deleteFile = async (filePath, credentials) => {
+    const params = {
+        Bucket: S3_BUCKET_NAME,
+        Key: filePath,
+    };
+
+    const s3 = getS3(credentials);
+    await s3.deleteObject(params).promise();
+};
+
 /**
  * Delete's all of the files in a folder
  * @param {String} folderName The id of the patient
@@ -88,3 +98,4 @@ function getS3(credentials) {
 exports.uploadFile = uploadFile;
 exports.downloadFile = downloadFile;
 exports.deleteFolder = deleteFolder;
+exports.deleteFile = deleteFile;

@@ -6,7 +6,7 @@ const _ = require('lodash');
 
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
-const { uploadFile, downloadFile, deleteFolder } = require('../../utils/aws/awsS3Helpers');
+const { uploadFile, downloadFile, deleteFile, deleteFolder } = require('../../utils/aws/awsS3Helpers');
 const {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
@@ -223,8 +223,6 @@ router.delete(
             return sendResponse(res, 404, `File "${fileName}" does not exist`);
         }
 
-        // TODO: Remove this file from AWS as well once we have
-        // a "do you want to remove this" on the frontend
         // Remove the file from Mongo tracking
         stepData[fieldKey].splice(index, 1);
 
@@ -237,6 +235,15 @@ router.delete(
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
         await patient.save();
+
+        // Remove this file from AWS as well
+        await deleteFile(
+            `${id}/${stepKey}/${fieldKey}/${fileName}`,
+            {
+                accessKeyId: ACCESS_KEY_ID,
+                secretAccessKey: SECRET_ACCESS_KEY,
+            },
+        );
 
         return sendResponse(res, 200, 'File deleted');
     }),

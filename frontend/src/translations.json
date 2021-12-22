@@ -135,7 +135,9 @@
                 "title": "Notes"
             },
             "file": {
-                "addAnother": "Add Another"
+                "addAnother": "Add Another",
+                "deleteTitle": "Are you sure?",
+                "deleteWarning": "Once deleted, this file will be lost forever. This is unchangeable!"
             },
             "audio": {
                 "start": "Start Recording",
@@ -143,7 +145,9 @@
                 "addAnother": "Add Another",
                 "save": "Save",
                 "close": "Close",
-                "discard": "Discard"
+                "discard": "Discard",
+                "deleteTitle": "Are you sure?",
+                "deleteWarning": "Once deleted, this audio recording will be lost forever. This is unchangeable!"
             },
             "swal": {
                 "dataDiscarding": {
@@ -380,7 +384,9 @@
                 "title": "\u0645\u0644\u0627\u062d\u0638\u0627\u062a"
             },
             "file": {
-                "addAnother": "\u0623\u0636\u0641 \u0622\u062e\u0631"
+                "addAnother": "\u0623\u0636\u0641 \u0622\u062e\u0631",
+                "deleteTitle": "Are you sure?",
+                "deleteWarning": "Once deleted, this file will be lost forever. This is unchangeable!"
             },
             "audio": {
                 "addAnother": "إضافة التسجيل",
@@ -388,7 +394,9 @@
                 "stop": "قف",
                 "save": "حفظ",
                 "close": "أغلق",
-                "discard": "تجاهل"
+                "discard": "تجاهل",
+                "deleteTitle": "Are you sure?",
+                "deleteWarning": "Once deleted, this audio recording will be lost forever. This is unchangeable!" 
             },
             "swal": {
                 "dataDiscarding": {
