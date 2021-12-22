@@ -104,6 +104,7 @@ const PatientDetail = () => {
     };
 
     const onPatientDeleted = async () => {
+        setEdit(false);
         await trackPromise(deletePatientById(patientId));
         // Go back to the home page
         window.location.href = '/';

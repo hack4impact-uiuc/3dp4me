@@ -61,6 +61,7 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave, onDelete
             dangerMode: true,
         }).then(async (willDelete) => {
             if (willDelete) {
+                onClose();
                 onDeleted();
             }
         });
