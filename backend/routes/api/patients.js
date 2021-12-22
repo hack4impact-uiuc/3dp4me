@@ -378,7 +378,13 @@ router.delete(
         const { id } = req.params;
 
         // Makes sure patient exists
-        const patient = await models.Patient.findById(id);
+        let patient;
+        try {
+            patient = await models.Patient.findById(id);
+        } catch {
+            return sendResponse(res, 404, `${id} is not a valid patient id`);
+        }
+
         if (!patient) return sendResponse(res, 404, `Patient "${id}" not found`);
 
         // Deletes the patient from the Patient Collection
