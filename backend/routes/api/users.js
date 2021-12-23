@@ -9,7 +9,6 @@ const {
 const {
     getUserRoles,
     getIdentityProvider,
-    getUserByAccessToken,
 } = require('../../utils/aws/awsUsers');
 const { sendResponse } = require('../../utils/response');
 const {
