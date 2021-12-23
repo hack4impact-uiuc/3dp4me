@@ -20,11 +20,17 @@ import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
-import { removeUserRole, setUserAccess, addUserRole } from '../../api/api';
+import {
+    removeUserRole,
+    setUserAccess,
+    addUserRole,
+    deleteUser,
+} from '../../api/api';
 
 const EditRoleModal = ({
     isOpen,
     onUserEdited,
+    onUserDeleted,
     onClose,
     userInfo,
     allRoles,
@@ -76,6 +82,13 @@ const EditRoleModal = ({
         // Close modal and update local data
         onClose();
         onUserEdited(userData.userId, userData.accessLevel, userData.roles);
+    };
+
+    // TODO: Can any user be deleted or do I need to check
+    const onDelete = async () => {
+        await errorWrap(async () => trackPromise(deleteUser(userData?.userId)));
+        onClose();
+        onUserDeleted(userData.userId);
     };
 
     const renderAccessDropdown = () => {
@@ -131,7 +144,7 @@ const EditRoleModal = ({
                     {renderAccessDropdown()}
                 </FormControl>
                 <div>
-                    <Button className="delete-user-button" onClick={() => {}}>
+                    <Button className="delete-user-button" onClick={onDelete}>
                         {translations.accountManagement.deleteUser}
                     </Button>
                 </div>
@@ -152,6 +165,7 @@ EditRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onUserEdited: PropTypes.func.isRequired,
+    onUserDeleted: PropTypes.func.isRequired,
     allRoles: PropTypes.arrayOf(
         PropTypes.shape({
             _id: PropTypes.string,

@@ -205,6 +205,16 @@ const AccountManagement = () => {
         });
     };
 
+    const onUserDeleted = (username) => {
+        setUserMetaData((metaData) => {
+            const users = _.cloneDeep(metaData);
+            const updatedUsers = users.filter(
+                (user) => user.Username !== username,
+            );
+            return updatedUsers;
+        });
+    };
+
     /**
      * Called when a role's data is deleted
      */
@@ -297,6 +307,7 @@ const AccountManagement = () => {
                 allRoles={memoizedMultiSelectRoles}
                 onClose={() => setSelectedUser(null)}
                 onUserEdited={onUserEdited}
+                onUserDeleted={onUserDeleted}
             />
         );
     };
