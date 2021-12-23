@@ -84,7 +84,6 @@ const EditRoleModal = ({
         onUserEdited(userData.userId, userData.accessLevel, userData.roles);
     };
 
-    // TODO: Can any user be deleted or do I need to check
     const onDelete = async () => {
         await errorWrap(async () => trackPromise(deleteUser(userData?.userId)));
         onClose();

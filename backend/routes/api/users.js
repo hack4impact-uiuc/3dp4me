@@ -170,13 +170,13 @@ router.delete(
     errorWrap(async (req, res) => {
         const { username } = req.params;
 
-        // Create the params for the update
+        // Create the params for the deletion
         const params = {
             Username: username,
             UserPoolId: USER_POOL_ID,
         };
 
-        // Do the update
+        // Do the deletion
         const identityProvider = getIdentityProvider();
         await identityProvider.adminDeleteUser(params).promise();
         await sendResponse(res, 200, 'Access updated');
