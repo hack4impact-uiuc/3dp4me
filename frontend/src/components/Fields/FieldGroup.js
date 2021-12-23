@@ -10,6 +10,7 @@ import { useTranslations } from '../../hooks/useTranslations';
 import StepField from '../StepField/StepField';
 import './Fields.scss';
 
+
 const FieldGroup = ({
     isDisabled,
     handleSimpleUpdate,
@@ -125,7 +126,7 @@ const FieldGroup = ({
             >
                 <img
                     src={XIcon}
-                    alt="delete item"
+                    alt={translations.components.button.discard}
                     className={`xicon-base xicon-${selectedLang} ${buttonClass}`}
                     onClick={() => onRemoveGroup(groupNumber)}
                 />
