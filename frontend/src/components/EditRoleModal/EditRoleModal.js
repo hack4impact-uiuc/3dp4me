@@ -131,6 +131,11 @@ const EditRoleModal = ({
                     {renderAccessDropdown()}
                 </FormControl>
                 <div>
+                    <Button className="delete-user-button" onClick={() => {}}>
+                        {translations.accountManagement.deleteUser}
+                    </Button>
+                </div>
+                <div>
                     <Button className="save-user-button" onClick={onSave}>
                         {translations.accountManagement.Save}
                     </Button>

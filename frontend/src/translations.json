@@ -225,7 +225,8 @@
             "Revoked": "Revoked",
             "Pending": "Pending",
             "Save": "Save",
-            "Discard": "Discard"
+            "Discard": "Discard",
+            "deleteUser": "Delete User"
         },
         "roleManagement": {
             "roleDatabase": "Role Database",
@@ -467,7 +468,8 @@
             "Save": "يحفظ",
             "Discard": "ينبذ",
             "username": "اسم المستخدم",
-            "email": "بريد إلكتروني"
+            "email": "بريد إلكتروني",
+            "deleteUser": "مسح المستخدم"
         },
         "roleManagement": {
             "roleDatabase": "قاعدة بيانات الدور",
