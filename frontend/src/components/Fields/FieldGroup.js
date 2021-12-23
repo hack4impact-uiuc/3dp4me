@@ -74,8 +74,8 @@ const FieldGroup = ({
     };
 
     const doRemoveGroup = (groupNumber) => {
-        const newData = _.cloneDeep(value)
-        newData.splice(groupNumber, 1)
+        const newData = _.cloneDeep(value);
+        newData.splice(groupNumber, 1);
         handleSimpleUpdate(metadata.key, newData);
     };
 
