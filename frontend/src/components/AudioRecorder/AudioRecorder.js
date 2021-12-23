@@ -102,7 +102,7 @@ class AudioRecorder extends React.Component {
                             onClick={this.discardRecording}
                             className="btn-discard-recording"
                         >
-                            {this.state.lang.components.audio.discard}
+                            {this.state.lang.components.audio.close}
                         </Button>
                     </div>
                 </>
