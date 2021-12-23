@@ -1,7 +1,6 @@
 const express = require('express');
 const twofactor = require('node-2fa');
 const passport = require('passport');
-require('express-session');
 
 const accountSid = process.env.ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -23,6 +22,9 @@ require('../../middleware/patientAuthentication');
 
 // Path is now /patient-2fa/authenticated
 router.post('/authenticated', passport.authenticate('passport-local'), async (req, res) => {
+    req.session.patientId = 'i am sad bc of this pr';
+    console.log(req.session);
+    req.session.save();
     await sendResponse(
         res,
         200,
@@ -30,8 +32,9 @@ router.post('/authenticated', passport.authenticate('passport-local'), async (re
     );
 });
 
-router.get('/isAuth', passport.authenticate('passport-local'), async (req, res) => {
-    if (req.user) {
+router.get('/isAuth', async (req, res) => {
+    console.log(req.session);
+    if (req.session) {
         await sendResponse(
             res,
             200,
@@ -113,6 +116,8 @@ router.post(
             isAuthenticated = twofactor.verifyToken(patientSecret, token, TWO_FACTOR_WINDOW_MINS);
         }
 
+        console.log(res);
+
         if (isAuthenticated) {
             await sendResponse(
                 res,
@@ -130,17 +135,5 @@ router.post(
         }
     }),
 );
-
-// router.set('trust proxy', 1); // trust first proxy
-/* router.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
-})); */
-
-// router.use(express.session({ secret: 'keyboard cat' })); // TODO // set secret to patient secret
-
-// router.use(passport.session());
 
 module.exports = router;

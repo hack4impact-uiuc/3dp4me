@@ -40,6 +40,7 @@ const Patient2FALogin = () => {
 
     const checkIsAuthenticated = async() => {
         const res = await authenticatePatient(patientId, token);
+        
         if (res.success) {
             window.location = `${ window.location.protocol }//${ window.location.hostname }:3000${ ROUTES.PATIENT_PORTAL }/${patientId}`;
         }
