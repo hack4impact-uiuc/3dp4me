@@ -9,6 +9,7 @@ const {
 const {
     getUserRoles,
     getIdentityProvider,
+    getUserByAccessToken,
 } = require('../../utils/aws/awsUsers');
 const { sendResponse } = require('../../utils/response');
 const {
@@ -116,8 +117,9 @@ router.delete(
         // Check if user has this role
         const userRoles = await getUserRoles(username);
         const roleIndex = userRoles.indexOf(roleId);
-        if (roleIndex === -1)
+        if (roleIndex === -1) {
             return sendResponse(res, 400, 'User does not have role');
+        }
 
         // Create params for the update in AWS
         userRoles.splice(roleIndex, 1);
@@ -171,14 +173,13 @@ router.delete(
 
         // Create the params for the update
         const params = {
-            UserAttributeNames: [SECURITY_ACCESS_ATTRIBUTE_NAME],
             Username: username,
             UserPoolId: USER_POOL_ID,
         };
 
         // Do the update
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminDeleteUserAttributes(params).promise();
+        await identityProvider.adminDeleteUser(params).promise();
         await sendResponse(res, 200, 'Access updated');
     }),
 );
