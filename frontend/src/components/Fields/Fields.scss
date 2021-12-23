@@ -1,6 +1,41 @@
 @import '../../styles/colors.scss';
 @import '../../styles/variables.scss';
 
+.xicon-base {
+    width: 20px;
+    height: 20px;
+    align-self: flex-end;
+}
+
+.button-disabled {
+    opacity: 0.5;
+}
+
+.button-active:hover {
+    opacity: 0.5;
+}
+
+.xicon-EN {
+    margin-right: 10px;
+}
+
+.xicon-AR {
+    margin-left: 10px;
+}
+
+.group-title-container-base {
+    display: flex;
+    margin-left: -30px;
+}
+
+.group-title-container-AR {
+    margin-left: -30px;
+}
+
+.group-title-container-EN {
+    margin-right: -30px;
+}
+
 .datepicker {
     padding: 18.5px 14px;
     font-size: 1em;
