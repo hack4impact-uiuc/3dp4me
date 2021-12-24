@@ -33,7 +33,8 @@
             },
             "modal": {
                 "deleteTitle": "Are you sure?",
-                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
+                "deleteUserConfirmation": "Once deleted, you will not be able to see this user, and the user will not have access to the site."
             },
             "signature": {
                 "save": "Save",
@@ -276,7 +277,8 @@
             },
             "modal": {
                 "deleteTitle": "Are you sure?",
-                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database."
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
+                "deleteUserConfirmation": "بمجرد الحذف ، لن تتمكن من رؤية هذا المستخدم ولن يتمكن المستخدم من الوصول إلى الموقع."
             },
             "signature": {
                 "save": "يحفظ",

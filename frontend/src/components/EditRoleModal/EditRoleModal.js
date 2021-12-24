@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { trackPromise } from 'react-promise-tracker';
+import swal from 'sweetalert';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import TextField from '../Fields/TextField';
@@ -85,9 +86,21 @@ const EditRoleModal = ({
     };
 
     const onDelete = async () => {
-        await errorWrap(async () => trackPromise(deleteUser(userData?.userId)));
-        onClose();
-        onUserDeleted(userData.userId);
+        swal({
+            title: translations.components.modal.deleteTitle,
+            text: translations.components.modal.deleteUserConfirmation,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willDelete) => {
+            if (willDelete) {
+                await errorWrap(async () =>
+                    trackPromise(deleteUser(userData?.userId)),
+                );
+                onClose();
+                onUserDeleted(userData.userId);
+            }
+        });
     };
 
     const renderAccessDropdown = () => {
