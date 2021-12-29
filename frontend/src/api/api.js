@@ -71,6 +71,15 @@ export const updatePatient = async (patientId, updatedData) => {
     return res.data;
 };
 
+export const deletePatientById = async (patientId) => {
+    const requestString = `/patients/${patientId}`;
+    const res = await instance.delete(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
 export const getAllStepsMetadata = async (showHiddenFieldsAndSteps = false) => {
     const requestString = `/metadata/steps?showHiddenFields=${showHiddenFieldsAndSteps}&showHiddenSteps=${showHiddenFieldsAndSteps}`;
 

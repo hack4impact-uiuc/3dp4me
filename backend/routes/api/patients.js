@@ -6,11 +6,9 @@ const _ = require('lodash');
 
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
-const { uploadFile, downloadFile } = require('../../utils/aws/awsS3Helpers');
 const {
-    ACCESS_KEY_ID,
-    SECRET_ACCESS_KEY,
-} = require('../../utils/aws/awsExports');
+    uploadFile, downloadFile, deleteFile, deleteFolder,
+} = require('../../utils/aws/awsS3Helpers');
 const { removeRequestAttributes } = require('../../middleware/requests');
 const {
     STEP_IMMUTABLE_ATTRIBUTES,
@@ -162,10 +160,6 @@ router.get(
         // Open a stream from the S3 bucket
         const s3Stream = downloadFile(
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
-            {
-                accessKeyId: ACCESS_KEY_ID,
-                secretAccessKey: SECRET_ACCESS_KEY,
-            },
         ).createReadStream();
 
         // Setup callbacks for stream error and stream close
@@ -223,8 +217,6 @@ router.delete(
             return sendResponse(res, 404, `File "${fileName}" does not exist`);
         }
 
-        // TODO: Remove this file from AWS as well once we have
-        // a "do you want to remove this" on the frontend
         // Remove the file from Mongo tracking
         stepData[fieldKey].splice(index, 1);
 
@@ -237,6 +229,11 @@ router.delete(
         patient.lastEdited = Date.now();
         patient.lastEditedBy = req.user.name;
         await patient.save();
+
+        // Remove this file from AWS as well
+        await deleteFile(
+            `${id}/${stepKey}/${fieldKey}/${fileName}`,
+        );
 
         return sendResponse(res, 200, 'File deleted');
     }),
@@ -283,10 +280,6 @@ router.post(
         await uploadFile(
             file.data,
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
-            {
-                accessKeyId: ACCESS_KEY_ID,
-                secretAccessKey: SECRET_ACCESS_KEY,
-            },
         );
 
         // Record this file in the DB
@@ -359,6 +352,55 @@ router.post(
         await patient.save();
 
         return sendResponse(res, 200, 'Step updated', patientStepData);
+    }),
+);
+
+/**
+ * Deletes all of the patient's data from the database.
+ */
+router.delete(
+    '/:id',
+    errorWrap(async (req, res) => {
+        const { id } = req.params;
+
+        // Makes sure patient exists
+        let patient;
+        try {
+            patient = await models.Patient.findById(id);
+        } catch {
+            return sendResponse(res, 404, `${id} is not a valid patient id`);
+        }
+
+        if (!patient) return sendResponse(res, 404, `Patient "${id}" not found`);
+
+        // Deletes the patient from the Patient Collection
+        await models.Patient.findOneAndDelete({ _id: mongoose.Types.ObjectId(id) });
+
+        const allStepKeys = await models.Step.find({}, 'key');
+
+        // Create array of promises to speed this up a bit
+        const lookups = allStepKeys.map(async (stepKeyData) => {
+            let Model;
+            const stepKey = stepKeyData.key;
+            try {
+                Model = mongoose.model(stepKey);
+                // eslint-disable-next-line no-await-in-loop
+                await Model.findOneAndDelete({ patientId: id });
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error(`DELETE /patients/:id - step ${stepKey} not found`);
+                return false;
+            }
+            return true;
+        });
+
+        // Deletes the patient from each Steps's Collection
+        await Promise.all(lookups);
+
+        // Deletes the patient's files from the AWS S3 bucket
+        await deleteFolder(id);
+
+        return sendResponse(res, 200, 'Deleted patient');
     }),
 );
 

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import swal from 'sweetalert';
 
 import { useTranslations } from '../../hooks/useTranslations';
 import { formatDate } from '../../utils/date';
@@ -20,6 +21,20 @@ const Files = ({
 }) => {
     const [translations, selectedLang] = useTranslations();
 
+    const onDeleteFile = (file) => {
+        swal({
+            title: translations.components.file.deleteTitle,
+            text: translations.components.file.deleteWarning,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                handleDelete(fieldKey, file);
+            }
+        });
+    };
+
     const getDeleteFileButton = (file) => {
         if (isDisabled) return null;
         return (
@@ -27,7 +42,7 @@ const Files = ({
                 className="file-close-button"
                 type="button"
                 onClick={() => {
-                    handleDelete(fieldKey, file);
+                    onDeleteFile(file);
                 }}
             >
                 <CloseIcon />

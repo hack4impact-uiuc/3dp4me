@@ -10,6 +10,7 @@ import {
     getPatientById,
     updatePatient,
     updateStage,
+    deletePatientById,
 } from '../../api/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
@@ -103,6 +104,27 @@ const PatientDetail = () => {
         setManagePatientModalOpen(false);
     };
 
+    const onPatientDeleted = async () => {
+        errorWrap(
+            async () => {
+                setEdit(false);
+                await trackPromise(deletePatientById(patientId));
+            },
+            () => {
+                // Success - Go back to the home page
+                window.location.href = '/';
+            },
+            () => {
+                // Error while deleting patient
+                swal(
+                    translations.components.swal.patientDetail.errorTitle,
+                    translations.components.swal.patientDetail.errorMessage,
+                    'error',
+                );
+            },
+        );
+    };
+
     /**
      * Gets the current patient model data. (Removes all of the step data)
      */
@@ -190,6 +212,7 @@ const PatientDetail = () => {
                     patientData={getCurrentPatientModelData()}
                     isOpen={isManagePatientModalOpen}
                     onClose={() => setManagePatientModalOpen(false)}
+                    onDeleted={onPatientDeleted}
                 />
 
                 <PatientDetailSidebar

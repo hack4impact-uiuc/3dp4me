@@ -18,6 +18,7 @@ import {
     PERMISSION_CONSTRAINTS,
     PERMISSION_STATUS_DENIED,
 } from '../../utils/constants';
+import swal from 'sweetalert';
 /*
  * For whatever reason, this component cannot be written functionally.
  * The MicRecorder object just doesn't work otherwise.
@@ -254,16 +255,28 @@ class AudioRecorder extends React.Component {
         });
     };
 
-    getDeleteFileButton = () => {
+    onDeleteFile = (fieldKey, file) => {
+        swal({
+            title: this.state.lang.components.audio.deleteTitle,
+            text: this.state.lang.components.audio.deleteWarning,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                this.props.handleDelete(fieldKey, file);
+            }
+        });
+    };
+
+    getDeleteFileButton = (file) => {
         if (this.props.isDisabled) return null;
 
         return (
             <button
                 className="file-close-button"
                 type="button"
-                onClick={() =>
-                    this.props.handleDelete(this.props.fieldKey, file)
-                }
+                onClick={() => this.onDeleteFile(this.props.fieldKey, file)}
             >
                 <CloseIcon />
             </button>
@@ -293,7 +306,7 @@ class AudioRecorder extends React.Component {
                         </div>
                     </div>
                 </Button>
-                {this.getDeleteFileButton()}
+                {this.getDeleteFileButton(file)}
             </div>
         ));
     };
