@@ -305,8 +305,8 @@ const EditFieldModal = ({
 
     const onDelete = () => {
         swal({
-            title: translations.components.modal.deleteTitle,
-            text: translations.components.modal.deleteConfirmation,
+            title: translations.components.modal.delete,
+            text: translations.components.modal.deleteFieldConfirmation,
             icon: 'warning',
             buttons: true,
             dangerMode: true,

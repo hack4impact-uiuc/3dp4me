@@ -34,7 +34,10 @@
             "modal": {
                 "deleteTitle": "Are you sure?",
                 "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
-                "deleteUserConfirmation": "Once deleted, you will not be able to see this user, and the user will not have access to the site."
+                "deleteUserConfirmation": "Once deleted, you will not be able to see this user, and the user will not have access to the site.",
+                "deleteFieldConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
+                "deleteStepConfirmation": "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
+                "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."
             },
             "signature": {
                 "save": "Save",
@@ -135,7 +138,9 @@
                 "title": "Notes"
             },
             "file": {
-                "addAnother": "Add Another"
+                "addAnother": "Add Another",
+                "deleteTitle": "Are you sure?",
+                "deleteWarning": "Once deleted, this file will be lost forever. This is unchangeable!"
             },
             "audio": {
                 "start": "Start Recording",
@@ -143,9 +148,15 @@
                 "addAnother": "Add Another",
                 "save": "Save",
                 "close": "Close",
-                "discard": "Discard"
+                "discard": "Discard",
+                "deleteTitle": "Are you sure?",
+                "deleteWarning": "Once deleted, this audio recording will be lost forever. This is unchangeable!"
             },
             "swal": {
+                "patientDetail": {
+                    "errorTitle": "Error!",
+                    "errorMessage": "Please try deleting the patient again."
+                },
                 "dataDiscarding": {
                     "stay": "Stay",
                     "leave": "Leave",
@@ -172,7 +183,8 @@
                     "familyName": "Family Name",
                     "successMsg": "Updated Patient",
                     "buttons": {
-                        "save": "Save"
+                        "save": "Save",
+                        "delete": "Delete"
                     },
                     "orderId": "Order Id"
                 },
@@ -278,7 +290,10 @@
             "modal": {
                 "deleteTitle": "Are you sure?",
                 "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
-                "deleteUserConfirmation": "بمجرد الحذف ، لن تتمكن من رؤية هذا المستخدم ولن يتمكن المستخدم من الوصول إلى الموقع."
+                "deleteUserConfirmation": "بمجرد الحذف ، لن تتمكن من رؤية هذا المستخدم ولن يتمكن المستخدم من الوصول إلى الموقع.",
+                "deleteFieldConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
+                "deleteStepConfirmation": "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
+                "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."
             },
             "signature": {
                 "save": "يحفظ",
@@ -379,7 +394,9 @@
                 "title": "\u0645\u0644\u0627\u062d\u0638\u0627\u062a"
             },
             "file": {
-                "addAnother": "\u0623\u0636\u0641 \u0622\u062e\u0631"
+                "addAnother": "\u0623\u0636\u0641 \u0622\u062e\u0631",
+                "deleteTitle": "Are you sure?",
+                "deleteWarning": "Once deleted, this file will be lost forever. This is unchangeable!"
             },
             "audio": {
                 "addAnother": "إضافة التسجيل",
@@ -387,9 +404,15 @@
                 "stop": "قف",
                 "save": "حفظ",
                 "close": "أغلق",
-                "discard": "تجاهل"
+                "discard": "تجاهل",
+                "deleteTitle": "Are you sure?",
+                "deleteWarning": "Once deleted, this audio recording will be lost forever. This is unchangeable!"
             },
             "swal": {
+                "patientDetail": {
+                    "errorTitle": "Error!",
+                    "errorMessage": "Please try deleting the patient again."
+                },
                 "dataDiscarding": {
                     "stay": "البقاء",
                     "leave": "يترك",
@@ -416,7 +439,8 @@
                     "familyName": "اسم العائلة",
                     "successMsg": "\u0627\u0644\u0645\u0631\u064a\u0636 \u0627\u0644\u0645\u062d\u062f\u062b",
                     "buttons": {
-                        "save": "\u062d\u0641\u0638"
+                        "save": "\u062d\u0641\u0638",
+                        "delete": "Delete"
                     },
                     "orderId": "رقم التعريف الخاص بالطلب"
                 },

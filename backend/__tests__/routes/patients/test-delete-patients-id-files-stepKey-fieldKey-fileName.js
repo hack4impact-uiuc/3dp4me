@@ -10,6 +10,7 @@ const {
     setCurrentUser,
     withAuthentication,
     getCurrentAuthenticatedUserAttribute,
+    initS3DeleteObjectMocker,
 } = require('../../utils/auth');
 
 describe('DELETE /patients/:id/files/:stepKey/:fieldKey/:fileName #214', () => {
@@ -23,6 +24,7 @@ describe('DELETE /patients/:id/files/:stepKey/:fieldKey/:fileName #214', () => {
         await db.connect();
         initAuthMocker(AWS);
         setCurrentUser(AWS);
+        initS3DeleteObjectMocker(AWS);
     });
 
     beforeEach(() => {

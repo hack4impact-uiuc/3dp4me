@@ -80,6 +80,26 @@ module.exports.initS3GetMocker = (AWS) => {
     );
 };
 
+module.exports.initS3DeleteObjectMocker = (AWS) => {
+    AWS.mock('S3', 'deleteObject', (params) => {
+        return Promise.resolve();
+    });
+};
+
+module.exports.initS3ListObjectsV2Mocker = (AWS) => {
+    AWS.mock('S3', 'listObjectsV2', (params) => {
+        return Promise.resolve({
+            Contents: []
+        });
+    });
+};
+
+module.exports.initS3DeleteObjectsMocker = (AWS) => {
+    AWS.mock('S3', 'deleteObjects', (params) => {
+        return Promise.resolve();
+    });
+};
+
 /**
  * Mocks the Cognito Identity Service Provider so that whenever the server queries for the current user, a static
  * user is returned.
