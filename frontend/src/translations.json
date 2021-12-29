@@ -151,6 +151,10 @@
                 "deleteWarning": "Once deleted, this audio recording will be lost forever. This is unchangeable!"
             },
             "swal": {
+                "patientDetail": {
+                    "errorTitle": "Error!",
+                    "errorMessage": "Please try deleting the patient again."
+                },
                 "dataDiscarding": {
                     "stay": "Stay",
                     "leave": "Leave",
@@ -400,6 +404,10 @@
                 "deleteWarning": "Once deleted, this audio recording will be lost forever. This is unchangeable!"
             },
             "swal": {
+                "patientDetail": {
+                    "errorTitle": "Error!",
+                    "errorMessage": "Please try deleting the patient again."
+                },
                 "dataDiscarding": {
                     "stay": "البقاء",
                     "leave": "يترك",

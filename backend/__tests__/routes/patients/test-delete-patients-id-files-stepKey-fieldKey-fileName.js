@@ -25,7 +25,6 @@ describe('DELETE /patients/:id/files/:stepKey/:fieldKey/:fileName #214', () => {
         initAuthMocker(AWS);
         setCurrentUser(AWS);
         initS3DeleteObjectMocker(AWS);
-
     });
 
     beforeEach(() => {

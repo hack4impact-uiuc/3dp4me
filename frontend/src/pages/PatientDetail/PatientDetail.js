@@ -105,10 +105,24 @@ const PatientDetail = () => {
     };
 
     const onPatientDeleted = async () => {
-        setEdit(false);
-        await trackPromise(deletePatientById(patientId));
-        // Go back to the home page
-        window.location.href = '/';
+        errorWrap(
+            async () => {
+                setEdit(false);
+                await trackPromise(deletePatientById(patientId));
+            },
+            () => {
+                // Success - Go back to the home page
+                window.location.href = '/';
+            },
+            () => {
+                // Error while deleting patient
+                swal(
+                    translations.components.swal.patientDetail.errorTitle,
+                    translations.components.swal.patientDetail.errorMessage,
+                    'error',
+                );
+            },
+        );
     };
 
     /**

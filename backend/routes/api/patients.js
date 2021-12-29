@@ -9,10 +9,6 @@ const { models } = require('../../models');
 const {
     uploadFile, downloadFile, deleteFile, deleteFolder,
 } = require('../../utils/aws/awsS3Helpers');
-const {
-    ACCESS_KEY_ID,
-    SECRET_ACCESS_KEY,
-} = require('../../utils/aws/awsExports');
 const { removeRequestAttributes } = require('../../middleware/requests');
 const {
     STEP_IMMUTABLE_ATTRIBUTES,
@@ -164,10 +160,6 @@ router.get(
         // Open a stream from the S3 bucket
         const s3Stream = downloadFile(
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
-            {
-                accessKeyId: ACCESS_KEY_ID,
-                secretAccessKey: SECRET_ACCESS_KEY,
-            },
         ).createReadStream();
 
         // Setup callbacks for stream error and stream close
@@ -241,10 +233,6 @@ router.delete(
         // Remove this file from AWS as well
         await deleteFile(
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
-            {
-                accessKeyId: ACCESS_KEY_ID,
-                secretAccessKey: SECRET_ACCESS_KEY,
-            },
         );
 
         return sendResponse(res, 200, 'File deleted');
@@ -292,10 +280,6 @@ router.post(
         await uploadFile(
             file.data,
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
-            {
-                accessKeyId: ACCESS_KEY_ID,
-                secretAccessKey: SECRET_ACCESS_KEY,
-            },
         );
 
         // Record this file in the DB
@@ -394,10 +378,10 @@ router.delete(
 
         const allStepKeys = await models.Step.find({}, 'key');
 
-        // Deletes the patient from each Steps's Collection
-        for (let keyIdx = 0; keyIdx < allStepKeys.length; keyIdx++) {
+        // Create array of promises to speed this up a bit
+        const lookups = allStepKeys.map(async (stepKeyData) => {
             let Model;
-            const stepKey = allStepKeys[keyIdx].key;
+            const stepKey = stepKeyData.key;
             try {
                 Model = mongoose.model(stepKey);
                 // eslint-disable-next-line no-await-in-loop
@@ -405,16 +389,16 @@ router.delete(
             } catch (error) {
                 // eslint-disable-next-line no-console
                 console.error(`DELETE /patients/:id - step ${stepKey} not found`);
+                return false;
             }
-        }
+            return true;
+        });
 
-        const awsCredentials = {
-            accessKeyId: ACCESS_KEY_ID,
-            secretAccessKey: SECRET_ACCESS_KEY,
-        };
+        // Deletes the patient from each Steps's Collection
+        await Promise.all(lookups);
 
         // Deletes the patient's files from the AWS S3 bucket
-        await deleteFolder(id, awsCredentials);
+        await deleteFolder(id);
 
         return sendResponse(res, 200, 'Deleted patient');
     }),

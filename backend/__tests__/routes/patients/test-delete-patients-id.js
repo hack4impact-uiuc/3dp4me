@@ -60,9 +60,8 @@ describe('DELETE /patients/:id', () => {
         // Check if the patient has been deleted from each Step's collectiom
         const stepsToCheck = ['medicalInfo', 'survey', 'example'];
 
-        for (let idx = 0; idx < stepsToCheck.length; idx++) {
+        stepsToCheck.forEach((stepKey) => {
             let Model;
-            const stepKey = stepsToCheck[idx];
             try {
                 Model = mongoose.model(stepKey);
                 // eslint-disable-next-line no-await-in-loop
@@ -72,6 +71,6 @@ describe('DELETE /patients/:id', () => {
             } catch (error) {
                 console.error(`test-delete-patients-id - step ${stepKey} not found`);
             }
-        }
+        })
     });
 });
