@@ -33,6 +33,8 @@
             },
             "modal": {
                 "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
+                "deleteUserConfirmation": "Once deleted, you will not be able to see this user, and the user will not have access to the site.",
                 "deleteFieldConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
                 "deleteStepConfirmation": "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
                 "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."
@@ -236,7 +238,8 @@
             "Revoked": "Revoked",
             "Pending": "Pending",
             "Save": "Save",
-            "Discard": "Discard"
+            "Discard": "Discard",
+            "deleteUser": "Delete User"
         },
         "roleManagement": {
             "roleDatabase": "Role Database",
@@ -286,6 +289,8 @@
             },
             "modal": {
                 "deleteTitle": "Are you sure?",
+                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
+                "deleteUserConfirmation": "بمجرد الحذف ، لن تتمكن من رؤية هذا المستخدم ولن يتمكن المستخدم من الوصول إلى الموقع.",
                 "deleteFieldConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
                 "deleteStepConfirmation": "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
                 "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."
@@ -489,7 +494,8 @@
             "Save": "يحفظ",
             "Discard": "ينبذ",
             "username": "اسم المستخدم",
-            "email": "بريد إلكتروني"
+            "email": "بريد إلكتروني",
+            "deleteUser": "مسح المستخدم"
         },
         "roleManagement": {
             "roleDatabase": "قاعدة بيانات الدور",

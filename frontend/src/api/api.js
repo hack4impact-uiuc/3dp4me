@@ -205,6 +205,14 @@ export const editRole = async (userId, updatedRoleInfo) => {
     return res.data;
 };
 
+// TODO: test endpoint or create issue for it
+export const deleteUser = async (username) => {
+    const requestString = `/users/${username}`;
+    const res = await instance.delete(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+    return res.data;
+};
+
 export const addUserRole = async (username, roleName) => {
     const requestString = `/users/${username}/roles/${roleName}`;
     const res = await instance.put(requestString);
