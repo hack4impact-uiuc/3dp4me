@@ -49,7 +49,7 @@ describe('DELETE /patients/:id', () => {
         );
         expect(res.status).toBe(200);
 
-        // Check if the patient has been deleted from the Patient collectiom
+        /* Check if the patient has been deleted from the Patient collection */
         const actual_patient = await mongoose
             .model('Patient')
             .findById(PATIENT_ID_WITH_ONE_FILE);
@@ -57,10 +57,10 @@ describe('DELETE /patients/:id', () => {
 
         expect(actual_patient).toBe(expected_patient);
 
-        // Check if the patient has been deleted from each Step's collectiom
+        /* Check if the patient has been deleted from each Step's collection */
         const stepsToCheck = ['medicalInfo', 'survey', 'example'];
 
-        stepsToCheck.forEach((stepKey) => {
+        const testPromiseArray = stepsToCheck.map(async (stepKey) => {
             let Model;
             try {
                 Model = mongoose.model(stepKey);
@@ -70,7 +70,11 @@ describe('DELETE /patients/:id', () => {
                 expect(actual_patient_step_data).toBe(expected_patient_step_data);
             } catch (error) {
                 console.error(`test-delete-patients-id - step ${stepKey} not found`);
+                return false;
             }
-        })
+            return true;
+        });
+
+        await Promise.all(testPromiseArray);
     });
 });
