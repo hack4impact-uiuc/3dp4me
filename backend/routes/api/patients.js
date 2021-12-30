@@ -7,14 +7,20 @@ const _ = require('lodash');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const {
-    uploadFile, downloadFile, deleteFile, deleteFolder,
+    uploadFile,
+    downloadFile,
+    deleteFile,
+    deleteFolder,
 } = require('../../utils/aws/awsS3Helpers');
 const { removeRequestAttributes } = require('../../middleware/requests');
 const {
     STEP_IMMUTABLE_ATTRIBUTES,
     PATIENT_IMMUTABLE_ATTRIBUTES,
 } = require('../../utils/constants');
-const { sendResponse, getDataFromModelWithPaginationAndSearch } = require('../../utils/response');
+const {
+    sendResponse,
+    getDataFromModelWithPaginationAndSearch,
+} = require('../../utils/response');
 const { getReadableSteps } = require('../../utils/stepUtils');
 const { getStepBaseSchemaKeys } = require('../../utils/initDb');
 const {
@@ -29,7 +35,10 @@ const {
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        const patientData = await getDataFromModelWithPaginationAndSearch(req, models.Patient);
+        const patientData = await getDataFromModelWithPaginationAndSearch(
+            req,
+            models.Patient,
+        );
         await sendResponse(res, 200, '', patientData);
     }),
 );
@@ -231,9 +240,7 @@ router.delete(
         await patient.save();
 
         // Remove this file from AWS as well
-        await deleteFile(
-            `${id}/${stepKey}/${fieldKey}/${fileName}`,
-        );
+        await deleteFile(`${id}/${stepKey}/${fieldKey}/${fileName}`);
 
         return sendResponse(res, 200, 'File deleted');
     }),
@@ -277,14 +284,16 @@ router.post(
 
         // Upload the file to the S3
         const file = req.files.uploadedFile;
-        await uploadFile(
-            file.data,
-            `${id}/${stepKey}/${fieldKey}/${fileName}`,
+        const modifiedFileName = await modifyFileName(
+            fileName,
+            stepData[fieldKey],
         );
+
+        await uploadFile(file.data, `${id}/${stepKey}/${fieldKey}/${fileName}`);
 
         // Record this file in the DB
         stepData[fieldKey].push({
-            filename: fileName,
+            filename: modifiedFileName,
             uploadedBy: req.user.name,
             uploadDate: Date.now(),
         });
@@ -302,7 +311,7 @@ router.post(
 
         // Send the response
         const respData = {
-            name: fileName,
+            name: modifiedFileName,
             uploadedBy: req.user.name,
             uploadDate: Date.now(),
             mimetype: file.mimetype,
@@ -374,7 +383,9 @@ router.delete(
         if (!patient) return sendResponse(res, 404, `Patient "${id}" not found`);
 
         // Deletes the patient from the Patient Collection
-        await models.Patient.findOneAndDelete({ _id: mongoose.Types.ObjectId(id) });
+        await models.Patient.findOneAndDelete({
+            _id: mongoose.Types.ObjectId(id),
+        });
 
         const allStepKeys = await models.Step.find({}, 'key');
 
@@ -388,7 +399,9 @@ router.delete(
                 await Model.findOneAndDelete({ patientId: id });
             } catch (error) {
                 // eslint-disable-next-line no-console
-                console.error(`DELETE /patients/:id - step ${stepKey} not found`);
+                console.error(
+                    `DELETE /patients/:id - step ${stepKey} not found`,
+                );
                 return false;
             }
             return true;
@@ -418,6 +431,31 @@ const updatePatientStepData = async (patientId, StepModel, data) => {
 
     patientStepData = _.assign(patientStepData, data);
     return patientStepData.save();
+};
+
+const modifyFileName = async (filename, data) => {
+    let updatedFileName = filename;
+    let file = '';
+    let suffix = '';
+    if (filename.includes('.')) {
+        const indexOfLastPeriod = filename.lastIndexOf('.');
+        file = filename.substring(0, indexOfLastPeriod);
+        suffix = `.${filename.substring(indexOfLastPeriod)}`;
+    } else {
+        file = filename;
+    }
+    if (data.filter((e) => e.filename === filename).length > 0) {
+        // TODO change to .some() instead of .filter()
+        let inrcrementedNum = 0;
+        for (
+            let numPrev = 1;
+            data.filter((e) => e.filename === `${file}_${numPrev}${suffix}`)
+                .length > 0;
+            numPrev++
+        ) inrcrementedNum = numPrev;
+        updatedFileName = `${file}_${inrcrementedNum}${suffix}`;
+    }
+    return updatedFileName;
 };
 
 module.exports = router;
