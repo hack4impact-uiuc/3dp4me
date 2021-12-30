@@ -445,7 +445,7 @@ const modifyFileName = async (filename, data) => {
         file = filename;
     }
     if (data.filter((e) => e.filename === filename).length > 0) {
-        // TODO change to some
+        // TODO change to .some() instead of .filter()
         let inrcrementedNum = 0;
         for (
             let numPrev = 1;
