@@ -31,11 +31,14 @@ passport.use('passport-local', new LocalStrategy(
 ));
 
 passport.serializeUser((user, done) => {
+    console.log('serializing user');
     done(null, user._id);
 });
 
 passport.deserializeUser((_id, done) => {
+    console.log('deserializing user');
     models.Patient.findById(_id, (err, user) => {
+        console.log('deserializing found user');
         done(err, user);
     });
 });

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactCodeInput from 'react-code-input';
 import { useParams } from 'react-router-dom';
 
-import { authenticatePatient, send2FAPatientCode } from '../../api/api';
+import { authenticatePatient, send2FAPatientCode } from '../../api/axios-patient-auth';
 import Logo from '../../assets/3dp4me_logo.png';
 import { useTranslations } from '../../hooks/useTranslations';
 import { ROUTES } from '../../utils/constants';

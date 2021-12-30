@@ -20,21 +20,28 @@ const router = express.Router();
 
 require('../../middleware/patientAuthentication');
 
-// Path is now /patient-2fa/authenticated
-router.post('/authenticated', passport.authenticate('passport-local'), async (req, res) => {
-    req.session.patientId = 'i am sad bc of this pr';
-    console.log(req.session);
-    req.session.save();
-    await sendResponse(
-        res,
-        200,
-        'Successfully authenticated patient',
-    );
+router.post('/authenticated/:patientId', passport.authenticate('passport-local'), async (req, res) => {
+    const { patientId } = req.params;
+    if (!req.user) { return res.redirect(`/${patientId}`); }
+
+    // req / res held in closure
+    req.logIn(req.user, (err) => {
+        console.log(req.user);
+        if (err) { return err; }
+        req.session.patientId = patientId;
+        console.log(req.session);
+        req.session.save();
+        return sendResponse(
+            res,
+            200,
+            'Successfully authenticated patient',
+        );
+    });
 });
 
 router.get('/isAuth', async (req, res) => {
     console.log(req.session);
-    if (req.session) {
+    if (req?.session?.passport?.user) {
         await sendResponse(
             res,
             200,
@@ -43,8 +50,8 @@ router.get('/isAuth', async (req, res) => {
     } else {
         await sendResponse(
             res,
-            500,
-            'Successfully authenticated patient',
+            401,
+            'Unauthorized user',
         );
     }
 });

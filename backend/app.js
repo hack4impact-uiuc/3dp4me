@@ -67,8 +67,15 @@ const sess = {
     cookie: {
         domain: 'localhost', path: '/', httpOnly: true, secure: false, maxAge: 60000,
     },
+    resave: false,
+    saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.DB_URI }),
 };
+
+/* app.use(cookieSession({
+    maxAge: 60 * 60 * 1000,
+    keys: [key.cookieSession.key1],
+})); */
 
 if (app.get('env') === 'production') {
     app.set('trust proxy', 1); // trust first proxy

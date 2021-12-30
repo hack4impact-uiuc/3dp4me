@@ -264,9 +264,10 @@ export const authenticatePatient = async (_id, token) => {
     bodyFormData.append('password', token);
     const res = await instance({
         method: "post",
-        url: "/patient-2fa/authenticated/",
+        url: `/patient-2fa/authenticated/${_id}`,
         data: bodyFormData,
         headers: { "Content-Type": "multipart/form-data" },
+        // credentials: 'include'
     })
 
     return res.data;
