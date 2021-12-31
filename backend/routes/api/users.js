@@ -18,12 +18,15 @@ const {
 } = require('../../utils/roleUtils');
 const { requireAdmin } = require('../../middleware/authentication');
 const { ADMIN_ID, DEFAULT_USERS_ON_GET_REQUEST } = require('../../utils/constants');
+const { requireAuthentication } = require('../../middleware/authentication');
+const { requireConditionalAuthentication } = require('../../middleware/conditionalAuthentication');
 
 /**
  * Gets information about the user making this request.
  */
 router.get(
     '/self',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         const isAdmin = req?.user?.roles?.includes(ADMIN_ID) || false;
 
@@ -40,7 +43,7 @@ router.get(
  */
 router.get(
     '/',
-    requireAdmin,
+    requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
         const { token } = req.query;
         let nPerPage = req.query.nPerPage ?? DEFAULT_USERS_ON_GET_REQUEST;
@@ -70,7 +73,7 @@ router.get(
  */
 router.put(
     '/:username/roles/:roleId',
-    requireAdmin,
+    requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
         const { username, roleId } = req.params;
 
@@ -101,7 +104,7 @@ router.put(
  */
 router.delete(
     '/:username/roles/:roleId',
-    requireAdmin,
+    requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
         const { username, roleId } = req.params;
 
@@ -127,7 +130,7 @@ router.delete(
  */
 router.put(
     '/:username/access/:accessLevel',
-    requireAdmin,
+    requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
         const { username, accessLevel } = req.params;
 

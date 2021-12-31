@@ -5,6 +5,9 @@ const { errorWrap } = require('../../utils');
 const { models } = require('../../models/index');
 const { requireAdmin } = require('../../middleware/authentication');
 const { sendResponse } = require('../../utils/response');
+const { requireAuthentication } = require('../../middleware/authentication');
+
+router.use(requireAuthentication);
 
 /**
  * Returns all roles in the DB.

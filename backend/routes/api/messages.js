@@ -12,6 +12,9 @@ const {
     TWILIO_RECEIVING_NUMBER,
     TWILIO_SENDING_NUMBER,
 } = require('../../utils/constants');
+const { requireAuthentication } = require('../../middleware/authentication');
+
+router.use(requireAuthentication);
 
 router.post('/sms', async (req, res) => {
     const phone = req?.body?.WaId;

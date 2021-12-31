@@ -14,7 +14,6 @@ const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 
 const { errorHandler } = require('./utils');
-const { requireAuthentication } = require('./middleware/authentication');
 const { initDB } = require('./utils/initDb');
 const {
     setResponseHeaders,
@@ -52,8 +51,6 @@ app.get('/*', (req, res, next) => {
     }
 });
 
-// app.use(requireAuthentication);
-
 /**
  * This is the secret used to sign the session ID cookie.
  * This can be either a string for a single secret, or an array of multiple secrets.
@@ -65,17 +62,12 @@ app.get('/*', (req, res, next) => {
 const sess = {
     secret: '3DP4ME',
     cookie: {
-        domain: 'localhost', path: '/', httpOnly: true, secure: false, maxAge: 60000,
+        domain: 'localhost', path: '/', httpOnly: true, secure: false, maxAge: 180000,
     },
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.DB_URI }),
 };
-
-/* app.use(cookieSession({
-    maxAge: 60 * 60 * 1000,
-    keys: [key.cookieSession.key1],
-})); */
 
 if (app.get('env') === 'production') {
     app.set('trust proxy', 1); // trust first proxy

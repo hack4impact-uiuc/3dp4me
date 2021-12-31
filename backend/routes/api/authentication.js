@@ -24,12 +24,10 @@ router.post('/authenticated/:patientId', passport.authenticate('passport-local')
     const { patientId } = req.params;
     if (!req.user) { return res.redirect(`/${patientId}`); }
 
-    // req / res held in closure
     req.logIn(req.user, (err) => {
-        console.log(req.user);
         if (err) { return err; }
-        req.session.patientId = patientId;
         console.log(req.session);
+        // do i need this line?
         req.session.save();
         return sendResponse(
             res,
@@ -37,23 +35,6 @@ router.post('/authenticated/:patientId', passport.authenticate('passport-local')
             'Successfully authenticated patient',
         );
     });
-});
-
-router.get('/isAuth', async (req, res) => {
-    console.log(req.session);
-    if (req?.session?.passport?.user) {
-        await sendResponse(
-            res,
-            200,
-            'Successfully authenticated patient',
-        );
-    } else {
-        await sendResponse(
-            res,
-            401,
-            'Unauthorized user',
-        );
-    }
 });
 
 /**
@@ -123,6 +104,7 @@ router.post(
             isAuthenticated = twofactor.verifyToken(patientSecret, token, TWO_FACTOR_WINDOW_MINS);
         }
 
+        // TODO: remove console logs and booleans in the response
         console.log(res);
 
         if (isAuthenticated) {

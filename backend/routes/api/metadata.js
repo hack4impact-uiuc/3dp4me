@@ -1,5 +1,4 @@
 const express = require('express');
-const passport = require('passport');
 
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -14,13 +13,16 @@ const {
     updateStepsInTransaction,
     getReadableSteps,
 } = require('../../utils/stepUtils');
+const { requireAuthentication } = require('../../middleware/authentication');
+const { requireConditionalAuthentication } = require('../../middleware/conditionalAuthentication');
 
 /**
  * Gets the metadata for a step. This describes the fields contained in the steps.
  * If a user isn't allowed to view step, it isn't returned to them.
  */
 router.get(
-    '/steps', passport.authenticate('passport-local'),
+    '/steps',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         const metaData = await getReadableSteps(req);
 
@@ -38,7 +40,7 @@ router.get(
  */
 router.post(
     '/steps',
-    requireAdmin,
+    requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
         const step = req.body;
         const newStep = new models.Step(step);
@@ -65,7 +67,7 @@ router.post(
  */
 router.put(
     '/steps/',
-    requireAdmin,
+    requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
         try {
             let stepData = [];
@@ -99,7 +101,7 @@ router.put(
  */
 router.delete(
     '/steps/:stepkey',
-    requireAdmin,
+    requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const step = await models.Step.deleteOne({ key: stepkey });

@@ -25,12 +25,15 @@ const {
     isFieldWritable,
     getWritableFields,
 } = require('../../utils/fieldUtils');
+const { requireAuthentication } = require('../../middleware/authentication');
+const { requireConditionalAuthentication } = require('../../middleware/conditionalAuthentication');
 
 /**
  * Returns everything in the patients collection (basic patient info)
  */
 router.get(
     '/',
+    requireAuthentication,
     errorWrap(async (req, res) => {
         const patients = await getDataFromModelWithPagination(req, models.Patient);
         await sendResponse(res, 200, '', patients);
@@ -43,6 +46,7 @@ router.get(
 
 router.get(
     '/count',
+    requireAuthentication,
     errorWrap(async (req, res) => {
         const patientCount = await models.Patient.count();
         return sendResponse(res, 200, 'success', patientCount);
@@ -53,9 +57,9 @@ router.get(
  * Returns all of our data on a specific patient. Gets both the basic info
  * from the Patient collection and the data from each step.
  * */
-// todo
 router.get(
     '/:id',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         const { id } = req.params;
 
@@ -103,6 +107,7 @@ router.get(
  */
 router.post(
     '/',
+    requireAuthentication,
     removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const patient = req.body;
@@ -124,9 +129,9 @@ router.post(
  * Updates the patients information in the Patient collection.
  * Note: This DOES NOT update the info for individual steps.
  */
-// todo
 router.put(
     '/:id',
+    requireAuthentication,
     removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const { id } = req.params;
@@ -151,6 +156,7 @@ router.put(
  */
 router.get(
     '/:id/files/:stepKey/:fieldKey/:fileName',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         const {
             id, stepKey, fieldKey, fileName,
@@ -191,7 +197,8 @@ router.get(
  * done manually through the AWS website.
  */
 router.delete(
-    '/:id/files/:stepKey/:fieldKey/:fileName', passport.authenticate('passport-local'),
+    '/:id/files/:stepKey/:fieldKey/:fileName',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         const {
             id, stepKey, fieldKey, fileName,
@@ -249,9 +256,9 @@ router.delete(
  * Uploads an individual file to S3 and records it in the DB.
  * URL format similar to GET file.
  */
-// todo upload/delete/etc. w/ files; did 2, unsure about the other
 router.post(
-    '/:id/files/:stepKey/:fieldKey/:fileName', passport.authenticate('passport-local'),
+    '/:id/files/:stepKey/:fieldKey/:fileName',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         // TODO during refactoring: We upload file name in form data, is this even needed???
         const {
@@ -329,6 +336,7 @@ router.post(
  */
 router.post(
     '/:id/:stepKey',
+    requireConditionalAuthentication,
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const { id, stepKey } = req.params;
