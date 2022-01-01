@@ -229,7 +229,10 @@ const SectionTab = () => {
             const fetchData = async () => {
                 const res = await trackPromise(getAllStepsMetadata(true)); // true indicates that we want to get hidden field
 
+                console.log(res.result);
+
                 const sortedMetadata = sortMetadata(res.result);
+
 
                 if (sortedMetadata.length > 0) {
                     setSelectedStep(sortedMetadata[0].key);

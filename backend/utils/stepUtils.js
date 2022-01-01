@@ -70,6 +70,28 @@ module.exports.getReadableSteps = async (req) => {
         },
     });
 
+    aggregation.push({
+        $addFields: {
+            fields2: {
+                $map: {
+                    input: '$fields',
+                    as: 'f',
+                    in: {
+                        subFields: {
+                            $filter: {
+                                input: '$$f.subFields',
+                                as: 'field',
+                                cond: {
+                                    $and: searchParams,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
     const data = await models.Step.aggregate(aggregation);
 
     return data;
