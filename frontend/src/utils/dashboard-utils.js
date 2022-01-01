@@ -30,11 +30,7 @@ export const getValidAdjacentElement = (arr, currIndex, direction) => {
 
 // Swaps the value of two elements in an array given their indices and attribute key
 export const swapValuesInArrayByKey = (arr, key, firstIndex, secondIndex) => {
-    const arrCopy = _.cloneDeep(arr);
-
-    const temp = arrCopy[firstIndex][key];
-    arrCopy[firstIndex][key] = arrCopy[secondIndex][key];
-    arrCopy[secondIndex][key] = temp;
-
-    return arrCopy;
+    const temp = arr[firstIndex][key];
+    arr[firstIndex][key] = arr[secondIndex][key];
+    arr[secondIndex][key] = temp;
 };

@@ -26,12 +26,11 @@ import {
     swapValuesInArrayByKey,
 } from '../../utils/dashboard-utils';
 import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
-import { rolesToMultiSelectFormat, sortMetadata } from '../../utils/utils';
+import { rolesToMultiSelectFormat, sortMetadata, getJSONValueByStringPath } from '../../utils/utils';
 import './DashboardManagement.scss';
 
-const expandedSidebarWidth = `${
-    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
-}px`;
+const expandedSidebarWidth = `${parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+    }px`;
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
@@ -46,6 +45,8 @@ const SectionTab = () => {
     const [allRoles, setAllRoles] = useState([]);
     const [selectedFieldNumberForEditing, setSelectedFieldNumberForEditing] =
         useState(0);
+    const [selectedFieldRootForEditing, setSelectedFieldRootForEditing] =
+        useState('fields');
     const [selectedStepNumberForEditing, setSelectedStepNumberForEditing] =
         useState(0);
 
@@ -62,6 +63,7 @@ const SectionTab = () => {
 
     const onEditField = (stepKey, fieldRoot, fieldNumber) => {
         setSelectedFieldNumberForEditing(fieldNumber);
+        setSelectedFieldRootForEditing(fieldRoot);
         setEditFieldModalOpen(true);
     };
 
@@ -132,7 +134,7 @@ const SectionTab = () => {
         if (adjStepIndex < 0) return;
 
         // Perform field number swap
-        updatedMetadata = swapValuesInArrayByKey(
+        swapValuesInArrayByKey(
             updatedMetadata,
             'stepNumber',
             currStepIndex,
@@ -159,20 +161,23 @@ const SectionTab = () => {
      * @param {Number} fieldNumber The number of the field that we have to move
      * @param {Number} direction 1 indicates moving down (increasing fieldNumber), -1 indicates moving up (decreasing fieldNumber)
      */
-    function moveField(stepKey, fieldNumber, direction) {
+    function moveField(stepKey, fieldNumber, fieldRoot, direction) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
         const foundStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
 
         if (foundStepIndex < 0) return;
 
+        // Reference to the fields/subfields array we are modifying.
+        let fieldsArray = getJSONValueByStringPath(updatedMetadata[foundStepIndex], fieldRoot);
+
         const currFieldIndex = getFieldIndexByNumber(
-            updatedMetadata[foundStepIndex],
+            fieldsArray,
             fieldNumber,
         );
 
         const adjFieldIndex = getValidAdjacentElement(
-            updatedMetadata[foundStepIndex].fields,
+            fieldsArray,
             currFieldIndex,
             direction,
         );
@@ -180,8 +185,8 @@ const SectionTab = () => {
         if (adjFieldIndex < 0) return;
 
         // Perform field number swap
-        updatedMetadata[foundStepIndex].fields = swapValuesInArrayByKey(
-            updatedMetadata[foundStepIndex].fields,
+        swapValuesInArrayByKey(
+            fieldsArray,
             'fieldNumber',
             currFieldIndex,
             adjFieldIndex,
@@ -192,13 +197,13 @@ const SectionTab = () => {
     }
 
     // Handles moving a field down
-    function onCardDownPressed(stepKey, fieldNumber) {
-        moveField(stepKey, fieldNumber, DIRECTION.DOWN);
+    function onCardDownPressed(stepKey, fieldRoot, fieldNumber) {
+        moveField(stepKey, fieldNumber, fieldRoot, DIRECTION.DOWN);
     }
 
     // Handles moving a field up
-    function onCardUpPressed(stepKey, fieldNumber) {
-        moveField(stepKey, fieldNumber, DIRECTION.UP);
+    function onCardUpPressed(stepKey, fieldRoot, fieldNumber) {
+        moveField(stepKey, fieldNumber, fieldRoot, DIRECTION.UP);
     }
 
     function GenerateStepManagementContent() {
@@ -272,9 +277,8 @@ const SectionTab = () => {
 
     // This function is needed because the field number doesn't correspond to the index of a field in
     // the fields array. There can be fields with field numbers 1, 2, 4, 5, but no 3, in the fields array.
-    const getFieldIndexByNumber = (step, fieldNumber) => {
-        if (!step) return -1;
-        return step.fields.findIndex(
+    const getFieldIndexByNumber = (fields, fieldNumber) => {
+        return fields.findIndex(
             (field) => field.fieldNumber === fieldNumber,
         );
     };
@@ -284,14 +288,18 @@ const SectionTab = () => {
 
         if (stepIndex < 0) return null;
 
+        let fieldArrayReference = getJSONValueByStringPath(stepMetadata[stepIndex], selectedFieldRootForEditing);
+
+        if (!fieldArrayReference) return null;
+
         const fieldIndex = getFieldIndexByNumber(
-            stepMetadata[stepIndex],
+            fieldArrayReference,
             selectedFieldNumberForEditing,
         );
 
         if (fieldIndex < 0) return null;
 
-        const fieldData = stepMetadata[stepIndex].fields[fieldIndex];
+        const fieldData = getJSONValueByStringPath(stepMetadata[stepIndex], selectedFieldRootForEditing)[fieldIndex];
 
         if (!fieldData) return null;
 
@@ -379,14 +387,18 @@ const SectionTab = () => {
 
         if (stepIndex < 0) return;
 
+        let fieldArrayReference = getJSONValueByStringPath(updatedMetadata[stepIndex], selectedFieldRootForEditing);
+
+        if (!fieldArrayReference) return;
+
         const fieldIndex = getFieldIndexByNumber(
-            updatedMetadata[stepIndex],
+            fieldArrayReference,
             selectedFieldNumberForEditing,
         );
 
         if (fieldIndex < 0) return;
 
-        updatedMetadata[stepIndex].fields[fieldIndex] = updatedField;
+        fieldArrayReference[fieldIndex] = updatedField;
 
         setStepMetadata(updatedMetadata);
     };
@@ -456,11 +468,10 @@ const SectionTab = () => {
                     onDiscard={onDiscardChanges}
                     style={{
                         editorSection: {
-                            marginLeft: `${
-                                isEditing
-                                    ? expandedSidebarWidth
-                                    : retractedSidebarWidth
-                            }`,
+                            marginLeft: `${isEditing
+                                ? expandedSidebarWidth
+                                : retractedSidebarWidth
+                                }`,
                         },
                     }}
                     selectedStep={selectedStep}

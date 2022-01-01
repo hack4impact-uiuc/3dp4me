@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import RadioButtonField from '../Fields/RadioButtonField';
 import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
+import { getJSONValueByStringPath } from '../../utils/utils'
 
 const StepManagementContent = ({
     onDownPressed,
@@ -69,7 +70,7 @@ const StepManagementContent = ({
                 <div className="reorder-buttons">
                     <div
                         onClick={() =>
-                            onUpPressed(stepMetadata.key, fieldNumber)
+                            onUpPressed(stepMetadata.key, fieldRoot, fieldNumber)
                         }
                         className="up-button"
                     >
@@ -77,7 +78,7 @@ const StepManagementContent = ({
                     </div>
                     <div
                         onClick={() =>
-                            onDownPressed(stepMetadata.key, fieldNumber)
+                            onDownPressed(stepMetadata.key, fieldRoot, fieldNumber)
                         }
                         className="down-button"
                     >
@@ -91,12 +92,16 @@ const StepManagementContent = ({
     function generateSubfieldInfo(field, fieldRoot, fieldNumber) {
         if (!field?.subFields?.length) return null;
 
-        const root = `${fieldRoot}[fieldNumber===${fieldNumber}].subFields`;
+        const root = `${fieldRoot}[${getFieldIndexGivenFieldNumber(fieldRoot, fieldNumber)}].subFields`;
         return (
             <div className="subfield-container">
                 {generateButtonInfo(field.subFields, root)}
             </div>
         );
+    }
+
+    function getFieldIndexGivenFieldNumber(fieldRoot, fieldNumber) {
+        return getJSONValueByStringPath(stepMetadata, fieldRoot).findIndex((field) => field.fieldNumber === fieldNumber);
     }
 
     function getFieldClassName(field) {
