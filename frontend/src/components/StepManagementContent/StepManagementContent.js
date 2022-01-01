@@ -100,7 +100,7 @@ const StepManagementContent = ({
     }
 
     function generateSubfieldInfo(field, fieldRoot, fieldNumber) {
-        if (!field?.subFields?.length) return null;
+        if (field.fieldType !== FIELD_TYPES.FIELD_GROUP) return null;
 
         const root = `${fieldRoot}[${getFieldIndexGivenFieldNumber(fieldRoot, fieldNumber)}].subFields`;
         return (

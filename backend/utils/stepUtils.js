@@ -5,7 +5,7 @@ const { models } = require('../models');
 const { isUniqueStepNumber, FIELD_NUMBER_KEY, STEP_NUMBER_KEY } = require('../models/Metadata');
 
 const { isAdmin } = require('./aws/awsUsers');
-const { addFieldsToSchema, updateFieldsInSchema, getAddedFields } = require('./fieldUtils');
+const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
 const { abortAndError } = require('./transactionUtils');
 const { generateSchemaFromMetadata } = require('./initDb');
 const { generateKeyWithoutCollision, checkNumOccurencesInList } = require('./keyUtils');
@@ -217,6 +217,7 @@ const updateFieldKeys = (fields) => {
                 currentField.displayName.EN,
                 currentFieldKeys,
             );
+            console.log("assigned key called: " + generatedKey);
             currentField.key = generatedKey;
             currentFieldKeys.push(generatedKey);
         }
@@ -227,14 +228,17 @@ const updateFieldKeys = (fields) => {
 
 /**
  * A recursive function that updates a set of fields before being saved in the database.
- * @param {} savedFields   The fields that are currently saved in the database.
- * @param {} updatedFields The fields sent in the request.
+ * @param {} fieldsInDB   The fields that are currently saved in the database.
+ * @param {} fieldsFromRequest The fields sent in the request.
  * @param {} stepKey       The key of the step that these fields belong to.
  * @param {} session       MongoDB Session.
  * @param {} level         Level of recursion. 0 is the first level.
  * @returns A boolean indicating if new fields were sent in the request.
  */
-const updateFieldInTransaction = async (savedFields, updatedFields, stepKey, session, level) => {
+const updateFieldInTransaction = async (fieldsInDB, fieldsFromRequest, stepKey, session, level) => {
+    const savedFields = _.cloneDeep(fieldsInDB);
+    let updatedFields = _.cloneDeep(fieldsFromRequest);
+
     const addedFields = await getAddedFields(
         session,
         savedFields,
@@ -278,7 +282,7 @@ const updateFieldInTransaction = async (savedFields, updatedFields, stepKey, ses
     let subFieldWasAdded = false;
 
     // Recursively call updateFieldInTransaction() on each field's subfields
-    const subFieldUpdateArray = updatedFields.map(async (updatedField) => {
+    const subFieldUpdateArray = updatedFields.map(async (updatedField, updatedFieldIndex) => {
         if (updatedField.subFields) {
             const updatedFieldKey = updatedField.key;
             const savedFieldIndex = getFieldIndexGivenKey(savedFields, updatedFieldKey);
@@ -287,8 +291,16 @@ const updateFieldInTransaction = async (savedFields, updatedFields, stepKey, ses
             if (savedFieldIndex > 0) {
                 newSavedFields = savedFields[savedFieldIndex].subFields || [];
             }
+
             // eslint-disable-next-line max-len
-            const didAddFields = await updateFieldInTransaction(newSavedFields, updatedField.subFields, stepKey, session, level + 1);
+            const updateFieldResponse = await updateFieldInTransaction(newSavedFields, updatedField.subFields, stepKey, session, level + 1);
+            const { didAddFields } = updateFieldResponse;
+            updatedFields[updatedFieldIndex].subFields = updateFieldResponse.updatedFields;
+
+            if (updatedField.fieldType === 'FieldGroup') {
+                console.log(updateFieldResponse.updatedFields);
+            }
+
             subFieldWasAdded = subFieldWasAdded || didAddFields;
             // Build up a list of field's whose schema need to be updated
             if (didAddFields && level === 0) {
@@ -303,12 +315,15 @@ const updateFieldInTransaction = async (savedFields, updatedFields, stepKey, ses
 
     // Update schema
     if (fieldsToUpdateInSchema.length > 0) {
-        updateFieldsInSchema(stepKey, fieldsToUpdateInSchema);
+        addFieldsToSchema(stepKey, fieldsToUpdateInSchema);
     }
 
-    // Returns true if a field was added at this level
+    // Along with other data, return true if a field was added at this level
     // or a sub field was added to one of the fields at this level
-    return subFieldWasAdded || addedFields.length > 0;
+    return ({
+        updatedFields,
+        didAddFields: subFieldWasAdded || addedFields.length > 0,
+    });
 };
 
 // Returns the index for a step given its key
@@ -364,8 +379,11 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
 
-    // Recursive updated on the fields
-    await updateFieldInTransaction(stepToEdit.fields, strippedBody.fields, stepKey, session, 0);
+    // Recursive update the field's numbers and keys
+    // while making sure deleted fields are properly handled.
+    // eslint-disable-next-line max-len
+    const { updatedFields } = await updateFieldInTransaction(stepToEdit.fields, strippedBody.fields, stepKey, session, 0);
+    strippedBody.fields = updatedFields;
 
     // Finally, update the metadata for this step
     const step = await models.Step.findOne({ key: stepKey }).session(session);
