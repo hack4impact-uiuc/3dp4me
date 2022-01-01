@@ -104,6 +104,18 @@ module.exports.addFieldsToSchema = (stepKey, addedFields) => {
     schema.add(schemaUpdate);
 };
 
+module.exports.updateFieldsInSchema = (stepKey, updatedFields) => {
+    // Create a schema for the new fields
+    const schemaUpdate = {};
+    updatedFields.forEach((field) => {
+        schemaUpdate[field.key] = generateFieldSchema(field);
+    });
+
+    // Add it to the existing schema
+    const { schema } = mongoose.model(stepKey);
+    schema.update(schemaUpdate);
+};
+
 // Disabling no await because the await only gets called if an error is thrown
 /* eslint-disable no-await-in-loop */
 module.exports.getAddedFields = async (session, oldFields, newFields) => {

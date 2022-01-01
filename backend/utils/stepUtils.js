@@ -5,7 +5,7 @@ const { models } = require('../models');
 const { isUniqueStepNumber, FIELD_NUMBER_KEY, STEP_NUMBER_KEY } = require('../models/Metadata');
 
 const { isAdmin } = require('./aws/awsUsers');
-const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
+const { addFieldsToSchema, updateFieldsInSchema, getAddedFields } = require('./fieldUtils');
 const { abortAndError } = require('./transactionUtils');
 const { generateSchemaFromMetadata } = require('./initDb');
 const { generateKeyWithoutCollision, checkNumOccurencesInList } = require('./keyUtils');
@@ -189,6 +189,102 @@ const updateFieldKeys = (fields) => {
     return clonedFields;
 };
 
+/**
+ * A recursive function that updates a set of fields before being saved in the database.
+ * @param {} savedFields   The fields that are currently saved in the database.
+ * @param {} updatedFields The fields sent in the request.
+ * @param {} stepKey       The key of the step that these fields belong to.
+ * @param {} session       MongoDB Session.
+ * @param {} level         Level of recursion. 0 is the first level.
+ * @returns A boolean indicating if new fields were sent in the request.
+ */
+const updateFieldInTransaction = async (savedFields, updatedFields, stepKey, session, level) => {
+    const addedFields = await getAddedFields(
+        session,
+        savedFields,
+        updatedFields,
+    );
+
+    // Checks that fields were not deleted
+    const deletedFields = getDeletedFields(savedFields);
+
+    const numDeletedFields = deletedFields.length;
+    const numUnchangedFields = updatedFields.length - addedFields.length;
+
+    const currentNumFields = savedFields.length - numDeletedFields;
+    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
+
+    // Update the field numbers in order to account for deleted fields
+    // eslint-disable-next-line no-param-reassign
+    updatedFields = updateElementNumbers(
+        updatedFields,
+        deletedFields,
+        FIELD_NUMBER_KEY,
+    );
+
+    // Add deleted fields so they will be remain in the database.
+    // They are added to the end in order to give easy access when
+    // restoring them manually.
+    for (let i = 0; i < deletedFields.length; i++) {
+        updatedFields.push(deletedFields[i]);
+    }
+
+    // Generate keys for the fields that do not have a key
+    // eslint-disable-next-line no-param-reassign
+    updatedFields = updateFieldKeys(updatedFields);
+
+    if (level === 0) {
+        // Update the schema with new fields
+        addFieldsToSchema(stepKey, addedFields);
+    }
+
+    const fieldsToUpdateInSchema = [];
+    let subFieldWasAdded = false;
+
+    // Recursively call updateFieldInTransaction() on each field's subfields
+    updatedFields.forEach(async (updatedField) => {
+        if (updatedField.subFields) {
+            if (updatedField.subFields.length > 0) {
+                console.log(`${updatedField.key} has subFields`);
+            }
+            const updatedFieldKey = updatedField.key;
+            const savedFieldIndex = getFieldIndexGivenKey(savedFields, updatedFieldKey);
+
+            let newSavedFields = [];
+            if (savedFieldIndex > 0) {
+                newSavedFields = savedFields[savedFieldIndex].subFields || [];
+            }
+            // eslint-disable-next-line max-len
+            const didAddFields = await updateFieldInTransaction(newSavedFields, updatedField.subFields, stepKey, session, level + 1);
+            subFieldWasAdded = subFieldWasAdded || didAddFields;
+            // Build up a list of field's whose schema need to be updated
+            if (didAddFields && level === 0) {
+                console.log(`Need to update ${updatedField.key} schema`);
+                fieldsToUpdateInSchema.push(updatedField);
+            }
+        }
+    });
+
+    // Update schema
+    if (fieldsToUpdateInSchema.length > 0) {
+        updateFieldsInSchema(stepKey, fieldsToUpdateInSchema);
+    }
+
+    // console.log(`level: ${level}`);
+    // console.log(`subField: ${subFieldWasAdded}`);
+    // console.log(`addedFields: ${addedFields.length > 0}`);
+
+    // Returns true if a field was added at this level
+    // or a sub field was added to one of the fields at this level
+    return subFieldWasAdded || addedFields.length > 0;
+};
+
+// Returns the index for a step given its key
+const getFieldIndexGivenKey = (fields, key) => {
+    if (!fields) return -1;
+    return fields.findIndex((field) => field.key === key);
+};
+
 /* eslint-enable no-restricted-syntax, no-await-in-loop */
 
 const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
@@ -220,8 +316,7 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
         }
 
         if (stepBody.fields) {
-            // eslint-disable-next-line no-param-reassign
-            stepBody.fields = updateFieldKeys(stepBody.fields);
+            await updateFieldInTransaction([], stepBody.fields, stepBody.key, session, 0);
         } else {
             // eslint-disable-next-line no-param-reassign
             stepBody.fields = [];
@@ -236,40 +331,9 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
 
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
-    const addedFields = await getAddedFields(
-        session,
-        stepToEdit.fields,
-        strippedBody.fields,
-    );
 
-    // Checks that fields were not deleted
-    const deletedFields = getDeletedFields(stepToEdit.fields);
-
-    const numDeletedFields = deletedFields.length;
-    const numUnchangedFields = strippedBody.fields.length - addedFields.length;
-
-    const currentNumFields = stepToEdit.fields.length - numDeletedFields;
-    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
-
-    // Update the schema
-    addFieldsToSchema(stepKey, addedFields);
-
-    // Update the field numbers in order to account for deleted fields
-    strippedBody.fields = updateElementNumbers(
-        strippedBody.fields,
-        deletedFields,
-        FIELD_NUMBER_KEY,
-    );
-
-    // Add deleted fields so they will be remain in the database.
-    // They are added to the end in order to give easy access when
-    // restoring them manually.
-    for (let i = 0; i < deletedFields.length; i++) {
-        strippedBody.fields.push(deletedFields[i]);
-    }
-
-    // Generate keys for the fields that do not have a key
-    strippedBody.fields = updateFieldKeys(strippedBody.fields);
+    // Recursive updated on the fields
+    await updateFieldInTransaction(stepToEdit.fields, strippedBody.fields, stepKey, session, 0);
 
     // Finally, update the metadata for this step
     const step = await models.Step.findOne({ key: stepKey }).session(session);
@@ -320,5 +384,28 @@ const validateStep = async (step, session) => {
     if (!isValid) {
         await session.abortTransaction();
         throw `Validation error: ${step.key} does not have unique stepNumber`;
+    }
+};
+
+// Filters out deleted steps and fields from stepData
+module.exports.filterOutDeletedSteps = (stepData) => {
+    for (let i = 0; i < stepData.length; i++) {
+        if (stepData[i].isDeleted) {
+            stepData.splice(i, 1);
+            i -= 1;
+        } else {
+            filterOutDeletedFields(stepData[i].fields);
+        }
+    }
+};
+
+const filterOutDeletedFields = (fields) => {
+    for (let i = 0; i < fields.length; i++) {
+        if (fields[i].isDeleted) {
+            fields.splice(i, 1);
+            i -= 1;
+        } else if (fields[i].subFields) {
+            filterOutDeletedFields(fields[i].subFields);
+        }
     }
 };
