@@ -44,3 +44,17 @@ export const generateKeyWithoutCollision = (input, otherKeys) => {
 
     return noCollisionKey;
 };
+
+// Returns the index for a step given its key
+export const getStepIndexGivenKey = (stepData, key) => {
+    if (!stepData) return -1;
+    return stepData.findIndex((step) => step.key === key);
+};
+
+// This function is needed because the field number doesn't correspond to the index of a field in
+// the fields array. There can be fields with field numbers 1, 2, 4, 5, but no 3, in the fields array.
+export const getFieldIndexByNumber = (fields, fieldNumber) => {
+    return fields.findIndex(
+        (field) => field.fieldNumber === fieldNumber,
+    );
+};

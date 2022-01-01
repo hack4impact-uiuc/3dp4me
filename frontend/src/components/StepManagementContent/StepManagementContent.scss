@@ -17,6 +17,18 @@
         margin-right: -($drawerWidth + 3 * $verticalMovementWidth) !important;
     }
 
+    .add-subfield-button {
+        font-size: 2.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 7px;
+        padding: 1px;
+        &:hover {
+            color: gray;
+        }
+    }
+
     .step-field-container {
         background-color: #f6f6f6;
         border: #f6f6f6 solid 1px;
@@ -40,6 +52,7 @@
                 .subfield-container {
                     display: flex;
                     flex-direction: row;
+                    justify-content: center;
                     background: rgba(255, 255, 255, 1);
                     margin-top: 10px;
                     padding: 10px;
@@ -113,6 +126,7 @@
                 .subfield-container {
                     display: flex;
                     flex-direction: row;
+                    justify-content: center;
                     background: rgba(255, 255, 255, 1);
                     margin-top: 10px;
                     padding: 10px;

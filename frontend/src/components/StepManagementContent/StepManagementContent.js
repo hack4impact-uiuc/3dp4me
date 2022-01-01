@@ -6,12 +6,13 @@ import PropTypes from 'prop-types';
 import RadioButtonField from '../Fields/RadioButtonField';
 import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
-import { getJSONValueByStringPath } from '../../utils/utils'
+import { getJSONReferenceByStringPath } from '../../utils/utils'
 
 const StepManagementContent = ({
     onDownPressed,
     onUpPressed,
     onEditField,
+    onAddSubfield,
     stepMetadata,
     isEditing,
     allRoles,
@@ -89,6 +90,15 @@ const StepManagementContent = ({
         );
     };
 
+    function generateAddSubFieldButton(stepKey, root, fieldNumber) {
+        if (!isEditing) return null;
+        return (<div
+            onClick={() => onAddSubfield(stepKey, root, fieldNumber)}
+            className="add-subfield-button">
+            <i className="chevron add icon" />
+        </div>);
+    }
+
     function generateSubfieldInfo(field, fieldRoot, fieldNumber) {
         if (!field?.subFields?.length) return null;
 
@@ -96,12 +106,13 @@ const StepManagementContent = ({
         return (
             <div className="subfield-container">
                 {generateButtonInfo(field.subFields, root)}
+                {generateAddSubFieldButton(stepMetadata.key, root, fieldNumber)}
             </div>
         );
     }
 
     function getFieldIndexGivenFieldNumber(fieldRoot, fieldNumber) {
-        return getJSONValueByStringPath(stepMetadata, fieldRoot).findIndex((field) => field.fieldNumber === fieldNumber);
+        return getJSONReferenceByStringPath(stepMetadata, fieldRoot).findIndex((field) => field.fieldNumber === fieldNumber);
     }
 
     function getFieldClassName(field) {
@@ -126,7 +137,7 @@ const StepManagementContent = ({
         if (!fields) return null;
 
         return fields.map((field) => {
-            if (field.isDeleted) return <p>What the?</p>; // don't render fields when they are marked as deleted
+            if (field.isDeleted) return null; // don't render fields when they are marked as deleted
 
             return (
                 <div className={getFieldClassName(field)}>
@@ -174,6 +185,7 @@ StepManagementContent.propTypes = {
     isEditing: PropTypes.bool.isRequired,
     onDownPressed: PropTypes.func.isRequired,
     onEditField: PropTypes.func.isRequired,
+    onAddSubfield: PropTypes.func.isRequired,
     stepMetadata: PropTypes.object,
     onUpPressed: PropTypes.func.isRequired,
     allRoles: PropTypes.array.isRequired,
