@@ -296,11 +296,6 @@ const updateFieldInTransaction = async (fieldsInDB, fieldsFromRequest, stepKey, 
             const updateFieldResponse = await updateFieldInTransaction(newSavedFields, updatedField.subFields, stepKey, session, level + 1);
             const { didAddFields } = updateFieldResponse;
             updatedFields[updatedFieldIndex].subFields = updateFieldResponse.updatedFields;
-
-            if (updatedField.fieldType === 'FieldGroup') {
-                console.log(updateFieldResponse.updatedFields);
-            }
-
             subFieldWasAdded = subFieldWasAdded || didAddFields;
             // Build up a list of field's whose schema need to be updated
             if (didAddFields && level === 0) {

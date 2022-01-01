@@ -54,11 +54,45 @@ const StepManagementContent = ({
         }
     };
 
-    const renderEditButtons = (field, fieldRoot, fieldNumber) => {
+    const renderEditButtons = (field, fieldRoot, fieldNumber, isSubField) => {
         if (!isEditing) return null;
 
+        // Since subfields are rendered from left to right, their buttons will have to change.
+        if (isSubField) {
+            return (
+                <div className="subfield-buttons">
+                    <div className="reorder-subfield-buttons">
+                        <div
+                            onClick={() =>
+                                onUpPressed(stepMetadata.key, fieldRoot, fieldNumber)
+                            }
+                            className="up-button"
+                        >
+                            <i className="chevron left icon" />
+                        </div>
+                        <div
+                            onClick={() =>
+                                onDownPressed(stepMetadata.key, fieldRoot, fieldNumber)
+                            }
+                            className="down-button"
+                        >
+                            <i className="chevron right icon" />
+                        </div>
+                    </div>
+                    <div
+                        className="edit-field-button"
+                        onClick={() =>
+                            onEditField(stepMetadata.key, fieldRoot, fieldNumber)
+                        }
+                    >
+                        <i className="pencil alternate icon" />
+                    </div>
+                </div>
+            );
+        }
+
         return (
-            <div className="buttons">
+            <div className="field-buttons">
                 <div
                     className="edit-field-button"
                     onClick={() =>
@@ -68,7 +102,7 @@ const StepManagementContent = ({
                     <i className="pencil alternate icon" />
                 </div>
 
-                <div className="reorder-buttons">
+                <div className="reorder-field-buttons">
                     <div
                         onClick={() =>
                             onUpPressed(stepMetadata.key, fieldRoot, fieldNumber)
@@ -105,7 +139,7 @@ const StepManagementContent = ({
         const root = `${fieldRoot}[${getFieldIndexGivenFieldNumber(fieldRoot, fieldNumber)}].subFields`;
         return (
             <div className="subfield-container">
-                {generateButtonInfo(field.subFields, root)}
+                {generateButtonInfo(field.subFields, root, true)}
                 {generateAddSubFieldButton(stepMetadata.key, root, fieldNumber)}
             </div>
         );
@@ -133,7 +167,7 @@ const StepManagementContent = ({
         return fieldClassName;
     }
 
-    function generateButtonInfo(fields, fieldRoot) {
+    function generateButtonInfo(fields, fieldRoot, isSubField) {
         if (!fields) return null;
 
         return fields.map((field) => {
@@ -165,7 +199,7 @@ const StepManagementContent = ({
                             )}
                         </div>
 
-                        {renderEditButtons(field, fieldRoot, field.fieldNumber)}
+                        {renderEditButtons(field, fieldRoot, field.fieldNumber, isSubField)}
                     </div>
 
                     {renderBottomSection(field)}
@@ -176,7 +210,7 @@ const StepManagementContent = ({
 
     return (
         <div className="content-container">
-            {generateButtonInfo(stepMetadata?.fields, 'fields')}
+            {generateButtonInfo(stepMetadata?.fields, 'fields', false)}
         </div>
     );
 };

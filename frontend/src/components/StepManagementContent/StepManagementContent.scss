@@ -57,27 +57,45 @@
                     margin-top: 10px;
                     padding: 10px;
                     border-radius: 10px;
+                    overflow-x: auto;
+                    white-space: nowrap;    
+                    width: 100%;
                 }
             }
 
-            .buttons {
-                align-self: flex-start;
-                display: flex;
+            .subfield-buttons {
+                flex-direction: column;
+            }
+
+            .field-buttons {
                 flex-direction: row;
+            }
+
+            .subfield-buttons, .field-buttons {
+                display: flex;
+                align-self: flex-start;
 
                 .edit-field-button {
                     display: flex;
                     align-items: center;
+                    justify-content: center;
                     font-size: 1.4em;
                     &:hover {
                         color: gray;
                     }
                 }
 
-                .reorder-buttons {
+                .reorder-field-buttons, .reorder-subfield-buttons {
                     display: flex;
-                    flex-direction: column;
                     font-size: 1em;
+                }
+
+                .reorder-field-buttons {
+                    flex-direction: column;
+                }
+
+                .reorder-subfield-buttons {
+                    flex-direction: row;
                 }
 
                 .up-button {
@@ -131,6 +149,8 @@
                     margin-top: 10px;
                     padding: 10px;
                     border-radius: 10px;
+                    overflow-y: hidden;
+                    overflow-x: auto; 
                 }
             }
 

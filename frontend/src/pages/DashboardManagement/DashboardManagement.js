@@ -46,10 +46,11 @@ const SectionTab = () => {
     const [selectedFieldNumberForEditing, setSelectedFieldNumberForEditing] =
         useState(0);
     const [selectedFieldRootForEditing, setSelectedFieldRootForEditing] =
-        useState('fields');
+        useState('fields'); // Identifies where to edit a field in stepMetadata
     const [selectedStepNumberForEditing, setSelectedStepNumberForEditing] =
         useState(0);
-    const [selectedFieldRootForCreating, setSelectedFieldRootForCreating] = useState('fields');
+    const [selectedFieldRootForCreating, setSelectedFieldRootForCreating] = useState('fields'); // Identifies where to add a field in stepMetadata
+    const [canAddFieldGroup, setCanAddFieldGroup] = useState(true); // Toggled to false if the create field modal is open for creating a subfield
 
     const errorWrap = useErrorWrap();
 
@@ -62,12 +63,14 @@ const SectionTab = () => {
     const onAddField = (stepKey) => {
         setSelectedStep(stepKey);
         setCreateFieldModalOpen(true);
+        setCanAddFieldGroup(true);
     };
 
     const onAddSubfield = (stepKey, fieldRoot, fieldNumber) => {
         setSelectedStep(stepKey);
         setSelectedFieldRootForCreating(fieldRoot);
         setCreateFieldModalOpen(true);
+        setCanAddFieldGroup(false);
     };
 
     const onEditField = (stepKey, fieldRoot, fieldNumber) => {
@@ -273,6 +276,7 @@ const SectionTab = () => {
                 onModalClose={onCreateFieldModalClose}
                 allRoles={allRoles}
                 onAddNewField={addNewField}
+                canAddFieldGroup={canAddFieldGroup}
             />
         );
     };
