@@ -20,14 +20,14 @@ const stringToBoolean = (value) => {
 };
 
 module.exports.getReadableSteps = async (req) => {
-    let showHiddenFields = req.query.showHiddenFields ?? 'false';
-    let showHiddenSteps = req.query.showHiddenSteps ?? 'false';
-    showHiddenFields = stringToBoolean(showHiddenFields);
-    showHiddenSteps = stringToBoolean(showHiddenSteps);
+    let shouldShowHiddenFields = req.query.showHiddenFields ?? 'false';
+    let shouldShowHiddenSteps = req.query.showHiddenSteps ?? 'false';
+    shouldShowHiddenFields = stringToBoolean(shouldShowHiddenFields);
+    shouldShowHiddenSteps = stringToBoolean(shouldShowHiddenSteps);
 
     const userRole = req.user.roles.toString();
 
-    const searchParams = [
+    const fieldSearchParams = [
         {
             $or: [{ $ne: ['$$field.isDeleted', true] }],
         },
@@ -41,21 +41,23 @@ module.exports.getReadableSteps = async (req) => {
         aggregation.push({
             $match: { $expr: { $in: [userRole, '$readableGroups'] } }, // limit returning steps that don't contain the user role
         });
-        searchParams.push({
+        fieldSearchParams.push({
             $in: [userRole, '$$field.readableGroups'], // limit returning fields that don't contain the user role
         });
     }
 
-    if (!showHiddenFields) {
-        searchParams.push({
+    if (!shouldShowHiddenFields) {
+        fieldSearchParams.push({
             $or: [{ $ne: ['$$field.isHidden', true] }],
         }); // limit returning fields that are hidden
     }
 
-    if (!showHiddenSteps) {
+    // Limit returning steps that are hidden
+    if (!shouldShowHiddenSteps) {
         aggregation.push({ $match: { isHidden: { $ne: true } } });
     }
 
+    // Adds operation for filtering out fields to the aggregation.
     aggregation.push({
         $addFields: {
             fields: {
@@ -63,29 +65,42 @@ module.exports.getReadableSteps = async (req) => {
                     input: '$fields',
                     as: 'field',
                     cond: {
-                        $and: searchParams,
+                        $and: fieldSearchParams,
                     },
                 },
             },
         },
     });
 
+    /*
+        Adds operation for filtering out subfields in fields to the aggregation.
+        Sources:
+        https://stackoverflow.com/questions/19431773/include-all-existing-fields-and-add-new-fields-to-document
+        https://stackoverflow.com/questions/44999893/how-do-i-add-properties-to-subdocument-array-in-aggregation-make-map-like-addf
+    */
+
     aggregation.push({
         $addFields: {
-            fields2: {
-                $map: {
-                    input: '$fields',
-                    as: 'f',
+            fields: {
+                $map: { // Perform map on the fields
+                    input: '$fields', // Input is the field array
+                    as: 'f', // Single element in the field array
                     in: {
-                        subFields: {
-                            $filter: {
-                                input: '$$f.subFields',
-                                as: 'field',
-                                cond: {
-                                    $and: searchParams,
+                        // Merges the filtered subFields with the rest of the field data
+                        $mergeObjects: [
+                            '$$f',
+                            {
+                                subFields: {
+                                    $filter: {
+                                        input: '$$f.subFields',
+                                        as: 'field',
+                                        cond: {
+                                            $and: fieldSearchParams, // Same field filter conditions
+                                        },
+                                    },
                                 },
                             },
-                        },
+                        ],
                     },
                 },
             },
@@ -93,7 +108,6 @@ module.exports.getReadableSteps = async (req) => {
     });
 
     const data = await models.Step.aggregate(aggregation);
-
     return data;
 };
 
@@ -264,11 +278,8 @@ const updateFieldInTransaction = async (savedFields, updatedFields, stepKey, ses
     let subFieldWasAdded = false;
 
     // Recursively call updateFieldInTransaction() on each field's subfields
-    updatedFields.forEach(async (updatedField) => {
+    const subFieldUpdateArray = updatedFields.map(async (updatedField) => {
         if (updatedField.subFields) {
-            if (updatedField.subFields.length > 0) {
-                console.log(`${updatedField.key} has subFields`);
-            }
             const updatedFieldKey = updatedField.key;
             const savedFieldIndex = getFieldIndexGivenKey(savedFields, updatedFieldKey);
 
@@ -281,20 +292,19 @@ const updateFieldInTransaction = async (savedFields, updatedFields, stepKey, ses
             subFieldWasAdded = subFieldWasAdded || didAddFields;
             // Build up a list of field's whose schema need to be updated
             if (didAddFields && level === 0) {
-                console.log(`Need to update ${updatedField.key} schema`);
                 fieldsToUpdateInSchema.push(updatedField);
             }
+            return true;
         }
+        return false;
     });
+
+    await Promise.all(subFieldUpdateArray);
 
     // Update schema
     if (fieldsToUpdateInSchema.length > 0) {
         updateFieldsInSchema(stepKey, fieldsToUpdateInSchema);
     }
-
-    // console.log(`level: ${level}`);
-    // console.log(`subField: ${subFieldWasAdded}`);
-    // console.log(`addedFields: ${addedFields.length > 0}`);
 
     // Returns true if a field was added at this level
     // or a sub field was added to one of the fields at this level
