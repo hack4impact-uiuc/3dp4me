@@ -22,13 +22,9 @@ require('../../middleware/patientAuthentication');
 
 router.post('/authenticated/:patientId', passport.authenticate('passport-local'), async (req, res) => {
     const { patientId } = req.params;
-    console.log('ya');
     if (!req.user) { return res.redirect(`/${patientId}`); }
-    console.log('nah');
     req.logIn(req.user, (err) => {
         if (err) { return err; }
-        console.log(req.session);
-        // do i need this line?
         req.session.save();
         return sendResponse(
             res,
