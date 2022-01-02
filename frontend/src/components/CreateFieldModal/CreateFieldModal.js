@@ -105,8 +105,9 @@ const CreateFieldModal = ({
             choices.push(
                 <div>
                     <span>
-                        {`${translations.components.swal.field.option} ${i + 1
-                            }`}
+                        {`${translations.components.swal.field.option} ${
+                            i + 1
+                        }`}
                     </span>
                     <LanguageInput
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
@@ -368,7 +369,7 @@ CreateFieldModal.propTypes = {
     onModalClose: PropTypes.func.isRequired,
     allRoles: PropTypes.array.isRequired,
     onAddNewField: PropTypes.func.isRequired,
-    canAddFieldGroup: PropTypes.bool
+    canAddFieldGroup: PropTypes.bool,
 };
 
 export default CreateFieldModal;

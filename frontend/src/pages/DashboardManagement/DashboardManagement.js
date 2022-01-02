@@ -25,12 +25,21 @@ import {
     getValidAdjacentElement,
     swapValuesInArrayByKey,
 } from '../../utils/dashboard-utils';
-import { generateKeyWithoutCollision, getStepIndexGivenKey, getFieldIndexByNumber } from '../../utils/metadataUtils';
-import { rolesToMultiSelectFormat, sortMetadata, getJSONReferenceByStringPath } from '../../utils/utils';
+import {
+    generateKeyWithoutCollision,
+    getStepIndexGivenKey,
+    getFieldIndexByNumber,
+} from '../../utils/metadataUtils';
+import {
+    rolesToMultiSelectFormat,
+    sortMetadata,
+    getJSONReferenceByStringPath,
+} from '../../utils/utils';
 import './DashboardManagement.scss';
 
-const expandedSidebarWidth = `${parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
-    }px`;
+const expandedSidebarWidth = `${
+    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+}px`;
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
@@ -49,7 +58,8 @@ const SectionTab = () => {
         useState('fields'); // Identifies where to edit a field in stepMetadata
     const [selectedStepNumberForEditing, setSelectedStepNumberForEditing] =
         useState(0);
-    const [selectedFieldRootForCreating, setSelectedFieldRootForCreating] = useState('fields'); // Identifies where to add a field in stepMetadata
+    const [selectedFieldRootForCreating, setSelectedFieldRootForCreating] =
+        useState('fields'); // Identifies where to add a field in stepMetadata
     const [canAddFieldGroup, setCanAddFieldGroup] = useState(true); // Toggled to false if the create field modal is open for creating a subfield
 
     const errorWrap = useErrorWrap();
@@ -67,14 +77,14 @@ const SectionTab = () => {
         setCanAddFieldGroup(true);
     };
 
-    const onAddSubfield = (stepKey, fieldRoot, fieldNumber) => {
+    const onAddSubfield = (stepKey, fieldRoot) => {
         setSelectedStep(stepKey);
         setSelectedFieldRootForCreating(fieldRoot);
         setCreateFieldModalOpen(true);
         setCanAddFieldGroup(false);
     };
 
-    const onEditField = (stepKey, fieldRoot, fieldNumber) => {
+    const onEditField = (fieldRoot, fieldNumber) => {
         setSelectedFieldNumberForEditing(fieldNumber);
         setSelectedFieldRootForEditing(fieldRoot);
         setEditFieldModalOpen(true);
@@ -135,7 +145,7 @@ const SectionTab = () => {
      * @param {Number} direction 1 indicates increasing stepNumber, -1 indicates decreasing fieldNumber
      */
     function moveStep(stepKey, direction) {
-        let updatedMetadata = _.cloneDeep(stepMetadata);
+        const updatedMetadata = _.cloneDeep(stepMetadata);
 
         const currStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
 
@@ -185,12 +195,12 @@ const SectionTab = () => {
         if (foundStepIndex < 0) return;
 
         // Reference to the fields/subfields array we are modifying.
-        let fieldsArray = getJSONReferenceByStringPath(updatedMetadata[foundStepIndex], fieldRoot);
-
-        const currFieldIndex = getFieldIndexByNumber(
-            fieldsArray,
-            fieldNumber,
+        const fieldsArray = getJSONReferenceByStringPath(
+            updatedMetadata[foundStepIndex],
+            fieldRoot,
         );
+
+        const currFieldIndex = getFieldIndexByNumber(fieldsArray, fieldNumber);
 
         const adjFieldIndex = getValidAdjacentElement(
             fieldsArray,
@@ -248,7 +258,6 @@ const SectionTab = () => {
 
                 const sortedMetadata = sortMetadata(res.result);
 
-
                 if (sortedMetadata.length > 0) {
                     setSelectedStep(sortedMetadata[0].key);
                 }
@@ -287,7 +296,10 @@ const SectionTab = () => {
 
         if (stepIndex < 0) return null;
 
-        let fieldArrayReference = getJSONReferenceByStringPath(stepMetadata[stepIndex], selectedFieldRootForEditing);
+        const fieldArrayReference = getJSONReferenceByStringPath(
+            stepMetadata[stepIndex],
+            selectedFieldRootForEditing,
+        );
 
         if (!fieldArrayReference) return null;
 
@@ -298,7 +310,10 @@ const SectionTab = () => {
 
         if (fieldIndex < 0) return null;
 
-        const fieldData = getJSONReferenceByStringPath(stepMetadata[stepIndex], selectedFieldRootForEditing)[fieldIndex];
+        const fieldData = getJSONReferenceByStringPath(
+            stepMetadata[stepIndex],
+            selectedFieldRootForEditing,
+        )[fieldIndex];
 
         if (!fieldData) return null;
 
@@ -346,7 +361,6 @@ const SectionTab = () => {
         );
     };
 
-
     const onCreateFieldModalClose = () => {
         setCreateFieldModalOpen(false);
     };
@@ -370,15 +384,17 @@ const SectionTab = () => {
 
         if (stepIndex < 0) return;
 
-        let fieldArrayReference = getJSONReferenceByStringPath(updatedMetadata[stepIndex], selectedFieldRootForCreating);
+        const fieldArrayReference = getJSONReferenceByStringPath(
+            updatedMetadata[stepIndex],
+            selectedFieldRootForCreating,
+        );
 
         // Set the field number to one more than the field number of the
         // last field for the selected step.
         if (fieldArrayReference.length) {
             updatedNewField.fieldNumber =
-                fieldArrayReference[
-                    fieldArrayReference.length - 1
-                ].fieldNumber + 1;
+                fieldArrayReference[fieldArrayReference.length - 1]
+                    .fieldNumber + 1;
         } else {
             updatedNewField.fieldNumber = 1;
         }
@@ -404,7 +420,10 @@ const SectionTab = () => {
 
         if (stepIndex < 0) return;
 
-        let fieldArrayReference = getJSONReferenceByStringPath(updatedMetadata[stepIndex], selectedFieldRootForEditing);
+        const fieldArrayReference = getJSONReferenceByStringPath(
+            updatedMetadata[stepIndex],
+            selectedFieldRootForEditing,
+        );
 
         if (!fieldArrayReference) return;
 
@@ -485,10 +504,11 @@ const SectionTab = () => {
                     onDiscard={onDiscardChanges}
                     style={{
                         editorSection: {
-                            marginLeft: `${isEditing
-                                ? expandedSidebarWidth
-                                : retractedSidebarWidth
-                                }`,
+                            marginLeft: `${
+                                isEditing
+                                    ? expandedSidebarWidth
+                                    : retractedSidebarWidth
+                            }`,
                         },
                     }}
                     selectedStep={selectedStep}

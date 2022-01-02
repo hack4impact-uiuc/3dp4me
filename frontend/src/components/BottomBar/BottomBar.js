@@ -150,10 +150,11 @@ const BottomBar = ({
         let buttonClassName = 'add-field-button';
 
         if (selectedLang !== LANGUAGES.AR) {
-            buttonClassName += ` ${isEditing
+            buttonClassName += ` ${
+                isEditing
                     ? 'add-field-expanded-width'
                     : 'add-field-retracted-width'
-                }`;
+            }`;
         }
 
         if (isEditing && onAddField) {

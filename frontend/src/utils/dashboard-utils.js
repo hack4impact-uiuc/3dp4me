@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export const DIRECTION = {
     UP: -1,
     DOWN: 1,
@@ -31,6 +29,8 @@ export const getValidAdjacentElement = (arr, currIndex, direction) => {
 // Swaps the value of two elements in an array given their indices and attribute key
 export const swapValuesInArrayByKey = (arr, key, firstIndex, secondIndex) => {
     const temp = arr[firstIndex][key];
+    // eslint-disable-next-line no-param-reassign
     arr[firstIndex][key] = arr[secondIndex][key];
+    // eslint-disable-next-line no-param-reassign
     arr[secondIndex][key] = temp;
 };

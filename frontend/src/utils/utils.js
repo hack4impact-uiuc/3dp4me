@@ -54,22 +54,22 @@ export const rolesToMultiSelectFormat = (roles) => {
     }));
 };
 
-
 /* 
     Returns a value form a JSON object given a string path (ex: fields[0].subFields)
     Source: https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
 */
 export const getJSONReferenceByStringPath = (object, stringPath) => {
-    stringPath = stringPath.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-    stringPath = stringPath.replace(/^\./, '');           // strip a leading dot
-    var splitStringPath = stringPath.split('.');
-    for (var i = 0, n = splitStringPath.length; i < n; ++i) {
-        var trimmedObject = splitStringPath[i];
+    const propertyStringPath = stringPath.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+    const strippedStringPath = propertyStringPath.replace(/^\./, ''); // strip a leading dot
+    const splitStringPath = strippedStringPath.split('.');
+    for (let i = 0, n = splitStringPath.length; i < n; ++i) {
+        const trimmedObject = splitStringPath[i];
         if (trimmedObject in object) {
+            // eslint-disable-next-line no-param-reassign
             object = object[trimmedObject];
         } else {
-            return;
+            return undefined;
         }
     }
     return object;
-}
+};

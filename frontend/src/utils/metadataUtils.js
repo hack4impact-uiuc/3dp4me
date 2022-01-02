@@ -54,7 +54,5 @@ export const getStepIndexGivenKey = (stepData, key) => {
 // This function is needed because the field number doesn't correspond to the index of a field in
 // the fields array. There can be fields with field numbers 1, 2, 4, 5, but no 3, in the fields array.
 export const getFieldIndexByNumber = (fields, fieldNumber) => {
-    return fields.findIndex(
-        (field) => field.fieldNumber === fieldNumber,
-    );
+    return fields.findIndex((field) => field.fieldNumber === fieldNumber);
 };

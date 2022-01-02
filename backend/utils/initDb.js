@@ -90,35 +90,35 @@ const getStepBaseSchema = () => {
  */
 module.exports.generateFieldSchema = (field) => {
     switch (field.fieldType) {
-        case FIELDS.STRING:
-            return getStringSchema();
-        case FIELDS.MULTILINE_STRING:
-            return getStringSchema();
-        case FIELDS.NUMBER:
-            return getNumberSchema();
-        case FIELDS.DATE:
-            return getDateSchema();
-        case FIELDS.PHONE:
-            return getStringSchema();
-        case FIELDS.RADIO_BUTTON:
-            return getRadioButtonSchema(field);
-        case FIELDS.FILE:
-            return getFileSchema();
-        case FIELDS.PHOTO:
-            return getFileSchema();
-        case FIELDS.AUDIO:
-            return getFileSchema();
-        case FIELDS.FIELD_GROUP:
-            return getFieldGroupSchema(field);
-        case FIELDS.SIGNATURE:
-            return getSignatureSchema(field);
-        case FIELDS.DIVIDER:
-            return null;
-        case FIELDS.MAP:
-            return getMapSchema(field);
-        default:
-            log.error(`Unrecognized field type, ${field.fieldType}`);
-            return null;
+    case FIELDS.STRING:
+        return getStringSchema();
+    case FIELDS.MULTILINE_STRING:
+        return getStringSchema();
+    case FIELDS.NUMBER:
+        return getNumberSchema();
+    case FIELDS.DATE:
+        return getDateSchema();
+    case FIELDS.PHONE:
+        return getStringSchema();
+    case FIELDS.RADIO_BUTTON:
+        return getRadioButtonSchema(field);
+    case FIELDS.FILE:
+        return getFileSchema();
+    case FIELDS.PHOTO:
+        return getFileSchema();
+    case FIELDS.AUDIO:
+        return getFileSchema();
+    case FIELDS.FIELD_GROUP:
+        return getFieldGroupSchema(field);
+    case FIELDS.SIGNATURE:
+        return getSignatureSchema(field);
+    case FIELDS.DIVIDER:
+        return null;
+    case FIELDS.MAP:
+        return getMapSchema(field);
+    default:
+        log.error(`Unrecognized field type, ${field.fieldType}`);
+        return null;
     }
 };
 
