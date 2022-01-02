@@ -217,7 +217,6 @@ const updateFieldKeys = (fields) => {
                 currentField.displayName.EN,
                 currentFieldKeys,
             );
-            console.log("assigned key called: " + generatedKey);
             currentField.key = generatedKey;
             currentFieldKeys.push(generatedKey);
         }
@@ -295,6 +294,7 @@ const updateFieldInTransaction = async (fieldsInDB, fieldsFromRequest, stepKey, 
             // eslint-disable-next-line max-len
             const updateFieldResponse = await updateFieldInTransaction(newSavedFields, updatedField.subFields, stepKey, session, level + 1);
             const { didAddFields } = updateFieldResponse;
+
             updatedFields[updatedFieldIndex].subFields = updateFieldResponse.updatedFields;
             subFieldWasAdded = subFieldWasAdded || didAddFields;
             // Build up a list of field's whose schema need to be updated
@@ -333,11 +333,14 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
     // Cannot find step
     if (!stepBody?.key) await abortAndError(session, 'stepKey missing');
 
-    // Get the step to edit
+    /*  Get the step to edit.
+        .lean() is used to return POJO (Plain Old JavaScript Object)
+        instead of MongoDB document.
+    */
     const stepKey = stepBody.key;
     const stepToEdit = await models.Step.findOne({ key: stepKey }).session(
         session,
-    );
+    ).lean();
 
     // Treat a field as new if it doesn't show up in the database
     // or it is marked as deleted in the database. This based on the assumption

@@ -60,8 +60,9 @@ const SectionTab = () => {
         setCreateStepModalOpen(true);
     };
 
-    const onAddField = (stepKey) => {
+    const onAddField = (stepKey, fieldRoot) => {
         setSelectedStep(stepKey);
+        setSelectedFieldRootForCreating(fieldRoot);
         setCreateFieldModalOpen(true);
         setCanAddFieldGroup(true);
     };
