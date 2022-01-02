@@ -22,8 +22,9 @@ require('../../middleware/patientAuthentication');
 
 router.post('/authenticated/:patientId', passport.authenticate('passport-local'), async (req, res) => {
     const { patientId } = req.params;
+    console.log('ya');
     if (!req.user) { return res.redirect(`/${patientId}`); }
-
+    console.log('nah');
     req.logIn(req.user, (err) => {
         if (err) { return err; }
         console.log(req.session);
@@ -46,7 +47,6 @@ router.get(
     '/:patientId',
     errorWrap(async (req, res) => {
         const { patientId } = req.params;
-
         const patient = await models.Patient.findById(patientId);
 
         if (!patient) {
@@ -71,7 +71,6 @@ router.get(
 
         client.messages
             .create({
-                // TODO: Backend translations
                 body: `Your one time token is ${newToken.token}`,
                 to: `${TWILIO_WHATSAPP_PREFIX}${patient.phoneNumber}`,
                 from: TWILIO_SENDING_NUMBER,
@@ -104,24 +103,62 @@ router.post(
             isAuthenticated = twofactor.verifyToken(patientSecret, token, TWO_FACTOR_WINDOW_MINS);
         }
 
-        // TODO: remove console logs and booleans in the response
-        console.log(res);
-
         if (isAuthenticated) {
             await sendResponse(
                 res,
                 200,
                 'Patient verified',
-                isAuthenticated,
             );
         } else {
             await sendResponse(
                 res,
                 404,
                 'Invalid token entered',
-                isAuthenticated,
             );
         }
+    }),
+);
+
+router.get(
+    '/patient-portal/:patientId',
+    errorWrap(async (req, res) => {
+        const { patientId } = req.params;
+        let patient;
+
+        try {
+            patient = await models.Patient.findById(patientId);
+        } catch {
+            await sendResponse(
+                res,
+                404,
+                'An error occurred while checking for patient authentication',
+            );
+            return;
+        }
+
+        if (!patient) {
+            await sendResponse(
+                res,
+                404,
+                'Invalid patient ID',
+            );
+            return;
+        }
+
+        if (!req.user) {
+            await sendResponse(
+                res,
+                404,
+                'Session expired',
+            );
+            return;
+        }
+
+        await sendResponse(
+            res,
+            200,
+            'Patient verified',
+        );
     }),
 );
 

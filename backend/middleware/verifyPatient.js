@@ -15,9 +15,9 @@ module.exports.requirePatientAuthentication = async (req, res) => {
     try {
         const user = req?.session?.passport?.user;
         if (!user) {
-            sendResponse(res, 401, ERR_AUTH_FAILED);
+            sendResponse(res, 401, ERR_NOT_APPROVED);
         } else {
-            sendResponse(res, 403, ERR_NOT_APPROVED);
+            sendResponse(res, 200);
         }
     } catch (error) {
         log.error(error);

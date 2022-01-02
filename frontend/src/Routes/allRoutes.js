@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom';
 
-import {ROUTES} from '../utils/constants';
+import { ROUTES } from '../utils/constants';
 import Patient2FA from '../pages/Patient2FALogin/Patient2FALogin';
 import PatientPortal from '../pages/PatientPortal/PatientPortal';
 

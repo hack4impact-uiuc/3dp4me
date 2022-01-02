@@ -269,28 +269,3 @@ export const getSelf = async () => {
 
     return res.data;
 };
-
-export const send2FAPatientCode = async (_id) => {
-    const requestString = `/patient-2fa/${_id}`;
-    const res = await instance.get(requestString);
-
-    // Need to handle case of invalid patient id
-    if (!res?.data?.success) throw new Error(res?.data?.message);
-    
-    return res.data;
-};
-
-export const authenticatePatient = async (_id, token) => {
-    const bodyFormData = new FormData();
-    bodyFormData.append('username', _id);
-    bodyFormData.append('password', token);
-    const res = await instance({
-        method: "post",
-        url: `/patient-2fa/authenticated/${_id}`,
-        data: bodyFormData,
-        headers: { "Content-Type": "multipart/form-data" },
-        // credentials: 'include'
-    })
-
-    return res.data;
-};

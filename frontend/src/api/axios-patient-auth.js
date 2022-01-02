@@ -16,10 +16,13 @@ const instance = axios.create({
 
 export const send2FAPatientCode = async (_id) => {
     const requestString = `/patient-2fa/${_id}`;
-    const res = await instance.get(requestString);
 
-    // Need to handle case of invalid patient id
-    if (!res?.data?.success) throw new Error(res?.data?.message);
+    const res = await instance.get(requestString);
+    
+    // Previously, without the redirect, the site would crash when an invalid patient id was entered
+    if (!res?.data?.success) {
+        window.location = `/patient-2fa/${_id}`;
+    }
     
     return res.data;
 };
@@ -36,4 +39,20 @@ export const authenticatePatient = async (_id, token) => {
     })
 
     return res.data;
+};
+
+export const redirectAndAuthenticate = async (_id) => {
+    const res = await instance({
+        method: "get",
+        url: `/patient-2fa/patient-portal/${_id}`,
+        data: {_id},
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    if (!res?.data?.success) {
+        window.location = `/patient-2fa/${_id}`;
+        return false;
+    }
+
+    return true;
 };

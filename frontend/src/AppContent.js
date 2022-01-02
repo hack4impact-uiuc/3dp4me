@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
-import { trackPromise } from 'react-promise-tracker';
 
 import ErrorModal from './components/ErrorModal/ErrorModal';
 import { useTranslations } from './hooks/useTranslations';
@@ -32,8 +31,6 @@ const AppContent = () => {
             <LoadingIndicator />
             <Router>
                 <QueryParamProvider ReactRouterRoute={Route}>
-                    
-
                     {/* Global error popup */}
                     <ErrorModal
                         message={state.error}

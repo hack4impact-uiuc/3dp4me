@@ -62,7 +62,7 @@ app.get('/*', (req, res, next) => {
 const sess = {
     secret: '3DP4ME',
     cookie: {
-        domain: 'localhost', path: '/', httpOnly: true, secure: false, maxAge: 180000,
+        domain: 'localhost', path: '/', httpOnly: true, secure: false, maxAge: 30000,
     },
     resave: false,
     saveUninitialized: false,
