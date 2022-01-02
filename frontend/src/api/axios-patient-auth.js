@@ -37,8 +37,3 @@ export const authenticatePatient = async (_id, token) => {
 
     return res.data;
 };
-
-export const randomMethod = async() => {
-    const requestString = `/patient-2fa/isAuth`;
-    instance.get(requestString, {withCredentials: true});
-}
