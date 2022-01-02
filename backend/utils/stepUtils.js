@@ -361,14 +361,16 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
         }
 
         if (stepBody.fields) {
-            await updateFieldInTransaction([], stepBody.fields, stepBody.key, session, 0);
+            generateSchemaFromMetadata(stepBody);
+            // eslint-disable-next-line max-len
+            const { updatedFields } = await updateFieldInTransaction([], stepBody.fields, stepBody.key, session, 0);
+            // eslint-disable-next-line no-param-reassign
+            stepBody.fields = updatedFields;
         } else {
             // eslint-disable-next-line no-param-reassign
             stepBody.fields = [];
+            generateSchemaFromMetadata(stepBody);
         }
-
-        generateSchemaFromMetadata(stepBody);
-
         const newStep = new models.Step(stepBody);
         await newStep.save({ session, validateBeforeSave: false });
         return newStep;
