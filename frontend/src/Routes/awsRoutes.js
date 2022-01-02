@@ -112,30 +112,30 @@ const AWSRoutes = () => {
     return (
         <Switch>
             <Route exact path={ROUTES.DASHBOARD}>
-                <Navbar />
+                <Navbar username={username} userEmail={userEmail} />
                 <Dashboard />
             </Route>
             <Route exact path={ROUTES.ACCOUNT}>
-                <Navbar />
+                <Navbar username={username} userEmail={userEmail} />
                 <AccountManagement />
             </Route>
             <Route exact path={ROUTES.PATIENTS}>
-                <Navbar />
+                <Navbar username={username} userEmail={userEmail} />
                 <Patients />
             </Route>
             <Route exact path={ROUTES.DASHBOARD_MANAGEMENT}>
-                <Navbar />
+                <Navbar username={username} userEmail={userEmail} />
                 <DashboardManagement />
             </Route>
             <Route
                 exact
                 path={`${ROUTES.PATIENT_DETAIL}/:patientId`}
             >
-                <Navbar />
+                <Navbar username={username} userEmail={userEmail} />
                 <PatientDetail />
             </Route>
             <Route>
-                <Navbar />
+                <Navbar username={username} userEmail={userEmail} />
                 <Dashboard />
             </Route>
         </Switch>
