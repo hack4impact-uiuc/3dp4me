@@ -1,10 +1,8 @@
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 const express = require('express');
 const twofactor = require('node-2fa');
 const passport = require('passport');
-
-const accountSid = process.env.ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-
 const client = require('twilio')(accountSid, authToken);
 
 const {
@@ -32,6 +30,8 @@ router.post('/authenticated/:patientId', passport.authenticate('passport-local')
             'Successfully authenticated patient',
         );
     });
+
+    return req.user;
 });
 
 /**
