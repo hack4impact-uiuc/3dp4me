@@ -2,7 +2,6 @@ import React from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-import { formatDate } from '../../utils/date';
 import './BottomBar.scss';
 import check from '../../assets/check.svg';
 import exclamation from '../../assets/exclamation.svg';
@@ -12,14 +11,13 @@ import { useTranslations } from '../../hooks/useTranslations';
 
 const BottomBar = ({
     isEditing,
-    lastEdited,
-    lastEditedBy,
+    onAddField,
     onStatusChange,
     onSave,
     onDiscard,
     onEdit,
     status = null,
-    style = null,
+    selectedStep,
 }) => {
     const [translations, selectedLang] = useTranslations();
 
@@ -89,6 +87,11 @@ const BottomBar = ({
         const saveBtnClassName =
             selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button';
 
+        const discardBtnClassName =
+            selectedLang === LANGUAGES.AR
+                ? 'discard-button-ar'
+                : 'discard-button';
+
         return [
             <Button
                 key="bottom-bar-save"
@@ -99,7 +102,7 @@ const BottomBar = ({
             </Button>,
             <Button
                 key="bottom-bar-discard"
-                className="discard-button"
+                className={discardBtnClassName}
                 onClick={onDiscard}
             >
                 <b>{translations.components.button.discard.title}</b>
@@ -108,12 +111,18 @@ const BottomBar = ({
     };
 
     /**
-     * Renders all of the controls for the bottom bar (status selector, save, discard)
+     * Renders the edit controls for the bottom bar (status selector, save, discard)
      */
     const renderToolbarControls = () => {
         if (isEditing) {
             return (
-                <div>
+                <div
+                    className={
+                        selectedLang === LANGUAGES.AR && onAddField
+                            ? 'toolbar-editing-div-ar'
+                            : 'toolbar-editing-div'
+                    }
+                >
                     {renderStatusSelector()}
                     {renderDiscardAndSaveButtons()}
                 </div>
@@ -130,12 +139,55 @@ const BottomBar = ({
         );
     };
 
-    const getLastEditedString = () => {
-        if (!lastEdited || !lastEditedBy) return '';
+    /**
+     *
+     * @returns Renders the controls for adding a field
+     */
 
-        const lastEditedDate = formatDate(new Date(lastEdited), selectedLang);
-        return `${translations.components.bottombar.lastEditedBy} ${lastEditedBy} ${translations.components.bottombar.on} ${lastEditedDate}`;
+    const renderAddFieldButton = () => {
+        let button = null;
+
+        let buttonClassName = 'add-field-button';
+
+        if (selectedLang !== LANGUAGES.AR) {
+            buttonClassName += ` ${
+                isEditing
+                    ? 'add-field-expanded-width'
+                    : 'add-field-retracted-width'
+            }`;
+        }
+
+        if (isEditing && onAddField) {
+            button = (
+                <Button
+                    className={buttonClassName}
+                    onClick={() => onAddField(selectedStep)}
+                >
+                    {translations.components.bottombar.addField}
+                </Button>
+            );
+        }
+
+        return <div className="add-field-div">{button}</div>;
     };
+
+    // The edit steps and discard button needs to remain in the same location on the screen,
+    // regardless of the language. This allows the user to keep the mouse in the same position when
+    // switching between the Editing-Not Editing state. In order to allow this, the order of the
+    // add field button and toolbar controls needs to flip below. This counters the flip in left-right
+    // orientation made to the entire website when the language switches to Arabic.
+    const controlToolbar =
+        selectedLang === LANGUAGES.AR && onAddField ? (
+            <>
+                {renderToolbarControls()}
+                {renderAddFieldButton()}
+            </>
+        ) : (
+            <>
+                {renderAddFieldButton()}
+                {renderToolbarControls()}
+            </>
+        );
 
     return (
         <AppBar
@@ -147,26 +199,20 @@ const BottomBar = ({
                 boxShadow: '0 0px 4px 2px rgba(0, 0, 0, 0.15)',
             }}
         >
-            <Toolbar className="bottom-toolbar">
-                <div className="editor-section" style={style?.editorSection}>
-                    {getLastEditedString()}
-                </div>
-                {renderToolbarControls()}
-            </Toolbar>
+            <Toolbar className="bottom-toolbar">{controlToolbar}</Toolbar>
         </AppBar>
     );
 };
 
 BottomBar.propTypes = {
-    style: PropTypes.object,
+    onAddField: PropTypes.func.isRequired,
     isEditing: PropTypes.bool.isRequired,
-    lastEdited: PropTypes.string,
-    lastEditedBy: PropTypes.string,
     status: PropTypes.string,
     onStatusChange: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     onDiscard: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
+    selectedStep: PropTypes.string.isRequired,
 };
 
 export default BottomBar;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { trackPromise } from 'react-promise-tracker';
 
 import TextField from '../Fields/TextField';
 import TextArea from '../Fields/TextArea';
@@ -21,7 +22,7 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }) => {
     const onSave = async () => {
         errorWrap(async () => {
             validateRole();
-            const res = await addRole(role);
+            const res = await trackPromise(addRole(role));
             onRoleAdded(res.result);
             onClose();
         });

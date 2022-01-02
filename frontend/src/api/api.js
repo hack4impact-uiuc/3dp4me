@@ -10,20 +10,25 @@ export const getPatientsCount = async () => {
     return res.data;
 };
 
-export const getPatientsByPageNumber = async (pageNumber, nPerPage) => {
-    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
+export const getPatientsByPageNumberAndSearch = async (
+    pageNumber,
+    nPerPage,
+    searchQuery = '',
+) => {
+    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
     return res.data;
 };
 
-export const getPatientsByStageAndPageNumber = async (
+export const getPatientsByStageAndPageNumberAndSearch = async (
     stage,
     pageNumber,
     nPerPage,
+    searchQuery = '',
 ) => {
-    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}`;
+    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
@@ -66,8 +71,17 @@ export const updatePatient = async (patientId, updatedData) => {
     return res.data;
 };
 
-export const getAllStepsMetadata = async (showHiddenField = false) => {
-    const requestString = `/metadata/steps?showHiddenFields=${showHiddenField}`;
+export const deletePatientById = async (patientId) => {
+    const requestString = `/patients/${patientId}`;
+    const res = await instance.delete(requestString);
+
+    if (!res?.data?.success) throw new Error(res?.data?.message);
+
+    return res.data;
+};
+
+export const getAllStepsMetadata = async (showHiddenFieldsAndSteps = false) => {
+    const requestString = `/metadata/steps?showHiddenFields=${showHiddenFieldsAndSteps}&showHiddenSteps=${showHiddenFieldsAndSteps}`;
 
     /**
      * In order to test this method and its steps, hardcode an entire object (subFields, displayName, etc.) from the database
@@ -188,6 +202,14 @@ export const editRole = async (userId, updatedRoleInfo) => {
     const res = await instance.put(requestString, updatedRoleInfo);
     if (!res?.data?.success) throw new Error(res?.data?.message);
 
+    return res.data;
+};
+
+// TODO: test endpoint or create issue for it
+export const deleteUser = async (username) => {
+    const requestString = `/users/${username}`;
+    const res = await instance.delete(requestString);
+    if (!res?.data?.success) throw new Error(res?.data?.message);
     return res.data;
 };
 

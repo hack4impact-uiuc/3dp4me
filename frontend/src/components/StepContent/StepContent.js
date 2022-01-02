@@ -9,6 +9,7 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import swal from 'sweetalert';
+import { trackPromise } from 'react-promise-tracker';
 
 import { deleteFile, downloadFile, uploadFile } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
@@ -25,8 +26,9 @@ const StepContent = ({
     loading,
     stepData,
     onDataSaved,
+    edit,
+    setEdit,
 }) => {
-    const [edit, setEdit] = useState(false);
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
@@ -36,6 +38,19 @@ const StepContent = ({
     useEffect(() => {
         setUpdatedData(_.cloneDeep(stepData));
     }, [stepData]);
+
+    useEffect(() => {
+        const determinePreventDefault = (e) => {
+            // Check if any of the step is being edited
+            if (edit) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        };
+        window.addEventListener('beforeunload', determinePreventDefault);
+        return () =>
+            window.removeEventListener('beforeunload', determinePreventDefault);
+    }, [edit]);
 
     const handleSimpleUpdate = (fieldKey, value) => {
         setUpdatedData((data) => {
@@ -47,7 +62,9 @@ const StepContent = ({
 
     const handleFileDelete = async (fieldKey, file) => {
         errorWrap(async () => {
-            await deleteFile(patientId, metaData.key, fieldKey, file.filename);
+            await trackPromise(
+                deleteFile(patientId, metaData.key, fieldKey, file.filename),
+            );
             if (!updatedData[fieldKey]) return;
 
             let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
@@ -61,18 +78,16 @@ const StepContent = ({
 
     const handleFileDownload = (fieldKey, filename) => {
         errorWrap(async () => {
-            await downloadFile(patientId, metaData.key, fieldKey, filename);
+            await trackPromise(
+                downloadFile(patientId, metaData.key, fieldKey, filename),
+            );
         });
     };
 
     const handleFileUpload = async (fieldKey, file) => {
         errorWrap(async () => {
-            const res = await uploadFile(
-                patientId,
-                metaData.key,
-                fieldKey,
-                file.name,
-                file,
+            const res = await trackPromise(
+                uploadFile(patientId, metaData.key, fieldKey, file.name, file),
             );
 
             const newFile = {
@@ -237,7 +252,7 @@ const StepContent = ({
             )}`;
         }
 
-        return <p>{text}</p>;
+        return <p className="last-edited-formatting">{text}</p>;
     };
 
     return (
@@ -246,24 +261,36 @@ const StepContent = ({
                 <CircularProgress color="inherit" />
             </Backdrop>
             {generateHeader()}
-            <Select
-                MenuProps={{
-                    style: { zIndex: 35001 },
-                }}
-                defaultValue={false}
-                onChange={handleQuestionFormatSelect}
-            >
-                <MenuItem value={false}>
-                    {translations.components.selectQuestionFormat.allQuestions}
-                </MenuItem>
-                <MenuItem value>
-                    {
-                        translations.components.selectQuestionFormat
-                            .singleQuestion
-                    }
-                </MenuItem>
-            </Select>
-            {generateLastEditedByAndDate()}
+
+            <div className={`last-edited-and-view-selection-${selectedLang}`}>
+                <div className={`last-edited-${selectedLang}`}>
+                    {generateLastEditedByAndDate()}
+                </div>
+
+                <div className={`view-selection-${selectedLang}`}>
+                    <Select
+                        MenuProps={{
+                            style: { zIndex: 35001 },
+                        }}
+                        defaultValue={false}
+                        onChange={handleQuestionFormatSelect}
+                    >
+                        <MenuItem value={false}>
+                            {
+                                translations.components.selectQuestionFormat
+                                    .allQuestions
+                            }
+                        </MenuItem>
+                        <MenuItem value>
+                            {
+                                translations.components.selectQuestionFormat
+                                    .singleQuestion
+                            }
+                        </MenuItem>
+                    </Select>
+                </div>
+            </div>
+
             {generateFields()}
             {generateFooter()}
         </form>
@@ -276,6 +303,8 @@ StepContent.propTypes = {
     loading: PropTypes.bool.isRequired,
     stepData: PropTypes.object.isRequired,
     onDataSaved: PropTypes.func.isRequired,
+    edit: PropTypes.bool.isRequired,
+    setEdit: PropTypes.func.isRequired,
 };
 
 export default StepContent;

@@ -62,7 +62,12 @@ router.get(
             const users = await identityProvider.listUsers(params).promise();
             await sendResponse(res, 200, '', users);
         } catch (error) {
-            await sendResponse(res, 400, 'Please send a proper pagination token.', {});
+            await sendResponse(
+                res,
+                400,
+                'Please send a proper pagination token.',
+                {},
+            );
         }
     }),
 );
@@ -111,7 +116,9 @@ router.delete(
         // Check if user has this role
         const userRoles = await getUserRoles(username);
         const roleIndex = userRoles.indexOf(roleId);
-        if (roleIndex === -1) return sendResponse(res, 400, 'User does not have role');
+        if (roleIndex === -1) {
+            return sendResponse(res, 400, 'User does not have role');
+        }
 
         // Create params for the update in AWS
         userRoles.splice(roleIndex, 1);
@@ -149,6 +156,29 @@ router.put(
         // Do the update
         const identityProvider = getIdentityProvider();
         await identityProvider.adminUpdateUserAttributes(params).promise();
+        await sendResponse(res, 200, 'Access updated');
+    }),
+);
+
+/**
+ * Deletes a user. The URL param is the user's unique
+ * username;
+ */
+router.delete(
+    '/:username',
+    requireAdmin,
+    errorWrap(async (req, res) => {
+        const { username } = req.params;
+
+        // Create the params for the deletion
+        const params = {
+            Username: username,
+            UserPoolId: USER_POOL_ID,
+        };
+
+        // Do the deletion
+        const identityProvider = getIdentityProvider();
+        await identityProvider.adminDeleteUser(params).promise();
         await sendResponse(res, 200, 'Access updated');
     }),
 );

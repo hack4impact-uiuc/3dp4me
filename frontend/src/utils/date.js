@@ -9,6 +9,10 @@ import { LANGUAGES } from './constants';
 export const formatDate = (date, language) => {
     if (date == null) return 'Undefined';
 
+    let parsedDate = date;
+    if (!(typeof date === 'object' || date instanceof Object))
+        parsedDate = new Date(date);
+
     let locale = 'ar-SA';
     if (language === LANGUAGES.EN) locale = 'en-US';
 
@@ -20,5 +24,5 @@ export const formatDate = (date, language) => {
         minute: '2-digit',
     };
 
-    return date.toLocaleDateString(locale, options);
+    return parsedDate.toLocaleDateString(locale, options);
 };

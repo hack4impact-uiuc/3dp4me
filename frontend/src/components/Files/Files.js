@@ -5,8 +5,10 @@ import PropTypes from 'prop-types';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import swal from 'sweetalert';
 
 import { useTranslations } from '../../hooks/useTranslations';
+import { formatDate } from '../../utils/date';
 
 const Files = ({
     title,
@@ -15,8 +17,38 @@ const Files = ({
     handleDownload,
     handleDelete,
     handleUpload,
+    isDisabled = false,
 }) => {
-    const translations = useTranslations()[0];
+    const [translations, selectedLang] = useTranslations();
+
+    const onDeleteFile = (file) => {
+        swal({
+            title: translations.components.file.deleteTitle,
+            text: translations.components.file.deleteWarning,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                handleDelete(fieldKey, file);
+            }
+        });
+    };
+
+    const getDeleteFileButton = (file) => {
+        if (isDisabled) return null;
+        return (
+            <button
+                className="file-close-button"
+                type="button"
+                onClick={() => {
+                    onDeleteFile(file);
+                }}
+            >
+                <CloseIcon />
+            </button>
+        );
+    };
 
     const RenderExistingFiles = () => {
         if (files == null) return null;
@@ -31,27 +63,46 @@ const Files = ({
                 >
                     <div className="file-info-wrapper">
                         <ArrowDownwardIcon />
-                        <div>
+                        <div
+                            className={
+                                isDisabled ? `file-info-view` : `file-info-edit`
+                            }
+                        >
                             <Typography align="left">
                                 {`${file.filename}`}
                             </Typography>
                             <p id="file-upload-timestamp">
-                                {file.uploadDate.toString()}
+                                {formatDate(file.uploadDate, selectedLang)}
                             </p>
                         </div>
                     </div>
                 </Button>
-                <button
-                    className="file-close-button"
-                    type="button"
-                    onClick={() => {
-                        handleDelete(fieldKey, file);
-                    }}
-                >
-                    <CloseIcon />
-                </button>
+                {getDeleteFileButton(file)}
             </div>
         ));
+    };
+
+    const getAddFileButton = () => {
+        if (isDisabled) return null;
+
+        return (
+            <label htmlFor={`upload-file-input-${title}`}>
+                <input
+                    id={`upload-file-input-${title}`}
+                    className="upload-file-input"
+                    type="file"
+                    onChange={(e) => {
+                        handleUpload(fieldKey, e.target.files[0]);
+                    }}
+                />
+                <Button className="file-button" component="span">
+                    <AddIcon />
+                    <Typography align="left">
+                        <b>{translations.components.file.addAnother}</b>
+                    </Typography>
+                </Button>
+            </label>
+        );
     };
 
     return (
@@ -61,22 +112,7 @@ const Files = ({
             </div>
             <div className="files-table">
                 {RenderExistingFiles()}
-                <label htmlFor={`upload-file-input-${title}`}>
-                    <input
-                        id={`upload-file-input-${title}`}
-                        className="upload-file-input"
-                        type="file"
-                        onChange={(e) => {
-                            handleUpload(fieldKey, e.target.files[0]);
-                        }}
-                    />
-                    <Button className="file-button" component="span">
-                        <AddIcon />
-                        <Typography align="left">
-                            <b>{translations.components.file.addAnother}</b>
-                        </Typography>
-                    </Button>
-                </label>
+                {getAddFileButton()}
             </div>
         </div>
     );
@@ -94,6 +130,7 @@ Files.propTypes = {
             uploadDate: PropTypes.instanceOf(Date).isRequired,
         }),
     ).isRequired,
+    isDisabled: PropTypes.bool,
 };
 
 export default Files;

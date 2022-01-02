@@ -238,7 +238,7 @@ export const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 16;
  */
 
 export const ERR_LANGUAGE_VALIDATION_FAILED =
-    'Please submit a field with a question in English and Arabic.';
+    'Please submit a field in English and Arabic.';
 export const ERR_OPTION_VALIDATION_FAILED = 'Please enter options.';
 
 export const ERR_ROLE_INPUT_VALIDATION_FAILED =
@@ -251,9 +251,11 @@ export const ERR_ROLE_IS_IMMUTABLE = 'This role cannot be edited';
 
 export const ADMIN_ID = '60e496fa7398681e9c82e0f5';
 
-export const PERMISSION_CONSTRAINTS = { video: true };
+export const PERMISSION_CONSTRAINTS = { audio: true, video: true };
 
 export const PERMISSION_STATUS_DENIED = 'denied';
+
+export const PATIENT_TABLE_SEARCH_DELAY = 1000;
 
 export const ACCOUNT_MANAGEMENT_TAB_NAMES = {
     EN: ['USERS', 'ROLES'],

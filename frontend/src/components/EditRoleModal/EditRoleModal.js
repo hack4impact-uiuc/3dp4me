@@ -12,6 +12,8 @@ import {
     Button,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { trackPromise } from 'react-promise-tracker';
+import swal from 'sweetalert';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import TextField from '../Fields/TextField';
@@ -19,11 +21,17 @@ import MultiSelectField from '../Fields/MultiSelectField';
 import { ACCESS_LEVELS } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
-import { removeUserRole, setUserAccess, addUserRole } from '../../api/api';
+import {
+    removeUserRole,
+    setUserAccess,
+    addUserRole,
+    deleteUser,
+} from '../../api/api';
 
 const EditRoleModal = ({
     isOpen,
     onUserEdited,
+    onUserDeleted,
     onClose,
     userInfo,
     allRoles,
@@ -54,14 +62,14 @@ const EditRoleModal = ({
                 // If user didn't have role before, make request to backend
                 if (!userInfo.roles.find((r) => r === role._id)) {
                     await errorWrap(async () =>
-                        addUserRole(userData.userId, role._id),
+                        trackPromise(addUserRole(userData.userId, role._id)),
                     );
                 }
             } else {
                 // If user did have role before, make request to backend
                 if (userInfo.roles.find((r) => r === role._id)) {
                     await errorWrap(async () =>
-                        removeUserRole(userData.userId, role._id),
+                        trackPromise(removeUserRole(userData.userId, role._id)),
                     );
                 }
             }
@@ -69,12 +77,30 @@ const EditRoleModal = ({
 
         // Update user access level
         await errorWrap(async () =>
-            setUserAccess(userData.userId, userData.accessLevel),
+            trackPromise(setUserAccess(userData.userId, userData.accessLevel)),
         );
 
         // Close modal and update local data
         onClose();
         onUserEdited(userData.userId, userData.accessLevel, userData.roles);
+    };
+
+    const onDelete = async () => {
+        swal({
+            title: translations.components.modal.deleteTitle,
+            text: translations.components.modal.deleteUserConfirmation,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willDelete) => {
+            if (willDelete) {
+                await errorWrap(async () =>
+                    trackPromise(deleteUser(userData?.userId)),
+                );
+                onClose();
+                onUserDeleted(userData.userId);
+            }
+        });
     };
 
     const renderAccessDropdown = () => {
@@ -130,6 +156,11 @@ const EditRoleModal = ({
                     {renderAccessDropdown()}
                 </FormControl>
                 <div>
+                    <Button className="delete-user-button" onClick={onDelete}>
+                        {translations.accountManagement.deleteUser}
+                    </Button>
+                </div>
+                <div>
                     <Button className="save-user-button" onClick={onSave}>
                         {translations.accountManagement.Save}
                     </Button>
@@ -146,6 +177,7 @@ EditRoleModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onUserEdited: PropTypes.func.isRequired,
+    onUserDeleted: PropTypes.func.isRequired,
     allRoles: PropTypes.arrayOf(
         PropTypes.shape({
             _id: PropTypes.string,

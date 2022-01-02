@@ -10,7 +10,15 @@ import React from 'react';
 import './AudioRecorder.scss';
 import { downloadBlobWithoutSaving } from '../../api/api';
 import AudioRecordImg from '../../assets/microphone.svg';
-
+import { trackPromise } from 'react-promise-tracker';
+import { LANGUAGES } from '../../utils/constants';
+import promptInstructionsAR from '../../assets/audio-prompt-instructions-ar.gif';
+import promptInstructionsEN from '../../assets/audio-prompt-instructions-en.gif';
+import {
+    PERMISSION_CONSTRAINTS,
+    PERMISSION_STATUS_DENIED,
+} from '../../utils/constants';
+import swal from 'sweetalert';
 /*
  * For whatever reason, this component cannot be written functionally.
  * The MicRecorder object just doesn't work otherwise.
@@ -22,6 +30,7 @@ class AudioRecorder extends React.Component {
     constructor(props) {
         super(props);
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        this.setIsBlocked = this.setIsBlocked.bind(this);
 
         this.state = {
             isPlaybackModalOpen: false,
@@ -30,10 +39,112 @@ class AudioRecorder extends React.Component {
             isPaused: false,
             blobURL: '',
             playbackBlobURL: '',
-            isBlocked: false,
+            isBlocked: true,
             lang: translations[this.props.selectedLanguage],
         };
     }
+
+    componentWillMount() {
+        const updatePermissionStatus = async () => {
+            this.getMedia({ PERMISSION_CONSTRAINTS });
+            if (navigator.permissions && navigator.permissions.query) {
+                const permissionStatus = await navigator.permissions.query({
+                    name: 'microphone',
+                });
+                this.setPermissionListener(permissionStatus, this.setIsBlocked);
+            }
+        };
+        updatePermissionStatus();
+    }
+
+    getMedia = async (constraints) => {
+        try {
+            this.setState({ isBlocked: false });
+            await navigator.mediaDevices.getUserMedia(constraints);
+        } catch (err) {
+            this.setState({ isBlocked: true });
+        }
+    };
+
+    setIsBlocked = (val) => {
+        this.setState({ isBlocked: val });
+    };
+
+    setPermissionListener = (permissionStatus, setIsBlocked) => {
+        permissionStatus.onchange = function () {
+            if (this.state === PERMISSION_STATUS_DENIED) {
+                setIsBlocked(true);
+            } else {
+                setIsBlocked(false);
+            }
+        };
+    };
+
+    generateMicrophone = () => {
+        if (this.state.isBlocked) {
+            return (
+                <>
+                    <h1>
+                        {
+                            this.state.lang.components.microphone
+                                .promptInstructions
+                        }
+                    </h1>
+                    <img
+                        src={
+                            this.props.selectedLang === LANGUAGES.EN
+                                ? promptInstructionsEN
+                                : promptInstructionsAR
+                        }
+                        alt="instructions"
+                    />
+                    <div className="bottom-butts">
+                        <Button
+                            onClick={this.discardRecording}
+                            className="btn-discard-recording"
+                        >
+                            {this.state.lang.components.audio.close}
+                        </Button>
+                    </div>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <audio
+                        ref="audioSource"
+                        controls="controls"
+                        src={this.state.blobURL || ''}
+                    />
+                    <Button
+                        onClick={this.toggleRecording}
+                        className="btn-toggle-record"
+                    >
+                        <img src={AudioRecordImg} alt="Microphone icon" />
+                        {this.state.isRecording
+                            ? this.state.lang.components.audio.stop
+                            : this.state.lang.components.audio.start}
+                    </Button>
+                    <div className="bottom-butts">
+                        {this.state.isRecording || this.state.blobURL === '' || (
+                            <Button
+                                onClick={this.saveRecording}
+                                className="btn-save-recording"
+                            >
+                                {this.state.lang.components.audio.save}
+                            </Button>
+                        )}
+                        <Button
+                            onClick={this.discardRecording}
+                            className="btn-discard-recording"
+                        >
+                            {this.state.lang.components.audio.discard}
+                        </Button>
+                    </div>
+                </>
+            );
+        }
+    };
 
     toggleRecording = () => {
         if (this.state.isRecording) this.stopRecording();
@@ -41,17 +152,11 @@ class AudioRecorder extends React.Component {
     };
 
     startRecording = () => {
-        if (this.state.isBlocked) {
-            console.log(
-                'Please give permission for the microphone to record audio.',
-            );
-        } else {
-            Mp3Recorder.start()
-                .then(() => {
-                    this.setState({ isRecording: true });
-                })
-                .catch((e) => console.error(e));
-        }
+        Mp3Recorder.start()
+            .then(() => {
+                this.setState({ isRecording: true });
+            })
+            .catch((e) => console.error(e));
     };
 
     stopRecording = () => {
@@ -96,7 +201,7 @@ class AudioRecorder extends React.Component {
         }
 
         navigator.mediaDevices
-            .getUserMedia({ audio: true })
+            .getUserMedia(PERMISSION_CONSTRAINTS)
             .then((stream) => {
                 this.setState({ isBlocked: false });
             })
@@ -135,17 +240,47 @@ class AudioRecorder extends React.Component {
     };
 
     handlePlay = async (file) => {
-        const blob = await downloadBlobWithoutSaving(
-            this.props.patientId,
-            this.props.stepKey,
-            this.props.fieldKey,
-            file.filename,
+        const blob = await trackPromise(
+            downloadBlobWithoutSaving(
+                this.props.patientId,
+                this.props.stepKey,
+                this.props.fieldKey,
+                file.filename,
+            ),
         );
         const blobURL = URL.createObjectURL(blob);
         this.setState({
             isPlaybackModalOpen: true,
             playbackBlobURL: blobURL,
         });
+    };
+
+    onDeleteFile = (fieldKey, file) => {
+        swal({
+            title: this.state.lang.components.audio.deleteTitle,
+            text: this.state.lang.components.audio.deleteWarning,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                this.props.handleDelete(fieldKey, file);
+            }
+        });
+    };
+
+    getDeleteFileButton = (file) => {
+        if (this.props.isDisabled) return null;
+
+        return (
+            <button
+                className="file-close-button"
+                type="button"
+                onClick={() => this.onDeleteFile(this.props.fieldKey, file)}
+            >
+                <CloseIcon />
+            </button>
+        );
     };
 
     RenderExistingFiles = () => {
@@ -171,15 +306,7 @@ class AudioRecorder extends React.Component {
                         </div>
                     </div>
                 </Button>
-                <button
-                    className="file-close-button"
-                    type="button"
-                    onClick={() =>
-                        this.props.handleDelete(this.props.fieldKey, file)
-                    }
-                >
-                    <CloseIcon />
-                </button>
+                {this.getDeleteFileButton(file)}
             </div>
         ));
     };
@@ -205,6 +332,39 @@ class AudioRecorder extends React.Component {
         });
     };
 
+    getAddAudioButton = () => {
+        if (this.props.isDisabled) return null;
+
+        return (
+            <label htmlFor={`upload-file-input-${this.props.title}`}>
+                <input
+                    id={`upload-file-input-${this.props.title}`}
+                    className="upload-file-input"
+                    type="button"
+                    onClick={this.onModalOpen}
+                    onChange={(e) => {
+                        this.props.handleUpload(
+                            this.props.fieldKey,
+                            e.target.files[0],
+                        );
+                    }}
+                />
+                <Button className="file-button" component="span">
+                    <AddIcon />
+                    <Typography align="left">
+                        <b>{this.state.lang.components.audio.addAnother}</b>
+                    </Typography>
+                </Button>
+            </label>
+        );
+    };
+
+    closeRecordModal = () => {
+        this.setState({
+            isRecordModalOpen: false,
+        });
+    };
+
     render() {
         const { isRecording } = this.state;
         return (
@@ -215,75 +375,18 @@ class AudioRecorder extends React.Component {
                     </div>
                     <div className="files-table">
                         {this.RenderExistingFiles()}
-                        <label
-                            htmlFor={`upload-file-input-${this.props.title}`}
-                        >
-                            <input
-                                id={`upload-file-input-${this.props.title}`}
-                                className="upload-file-input"
-                                type="button"
-                                onClick={this.onModalOpen}
-                                onChange={(e) => {
-                                    this.props.handleUpload(
-                                        this.props.fieldKey,
-                                        e.target.files[0],
-                                    );
-                                }}
-                            />
-                            <Button className="file-button" component="span">
-                                <AddIcon />
-                                <Typography align="left">
-                                    <b>
-                                        {
-                                            this.state.lang.components.audio
-                                                .addAnother
-                                        }
-                                    </b>
-                                </Typography>
-                            </Button>
-                        </label>
+                        {this.getAddAudioButton()}
                     </div>
                 </div>
 
                 <Modal
                     open={this.state.isRecordModalOpen}
+                    onClose={this.closeRecordModal}
                     className="record-modal"
                 >
                     <div className="modal-wrap">
                         <div className="modal-inner">
-                            <audio
-                                ref="audioSource"
-                                controls="controls"
-                                src={this.state.blobURL || ''}
-                            />
-                            <Button
-                                onClick={this.toggleRecording}
-                                className="btn-toggle-record"
-                            >
-                                <img
-                                    src={AudioRecordImg}
-                                    alt="Microphone icon"
-                                />
-                                {isRecording
-                                    ? this.state.lang.components.audio.stop
-                                    : this.state.lang.components.audio.start}
-                            </Button>
-                            <div className="bottom-butts">
-                                {isRecording || this.state.blobURL === '' || (
-                                    <Button
-                                        onClick={this.saveRecording}
-                                        className="btn-save-recording"
-                                    >
-                                        {this.state.lang.components.audio.save}
-                                    </Button>
-                                )}
-                                <Button
-                                    onClick={this.discardRecording}
-                                    className="btn-discard-recording"
-                                >
-                                    {this.state.lang.components.audio.discard}
-                                </Button>
-                            </div>
+                            {this.generateMicrophone()}
                         </div>
                     </div>
                 </Modal>

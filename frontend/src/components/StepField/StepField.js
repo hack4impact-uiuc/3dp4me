@@ -98,6 +98,7 @@ const StepField = ({
                         handleDownload={handleFileDownload}
                         handleUpload={handleFileUpload}
                         handleDelete={handleFileDelete}
+                        isDisabled={isDisabled}
                     />
                 );
 
@@ -124,6 +125,9 @@ const StepField = ({
                         stepKey={stepKey}
                         files={value}
                         title={displayName}
+                        isDisabled={isDisabled}
+                        selectedLang={selectedLang}
+                        key={stepKey}
                     />
                 );
             case FIELD_TYPES.DIVIDER:
@@ -184,6 +188,7 @@ const StepField = ({
                         value={value || []}
                         displayName={displayName}
                         fieldId={metadata.key}
+                        isDisabled={isDisabled}
                     />
                 );
             default:

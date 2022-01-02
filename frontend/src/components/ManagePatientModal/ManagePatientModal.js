@@ -3,6 +3,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import swal from 'sweetalert';
 
 import { useTranslations } from '../../hooks/useTranslations';
 import language from '../../translations.json';
@@ -11,7 +12,13 @@ import RadioButtonField from '../Fields/RadioButtonField';
 import TextField from '../Fields/TextField';
 import './ManagePatientModal.scss';
 
-const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
+const ManagePatientModal = ({
+    patientData,
+    isOpen,
+    onClose,
+    onDataSave,
+    onDeleted,
+}) => {
     const [translations, selectedLang] = useTranslations();
     const [updatedPatientData, setUpdatedPatientData] = useState(
         _.cloneDeep(patientData),
@@ -50,6 +57,21 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
             },
         },
     ];
+
+    const deletePatient = () => {
+        swal({
+            title: translations.components.modal.deleteTitle,
+            text: translations.components.modal.deletePatientConfirmation,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willDelete) => {
+            if (willDelete) {
+                onClose();
+                onDeleted();
+            }
+        });
+    };
 
     return (
         <Modal open={isOpen} onClose={onClose} className="manage-patient-modal">
@@ -150,6 +172,15 @@ const ManagePatientModal = ({ patientData, isOpen, onClose, onDataSave }) => {
                                 .save
                         }
                     </Button>
+                    <Button
+                        className="manage-patient-delete-button"
+                        onClick={deletePatient}
+                    >
+                        {
+                            translations.components.swal.managePatient.buttons
+                                .delete
+                        }
+                    </Button>
                 </div>
             </div>
         </Modal>
@@ -161,6 +192,7 @@ ManagePatientModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onDataSave: PropTypes.func.isRequired,
+    onDeleted: PropTypes.func.isRequired,
 };
 
 export default ManagePatientModal;

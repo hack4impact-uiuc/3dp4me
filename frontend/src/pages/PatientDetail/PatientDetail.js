@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import { StringParam, useQueryParam } from 'use-query-params';
+import { trackPromise } from 'react-promise-tracker';
 
 import {
     getAllStepsMetadata,
     getPatientById,
     updatePatient,
     updateStage,
+    deletePatientById,
 } from '../../api/api';
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper';
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal';
@@ -37,6 +39,7 @@ const PatientDetail = () => {
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
     const stepKeyParam = useQueryParam('stepKey', StringParam)[0];
+    const [edit, setEdit] = useState(false);
 
     /**
      * Fetch metadata for all steps and the patient's data.
@@ -46,11 +49,11 @@ const PatientDetail = () => {
         const getData = async () => {
             errorWrap(async () => {
                 // Step metadata
-                let res = await getAllStepsMetadata(false);
+                let res = await trackPromise(getAllStepsMetadata(false));
                 let metaData = res.result;
 
                 // Patient data
-                res = await getPatientById(patientId);
+                res = await trackPromise(getPatientById(patientId));
                 const data = res.result;
 
                 // Sort it
@@ -76,7 +79,7 @@ const PatientDetail = () => {
         errorWrap(async () => {
             const newPatientData = _.cloneDeep(patientData);
             newPatientData[stepKey] = _.cloneDeep(stepData);
-            await updateStage(patientId, stepKey, stepData);
+            await trackPromise(updateStage(patientId, stepKey, stepData));
             setPatientData(newPatientData);
         });
     };
@@ -89,7 +92,7 @@ const PatientDetail = () => {
         const patientDataCopy = _.cloneDeep(patientData);
         Object.assign(patientDataCopy, newPatientData);
         await errorWrap(async () => {
-            await updatePatient(patientId, patientDataCopy);
+            await trackPromise(updatePatient(patientId, patientDataCopy));
             setPatientData(patientDataCopy);
             swal(
                 translations.components.swal.managePatient.successMsg,
@@ -99,6 +102,27 @@ const PatientDetail = () => {
         });
 
         setManagePatientModalOpen(false);
+    };
+
+    const onPatientDeleted = async () => {
+        errorWrap(
+            async () => {
+                setEdit(false);
+                await trackPromise(deletePatientById(patientId));
+            },
+            () => {
+                // Success - Go back to the home page
+                window.location.href = '/';
+            },
+            () => {
+                // Error while deleting patient
+                swal(
+                    translations.components.swal.patientDetail.errorTitle,
+                    translations.components.swal.patientDetail.errorMessage,
+                    'error',
+                );
+            },
+        );
     };
 
     /**
@@ -115,10 +139,34 @@ const PatientDetail = () => {
         };
     };
 
-    const onStepChange = (newStep) => {
+    const displayUnsavedDataAlert = (newStep) => {
+        swal({
+            title: translations.components.swal.dataDiscarding
+                .confirmationQuestion,
+            buttons: [
+                translations.components.swal.dataDiscarding.stay,
+                translations.components.swal.dataDiscarding.leave,
+            ],
+        }).then((isLeaveConfirmed) => {
+            if (isLeaveConfirmed) {
+                switchStep(newStep);
+            }
+        });
+    };
+
+    const switchStep = (newStep) => {
         if (newStep === null) return;
         setSelectedStep(newStep);
+        setEdit(false);
         window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
+    };
+
+    const onStepChange = (newStep) => {
+        if (edit) {
+            displayUnsavedDataAlert(newStep);
+        } else {
+            switchStep(newStep);
+        }
     };
 
     /**
@@ -147,6 +195,8 @@ const PatientDetail = () => {
                             )}
                             stepData={patientData[step.key] ?? {}}
                             loading={loading}
+                            edit={edit}
+                            setEdit={setEdit}
                         />
                     );
                 })}
@@ -162,6 +212,7 @@ const PatientDetail = () => {
                     patientData={getCurrentPatientModelData()}
                     isOpen={isManagePatientModalOpen}
                     onClose={() => setManagePatientModalOpen(false)}
+                    onDeleted={onPatientDeleted}
                 />
 
                 <PatientDetailSidebar

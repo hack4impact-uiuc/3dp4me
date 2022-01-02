@@ -43,7 +43,7 @@ module.exports.STEPS_COLLECTION_NAME = 'steps';
 module.exports.ERR_NOT_APPROVED = 'You are not approved to access this site. Please contact an administrator.';
 module.exports.ERR_AUTH_FAILED = 'Authentication failed';
 module.exports.ERR_FIELD_VALIDATION_FAILED = 'fieldKeys and fieldNumbers must be unique';
-module.exports.ERR_LANGUAGE_VALIDATION_FAILED = 'Please submit a field with a question in English and Arabic.';
+module.exports.ERR_LANGUAGE_VALIDATION_FAILED = 'Please submit a field in English and Arabic.';
 
 const GLOBALLY_IMMUTABLE_ATTRIBUTES = ['_id', '__v'];
 

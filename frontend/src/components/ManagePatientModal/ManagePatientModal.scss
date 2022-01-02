@@ -10,6 +10,8 @@
         border-radius: 5px;
         padding: 30px;
         width: 80%;
+        overflow-y: scroll;
+        height: 80vh;
 
         .text-field {
             margin-bottom: 20px;
@@ -38,9 +40,9 @@
 
         .manage-patient-footer {
             display: flex;
-            justify-content: flex-end;
-            .manage-patient-save-button {
-                background-color: $button;
+            justify-content: space-between;
+            .manage-patient-save-button,
+            .manage-patient-delete-button {
                 color: white;
                 padding: 0 24px 0 24px;
                 height: 38px;
@@ -50,8 +52,18 @@
                 transition: all 0.2s;
                 border-radius: 2px;
                 box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+            }
+            .manage-patient-save-button {
+                background-color: $button;
+                margin-right: 5px;
                 &:hover {
                     background-color: $buttonHighlight;
+                }
+            }
+            .manage-patient-delete-button {
+                background-color: $deleteRed;
+                &:hover {
+                    background-color: $deleteRedHighlight;
                 }
             }
         }

@@ -21,7 +21,7 @@ export const getValidAdjacentElement = (arr, currIndex, direction) => {
         prevNextIndex += direction;
     }
 
-    if (prevNextIndex === -1 || prevNextIndex === arr.length) {
+    if (prevNextIndex < 0 || prevNextIndex >= arr.length) {
         return -1;
     }
 

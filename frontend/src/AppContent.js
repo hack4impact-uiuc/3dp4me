@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
+import { trackPromise } from 'react-promise-tracker';
 
 import ErrorModal from './components/ErrorModal/ErrorModal';
 import { useTranslations } from './hooks/useTranslations';
@@ -10,6 +11,7 @@ import {
     REDUCER_ACTIONS,
 } from './utils/constants';
 import AllRoutes from './Routes/allRoutes'
+import LoadingIndicator from './components/LoadingIndicator/LoadingIndicator';
 
 const AppContent = () => {
     const [state, dispatch] = useContext(Context);
@@ -26,6 +28,8 @@ const AppContent = () => {
 
     return (
         <div dir={selectedLang === LANGUAGES.AR ? 'rtl' : 'ltr'}>
+            {/* Shown when making a network request */}
+            <LoadingIndicator />
             <Router>
                 <QueryParamProvider ReactRouterRoute={Route}>
                     

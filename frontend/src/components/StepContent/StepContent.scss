@@ -7,6 +7,37 @@
 .medical-info {
     margin-bottom: 20px;
 
+    .last-edited-formatting {
+        margin: 0 0 0;
+        align-self: center;
+    }
+
+    .last-edited-and-view-selection-EN {
+        display: flex;
+        justify-content: space-between;
+        margin-right: 24px;
+
+        .last-edited-EN {
+            padding-right: 10px;
+        }
+        .view-selection-EN {
+            padding-left: 10px;
+        }
+    }
+
+    .last-edited-and-view-selection-AR {
+        display: flex;
+        justify-content: space-between;
+        margin-left: 24px;
+
+        .last-edited-AR {
+            padding-left: 10px;
+        }
+        .view-selection-AR {
+            padding-right: 10px;
+        }
+    }
+
     .backdrop {
         z-index: 1;
         color: white;

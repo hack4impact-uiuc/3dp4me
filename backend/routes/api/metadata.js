@@ -7,7 +7,6 @@ const log = require('loglevel');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const { requireAdmin } = require('../../middleware/authentication');
-const { generateSchemaFromMetadata } = require('../../utils/initDb');
 const { sendResponse } = require('../../utils/response');
 const {
     updateStepsInTransaction,
@@ -42,13 +41,12 @@ router.post(
     '/steps',
     requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
-        const step = req.body;
-        const newStep = new models.Step(step);
-
         try {
+            const stepToCreate = req.body;
+            let newStep;
+
             await mongoose.connection.transaction(async (session) => {
-                await newStep.save({ session });
-                generateSchemaFromMetadata(step);
+                newStep = await updateStepsInTransaction([stepToCreate], session);
             });
 
             await sendResponse(res, 200, 'Step created', newStep);
@@ -72,18 +70,23 @@ router.put(
         try {
             let stepData = [];
             await mongoose.connection.transaction(async (session) => {
-                stepData = await updateStepsInTransaction(req, session);
+                stepData = await updateStepsInTransaction(req.body, session);
             });
 
             // The step data will be sent in the response in order to
             // update the frontend's step data. We are filtering out deleted fields
-            // since they should not be sent to the frontend.
+            // AND deleted steps since they should not be sent to the frontend.
             for (let i = 0; i < stepData.length; i++) {
                 const step = stepData[i];
-                for (let j = 0; j < step.fields.length; j++) {
-                    if (step.fields[j].isDeleted) {
-                        step.fields.splice(j, 1);
-                        j -= 1;
+                if (step.isDeleted) {
+                    stepData.splice(i, 1);
+                    i -= 1;
+                } else {
+                    for (let j = 0; j < step.fields.length; j++) {
+                        if (step.fields[j].isDeleted) {
+                            step.fields.splice(j, 1);
+                            j -= 1;
+                        }
                     }
                 }
             }

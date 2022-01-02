@@ -351,7 +351,7 @@ const CreateFieldModal = ({
                         onClick={onDiscard}
                         className="discard-field-button"
                     >
-                        {translations.components.swal.field.buttons.cancel}
+                        {translations.components.swal.field.buttons.discard}
                     </Button>
                 </div>
             </div>

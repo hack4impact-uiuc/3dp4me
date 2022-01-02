@@ -42,7 +42,7 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
     const generateFields = () => {
         return (
             <div className="create-step-modal-field-container">
-                <span>{translations.components.swal.step.createStepTitle}</span>
+                <span>{translations.components.swal.step.stepTitle}</span>
                 <LanguageInput
                     fieldValues={displayName}
                     handleFieldChange={(value, language) => {
