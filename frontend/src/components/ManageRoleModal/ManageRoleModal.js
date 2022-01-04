@@ -113,13 +113,19 @@ const ManageRoleModal = ({
                         <Button className="save-user-button" onClick={onSave}>
                             {translations.accountManagement.Save}
                         </Button>
-                        <Button className="discard-user-button" onClick={onClose}>
+                        <Button
+                            className="discard-user-button"
+                            onClick={onClose}
+                        >
                             {translations.accountManagement.Discard}
                         </Button>
                     </div>
 
                     <div>
-                        <Button className="delete-user-button" onClick={onDelete}>
+                        <Button
+                            className="delete-user-button"
+                            onClick={onDelete}
+                        >
                             {translations.roleManagement.deleteRole}
                         </Button>
                     </div>
