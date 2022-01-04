@@ -1,12 +1,13 @@
 @import '../../styles/colors.scss';
 @import '../../styles/variables.scss';
 
-.toggle-buttons-wrapper {
+.toggle-buttons-wrapper, .toggle-buttons-wrapper-dropdown {
     display: flex;
     width: 100%;
     height: $buttonGroupHeight;
     background-color: $controllerGrey;
     text-transform: uppercase;
+    justify-content: flex-start;
 
     .status-icon,
     .status-icon-ar {
@@ -48,31 +49,32 @@
         display: none;
     }
 
-    @media (max-width: $resizeButtonGroupMaxWidth) {
-        .toggle-button-group {
-            display: none;
-        }
+    .toggle-button-selector-dropdown {
+        display: inherit;
+        width: fit-content;
+        justify-content: space-between;
+        margin: 0 36px;
+        align-items: center;
 
-        .toggle-button-selector {
+        .current-step-label {
             display: inherit;
-            width: 100%;
-            justify-content: space-between;
-            margin: 0 36px;
             align-items: center;
-
-            .current-step-label {
-                display: inherit;
-                align-items: center;
-                b {
-                    font-family: 'Roboto', sans-serif;
-                    font-size: 14px;
-                }
+            text-align: center;
+            b {
+                font-family: 'Roboto', sans-serif;
+                font-size: 1em;
+                text-align: center;
             }
         }
     }
 }
 
-.stage-selector-menu {
+.dropdown-icon {
+    transform: scale(1.5);
+    color: black !important;
+}
+
+.stage-selector-menu, .stage-selector-menu-dropdown {
     display: none;
 
     .selector-text {
@@ -94,8 +96,10 @@
     }
 }
 
-@media (max-width: $resizeButtonGroupMaxWidth) {
-    .stage-selector-menu {
-        display: inherit;
-    }
+.toggle-buttons-wrapper-dropdown{
+    justify-content: flex-end;
+}
+
+.stage-selector-menu-dropdown {
+    display: inherit;
 }
