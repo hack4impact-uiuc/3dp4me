@@ -7,7 +7,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
 
-import { LANGUAGES, STEP_STATUS, RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH } from '../../utils/constants';
+import {
+    LANGUAGES,
+    STEP_STATUS,
+    RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH,
+} from '../../utils/constants';
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
@@ -25,30 +29,33 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
             <img
                 alt="incomplete"
                 src={ExclamationIcon}
-                className={`${selectedLang === LANGUAGES.AR
-                    ? 'status-icon-ar'
-                    : 'status-icon'
-                    }`}
+                className={`${
+                    selectedLang === LANGUAGES.AR
+                        ? 'status-icon-ar'
+                        : 'status-icon'
+                }`}
             />
         ),
         [STEP_STATUS.PARTIALLY_FINISHED]: (
             <img
                 alt="partial"
                 src={HalfCircleIcon}
-                className={`${selectedLang === LANGUAGES.AR
-                    ? 'status-icon-ar'
-                    : 'status-icon'
-                    }`}
+                className={`${
+                    selectedLang === LANGUAGES.AR
+                        ? 'status-icon-ar'
+                        : 'status-icon'
+                }`}
             />
         ),
         [STEP_STATUS.FINISHED]: (
             <img
                 alt="complete"
                 src={CheckIcon}
-                className={`${selectedLang === LANGUAGES.AR
-                    ? 'status-icon-ar'
-                    : 'status-icon'
-                    }`}
+                className={`${
+                    selectedLang === LANGUAGES.AR
+                        ? 'status-icon-ar'
+                        : 'status-icon'
+                }`}
             />
         ),
     };
@@ -77,8 +84,9 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
                 <ToggleButton
                     disableRipple
                     key={`${element.key}-tb`}
-                    className={`toggle-button ${step === element.key ? 'active' : ''
-                        }`}
+                    className={`toggle-button ${
+                        step === element.key ? 'active' : ''
+                    }`}
                     value={element.key}
                 >
                     {patientData ? statusIcons[status] : null}{' '}
@@ -91,18 +99,22 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
     function generateSelectedStepLabel() {
         if (metaData == null) return null;
 
-        const selectedStepIndex = metaData.findIndex((element) => element.key === step);
+        const selectedStepIndex = metaData.findIndex(
+            (element) => element.key === step,
+        );
 
         if (selectedStepIndex === -1) return null;
 
         const element = metaData[selectedStepIndex];
 
-        return (<div className="current-step-label">
-            {patientData && patientData[step]?.status
-                ? statusIcons[patientData[step].status]
-                : null}{' '}
-            <b>{element.displayName[selectedLang]}</b>
-        </div>)
+        return (
+            <div className="current-step-label">
+                {patientData && patientData[step]?.status
+                    ? statusIcons[patientData[step].status]
+                    : null}{' '}
+                <b>{element.displayName[selectedLang]}</b>
+            </div>
+        );
     }
 
     function generateMenuItems() {
@@ -131,30 +143,34 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
         and check if that exceeds the width of the screen.
         If so, we must show a dropdown.
     */
-    if (metaData && width < RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH * metaData.length) {
-        return (<div className="toggle-buttons-wrapper-dropdown">
-            <div className="toggle-button-selector-dropdown">
-                {generateSelectedStepLabel()}
-                <IconButton
-                    aria-controls="customized-menu"
-                    aria-haspopup="true"
-                    onClick={handleClickSelector}
-                    className="dropdown-icon"
-                >
-                    <ExpandMoreIcon />
-                </IconButton>
-                <Menu
-                    className="stage-selector-menu-dropdown"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={(e) => handleCloseSelector(e, 'close')}
-                >
-                    {generateMenuItems()}
-                </Menu>
+    if (
+        metaData &&
+        width < RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH * metaData.length
+    ) {
+        return (
+            <div className="toggle-buttons-wrapper-dropdown">
+                <div className="toggle-button-selector-dropdown">
+                    {generateSelectedStepLabel()}
+                    <IconButton
+                        aria-controls="customized-menu"
+                        aria-haspopup="true"
+                        onClick={handleClickSelector}
+                        className="dropdown-icon"
+                    >
+                        <ExpandMoreIcon />
+                    </IconButton>
+                    <Menu
+                        className="stage-selector-menu-dropdown"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={(e) => handleCloseSelector(e, 'close')}
+                    >
+                        {generateMenuItems()}
+                    </Menu>
+                </div>
             </div>
-
-        </div>)
+        );
     }
 
     return (

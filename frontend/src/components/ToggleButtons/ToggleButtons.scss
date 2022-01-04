@@ -1,7 +1,8 @@
 @import '../../styles/colors.scss';
 @import '../../styles/variables.scss';
 
-.toggle-buttons-wrapper, .toggle-buttons-wrapper-dropdown {
+.toggle-buttons-wrapper,
+.toggle-buttons-wrapper-dropdown {
     display: flex;
     width: 100%;
     height: $buttonGroupHeight;
@@ -74,7 +75,8 @@
     color: black !important;
 }
 
-.stage-selector-menu, .stage-selector-menu-dropdown {
+.stage-selector-menu,
+.stage-selector-menu-dropdown {
     display: none;
 
     .selector-text {
@@ -96,7 +98,7 @@
     }
 }
 
-.toggle-buttons-wrapper-dropdown{
+.toggle-buttons-wrapper-dropdown {
     justify-content: flex-end;
 }
 
