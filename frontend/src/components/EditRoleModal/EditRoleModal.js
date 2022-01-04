@@ -109,6 +109,7 @@ const EditRoleModal = ({
                 native
                 value={userData?.accessLevel}
                 onChange={onAccessChange}
+                className="access-dropdown"
             >
                 <option value={ACCESS_LEVELS.GRANTED}>
                     {translations.accountManagement.Approved}
@@ -149,24 +150,26 @@ const EditRoleModal = ({
                     onChange={onRolesChange}
                     isDisabled={false}
                 />
-                <FormControl>
-                    <InputLabel>
-                        {translations.accountManagement.access}
+                <FormControl variant="standard">
+                    <InputLabel className="access-label">
+                        {translations.accountManagement.Access}
                     </InputLabel>
                     {renderAccessDropdown()}
                 </FormControl>
-                <div>
-                    <Button className="delete-user-button" onClick={onDelete}>
-                        {translations.accountManagement.deleteUser}
-                    </Button>
-                </div>
-                <div>
-                    <Button className="save-user-button" onClick={onSave}>
-                        {translations.accountManagement.Save}
-                    </Button>
-                    <Button className="discard-user-button" onClick={onClose}>
-                        {translations.accountManagement.Discard}
-                    </Button>
+                <div className="button-div">
+                    <div>
+                        <Button className="save-user-button" onClick={onSave}>
+                            {translations.accountManagement.Save}
+                        </Button>
+                        <Button className="discard-user-button" onClick={onClose}>
+                            {translations.accountManagement.Discard}
+                        </Button>
+                    </div>
+                    <div>
+                        <Button className="delete-user-button" onClick={onDelete}>
+                            {translations.accountManagement.deleteUser}
+                        </Button>
+                    </div>
                 </div>
             </div>
         </Modal>

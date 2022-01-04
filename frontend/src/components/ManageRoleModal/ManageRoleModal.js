@@ -96,19 +96,22 @@ const ManageRoleModal = ({
                     onChange={onRoleChange}
                 />
                 <p>{translations.roleManagement.warning}</p>
-                <div>
-                    <Button className="delete-user-button" onClick={onDelete}>
-                        {translations.roleManagement.deleteRole}
-                    </Button>
-                </div>
 
-                <div>
-                    <Button className="save-user-button" onClick={onSave}>
-                        {translations.accountManagement.Save}
-                    </Button>
-                    <Button className="discard-user-button" onClick={onClose}>
-                        {translations.accountManagement.Discard}
-                    </Button>
+                <div className="button-div">
+                    <div>
+                        <Button className="save-user-button" onClick={onSave}>
+                            {translations.accountManagement.Save}
+                        </Button>
+                        <Button className="discard-user-button" onClick={onClose}>
+                            {translations.accountManagement.Discard}
+                        </Button>
+                    </div>
+
+                    <div>
+                        <Button className="delete-user-button" onClick={onDelete}>
+                            {translations.roleManagement.deleteRole}
+                        </Button>
+                    </div>
                 </div>
             </div>
         </Modal>
