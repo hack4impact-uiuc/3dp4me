@@ -265,3 +265,9 @@ export const ACCOUNT_MANAGEMENT_TABS = {
     USERS: 'USERS',
     ROLES: 'ROLES',
 };
+
+export const DIRECTION = {
+    UP: -1,
+    DOWN: 1,
+};
+

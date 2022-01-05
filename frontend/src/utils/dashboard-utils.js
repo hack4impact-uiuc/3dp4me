@@ -1,12 +1,7 @@
 import _ from 'lodash';
 
-export const DIRECTION = {
-    UP: -1,
-    DOWN: 1,
-};
-
 // Inclusive min and exclusive max
-const checkBounds = (min, max, num) => {
+export const checkBounds = (min, max, num) => {
     return num >= min && num < max;
 };
 

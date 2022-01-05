@@ -21,17 +21,17 @@ import {
     verticalMovementWidth,
 } from '../../styles/variables.scss';
 import {
-    DIRECTION,
     getValidAdjacentElement,
     swapValuesInArrayByKey,
 } from '../../utils/dashboard-utils';
 import { generateKeyWithoutCollision } from '../../utils/metadataUtils';
 import { rolesToMultiSelectFormat, sortMetadata } from '../../utils/utils';
+import { DIRECTION } from '../../utils/constants';
+
 import './DashboardManagement.scss';
 
-const expandedSidebarWidth = `${
-    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
-}px`;
+const expandedSidebarWidth = `${parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+    }px`;
 const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
@@ -456,11 +456,10 @@ const SectionTab = () => {
                     onDiscard={onDiscardChanges}
                     style={{
                         editorSection: {
-                            marginLeft: `${
-                                isEditing
-                                    ? expandedSidebarWidth
-                                    : retractedSidebarWidth
-                            }`,
+                            marginLeft: `${isEditing
+                                ? expandedSidebarWidth
+                                : retractedSidebarWidth
+                                }`,
                         },
                     }}
                     selectedStep={selectedStep}

@@ -14,11 +14,12 @@ import { trackPromise } from 'react-promise-tracker';
 import { deleteFile, downloadFile, uploadFile } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
-import { FIELD_TYPES, STEP_STATUS } from '../../utils/constants';
+import { FIELD_TYPES, STEP_STATUS, DIRECTION } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
 import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
 import './StepContent.scss';
+import { checkBounds } from '../../utils/dashboard-utils';
 
 const StepContent = ({
     patientId,
@@ -34,6 +35,14 @@ const StepContent = ({
     const [singleQuestionFormat, setSingleQuestionFormat] = useState(false);
     const [translations, selectedLang] = useTranslations();
     const errorWrap = useErrorWrap();
+
+    /* 
+        Since field numbers don't have to follow an arithmetic progression, ie 0, 1, 2, 3...
+        we must check what the smallest field number and set it to currentQuestion.
+    */
+    useEffect(() => {
+        setCurrentQuestion(getSmallestFieldNumber());
+    }, [metaData]);
 
     useEffect(() => {
         setUpdatedData(_.cloneDeep(stepData));
@@ -150,6 +159,59 @@ const StepContent = ({
         return <h1>{metaData.displayName[selectedLang]}</h1>;
     };
 
+    // Returns the smallest fieldNumber out of all of the fields in metaData
+    const getSmallestFieldNumber = () => {
+
+        if (!metaData || metaData.length === 0) return;
+
+        let smallestFieldNumber = metaData.fields[0].fieldNumber;
+
+        for (let i = 1; i < metaData.fields.length; i++) {
+            smallestFieldNumber = Math.min(smallestFieldNumber, metaData.fields[i].fieldNumber);
+        }
+
+        return smallestFieldNumber;
+    };
+
+    const getFieldIndexGivenFieldNumber = (fieldNumber) => {
+        return metaData.fields.findIndex((element) => element.fieldNumber === fieldNumber)
+    }
+
+    const fieldDoesExist = (fieldNumber) => {
+        return getFieldIndexGivenFieldNumber(fieldNumber) >= 0;
+    }
+
+    const isAnEditableField = (fieldNumber) => {
+        const fieldIndex = getFieldIndexGivenFieldNumber(fieldNumber);
+
+        if (fieldIndex < 0) return false;
+
+        const fieldType = metaData.fields[fieldIndex].fieldType;
+        return (fieldType !== FIELD_TYPES.HEADER && fieldType !== FIELD_TYPES.DIVIDER);
+    }
+
+    /*
+        Since field numbers don't have to follow an arithmetic progression, ie 0, 1, 2, 3...,
+        you can't get the next or previous field by adding or subtracting 1. Furthermore,
+        when moving onto the next or previous field, we also don't want to stop on a non-editable field,
+        like a HEADER field. This function returns the next/previous editable field, given the current field.
+    */
+    const getAdjacentField = (currFieldNumber, direction) => {
+        let adjacentField = currFieldNumber + direction;
+
+        while (
+            checkBounds(0, metaData.fields.length, adjacentField) &&
+            (!fieldDoesExist(adjacentField) || !isAnEditableField(adjacentField))
+        ) {
+            adjacentField += direction;
+        }
+
+        if (adjacentField < 0 || adjacentField >= metaData.fields.length) {
+            return currFieldNumber;
+        }
+        return adjacentField;
+    }
+
     const generateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
         // if displaying a single question per page, only return the right numbered question
@@ -182,22 +244,15 @@ const StepContent = ({
 
             if (singleQuestionFormat) {
                 if (currentQuestion === field.fieldNumber) {
-                    if (
-                        field.fieldType === FIELD_TYPES.HEADER ||
-                        field.fieldType === FIELD_TYPES.DIVIDER
-                    ) {
-                        if (currentQuestion !== metaData.fields.length - 1)
-                            setCurrentQuestion(currentQuestion + 1);
-                        return null;
-                    }
                     return (
                         <div key={`field-${stepData?.key}-${field.key}`}>
                             {stepField}
                             <Button
                                 onClick={() => {
                                     if (currentQuestion !== 0)
-                                        setCurrentQuestion(currentQuestion - 1);
+                                        setCurrentQuestion(getAdjacentField(currentQuestion, DIRECTION.UP));
                                 }}
+                                className="prev-button"
                             >
                                 {translations.components.button.previous}
                             </Button>
@@ -207,8 +262,9 @@ const StepContent = ({
                                         currentQuestion !==
                                         metaData.fields.length - 1
                                     )
-                                        setCurrentQuestion(currentQuestion + 1);
+                                        setCurrentQuestion(getAdjacentField(currentQuestion, DIRECTION.DOWN));
                                 }}
+                                className="next-button"
                             >
                                 {translations.components.button.next}
                             </Button>
@@ -242,9 +298,8 @@ const StepContent = ({
     };
 
     const generateLastEditedByAndDate = () => {
-        let text = `${translations.components.step.lastEditedBy} ${
-            stepData?.lastEditedBy || translations.components.step.none
-        }`;
+        let text = `${translations.components.step.lastEditedBy} ${stepData?.lastEditedBy || translations.components.step.none
+            }`;
         if (stepData?.lastEdited) {
             text += ` ${translations.components.step.on} ${formatDate(
                 new Date(),
