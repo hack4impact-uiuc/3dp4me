@@ -59,13 +59,13 @@ app.get('/*', (req, res, next) => {
  * The secret itself should be not easily parsed by a human and would best be a random set of
  * characters.
  *
- * Patients will be logged in a session for 10 minutes, unless they refresh to extend this period.
+ * Patients will be logged in a session for 5 minutes, unless they refresh to extend this period.
  * maxAge can also be set to null, which keeps a user logged in until the BROWSER is closed.
  */
 const sess = {
     secret: '3DP4ME',
     cookie: {
-        domain: 'localhost', path: '/', httpOnly: true, secure: false, maxAge: 60000 * 10,
+        domain: 'localhost', path: '/', httpOnly: true, secure: false, maxAge: 150000,
     },
     resave: false,
     saveUninitialized: false,

@@ -18,12 +18,12 @@ export const send2FAPatientCode = async (_id) => {
     const requestString = `/patient-2fa/${_id}`;
 
     const res = await instance.get(requestString);
-    
+
     // Previously, without the redirect, the site would crash when an invalid patient id was entered
     if (!res?.data?.success) {
         window.location = `/patient-2fa/${_id}`;
     }
-    
+
     return res.data;
 };
 
@@ -32,21 +32,21 @@ export const authenticatePatient = async (_id, token) => {
     bodyFormData.append('username', _id);
     bodyFormData.append('password', token);
     const res = await instance({
-        method: "post",
+        method: 'post',
         url: `/patient-2fa/authenticated/${_id}`,
         data: bodyFormData,
-        headers: { "Content-Type": "multipart/form-data" },
-    })
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
 
     return res.data;
 };
 
 export const redirectAndAuthenticate = async (_id) => {
     const res = await instance({
-        method: "get",
+        method: 'get',
         url: `/patient-2fa/patient-portal/${_id}`,
-        data: {_id},
-        headers: { "Content-Type": "multipart/form-data" },
+        data: { _id },
+        headers: { 'Content-Type': 'multipart/form-data' },
     });
 
     if (!res?.data?.success) {

@@ -5,11 +5,8 @@ import { QueryParamProvider } from 'use-query-params';
 import ErrorModal from './components/ErrorModal/ErrorModal';
 import { useTranslations } from './hooks/useTranslations';
 import { Context } from './store/Store';
-import {
-    LANGUAGES,
-    REDUCER_ACTIONS,
-} from './utils/constants';
-import AllRoutes from './Routes/allRoutes'
+import { LANGUAGES, REDUCER_ACTIONS } from './utils/constants';
+import AllRoutes from './Routes/AllRoutes';
 import LoadingIndicator from './components/LoadingIndicator/LoadingIndicator';
 
 const AppContent = () => {
@@ -40,9 +37,9 @@ const AppContent = () => {
 
                     {/* Routes */}
                     <div className={contentClassNames}>
-                            <Switch>
-                                <AllRoutes />
-                            </Switch>
+                        <Switch>
+                            <AllRoutes />
+                        </Switch>
                     </div>
                 </QueryParamProvider>
             </Router>

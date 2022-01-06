@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
@@ -9,7 +9,12 @@ import Dashboard from '../pages/Dashboard/Dashboard';
 import DashboardManagement from '../pages/DashboardManagement/DashboardManagement';
 import PatientDetail from '../pages/PatientDetail/PatientDetail';
 import Patients from '../pages/Patients/Patients';
-import { REDUCER_ACTIONS, ROUTES, LANGUAGES , COGNITO_ATTRIBUTES } from '../utils/constants';
+import {
+    REDUCER_ACTIONS,
+    ROUTES,
+    LANGUAGES,
+    COGNITO_ATTRIBUTES,
+} from '../utils/constants';
 import Login from '../pages/Login/Login';
 import { useErrorWrap } from '../hooks/useErrorWrap';
 import { getCurrentUserInfo } from '../aws/aws-helper';
@@ -19,7 +24,6 @@ import {
     UNAUTHENTICATED,
     setAuthListener,
 } from '../aws/aws-auth';
-import { useTranslations } from '../hooks/useTranslations';
 import { getSelf } from '../api/api';
 
 const AWSRoutes = () => {
@@ -27,9 +31,6 @@ const AWSRoutes = () => {
     const [username, setUsername] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [state, dispatch] = useContext(Context);
-    const selectedLang = useTranslations()[1];
-    const contentClassNames =
-        selectedLang === LANGUAGES.AR ? 'flip content' : 'content';
     const errorWrap = useErrorWrap();
 
     /**
@@ -107,7 +108,12 @@ const AWSRoutes = () => {
     if (authLevel === UNDEFINED_AUTH) return <p>Authenticating User</p>;
 
     // If the user is unauthenticated, show login screen
-    if (authLevel === UNAUTHENTICATED) return <Route><Login /></Route>
+    if (authLevel === UNAUTHENTICATED)
+        return (
+            <Route>
+                <Login />
+            </Route>
+        );
 
     return (
         <Switch>
@@ -127,10 +133,7 @@ const AWSRoutes = () => {
                 <Navbar username={username} userEmail={userEmail} />
                 <DashboardManagement />
             </Route>
-            <Route
-                exact
-                path={`${ROUTES.PATIENT_DETAIL}/:patientId`}
-            >
+            <Route exact path={`${ROUTES.PATIENT_DETAIL}/:patientId`}>
                 <Navbar username={username} userEmail={userEmail} />
                 <PatientDetail />
             </Route>
@@ -139,7 +142,7 @@ const AWSRoutes = () => {
                 <Dashboard />
             </Route>
         </Switch>
-    )
-}
+    );
+};
 
-export default AWSRoutes
+export default AWSRoutes;

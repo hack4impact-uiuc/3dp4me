@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import ReactCodeInput from 'react-code-input';
 import { useParams } from 'react-router-dom';
 
-import { authenticatePatient, send2FAPatientCode } from '../../api/axios-patient-auth';
+import {
+    authenticatePatient,
+    send2FAPatientCode,
+} from '../../api/axios-patient-auth';
 import Logo from '../../assets/3dp4me_logo.png';
 import { useTranslations } from '../../hooks/useTranslations';
 import { ROUTES } from '../../utils/constants';
@@ -38,13 +41,13 @@ const Patient2FALogin = () => {
         setIsTokenSent(true);
     };
 
-    const checkIsAuthenticated = async() => {
+    const checkIsAuthenticated = async () => {
         const res = await authenticatePatient(patientId, token);
-        
+
         if (res.success) {
-            window.location.href = `${ ROUTES.PATIENT_PORTAL }/${patientId}`;
+            window.location.href = `${ROUTES.PATIENT_PORTAL}/${patientId}`;
         }
-    }
+    };
 
     const displayAuthPage = () => {
         if (!isTokenSent) {
@@ -80,8 +83,16 @@ const Patient2FALogin = () => {
                 </h5>
 
                 <div className="centered-token-content">
-                    <ReactCodeInput fields={6} inputStyle={inputStyle} onChange={(tokenInput) => setToken(tokenInput)}/>
-                    <button className="verification-button" type="submit" onClick={() => checkIsAuthenticated()}>
+                    <ReactCodeInput
+                        fields={6}
+                        inputStyle={inputStyle}
+                        onChange={(tokenInput) => setToken(tokenInput)}
+                    />
+                    <button
+                        className="verification-button"
+                        type="submit"
+                        onClick={() => checkIsAuthenticated()}
+                    >
                         {translations.patient2FA.verify}
                     </button>
                     <div

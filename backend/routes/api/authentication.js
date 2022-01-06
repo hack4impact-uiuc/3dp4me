@@ -1,8 +1,10 @@
-const accountSid = process.env.ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
 const express = require('express');
 const twofactor = require('node-2fa');
 const passport = require('passport');
+
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+
 const client = require('twilio')(accountSid, authToken);
 
 const {
@@ -20,9 +22,13 @@ require('../../middleware/patientAuthentication');
 
 router.post('/authenticated/:patientId', passport.authenticate('passport-local'), async (req, res) => {
     const { patientId } = req.params;
+    console.log('ya');
     if (!req.user) { return res.redirect(`/${patientId}`); }
+    console.log('nah');
     req.logIn(req.user, (err) => {
         if (err) { return err; }
+        console.log(req.session);
+        // do i need this line?
         req.session.save();
         return sendResponse(
             res,
@@ -30,8 +36,6 @@ router.post('/authenticated/:patientId', passport.authenticate('passport-local')
             'Successfully authenticated patient',
         );
     });
-
-    return req.user;
 });
 
 /**
