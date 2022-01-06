@@ -15,7 +15,6 @@ import { Context } from '../../store/Store';
 import { useStyles } from './Navbar.style';
 
 const Navbar = ({ username, userEmail }) => {
-
     const state = useContext(Context)[0];
     const classes = useStyles();
     const [translations, selectedLang] = useTranslations();

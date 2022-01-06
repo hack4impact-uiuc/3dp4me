@@ -26,8 +26,8 @@ const Reducer = (state, action) => {
         case REDUCER_ACTIONS.SET_USERNAME:
             return {
                 ...state,
-                username: action.username
-            }
+                username: action.username,
+            };
         default:
             return state;
     }

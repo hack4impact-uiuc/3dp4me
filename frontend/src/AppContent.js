@@ -38,7 +38,7 @@ const AppContent = ({ username, userEmail }) => {
             type: REDUCER_ACTIONS.SET_USERNAME,
             username,
         });
-    }, [dispatch, username])
+    }, [dispatch, username]);
 
     /**
      * Gets the user's preferred language and sets it in the store

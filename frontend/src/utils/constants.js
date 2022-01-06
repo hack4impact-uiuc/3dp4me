@@ -196,7 +196,7 @@ export const REDUCER_ACTIONS = {
     CLEAR_ERROR: 'CLEAR_ERROR',
     SET_LANGUAGE: 'SET_LANGUAGE',
     SET_ADMIN_STATUS: 'SET_ADMIN_STATUS',
-    SET_USERNAME: 'SET_USERNAME'
+    SET_USERNAME: 'SET_USERNAME',
 };
 
 /**
@@ -271,4 +271,3 @@ export const DIRECTION = {
     UP: -1,
     DOWN: 1,
 };
-

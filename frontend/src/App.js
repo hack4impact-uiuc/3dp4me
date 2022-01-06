@@ -9,7 +9,6 @@ import Login from './pages/Login/Login';
 import { awsconfig } from './aws/aws-exports';
 import { LANGUAGES } from './utils/constants';
 import { getCurrentUserInfo } from './aws/aws-helper';
-
 import {
     UNDEFINED_AUTH,
     AUTHENTICATED,

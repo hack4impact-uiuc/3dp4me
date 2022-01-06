@@ -10,7 +10,7 @@ const initialState = {
     isErrorVisible: false,
     language: LANGUAGES.EN,
     isAdmin: false,
-    username: ''
+    username: '',
 };
 
 const Store = ({ children }) => {

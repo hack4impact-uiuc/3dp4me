@@ -26,10 +26,10 @@ const StepField = ({
     displayName,
     stepKey,
     isDisabled = true,
-    handleSimpleUpdate = () => { },
-    handleFileDownload = () => { },
-    handleFileUpload = () => { },
-    handleFileDelete = () => { },
+    handleSimpleUpdate = () => {},
+    handleFileDownload = () => {},
+    handleFileUpload = () => {},
+    handleFileDelete = () => {},
 }) => {
     const selectedLang = useTranslations()[1];
 

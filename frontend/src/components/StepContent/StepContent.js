@@ -161,34 +161,41 @@ const StepContent = ({
 
     // Returns the smallest fieldNumber out of all of the fields in metaData
     const getSmallestFieldNumber = () => {
-
-        if (!metaData || metaData.length === 0) return;
+        if (!metaData || metaData.length === 0) return 0;
 
         let smallestFieldNumber = metaData.fields[0].fieldNumber;
 
         for (let i = 1; i < metaData.fields.length; i++) {
-            smallestFieldNumber = Math.min(smallestFieldNumber, metaData.fields[i].fieldNumber);
+            smallestFieldNumber = Math.min(
+                smallestFieldNumber,
+                metaData.fields[i].fieldNumber,
+            );
         }
 
         return smallestFieldNumber;
     };
 
     const getFieldIndexGivenFieldNumber = (fieldNumber) => {
-        return metaData.fields.findIndex((element) => element.fieldNumber === fieldNumber)
-    }
+        return metaData.fields.findIndex(
+            (element) => element.fieldNumber === fieldNumber,
+        );
+    };
 
     const fieldDoesExist = (fieldNumber) => {
         return getFieldIndexGivenFieldNumber(fieldNumber) >= 0;
-    }
+    };
 
     const isAnEditableField = (fieldNumber) => {
         const fieldIndex = getFieldIndexGivenFieldNumber(fieldNumber);
 
         if (fieldIndex < 0) return false;
 
-        const fieldType = metaData.fields[fieldIndex].fieldType;
-        return (fieldType !== FIELD_TYPES.HEADER && fieldType !== FIELD_TYPES.DIVIDER);
-    }
+        const { fieldType } = metaData.fields[fieldIndex];
+        return (
+            fieldType !== FIELD_TYPES.HEADER &&
+            fieldType !== FIELD_TYPES.DIVIDER
+        );
+    };
 
     /*
         Since field numbers don't have to follow an arithmetic progression, ie 0, 1, 2, 3...,
@@ -201,7 +208,8 @@ const StepContent = ({
 
         while (
             checkBounds(0, metaData.fields.length, adjacentField) &&
-            (!fieldDoesExist(adjacentField) || !isAnEditableField(adjacentField))
+            (!fieldDoesExist(adjacentField) ||
+                !isAnEditableField(adjacentField))
         ) {
             adjacentField += direction;
         }
@@ -210,7 +218,7 @@ const StepContent = ({
             return currFieldNumber;
         }
         return adjacentField;
-    }
+    };
 
     const generateFields = () => {
         if (metaData == null || metaData.fields == null) return null;
@@ -250,7 +258,12 @@ const StepContent = ({
                             <Button
                                 onClick={() => {
                                     if (currentQuestion !== 0)
-                                        setCurrentQuestion(getAdjacentField(currentQuestion, DIRECTION.UP));
+                                        setCurrentQuestion(
+                                            getAdjacentField(
+                                                currentQuestion,
+                                                DIRECTION.UP,
+                                            ),
+                                        );
                                 }}
                                 className="prev-button"
                             >
@@ -262,7 +275,12 @@ const StepContent = ({
                                         currentQuestion !==
                                         metaData.fields.length - 1
                                     )
-                                        setCurrentQuestion(getAdjacentField(currentQuestion, DIRECTION.DOWN));
+                                        setCurrentQuestion(
+                                            getAdjacentField(
+                                                currentQuestion,
+                                                DIRECTION.DOWN,
+                                            ),
+                                        );
                                 }}
                                 className="next-button"
                             >
@@ -298,8 +316,9 @@ const StepContent = ({
     };
 
     const generateLastEditedByAndDate = () => {
-        let text = `${translations.components.step.lastEditedBy} ${stepData?.lastEditedBy || translations.components.step.none
-            }`;
+        let text = `${translations.components.step.lastEditedBy} ${
+            stepData?.lastEditedBy || translations.components.step.none
+        }`;
         if (stepData?.lastEdited) {
             text += ` ${translations.components.step.on} ${formatDate(
                 stepData.lastEdited,
