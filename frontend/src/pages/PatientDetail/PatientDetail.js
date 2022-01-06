@@ -79,7 +79,10 @@ const PatientDetail = () => {
         errorWrap(async () => {
             const newPatientData = _.cloneDeep(patientData);
             newPatientData[stepKey] = _.cloneDeep(stepData);
-            await trackPromise(updateStage(patientId, stepKey, stepData));
+            const updatePatientDataResponse = await trackPromise(updateStage(patientId, stepKey, stepData));
+            // Need to update state with the stepData from the response since some 
+            // values, such as lastEdited and lastEditedBy, were updated after the request.
+            newPatientData[stepKey] = updatePatientDataResponse.result;
             setPatientData(newPatientData);
         });
     };
@@ -222,11 +225,10 @@ const PatientDetail = () => {
                 />
 
                 <div
-                    className={`controller-content ${
-                        selectedLang === LANGUAGES.AR
-                            ? 'controller-content-ar'
-                            : ''
-                    }`}
+                    className={`controller-content ${selectedLang === LANGUAGES.AR
+                        ? 'controller-content-ar'
+                        : ''
+                        }`}
                 >
                     <ToggleButtons
                         step={selectedStep}

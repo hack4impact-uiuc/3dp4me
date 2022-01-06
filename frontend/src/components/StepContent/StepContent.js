@@ -302,7 +302,7 @@ const StepContent = ({
             }`;
         if (stepData?.lastEdited) {
             text += ` ${translations.components.step.on} ${formatDate(
-                new Date(),
+                stepData.lastEdited,
                 selectedLang,
             )}`;
         }
