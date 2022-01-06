@@ -168,8 +168,8 @@ describe('GET /patient/:id', () => {
 
         // Check responses
         expectStrictEqualWithTimestampOrdering(
-            GET_PATIENT_WITH_ALL_STEP_DATA,
-            omitDeep(resContent.result, '__v'),
+            omitDeep(GET_PATIENT_WITH_ALL_STEP_DATA, ['__v', '_id']),
+            omitDeep(resContent.result, ['__v', '_id']),
         );
     });
 

@@ -102,8 +102,8 @@ describe('POST /patient', () => {
         expect(updatedData.date.getTime()).toBeGreaterThanOrEqual(
             startTimestamp,
         );
-        updatedData = _.omit(updatedData, ['_id', 'date', '__v']);
-        expectedResult = _.omit(expectedResult, ['_id', 'date', '__v']);
+        updatedData = omitDeep(updatedData, ['_id', 'date', '__v']);
+        expectedResult = omitDeep(expectedResult, ['_id', 'date', '__v']);
 
         expectStrictEqualWithTimestampOrdering(expectedResult, updatedData);
     });
