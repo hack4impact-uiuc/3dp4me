@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { trackPromise } from 'react-promise-tracker';
+import PropTypes from 'prop-types';
 
 import {
     getAllStepsMetadata,
@@ -27,7 +28,10 @@ import './PatientDetail.scss';
  * The detail view for a patient. Shows their information
  * for each step.
  */
-const PatientDetail = () => {
+const PatientDetail = (username = '') => {
+
+    console.log(username);
+
     const errorWrap = useErrorWrap();
     const params = useParams();
     const { patientId } = params;
@@ -190,6 +194,7 @@ const PatientDetail = () => {
 
                     return (
                         <StepContent
+                            username={username}
                             key={step.key}
                             patientId={patientId}
                             onDataSaved={onStepSaved}
@@ -241,6 +246,10 @@ const PatientDetail = () => {
             </div>
         </LoadWrapper>
     );
+};
+
+PatientDetail.propTypes = {
+    username: PropTypes.string,
 };
 
 export default PatientDetail;

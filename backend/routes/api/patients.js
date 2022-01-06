@@ -320,7 +320,7 @@ router.post(
 router.post(
     '/:id/:stepKey',
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
-    addLastEditedToStepFields(),
+    // addLastEditedToStepFields(),
     errorWrap(async (req, res) => {
         const { id, stepKey } = req.params;
 

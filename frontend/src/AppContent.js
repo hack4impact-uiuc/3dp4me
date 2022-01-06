@@ -118,7 +118,7 @@ const AppContent = ({ username, userEmail }) => {
                                 exact
                                 path={`${ROUTES.PATIENT_DETAIL}/:patientId`}
                             >
-                                <PatientDetail />
+                                <PatientDetail username={username} />
                             </Route>
                         </Switch>
                     </div>
