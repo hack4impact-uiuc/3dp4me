@@ -28,10 +28,7 @@ import './PatientDetail.scss';
  * The detail view for a patient. Shows their information
  * for each step.
  */
-const PatientDetail = (username = '') => {
-
-    console.log(username);
-
+const PatientDetail = () => {
     const errorWrap = useErrorWrap();
     const params = useParams();
     const { patientId } = params;
@@ -194,7 +191,6 @@ const PatientDetail = (username = '') => {
 
                     return (
                         <StepContent
-                            username={username}
                             key={step.key}
                             patientId={patientId}
                             onDataSaved={onStepSaved}
@@ -246,10 +242,6 @@ const PatientDetail = (username = '') => {
             </div>
         </LoadWrapper>
     );
-};
-
-PatientDetail.propTypes = {
-    username: PropTypes.string,
 };
 
 export default PatientDetail;

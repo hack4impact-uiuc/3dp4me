@@ -9,7 +9,7 @@ const { models } = require('../../models');
 const {
     uploadFile, downloadFile, deleteFile, deleteFolder,
 } = require('../../utils/aws/awsS3Helpers');
-const { removeRequestAttributes, addLastEditedToStepFields } = require('../../middleware/requests');
+const { removeRequestAttributes } = require('../../middleware/requests');
 const {
     STEP_IMMUTABLE_ATTRIBUTES,
     PATIENT_IMMUTABLE_ATTRIBUTES,
@@ -320,7 +320,6 @@ router.post(
 router.post(
     '/:id/:stepKey',
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
-    // addLastEditedToStepFields(),
     errorWrap(async (req, res) => {
         const { id, stepKey } = req.params;
 

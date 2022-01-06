@@ -32,6 +32,14 @@ const AppContent = ({ username, userEmail }) => {
     const contentClassNames =
         selectedLang === LANGUAGES.AR ? 'flip content' : 'content';
 
+    // Sets the username in store
+    useEffect(() => {
+        dispatch({
+            type: REDUCER_ACTIONS.SET_USERNAME,
+            username,
+        });
+    }, [dispatch, username])
+
     /**
      * Gets the user's preferred language and sets it in the store
      * Also checks if the user is an admin and updates store
@@ -118,7 +126,7 @@ const AppContent = ({ username, userEmail }) => {
                                 exact
                                 path={`${ROUTES.PATIENT_DETAIL}/:patientId`}
                             >
-                                <PatientDetail username={username} />
+                                <PatientDetail />
                             </Route>
                         </Switch>
                     </div>

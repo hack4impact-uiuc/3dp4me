@@ -19,7 +19,6 @@ import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
 
 const StepField = ({
-    username = '',
     metadata,
     value,
     initValue,
@@ -77,7 +76,6 @@ const StepField = ({
                             title={displayName}
                             fieldId={metadata.key}
                             value={value}
-                            username={username}
                         />
                     </div>
                 );
@@ -202,7 +200,6 @@ const StepField = ({
 };
 
 StepField.propTypes = {
-    username: PropTypes.string,
     value: PropTypes.any,
     initValue: PropTypes.any,
     isDisabled: PropTypes.bool,

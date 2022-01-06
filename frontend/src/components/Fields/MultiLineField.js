@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { formatDate } from '../../utils/date';
 import { useTranslations } from '../../hooks/useTranslations';
 import TextArea from './TextArea';
 import './MultiLineField.scss';
+import { Context } from '../../store/Store';
 
-const MultiLineField = ({ username = '', title, disabled, fieldId, onChange, value = { data: '', lastEdited: Date.now(), lastEditedBy: '' } }) => {
+const MultiLineField = ({ title, disabled, fieldId, onChange, value = { data: '', lastEdited: Date.now(), lastEditedBy: '' } }) => {
     const [translations, selectedLang] = useTranslations();
+    const [state] = useContext(Context);
 
     const generateLastEditedByAndDate = () => {
         let text;
@@ -29,8 +31,7 @@ const MultiLineField = ({ username = '', title, disabled, fieldId, onChange, val
         const valueCopy = _.cloneDeep(value);
         valueCopy.data = newData;
         valueCopy.lastEdited = Date.now();
-        console.log(username)
-        valueCopy.lastEditedBy = username;
+        valueCopy.lastEditedBy = state.username;
         onChange(fieldId, valueCopy);
     }
 
@@ -49,7 +50,6 @@ const MultiLineField = ({ username = '', title, disabled, fieldId, onChange, val
 };
 
 MultiLineField.propTypes = {
-    username: PropTypes.string,
     title: PropTypes.string.isRequired,
     disabled: PropTypes.bool.isRequired,
     fieldId: PropTypes.string.isRequired,

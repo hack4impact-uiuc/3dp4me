@@ -29,7 +29,6 @@ const StepContent = ({
     onDataSaved,
     edit,
     setEdit,
-    username = '',
 }) => {
     const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData));
     const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -220,7 +219,6 @@ const StepContent = ({
             const stepField = (
                 <div className="step-field">
                     <StepField
-                        username={username}
                         displayName={field.displayName[selectedLang]}
                         metadata={field}
                         value={
@@ -355,7 +353,6 @@ const StepContent = ({
 };
 
 StepContent.propTypes = {
-    username: PropTypes.string,
     patientId: PropTypes.string.isRequired,
     metaData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
