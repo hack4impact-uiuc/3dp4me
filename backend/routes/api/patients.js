@@ -407,6 +407,8 @@ router.delete(
 const updatePatientStepData = async (patientId, StepModel, data) => {
     let patientStepData = await StepModel.findOne({ patientId });
 
+    console.log(data);
+
     // If patient doesn't have step data, create it with constructor. Else update it.
     if (!patientStepData) {
         patientStepData = data;
@@ -417,6 +419,7 @@ const updatePatientStepData = async (patientId, StepModel, data) => {
     }
 
     patientStepData = _.assign(patientStepData, data);
+
     return patientStepData.save();
 };
 
