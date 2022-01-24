@@ -35,7 +35,9 @@ module.exports.DEFAULT_PATIENT_DATA = {
 module.exports.POST_FINISHED_STEP_DATA = {
     status: STEP_STATUS_ENUM.FINISHED,
     string: 'helloo',
-    multilineString: 'Test looooooooong string',
+    multilineString: {
+        data: 'Test looooooooong string'
+    },
     number: 932,
     date: new Date().toISOString(),
     radioButton: '60944e084a4a0d4330cc258d',
@@ -64,7 +66,7 @@ module.exports.POST_FINISHED_STEP_DATA = {
 module.exports.DEFAULT_STEP_DATA = {
     status: STEP_STATUS_ENUM.UNFINISHED,
     string: '',
-    multilineString: '',
+    multilineString: { data: '' },
     number: 0,
     date: new Date(),
     radioButton: '',
@@ -169,10 +171,12 @@ module.exports.GET_PATIENT_WITH_ALL_STEP_DATA = {
     example: {
         _id: '60944e084f4c0d4330cc25fe',
         audio: [],
-        multilineString:
-            'Quo enim optio voluptatem quibusdam voluptatem non adipisci nihil. Voluptatum maxime consequatur porro et. Modi et debitis aspernatur eius aut laboriosam amet amet harum. Qui eum autem assumenda fugit dignissimos est. Eveniet consequuntur sed sapiente aut autem.\n' +
-            ' \rDebitis commodi veritatis fuga animi vel. Corporis minus cupiditate occaecati natus eum dolores non error. Quam reprehenderit iusto officia unde perferendis est. Perferendis ut non eius.\n' +
-            ' \rAliquam qui voluptates doloribus beatae sit. Nihil veritatis ut facere possimus magni excepturi harum. Optio sint et sed dolorem quisquam maiores ullam. Nisi voluptas ut possimus. Ut rerum cumque aut dolores nam qui dolorem eligendi reiciendis. Veritatis quo repudiandae rerum ipsam doloremque recusandae molestiae dolorum fugiat.',
+        multilineString: {
+            "_id": "61d6888c69f15ded8de5be57",
+            data: 'Quo enim optio voluptatem quibusdam voluptatem non adipisci nihil. Voluptatum maxime consequatur porro et. Modi et debitis aspernatur eius aut laboriosam amet amet harum. Qui eum autem assumenda fugit dignissimos est. Eveniet consequuntur sed sapiente aut autem.\n' +
+                ' \rDebitis commodi veritatis fuga animi vel. Corporis minus cupiditate occaecati natus eum dolores non error. Quam reprehenderit iusto officia unde perferendis est. Perferendis ut non eius.\n' +
+                ' \rAliquam qui voluptates doloribus beatae sit. Nihil veritatis ut facere possimus magni excepturi harum. Optio sint et sed dolorem quisquam maiores ullam. Nisi voluptas ut possimus. Ut rerum cumque aut dolores nam qui dolorem eligendi reiciendis. Veritatis quo repudiandae rerum ipsam doloremque recusandae molestiae dolorum fugiat.',
+        },
         number: 36,
         date: '2020-10-09T13:06:34.732Z',
         file: [

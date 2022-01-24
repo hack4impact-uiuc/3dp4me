@@ -14,7 +14,7 @@ import PhoneField from '../Fields/PhoneField';
 import PhotoField from '../Fields/PhotoField';
 import RadioButtonField from '../Fields/RadioButtonField';
 import SignatureField from '../Fields/SignatureField';
-import TextArea from '../Fields/TextArea';
+import MultiLineField from '../Fields/MultiLineField';
 import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
 
@@ -70,7 +70,7 @@ const StepField = ({
             case FIELD_TYPES.MULTILINE_STRING:
                 return (
                     <div>
-                        <TextArea
+                        <MultiLineField
                             disabled={isDisabled}
                             onChange={handleSimpleUpdate}
                             title={displayName}

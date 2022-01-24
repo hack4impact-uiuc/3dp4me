@@ -21,10 +21,10 @@ import {
     verticalMovementWidth,
 } from '../../styles/variables.scss';
 import {
-    DIRECTION,
     getValidAdjacentElement,
     swapValuesInArrayByKey,
 } from '../../utils/dashboard-utils';
+import { DIRECTION } from '../../utils/constants';
 import {
     generateKeyWithoutCollision,
     getStepIndexGivenKey,

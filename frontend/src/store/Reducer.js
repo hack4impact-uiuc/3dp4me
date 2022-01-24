@@ -23,6 +23,11 @@ const Reducer = (state, action) => {
                 ...state,
                 isAdmin: action.isAdmin,
             };
+        case REDUCER_ACTIONS.SET_USERNAME:
+            return {
+                ...state,
+                username: action.username,
+            };
         default:
             return state;
     }
