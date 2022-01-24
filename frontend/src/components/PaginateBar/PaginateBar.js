@@ -33,6 +33,7 @@ const PaginateBar = ({ pageCount, onPageChange, currentPage }) => {
             pageLinkClassName="paginate-link"
             previousLinkClassName="paginate-previous-link"
             nextLinkClassName="paginate-next-link"
+            breakLinkClassName="paginate-break"
             nextLabel={nextLabel}
             previousLabel={previousLabel}
         />
