@@ -170,6 +170,8 @@ const EditFieldModal = ({
             case FIELD_TYPES.AUDIO:
             case FIELD_TYPES.MAP:
             case FIELD_TYPES.PHOTO:
+            case FIELD_TYPES.FIELD_GROUP:
+            case FIELD_TYPES.SIGNATURE:
                 return (
                     <div className="edit-field-div">
                         <span>

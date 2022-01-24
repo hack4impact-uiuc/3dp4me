@@ -149,7 +149,8 @@ const getRadioButtonSchema = (fieldMetadata) => {
 };
 
 const getFieldGroupSchema = (fieldMetadata) => {
-    if (!fieldMetadata?.subFields?.length) {
+    // Field groups can have 0 sub fields.
+    if (!fieldMetadata?.subFields) {
         throw new Error('Field groups must have sub fields');
     }
 

@@ -24,6 +24,7 @@ const CreateFieldModal = ({
     onModalClose,
     allRoles,
     onAddNewField,
+    canAddFieldGroup = true,
 }) => {
     const [translations, selectedLang] = useTranslations();
     const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
@@ -147,6 +148,8 @@ const CreateFieldModal = ({
             case FIELD_TYPES.AUDIO:
             case FIELD_TYPES.MAP:
             case FIELD_TYPES.PHOTO:
+            case FIELD_TYPES.FIELD_GROUP:
+            case FIELD_TYPES.SIGNATURE:
                 return (
                     <div className="create-field-div">
                         <span>
@@ -220,11 +223,13 @@ const CreateFieldModal = ({
     const generateFieldDropdownOptions = () => {
         const fieldDropdownOptions = [];
         Object.values(FIELD_TYPES).forEach((value) => {
-            fieldDropdownOptions.push(
-                <option value={value} className="create-field-option">
-                    {value}
-                </option>,
-            );
+            if (canAddFieldGroup || value !== FIELD_TYPES.FIELD_GROUP) {
+                fieldDropdownOptions.push(
+                    <option value={value} className="create-field-option">
+                        {value}
+                    </option>,
+                );
+            }
         });
 
         return fieldDropdownOptions;
@@ -364,6 +369,7 @@ CreateFieldModal.propTypes = {
     onModalClose: PropTypes.func.isRequired,
     allRoles: PropTypes.array.isRequired,
     onAddNewField: PropTypes.func.isRequired,
+    canAddFieldGroup: PropTypes.bool,
 };
 
 export default CreateFieldModal;

@@ -161,7 +161,7 @@ const BottomBar = ({
             button = (
                 <Button
                     className={buttonClassName}
-                    onClick={() => onAddField(selectedStep)}
+                    onClick={() => onAddField(selectedStep, 'fields')}
                 >
                     {translations.components.bottombar.addField}
                 </Button>
