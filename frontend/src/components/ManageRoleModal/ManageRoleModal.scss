@@ -64,5 +64,11 @@
         .text-field {
             margin-bottom: 20px;
         }
+
+        .button-div {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+        }
     }
 }

@@ -64,4 +64,20 @@
             margin-bottom: 20px;
         }
     }
+
+    .button-div {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .access-dropdown {
+        width: fit-content;
+        margin-top: 20px;
+    }
+
+    .access-label {
+        font-size: 1.3em;
+        color: black;
+    }
 }

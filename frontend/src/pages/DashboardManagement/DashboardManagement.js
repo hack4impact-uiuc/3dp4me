@@ -11,7 +11,7 @@ import {
 import BottomBar from '../../components/BottomBar/BottomBar';
 import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
 import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
-import EditStepModal from '../../components/EditStepModal.js/EditStepModal';
+import EditStepModal from '../../components/EditStepModal/EditStepModal';
 import EditFieldModal from '../../components/EditFieldModal/EditFieldModal';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';

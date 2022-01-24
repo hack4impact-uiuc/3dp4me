@@ -3,6 +3,7 @@ import { Modal, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { trackPromise } from 'react-promise-tracker';
+import swal from 'sweetalert';
 
 import TextField from '../Fields/TextField';
 import TextArea from '../Fields/TextArea';
@@ -31,15 +32,25 @@ const ManageRoleModal = ({
     }, [roleInfo]);
 
     const onDelete = async () => {
-        errorWrap(async () => {
-            if (roleInfo?.isMutable) {
-                await errorWrap(async () =>
-                    trackPromise(deleteRole(roleInfo?._id)),
-                );
-                onRoleDeleted(roleInfo?._id);
-                onClose();
-            } else {
-                throw new Error(ERR_ROLE_IS_IMMUTABLE);
+        swal({
+            title: translations.components.modal.deleteTitle,
+            text: translations.roleManagement.warning,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willDelete) => {
+            if (willDelete) {
+                errorWrap(async () => {
+                    if (roleInfo?.isMutable) {
+                        await errorWrap(async () =>
+                            trackPromise(deleteRole(roleInfo?._id)),
+                        );
+                        onRoleDeleted(roleInfo?._id);
+                        onClose();
+                    } else {
+                        throw new Error(ERR_ROLE_IS_IMMUTABLE);
+                    }
+                });
             }
         });
     };
@@ -96,19 +107,28 @@ const ManageRoleModal = ({
                     onChange={onRoleChange}
                 />
                 <p>{translations.roleManagement.warning}</p>
-                <div>
-                    <Button className="delete-user-button" onClick={onDelete}>
-                        {translations.roleManagement.deleteRole}
-                    </Button>
-                </div>
 
-                <div>
-                    <Button className="save-user-button" onClick={onSave}>
-                        {translations.accountManagement.Save}
-                    </Button>
-                    <Button className="discard-user-button" onClick={onClose}>
-                        {translations.accountManagement.Discard}
-                    </Button>
+                <div className="button-div">
+                    <div>
+                        <Button className="save-user-button" onClick={onSave}>
+                            {translations.accountManagement.Save}
+                        </Button>
+                        <Button
+                            className="discard-user-button"
+                            onClick={onClose}
+                        >
+                            {translations.accountManagement.Discard}
+                        </Button>
+                    </div>
+
+                    <div>
+                        <Button
+                            className="delete-user-button"
+                            onClick={onDelete}
+                        >
+                            {translations.roleManagement.deleteRole}
+                        </Button>
+                    </div>
                 </div>
             </div>
         </Modal>
