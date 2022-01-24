@@ -20,14 +20,14 @@ const stringToBoolean = (value) => {
 };
 
 module.exports.getReadableSteps = async (req) => {
-    let showHiddenFields = req.query.showHiddenFields ?? 'false';
-    let showHiddenSteps = req.query.showHiddenSteps ?? 'false';
-    showHiddenFields = stringToBoolean(showHiddenFields);
-    showHiddenSteps = stringToBoolean(showHiddenSteps);
+    let shouldShowHiddenFields = req.query.showHiddenFields ?? 'false';
+    let shouldShowHiddenSteps = req.query.showHiddenSteps ?? 'false';
+    shouldShowHiddenFields = stringToBoolean(shouldShowHiddenFields);
+    shouldShowHiddenSteps = stringToBoolean(shouldShowHiddenSteps);
 
     const userRole = req.user.roles.toString();
 
-    const searchParams = [
+    const fieldSearchParams = [
         {
             $or: [{ $ne: ['$$field.isDeleted', true] }],
         },
@@ -41,21 +41,23 @@ module.exports.getReadableSteps = async (req) => {
         aggregation.push({
             $match: { $expr: { $in: [userRole, '$readableGroups'] } }, // limit returning steps that don't contain the user role
         });
-        searchParams.push({
+        fieldSearchParams.push({
             $in: [userRole, '$$field.readableGroups'], // limit returning fields that don't contain the user role
         });
     }
 
-    if (!showHiddenFields) {
-        searchParams.push({
+    if (!shouldShowHiddenFields) {
+        fieldSearchParams.push({
             $or: [{ $ne: ['$$field.isHidden', true] }],
         }); // limit returning fields that are hidden
     }
 
-    if (!showHiddenSteps) {
+    // Limit returning steps that are hidden
+    if (!shouldShowHiddenSteps) {
         aggregation.push({ $match: { isHidden: { $ne: true } } });
     }
 
+    // Adds operation for filtering out fields to the aggregation.
     aggregation.push({
         $addFields: {
             fields: {
@@ -63,7 +65,42 @@ module.exports.getReadableSteps = async (req) => {
                     input: '$fields',
                     as: 'field',
                     cond: {
-                        $and: searchParams,
+                        $and: fieldSearchParams,
+                    },
+                },
+            },
+        },
+    });
+
+    /*
+        Adds operation for filtering out subfields in fields to the aggregation.
+        Sources:
+        https://stackoverflow.com/questions/19431773/include-all-existing-fields-and-add-new-fields-to-document
+        https://stackoverflow.com/questions/44999893/how-do-i-add-properties-to-subdocument-array-in-aggregation-make-map-like-addf
+    */
+
+    aggregation.push({
+        $addFields: {
+            fields: {
+                $map: { // Perform map on the fields
+                    input: '$fields', // Input is the field array
+                    as: 'f', // Single element in the field array
+                    in: {
+                        // Merges the filtered subFields with the rest of the field data
+                        $mergeObjects: [
+                            '$$f',
+                            {
+                                subFields: {
+                                    $filter: {
+                                        input: '$$f.subFields',
+                                        as: 'field',
+                                        cond: {
+                                            $and: fieldSearchParams, // Same field filter conditions
+                                        },
+                                    },
+                                },
+                            },
+                        ],
                     },
                 },
             },
@@ -71,7 +108,6 @@ module.exports.getReadableSteps = async (req) => {
     });
 
     const data = await models.Step.aggregate(aggregation);
-
     return data;
 };
 
@@ -189,17 +225,122 @@ const updateFieldKeys = (fields) => {
     return clonedFields;
 };
 
+/**
+ * A recursive function that updates a set of fields before being saved in the database.
+ * @param {} fieldsInDB   The fields that are currently saved in the database.
+ * @param {} fieldsFromRequest The fields sent in the request.
+ * @param {} stepKey       The key of the step that these fields belong to.
+ * @param {} session       MongoDB Session.
+ * @param {} level         Level of recursion. 0 is the first level.
+ * @returns A boolean indicating if new fields were sent in the request.
+ */
+const updateFieldInTransaction = async (fieldsInDB, fieldsFromRequest, stepKey, session, level) => {
+    const savedFields = _.cloneDeep(fieldsInDB);
+    let updatedFields = _.cloneDeep(fieldsFromRequest);
+
+    const addedFields = await getAddedFields(
+        session,
+        savedFields,
+        updatedFields,
+    );
+
+    // Checks that fields were not deleted
+    const deletedFields = getDeletedFields(savedFields);
+
+    const numDeletedFields = deletedFields.length;
+    const numUnchangedFields = updatedFields.length - addedFields.length;
+
+    const currentNumFields = savedFields.length - numDeletedFields;
+    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
+
+    // Update the field numbers in order to account for deleted fields
+    // eslint-disable-next-line no-param-reassign
+    updatedFields = updateElementNumbers(
+        updatedFields,
+        deletedFields,
+        FIELD_NUMBER_KEY,
+    );
+
+    // Add deleted fields so they will be remain in the database.
+    // They are added to the end in order to give easy access when
+    // restoring them manually.
+    for (let i = 0; i < deletedFields.length; i++) {
+        updatedFields.push(deletedFields[i]);
+    }
+
+    // Generate keys for the fields that do not have a key
+    // eslint-disable-next-line no-param-reassign
+    updatedFields = updateFieldKeys(updatedFields);
+
+    if (level === 0) {
+        // Update the schema with new fields
+        addFieldsToSchema(stepKey, addedFields);
+    }
+
+    const fieldsToUpdateInSchema = [];
+    let subFieldWasAdded = false;
+
+    // Recursively call updateFieldInTransaction() on each field's subfields
+    const subFieldUpdateArray = updatedFields.map(async (updatedField, updatedFieldIndex) => {
+        if (updatedField.subFields) {
+            const updatedFieldKey = updatedField.key;
+            const savedFieldIndex = getFieldIndexGivenKey(savedFields, updatedFieldKey);
+
+            let newSavedFields = [];
+            if (savedFieldIndex > 0) {
+                newSavedFields = savedFields[savedFieldIndex].subFields || [];
+            }
+
+            // eslint-disable-next-line max-len
+            const updateFieldResponse = await updateFieldInTransaction(newSavedFields, updatedField.subFields, stepKey, session, level + 1);
+            const { didAddFields } = updateFieldResponse;
+
+            updatedFields[updatedFieldIndex].subFields = updateFieldResponse.updatedFields;
+            subFieldWasAdded = subFieldWasAdded || didAddFields;
+            // Build up a list of field's whose schema need to be updated
+            if (didAddFields && level === 0) {
+                fieldsToUpdateInSchema.push(updatedField);
+            }
+            return true;
+        }
+        return false;
+    });
+
+    await Promise.all(subFieldUpdateArray);
+
+    // Update schema
+    if (fieldsToUpdateInSchema.length > 0) {
+        addFieldsToSchema(stepKey, fieldsToUpdateInSchema);
+    }
+
+    // Along with other data, return true if a field was added at this level
+    // or a sub field was added to one of the fields at this level
+    return ({
+        updatedFields,
+        didAddFields: subFieldWasAdded || addedFields.length > 0,
+    });
+};
+
+// Returns the index for a step given its key
+const getFieldIndexGivenKey = (fields, key) => {
+    if (!fields) return -1;
+    return fields.findIndex((field) => field.key === key);
+};
+
 /* eslint-enable no-restricted-syntax, no-await-in-loop */
 
 const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
     // Cannot find step
     if (!stepBody?.key) await abortAndError(session, 'stepKey missing');
 
-    // Get the step to edit
+    /*  Get the step to edit.
+        .lean() is used to return POJO (Plain Old JavaScript Object)
+        instead of MongoDB document.
+    */
     const stepKey = stepBody.key;
     const stepToEdit = await models.Step.findOne({ key: stepKey }).session(
         session,
-    );
+    ).lean();
 
     // Treat a field as new if it doesn't show up in the database
     // or it is marked as deleted in the database. This based on the assumption
@@ -220,15 +361,16 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
         }
 
         if (stepBody.fields) {
+            generateSchemaFromMetadata(stepBody);
+            // eslint-disable-next-line max-len
+            const { updatedFields } = await updateFieldInTransaction([], stepBody.fields, stepBody.key, session, 0);
             // eslint-disable-next-line no-param-reassign
-            stepBody.fields = updateFieldKeys(stepBody.fields);
+            stepBody.fields = updatedFields;
         } else {
             // eslint-disable-next-line no-param-reassign
             stepBody.fields = [];
+            generateSchemaFromMetadata(stepBody);
         }
-
-        generateSchemaFromMetadata(stepBody);
-
         const newStep = new models.Step(stepBody);
         await newStep.save({ session, validateBeforeSave: false });
         return newStep;
@@ -236,40 +378,12 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
 
     // Build up a list of all the new fields added
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v']);
-    const addedFields = await getAddedFields(
-        session,
-        stepToEdit.fields,
-        strippedBody.fields,
-    );
 
-    // Checks that fields were not deleted
-    const deletedFields = getDeletedFields(stepToEdit.fields);
-
-    const numDeletedFields = deletedFields.length;
-    const numUnchangedFields = strippedBody.fields.length - addedFields.length;
-
-    const currentNumFields = stepToEdit.fields.length - numDeletedFields;
-    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
-
-    // Update the schema
-    addFieldsToSchema(stepKey, addedFields);
-
-    // Update the field numbers in order to account for deleted fields
-    strippedBody.fields = updateElementNumbers(
-        strippedBody.fields,
-        deletedFields,
-        FIELD_NUMBER_KEY,
-    );
-
-    // Add deleted fields so they will be remain in the database.
-    // They are added to the end in order to give easy access when
-    // restoring them manually.
-    for (let i = 0; i < deletedFields.length; i++) {
-        strippedBody.fields.push(deletedFields[i]);
-    }
-
-    // Generate keys for the fields that do not have a key
-    strippedBody.fields = updateFieldKeys(strippedBody.fields);
+    // Recursive update the field's numbers and keys
+    // while making sure deleted fields are properly handled.
+    // eslint-disable-next-line max-len
+    const { updatedFields } = await updateFieldInTransaction(stepToEdit.fields, strippedBody.fields, stepKey, session, 0);
+    strippedBody.fields = updatedFields;
 
     // Finally, update the metadata for this step
     const step = await models.Step.findOne({ key: stepKey }).session(session);
@@ -320,5 +434,28 @@ const validateStep = async (step, session) => {
     if (!isValid) {
         await session.abortTransaction();
         throw `Validation error: ${step.key} does not have unique stepNumber`;
+    }
+};
+
+// Filters out deleted steps and fields from stepData
+module.exports.filterOutDeletedSteps = (stepData) => {
+    for (let i = 0; i < stepData.length; i++) {
+        if (stepData[i].isDeleted) {
+            stepData.splice(i, 1);
+            i -= 1;
+        } else {
+            filterOutDeletedFields(stepData[i].fields);
+        }
+    }
+};
+
+const filterOutDeletedFields = (fields) => {
+    for (let i = 0; i < fields.length; i++) {
+        if (fields[i].isDeleted) {
+            fields.splice(i, 1);
+            i -= 1;
+        } else if (fields[i].subFields) {
+            filterOutDeletedFields(fields[i].subFields);
+        }
     }
 };

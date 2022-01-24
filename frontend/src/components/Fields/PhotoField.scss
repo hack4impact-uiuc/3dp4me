@@ -16,8 +16,12 @@
 
         .button-wrapper {
             display: flex;
-            justify-content: flex-end;
-            margin-left: 20px;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .save-retake-button-wrapper {
+            display: inherit;
         }
     }
 }

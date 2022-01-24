@@ -1,4 +1,7 @@
-import _ from 'lodash';
+export const DIRECTION = {
+    UP: -1,
+    DOWN: 1,
+};
 
 // Inclusive min and exclusive max
 export const checkBounds = (min, max, num) => {
@@ -25,11 +28,9 @@ export const getValidAdjacentElement = (arr, currIndex, direction) => {
 
 // Swaps the value of two elements in an array given their indices and attribute key
 export const swapValuesInArrayByKey = (arr, key, firstIndex, secondIndex) => {
-    const arrCopy = _.cloneDeep(arr);
-
-    const temp = arrCopy[firstIndex][key];
-    arrCopy[firstIndex][key] = arrCopy[secondIndex][key];
-    arrCopy[secondIndex][key] = temp;
-
-    return arrCopy;
+    const temp = arr[firstIndex][key];
+    // eslint-disable-next-line no-param-reassign
+    arr[firstIndex][key] = arr[secondIndex][key];
+    // eslint-disable-next-line no-param-reassign
+    arr[secondIndex][key] = temp;
 };

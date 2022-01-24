@@ -271,3 +271,4 @@ export const DIRECTION = {
     UP: -1,
     DOWN: 1,
 };
+export const RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH = 170;

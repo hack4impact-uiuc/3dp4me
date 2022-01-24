@@ -6,11 +6,13 @@ import PropTypes from 'prop-types';
 import RadioButtonField from '../Fields/RadioButtonField';
 import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
+import { getJSONReferenceByStringPath } from '../../utils/utils';
 
 const StepManagementContent = ({
     onDownPressed,
     onUpPressed,
     onEditField,
+    onAddSubfield,
     stepMetadata,
     isEditing,
     allRoles,
@@ -52,24 +54,66 @@ const StepManagementContent = ({
         }
     };
 
-    const renderEditButtons = (field, fieldRoot, fieldNumber) => {
+    const renderEditButtons = (field, fieldRoot, fieldNumber, isSubField) => {
         if (!isEditing) return null;
 
+        // Since subfields are rendered from left to right, their buttons will have to change.
+        if (isSubField) {
+            return (
+                <div className="subfield-buttons">
+                    <div className="reorder-subfield-buttons">
+                        <div
+                            onClick={() =>
+                                onUpPressed(
+                                    stepMetadata.key,
+                                    fieldRoot,
+                                    fieldNumber,
+                                )
+                            }
+                            className="up-button"
+                        >
+                            <i className="chevron left icon" />
+                        </div>
+                        <div
+                            onClick={() =>
+                                onDownPressed(
+                                    stepMetadata.key,
+                                    fieldRoot,
+                                    fieldNumber,
+                                )
+                            }
+                            className="down-button"
+                        >
+                            <i className="chevron right icon" />
+                        </div>
+                    </div>
+                    <div
+                        className="edit-field-button"
+                        onClick={() => onEditField(fieldRoot, fieldNumber)}
+                    >
+                        <i className="pencil alternate icon" />
+                    </div>
+                </div>
+            );
+        }
+
         return (
-            <div className="buttons">
+            <div className="field-buttons">
                 <div
                     className="edit-field-button"
-                    onClick={() =>
-                        onEditField(stepMetadata.key, fieldRoot, fieldNumber)
-                    }
+                    onClick={() => onEditField(fieldRoot, fieldNumber)}
                 >
                     <i className="pencil alternate icon" />
                 </div>
 
-                <div className="reorder-buttons">
+                <div className="reorder-field-buttons">
                     <div
                         onClick={() =>
-                            onUpPressed(stepMetadata.key, fieldNumber)
+                            onUpPressed(
+                                stepMetadata.key,
+                                fieldRoot,
+                                fieldNumber,
+                            )
                         }
                         className="up-button"
                     >
@@ -77,7 +121,11 @@ const StepManagementContent = ({
                     </div>
                     <div
                         onClick={() =>
-                            onDownPressed(stepMetadata.key, fieldNumber)
+                            onDownPressed(
+                                stepMetadata.key,
+                                fieldRoot,
+                                fieldNumber,
+                            )
                         }
                         className="down-button"
                     >
@@ -88,14 +136,36 @@ const StepManagementContent = ({
         );
     };
 
-    function generateSubfieldInfo(field, fieldRoot, fieldNumber) {
-        if (!field?.subFields?.length) return null;
+    function generateAddSubFieldButton(stepKey, root) {
+        if (!isEditing) return null;
+        return (
+            <div
+                onClick={() => onAddSubfield(stepKey, root)}
+                className="add-subfield-button"
+            >
+                <i className="chevron add icon" />
+            </div>
+        );
+    }
 
-        const root = `${fieldRoot}[fieldNumber===${fieldNumber}].subFields`;
+    function generateSubfieldInfo(field, fieldRoot, fieldNumber) {
+        if (field.fieldType !== FIELD_TYPES.FIELD_GROUP) return null;
+
+        const root = `${fieldRoot}[${getFieldIndexGivenFieldNumber(
+            fieldRoot,
+            fieldNumber,
+        )}].subFields`;
         return (
             <div className="subfield-container">
-                {generateButtonInfo(field.subFields, root)}
+                {generateButtonInfo(field.subFields, root, true)}
+                {generateAddSubFieldButton(stepMetadata.key, root)}
             </div>
+        );
+    }
+
+    function getFieldIndexGivenFieldNumber(fieldRoot, fieldNumber) {
+        return getJSONReferenceByStringPath(stepMetadata, fieldRoot).findIndex(
+            (field) => field.fieldNumber === fieldNumber,
         );
     }
 
@@ -117,7 +187,7 @@ const StepManagementContent = ({
         return fieldClassName;
     }
 
-    function generateButtonInfo(fields, fieldRoot) {
+    function generateButtonInfo(fields, fieldRoot, isSubField) {
         if (!fields) return null;
 
         return fields.map((field) => {
@@ -149,7 +219,12 @@ const StepManagementContent = ({
                             )}
                         </div>
 
-                        {renderEditButtons(field, fieldRoot, field.fieldNumber)}
+                        {renderEditButtons(
+                            field,
+                            fieldRoot,
+                            field.fieldNumber,
+                            isSubField,
+                        )}
                     </div>
 
                     {renderBottomSection(field)}
@@ -160,7 +235,7 @@ const StepManagementContent = ({
 
     return (
         <div className="content-container">
-            {generateButtonInfo(stepMetadata?.fields, 'fields')}
+            {generateButtonInfo(stepMetadata?.fields, 'fields', false)}
         </div>
     );
 };
@@ -169,6 +244,7 @@ StepManagementContent.propTypes = {
     isEditing: PropTypes.bool.isRequired,
     onDownPressed: PropTypes.func.isRequired,
     onEditField: PropTypes.func.isRequired,
+    onAddSubfield: PropTypes.func.isRequired,
     stepMetadata: PropTypes.object,
     onUpPressed: PropTypes.func.isRequired,
     allRoles: PropTypes.array.isRequired,

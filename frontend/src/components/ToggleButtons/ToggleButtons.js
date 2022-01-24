@@ -7,16 +7,22 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
 
-import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
+import {
+    LANGUAGES,
+    STEP_STATUS,
+    RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH,
+} from '../../utils/constants';
 import CheckIcon from '../../assets/check.svg';
 import ExclamationIcon from '../../assets/exclamation.svg';
 import HalfCircleIcon from '../../assets/half-circle.svg';
 import './ToggleButtons.scss';
 import { useTranslations } from '../../hooks/useTranslations';
+import { useWindowDimensions } from '../../hooks/useWindowDimensions';
 
 const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const selectedLang = useTranslations()[1];
+    const { width } = useWindowDimensions();
 
     const statusIcons = {
         [STEP_STATUS.UNFINISHED]: (
@@ -90,26 +96,25 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
         });
     }
 
-    function generateLabels() {
+    function generateSelectedStepLabel() {
         if (metaData == null) return null;
 
-        return metaData.map((element) => {
-            return (
-                <div
-                    className="toggle-button-selector"
-                    key={`${element.key}-label`}
-                >
-                    {step === element.key ? (
-                        <div className="current-step-label">
-                            {patientData && patientData[element.key]?.status
-                                ? statusIcons[patientData[element.key].status]
-                                : null}{' '}
-                            <b>{element.displayName[selectedLang]}</b>
-                        </div>
-                    ) : null}
-                </div>
-            );
-        });
+        const selectedStepIndex = metaData.findIndex(
+            (element) => element.key === step,
+        );
+
+        if (selectedStepIndex === -1) return null;
+
+        const element = metaData[selectedStepIndex];
+
+        return (
+            <div className="current-step-label">
+                {patientData && patientData[step]?.status
+                    ? statusIcons[patientData[step].status]
+                    : null}{' '}
+                <b>{element.displayName[selectedLang]}</b>
+            </div>
+        );
     }
 
     function generateMenuItems() {
@@ -132,6 +137,42 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
         });
     }
 
+    /*  To determine whether to show the dropdown or tabs,
+        we must check if the tabs would run off the screen.
+        We use an overestimated value of 170px width per tab,
+        and check if that exceeds the width of the screen.
+        If so, we must show a dropdown.
+    */
+    if (
+        metaData &&
+        width < RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH * metaData.length
+    ) {
+        return (
+            <div className="toggle-buttons-wrapper-dropdown">
+                <div className="toggle-button-selector-dropdown">
+                    {generateSelectedStepLabel()}
+                    <IconButton
+                        aria-controls="customized-menu"
+                        aria-haspopup="true"
+                        onClick={handleClickSelector}
+                        className="dropdown-icon"
+                    >
+                        <ExpandMoreIcon />
+                    </IconButton>
+                    <Menu
+                        className="stage-selector-menu-dropdown"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={(e) => handleCloseSelector(e, 'close')}
+                    >
+                        {generateMenuItems()}
+                    </Menu>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="toggle-buttons-wrapper">
             <ToggleButtonGroup
@@ -143,26 +184,6 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }) => {
             >
                 {generateToggleButtons()}
             </ToggleButtonGroup>
-
-            <div className="toggle-button-selector">
-                {generateLabels()}
-                <IconButton
-                    aria-controls="customized-menu"
-                    aria-haspopup="true"
-                    onClick={handleClickSelector}
-                >
-                    <ExpandMoreIcon />
-                </IconButton>
-                <Menu
-                    className="stage-selector-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={(e) => handleCloseSelector(e, 'close')}
-                >
-                    {generateMenuItems()}
-                </Menu>
-            </div>
         </div>
     );
 };
