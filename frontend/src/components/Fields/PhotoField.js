@@ -152,21 +152,28 @@ const PhotoField = ({
                 <>
                     <br />
                     <div className="button-wrapper">
-                        <StyledButton onClick={confirmUpload} primary>
-                            {translations.components.button.discard.saveButton}
-                        </StyledButton>
-                        <StyledButton onClick={handleRetake} primary={false}>
-                            {
-                                translations.components.button.discard
-                                    .retakeButton
-                            }
-                        </StyledButton>
-                        <StyledButton onClick={resetUpload} primary={false}>
-                            {
-                                translations.components.button.discard
-                                    .cancelButton
-                            }
-                        </StyledButton>
+                        <div className="save-retake-button-wrapper">
+                            <StyledButton onClick={confirmUpload} primary>
+                                {
+                                    translations.components.button.discard
+                                        .saveButton
+                                }
+                            </StyledButton>
+                            <StyledButton onClick={handleRetake}>
+                                {
+                                    translations.components.button.discard
+                                        .retakeButton
+                                }
+                            </StyledButton>
+                        </div>
+                        <div>
+                            <StyledButton onClick={resetUpload} danger>
+                                {
+                                    translations.components.button.discard
+                                        .cancelButton
+                                }
+                            </StyledButton>
+                        </div>
                     </div>
                 </>
             );
