@@ -54,7 +54,7 @@ To do this, they need a system that will help track individual hearing aids and 
     <td align="center">
       <a href="https://www.linkedin.com/in/genewang0"
         ><img
-          src="https://media-exp1.licdn.com/dms/image/C5603AQEqmRC96yvduw/profile-displayphoto-shrink_200_200/0/1630967298162?e=1638403200&v=beta&t=d_d-LQJU6HT7UGiwrodr8cf0zFFoaUSNiDoo62-pkBM"
+          src="https://uiuc.hack4impact.org/images/people/gene_wang.jpg"
           width="500px;"
           alt="Gene Wang"
         /><br /><b>Gene Wang</b></a
@@ -102,7 +102,7 @@ To do this, they need a system that will help track individual hearing aids and 
     <td align="center">
       <a href="https://abehara2.github.io/"
         ><img
-          src="https://media-exp1.licdn.com/dms/image/C5603AQGyU2TjxvH8Jw/profile-displayphoto-shrink_200_200/0/1610096609905?e=1638403200&v=beta&t=eAVPr6Xcbxm9jdgLnlMabp3t4B0d_kjeUSMCsSOqAk0"
+          src="https://uiuc.hack4impact.org/images/people/ashank_behara.jpg"
           width="500px;"
           alt="Ashank Behara"
         /><br /><b>Ashank Behara</b></a
@@ -160,7 +160,7 @@ To do this, they need a system that will help track individual hearing aids and 
     <td align="center">
       <a href="https://www.linkedin.com/in/ashay-parikh-a0621619a/"
         ><img
-          src="https://media-exp1.licdn.com/dms/image/C4E03AQGREsCFO7JKYg/profile-displayphoto-shrink_200_200/0/1632719027225?e=1638403200&v=beta&t=B1_Eyb7z7wAh41cyuWGbdagsjOFSLL_V2FpmalJn3TU"
+          src="https://uiuc.hack4impact.org/images/people/ashay_parikh.jpg"
           width="500px;"
           alt="Ashay Parikh"
         /><br /><b>Ashay Parikh</b></a
@@ -190,7 +190,7 @@ To do this, they need a system that will help track individual hearing aids and 
     <td align="center">
       <a href="https://www.linkedin.com/in/ananth-yogi-koppol/"
         ><img
-          src="https://media-exp1.licdn.com/dms/image/C4D03AQECkebPnjlKcA/profile-displayphoto-shrink_200_200/0/1568061882339?e=1638403200&v=beta&t=xYD2vTwLJBBOnpOggonB8AxFqo4tqM4YMvN8Pe3vbLI"
+          src="https://uiuc.hack4impact.org/images/people/yogi_koppol.jpg"
           width="500px;"
           alt="Yogi Koppol"
         /><br /><b>Yogi Koppol</b></a
