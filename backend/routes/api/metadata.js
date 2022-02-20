@@ -32,6 +32,29 @@ router.get(
 );
 
 /**
+ * Creates a new step. If the step is formatted invalid, we roll back the changes
+ * and return 400.
+ */
+router.post(
+    '/steps',
+    requireAdmin,
+    errorWrap(async (req, res) => {
+        try {
+            const stepToCreate = req.body;
+            let newStep;
+
+            await mongoose.connection.transaction(async (session) => {
+                newStep = await updateStepsInTransaction([stepToCreate], session);
+            });
+
+            await sendResponse(res, 200, 'Step created', newStep);
+        } catch (error) {
+            await sendResponse(res, 400, `Could not add step: ${error}`);
+        }
+    }),
+);
+
+/**
  * Updates many steps at a time. We need to process many steps at a time becuase -- for instance --
  * if we want to swap step order (i.e. step 5 becomes step 6 and vice versa), then there is a
  * moment of inconsistency where we have two step 5s or 6s. So all step updates are batched

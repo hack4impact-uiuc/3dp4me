@@ -106,7 +106,6 @@ router.post(
 
         try {
             req.body.lastEditedBy = req.user.name;
-            req.body.lastEdited = Date.now();
             newPatient = new models.Patient(patient);
             await newPatient.save();
         } catch (error) {
@@ -345,7 +344,6 @@ router.post(
         // Update step data last edited
         patientStepData.lastEdited = Date.now();
         patientStepData.lastEditedBy = req.user.name;
-
         patientStepData = await patientStepData.save();
 
         // Update patient last edited
@@ -419,7 +417,6 @@ const updatePatientStepData = async (patientId, StepModel, data) => {
     }
 
     patientStepData = _.assign(patientStepData, data);
-
     return patientStepData.save();
 };
 

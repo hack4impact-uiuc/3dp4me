@@ -174,7 +174,7 @@ const generateExampleInfo = (status) => {
     if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.string = faker.random.alphaNumeric();
     if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
-        info.multilineString = { data: faker.lorem.paragraphs() };
+        info.multilineString = faker.lorem.paragraphs();
     if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))
         info.number = getRandomInt(100);
     if (status == STEP_STATUS_ENUM.FINISHED || getRandomInt(2))

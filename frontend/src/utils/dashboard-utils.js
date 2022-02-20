@@ -4,7 +4,7 @@ export const DIRECTION = {
 };
 
 // Inclusive min and exclusive max
-export const checkBounds = (min, max, num) => {
+const checkBounds = (min, max, num) => {
     return num >= min && num < max;
 };
 

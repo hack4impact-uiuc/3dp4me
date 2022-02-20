@@ -196,7 +196,6 @@ export const REDUCER_ACTIONS = {
     CLEAR_ERROR: 'CLEAR_ERROR',
     SET_LANGUAGE: 'SET_LANGUAGE',
     SET_ADMIN_STATUS: 'SET_ADMIN_STATUS',
-    SET_USERNAME: 'SET_USERNAME',
 };
 
 /**
@@ -267,8 +266,4 @@ export const ACCOUNT_MANAGEMENT_TABS = {
     ROLES: 'ROLES',
 };
 
-export const DIRECTION = {
-    UP: -1,
-    DOWN: 1,
-};
 export const RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH = 170;

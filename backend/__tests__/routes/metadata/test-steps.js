@@ -38,7 +38,7 @@ const {
 } = require('../../utils/auth');
 const { models } = require('../../../models');
 
-describe('PUT /steps', () => {
+describe('POST /steps', () => {
     afterAll(async () => await db.closeDatabase());
     afterEach(async () => await db.resetDatabase());
     beforeAll(async () => {
@@ -52,16 +52,16 @@ describe('PUT /steps', () => {
     });
 
     it('returns 400 if missing required fields', (done) => {
-        withAuthentication(request(server).put('/api/metadata/steps')).expect(
+        withAuthentication(request(server).post('/api/metadata/steps')).expect(
             400,
             done,
         );
     });
 
-    const putAndExpect = async (body, status) => {
+    const postAndExpect = async (body, status) => {
         const initDbStats = await mongoose.connection.db.stats();
         const res = await withAuthentication(
-            request(server).put('/api/metadata/steps').send(body),
+            request(server).post('/api/metadata/steps').send(body),
         );
 
         expect(res.status).toBe(status);
@@ -73,47 +73,47 @@ describe('PUT /steps', () => {
     };
 
     it('returns 400 if fieldType is readio and no options provided', async () => {
-        await putAndExpect(POST_STEP_WITHOUT_OPTIONS, 400);
+        await postAndExpect(POST_STEP_WITHOUT_OPTIONS, 400);
     });
 
     it('returns 400 if fieldType is radio and options empty', async () => {
-        await putAndExpect(POST_STEP_WITH_EMPTY_OPTIONS, 400);
+        await postAndExpect(POST_STEP_WITH_EMPTY_OPTIONS, 400);
     });
 
     it('returns 400 if given bad fieldType', async () => {
-        await putAndExpect(POST_STEP_WITH_BAD_FIELD, 400);
+        await postAndExpect(POST_STEP_WITH_BAD_FIELD, 400);
     });
 
     it('returns 400 if given duplicate stepKey', async () => {
-        await putAndExpect(POST_STEP_WITH_DUPLICATE_KEY, 400);
+        await postAndExpect(POST_STEP_WITH_DUPLICATE_KEY, 400);
     });
 
     it('returns 400 if given duplicate stepNumber', async () => {
-        await putAndExpect(POST_STEP_WITH_DUPLICATE_STEP_NUMBER, 400);
+        await postAndExpect(POST_STEP_WITH_DUPLICATE_STEP_NUMBER, 400);
     });
 
     it('returns 400 if given stepGroup without subFields', async () => {
-        await putAndExpect(POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS, 400);
+        await postAndExpect(POST_STEP_WITH_FIELD_GROUP_WITHOUT_SUB_FIELDS, 400);
     });
 
     it('returns 400 if subFieldType is radio and no options provided', async () => {
-        await putAndExpect(POST_SUB_FIELD_WITHOUT_OPTIONS, 400);
+        await postAndExpect(POST_SUB_FIELD_WITHOUT_OPTIONS, 400);
     });
 
     it('returns 400 if subFieldType is radio and options empty', async () => {
-        await putAndExpect(POST_SUB_FIELD_WITH_EMPTY_OPTIONS, 400);
+        await postAndExpect(POST_SUB_FIELD_WITH_EMPTY_OPTIONS, 400);
     });
 
     it('returns 400 if given bad subFieldType', async () => {
-        await putAndExpect(POST_STEP_WITH_BAD_SUB_FIELD, 400);
+        await postAndExpect(POST_STEP_WITH_BAD_SUB_FIELD, 400);
     });
 
     it('returns 400 if given duplicate subFieldKey', async () => {
-        await putAndExpect(POST_STEP_WITH_DUPLICATE_SUB_FIELDKEY, 400);
+        await postAndExpect(POST_STEP_WITH_DUPLICATE_SUB_FIELDKEY, 400);
     });
 
     it('returns 400 if given stepGroup with empty subFields', async () => {
-        await putAndExpect(
+        await postAndExpect(
             POST_STEP_WITH_FIELD_GROUP_WITH_EMPTY_SUB_FIELDS,
             400,
         );

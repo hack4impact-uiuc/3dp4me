@@ -79,12 +79,7 @@ const PatientDetail = () => {
         errorWrap(async () => {
             const newPatientData = _.cloneDeep(patientData);
             newPatientData[stepKey] = _.cloneDeep(stepData);
-            const updatePatientDataResponse = await trackPromise(
-                updateStage(patientId, stepKey, stepData),
-            );
-            // Need to update state with the stepData from the response since some
-            // values, such as lastEdited and lastEditedBy, were updated after the request.
-            newPatientData[stepKey] = updatePatientDataResponse.result;
+            await trackPromise(updateStage(patientId, stepKey, stepData));
             setPatientData(newPatientData);
         });
     };

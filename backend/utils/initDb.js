@@ -93,7 +93,7 @@ module.exports.generateFieldSchema = (field) => {
     case FIELDS.STRING:
         return getStringSchema();
     case FIELDS.MULTILINE_STRING:
-        return getMultiLineSchema();
+        return getStringSchema();
     case FIELDS.NUMBER:
         return getNumberSchema();
     case FIELDS.DATE:
@@ -121,17 +121,6 @@ module.exports.generateFieldSchema = (field) => {
         return null;
     }
 };
-
-const getMultiLineSchema = () => ({
-    type: {
-        data: String,
-        lastEdited: Date,
-        lastEditedBy: String,
-    },
-    default: {
-        data: '',
-    },
-});
 
 const getStringSchema = () => ({
     type: String,
