@@ -9,6 +9,6 @@ router.use('/metadata', require('./metadata'));
 router.use('/users', require('./users'));
 router.use('/roles', require('./roles'));
 router.use('/messages', require('./messages'));
-router.use('/authentication', require('./authentication'));
+router.use('/patient-2fa', require('./authentication'));
 
 module.exports = router;

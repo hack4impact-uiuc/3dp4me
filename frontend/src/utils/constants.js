@@ -47,6 +47,7 @@ export const ROUTES = {
     DASHBOARD_MANAGEMENT: '/dashboard-management',
     PATIENT_DETAIL: '/patient-info',
     PATIENT_2FA: '/patient-2fa',
+    PATIENT_PORTAL: '/patient-portal',
 };
 
 /**

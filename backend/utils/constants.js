@@ -64,4 +64,6 @@ module.exports.DEFAULT_PATIENTS_ON_GET_REQUEST = 1;
 
 module.exports.TWILIO_SENDING_NUMBER = 'whatsapp:+14155238886';
 module.exports.TWILIO_RECEIVING_NUMBER = 'whatsapp:+13098319210';
+module.exports.TWILIO_WHATSAPP_PREFIX = 'whatsapp:+';
+
 module.exports.TWO_FACTOR_WINDOW_MINS = 5;

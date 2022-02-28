@@ -10,6 +10,9 @@ const {
     sendResponse,
     getDataFromModelWithPaginationAndSearch,
 } = require('../../utils/response');
+const { requireAuthentication } = require('../../middleware/authentication');
+
+router.use(requireAuthentication);
 
 /**
  * Returns basic information for all patients that are active in

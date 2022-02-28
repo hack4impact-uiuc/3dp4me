@@ -9,6 +9,9 @@
             "verify": "Verify",
             "resendCode": "Send code again"
         },
+        "patientPortal": {
+            "authenticating": "Checking authentication status"
+        },
         "errors": {
             "noMetadata": "You aren't allowed to view any steps. Contact an administrator to give you the proper roles."
         },
@@ -264,6 +267,9 @@
             "enterDigits": "أدخل رمز مكون من 6 أرقام من ****",
             "verify": "التحقق",
             "resendCode": "ارسل الرمز مجددا"
+        },
+        "patientPortal": {
+            "authenticating": "التحقق من حالة المصادقة"
         },
         "errors": {
             "noMetadata": "لا يُسمح لك بمشاهدة أي خطوات. اتصل بالمسؤول لمنحك الأدوار المناسبة."

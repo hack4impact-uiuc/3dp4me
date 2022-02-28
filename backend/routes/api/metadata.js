@@ -13,6 +13,8 @@ const {
     getReadableSteps,
     filterOutDeletedSteps,
 } = require('../../utils/stepUtils');
+const { requireAuthentication } = require('../../middleware/authentication');
+const { requireConditionalAuthentication } = require('../../middleware/conditionalAuthentication');
 
 /**
  * Gets the metadata for a step. This describes the fields contained in the steps.
@@ -20,6 +22,7 @@ const {
  */
 router.get(
     '/steps',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         const metaData = await getReadableSteps(req);
 
@@ -37,7 +40,7 @@ router.get(
  */
 router.post(
     '/steps',
-    requireAdmin,
+    requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
         try {
             const stepToCreate = req.body;
@@ -63,7 +66,7 @@ router.post(
  */
 router.put(
     '/steps/',
-    requireAdmin,
+    requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
         try {
             let stepData = [];
@@ -89,7 +92,7 @@ router.put(
  */
 router.delete(
     '/steps/:stepkey',
-    requireAdmin,
+    requireAuthentication, requireAdmin,
     errorWrap(async (req, res) => {
         const { stepkey } = req.params;
         const step = await models.Step.deleteOne({ key: stepkey });

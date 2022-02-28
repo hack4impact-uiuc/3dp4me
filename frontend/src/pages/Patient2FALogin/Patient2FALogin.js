@@ -2,13 +2,19 @@ import React, { useState } from 'react';
 import ReactCodeInput from 'react-code-input';
 import { useParams } from 'react-router-dom';
 
+import {
+    authenticatePatient,
+    send2FAPatientCode,
+} from '../../api/axios-patient-auth';
 import Logo from '../../assets/3dp4me_logo.png';
 import { useTranslations } from '../../hooks/useTranslations';
+import { ROUTES } from '../../utils/constants';
 
 import './Patient2FALogin.scss';
 import './TokenInput.scss';
 
 const Patient2FALogin = () => {
+    const [token, setToken] = useState();
     const [isTokenSent, setIsTokenSent] = useState();
     const translations = useTranslations()[0];
     const params = useParams();
@@ -30,6 +36,19 @@ const Patient2FALogin = () => {
         backgroundColor: '#DEDFFB',
     };
 
+    const onTokenSend = () => {
+        send2FAPatientCode(patientId);
+        setIsTokenSent(true);
+    };
+
+    const checkIsAuthenticated = async () => {
+        const res = await authenticatePatient(patientId, token);
+
+        if (res.success) {
+            window.location.href = `${ROUTES.PATIENT_PORTAL}/${patientId}`;
+        }
+    };
+
     const displayAuthPage = () => {
         if (!isTokenSent) {
             return (
@@ -42,7 +61,7 @@ const Patient2FALogin = () => {
                     <button
                         className="two-factor-authentication-button"
                         type="submit"
-                        onClick={() => setIsTokenSent(true)}
+                        onClick={() => onTokenSend()}
                     >
                         {translations.patient2FA.sendCode}
                     </button>
@@ -64,9 +83,16 @@ const Patient2FALogin = () => {
                 </h5>
 
                 <div className="centered-token-content">
-                    <ReactCodeInput fields={6} inputStyle={inputStyle} />
-
-                    <button className="verification-button" type="submit">
+                    <ReactCodeInput
+                        fields={6}
+                        inputStyle={inputStyle}
+                        onChange={(tokenInput) => setToken(tokenInput)}
+                    />
+                    <button
+                        className="verification-button"
+                        type="submit"
+                        onClick={() => checkIsAuthenticated()}
+                    >
                         {translations.patient2FA.verify}
                     </button>
                     <div

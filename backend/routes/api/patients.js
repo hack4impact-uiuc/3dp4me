@@ -22,12 +22,15 @@ const {
     isFieldWritable,
     getWritableFields,
 } = require('../../utils/fieldUtils');
+const { requireAuthentication } = require('../../middleware/authentication');
+const { requireConditionalAuthentication } = require('../../middleware/conditionalAuthentication');
 
 /**
  * Returns everything in the patients collection (basic patient info)
  */
 router.get(
     '/',
+    requireAuthentication,
     errorWrap(async (req, res) => {
         const patientData = await getDataFromModelWithPaginationAndSearch(req, models.Patient);
         await sendResponse(res, 200, '', patientData);
@@ -40,6 +43,7 @@ router.get(
 
 router.get(
     '/count',
+    requireAuthentication,
     errorWrap(async (req, res) => {
         const patientCount = await models.Patient.count();
         return sendResponse(res, 200, 'success', patientCount);
@@ -52,6 +56,7 @@ router.get(
  * */
 router.get(
     '/:id',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         const { id } = req.params;
 
@@ -99,6 +104,7 @@ router.get(
  */
 router.post(
     '/',
+    requireAuthentication,
     removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const patient = req.body;
@@ -122,6 +128,7 @@ router.post(
  */
 router.put(
     '/:id',
+    requireAuthentication,
     removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const { id } = req.params;
@@ -146,6 +153,7 @@ router.put(
  */
 router.get(
     '/:id/files/:stepKey/:fieldKey/:fileName',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         const {
             id, stepKey, fieldKey, fileName,
@@ -183,6 +191,7 @@ router.get(
  */
 router.delete(
     '/:id/files/:stepKey/:fieldKey/:fileName',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         const {
             id, stepKey, fieldKey, fileName,
@@ -245,6 +254,7 @@ router.delete(
  */
 router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
+    requireConditionalAuthentication,
     errorWrap(async (req, res) => {
         // TODO during refactoring: We upload file name in form data, is this even needed???
         const {
@@ -318,6 +328,7 @@ router.post(
  */
 router.post(
     '/:id/:stepKey',
+    requireConditionalAuthentication,
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req, res) => {
         const { id, stepKey } = req.params;
