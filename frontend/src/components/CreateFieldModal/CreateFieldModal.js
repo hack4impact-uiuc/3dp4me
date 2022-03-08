@@ -1,23 +1,27 @@
-import './CreateFieldModal.scss';
-import React, { useState } from 'react';
 import {
     Button,
     Checkbox,
+    FormControl,
+    InputBase,
     Modal,
     NativeSelect,
     withStyles,
-    InputBase,
-    FormControl,
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
-import MultiSelectField from '../Fields/MultiSelectField';
-import { FIELD_TYPES, ADMIN_ID } from '../../utils/constants';
-import LanguageInput from '../LanguageInput/LanguageInput';
-import { useTranslations } from '../../hooks/useTranslations';
-import { validateField } from '../../utils/fields';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { useTranslations } from '../../hooks/useTranslations';
+import { ADMIN_ID, FIELD_TYPES } from '../../utils/constants';
+import {
+    canFieldBeAddedToStep,
+    getFieldName,
+    validateField,
+} from '../../utils/fields';
+import MultiSelectField from '../Fields/MultiSelectField';
+import LanguageInput from '../LanguageInput/LanguageInput';
+import './CreateFieldModal.scss';
 
 const CreateFieldModal = ({
     isOpen,
@@ -223,10 +227,12 @@ const CreateFieldModal = ({
     const generateFieldDropdownOptions = () => {
         const fieldDropdownOptions = [];
         Object.values(FIELD_TYPES).forEach((value) => {
+            if (!canFieldBeAddedToStep(value)) return;
+
             if (canAddFieldGroup || value !== FIELD_TYPES.FIELD_GROUP) {
                 fieldDropdownOptions.push(
                     <option value={value} className="create-field-option">
-                        {value}
+                        {getFieldName(value)}
                     </option>,
                 );
             }
