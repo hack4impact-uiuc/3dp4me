@@ -14,9 +14,11 @@ import {
     FIELD_TYPES,
     PATIENT_STATUS,
     SIGNATURE_STATUS,
-    STEP_STATUS,
+    STEP_STATUS
 } from './constants';
 import { formatDate } from './date';
+
+
 
 /**
  * Converts a step status to a string
@@ -236,7 +238,7 @@ const signatureToJSX = (signatureData) => {
 export const getFieldName = (fieldType) => {
     switch (fieldType) {
         case FIELD_TYPES.AUDIO:
-            return 'Audo Recording';
+            return 'Audio Recording';
         case FIELD_TYPES.DATE:
             return 'Date';
         case FIELD_TYPES.DIVIDER:
