@@ -283,16 +283,29 @@ router.post(
         );
 
         // Record this file in the DB
-        stepData[fieldKey].push({
-            filename: fileName,
-            uploadedBy: req.user.name,
-            uploadDate: Date.now(),
-        });
+        console.log(Model);
+        console.log('BEFORE PUSH');
+        console.log(fieldKey);
+        console.log(stepData[fieldKey]);
+
+        stepData[fieldKey] = [
+            ...stepData[fieldKey],
+            {
+                filename: fileName,
+                uploadedBy: req.user.name,
+                uploadDate: new Date(),
+            },
+        ];
+
+        console.log('AFTER PUSH');
+        console.log(stepData[fieldKey]);
 
         // TODO: Make this a middleware
         // Update step's last edited
         stepData.lastEdited = Date.now();
         stepData.lastEditedBy = req.user.name;
+        console.log('STEP DATA');
+        console.log(stepData);
         await stepData.save();
 
         // Update patient's last edited

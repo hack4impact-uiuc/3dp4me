@@ -13,6 +13,7 @@ const {
     getReadableSteps,
     filterOutDeletedSteps,
 } = require('../../utils/stepUtils');
+const { reinitModels } = require('../../utils/initDb');
 
 /**
  * Gets the metadata for a step. This describes the fields contained in the steps.
@@ -47,6 +48,7 @@ router.post(
                 newStep = await updateStepsInTransaction([stepToCreate], session);
             });
 
+            await reinitModels();
             await sendResponse(res, 200, 'Step created', newStep);
         } catch (error) {
             await sendResponse(res, 400, `Could not add step: ${error}`);
@@ -70,6 +72,8 @@ router.put(
             await mongoose.connection.transaction(async (session) => {
                 stepData = await updateStepsInTransaction(req.body, session);
             });
+
+            await reinitModels();
 
             // The step data will be sent in the response in order to
             // update the frontend's step data. We are filtering out deleted fields

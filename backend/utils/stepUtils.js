@@ -206,13 +206,12 @@ const updateElementNumbers = (goodElements, deletedElements, numberKey) => {
 
 const updateFieldKeys = (fields) => {
     const clonedFields = _.cloneDeep(fields);
-
     const currentFieldKeys = clonedFields.map((field) => field.key ?? '');
 
     for (let i = 0; i < clonedFields.length; i++) {
         const currentField = clonedFields[i];
         const currentKey = currentField.key;
-        if (typeof currentKey === 'undefined' || currentKey === null) {
+        if (!currentKey) {
             const generatedKey = generateKeyWithoutCollision(
                 currentField.displayName.EN,
                 currentFieldKeys,
@@ -274,7 +273,8 @@ const updateFieldInTransaction = async (fieldsInDB, fieldsFromRequest, stepKey, 
 
     if (level === 0) {
         // Update the schema with new fields
-        addFieldsToSchema(stepKey, addedFields);
+        const addedFieldsWithKeys = await getAddedFields(session, savedFields, updatedFields);
+        addFieldsToSchema(stepKey, addedFieldsWithKeys);
     }
 
     const fieldsToUpdateInSchema = [];

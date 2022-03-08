@@ -26,6 +26,18 @@ module.exports.initDB = () => {
         .on('error', (error) => log.error('Error connecting to the database: ', error));
 };
 
+const clearModels = async () => {
+    const steps = await models.Step.find();
+    steps.forEach((step) => {
+        delete mongoose.connection.models[step.key];
+    });
+};
+
+module.exports.reinitModels = async () => {
+    await clearModels();
+    await this.initModels();
+};
+
 /**
  * Initializes all of the dynamic models in the DB. Should be called immediately after initDB.
  */
