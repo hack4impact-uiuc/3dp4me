@@ -8,15 +8,15 @@ import partiallyIcon from '../assets/half-circle.svg';
 import translations from '../translations.json';
 
 import {
-    ACCESS_LEVELS, ERR_LANGUAGE_VALIDATION_FAILED,
-    ERR_OPTION_VALIDATION_FAILED, FIELD_TYPES,
+    ACCESS_LEVELS,
+    ERR_LANGUAGE_VALIDATION_FAILED,
+    ERR_OPTION_VALIDATION_FAILED,
+    FIELD_TYPES,
     PATIENT_STATUS,
     SIGNATURE_STATUS,
-    STEP_STATUS
+    STEP_STATUS,
 } from './constants';
 import { formatDate } from './date';
-
-
 
 /**
  * Converts a step status to a string
@@ -234,39 +234,39 @@ const signatureToJSX = (signatureData) => {
  * @returns The user-friendly name
  */
 export const getFieldName = (fieldType) => {
-    switch(fieldType) {
+    switch (fieldType) {
         case FIELD_TYPES.AUDIO:
-            return "Audo Recording"
+            return 'Audo Recording';
         case FIELD_TYPES.DATE:
-            return "Date"
+            return 'Date';
         case FIELD_TYPES.DIVIDER:
-            return "Divider"
+            return 'Divider';
         case FIELD_TYPES.FIELD_GROUP:
-            return "Field Group"
+            return 'Field Group';
         case FIELD_TYPES.FILE:
-            return "File"
+            return 'File';
         case FIELD_TYPES.HEADER:
-            return "Header"
+            return 'Header';
         case FIELD_TYPES.MAP:
-            return "Location"
+            return 'Location';
         case FIELD_TYPES.MULTILINE_STRING:
-            return "Long text"
+            return 'Long text';
         case FIELD_TYPES.NUMBER:
-            return "Number"
+            return 'Number';
         case FIELD_TYPES.PHONE:
-            return "Phone Number"
+            return 'Phone Number';
         case FIELD_TYPES.PHOTO:
-            return "Photograph"
+            return 'Photograph';
         case FIELD_TYPES.RADIO_BUTTON:
-            return "Multiple Choice Question"
+            return 'Multiple Choice Question';
         case FIELD_TYPES.SIGNATURE:
-            return "Signature"
+            return 'Signature';
         case FIELD_TYPES.STRING:
-            return "Short text"
+            return 'Short text';
         default:
-            return fieldType
+            return fieldType;
     }
-}
+};
 
 /**
  * Returns whether or not a field can be added to a step
@@ -274,7 +274,7 @@ export const getFieldName = (fieldType) => {
  * @returns The user-friendly name
  */
 export const canFieldBeAddedToStep = (fieldType) => {
-    switch(fieldType) {
+    switch (fieldType) {
         case FIELD_TYPES.AUDIO:
         case FIELD_TYPES.DATE:
         case FIELD_TYPES.DIVIDER:
@@ -294,7 +294,7 @@ export const canFieldBeAddedToStep = (fieldType) => {
         default:
             return false;
     }
-}
+};
 
 /**
  * Turn field data into a string
