@@ -283,11 +283,14 @@ router.post(
         );
 
         // Record this file in the DB
-        stepData[fieldKey].push({
-            filename: fileName,
-            uploadedBy: req.user.name,
-            uploadDate: Date.now(),
-        });
+        stepData[fieldKey] = [
+            ...stepData[fieldKey],
+            {
+                filename: fileName,
+                uploadedBy: req.user.name,
+                uploadDate: new Date(),
+            },
+        ];
 
         // TODO: Make this a middleware
         // Update step's last edited

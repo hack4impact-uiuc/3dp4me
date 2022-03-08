@@ -236,7 +236,7 @@ const signatureToJSX = (signatureData) => {
 export const getFieldName = (fieldType) => {
     switch (fieldType) {
         case FIELD_TYPES.AUDIO:
-            return 'Audo Recording';
+            return 'Audio Recording';
         case FIELD_TYPES.DATE:
             return 'Date';
         case FIELD_TYPES.DIVIDER:
