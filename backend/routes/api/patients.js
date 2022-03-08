@@ -283,11 +283,6 @@ router.post(
         );
 
         // Record this file in the DB
-        console.log(Model);
-        console.log('BEFORE PUSH');
-        console.log(fieldKey);
-        console.log(stepData[fieldKey]);
-
         stepData[fieldKey] = [
             ...stepData[fieldKey],
             {
@@ -297,15 +292,10 @@ router.post(
             },
         ];
 
-        console.log('AFTER PUSH');
-        console.log(stepData[fieldKey]);
-
         // TODO: Make this a middleware
         // Update step's last edited
         stepData.lastEdited = Date.now();
         stepData.lastEditedBy = req.user.name;
-        console.log('STEP DATA');
-        console.log(stepData);
         await stepData.save();
 
         // Update patient's last edited
