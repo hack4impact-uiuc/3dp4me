@@ -21,7 +21,7 @@ jobs:
           node-version: 14.15.0
 
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: backend/node_modules
           key: ${{ runner.os }}-cache
@@ -50,13 +50,13 @@ jobs:
           node-version: 14.15.0
 
       - name: Cache backend dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: backend/node_modules
           key: ${{ runner.os }}-cache
 
       - name: Cache frontend dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: client/node_modules
           key: ${{ runner.os }}-cache
