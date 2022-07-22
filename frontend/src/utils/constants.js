@@ -186,6 +186,7 @@ export const PATIENT_STATUS = {
     FEEDBACK: 'Feedback',
     ARCHIVE: 'Archived',
     ACTIVE: 'Active',
+    WAITLIST: 'Waitlist',
 };
 
 /**

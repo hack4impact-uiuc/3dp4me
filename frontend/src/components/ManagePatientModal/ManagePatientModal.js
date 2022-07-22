@@ -37,7 +37,7 @@ const ManagePatientModal = ({
             IsHidden: false,
             Question: {
                 [LANGUAGES.EN]: language[LANGUAGES.EN].status.active,
-                [LANGUAGES.AR]: language[LANGUAGES.EN].status.active,
+                [LANGUAGES.AR]: language[LANGUAGES.AR].status.active,
             },
         },
         {
@@ -45,7 +45,7 @@ const ManagePatientModal = ({
             IsHidden: false,
             Question: {
                 [LANGUAGES.EN]: language[LANGUAGES.EN].status.feedback,
-                [LANGUAGES.AR]: language[LANGUAGES.EN].status.feedback,
+                [LANGUAGES.AR]: language[LANGUAGES.AR].status.feedback,
             },
         },
         {
@@ -53,7 +53,15 @@ const ManagePatientModal = ({
             IsHidden: false,
             Question: {
                 [LANGUAGES.EN]: language[LANGUAGES.EN].status.archive,
-                [LANGUAGES.AR]: language[LANGUAGES.EN].status.archive,
+                [LANGUAGES.AR]: language[LANGUAGES.AR].status.archive,
+            },
+        },
+        {
+            _id: PATIENT_STATUS.WAITLIST,
+            IsHidden: false,
+            Question: {
+                [LANGUAGES.EN]: language[LANGUAGES.EN].status.waitlist,
+                [LANGUAGES.AR]: language[LANGUAGES.AR].status.waitlist,
             },
         },
     ];

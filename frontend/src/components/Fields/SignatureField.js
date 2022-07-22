@@ -1,12 +1,12 @@
 /* eslint-disable no-use-before-define */
 
-import './SignatureField.scss';
-import React, { useState, useRef, useEffect } from 'react';
+import { Button, Modal } from '@material-ui/core';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import React, { useEffect, useRef, useState } from 'react';
 import SignaturePadWrapper from 'react-signature-canvas';
 import SignaturePad from 'signature_pad';
-import { Modal, Button } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
+import './SignatureField.scss';
 
 import { useTranslations } from '../../hooks/useTranslations';
 
@@ -112,11 +112,12 @@ const SignatureField = ({
 
         return (
             <div>
-                <img
+                {/* For now we are only showing the arabic document */}
+                {/* <img
                     alt="document"
                     className="sig-document"
                     src={value?.documentURL?.EN || documentURL?.EN}
-                />
+                /> */}
                 <img
                     alt="document"
                     className="sig-document"

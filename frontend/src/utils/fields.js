@@ -55,6 +55,8 @@ const patientStatusToString = (status, selectedLang) => {
             return bottomBarTranslations.archived;
         case PATIENT_STATUS.FEEDBACK:
             return bottomBarTranslations.feedback;
+        case PATIENT_STATUS.WAITLIST:
+            return bottomBarTranslations.waitlisted;
         default:
             console.error(`statusToString(): Unrecognized status: ${status}`);
     }
@@ -95,6 +97,8 @@ const getPatientStatusColor = (status) => {
             return 'black';
         case PATIENT_STATUS.FEEDBACK:
             return '#5395f8';
+        case PATIENT_STATUS.WAITLIST:
+            return '#75aaff';
         default:
             console.error(
                 `getPatientStatusColor(): Unrecognized status: ${status}`,
