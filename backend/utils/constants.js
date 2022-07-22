@@ -30,6 +30,7 @@ module.exports.PATIENT_STATUS_ENUM = {
     ACTIVE: 'Active',
     ARCHIVED: 'Archived',
     FEEDBACK: 'Feedback',
+    WAITLIST: 'Waitlist',
 };
 
 module.exports.STEP_STATUS_ENUM = {
