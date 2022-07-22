@@ -14,7 +14,7 @@ import {
     FIELD_TYPES,
     PATIENT_STATUS,
     SIGNATURE_STATUS,
-    STEP_STATUS
+    STEP_STATUS,
 } from './constants';
 import { formatDate } from './date';
 
