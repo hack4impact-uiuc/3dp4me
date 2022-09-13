@@ -258,7 +258,7 @@
         }
     },
     "AR": {
-          "patient2FA": {
+        "patient2FA": {
             "patientLogin": "تسجيل دخول المريض",
             "patientID": "هوية المريض:",
             "sendCode": "إرسال رمز ثنائي العوامل",
