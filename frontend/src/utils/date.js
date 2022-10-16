@@ -13,7 +13,7 @@ export const formatDate = (date, language) => {
     if (!(typeof date === 'object' || date instanceof Object))
         parsedDate = new Date(date);
 
-    let locale = 'ar-SA';
+    let locale = 'ar-JO';
     if (language === LANGUAGES.EN) locale = 'en-US';
 
     const options = {
