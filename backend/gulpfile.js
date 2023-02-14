@@ -81,6 +81,11 @@ function addEngineToPackage() {
     );
 }
 
+
+function copyEbextensions() {
+    return src('../.platform/**/*').pipe(dest(`${paths.prod_build}/.platform`))
+}
+
 function zippingTask() {
     log('zipping the code ');
     return src(`${paths.prod_build}/**`, { dot: true })
@@ -94,5 +99,6 @@ exports.default = series(
     parallel(buildReactCodeTask, buildServerCodeTask),
     parallel(copyReactCodeTask, copyNodeJSCodeTask),
     addEngineToPackage,
+    copyEbextensions,
     zippingTask,
 );
