@@ -58,6 +58,8 @@ module.exports.PATIENT_IMMUTABLE_ATTRIBUTES = GLOBALLY_IMMUTABLE_ATTRIBUTES.conc
     'dateCreated',
     'lastEdited',
     'lastEditedBy',
+    'orderYear',
+    'orderId',
 );
 
 module.exports.DEFAULT_USERS_ON_GET_REQUEST = 0;
