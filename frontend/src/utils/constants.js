@@ -77,6 +77,7 @@ export const getStepDashboardHeaders = (langKey) => {
     return [
         { title: t.firstName, sortKey: 'firstName' },
         { title: t.familyName, sortKey: 'familyName' },
+        { title: t.orderId, sortKey: 'orderId' },
         { title: t.lastEdited, sortKey: 'lastEdited' },
     ];
 };
@@ -88,6 +89,7 @@ export const getStepDashboardHeaders = (langKey) => {
 export const PATIENTS_BY_STEP_TABLE_ROW_DATA = [
     { id: 'firstName', dataType: FIELD_TYPES.STRING },
     { id: 'familyName', dataType: FIELD_TYPES.STRING },
+    { id: 'orderId', dataType: FIELD_TYPES.STRING },
     { id: 'lastEdited', dataType: FIELD_TYPES.DATE },
 ];
 
@@ -101,6 +103,7 @@ export const getPatientDashboardHeaders = (langKey) => {
     return [
         { title: t.firstName, sortKey: 'firstName' },
         { title: t.familyName, sortKey: 'familyName' },
+        { title: t.orderId, sortKey: 'orderId' },
         { title: t.lastEdited, sortKey: 'lastEdited' },
         { title: t.status, sortKey: 'status' },
     ];
@@ -113,6 +116,7 @@ export const getPatientDashboardHeaders = (langKey) => {
 export const ALL_PATIENT_DASHBOARD_ROW_DATA = [
     { id: 'firstName', dataType: FIELD_TYPES.STRING },
     { id: 'familyName', dataType: FIELD_TYPES.STRING },
+    { id: 'orderId', dataType: FIELD_TYPES.STRING },
     { id: 'lastEdited', dataType: FIELD_TYPES.DATE },
     { id: 'status', dataType: FIELD_TYPES.PATIENT_STATUS },
 ];

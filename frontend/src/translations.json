@@ -14,6 +14,7 @@
         },
         "tableHeaders": {
             "firstName": "First Name",
+            "orderId": "Order ID",
             "familyName": "Family Name",
             "lastEdited": "Last Edited",
             "status": "Status",
@@ -272,6 +273,7 @@
         },
         "tableHeaders": {
             "firstName": "الاسم الأول",
+            "orderId": "رقم الأمر",
             "familyName": "اسم العائلة",
             "lastEdited": "التعديل الأخير",
             "status": "الحالة",
