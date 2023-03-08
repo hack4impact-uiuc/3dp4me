@@ -9,7 +9,6 @@ const STARTING_YEAR = 2023;
 const generateOrderId = async (session) => {
     const currentYear = new Date().getFullYear();
     const numOrdersInYear = await Patient.count({ orderYear: currentYear });
-    console.log('NUM IN YEAR ', numOrdersInYear);
     let offset = 1;
 
     // while true should be fine, but this is just a failsafe
