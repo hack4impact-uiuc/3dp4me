@@ -10,6 +10,7 @@ const UNECRYPTED_FIELDS = [
     'lastEditedBy',
     'status',
     'phoneNumber',
+    'orderYear',
 ];
 
 /**

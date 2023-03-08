@@ -40,6 +40,7 @@
         "node": "^16.9.1",
         "node-2fa": "^2.0.2",
         "omit-deep-lodash": "^1.1.5",
+        "pad": "^3.2.0",
         "prettier": "^2.4.1",
         "superagent-defaults": "^0.1.14",
         "supertest": "^6.1.3",

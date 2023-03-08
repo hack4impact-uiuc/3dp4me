@@ -109,6 +109,7 @@ router.post(
             req.body.lastEditedBy = req.user.name;
 
             await mongoose.connection.transaction(async (session) => {
+                patient.orderYear = new Date().getFullYear();
                 patient.orderId = await generateOrderId(session);
                 newPatient = new models.Patient(patient);
                 await newPatient.save({ session });

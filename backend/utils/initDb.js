@@ -12,7 +12,7 @@ const { STEP_STATUS_ENUM, FIELDS } = require('./constants');
 /**
  * Initalizes and connects to the DB. Should be called at app startup.
  */
-module.exports.initDB = () => {
+module.exports.initDB = (callback) => {
     mongoose.connect(process.env.DB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -22,6 +22,7 @@ module.exports.initDB = () => {
         .once('open', () => {
             log.info('Connected to the DB');
             this.initModels();
+            callback?.();
         })
         .on('error', (error) => log.error('Error connecting to the database: ', error));
 };
