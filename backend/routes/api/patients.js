@@ -22,6 +22,7 @@ const {
     isFieldWritable,
     getWritableFields,
 } = require('../../utils/fieldUtils');
+const { generateOrderId } = require('../../utils/generateOrderId');
 
 /**
  * Returns everything in the patients collection (basic patient info)
@@ -106,8 +107,13 @@ router.post(
 
         try {
             req.body.lastEditedBy = req.user.name;
-            newPatient = new models.Patient(patient);
-            await newPatient.save();
+
+            await mongoose.connection.transaction(async (session) => {
+                patient.orderYear = new Date().getFullYear();
+                patient.orderId = await generateOrderId(session);
+                newPatient = new models.Patient(patient);
+                await newPatient.save({ session });
+            });
         } catch (error) {
             return sendResponse(res, 400, `Bad request: ${error}`);
         }
