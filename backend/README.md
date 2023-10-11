@@ -12,7 +12,7 @@ DB_URI=""
 
 ## Run
 
-In the backend directory, run `yarn && yarn start`. This should start a local server on localhost:5000
+In the backend directory, run `yarn && yarn start`. This should start a local server on localhost:8080
 
 ## Structure
 

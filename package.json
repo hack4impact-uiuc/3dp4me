@@ -3,6 +3,8 @@
     "version": "1.0.0",
     "description": "Package with the development tools for 3DP4ME (such as Prettier and Husky). Please see the individual client and api sub-packages for the actual dependencies.",
     "devDependencies": {
+        "cross-env": "^7.0.3",
+        "dotenv": "^16.0.3",
         "eslint-config-airbnb": "^18.0.1",
         "eslint-config-prettier": "^6.3.0",
         "eslint-plugin-flowtype": "^6.0.1",

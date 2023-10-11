@@ -9,7 +9,8 @@ module.exports.POST_PATIENT = {
     fathersName: 'Dan',
     grandfathersName: 'Gene',
     familyName: 'Walowski',
-    orderId: '1234',
+    orderId: 'A00101',
+    orderYear: 2023,
     status: PATIENT_STATUS_ENUM.FEEDBACK,
 };
 
@@ -28,7 +29,8 @@ module.exports.POST_IMMUTABLE_PATIENT_DATA = {
 module.exports.DEFAULT_PATIENT_DATA = {
     fathersName: '',
     grandfathersName: '',
-    orderId: '',
+    orderId: 'A00101',
+    orderYear: 2023,
     status: PATIENT_STATUS_ENUM.ACTIVE,
 };
 
@@ -86,7 +88,8 @@ module.exports.GET_PATIENT_WITHOUT_STEP_DATA = {
     fathersName: 'Edgar',
     grandfathersName: '',
     dateCreated: '2020-12-15T09:48:57.205Z',
-    orderId: '',
+    orderId: '0096',
+    orderYear: 2023,
     lastEdited: '2020-12-18T00:55:01.752Z',
     status: 'Archived',
     _id: '60944e084f4c0d4330cc25ec',
@@ -107,7 +110,8 @@ module.exports.GET_PATIENT_WITH_SOME_STEP_DATA = {
     dateCreated: '2020-09-05T11:28:44.920Z',
     lastEdited: '2020-10-21T10:45:29.001Z',
     lastEditedBy: 'KatarinaSchneider',
-    orderId: '',
+    orderId: '0098',
+    orderYear: 2023,
     status: 'Active',
     example: null,
     medicalInfo: null,
@@ -131,6 +135,7 @@ module.exports.GET_PATIENT_WITH_ALL_STEP_DATA = {
     fathersName: '',
     dateCreated: '2020-12-02T01:17:55.181Z',
     orderId: 't',
+    orderYear: 2023,
     lastEdited: '2020-07-12T22:25:28.949Z',
     status: 'Active',
     _id: '60944e084f4c0d4330cc258b',
@@ -199,6 +204,7 @@ module.exports.PUT_BAD_PATIENT_DATA = {
     grandfathersName: 'Gene',
     familyName: 'Wang',
     orderId: '123456',
+    orderYear: 2023,
     status: PATIENT_STATUS_ENUM.FEEDBACK,
     dateCreated: Date.now(),
     _id: '0944e084f4c0d4330cc258b',
@@ -210,6 +216,7 @@ module.exports.PUT_PATIENT_DATA = {
     fathersName: 'Daniel',
     grandfathersName: 'Gene',
     familyName: 'Wang',
+    orderYear: "2023",
     orderId: '123456',
     status: PATIENT_STATUS_ENUM.FEEDBACK,
 };
@@ -217,7 +224,8 @@ module.exports.PUT_PATIENT_DATA = {
 module.exports.EXPECTED_PUT_DATA = {
     fathersName: 'Daniel',
     grandfathersName: 'Gene',
-    orderId: '123456',
+    orderId: 't',
+    orderYear: 2023,
     status: 'Feedback',
     _id: '60944e084f4c0d4330cc258b',
     firstName: 'Mathias',

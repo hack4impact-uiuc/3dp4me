@@ -35,7 +35,7 @@ const filterPatientsBySearchQuery = (patients, searchQuery) => {
            All of the fields are encrypted in the database.
            If the data associated with any one of these fields
            contains the search query, we will return it. */
-        const fieldsToCheckList = ['_id', 'firstName', 'fathersName', 'grandfathersName', 'familyName', 'phoneNumber'];
+        const fieldsToCheckList = ['_id', 'firstName', 'fathersName', 'grandfathersName', 'familyName', 'phoneNumber', 'orderId'];
 
         for (let dataIdx = 0; dataIdx < patients.length; dataIdx++) {
             for (let fieldsIdx = 0; fieldsIdx < fieldsToCheckList.length; fieldsIdx++) {

@@ -10,6 +10,7 @@ const UNECRYPTED_FIELDS = [
     'lastEditedBy',
     'status',
     'phoneNumber',
+    'orderYear',
 ];
 
 /**
@@ -22,7 +23,8 @@ const patientSchema = new mongoose.Schema({
     grandfathersName: { type: String, required: false, default: '' },
     familyName: { type: String, required: false },
     dateCreated: { type: Date, required: false, default: Date.now },
-    orderId: { type: String, required: false, default: '' },
+    orderYear: { type: Number, required: true },
+    orderId: { type: String, required: true, unique: true },
     lastEdited: { type: Date, required: false, default: Date.now },
     lastEditedBy: { type: String, required: false },
     status: {

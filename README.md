@@ -29,6 +29,16 @@ _"In developing countries, less than 3% of people who need a hearing aid are tho
 
 To do this, they need a system that will help track individual hearing aids and where they are in the development process. Our dashboard will separate each step of design + manufacturing so that volunteers can work on the section they specialize in, helping 3DP4ME efficiently develop hearing aids at a larger scale with more volunteers in a more organized fashion.
 
+# Development
+To get started, complete this one time setup:
+ - obtain `development.env` files for both the frontend and backend directories.
+ - Run `yarn` in the root folder, `/frontend`, and `/backend`
+ - Run `yarn build` in `/frontend`
+
+Then, every time you want to run the app
+ - Run `yarn start` in the `/frontend`
+ - Run `yarn start` in the `/backend`
+
 # Team
 
 <table align="center">

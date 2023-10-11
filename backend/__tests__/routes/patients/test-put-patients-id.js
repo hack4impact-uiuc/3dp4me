@@ -50,7 +50,7 @@ describe('PUT /patients/:id', () => {
             ...initialResponse,
             firstName: 'Vasu',
             grandfathersName: 'Gramps',
-            orderId: 'm',
+            orderId: 't',
             familyName: 'Chalasani',
             status: 'Archived',
         };

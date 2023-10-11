@@ -108,6 +108,8 @@ const ManagePatientModal = ({
                         className="text-field"
                         value={updatedPatientData?.orderId}
                         fieldId="orderId"
+                        isDisabled
+                        disabled
                         displayName={
                             translations.components.swal.managePatient.orderId
                         }
@@ -182,6 +184,7 @@ const ManagePatientModal = ({
                     </Button>
                     <Button
                         className="manage-patient-delete-button"
+                        disabled
                         onClick={deletePatient}
                     >
                         {
