@@ -1,14 +1,15 @@
 require('dotenv').config({ path: `${process.env.NODE_ENV}.env` });
-const { promisify } = require("util")
+require('../utils/aws/awsSetup');
 const { exit } = require("process")
 const { initDB } = require("../utils/initDb");
-const { appendFileSync, writeFile, writeFileSync, mkdirSync, existsSync } = require('fs');
+const { appendFileSync, writeFile, writeFileSync, mkdirSync, existsSync, createWriteStream } = require('fs');
 const { Patient } = require('../models/Patient');
 const { join } = require('path');
 const ExcelJS = require('exceljs');
 const { Step } = require('../models/Metadata');
 const mongoose = require('mongoose');
 const { FIELDS } = require('../utils/constants');
+const { downloadFile } = require('../utils/aws/awsS3Helpers');
 
 const PATIENT_INDEX_FILENAME = "./patient-directory.csv"
 const PATIENT_FILE_DIR = "./patients"
@@ -27,17 +28,33 @@ const exportToCSV = async () => {
 const createPatientFiles = async () => {
     if (!existsSync(PATIENT_FILE_DIR))
         mkdirSync(PATIENT_FILE_DIR)
+
     const patients = await Patient.find({ orderId: "A00023"})
     return Promise.all(patients.map(createPatientFile))
 }
 
 const createPatientFile = async (patient) => {
+    if (!existsSync(join(PATIENT_FILE_DIR, patient.orderId)))
+        mkdirSync(join(PATIENT_FILE_DIR, patient.orderId))
     console.log(`Writing patient ${patient.orderId}`)
     await Promise.all(LANGUAGES.map(l => createPatientFileInLanguage(patient, l)))
     console.log(`Done with patient ${patient.orderId}`)
 }
 
-const decodeValue = (fieldMeta, stepData, langKey) => {
+const download = async (patient, stepKey, fieldKey, fileName) => {
+    const localPath = join(PATIENT_FILE_DIR, patient.orderId, fileName)
+
+    console.log("Downloading file to ", localPath)
+    const ws = createWriteStream(localPath)
+    console.log(
+        `${patient._id}/${stepKey}/${fieldKey}/${fileName}`,
+    )
+    await downloadFile(
+        `${patient._id}/${stepKey}/${fieldKey}/${fileName}`,
+    ).createReadStream().pipe(ws);
+}
+
+const decodeValue = async (patient, fieldMeta, stepData, langKey, stepKey) => {
     switch (fieldMeta.fieldType) {
         // There's no valuable data for dividers
         case FIELDS.HEADER:
@@ -53,13 +70,14 @@ const decodeValue = (fieldMeta, stepData, langKey) => {
         case FIELDS.FIELD_GROUP:
             const output = []
 
-            stepData[fieldMeta.key].forEach((data, i)=> {
-                fieldMeta.subFields.forEach(subfield => {
-                        const key = `${fieldMeta.displayName[langKey]} ${i + 1} - ${subfield.displayName[langKey]}`
-                        const value = decodeValue(subfield, data, langKey)
-                        output.push([key, value])
-                })
-            })
+            for (let i = 0; i < stepData[fieldMeta.key].length; i++) {
+                const data = stepData[fieldMeta.key][i]
+                for (const subfield of fieldMeta.subFields) {
+                    const key = `${fieldMeta.displayName[langKey]} ${i + 1} - ${subfield.displayName[langKey]}`
+                    const value = await decodeValue(patient, subfield, data, langKey, stepKey)
+                    output.push([key, value])
+                }
+            }
 
             return output
 
@@ -71,7 +89,12 @@ const decodeValue = (fieldMeta, stepData, langKey) => {
         case FIELDS.FILE:
         case FIELDS.PHOTO:
         case FIELDS.AUDIO:
-            return `${stepData[fieldMeta.key].length} files. See patient folder for raw files.`
+            const files = stepData[fieldMeta.key]
+            await Promise.all(files.map(file => {
+                download(patient, stepKey, fieldMeta.key, file.filename)
+            }))
+
+            return `${files.length} files. See patient folder for raw files.`
 
         // Match radio button ID with human-friendly value
         case FIELDS.RADIO_BUTTON:
@@ -138,23 +161,23 @@ const createPatientFileInLanguage = async (patient, langKey) => {
 
         // TODO: Match up meta to data
         const keyValuePairs = []
-        stepMeta.fields.forEach(fieldMeta => {
+        await Promise.all(stepMeta.fields.map(async fieldMeta => {
             if (fieldMeta.isHidden || fieldMeta.isDeleted || [FIELDS.HEADER, FIELDS.DIVIDER].includes(fieldMeta.fieldType)) 
                 return null
 
             const key = fieldMeta.displayName[langKey] 
-            const value = decodeValue(fieldMeta, stepData, langKey)
+            const value = await decodeValue(patient, fieldMeta, stepData, langKey, stepMeta.key)
             if (Array.isArray(value))
                 keyValuePairs.push(...value)
             else
                 keyValuePairs.push([key, value])
-        })
+        }))
 
         keyValuePairs.forEach(p => sheet.addRow(p))
         autosizeColumns(sheet)
     }))
 
-    await workbook.xlsx.writeFile(join(PATIENT_FILE_DIR, `${patient.orderId} (${languageString}).xlsx`))
+    await workbook.xlsx.writeFile(join(PATIENT_FILE_DIR, patient.orderId, `${patient.orderId} (${languageString}).xlsx`))
 }
 
 const createPatientIndex = async () => {
