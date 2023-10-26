@@ -39,19 +39,29 @@ const createPatientFile = async (patient) => {
 
 const decodeValue = (fieldMeta, stepData, langKey) => {
     switch (fieldMeta.fieldType) {
+        // There's no valuable data for dividers
         case FIELDS.HEADER:
         case FIELDS.DIVIDER:
             return null;
 
         case FIELDS.MAP:
         case FIELDS.ACCESS:
-            //throw new Error("Cannot process field " + fieldMeta.fieldType);
-            return null
+            throw new Error("Cannot process field " + fieldMeta.fieldType);
 
 
-        // TODO: How to handle field groups?
+        // Recurse on field groups
         case FIELDS.FIELD_GROUP:
-            return null
+            const output = []
+
+            stepData[fieldMeta.key].forEach((data, i)=> {
+                fieldMeta.subFields.forEach(subfield => {
+                        const key = `${fieldMeta.displayName[langKey]} ${i + 1} - ${subfield.displayName[langKey]}`
+                        const value = decodeValue(subfield, data, langKey)
+                        output.push([key, value])
+                })
+            })
+
+            return output
 
         // TODO: Take image of signature
         case FIELDS.SIGNATURE:
@@ -59,9 +69,11 @@ const decodeValue = (fieldMeta, stepData, langKey) => {
 
         // TODO: Upload files to folder
         case FIELDS.FILE:
+        case FIELDS.PHOTO:
         case FIELDS.AUDIO:
             return `${stepData[fieldMeta.key].length} files. See patient folder for raw files.`
 
+        // Match radio button ID with human-friendly value
         case FIELDS.RADIO_BUTTON:
             const id = stepData[fieldMeta.key].toString()
 
@@ -78,14 +90,15 @@ const decodeValue = (fieldMeta, stepData, langKey) => {
 
             return opt.Question[langKey]
 
+        // Stringify date
         case FIELDS.DATE:
             return stepData[fieldMeta.key].toString()
 
+        // For string based fields we can just return the value
         case FIELDS.MULTILINE_STRING:
         case FIELDS.NUMBER:
         case FIELDS.PATIENT_STATUS:
         case FIELDS.PHONE:
-        case FIELDS.PHOTO:
         case FIELDS.STEP_STATUS:
         case FIELDS.STRING:
             return stepData[fieldMeta.key]
@@ -124,15 +137,18 @@ const createPatientFileInLanguage = async (patient, langKey) => {
             return
 
         // TODO: Match up meta to data
-        keyValuePairs = stepMeta.fields.map(fieldMeta => {
+        const keyValuePairs = []
+        stepMeta.fields.forEach(fieldMeta => {
             if (fieldMeta.isHidden || fieldMeta.isDeleted || [FIELDS.HEADER, FIELDS.DIVIDER].includes(fieldMeta.fieldType)) 
                 return null
 
             const key = fieldMeta.displayName[langKey] 
             const value = decodeValue(fieldMeta, stepData, langKey)
-
-            return [key, value]
-        }).filter(i => !!i)
+            if (Array.isArray(value))
+                keyValuePairs.push(...value)
+            else
+                keyValuePairs.push([key, value])
+        })
 
         keyValuePairs.forEach(p => sheet.addRow(p))
         autosizeColumns(sheet)
