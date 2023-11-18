@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Amplify, Auth } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 import { registerLocale } from 'react-datepicker';
 import { enUS, arSA } from 'date-fns/locale';
 
@@ -48,7 +48,8 @@ function App() {
      */
     const updateAuthLevel = async () => {
         try {
-            await Auth.currentAuthenticatedUser();
+            // TODO: This might not be right
+            // await Auth.currentAuthenticatedUser();
             setAuthLevel(AUTHENTICATED);
         } catch (error) {
             setAuthLevel(UNAUTHENTICATED);
