@@ -50,11 +50,14 @@
         "webpack-node-externals": "^3.0.0"
     },
     "devDependencies": {
+        "canvas": "^2.11.2",
         "eslint-config-airbnb": "^18.2.1",
+        "exceljs": "^4.4.0",
         "nodemon": "^2.0.4"
     },
     "scripts": {
         "dev": "cross-env NODE_ENV=development nodemon ./bin/www",
+        "export": "cross-env NODE_ENV=production node ./scripts/export_csv.js",
         "prod": "cross-env NODE_ENV=production node ./bin/www",
         "build": "cross-env NODE_ENV=production webpack ./bin/www",
         "start": "cross-env NODE_ENV=development node ./bin/www",
