@@ -48,7 +48,6 @@ function App() {
      */
     const updateAuthLevel = async () => {
         try {
-            // TODO: This might not be right
             await Auth.currentAuthenticatedUser();
             setAuthLevel(AUTHENTICATED);
         } catch (error) {

@@ -13,6 +13,7 @@ router.get(
     '/',
     errorWrap(async (req, res) => {
         const roles = await models.Role.find({});
+        console.log("ROLES ", roles)
         return sendResponse(res, 200, '', roles);
     }),
 );
