@@ -8,9 +8,9 @@ import Eyecon from '../assets/view.svg';
 import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
 import translations from '../translations.json';
 
-import { LANGUAGES, SORT_DIRECTIONS } from './constants';
-import { fieldToJSX } from './fields';
-import { resolveObjPath } from './object';
+import { LANGUAGES, SORT_DIRECTIONS } from './constants.js';
+import { fieldToJSX } from './fields.js';
+import { resolveObjPath } from './object.js';
 
 /**
  * Given item data, a field key, and a field type, this function finds

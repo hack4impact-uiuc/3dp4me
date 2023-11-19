@@ -1,4 +1,4 @@
-import { LANGUAGES } from './constants';
+import { LANGUAGES } from './constants.js';
 
 /**
  * Formats a date object according to the selected language

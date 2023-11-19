@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { LANGUAGES } from '../utils/constants';
 
-import Reducer from './Reducer';
+import Reducer from './Reducer.js';
 
 const initialState = {
     error: '',

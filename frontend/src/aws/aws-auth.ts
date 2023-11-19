@@ -14,8 +14,9 @@ type AuthListener = (state: typeof AUTHENTICATED | typeof UNAUTHENTICATED | type
  * @param listener The function to be called when auth changes. Is passed a string indicating auth level.
  */
 export const setAuthListener = (listener: AuthListener) => {
-    Hub.listen('auth', ({ payload: { event } }) => {
-        switch (event) {
+    Hub.listen('auth', (data) => {
+        console.log("HUB EVENT ", data)
+        switch (data.payload.event) {
             case EVENT_SIGN_IN:
                 listener(AUTHENTICATED);
                 break;

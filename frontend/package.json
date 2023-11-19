@@ -2,14 +2,13 @@
     "name": "frontend",
     "version": "0.1.0",
     "private": true,
-    "type": "module",
     "dependencies": {
         "@material-ui/core": "^4.11.0",
         "@material-ui/icons": "^4.9.1",
         "@material-ui/lab": "^4.0.0-alpha.56",
         "@material/tabs": "^2.3.0",
         "@sweetalert/with-react": "^0.1.1",
-        "aws-amplify": "^5.3.12",
+        "aws-amplify": "^5.0.3",
         "axios": "^1.6.0",
         "compose": "^0.1.2",
         "date-fns": "^2.24.0",
@@ -34,14 +33,14 @@
         "react-scripts": "^5.0.1",
         "react-signature-canvas": "^1.0.3",
         "react-switch": "^6.0.0",
-        "semantic-ui-css": "^2.4.1",
+        "semantic-ui-css": "^2.5.0",
         "signature_pad": "^3.0.0-beta.4",
         "sweetalert": "^2.1.2",
         "typescript": "^5.2.2",
         "use-query-params": "^1.2.3"
     },
     "scripts": {
-        "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-app-env start",
+        "start": "react-app-env start",
         "lint": "eslint --fix src -c .eslintrc.json --ext js,jsx",
         "format": "prettier --write \"./**/*.{js,jsx,css,scss,json,md}\"",
         "format:check": "prettier --check \"./**/*.{js,jsx,css,scss,json,md}\"",
@@ -66,6 +65,7 @@
         ]
     },
     "devDependencies": {
+        "@craco/craco": "^7.1.0",
         "@rollup/plugin-commonjs": "^25.0.7",
         "@rollup/plugin-typescript": "^11.1.5",
         "@types/jest": "^29.5.8",
@@ -80,6 +80,7 @@
         "eslint-plugin-import": "^2.22.1",
         "prettier": "^2.4.1",
         "react-app-env": "^1.2.3",
+        "react-app-rewired": "^2.2.1",
         "rollup": "^4.5.0",
         "rollup-plugin-postcss": "^4.0.2",
         "rollup-plugin-terser": "^7.0.2",

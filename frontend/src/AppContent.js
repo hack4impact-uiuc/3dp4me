@@ -4,26 +4,26 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { QueryParamProvider } from 'use-query-params';
 import { trackPromise } from 'react-promise-tracker';
 
-import { getSelf } from './api/api';
-import { getCurrentUserInfo } from './aws/aws-helper';
-import ErrorModal from './components/ErrorModal/ErrorModal';
-import Navbar from './components/Navbar/Navbar';
-import { useErrorWrap } from './hooks/useErrorWrap';
-import { useTranslations } from './hooks/useTranslations';
-import AccountManagement from './pages/AccountManagement/AccountManagment';
-import Dashboard from './pages/Dashboard/Dashboard';
-import DashboardManagement from './pages/DashboardManagement/DashboardManagement';
-import PatientDetail from './pages/PatientDetail/PatientDetail';
-import Patients from './pages/Patients/Patients';
-import Patient2FA from './pages/Patient2FALogin/Patient2FALogin';
-import { Context } from './store/Store';
+import { getSelf } from './api/api.js';
+import { getCurrentUserInfo } from './aws/aws-helper.js';
+import ErrorModal from './components/ErrorModal/ErrorModal.js';
+import Navbar from './components/Navbar/Navbar.js';
+import { useErrorWrap } from './hooks/useErrorWrap.js';
+import { useTranslations } from './hooks/useTranslations.js';
+import AccountManagement from './pages/AccountManagement/AccountManagment.js';
+import Dashboard from './pages/Dashboard/Dashboard.js';
+import DashboardManagement from './pages/DashboardManagement/DashboardManagement.js';
+import PatientDetail from './pages/PatientDetail/PatientDetail.js';
+import Patients from './pages/Patients/Patients.js';
+import Patient2FA from './pages/Patient2FALogin/Patient2FALogin.js';
+import { Context } from './store/Store.js';
 import {
     COGNITO_ATTRIBUTES,
     LANGUAGES,
     REDUCER_ACTIONS,
     ROUTES,
-} from './utils/constants';
-import LoadingIndicator from './components/LoadingIndicator/LoadingIndicator';
+} from './utils/constants.js';
+import LoadingIndicator from './components/LoadingIndicator/LoadingIndicator.js';
 
 const AppContent = ({ username, userEmail }) => {
     const errorWrap = useErrorWrap();

@@ -4,7 +4,7 @@ import Drawer from '@material-ui/core/Drawer';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Toolbar from '@material-ui/core/Toolbar';
 import {
-    createMuiTheme,
+    createTheme,
     ThemeProvider,
     Accordion,
     AccordionDetails,
@@ -17,11 +17,11 @@ import { LANGUAGES } from '../../utils/constants';
 import { getPatientName } from '../../utils/utils';
 import './PatientDetailSidebar.scss';
 
-const arTheme = createMuiTheme({
+const arTheme = createTheme({
     direction: 'rtl',
 });
 
-const enTheme = createMuiTheme({
+const enTheme = createTheme({
     direction: 'ltr',
 });
 

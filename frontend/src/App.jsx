@@ -3,18 +3,18 @@ import { Amplify } from 'aws-amplify';
 import { registerLocale } from 'react-datepicker';
 import { enUS, arSA } from 'date-fns/locale';
 
-import Store from './store/Store';
-import AppContent from './AppContent';
-import Login from './pages/Login/Login';
-import { awsconfig } from './aws/aws-exports';
-import { LANGUAGES } from './utils/constants';
-import { getCurrentUserInfo } from './aws/aws-helper';
+import Store from './store/Store.js';
+import AppContent from './AppContent.js';
+import Login from './pages/Login/Login.tsx';
+import { awsconfig } from './aws/aws-exports.js';
+import { LANGUAGES } from './utils/constants.js';
+import { getCurrentUserInfo } from './aws/aws-helper.js';
 import {
     UNDEFINED_AUTH,
     AUTHENTICATED,
     UNAUTHENTICATED,
     setAuthListener,
-} from './aws/aws-auth';
+} from './aws/aws-auth.ts';
 
 // Configure amplify
 Amplify.configure(awsconfig);
@@ -49,7 +49,7 @@ function App() {
     const updateAuthLevel = async () => {
         try {
             // TODO: This might not be right
-            // await Auth.currentAuthenticatedUser();
+            await Auth.currentAuthenticatedUser();
             setAuthLevel(AUTHENTICATED);
         } catch (error) {
             setAuthLevel(UNAUTHENTICATED);

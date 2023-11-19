@@ -23,7 +23,7 @@ const Login = () => {
                         type="submit"
                         onClick={() =>
                             Auth.federatedSignIn({
-                                provider: 'Google',
+                                provider: "Google" as any,
                             })
                         }
                     >
