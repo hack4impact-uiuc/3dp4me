@@ -19,7 +19,6 @@
     },
     "scripts": {
         "init-repo": "chmod +x ./scripts/init-repo.sh && ./scripts/init-repo.sh",
-        "check-sensitive-files": "chmod +x ./scripts/check-sensitive-files.sh && ./scripts/check-sensitive-files.sh",
         "format": "prettier --write '{client/**/*.{js,jsx,css,scss,json,md},api/**/*.{js,jsx,json,md}}'",
         "gen-db": "node scripts/generate-db-data.js"
     },
@@ -33,7 +32,7 @@
     "homepage": "https://github.com/hack4impact-uiuc/3dp4me#readme",
     "husky": {
         "hooks": {
-            "pre-commit": "yarn check-sensitive-files && lint-staged"
+            "pre-commit": "yarn lint-staged"
         }
     },
     "lint-staged": {

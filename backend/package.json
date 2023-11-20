@@ -52,7 +52,6 @@
     "scripts": {
         "dev": "cross-env NODE_ENV=development nodemon ./bin/www",
         "export": "cross-env NODE_ENV=production node ./scripts/export_csv.js",
-        "prod": "node ./bin/www",
         "build": "webpack ./bin/www",
         "start": "doppler run -- node ./bin/www",
         "test": "cross-env S3_BUCKET_NAME=test jest --runInBand --forceExit",
