@@ -1,4 +1,4 @@
-import instance from './axios-config.js';
+import instance from './axios-config';
 
 const FileDownload = require('js-file-download');
 

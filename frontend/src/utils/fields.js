@@ -16,7 +16,7 @@ import {
     SIGNATURE_STATUS,
     STEP_STATUS,
 } from './constants';
-import { formatDate } from './date.js';
+import { formatDate } from './date';
 
 /**
  * Converts a step status to a string

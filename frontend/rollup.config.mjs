@@ -11,23 +11,20 @@ import { terser } from 'rollup-plugin-terser';
 // const extensions = ['.js', '.ts', '.jsx', '.tsx'];
 
 export default {
-  input: [
-    './src/index.tsx',
-  ],
+  input: './src/index.tsx',
   output: {
-    dir: 'dist',
-    format: 'esm',
-    preserveModules: true,
-    preserveModulesRoot: 'src',
-    sourcemap: true,
+    file: 'dist/bundle.js',
+    format: 'iife',
   },
   plugins: [
-    resolve(),
+    resolve({
+      browser: true
+    }),
     image(),
     json(),
     babel({ 
       exclude: 'node_modules/**',
-      presets: ['@babel/env', '@babel/preset-react']
+      presets: ['@babel/preset-react']
     }),
     commonjs(),
     typescript({

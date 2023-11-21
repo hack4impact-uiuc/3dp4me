@@ -24,7 +24,7 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": false
   },
   "exclude": [
     "node_modules",
@@ -40,5 +40,5 @@
   ],
   "include": [
     "src"
-  ]
+  ],
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { getCurrentSession } from '../aws/aws-helper.js';
+import { getCurrentSession } from '../aws/aws-helper';
 
 let cachedJWTToken = null;
 const BASE_URL = process.env.REACT_APP_BACKEND_BASE_URL;

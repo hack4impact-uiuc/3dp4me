@@ -6,6 +6,7 @@ COPY ./frontend /app/frontend
 WORKDIR /app/frontend
 RUN yarn install
 RUN yarn build
+RUN cp -r /app/frontend/public/* /app/frontend/dist
 
 # Build the backend
 FROM builder as backend-builder

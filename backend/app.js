@@ -23,7 +23,7 @@ const app = express();
 
 app.use(configureHelment());
 app.use(setResponseHeaders);
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use(express.static(path.join(__dirname, './frontend')));
 app.use(cors());
 app.use(
     fileUpload({
@@ -40,7 +40,7 @@ app.get('/*', (req, res, next) => {
     if (req.url.includes('/api')) next();
     else {
         res.sendFile(
-            path.join(__dirname, '../frontend/build/index.html'),
+            path.join(__dirname, './frontend/index.html'),
             (err) => {
                 if (err) res.status(500).send(err);
             },

@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Amplify } from 'aws-amplify';
+import { Amplify, Auth } from 'aws-amplify';
 import { registerLocale } from 'react-datepicker';
 import { enUS, arSA } from 'date-fns/locale';
 
-import Store from './store/Store.js';
-import AppContent from './AppContent.js';
-import Login from './pages/Login/Login.tsx';
-import { awsconfig } from './aws/aws-exports.js';
-import { LANGUAGES } from './utils/constants.js';
-import { getCurrentUserInfo } from './aws/aws-helper.js';
+import Store from './store/Store';
+import AppContent from './AppContent';
+import Login from './pages/Login/Login';
+import { awsconfig } from './aws/aws-exports';
+import { LANGUAGES } from './utils/constants';
+import { getCurrentUserInfo } from './aws/aws-helper';
 import {
     UNDEFINED_AUTH,
     AUTHENTICATED,
     UNAUTHENTICATED,
     setAuthListener,
-} from './aws/aws-auth.ts';
+} from './aws/aws-auth';
 
 // Configure amplify
 Amplify.configure(awsconfig);
