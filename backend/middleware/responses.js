@@ -6,7 +6,7 @@ const SRC_SELF = ["'self'", 'blob:', 'data:'];
 // Describes cognito origins
 const SRC_COGNITO = [
     'https://cognito-idp.eu-north-1.amazonaws.com/',
-    'https://3dp4me.auth.eu-north-1.amazoncognito.com/oauth2/token',
+    'https://3dp4me-users.auth.eu-north-1.amazoncognito.com/oauth2/token',
     'https://cognito-identity.eu-north-1.amazonaws.com/',
 ];
 
