@@ -15,7 +15,6 @@ type AuthListener = (state: typeof AUTHENTICATED | typeof UNAUTHENTICATED | type
  */
 export const setAuthListener = (listener: AuthListener) => {
     Hub.listen('auth', (data) => {
-        console.log("HUB EVENT ", data)
         switch (data.payload.event) {
             case EVENT_SIGN_IN:
                 listener(AUTHENTICATED);
