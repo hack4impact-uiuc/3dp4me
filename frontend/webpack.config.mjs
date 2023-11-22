@@ -74,8 +74,16 @@ const config = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "./public",
-          to: "./",
+          from: "public/3dp4me_logo.png",
+        },
+        {
+          from: "public/favicon.ico",
+        },
+        {
+          from: "public/robots.txt",
+        },
+        {
+          from: "public/manifest.json",
         },
       ],
     }),
