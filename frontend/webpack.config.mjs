@@ -2,7 +2,7 @@ import Dotenv from "dotenv-webpack";
 // const path = require("path")
 import path from "path";
 // import { Configuration } from "webpack";
-// // import CopyWebpackPlugin from "copy-webpack-plugin";
+import CopyWebpackPlugin from "copy-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
 const config = {
@@ -71,29 +71,23 @@ const config = {
     filename: "bundle.js",
   },
   plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "./public",
+          to: "./",
+        },
+      ],
+    }),
+
     new HtmlWebpackPlugin({
-      // template: "./public/index.html"
+      template: "./public/index.html"
     }),
 
     new Dotenv({
-      path: './production.env', // Path to .env file (this is the default)
-      safe: true, // load .env.example (defaults to "false" which does not use dotenv-safe)
-    })
-
-
-    // new webpack.ProvidePlugin({
-    //   process: 'process/browser',
-    // }),
-
-    // new webpack.DefinePlugin({
-    //   "process.env.REACT_APP_BACKEND_BASE_URL",
-    //   "REACT_APP_CALLBACK_URL",
-    //   "REACT_APP_COGNITO_IDENTITY_POOL_ID",
-    //   "REACT_APP_COGNITO_REGION",
-    //   "REACT_APP_COGNITO_USER_POOL_ID",
-    //   "REACT_APP_COGNITO_WEB_COIENT_ID",
-    //   "REACT_APP_OAUTH_DOMAIN",
-    // })
+      path: './production.env',
+      safe: true,
+    }),
   ],
 };
 

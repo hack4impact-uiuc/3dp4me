@@ -16,7 +16,6 @@ import EditFieldModal from '../../components/EditFieldModal/EditFieldModal';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
-import scssVars from '../../styles/variables.scss';
 import {
     DIRECTION,
     getValidAdjacentElement,
@@ -33,8 +32,7 @@ import {
     getJSONReferenceByStringPath,
 } from '../../utils/utils';
 import './DashboardManagement.scss';
-
-const { drawerWidth, verticalMovementWidth } = scssVars
+import { drawerWidth, verticalMovementWidth } from '../../styles/variables';
 
 const expandedSidebarWidth = `${
     parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
