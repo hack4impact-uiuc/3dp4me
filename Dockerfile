@@ -11,7 +11,7 @@ RUN yarn build
 FROM builder as backend-builder
 COPY ./backend /app/backend
 WORKDIR /app/backend
-RUN yarn install || true
+RUN yarn install
 RUN yarn build
 RUN cp /app/backend/package.json /app/backend/dist
 

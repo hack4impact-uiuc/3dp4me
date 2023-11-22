@@ -37,7 +37,6 @@
         "twilio": "^3.71.1"
     },
     "devDependencies": {
-        "canvas": "^2.11.2",
         "eslint-config-airbnb": "^18.2.1",
         "exceljs": "^4.4.0",
         "nodemon": "^2.0.4",
