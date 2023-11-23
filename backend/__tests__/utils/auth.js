@@ -89,7 +89,7 @@ module.exports.initS3DeleteObjectMocker = (AWS) => {
 module.exports.initS3ListObjectsV2Mocker = (AWS) => {
     AWS.mock('S3', 'listObjectsV2', (params) => {
         return Promise.resolve({
-            Contents: []
+            Contents: [],
         });
     });
 };

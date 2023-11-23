@@ -7,14 +7,20 @@ const _ = require('lodash');
 const { errorWrap } = require('../../utils');
 const { models } = require('../../models');
 const {
-    uploadFile, downloadFile, deleteFile, deleteFolder,
+    uploadFile,
+    downloadFile,
+    deleteFile,
+    deleteFolder,
 } = require('../../utils/aws/awsS3Helpers');
 const { removeRequestAttributes } = require('../../middleware/requests');
 const {
     STEP_IMMUTABLE_ATTRIBUTES,
     PATIENT_IMMUTABLE_ATTRIBUTES,
 } = require('../../utils/constants');
-const { sendResponse, getDataFromModelWithPaginationAndSearch } = require('../../utils/response');
+const {
+    sendResponse,
+    getDataFromModelWithPaginationAndSearch,
+} = require('../../utils/response');
 const { getReadableSteps } = require('../../utils/stepUtils');
 const { getStepBaseSchemaKeys } = require('../../utils/initDb');
 const {
@@ -30,7 +36,10 @@ const { generateOrderId } = require('../../utils/generateOrderId');
 router.get(
     '/',
     errorWrap(async (req, res) => {
-        const patientData = await getDataFromModelWithPaginationAndSearch(req, models.Patient);
+        const patientData = await getDataFromModelWithPaginationAndSearch(
+            req,
+            models.Patient,
+        );
         await sendResponse(res, 200, '', patientData);
     }),
 );
@@ -58,7 +67,8 @@ router.get(
 
         // Check if patient exists
         const patientData = await models.Patient.findById(id);
-        if (!patientData) return sendResponse(res, 404, `Patient with id ${id} not found`);
+        if (!patientData)
+            return sendResponse(res, 404, `Patient with id ${id} not found`);
 
         // Get all steps/fields that the user is allowed to view
         const steps = await getReadableSteps(req);
@@ -132,7 +142,8 @@ router.put(
     errorWrap(async (req, res) => {
         const { id } = req.params;
         const patient = await models.Patient.findById(id);
-        if (!patient) return sendResponse(res, 404, `Patient "${id}" not found`);
+        if (!patient)
+            return sendResponse(res, 404, `Patient "${id}" not found`);
 
         // Copy over the attributes from the request
         _.assign(patient, req.body);
@@ -153,9 +164,7 @@ router.put(
 router.get(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
-        const {
-            id, stepKey, fieldKey, fileName,
-        } = req.params;
+        const { id, stepKey, fieldKey, fileName } = req.params;
 
         const isReadable = await isFieldReadable(req.user, stepKey, fieldKey);
         if (!isReadable) {
@@ -190,13 +199,12 @@ router.get(
 router.delete(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
-        const {
-            id, stepKey, fieldKey, fileName,
-        } = req.params;
+        const { id, stepKey, fieldKey, fileName } = req.params;
 
         // Get patient
         const patient = await models.Patient.findById(id);
-        if (!patient) return sendResponse(res, 404, `Patient (${id}) not found`);
+        if (!patient)
+            return sendResponse(res, 404, `Patient (${id}) not found`);
 
         // Get model
         let model;
@@ -208,7 +216,8 @@ router.delete(
 
         // Make sure user has permission to delete file
         const isWritable = await isFieldReadable(req.user, stepKey, fieldKey);
-        if (!isWritable) return sendResponse(res, 403, 'Insufficient permission');
+        if (!isWritable)
+            return sendResponse(res, 403, 'Insufficient permission');
 
         // Get step data
         const stepData = await model.findOne({ patientId: id });
@@ -237,9 +246,7 @@ router.delete(
         await patient.save();
 
         // Remove this file from AWS as well
-        await deleteFile(
-            `${id}/${stepKey}/${fieldKey}/${fileName}`,
-        );
+        await deleteFile(`${id}/${stepKey}/${fieldKey}/${fileName}`);
 
         return sendResponse(res, 200, 'File deleted');
     }),
@@ -253,13 +260,12 @@ router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
     errorWrap(async (req, res) => {
         // TODO during refactoring: We upload file name in form data, is this even needed???
-        const {
-            id, stepKey, fieldKey, fileName,
-        } = req.params;
+        const { id, stepKey, fieldKey, fileName } = req.params;
         const patient = await models.Patient.findById(id);
 
         // Make sure patient exists
-        if (!patient) return sendResponse(res, 404, `Cannot find patient "${id}"`);
+        if (!patient)
+            return sendResponse(res, 404, `Cannot find patient "${id}"`);
 
         // Make sure step exists
         let Model;
@@ -271,7 +277,8 @@ router.post(
 
         // Make sure file is writable
         const isWritable = await isFieldWritable(req.user, stepKey, fieldKey);
-        if (!isWritable) return sendResponse(res, 403, 'Insufficient permission');
+        if (!isWritable)
+            return sendResponse(res, 403, 'Insufficient permission');
 
         // Get patient's data for this step. If patient has no data, construct it with the model.
         let stepData = await Model.findOne({ patientId: id });
@@ -283,10 +290,7 @@ router.post(
 
         // Upload the file to the S3
         const file = req.files.uploadedFile;
-        await uploadFile(
-            file.data,
-            `${id}/${stepKey}/${fieldKey}/${fileName}`,
-        );
+        await uploadFile(file.data, `${id}/${stepKey}/${fieldKey}/${fileName}`);
 
         // Record this file in the DB
         stepData[fieldKey] = [
@@ -333,7 +337,8 @@ router.post(
 
         // Make sure patient exists
         const patient = await models.Patient.findById(id);
-        if (!patient) return sendResponse(res, 404, `Patient "${id}" not found`);
+        if (!patient)
+            return sendResponse(res, 404, `Patient "${id}" not found`);
 
         // Filter out request fields that the user cannot write
         const writableFields = await getWritableFields(req.user, stepKey);
@@ -380,10 +385,13 @@ router.delete(
             return sendResponse(res, 404, `${id} is not a valid patient id`);
         }
 
-        if (!patient) return sendResponse(res, 404, `Patient "${id}" not found`);
+        if (!patient)
+            return sendResponse(res, 404, `Patient "${id}" not found`);
 
         // Deletes the patient from the Patient Collection
-        await models.Patient.findOneAndDelete({ _id: mongoose.Types.ObjectId(id) });
+        await models.Patient.findOneAndDelete({
+            _id: mongoose.Types.ObjectId(id),
+        });
 
         const allStepKeys = await models.Step.find({}, 'key');
 
@@ -397,7 +405,9 @@ router.delete(
                 await Model.findOneAndDelete({ patientId: id });
             } catch (error) {
                 // eslint-disable-next-line no-console
-                console.error(`DELETE /patients/:id - step ${stepKey} not found`);
+                console.error(
+                    `DELETE /patients/:id - step ${stepKey} not found`,
+                );
                 return false;
             }
             return true;

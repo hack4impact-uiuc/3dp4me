@@ -2,20 +2,27 @@ const _ = require('lodash');
 
 const { removeAttributesFrom } = require('../middleware/requests');
 const { models } = require('../models');
-const { isUniqueStepNumber, FIELD_NUMBER_KEY, STEP_NUMBER_KEY } = require('../models/Metadata');
+const {
+    isUniqueStepNumber,
+    FIELD_NUMBER_KEY,
+    STEP_NUMBER_KEY,
+} = require('../models/Metadata');
 
 const { isAdmin } = require('./aws/awsUsers');
 const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
 const { abortAndError } = require('./transactionUtils');
 const { generateSchemaFromMetadata } = require('./initDb');
-const { generateKeyWithoutCollision, checkNumOccurencesInList } = require('./keyUtils');
+const {
+    generateKeyWithoutCollision,
+    checkNumOccurencesInList,
+} = require('./keyUtils');
 
 const stringToBoolean = (value) => {
     const trimmedValue = value.toString().trim().toLowerCase();
     return !(
-        trimmedValue === 'false'
-        || trimmedValue === '0'
-        || trimmedValue === ''
+        trimmedValue === 'false' ||
+        trimmedValue === '0' ||
+        trimmedValue === ''
     );
 };
 
@@ -82,7 +89,8 @@ module.exports.getReadableSteps = async (req) => {
     aggregation.push({
         $addFields: {
             fields: {
-                $map: { // Perform map on the fields
+                $map: {
+                    // Perform map on the fields
                     input: '$fields', // Input is the field array
                     as: 'f', // Single element in the field array
                     in: {
@@ -134,7 +142,10 @@ module.exports.updateStepsInTransaction = async (updatedSteps, session) => {
     // Build up a list of steps that were not included in the request or are deleted.
     // The stepNumbers of these steps won't be changed.
     for (let i = 0; i < currentStepsInDB.length; i++) {
-        if (currentStepsInDB[i].isDeleted || !requestStepKeys.includes(currentStepsInDB[i].key)) {
+        if (
+            currentStepsInDB[i].isDeleted ||
+            !requestStepKeys.includes(currentStepsInDB[i].key)
+        ) {
             stepsToNotChange.push(currentStepsInDB[i]);
         }
     }
@@ -163,7 +174,11 @@ module.exports.updateStepsInTransaction = async (updatedSteps, session) => {
     // Go through all of the step updates in the request body and apply them
     for (let stepIdx = 0; stepIdx < requestSteps.length; stepIdx++) {
         // eslint-disable-next-line max-len
-        const updatedStepModel = await updateStepInTransaction(requestSteps[stepIdx], session, combinedKeys);
+        const updatedStepModel = await updateStepInTransaction(
+            requestSteps[stepIdx],
+            session,
+            combinedKeys,
+        );
         stepData.push(updatedStepModel);
     }
 
@@ -190,8 +205,9 @@ const updateElementNumbers = (goodElements, deletedElements, numberKey) => {
 
     while (currElementNumber < numTotalFields) {
         if (
-            deletedElementPointer < deletedElements.length
-            && currElementNumber === deletedElements[deletedElementPointer][numberKey]
+            deletedElementPointer < deletedElements.length &&
+            currElementNumber ===
+                deletedElements[deletedElementPointer][numberKey]
         ) {
             deletedElementPointer += 1; // Skip over since deleted fields have priority
         } else if (goodElementPointer < updatedElements.length) {
@@ -233,7 +249,13 @@ const updateFieldKeys = (fields) => {
  * @param {} level         Level of recursion. 0 is the first level.
  * @returns A boolean indicating if new fields were sent in the request.
  */
-const updateFieldInTransaction = async (fieldsInDB, fieldsFromRequest, stepKey, session, level) => {
+const updateFieldInTransaction = async (
+    fieldsInDB,
+    fieldsFromRequest,
+    stepKey,
+    session,
+    level,
+) => {
     const savedFields = _.cloneDeep(fieldsInDB);
     let updatedFields = _.cloneDeep(fieldsFromRequest);
 
@@ -250,7 +272,8 @@ const updateFieldInTransaction = async (fieldsInDB, fieldsFromRequest, stepKey, 
     const numUnchangedFields = updatedFields.length - addedFields.length;
 
     const currentNumFields = savedFields.length - numDeletedFields;
-    if (numUnchangedFields < currentNumFields) await abortAndError(session, 'Cannot delete fields');
+    if (numUnchangedFields < currentNumFields)
+        await abortAndError(session, 'Cannot delete fields');
 
     // Update the field numbers in order to account for deleted fields
     // eslint-disable-next-line no-param-reassign
@@ -273,7 +296,11 @@ const updateFieldInTransaction = async (fieldsInDB, fieldsFromRequest, stepKey, 
 
     if (level === 0) {
         // Update the schema with new fields
-        const addedFieldsWithKeys = await getAddedFields(session, savedFields, updatedFields);
+        const addedFieldsWithKeys = await getAddedFields(
+            session,
+            savedFields,
+            updatedFields,
+        );
         addFieldsToSchema(stepKey, addedFieldsWithKeys);
     }
 
@@ -281,30 +308,43 @@ const updateFieldInTransaction = async (fieldsInDB, fieldsFromRequest, stepKey, 
     let subFieldWasAdded = false;
 
     // Recursively call updateFieldInTransaction() on each field's subfields
-    const subFieldUpdateArray = updatedFields.map(async (updatedField, updatedFieldIndex) => {
-        if (updatedField.subFields) {
-            const updatedFieldKey = updatedField.key;
-            const savedFieldIndex = getFieldIndexGivenKey(savedFields, updatedFieldKey);
+    const subFieldUpdateArray = updatedFields.map(
+        async (updatedField, updatedFieldIndex) => {
+            if (updatedField.subFields) {
+                const updatedFieldKey = updatedField.key;
+                const savedFieldIndex = getFieldIndexGivenKey(
+                    savedFields,
+                    updatedFieldKey,
+                );
 
-            let newSavedFields = [];
-            if (savedFieldIndex > 0) {
-                newSavedFields = savedFields[savedFieldIndex].subFields || [];
+                let newSavedFields = [];
+                if (savedFieldIndex > 0) {
+                    newSavedFields =
+                        savedFields[savedFieldIndex].subFields || [];
+                }
+
+                // eslint-disable-next-line max-len
+                const updateFieldResponse = await updateFieldInTransaction(
+                    newSavedFields,
+                    updatedField.subFields,
+                    stepKey,
+                    session,
+                    level + 1,
+                );
+                const { didAddFields } = updateFieldResponse;
+
+                updatedFields[updatedFieldIndex].subFields =
+                    updateFieldResponse.updatedFields;
+                subFieldWasAdded = subFieldWasAdded || didAddFields;
+                // Build up a list of field's whose schema need to be updated
+                if (didAddFields && level === 0) {
+                    fieldsToUpdateInSchema.push(updatedField);
+                }
+                return true;
             }
-
-            // eslint-disable-next-line max-len
-            const updateFieldResponse = await updateFieldInTransaction(newSavedFields, updatedField.subFields, stepKey, session, level + 1);
-            const { didAddFields } = updateFieldResponse;
-
-            updatedFields[updatedFieldIndex].subFields = updateFieldResponse.updatedFields;
-            subFieldWasAdded = subFieldWasAdded || didAddFields;
-            // Build up a list of field's whose schema need to be updated
-            if (didAddFields && level === 0) {
-                fieldsToUpdateInSchema.push(updatedField);
-            }
-            return true;
-        }
-        return false;
-    });
+            return false;
+        },
+    );
 
     await Promise.all(subFieldUpdateArray);
 
@@ -315,10 +355,10 @@ const updateFieldInTransaction = async (fieldsInDB, fieldsFromRequest, stepKey, 
 
     // Along with other data, return true if a field was added at this level
     // or a sub field was added to one of the fields at this level
-    return ({
+    return {
         updatedFields,
         didAddFields: subFieldWasAdded || addedFields.length > 0,
-    });
+    };
 };
 
 // Returns the index for a step given its key
@@ -338,9 +378,9 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
         instead of MongoDB document.
     */
     const stepKey = stepBody.key;
-    const stepToEdit = await models.Step.findOne({ key: stepKey }).session(
-        session,
-    ).lean();
+    const stepToEdit = await models.Step.findOne({ key: stepKey })
+        .session(session)
+        .lean();
 
     // Treat a field as new if it doesn't show up in the database
     // or it is marked as deleted in the database. This based on the assumption
@@ -350,7 +390,10 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
         // Make sure the key for this new step won't collide with any deleted steps
         // Using the value 2 since the key should be in combinedKeys at least once.
         if (checkNumOccurencesInList(stepBody.key, combinedKeys) >= 2) {
-            const newKey = generateKeyWithoutCollision(stepBody.displayName.EN || '', combinedKeys);
+            const newKey = generateKeyWithoutCollision(
+                stepBody.displayName.EN || '',
+                combinedKeys,
+            );
             const oldKey = stepBody.key;
             // eslint-disable-next-line no-param-reassign
             stepBody.key = newKey;
@@ -363,7 +406,13 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
         if (stepBody.fields) {
             generateSchemaFromMetadata(stepBody);
             // eslint-disable-next-line max-len
-            const { updatedFields } = await updateFieldInTransaction([], stepBody.fields, stepBody.key, session, 0);
+            const { updatedFields } = await updateFieldInTransaction(
+                [],
+                stepBody.fields,
+                stepBody.key,
+                session,
+                0,
+            );
             // eslint-disable-next-line no-param-reassign
             stepBody.fields = updatedFields;
         } else {
@@ -382,7 +431,13 @@ const updateStepInTransaction = async (stepBody, session, combinedKeys) => {
     // Recursive update the field's numbers and keys
     // while making sure deleted fields are properly handled.
     // eslint-disable-next-line max-len
-    const { updatedFields } = await updateFieldInTransaction(stepToEdit.fields, strippedBody.fields, stepKey, session, 0);
+    const { updatedFields } = await updateFieldInTransaction(
+        stepToEdit.fields,
+        strippedBody.fields,
+        stepKey,
+        session,
+        0,
+    );
     strippedBody.fields = updatedFields;
 
     // Finally, update the metadata for this step

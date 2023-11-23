@@ -34,9 +34,10 @@ describe('PUT /roles/:roleid', () => {
 
     it('returns 404 when given nonexistent ID', (done) => {
         const randID = '6092a9ae9e3769ae75abe0a5';
-        withAuthentication(
-            request(server).put(`/api/roles/${randID}`),
-        ).expect(404, done);
+        withAuthentication(request(server).put(`/api/roles/${randID}`)).expect(
+            404,
+            done,
+        );
     });
 
     it('update existing mutable role id', async () => {

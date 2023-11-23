@@ -1,7 +1,10 @@
 const AWS = require('aws-sdk');
 
 const {
-    S3_BUCKET_NAME, S3_REGION, ACCESS_KEY_ID, SECRET_ACCESS_KEY,
+    S3_BUCKET_NAME,
+    S3_REGION,
+    ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY,
 } = require('./awsExports');
 
 // S3 Credential Object created with access id and secret key
@@ -87,7 +90,8 @@ const deleteFolder = async (folderName) => {
     await s3.deleteObjects(deleteParams).promise();
 
     // If there are more than 1000 objects that need to be deleted from the folder
-    if (listedObjects.IsTruncated) await deleteFolder(folderName, S3_CREDENTIALS);
+    if (listedObjects.IsTruncated)
+        await deleteFolder(folderName, S3_CREDENTIALS);
 };
 
 function getS3(credentials) {

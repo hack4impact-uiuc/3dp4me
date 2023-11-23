@@ -39,12 +39,9 @@ app.use(bodyParser.json());
 app.get('/*', (req, res, next) => {
     if (req.url.includes('/api')) next();
     else {
-        res.sendFile(
-            path.join(__dirname, './frontend/index.html'),
-            (err) => {
-                if (err) res.status(500).send(err);
-            },
-        );
+        res.sendFile(path.join(__dirname, './frontend/index.html'), (err) => {
+            if (err) res.status(500).send(err);
+        });
     }
 });
 

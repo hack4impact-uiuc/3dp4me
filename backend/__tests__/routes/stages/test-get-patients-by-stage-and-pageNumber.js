@@ -9,9 +9,7 @@ const {
     setCurrentUser,
     withAuthentication,
 } = require('../../utils/auth');
-const {
-    DEFAULT_PATIENTS_ON_GET_REQUEST,
-} = require('../../../utils/constants');
+const { DEFAULT_PATIENTS_ON_GET_REQUEST } = require('../../../utils/constants');
 
 describe('GET /stages', () => {
     afterAll(async () => await db.closeDatabase());
@@ -76,7 +74,9 @@ describe('GET /stages', () => {
 
         // Send the request
         const res = await withAuthentication(
-            request(server).get(`/api/stages/survey?pageNumber=${pageNumber}&nPerPage=${nPerPage}`),
+            request(server).get(
+                `/api/stages/survey?pageNumber=${pageNumber}&nPerPage=${nPerPage}`,
+            ),
         );
 
         // Check response

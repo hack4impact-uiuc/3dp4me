@@ -12,11 +12,12 @@ const {
     SECRET_ACCESS_KEY,
 } = require('./awsExports');
 
-module.exports.getIdentityProvider = () => new AWS.CognitoIdentityServiceProvider({
-    region: COGNITO_REGION,
-    accessKeyId: ACCESS_KEY_ID,
-    secretAccessKey: SECRET_ACCESS_KEY,
-});
+module.exports.getIdentityProvider = () =>
+    new AWS.CognitoIdentityServiceProvider({
+        region: COGNITO_REGION,
+        accessKeyId: ACCESS_KEY_ID,
+        secretAccessKey: SECRET_ACCESS_KEY,
+    });
 
 /**
  * Given a user object, determine if they are an admin.

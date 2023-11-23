@@ -1,6 +1,4 @@
-const {
-    DEFAULT_PATIENTS_ON_GET_REQUEST,
-} = require('./constants');
+const { DEFAULT_PATIENTS_ON_GET_REQUEST } = require('./constants');
 
 /**
  * Convienience function for sending responses.
@@ -35,13 +33,31 @@ const filterPatientsBySearchQuery = (patients, searchQuery) => {
            All of the fields are encrypted in the database.
            If the data associated with any one of these fields
            contains the search query, we will return it. */
-        const fieldsToCheckList = ['_id', 'firstName', 'fathersName', 'grandfathersName', 'familyName', 'phoneNumber', 'orderId'];
+        const fieldsToCheckList = [
+            '_id',
+            'firstName',
+            'fathersName',
+            'grandfathersName',
+            'familyName',
+            'phoneNumber',
+            'orderId',
+        ];
 
         for (let dataIdx = 0; dataIdx < patients.length; dataIdx++) {
-            for (let fieldsIdx = 0; fieldsIdx < fieldsToCheckList.length; fieldsIdx++) {
+            for (
+                let fieldsIdx = 0;
+                fieldsIdx < fieldsToCheckList.length;
+                fieldsIdx++
+            ) {
                 const fieldToCheck = fieldsToCheckList[fieldsIdx];
-                const patientDataByField = patients[dataIdx][fieldToCheck] || '';
-                if (patientDataByField.toString().toLowerCase().includes(searchQuery)) {
+                const patientDataByField =
+                    patients[dataIdx][fieldToCheck] || '';
+                if (
+                    patientDataByField
+                        .toString()
+                        .toLowerCase()
+                        .includes(searchQuery)
+                ) {
                     filteredData.push(patients[dataIdx]);
                     break;
                 }
@@ -59,45 +75,60 @@ const filterPatientsBySearchQuery = (patients, searchQuery) => {
  * @returns {Object} data Documents recieved from db.collection.find()
  */
 // eslint-disable-next-line max-len
-module.exports.getDataFromModelWithPaginationAndSearch = async (req, model, findParameters = {}) => {
+module.exports.getDataFromModelWithPaginationAndSearch = async (
+    req,
+    model,
+    findParameters = {},
+) => {
     // The default values below will get the first user in the database
     const {
-        pageNumber = 1, nPerPage = DEFAULT_PATIENTS_ON_GET_REQUEST, searchQuery = '',
+        pageNumber = 1,
+        nPerPage = DEFAULT_PATIENTS_ON_GET_REQUEST,
+        searchQuery = '',
     } = req.query;
     const intPageNumber = parseInt(pageNumber, 10);
     const intPatientsPerPage = parseInt(nPerPage, 10);
     const lowerCaseSearchQuery = searchQuery.toLowerCase();
 
     // Calculates the number of patients to skip based on the request paramaters
-    const documentsToSkip = intPageNumber > 0 ? ((intPageNumber - 1) * intPatientsPerPage) : 0;
+    const documentsToSkip =
+        intPageNumber > 0 ? (intPageNumber - 1) * intPatientsPerPage : 0;
 
     // Perform pagination while doing .find() if there isn't a search query
     if (lowerCaseSearchQuery === '') {
         const patientCount = await model.count(findParameters);
-        const data = await model.find(findParameters)
-            .sort({ lastEdited: -1 }).skip(documentsToSkip)
+        const data = await model
+            .find(findParameters)
+            .sort({ lastEdited: -1 })
+            .skip(documentsToSkip)
             .limit(intPatientsPerPage);
 
-        return ({
+        return {
             data,
             count: patientCount,
-        });
+        };
     }
 
     const data = await model.find(findParameters).sort({ lastEdited: -1 });
 
     // Filter by search
-    const filteredData = filterPatientsBySearchQuery(data, lowerCaseSearchQuery);
+    const filteredData = filterPatientsBySearchQuery(
+        data,
+        lowerCaseSearchQuery,
+    );
 
     // Filter by page number
     const countTotalPatients = filteredData.length;
 
-    const paginatedData = filteredData.splice(documentsToSkip, intPatientsPerPage);
+    const paginatedData = filteredData.splice(
+        documentsToSkip,
+        intPatientsPerPage,
+    );
 
-    return ({
+    return {
         data: paginatedData,
         count: countTotalPatients,
-    });
+    };
 };
 
 const isCodeSuccessful = (code) => code >= 200 && code < 300;

@@ -68,16 +68,15 @@ router.post(
         let isAuthenticated = false;
 
         if (patient.secret) {
-            isAuthenticated = twofactor.verifyToken(patientSecret, token, TWO_FACTOR_WINDOW_MINS);
+            isAuthenticated = twofactor.verifyToken(
+                patientSecret,
+                token,
+                TWO_FACTOR_WINDOW_MINS,
+            );
         }
 
         if (isAuthenticated) {
-            await sendResponse(
-                res,
-                200,
-                'Patient verified',
-                isAuthenticated,
-            );
+            await sendResponse(res, 200, 'Patient verified', isAuthenticated);
         } else {
             await sendResponse(
                 res,

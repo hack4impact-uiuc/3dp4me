@@ -35,13 +35,10 @@ router.get(
             return sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
-        const getPatientDataResponse = await getDataFromModelWithPaginationAndSearch(
-            req,
-            models.Patient,
-            {
+        const getPatientDataResponse =
+            await getDataFromModelWithPaginationAndSearch(req, models.Patient, {
                 status: PATIENT_STATUS_ENUM.ACTIVE,
-            },
-        );
+            });
 
         const patients = getPatientDataResponse.data;
         const countTotalPatients = getPatientDataResponse.count;
@@ -59,7 +56,10 @@ router.get(
         });
 
         const patientData = await Promise.all(lookups);
-        return sendResponse(res, 200, '', { data: patientData, count: countTotalPatients });
+        return sendResponse(res, 200, '', {
+            data: patientData,
+            count: countTotalPatients,
+        });
     }),
 );
 

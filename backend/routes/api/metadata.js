@@ -45,7 +45,10 @@ router.post(
             let newStep;
 
             await mongoose.connection.transaction(async (session) => {
-                newStep = await updateStepsInTransaction([stepToCreate], session);
+                newStep = await updateStepsInTransaction(
+                    [stepToCreate],
+                    session,
+                );
             });
 
             await reinitModels();
@@ -98,7 +101,8 @@ router.delete(
         const { stepkey } = req.params;
         const step = await models.Step.deleteOne({ key: stepkey });
 
-        if (step.deletedCount === 0) await sendResponse(res, 404, 'Step not found');
+        if (step.deletedCount === 0)
+            await sendResponse(res, 404, 'Step not found');
         else await sendResponse(res, 201, 'Step deleted');
     }),
 );

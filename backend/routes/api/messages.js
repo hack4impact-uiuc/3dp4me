@@ -27,8 +27,12 @@ router.post('/sms', async (req, res) => {
     const twiml = new MessagingResponse();
 
     const patientInfoReducer = (prev, curr) => {
-        const patientName = curr?.familyName ? `${curr?.firstName} ${curr?.familyName}` : `${curr?.firstName}`;
-        return `${prev} ${curr?.firstName ? `${patientName}` : 'Unnamed Patient'} : \n ${curr._id} \n`;
+        const patientName = curr?.familyName
+            ? `${curr?.firstName} ${curr?.familyName}`
+            : `${curr?.firstName}`;
+        return `${prev} ${
+            curr?.firstName ? `${patientName}` : 'Unnamed Patient'
+        } : \n ${curr._id} \n`;
     };
 
     const messageToPatients = patients.reduce(patientInfoReducer, '');

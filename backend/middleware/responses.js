@@ -37,16 +37,17 @@ module.exports.setResponseHeaders = (req, res, next) => {
  * Creates the middleware object for Helmet. Used for security.
  * @returns The Helment middleware.
  */
-module.exports.configureHelment = () => helmet({
-    contentSecurityPolicy: {
-        useDefaults: true,
-        directives: {
-            'connect-src': [...SRC_SELF, ...SRC_COGNITO, ...SRC_MAPBOX],
-            'img-src': [...SRC_SELF, ...SRC_S3],
-            'media-src': [...SRC_SELF, ...SRC_S3],
-            'object-src': [...SRC_SELF],
-            'worker-src': [...SRC_SELF],
-            'child-src': [...SRC_SELF],
+module.exports.configureHelment = () =>
+    helmet({
+        contentSecurityPolicy: {
+            useDefaults: true,
+            directives: {
+                'connect-src': [...SRC_SELF, ...SRC_COGNITO, ...SRC_MAPBOX],
+                'img-src': [...SRC_SELF, ...SRC_S3],
+                'media-src': [...SRC_SELF, ...SRC_S3],
+                'object-src': [...SRC_SELF],
+                'worker-src': [...SRC_SELF],
+                'child-src': [...SRC_SELF],
+            },
         },
-    },
-});
+    });
