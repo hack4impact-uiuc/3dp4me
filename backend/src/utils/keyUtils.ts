@@ -1,7 +1,7 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
 /* Returns a string of specified length composed of random alphanumeric characters */
-const randomAlphanumeric = (length) => {
+const randomAlphanumeric = (length: number) => {
     let result = '';
     const characters =
         'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -15,7 +15,7 @@ const randomAlphanumeric = (length) => {
 };
 
 /* Converts input into camel case */
-const generateKeyWithCamelCase = (input) => {
+const generateKeyWithCamelCase = (input: string) => {
     if (input === '') {
         return randomAlphanumeric(10);
     }
@@ -23,10 +23,10 @@ const generateKeyWithCamelCase = (input) => {
     return _.camelCase(input);
 };
 
-const checkKeyCollision = (newKey, otherKeys) =>
+const checkKeyCollision = (newKey: string, otherKeys: string[]) =>
     checkNumOccurencesInList(newKey, otherKeys) >= 1;
 
-const generateKeyWithoutCollision = (input, otherKeys) => {
+export const generateKeyWithoutCollision = (input: string, otherKeys: string[]) => {
     const newKey = generateKeyWithCamelCase(input);
 
     let keySuffix = 1;
@@ -43,7 +43,7 @@ const generateKeyWithoutCollision = (input, otherKeys) => {
 
 // Checks the number of occurences of an element in a list.
 // Used for detecting multiple occurences of keys in a list of step keys.
-const checkNumOccurencesInList = (input, list) => {
+export const checkNumOccurencesInList = (input: string, list: string[]) => {
     let count = 0;
     for (let i = 0; i < list.length; i++) {
         if (list[i] === input) {
@@ -51,9 +51,4 @@ const checkNumOccurencesInList = (input, list) => {
         }
     }
     return count;
-};
-
-module.exports = {
-    generateKeyWithoutCollision,
-    checkNumOccurencesInList,
 };

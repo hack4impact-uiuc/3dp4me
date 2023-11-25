@@ -1,11 +1,13 @@
-const log = require('loglevel');
+import { NextFunction, Request, Response } from 'express';
+import log from 'loglevel';
+import { AuthenticatedRequest } from './types';
 
 /**
  * Logs some information about the incoming request. We need this
  * for HIPPA compliance. This middleware should be placed after auth
  * but before serving the route.
  */
-module.exports.logRequest = (req, res, next) => {
+export const logRequest = (req: AuthenticatedRequest, _: Response, next: NextFunction) => {
     log.trace('-------------------------- REQUEST --------------------------');
     log.trace(`${Date.now()}: ${req.method} ${req.url}`);
     log.trace('------------ USER ------------');

@@ -1,13 +1,13 @@
-const { models } = require('../models');
-
-const {
+import { ObjectId } from 'mongoose';
+import { Role } from '../models/Role';
+import {
     SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
     SECURITY_ROLE_ATTRIBUTE_NAME,
     USER_POOL_ID,
-} = require('./aws/awsExports');
+} from './aws/awsExports';
 
-module.exports.isRoleValid = async (role) => {
-    const roles = await models.Role.find({});
+export const isRoleValid = async (role: string) => {
+    const roles = await Role.find({});
     for (let i = 0; i < roles.length; ++i) {
         if (role.toString() === roles[i]._id.toString()) return true;
     }
@@ -19,11 +19,11 @@ module.exports.isRoleValid = async (role) => {
  * Removes invalid roles from the incoming roles array. For example, if a user has a role
  * that is later deleted, this will remove that old role from the user.
  */
-module.exports.getValidRoles = async (roles) => {
-    const validRoles = [];
+export const getValidRoles = async (roles: string[]) => {
+    const validRoles = [] as string[];
 
     const addRoles = roles.map(async (role) => {
-        const roleIsValid = await this.isRoleValid(role);
+        const roleIsValid = await isRoleValid(role);
         if (roleIsValid) validRoles.push(role);
     });
 
@@ -39,7 +39,7 @@ module.exports.getValidRoles = async (roles) => {
  * @param {Array} newRole Array of IDs of the user's new roles to add.
  * @returns The update parameter.
  */
-module.exports.createRoleUpdateParams = (username, oldRoles, newRole) => {
+export const createRoleUpdateParams = (username: string, oldRoles: ObjectId[], newRole: ObjectId[]) => {
     let roles = oldRoles;
     if (newRole) roles = arrayUnique(oldRoles.concat(newRole));
 
@@ -62,7 +62,7 @@ module.exports.createRoleUpdateParams = (username, oldRoles, newRole) => {
     return params;
 };
 
-function arrayUnique(array) {
+function arrayUnique<T>(array: T[]) {
     const a = array.concat();
     for (let i = 0; i < a.length; ++i) {
         for (let j = i + 1; j < a.length; ++j) {

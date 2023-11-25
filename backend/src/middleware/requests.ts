@@ -1,12 +1,13 @@
-const _ = require('lodash');
+import { NextFunction, Request, Response } from 'express';
+import _ from 'lodash';
 
 /**
  * Removes attributes from a request's body. So if "_id" is passed in, "_id" will be removed
  * from the request if it exists.
  * @param {Array} attributes String array of attribute keys to remove
  */
-module.exports.removeRequestAttributes = (attributes) => (req, res, next) => {
-    req.body = this.removeAttributesFrom(req.body, attributes);
+export const removeRequestAttributes = (attributes: string[]) => (req: Request, res: Response, next: NextFunction) => {
+    req.body = removeAttributesFrom(req.body, attributes);
     next();
 };
 
@@ -16,5 +17,5 @@ module.exports.removeRequestAttributes = (attributes) => (req, res, next) => {
  * @param {Array} attributes String array of attributes to remove
  * @returns
  */
-module.exports.removeAttributesFrom = (obj, attributes) =>
+export const removeAttributesFrom = (obj: Record<string, any>, attributes: string[]) =>
     _.omit(obj, attributes);

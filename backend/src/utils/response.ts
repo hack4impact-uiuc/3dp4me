@@ -1,4 +1,6 @@
-const { DEFAULT_PATIENTS_ON_GET_REQUEST } = require('./constants');
+import { Request, Response } from 'express';
+import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants';
+import { Model } from 'mongoose';
 
 /**
  * Convienience function for sending responses.
@@ -7,8 +9,8 @@ const { DEFAULT_PATIENTS_ON_GET_REQUEST } = require('./constants');
  * @param {String} message The message to send.
  * @param {Object} data The optional data to send back.
  */
-module.exports.sendResponse = async (res, code, message, data = {}) => {
-    await res.status(code).json({
+export const sendResponse = (res: Response, code: number, message: string, data: Record<string, any> = {}) => {
+    return res.status(code).json({
         success: isCodeSuccessful(code),
         message,
         result: data,
@@ -21,7 +23,7 @@ module.exports.sendResponse = async (res, code, message, data = {}) => {
  * @param {String} searchQuery A word or phrase related to a specific patient/group of patients
  * @returns a List containing the filtering patients
  */
-const filterPatientsBySearchQuery = (patients, searchQuery) => {
+const filterPatientsBySearchQuery = <T extends Record<string, any>>(patients: T[], searchQuery: string): T[] => {
     if (searchQuery === '') {
         return patients;
     }
@@ -75,9 +77,9 @@ const filterPatientsBySearchQuery = (patients, searchQuery) => {
  * @returns {Object} data Documents recieved from db.collection.find()
  */
 // eslint-disable-next-line max-len
-module.exports.getDataFromModelWithPaginationAndSearch = async (
-    req,
-    model,
+export const getDataFromModelWithPaginationAndSearch = async (
+    req: Request,
+    model: Model<any>,
     findParameters = {},
 ) => {
     // The default values below will get the first user in the database
@@ -131,4 +133,4 @@ module.exports.getDataFromModelWithPaginationAndSearch = async (
     };
 };
 
-const isCodeSuccessful = (code) => code >= 200 && code < 300;
+const isCodeSuccessful = (code: number) => code >= 200 && code < 300;

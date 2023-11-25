@@ -1,23 +1,24 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
-const { removeAttributesFrom } = require('../middleware/requests');
-const { models } = require('../models');
-const {
+import { removeAttributesFrom } from '../middleware/requests'
+import { models } from '../models';
+import {
     isUniqueStepNumber,
     FIELD_NUMBER_KEY,
     STEP_NUMBER_KEY,
-} = require('../models/Metadata');
+} from '../models/Metadata';
 
-const { isAdmin } = require('./aws/awsUsers');
-const { addFieldsToSchema, getAddedFields } = require('./fieldUtils');
-const { abortAndError } = require('./transactionUtils');
-const { generateSchemaFromMetadata } = require('./initDb');
-const {
+import { isAdmin } from './aws/awsUsers';
+import { addFieldsToSchema, getAddedFields } from './fieldUtils';
+import { abortAndError } from './transactionUtils';
+import { generateSchemaFromMetadata } from './initDb';
+import {
     generateKeyWithoutCollision,
     checkNumOccurencesInList,
-} = require('./keyUtils');
+} from './keyUtils';
+import { Request } from 'express';
 
-const stringToBoolean = (value) => {
+const stringToBoolean = (value: string) => {
     const trimmedValue = value.toString().trim().toLowerCase();
     return !(
         trimmedValue === 'false' ||
@@ -26,7 +27,7 @@ const stringToBoolean = (value) => {
     );
 };
 
-module.exports.getReadableSteps = async (req) => {
+export const getReadableSteps = async (req: Request) => {
     let shouldShowHiddenFields = req.query.showHiddenFields ?? 'false';
     let shouldShowHiddenSteps = req.query.showHiddenSteps ?? 'false';
     shouldShowHiddenFields = stringToBoolean(shouldShowHiddenFields);
