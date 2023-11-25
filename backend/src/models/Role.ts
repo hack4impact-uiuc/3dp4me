@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const { languageSchema } = require('../schemas/languageSchema');
+import { languageSchema } from '../schemas/languageSchema';
 
 /**
  * Contains information about user roles. the name and description are just for
@@ -20,8 +20,4 @@ const roleSchema = new mongoose.Schema({
     isMutable: { type: Boolean, required: false, default: true },
 });
 
-const Role = mongoose.model('Role', roleSchema, 'Role');
-
-module.exports = {
-    Role,
-};
+export const Role = mongoose.model('Role', roleSchema, 'Role');

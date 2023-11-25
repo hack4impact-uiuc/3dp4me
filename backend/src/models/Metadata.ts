@@ -1,22 +1,22 @@
-const mongoose = require('mongoose');
+import mongoose, { ClientSession, InferSchemaType } from 'mongoose';
 
-const { languageSchema } = require('../schemas/languageSchema');
-const {
+import { languageSchema } from '../schemas/languageSchema';
+import {
     FIELDS,
     ERR_FIELD_VALIDATION_FAILED,
     STEPS_COLLECTION_NAME,
-} = require('../utils/constants');
+} from '../utils/constants';
 
 /**
  * Validates a step's question options by insuring that all of the
  * indices are unique.
  * @returns True if valid, false otherwise.
  */
-module.exports.validateOptions = (questionOptionSchema) => {
+export const validateOptions = (questionOptions: InferSchemaType<typeof questionOptionSchema>[]) => {
     const questionIndex = Object.create(null);
-    for (let i = 0; i < questionOptionSchema.length; ++i) {
+    for (let i = 0; i < questionOptions.length; ++i) {
         // Check if we've already seen this index
-        const value = questionOptionSchema[i];
+        const value = questionOptions[i];
         if (value.Index in questionIndex) return false;
 
         // Else, track this index and continue
@@ -29,12 +29,9 @@ module.exports.validateOptions = (questionOptionSchema) => {
 /**
  * Checks if the step number is unique among all other steps. This
  * function is meant to be called in transactions.
- * @param {Number} stepNumber The step number to check.
- * @param {String} stepKey The stepKey for the step we're validating.
- * @param {Object} session The session object for this transaction.
  * @returns True if the step number is unique.
  */
-const isUniqueStepNumber = async (stepNumber, stepKey, session) => {
+export const isUniqueStepNumber = async (stepNumber: number, stepKey: string, session?: ClientSession) => {
     // Find all steps with this step number
     const steps = await mongoose.connection.db
         .collection(STEPS_COLLECTION_NAME)
@@ -54,7 +51,7 @@ const isUniqueStepNumber = async (stepNumber, stepKey, session) => {
 /**
  * Schema for a question option. E.g. radio button field.
  */
-module.exports.questionOptionSchema = new mongoose.Schema({
+export const questionOptionSchema = new mongoose.Schema({
     Index: { type: Number, required: true },
     IsHidden: { type: Boolean, required: true, default: false },
     Question: { type: languageSchema, required: true },
@@ -65,12 +62,12 @@ module.exports.questionOptionSchema = new mongoose.Schema({
  * and indices.
  * @returns True if valid, false otherwise.
  */
-const validateStep = (fieldSchema) => {
+const validateStep = (field: InferSchemaType<typeof fieldSchema>[]) => {
     const fieldNumbers = Object.create(null);
     const fieldKeys = Object.create(null);
-    for (let i = 0; i < fieldSchema.length; ++i) {
+    for (let i = 0; i < field.length; ++i) {
         // Check if we've already seen this fieldNumber or fieldKey
-        const value = fieldSchema[i];
+        const value = field[i];
         if (value.fieldNumber in fieldNumbers || value.key in fieldKeys) {
             return false;
         }
@@ -86,7 +83,7 @@ const validateStep = (fieldSchema) => {
 /**
  * Schema for an individual field in a step.
  */
-const fieldSchema = new mongoose.Schema({
+export const fieldSchema = new mongoose.Schema({
     fieldNumber: { type: Number, required: true },
     key: { type: String, required: true },
     fieldType: {
@@ -96,9 +93,9 @@ const fieldSchema = new mongoose.Schema({
         required: true,
     },
     options: {
-        type: [this.questionOptionSchema],
+        type: [questionOptionSchema],
         validate: {
-            validator: this.validateOptions,
+            validator: validateOptions,
             message: 'Index must be unique',
         },
         required: false,
@@ -123,6 +120,10 @@ fieldSchema.add({
     },
 });
 
+export type FieldSchema = InferSchemaType<typeof fieldSchema> & {
+    subFields?: FieldSchema[];
+};
+
 /**
  * Schema for a step's metadata.
  */
@@ -146,14 +147,16 @@ const stepSchema = new mongoose.Schema({
     isDeleted: { type: Boolean, required: false, default: false },
 });
 
+export type StepSchema = Omit<InferSchemaType<typeof stepSchema>, 'fields'> & {
+    fields: FieldSchema[]
+};
+
 // Run validator when stepNumber is changed.
 stepSchema.path('stepNumber').validate(async function () {
     return isUniqueStepNumber(this.stepNumber, this.key);
 });
 
 // This must be at end of file so that isUniqueStepNumber is bound in the stepNumber validator
-module.exports.isUniqueStepNumber = isUniqueStepNumber;
-module.exports.Step = mongoose.model(STEPS_COLLECTION_NAME, stepSchema);
-
-module.exports.FIELD_NUMBER_KEY = 'fieldNumber';
-module.exports.STEP_NUMBER_KEY = 'stepNumber';
+export const Step = mongoose.model(STEPS_COLLECTION_NAME, stepSchema);
+export const FIELD_NUMBER_KEY = 'fieldNumber';
+export const STEP_NUMBER_KEY = 'stepNumber';

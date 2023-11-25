@@ -168,7 +168,7 @@ export const ROLE_TABLE_ROW_DATA = [
 /**
  * List of different access levels. Must match the backend.
  */
-export const ACCESS_LEVELS = {
+export const AccessLevel = {
     GRANTED: 'Granted',
     REVOKED: 'Revoked',
     PENDING: 'Pending',

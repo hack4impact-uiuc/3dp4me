@@ -1,13 +1,12 @@
-const mongoose = require('mongoose');
+import mongoose, { Schema } from 'mongoose';
+import { ERR_LANGUAGE_VALIDATION_FAILED } from '../utils/constants';
 
-const { ERR_LANGUAGE_VALIDATION_FAILED } = require('../utils/constants');
-
-const validateLanguage = (languageScheme) => languageScheme !== '';
+const validateLanguage = (languageScheme: string) => languageScheme !== '';
 
 /**
  * Used for any language field to support both English and Arabic.
  */
-module.exports.languageSchema = new mongoose.Schema({
+export const languageSchema = new mongoose.Schema({
     EN: {
         type: String,
         validate: {

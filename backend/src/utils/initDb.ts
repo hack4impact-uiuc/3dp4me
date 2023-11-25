@@ -1,27 +1,28 @@
-const log = require('loglevel');
-const _ = require('lodash');
-const encrypt = require('mongoose-encryption');
-const mongoose = require('mongoose');
+import log from 'loglevel';
+import _ from 'lodash';
+import encrypt from 'mongoose-encryption';
+import mongoose, { Schema, SchemaDefinition, SchemaDefinitionProperty } from 'mongoose';
 
-const { models } = require('../models');
-const { signatureSchema } = require('../schemas/signatureSchema');
-const { fileSchema } = require('../schemas/fileSchema');
+import { signatureSchema } from '../schemas/signatureSchema';
+import { fileSchema } from '../schemas/fileSchema';
 
-const { STEP_STATUS_ENUM, FIELDS } = require('./constants');
+import { STEP_STATUS_ENUM, FIELDS } from './constants';
+import { FieldSchema, Step, StepSchema, fieldSchema } from '../models/Metadata';
+import { InferSchemaType } from 'mongoose';
 
 /**
  * Initalizes and connects to the DB. Should be called at app startup.
  */
-module.exports.initDB = (callback) => {
-    mongoose.connect(process.env.DB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+export const initDB = (callback: Function) => {
+    mongoose.connect(process.env.DB_URI!, {
+        // useNewUrlParser: true,
+        // useUnifiedTopology: true,
     });
 
     mongoose.connection
         .once('open', () => {
             log.info('Connected to the DB');
-            this.initModels();
+            initModels();
             callback?.();
         })
         .on('error', (error) =>
@@ -30,31 +31,31 @@ module.exports.initDB = (callback) => {
 };
 
 const clearModels = async () => {
-    const steps = await models.Step.find();
+    const steps = await Step.find();
     steps.forEach((step) => {
+        // @ts-ignore
         delete mongoose.connection.models[step.key];
     });
 };
 
-module.exports.reinitModels = async () => {
+export const reinitModels = async () => {
     await clearModels();
-    await this.initModels();
+    await initModels();
 };
 
 /**
  * Initializes all of the dynamic models in the DB. Should be called immediately after initDB.
  */
-module.exports.initModels = async () => {
-    const steps = await models.Step.find();
-    steps.forEach((step) => this.generateSchemaFromMetadata(step));
+export const initModels = async () => {
+    const steps = await Step.find();
+    steps.forEach((step) => generateSchemaFromMetadata(step));
 };
 
 /**
  * Generate and registers a schema based off the provided metadata.
  */
-module.exports.generateSchemaFromMetadata = (stepMetadata) => {
-    let stepSchema = getStepBaseSchema();
-    stepSchema = generateFieldsFromMetadata(stepMetadata.fields, stepSchema);
+export const generateSchemaFromMetadata = (stepMetadata: StepSchema) => {
+    const stepSchema = generateFieldsFromMetadata(stepMetadata.fields, getStepBaseSchema());
     const schema = new mongoose.Schema(stepSchema);
 
     schema.plugin(encrypt, {
@@ -69,7 +70,7 @@ module.exports.generateSchemaFromMetadata = (stepMetadata) => {
  * Returns a list of keys that are included in the base schema for a step.
  * @returns An array of strings
  */
-module.exports.getStepBaseSchemaKeys = () => {
+export const getStepBaseSchemaKeys = () => {
     const baseSchema = getStepBaseSchema();
     const keys = Object.keys(baseSchema);
     keys.push('_id');
@@ -81,21 +82,21 @@ module.exports.getStepBaseSchemaKeys = () => {
  * for the field name across the entire project to find references before changing something.
  */
 const getStepBaseSchema = () => {
-    const stepSchema = {};
-    stepSchema.patientId = { type: String, required: true, unique: true };
-    stepSchema.lastEdited = { type: Date, required: true, default: Date.now };
-    stepSchema.status = {
-        type: String,
-        required: true,
-        enum: Object.values(STEP_STATUS_ENUM),
-        default: STEP_STATUS_ENUM.UNFINISHED,
+    return {
+        patientId: { type: String, required: true, unique: true },
+        lastEdited: { type: Date, required: true, default: Date.now },
+        status: {
+            type: String,
+            required: true,
+            enum: Object.values(STEP_STATUS_ENUM),
+            default: STEP_STATUS_ENUM.UNFINISHED,
+        },
+        lastEditedBy: {
+            type: String,
+            required: true,
+            default: 'Admin',
+        }
     };
-    stepSchema.lastEditedBy = {
-        type: String,
-        required: true,
-        default: 'Admin',
-    };
-    return stepSchema;
 };
 
 /**
@@ -103,7 +104,7 @@ const getStepBaseSchema = () => {
  * @param {String} field Field type (see constants.js).
  * @returns An object describing the field schema.
  */
-module.exports.generateFieldSchema = (field) => {
+export const generateFieldSchema = (field: FieldSchema): SchemaDefinitionProperty | null => {
     switch (field.fieldType) {
         case FIELDS.STRING:
             return getStringSchema();
@@ -130,7 +131,7 @@ module.exports.generateFieldSchema = (field) => {
         case FIELDS.DIVIDER:
             return null;
         case FIELDS.MAP:
-            return getMapSchema(field);
+            return getMapSchema();
         default:
             log.error(`Unrecognized field type, ${field.fieldType}`);
             return null;
@@ -152,7 +153,7 @@ const getDateSchema = () => ({
     default: Date.now,
 });
 
-const getRadioButtonSchema = (fieldMetadata) => {
+const getRadioButtonSchema = (fieldMetadata: FieldSchema) => {
     if (!fieldMetadata?.options?.length) {
         throw new Error('Radio button must have options');
     }
@@ -163,7 +164,7 @@ const getRadioButtonSchema = (fieldMetadata) => {
     };
 };
 
-const getFieldGroupSchema = (fieldMetadata) => {
+const getFieldGroupSchema = (fieldMetadata: FieldSchema) => {
     // Field groups can have 0 sub fields.
     if (!fieldMetadata?.subFields) {
         throw new Error('Field groups must have sub fields');
@@ -181,7 +182,7 @@ const getFileSchema = () => ({
     default: [],
 });
 
-const getSignatureSchema = (fieldMetadata) => {
+const getSignatureSchema = (fieldMetadata: FieldSchema) => {
     const defaultURL = fieldMetadata?.additionalData?.defaultDocumentURL;
     if (!defaultURL?.EN || !defaultURL?.AR) {
         throw new Error(
@@ -199,13 +200,16 @@ const getMapSchema = () => ({
     },
 });
 
-const generateFieldsFromMetadata = (fieldsMetadata, schema = {}) => {
-    const updatedSchema = _.cloneDeep(schema);
+const generateFieldsFromMetadata = (fieldsMetadata: FieldSchema[], baseSchema = {}) => {
+    const generatedSchema = fieldsMetadata.map((field) => {
+        const s = generateFieldSchema(field);
+        if (!s)
+            return null
 
-    fieldsMetadata.forEach((field) => {
-        const generatedSchema = this.generateFieldSchema(field);
-        if (generatedSchema) updatedSchema[field.key] = generatedSchema;
+        return {
+            [field.key]: s
+        }
     });
 
-    return updatedSchema;
+    return Object.assign(_.cloneDeep(baseSchema), ...generatedSchema)
 };

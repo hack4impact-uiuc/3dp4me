@@ -1,11 +1,11 @@
-import { ACCESS_LEVELS, COGNITO_ATTRIBUTES } from '../utils/constants';
+import { AccessLevel, COGNITO_ATTRIBUTES } from '../utils/constants';
 
 const getAttr = (user, atr) => {
     return user?.Attributes?.find((attribute) => attribute.Name === atr)?.Value;
 };
 
 export const getAccessLevel = (user) => {
-    return getAttr(user, COGNITO_ATTRIBUTES.ACCESS) || ACCESS_LEVELS.PENDING;
+    return getAttr(user, COGNITO_ATTRIBUTES.ACCESS) || AccessLevel.PENDING;
 };
 
 export const getName = (user) => {

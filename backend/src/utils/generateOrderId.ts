@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
-const pad = require('pad');
-
-const { Patient } = require('../models/Patient');
+import pad from 'pad';
+import { Patient } from '../models/Patient';
+import { ClientSession } from 'mongoose';
 
 const ALPHABET = [
     'A',
@@ -33,7 +33,7 @@ const ALPHABET = [
 ];
 const STARTING_YEAR = 2023;
 
-const generateOrderId = async (session) => {
+export const generateOrderId = async (session: ClientSession) => {
     const currentYear = new Date().getFullYear();
     const numOrdersInYear = await Patient.count({ orderYear: currentYear });
     let offset = 1;
@@ -63,8 +63,4 @@ const generateOrderId = async (session) => {
 const getYearLetter = () => {
     const year = new Date().getFullYear();
     return ALPHABET[(year - STARTING_YEAR) % ALPHABET.length];
-};
-
-module.exports = {
-    generateOrderId,
 };

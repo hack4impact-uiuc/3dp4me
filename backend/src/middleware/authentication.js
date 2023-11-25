@@ -2,7 +2,7 @@ const log = require('loglevel');
 
 const { getUserByAccessToken } = require('../utils/aws/awsUsers');
 const {
-    ACCESS_LEVELS,
+    AccessLevel,
     ERR_AUTH_FAILED,
     ERR_NOT_APPROVED,
     ADMIN_ID,
@@ -20,7 +20,7 @@ module.exports.requireAuthentication = async (req, res, next) => {
         const user = await getUserFromRequest(req);
         if (!user) {
             sendResponse(res, 401, ERR_AUTH_FAILED);
-        } else if (user.accessLevel !== ACCESS_LEVELS.GRANTED) {
+        } else if (user.accessLevel !== AccessLevel.GRANTED) {
             sendResponse(res, 403, ERR_NOT_APPROVED);
         } else {
             req.user = user;

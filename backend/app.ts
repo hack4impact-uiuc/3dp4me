@@ -1,23 +1,23 @@
-require('express-async-errors');
-require('dotenv').config({ path: `${process.env.NODE_ENV}.env` });
-require('./utils/aws/awsSetup');
-const path = require('path');
+import "express-async-errors"
+import "./src/utils/aws/awsSetup"
+import path from "path"
+import routes from "./src/routes"
 
-const log = require('loglevel');
-const express = require('express');
-const fileUpload = require('express-fileupload');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+import log from "loglevel"
+import express from 'express'
+import fileUpload from "express-fileupload"
+import cors from "cors"
+import bodyParser from "body-parser"
 
-const { errorHandler } = require('./utils');
-const { requireAuthentication } = require('./middleware/authentication');
-const { initDB } = require('./utils/initDb');
-const {
+import { errorHandler } from './src/utils';
+import { requireAuthentication } from './src/middleware/authentication';
+import { initDB } from './src/utils/initDb';
+import {
     setResponseHeaders,
     configureHelment,
-} = require('./middleware/responses');
-const { logRequest } = require('./middleware/logging');
-const { ENV_TEST } = require('./utils/constants');
+} from './src/middleware/responses'
+import { logRequest } from './src/middleware/logging';
+import { ENV_TEST } from './src/utils/constants';
 
 const app = express();
 
@@ -47,7 +47,7 @@ app.get('/*', (req, res, next) => {
 
 app.use(requireAuthentication);
 app.use(logRequest);
-app.use(require('./routes'));
+app.use(routes);
 
 app.use(errorHandler);
 
@@ -55,4 +55,4 @@ process.on('unhandledRejection', (reason) => {
     log.error(`UNHANDLED REJECTION: ${reason}`);
 });
 
-module.exports = app;
+export default app

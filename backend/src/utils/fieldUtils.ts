@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose"
 
-const { models } = require('../models');
+import { models } from '../models';
 
-const { isAdmin } = require('./aws/awsUsers');
-const { generateFieldSchema } = require('./initDb');
-const { abortAndError } = require('./transactionUtils');
+import { isAdmin } from './aws/awsUsers';
+import { generateFieldSchema } from './initDb';
+import { abortAndError } from './transactionUtils';
 
 /**
  * Returns the keys of all fields writable by a user in a step.
@@ -12,7 +12,7 @@ const { abortAndError } = require('./transactionUtils');
  * @param {String} stepKey The key of the step to check.
  * @returns Array of strings. Each entry is a fieldKey that is writable.
  */
-module.exports.getWritableFields = async (user, stepKey) => {
+export const getWritableFields = async (user, stepKey) => {
     const fields = await getWritableFieldsInStep(user, stepKey);
     return fields.concat(['status']);
 };
@@ -44,7 +44,7 @@ const getWritableFieldsInStep = async (user, stepKey) => {
  * @param {String} fieldKey The fieldKey within the step.
  * @returns True if readable.
  */
-module.exports.isFieldReadable = async (user, stepKey, fieldKey) => {
+export const isFieldReadable = async (user, stepKey, fieldKey) => {
     if (isAdmin(user)) return true;
 
     const fieldData = await getFieldMetadata(stepKey, fieldKey);
@@ -62,7 +62,7 @@ module.exports.isFieldReadable = async (user, stepKey, fieldKey) => {
  * @param {String} fieldKey The fieldKey within the step.
  * @returns True if writable.
  */
-module.exports.isFieldWritable = async (user, stepKey, fieldKey) => {
+export const isFieldWritable = async (user, stepKey, fieldKey) => {
     if (isAdmin(user)) return true;
 
     const fieldData = await getFieldMetadata(stepKey, fieldKey);
@@ -80,7 +80,7 @@ const getFieldMetadata = async (stepKey, fieldKey) => {
     return stepData?.fields?.find((f) => f.key === fieldKey);
 };
 
-module.exports.getFieldByKey = (objectList, key) => {
+export const getFieldByKey = (objectList, key) => {
     if (!objectList) {
         return null;
     }
@@ -94,7 +94,7 @@ module.exports.getFieldByKey = (objectList, key) => {
     return null;
 };
 
-module.exports.addFieldsToSchema = (stepKey, addedFields) => {
+export const addFieldsToSchema = (stepKey, addedFields) => {
     // Create a schema for the new fields
     const schemaUpdate = {};
     addedFields.forEach((field) => {
@@ -108,7 +108,7 @@ module.exports.addFieldsToSchema = (stepKey, addedFields) => {
 
 // Disabling no await because the await only gets called if an error is thrown
 /* eslint-disable no-await-in-loop */
-module.exports.getAddedFields = async (session, oldFields, newFields) => {
+export const getAddedFields = async (session, oldFields, newFields) => {
     // Build up a list of al the new fields added
     const addedFields = [];
     for (let i = 0; i < newFields.length; ++i) {

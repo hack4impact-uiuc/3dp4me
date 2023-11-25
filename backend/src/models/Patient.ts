@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const encrypt = require('mongoose-encryption');
+import mongoose from 'mongoose';
+import encrypt from 'mongoose-encryption';
 
-const { PATIENT_STATUS_ENUM } = require('../utils/constants');
+import { PATIENT_STATUS_ENUM } from '../utils/constants';
 
 const UNECRYPTED_FIELDS = [
     'dateCreated',
@@ -44,4 +44,4 @@ patientSchema.plugin(encrypt, {
     excludeFromEncryption: UNECRYPTED_FIELDS,
 });
 
-module.exports.Patient = mongoose.model('Patient', patientSchema, 'Patient');
+export const Patient = mongoose.model('Patient', patientSchema, 'Patient');
