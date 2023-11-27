@@ -1,7 +1,6 @@
 import _ from 'lodash';
 
 import { removeAttributesFrom } from '../middleware/requests'
-import { models } from '../models';
 import {
     isUniqueStepNumber,
     FIELD_NUMBER_KEY,
@@ -16,22 +15,13 @@ import {
     generateKeyWithoutCollision,
     checkNumOccurencesInList,
 } from './keyUtils';
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { queryParamToBool } from './request';
+import { AuthenticatedRequest } from '../middleware/types';
 
-const stringToBoolean = (value: string) => {
-    const trimmedValue = value.toString().trim().toLowerCase();
-    return !(
-        trimmedValue === 'false' ||
-        trimmedValue === '0' ||
-        trimmedValue === ''
-    );
-};
-
-export const getReadableSteps = async (req: Request) => {
-    let shouldShowHiddenFields = req.query.showHiddenFields ?? 'false';
-    let shouldShowHiddenSteps = req.query.showHiddenSteps ?? 'false';
-    shouldShowHiddenFields = stringToBoolean(shouldShowHiddenFields);
-    shouldShowHiddenSteps = stringToBoolean(shouldShowHiddenSteps);
+export const getReadableSteps = async (req: AuthenticatedRequest) => {
+    const shouldShowHiddenFields = queryParamToBool(req.query.showHiddenFields ?? "false");
+    const shouldShowHiddenSteps = queryParamToBool(req.query.showHiddenSteps ?? "false");
 
     const userRole = req.user.roles.toString();
 
