@@ -1,6 +1,6 @@
 import mongoose, { ClientSession, InferSchemaType } from 'mongoose';
 
-import { languageSchema } from '../schemas/languageSchema';
+import { TranslatedString, languageSchema } from '../schemas/languageSchema';
 import {
     FIELDS,
     ERR_FIELD_VALIDATION_FAILED,
@@ -48,6 +48,12 @@ export const isUniqueStepNumber = async (stepNumber: number, stepKey: string, se
     return steps[0].key === stepKey;
 };
 
+export interface QuestionOption {
+    Index: number,
+    IsHidden: boolean,
+    Question: TranslatedString
+}
+
 /**
  * Schema for a question option. E.g. radio button field.
  */
@@ -79,6 +85,21 @@ const validateStep = (field: InferSchemaType<typeof fieldSchema>[]) => {
 
     return true;
 };
+
+export interface Field {
+    fieldNumber: number,
+    key: string,
+    fieldType: FIELDS,
+    options: QuestionOption[],
+    isVisibleOnDashboard: boolean,
+    displayName: TranslatedString,
+    readableGroups: string[],
+    writableGroups: string[],
+    isHidden: boolean,
+    isDeleted: boolean,
+    additionalData: any
+    subFields: Field[]
+}
 
 /**
  * Schema for an individual field in a step.
@@ -120,9 +141,17 @@ fieldSchema.add({
     },
 });
 
-export type FieldSchema = InferSchemaType<typeof fieldSchema> & {
-    subFields?: FieldSchema[];
-};
+export interface Step {
+    key: string,
+    displayName: TranslatedString,
+    stepNumber: number,
+    readableGroups: string[],
+    writableGroups: string[],
+    defaultToListView: boolean,
+    fields: Field[]
+    isHidden: boolean,
+    isDeleted: boolean
+}
 
 /**
  * Schema for a step's metadata.
@@ -147,9 +176,6 @@ const stepSchema = new mongoose.Schema({
     isDeleted: { type: Boolean, required: false, default: false },
 });
 
-export type StepSchema = Omit<InferSchemaType<typeof stepSchema>, 'fields'> & {
-    fields: FieldSchema[]
-};
 
 // Run validator when stepNumber is changed.
 stepSchema.path('stepNumber').validate(async function () {
@@ -157,6 +183,6 @@ stepSchema.path('stepNumber').validate(async function () {
 });
 
 // This must be at end of file so that isUniqueStepNumber is bound in the stepNumber validator
-export const Step = mongoose.model(STEPS_COLLECTION_NAME, stepSchema);
+export const StepModel = mongoose.model<Step>(STEPS_COLLECTION_NAME, stepSchema);
 export const FIELD_NUMBER_KEY = 'fieldNumber';
 export const STEP_NUMBER_KEY = 'stepNumber';

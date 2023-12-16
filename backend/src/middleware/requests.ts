@@ -17,5 +17,5 @@ export const removeRequestAttributes = (attributes: string[]) => (req: Request, 
  * @param {Array} attributes String array of attributes to remove
  * @returns
  */
-export const removeAttributesFrom = (obj: Record<string, any>, attributes: string[]) =>
+export const removeAttributesFrom = <T extends object, K extends keyof T>(obj: T, attributes: K[]): Omit<T, K> =>
     _.omit(obj, attributes);

@@ -3,6 +3,11 @@ import { ERR_LANGUAGE_VALIDATION_FAILED } from '../utils/constants';
 
 const validateLanguage = (languageScheme: string) => languageScheme !== '';
 
+export interface TranslatedString {
+    EN: string,
+    AR: string
+}
+
 /**
  * Used for any language field to support both English and Arabic.
  */
