@@ -44,4 +44,4 @@ patientSchema.plugin(encrypt, {
     excludeFromEncryption: UNECRYPTED_FIELDS,
 });
 
-export const Patient = mongoose.model('Patient', patientSchema, 'Patient');
+export const PatientModel = mongoose.model('Patient', patientSchema, 'Patient');
