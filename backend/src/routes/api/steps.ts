@@ -1,15 +1,18 @@
-const express = require('express');
+import { Patient, PatientModel } from "../../models/Patient";
+import { AuthenticatedRequest } from "../../middleware/types";
+import { HydratedDocument } from 'mongoose';
 
-const router = express.Router();
-const mongoose = require('mongoose');
-
-const { errorWrap } = require('../../utils');
-const { models } = require('../../models');
-const { PATIENT_STATUS_ENUM } = require('../../utils/constants');
-const {
+import express, { Response } from 'express';
+import mongoose from 'mongoose';
+import { PATIENT_STATUS_ENUM } from '../../utils/constants';
+import {
     sendResponse,
     getDataFromModelWithPaginationAndSearch,
-} = require('../../utils/response');
+} from '../../utils/response';
+import errorWrap from "../../utils/errorWrap";
+import { StepModel } from "../../models/Metadata";
+
+export const router = express.Router();
 
 /**
  * Returns basic information for all patients that are active in
@@ -19,16 +22,16 @@ const {
  */
 router.get(
     '/:stepKey',
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { stepKey } = req.params;
 
-        const steps = await models.Step.find({ key: stepKey });
+        const steps = await StepModel.find({ key: stepKey });
 
         // Check if step exists
         if (steps.length === 0) return sendResponse(res, 404, 'Step not found');
 
         // Get model
-        let model;
+        let model: HydratedDocument<any>;
         try {
             model = mongoose.model(stepKey);
         } catch (error) {
@@ -36,7 +39,7 @@ router.get(
         }
 
         const getPatientDataResponse =
-            await getDataFromModelWithPaginationAndSearch(req, models.Patient, {
+            await getDataFromModelWithPaginationAndSearch(req, PatientModel, {
                 status: PATIENT_STATUS_ENUM.ACTIVE,
             });
 
@@ -44,7 +47,7 @@ router.get(
         const countTotalPatients = getPatientDataResponse.count;
 
         // Create array of promises to speed this up a bit
-        const lookups = patients.map(async (p) => {
+        const lookups = patients.map(async (p: HydratedDocument<Patient>) => {
             const stepInfo = await model.findOne({
                 patientId: p._id.toString(),
             });

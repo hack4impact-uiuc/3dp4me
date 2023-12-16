@@ -20,4 +20,4 @@ const roleSchema = new mongoose.Schema({
     isMutable: { type: Boolean, required: false, default: true },
 });
 
-export const Role = mongoose.model('Role', roleSchema, 'Role');
+export const RoleModel = mongoose.model('Role', roleSchema, 'Role');

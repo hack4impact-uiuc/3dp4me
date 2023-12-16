@@ -46,7 +46,7 @@ app.get('/*', (req, res, next) => {
 });
 
 app.use(requireAuthentication);
-app.use(logRequest);
+app.use(logRequest as any);
 app.use(routes);
 
 app.use(errorHandler);

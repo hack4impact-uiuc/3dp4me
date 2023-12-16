@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { InferSchemaType } from 'mongoose';
 import encrypt from 'mongoose-encryption';
 
 import { PATIENT_STATUS_ENUM } from '../utils/constants';
@@ -44,4 +44,5 @@ patientSchema.plugin(encrypt, {
     excludeFromEncryption: UNECRYPTED_FIELDS,
 });
 
+export type Patient = InferSchemaType<typeof patientSchema>;
 export const PatientModel = mongoose.model('Patient', patientSchema, 'Patient');

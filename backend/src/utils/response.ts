@@ -9,7 +9,7 @@ import { Model } from 'mongoose';
  * @param {String} message The message to send.
  * @param {Object} data The optional data to send back.
  */
-export const sendResponse = (res: Response, code: number, message: string, data: Record<string, any> = {}) => {
+export const sendResponse = (res: Response, code: number, message: string, data: any = {}) => {
     return res.status(code).json({
         success: isCodeSuccessful(code),
         message,

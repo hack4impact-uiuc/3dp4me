@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { InferSchemaType } from 'mongoose';
 
 /**
  * Schema for storing files. The file contents are stored in S3, this records
@@ -9,3 +9,4 @@ export const fileSchema = new mongoose.Schema({
     uploadedBy: { type: String, required: true },
     uploadDate: { type: Date, required: true },
 });
+export type FileData = InferSchemaType<typeof fileSchema>;

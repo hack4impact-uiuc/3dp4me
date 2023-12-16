@@ -1,18 +1,18 @@
-const express = require('express');
+import express, {Response} from 'express';
+import { requireAdmin } from '../../middleware/authentication';
+import { sendResponse } from '../../utils/response';
+import errorWrap from '../../utils/errorWrap';
+import { AuthenticatedRequest } from '../../middleware/types';
+import { RoleModel } from '../../models/Role';
 
-const router = express.Router();
-const { errorWrap } = require('../../utils');
-const { models } = require('../../models/index');
-const { requireAdmin } = require('../../middleware/authentication');
-const { sendResponse } = require('../../utils/response');
-
+export const router = express.Router();
 /**
  * Returns all roles in the DB.
  */
 router.get(
     '/',
-    errorWrap(async (req, res) => {
-        const roles = await models.Role.find({});
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
+        const roles = await RoleModel.find({});
         return sendResponse(res, 200, '', roles);
     }),
 );
@@ -22,9 +22,9 @@ router.get(
  */
 router.post(
     '/',
-    requireAdmin,
-    errorWrap(async (req, res) => {
-        const newRole = new models.Role(req.body);
+    requireAdmin as any,
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
+        const newRole = new RoleModel(req.body);
         const savedRole = await newRole.save();
         return sendResponse(res, 200, 'Role created', savedRole);
     }),
@@ -36,15 +36,15 @@ router.post(
  */
 router.put(
     '/:roleId',
-    requireAdmin,
-    errorWrap(async (req, res) => {
+    requireAdmin as any,
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { roleId } = req.params;
-        const role = await models.Role.findById(roleId);
+        const role = await RoleModel.findById(roleId);
         if (!role) return sendResponse(res, 404, `Role ${roleId} not found`);
 
         if (!role.isMutable) return sendResponse(res, 403, 'Role is immutable');
 
-        const result = await models.Role.findByIdAndUpdate(
+        const result = await RoleModel.findByIdAndUpdate(
             roleId,
             { $set: req.body },
             { new: true },
@@ -59,15 +59,15 @@ router.put(
  */
 router.delete(
     '/:roleId',
-    requireAdmin,
-    errorWrap(async (req, res) => {
+    requireAdmin as any,
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { roleId } = req.params;
-        const role = await models.Role.findById(roleId);
+        const role = await RoleModel.findById(roleId);
         if (!role) return sendResponse(res, 404, `Role ${roleId} not found`);
 
         if (!role.isMutable) return sendResponse(res, 403, 'Role is immutable');
 
-        await models.Role.findByIdAndDelete(roleId);
+        await RoleModel.findByIdAndDelete(roleId);
         return sendResponse(res, 200, 'Role deleted');
     }),
 );

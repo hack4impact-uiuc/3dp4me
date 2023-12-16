@@ -1,44 +1,48 @@
-const express = require('express');
-const mongoose = require('mongoose');
+import express, { Request, Response } from 'express';
+import mongoose from 'mongoose';
 
-const router = express.Router();
-const _ = require('lodash');
-
-const { errorWrap } = require('../../utils');
-const { models } = require('../../models');
-const {
+import _ from 'lodash';
+import {
     uploadFile,
     downloadFile,
     deleteFile,
     deleteFolder,
-} = require('../../utils/aws/awsS3Helpers');
-const { removeRequestAttributes } = require('../../middleware/requests');
-const {
+} from '../../utils/aws/awsS3Helpers';
+import { removeRequestAttributes } from '../../middleware/requests';
+import {
     STEP_IMMUTABLE_ATTRIBUTES,
     PATIENT_IMMUTABLE_ATTRIBUTES,
-} = require('../../utils/constants');
-const {
+} from '../../utils/constants';
+import {
     sendResponse,
     getDataFromModelWithPaginationAndSearch,
-} = require('../../utils/response');
-const { getReadableSteps } = require('../../utils/stepUtils');
-const { getStepBaseSchemaKeys } = require('../../utils/initDb');
-const {
+} from '../../utils/response';
+import { getReadableSteps } from '../../utils/stepUtils';
+import { getStepBaseSchemaKeys } from '../../utils/initDb';
+import {
     isFieldReadable,
     isFieldWritable,
     getWritableFields,
-} = require('../../utils/fieldUtils');
-const { generateOrderId } = require('../../utils/generateOrderId');
+} from '../../utils/fieldUtils';
+import { generateOrderId } from '../../utils/generateOrderId';
+import errorWrap from '../../utils/errorWrap';
+import { AuthenticatedRequest } from '../../middleware/types';
+import { PatientModel } from '../../models/Patient';
+import { Patient } from '../../models/Patient';
+import { Field, StepModel } from '../../models/Metadata';
+import { HydratedDocument } from 'mongoose';
+import { FileData } from '../../schemas/fileSchema';
 
+export const router = express.Router();
 /**
  * Returns everything in the patients collection (basic patient info)
  */
 router.get(
     '/',
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const patientData = await getDataFromModelWithPaginationAndSearch(
             req,
-            models.Patient,
+            PatientModel,
         );
         await sendResponse(res, 200, '', patientData);
     }),
@@ -50,8 +54,8 @@ router.get(
 
 router.get(
     '/count',
-    errorWrap(async (req, res) => {
-        const patientCount = await models.Patient.count();
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
+        const patientCount = await PatientModel.count();
         return sendResponse(res, 200, 'success', patientCount);
     }),
 );
@@ -62,11 +66,11 @@ router.get(
  * */
 router.get(
     '/:id',
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id } = req.params;
 
         // Check if patient exists
-        const patientData = await models.Patient.findById(id);
+        const patientData = await PatientModel.findById(id);
         if (!patientData)
             return sendResponse(res, 404, `Patient with id ${id} not found`);
 
@@ -87,7 +91,7 @@ router.get(
             }
 
             // The user can read any field returned by getReadableSteps
-            let readableFields = step.fields.map((f) => f.key);
+            let readableFields = step.fields.map((f: Field) => f.key);
             readableFields = readableFields.concat(getStepBaseSchemaKeys());
             stepData = stepData.toObject();
 
@@ -111,9 +115,9 @@ router.get(
 router.post(
     '/',
     removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const patient = req.body;
-        let newPatient = null;
+        let newPatient: HydratedDocument<Patient> | null = null;
 
         try {
             req.body.lastEditedBy = req.user.name;
@@ -121,7 +125,7 @@ router.post(
             await mongoose.connection.transaction(async (session) => {
                 patient.orderYear = new Date().getFullYear();
                 patient.orderId = await generateOrderId(session);
-                newPatient = new models.Patient(patient);
+                newPatient = new PatientModel(patient);
                 await newPatient.save({ session });
             });
         } catch (error) {
@@ -139,15 +143,15 @@ router.post(
 router.put(
     '/:id',
     removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id } = req.params;
-        const patient = await models.Patient.findById(id);
+        const patient = await PatientModel.findById(id);
         if (!patient)
             return sendResponse(res, 404, `Patient "${id}" not found`);
 
         // Copy over the attributes from the request
         _.assign(patient, req.body);
-        patient.lastEdited = Date.now();
+        patient.lastEdited = new Date();
         patient.lastEditedBy = req.user.name;
 
         // Update the patient
@@ -163,7 +167,7 @@ router.put(
  */
 router.get(
     '/:id/files/:stepKey/:fieldKey/:fileName',
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
 
         const isReadable = await isFieldReadable(req.user, stepKey, fieldKey);
@@ -198,11 +202,11 @@ router.get(
  */
 router.delete(
     '/:id/files/:stepKey/:fieldKey/:fileName',
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
 
         // Get patient
-        const patient = await models.Patient.findById(id);
+        const patient = await PatientModel.findById(id);
         if (!patient)
             return sendResponse(res, 404, `Patient (${id}) not found`);
 
@@ -225,7 +229,7 @@ router.delete(
 
         // Get the file
         const index = stepData[fieldKey].findIndex(
-            (x) => x.filename === fileName,
+            (x: FileData) => x.filename === fileName,
         );
 
         if (index === -1) {
@@ -241,7 +245,7 @@ router.delete(
         await stepData.save();
 
         // Update patient's last edited
-        patient.lastEdited = Date.now();
+        patient.lastEdited = new Date()
         patient.lastEditedBy = req.user.name;
         await patient.save();
 
@@ -258,10 +262,10 @@ router.delete(
  */
 router.post(
     '/:id/files/:stepKey/:fieldKey/:fileName',
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         // TODO during refactoring: We upload file name in form data, is this even needed???
         const { id, stepKey, fieldKey, fileName } = req.params;
-        const patient = await models.Patient.findById(id);
+        const patient = await PatientModel.findById(id);
 
         // Make sure patient exists
         if (!patient)
@@ -288,8 +292,9 @@ router.post(
         stepData.patientId = id;
         if (!stepData[fieldKey]) stepData[fieldKey] = [];
 
+        // TODO: Better types
         // Upload the file to the S3
-        const file = req.files.uploadedFile;
+        const file = (req as any).files.uploadedFile;
         await uploadFile(file.data, `${id}/${stepKey}/${fieldKey}/${fileName}`);
 
         // Record this file in the DB
@@ -304,12 +309,12 @@ router.post(
 
         // TODO: Make this a middleware
         // Update step's last edited
-        stepData.lastEdited = Date.now();
+        stepData.lastEdited = new Date()
         stepData.lastEditedBy = req.user.name;
         await stepData.save();
 
         // Update patient's last edited
-        patient.lastEdited = Date.now();
+        patient.lastEdited = new Date()
         patient.lastEditedBy = req.user.name;
         await patient.save();
 
@@ -317,7 +322,7 @@ router.post(
         const respData = {
             name: fileName,
             uploadedBy: req.user.name,
-            uploadDate: Date.now(),
+            uploadDate: new Date(),
             mimetype: file.mimetype,
             size: file.size,
         };
@@ -332,11 +337,11 @@ router.post(
 router.post(
     '/:id/:stepKey',
     removeRequestAttributes(STEP_IMMUTABLE_ATTRIBUTES),
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id, stepKey } = req.params;
 
         // Make sure patient exists
-        const patient = await models.Patient.findById(id);
+        const patient = await PatientModel.findById(id);
         if (!patient)
             return sendResponse(res, 404, `Patient "${id}" not found`);
 
@@ -361,7 +366,7 @@ router.post(
         patientStepData = await patientStepData.save();
 
         // Update patient last edited
-        patient.lastEdited = Date.now();
+        patient.lastEdited = new Date()
         patient.lastEditedBy = req.user.name;
         await patient.save();
 
@@ -374,13 +379,13 @@ router.post(
  */
 router.delete(
     '/:id',
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id } = req.params;
 
         // Makes sure patient exists
         let patient;
         try {
-            patient = await models.Patient.findById(id);
+            patient = await PatientModel.findById(id);
         } catch {
             return sendResponse(res, 404, `${id} is not a valid patient id`);
         }
@@ -389,11 +394,11 @@ router.delete(
             return sendResponse(res, 404, `Patient "${id}" not found`);
 
         // Deletes the patient from the Patient Collection
-        await models.Patient.findOneAndDelete({
-            _id: mongoose.Types.ObjectId(id),
+        await PatientModel.findOneAndDelete({
+            _id: new mongoose.Types.ObjectId(id),
         });
 
-        const allStepKeys = await models.Step.find({}, 'key');
+        const allStepKeys = await StepModel.find({}, 'key');
 
         // Create array of promises to speed this up a bit
         const lookups = allStepKeys.map(async (stepKeyData) => {
@@ -423,7 +428,7 @@ router.delete(
     }),
 );
 
-const updatePatientStepData = async (patientId, StepModel, data) => {
+const updatePatientStepData = async (patientId: string, StepModel: typeof mongoose.Model, data: Record<string, number|string>) => {
     let patientStepData = await StepModel.findOne({ patientId });
 
     // If patient doesn't have step data, create it with constructor. Else update it.

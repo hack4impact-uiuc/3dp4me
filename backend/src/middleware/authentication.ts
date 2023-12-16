@@ -8,7 +8,7 @@ import {
     ADMIN_ID,
 } from '../utils/constants';
 import { sendResponse } from '../utils/response';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { AuthenticatedRequest } from './types';
 
 /**
