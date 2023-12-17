@@ -50,15 +50,15 @@
         "exceljs": "^4.4.0",
         "jest": "^27.0.6",
         "nodemon": "^2.0.4",
-        "typescript": "^5.3.2",
+        "typescript": "^5.3.3",
         "webpack": "^5.53.0",
         "webpack-cli": "^4.6.0"
     },
     "scripts": {
-        "dev": "cross-env NODE_ENV=development nodemon ./bin/www.ts",
+        "dev": "cross-env NODE_ENV=development nodemon ./src/index.ts",
         "export": "cross-env NODE_ENV=production node ./scripts/export_csv.js",
-        "build": "webpack ./bin/www",
-        "start": "tsc && doppler run -- node ./dst/bin/www.ts",
+        "build": "webpack ./src/index.ts",
+        "start": "tsc && doppler run -- node ./dist/src/index.js",
         "test": "cross-env S3_BUCKET_NAME=test jest --runInBand --forceExit",
         "lint": "eslint --fix \"./**/*.{js,jsx}\" -c .eslintrc.json",
         "lint:check": "eslint \"./**/*.{js,jsx}\" -c .eslintrc.json"
