@@ -1,10 +1,10 @@
-import mongoose from "mongoose"
-
-import { models } from '../models';
+import mongoose, { ClientSession, SchemaDefinitionProperty } from "mongoose"
 
 import { isAdmin } from './aws/awsUsers';
 import { generateFieldSchema } from './initDb';
 import { abortAndError } from './transactionUtils';
+import { StepModel, Field, Step } from '../models/Metadata';
+import { AuthenticatedUser } from "./aws/types";
 
 /**
  * Returns the keys of all fields writable by a user in a step.
@@ -12,13 +12,13 @@ import { abortAndError } from './transactionUtils';
  * @param {String} stepKey The key of the step to check.
  * @returns Array of strings. Each entry is a fieldKey that is writable.
  */
-export const getWritableFields = async (user, stepKey) => {
+export const getWritableFields = async (user: AuthenticatedUser, stepKey: string) => {
     const fields = await getWritableFieldsInStep(user, stepKey);
     return fields.concat(['status']);
 };
 
-const getWritableFieldsInStep = async (user, stepKey) => {
-    let stepData = await models.Step.findOne({ key: stepKey });
+const getWritableFieldsInStep = async (user: AuthenticatedUser, stepKey: string) => {
+    let stepData = await StepModel.findOne({ key: stepKey });
     if (!stepData) return [];
 
     // Return all fields if user is admin
@@ -44,7 +44,7 @@ const getWritableFieldsInStep = async (user, stepKey) => {
  * @param {String} fieldKey The fieldKey within the step.
  * @returns True if readable.
  */
-export const isFieldReadable = async (user, stepKey, fieldKey) => {
+export const isFieldReadable = async (user: AuthenticatedUser, stepKey: string, fieldKey: string) => {
     if (isAdmin(user)) return true;
 
     const fieldData = await getFieldMetadata(stepKey, fieldKey);
@@ -62,7 +62,7 @@ export const isFieldReadable = async (user, stepKey, fieldKey) => {
  * @param {String} fieldKey The fieldKey within the step.
  * @returns True if writable.
  */
-export const isFieldWritable = async (user, stepKey, fieldKey) => {
+export const isFieldWritable = async (user: AuthenticatedUser, stepKey: string, fieldKey: string) => {
     if (isAdmin(user)) return true;
 
     const fieldData = await getFieldMetadata(stepKey, fieldKey);
@@ -72,15 +72,15 @@ export const isFieldWritable = async (user, stepKey, fieldKey) => {
     return fieldData?.writableGroups?.some((g) => user.roles.includes(g));
 };
 
-const getFieldMetadata = async (stepKey, fieldKey) => {
-    let stepData = await models.Step.findOne({ key: stepKey });
+const getFieldMetadata = async (stepKey: string, fieldKey: string) => {
+    let stepData = await StepModel.findOne({ key: stepKey });
     if (!stepData) return null;
 
     stepData = stepData.toObject();
     return stepData?.fields?.find((f) => f.key === fieldKey);
 };
 
-export const getFieldByKey = (objectList, key) => {
+export const getFieldByKey = (objectList: Field[], key: string) => {
     if (!objectList) {
         return null;
     }
@@ -94,11 +94,13 @@ export const getFieldByKey = (objectList, key) => {
     return null;
 };
 
-export const addFieldsToSchema = (stepKey, addedFields) => {
+export const addFieldsToSchema = (stepKey: string, addedFields: Field[]) => {
     // Create a schema for the new fields
-    const schemaUpdate = {};
+    const schemaUpdate: Record<string, SchemaDefinitionProperty> = {};
     addedFields.forEach((field) => {
-        schemaUpdate[field.key] = generateFieldSchema(field);
+        const schema = generateFieldSchema(field)
+        if (!schema) return
+        schemaUpdate[field.key] = schema
     });
 
     // Add it to the existing schema
@@ -108,14 +110,14 @@ export const addFieldsToSchema = (stepKey, addedFields) => {
 
 // Disabling no await because the await only gets called if an error is thrown
 /* eslint-disable no-await-in-loop */
-export const getAddedFields = async (session, oldFields, newFields) => {
+export const getAddedFields = async (session: ClientSession, oldFields: Field[], newFields: Field[]) => {
     // Build up a list of al the new fields added
-    const addedFields = [];
+    const addedFields: Field[] = [];
     for (let i = 0; i < newFields.length; ++i) {
         const requestField = newFields[i];
 
         if (requestField.key) {
-            const existingField = this.getFieldByKey(
+            const existingField = getFieldByKey(
                 oldFields,
                 requestField.key,
             );
@@ -150,7 +152,7 @@ export const getAddedFields = async (session, oldFields, newFields) => {
 };
 /* eslint-enable no-await-in-loop */
 
-const areFieldTypesSame = (fieldA, fieldB) => {
+const areFieldTypesSame = (fieldA: Field, fieldB: Field) => {
     if (!fieldA || !fieldB) return false;
 
     return fieldA.fieldType === fieldB.fieldType;

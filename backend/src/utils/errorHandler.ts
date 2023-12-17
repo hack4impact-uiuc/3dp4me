@@ -5,7 +5,7 @@ import log from "loglevel"
  * Global error handler. As a last resort, if any route throws an error, this
  * should catch it and return a 500.
  */
-const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
     log.error(err);
     if (res?.headersSent) {
         next(err);
@@ -16,5 +16,3 @@ const errorHandler = (err: Error, req: Request, res: Response, next: NextFunctio
         });
     }
 };
-
-module.exports = errorHandler;

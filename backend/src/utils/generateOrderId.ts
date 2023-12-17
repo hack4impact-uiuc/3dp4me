@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import pad from 'pad';
-import { Patient } from '../models/Patient';
+import { Patient, PatientModel } from '../models/Patient';
 import { ClientSession } from 'mongoose';
 
 const ALPHABET = [
@@ -35,7 +35,7 @@ const STARTING_YEAR = 2023;
 
 export const generateOrderId = async (session: ClientSession) => {
     const currentYear = new Date().getFullYear();
-    const numOrdersInYear = await Patient.count({ orderYear: currentYear });
+    const numOrdersInYear = await PatientModel.count({ orderYear: currentYear });
     let offset = 1;
 
     // while true should be fine, but this is just a failsafe
@@ -46,7 +46,7 @@ export const generateOrderId = async (session: ClientSession) => {
         const orderId = `${getYearLetter()}${paddedOrderNumber}`;
 
         // See if a patient already has this ID
-        const patientWithId = await Patient.findOne(
+        const patientWithId = await PatientModel.findOne(
             { orderId },
             {},
             { session },

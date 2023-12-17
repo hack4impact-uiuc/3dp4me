@@ -7,13 +7,12 @@ import { signatureSchema } from '../schemas/signatureSchema';
 import { fileSchema } from '../schemas/fileSchema';
 
 import { STEP_STATUS_ENUM, FIELDS } from './constants';
-import { FieldSchema, Step, StepSchema, fieldSchema } from '../models/Metadata';
-import { InferSchemaType } from 'mongoose';
+import { StepModel, Step, Field } from '../models/Metadata';
 
 /**
  * Initalizes and connects to the DB. Should be called at app startup.
  */
-export const initDB = (callback: Function) => {
+export const initDB = (callback?: Function) => {
     mongoose.connect(process.env.DB_URI!, {
         // useNewUrlParser: true,
         // useUnifiedTopology: true,
@@ -31,7 +30,7 @@ export const initDB = (callback: Function) => {
 };
 
 const clearModels = async () => {
-    const steps = await Step.find();
+    const steps = await StepModel.find();
     steps.forEach((step) => {
         // @ts-ignore
         delete mongoose.connection.models[step.key];
@@ -47,14 +46,14 @@ export const reinitModels = async () => {
  * Initializes all of the dynamic models in the DB. Should be called immediately after initDB.
  */
 export const initModels = async () => {
-    const steps = await Step.find();
+    const steps = await StepModel.find();
     steps.forEach((step) => generateSchemaFromMetadata(step));
 };
 
 /**
  * Generate and registers a schema based off the provided metadata.
  */
-export const generateSchemaFromMetadata = (stepMetadata: StepSchema) => {
+export const generateSchemaFromMetadata = (stepMetadata: Step) => {
     const stepSchema = generateFieldsFromMetadata(stepMetadata.fields, getStepBaseSchema());
     const schema = new mongoose.Schema(stepSchema);
 
@@ -104,7 +103,7 @@ const getStepBaseSchema = () => {
  * @param {String} field Field type (see constants.js).
  * @returns An object describing the field schema.
  */
-export const generateFieldSchema = (field: FieldSchema): SchemaDefinitionProperty | null => {
+export const generateFieldSchema = (field: Field): SchemaDefinitionProperty | null => {
     switch (field.fieldType) {
         case FIELDS.STRING:
             return getStringSchema();
@@ -153,7 +152,7 @@ const getDateSchema = () => ({
     default: Date.now,
 });
 
-const getRadioButtonSchema = (fieldMetadata: FieldSchema) => {
+const getRadioButtonSchema = (fieldMetadata: Field) => {
     if (!fieldMetadata?.options?.length) {
         throw new Error('Radio button must have options');
     }
@@ -164,7 +163,7 @@ const getRadioButtonSchema = (fieldMetadata: FieldSchema) => {
     };
 };
 
-const getFieldGroupSchema = (fieldMetadata: FieldSchema) => {
+const getFieldGroupSchema = (fieldMetadata: Field) => {
     // Field groups can have 0 sub fields.
     if (!fieldMetadata?.subFields) {
         throw new Error('Field groups must have sub fields');
@@ -182,7 +181,7 @@ const getFileSchema = () => ({
     default: [],
 });
 
-const getSignatureSchema = (fieldMetadata: FieldSchema) => {
+const getSignatureSchema = (fieldMetadata: Field) => {
     const defaultURL = fieldMetadata?.additionalData?.defaultDocumentURL;
     if (!defaultURL?.EN || !defaultURL?.AR) {
         throw new Error(
@@ -200,7 +199,7 @@ const getMapSchema = () => ({
     },
 });
 
-const generateFieldsFromMetadata = (fieldsMetadata: FieldSchema[], baseSchema = {}) => {
+const generateFieldsFromMetadata = (fieldsMetadata: Field[], baseSchema = {}) => {
     const generatedSchema = fieldsMetadata.map((field) => {
         const s = generateFieldSchema(field);
         if (!s)
