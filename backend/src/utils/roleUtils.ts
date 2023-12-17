@@ -1,13 +1,14 @@
 import { ObjectId } from 'mongoose';
-import { Role } from '../models/Role';
+import { RoleModel } from '../models/Role';
 import {
     SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
     SECURITY_ROLE_ATTRIBUTE_NAME,
     USER_POOL_ID,
 } from './aws/awsExports';
+import { AdminUpdateUserAttributesRequest } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 
 export const isRoleValid = async (role: string) => {
-    const roles = await Role.find({});
+    const roles = await RoleModel.find({});
     for (let i = 0; i < roles.length; ++i) {
         if (role.toString() === roles[i]._id.toString()) return true;
     }
@@ -39,7 +40,7 @@ export const getValidRoles = async (roles: string[]) => {
  * @param {Array} newRole Array of IDs of the user's new roles to add.
  * @returns The update parameter.
  */
-export const createRoleUpdateParams = (username: string, oldRoles: ObjectId[], newRole: ObjectId[]) => {
+export const createRoleUpdateParams = (username: string, oldRoles: string[], newRole: string | null): AdminUpdateUserAttributesRequest | null => {
     let roles = oldRoles;
     if (newRole) roles = arrayUnique(oldRoles.concat(newRole));
 

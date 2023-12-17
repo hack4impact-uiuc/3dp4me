@@ -1,33 +1,37 @@
-const express = require('express');
+import express, { Response } from 'express';
 
-const router = express.Router();
-const { errorWrap } = require('../../utils');
-const {
+import {
     USER_POOL_ID,
     SECURITY_ACCESS_ATTRIBUTE_NAME,
-} = require('../../utils/aws/awsExports');
-const {
+} from '../../utils/aws/awsExports';
+import {
     getUserRoles,
     getIdentityProvider,
-} = require('../../utils/aws/awsUsers');
-const { sendResponse } = require('../../utils/response');
-const {
+}from '../../utils/aws/awsUsers';
+import { sendResponse } from '../../utils/response';
+import {
     createRoleUpdateParams,
     getValidRoles,
     isRoleValid,
-} = require('../../utils/roleUtils');
-const { requireAdmin } = require('../../middleware/authentication');
-const {
+} from '../../utils/roleUtils';
+import  { requireAdmin } from '../../middleware/authentication';
+import {
     ADMIN_ID,
     DEFAULT_USERS_ON_GET_REQUEST,
-} = require('../../utils/constants');
+} from '../../utils/constants';
+import errorWrap from '../../utils/errorWrap';
+import { AuthenticatedRequest } from '../../middleware/types';
+import { queryParamToNum, queryParamToString } from '../../utils/request';
+import { ListUsersRequest } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+
+export const router = express.Router();
 
 /**
  * Gets information about the user making this request.
  */
 router.get(
     '/self',
-    errorWrap(async (req, res) => {
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const isAdmin = req?.user?.roles?.includes(ADMIN_ID) || false;
 
         const data = {
@@ -43,19 +47,17 @@ router.get(
  */
 router.get(
     '/',
-    requireAdmin,
-    errorWrap(async (req, res) => {
-        const { token } = req.query;
-        let nPerPage = req.query.nPerPage ?? DEFAULT_USERS_ON_GET_REQUEST;
+    requireAdmin as any,
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
+        const token = queryParamToString(req.query.token ?? "")
+        const nPerPage = queryParamToNum(req.query.nPerPage ?? DEFAULT_USERS_ON_GET_REQUEST);
 
-        nPerPage = parseInt(nPerPage, 10);
-
-        const params = {
+        const params: ListUsersRequest = {
             UserPoolId: USER_POOL_ID,
             Limit: nPerPage,
         };
 
-        if (token) params.PaginationToken = token;
+        if (token.length) params.PaginationToken = token;
 
         const identityProvider = getIdentityProvider();
         try {
@@ -78,8 +80,8 @@ router.get(
  */
 router.put(
     '/:username/roles/:roleId',
-    requireAdmin,
-    errorWrap(async (req, res) => {
+    requireAdmin as any,
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { username, roleId } = req.params;
 
         // Check that role is valid
@@ -109,8 +111,8 @@ router.put(
  */
 router.delete(
     '/:username/roles/:roleId',
-    requireAdmin,
-    errorWrap(async (req, res) => {
+    requireAdmin as any,
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { username, roleId } = req.params;
 
         // Check if user has this role
@@ -123,6 +125,9 @@ router.delete(
         // Create params for the update in AWS
         userRoles.splice(roleIndex, 1);
         const params = createRoleUpdateParams(username, userRoles, null);
+        if (!params) {
+            return sendResponse(res, 400, 'User has max amount of roles.');
+        }
 
         // Do the update
         const identityProvider = getIdentityProvider();
@@ -137,8 +142,8 @@ router.delete(
  */
 router.put(
     '/:username/access/:accessLevel',
-    requireAdmin,
-    errorWrap(async (req, res) => {
+    requireAdmin as any,
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { username, accessLevel } = req.params;
 
         // Create the params for the update
@@ -166,8 +171,8 @@ router.put(
  */
 router.delete(
     '/:username',
-    requireAdmin,
-    errorWrap(async (req, res) => {
+    requireAdmin as any,
+    errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { username } = req.params;
 
         // Create the params for the deletion
