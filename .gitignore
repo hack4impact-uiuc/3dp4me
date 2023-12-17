@@ -4,3 +4,5 @@ build/
 
 .vercel
 *.swp
+build.zip
+.DS_Store
