@@ -18,10 +18,9 @@
         "prettier": "^2.4.1"
     },
     "scripts": {
-        "init-repo": "chmod +x ./scripts/init-repo.sh && ./scripts/init-repo.sh",
         "format": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,jsx,json,md}}'",
-        "gen-db": "node scripts/generate-db-data.js"
-
+        "gen-db": "node scripts/generate-db-data.js",
+        "build": "turbo build"
     },
     "repository": {
         "type": "git",
