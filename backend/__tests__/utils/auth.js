@@ -6,7 +6,7 @@ const {
     SECURITY_ACCESS_ATTRIBUTE_NAME,
 } = require('../../utils/aws/awsExports');
 const { MOCK_USER, MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
-const { ACCESS_LEVELS, ADMIN_ID } = require('../../utils/constants');
+const { AccessLevel, ADMIN_ID } = require('../../utils/constants');
 
 let currentAuthenticatedUser = null;
 let lastUploadedFileParams = null;
@@ -89,7 +89,7 @@ module.exports.initS3DeleteObjectMocker = (AWS) => {
 module.exports.initS3ListObjectsV2Mocker = (AWS) => {
     AWS.mock('S3', 'listObjectsV2', (params) => {
         return Promise.resolve({
-            Contents: []
+            Contents: [],
         });
     });
 };
@@ -110,7 +110,7 @@ module.exports.initS3DeleteObjectsMocker = (AWS) => {
 module.exports.setCurrentUser = (
     AWS,
     user = this.createUserDataWithRolesAndAccess(
-        ACCESS_LEVELS.GRANTED,
+        AccessLevel.GRANTED,
         ADMIN_ID,
     ),
 ) => {

@@ -18,7 +18,7 @@ import swal from 'sweetalert';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import TextField from '../Fields/TextField';
 import MultiSelectField from '../Fields/MultiSelectField';
-import { ACCESS_LEVELS } from '../../utils/constants';
+import { AccessLevel } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
@@ -111,13 +111,13 @@ const EditRoleModal = ({
                 onChange={onAccessChange}
                 className="access-dropdown"
             >
-                <option value={ACCESS_LEVELS.GRANTED}>
+                <option value={AccessLevel.GRANTED}>
                     {translations.accountManagement.Approved}
                 </option>
-                <option value={ACCESS_LEVELS.REVOKED}>
+                <option value={AccessLevel.REVOKED}>
                     {translations.accountManagement.Revoked}
                 </option>
-                <option value={ACCESS_LEVELS.PENDING}>
+                <option value={AccessLevel.PENDING}>
                     {translations.accountManagement.Pending}
                 </option>
             </Select>

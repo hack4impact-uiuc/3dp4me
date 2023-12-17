@@ -5,7 +5,7 @@ const PUBLIC_CLOUDFRONT_URL = 'https://d1m40dlonmuszr.cloudfront.net';
 /**
  * Generic URL for phone number country flags. {XX} will be replaced by two letter country code.
  */
-export const FLAG_URL = `${PUBLIC_CLOUDFRONT_URL}/country-flag-icons-gh-pages/3x2/{XX}.svg`;
+export const FLAG_URL = `${PUBLIC_CLOUDFRONT_URL}/flags/3x2/{XX}.svg`;
 
 export const PIN_URL = `${PUBLIC_CLOUDFRONT_URL}/pin.png`;
 
@@ -168,7 +168,7 @@ export const ROLE_TABLE_ROW_DATA = [
 /**
  * List of different access levels. Must match the backend.
  */
-export const ACCESS_LEVELS = {
+export const AccessLevel = {
     GRANTED: 'Granted',
     REVOKED: 'Revoked',
     PENDING: 'Pending',

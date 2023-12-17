@@ -35,17 +35,13 @@ describe('DELETE /patients/:id', () => {
 
     it('returns 404 when given patient ID that does not exist', (done) => {
         withAuthentication(
-            request(server).delete(
-                `/api/patients/${BAD_PATIENT_ID}`,
-            ),
+            request(server).delete(`/api/patients/${BAD_PATIENT_ID}`),
         ).expect(404, done);
     });
 
     it('deletes patient data when given existing patient ID', async () => {
         const res = await withAuthentication(
-            request(server).delete(
-                `/api/patients/${PATIENT_ID_WITH_ONE_FILE}`,
-            ),
+            request(server).delete(`/api/patients/${PATIENT_ID_WITH_ONE_FILE}`),
         );
         expect(res.status).toBe(200);
 
@@ -65,11 +61,17 @@ describe('DELETE /patients/:id', () => {
             try {
                 Model = mongoose.model(stepKey);
                 // eslint-disable-next-line no-await-in-loop
-                const actual_patient_step_data = await Model.findOne({ patientId: PATIENT_ID_WITH_ONE_FILE });
+                const actual_patient_step_data = await Model.findOne({
+                    patientId: PATIENT_ID_WITH_ONE_FILE,
+                });
                 const expected_patient_step_data = null;
-                expect(actual_patient_step_data).toBe(expected_patient_step_data);
+                expect(actual_patient_step_data).toBe(
+                    expected_patient_step_data,
+                );
             } catch (error) {
-                console.error(`test-delete-patients-id - step ${stepKey} not found`);
+                console.error(
+                    `test-delete-patients-id - step ${stepKey} not found`,
+                );
                 return false;
             }
             return true;

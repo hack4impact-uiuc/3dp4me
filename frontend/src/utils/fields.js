@@ -8,7 +8,7 @@ import partiallyIcon from '../assets/half-circle.svg';
 import translations from '../translations.json';
 
 import {
-    ACCESS_LEVELS,
+    AccessLevel,
     ERR_LANGUAGE_VALIDATION_FAILED,
     ERR_OPTION_VALIDATION_FAILED,
     FIELD_TYPES,
@@ -149,11 +149,11 @@ const accessToString = (access, selectedLang) => {
     const accessTranslations = translations[selectedLang].accountManagement;
 
     switch (access) {
-        case ACCESS_LEVELS.GRANTED:
+        case AccessLevel.GRANTED:
             return accessTranslations.Approved;
-        case ACCESS_LEVELS.PENDING:
+        case AccessLevel.PENDING:
             return accessTranslations.Pending;
-        case ACCESS_LEVELS.REVOKED:
+        case AccessLevel.REVOKED:
             return accessTranslations.Revoked;
         default:
             console.error(`Unrecognized access level: ${access}`);
@@ -167,11 +167,11 @@ const accessToString = (access, selectedLang) => {
  */
 const getAccessColor = (access) => {
     switch (access) {
-        case ACCESS_LEVELS.GRANTED:
+        case AccessLevel.GRANTED:
             return '#65d991';
-        case ACCESS_LEVELS.PENDING:
+        case AccessLevel.PENDING:
             return 'black';
-        case ACCESS_LEVELS.REVOKED:
+        case AccessLevel.REVOKED:
             return 'red';
         default:
             console.error(

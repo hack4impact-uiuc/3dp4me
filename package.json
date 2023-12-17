@@ -19,8 +19,7 @@
     },
     "scripts": {
         "init-repo": "chmod +x ./scripts/init-repo.sh && ./scripts/init-repo.sh",
-        "check-sensitive-files": "chmod +x ./scripts/check-sensitive-files.sh && ./scripts/check-sensitive-files.sh",
-        "format": "prettier --write '{client/**/*.{js,jsx,css,scss,json,md},api/**/*.{js,jsx,json,md}}'",
+        "format": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,jsx,json,md}}'",
         "gen-db": "node scripts/generate-db-data.js"
     },
     "repository": {
@@ -33,7 +32,7 @@
     "homepage": "https://github.com/hack4impact-uiuc/3dp4me#readme",
     "husky": {
         "hooks": {
-            "pre-commit": "yarn check-sensitive-files && lint-staged"
+            "pre-commit": "yarn lint-staged"
         }
     },
     "lint-staged": {
@@ -45,7 +44,7 @@
         ]
     },
     "dependencies": {
-        "eslint": "^7.32.0",
+        "eslint": "^8.54.0",
         "faker": "^5.5.3",
         "fs": "^0.0.1-security",
         "libphonenumber-js": "^1.9.16",

@@ -1,28 +1,20 @@
-const path = require('path');
-
-const nodeExternals = require('webpack-node-externals');
-
 module.exports = {
-    mode: 'production',
-    devtool: 'source-map',
-    entry: {
-        server: './index.js',
-    },
-    output: {
-        path: path.join(__dirname, 'build'),
-        filename: 'index.js',
-    },
+    entry: "./src/index.ts",
     target: 'node',
-    node: {
-        __dirname: false,
-        __filename: false,
-    },
-    externals: [nodeExternals()],
     module: {
         rules: [
-            {
-                exclude: /node_modules/,
-            },
+          {
+            test: /\.tsx?$/,
+            use: 'ts-loader',
+            exclude: /node_modules/,
+          },
         ],
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    },
+    output: {
+        filename: 'bundle.js',
+        path: __dirname + '/build',
     },
 };

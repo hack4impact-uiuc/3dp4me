@@ -216,7 +216,7 @@ module.exports.PUT_PATIENT_DATA = {
     fathersName: 'Daniel',
     grandfathersName: 'Gene',
     familyName: 'Wang',
-    orderYear: "2023",
+    orderYear: '2023',
     orderId: '123456',
     status: PATIENT_STATUS_ENUM.FEEDBACK,
 };

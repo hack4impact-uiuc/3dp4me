@@ -22,7 +22,7 @@ const {
     EXPECTED_FILE_DATA,
 } = require('../mock-data/patients-mock-data');
 const { expectStrictEqualWithTimestampOrdering } = require('../utils/utils');
-const { ADMIN_ID, ACCESS_LEVELS } = require('../../utils/constants');
+const { ADMIN_ID, AccessLevel } = require('../../utils/constants');
 
 describe('Test authentication ', () => {
     afterAll(async () => await db.closeDatabase());
@@ -80,7 +80,7 @@ describe('Test authentication ', () => {
         AWS.remock('CognitoIdentityServiceProvider', 'getUser', () =>
             Promise.resolve(
                 createUserDataWithRolesAndAccess(
-                    ACCESS_LEVELS.GRANTED,
+                    AccessLevel.GRANTED,
                     ADMIN_ID,
                 ),
             ),
@@ -98,7 +98,7 @@ describe('Test authentication ', () => {
         const STEP_KEY = 'Patient';
         setCurrentUser(
             AWS,
-            createUserDataWithRolesAndAccess(ACCESS_LEVELS.GRANTED, ADMIN_ID),
+            createUserDataWithRolesAndAccess(AccessLevel.GRANTED, ADMIN_ID),
         );
 
         const patientID = '60944e084f4c0d4330cc258b';
@@ -135,7 +135,7 @@ describe('Test authentication ', () => {
         setCurrentUser(
             AWS,
             createUserDataWithRolesAndAccess(
-                ACCESS_LEVELS.GRANTED,
+                AccessLevel.GRANTED,
                 MOCK_ROLE_ID,
             ),
         );
@@ -160,7 +160,7 @@ describe('Test authentication ', () => {
         setCurrentUser(
             AWS,
             createUserDataWithRolesAndAccess(
-                ACCESS_LEVELS.GRANTED,
+                AccessLevel.GRANTED,
                 MOCK_ROLE_ID,
             ),
         );
@@ -192,7 +192,7 @@ describe('Test authentication ', () => {
         setCurrentUser(
             AWS,
             createUserDataWithRolesAndAccess(
-                ACCESS_LEVELS.GRANTED,
+                AccessLevel.GRANTED,
                 MOCK_ROLE_ID,
             ),
         );
@@ -215,7 +215,7 @@ describe('Test authentication ', () => {
         setCurrentUser(
             AWS,
             createUserDataWithRolesAndAccess(
-                ACCESS_LEVELS.GRANTED,
+                AccessLevel.GRANTED,
                 MOCK_ROLE_ID,
             ),
         );

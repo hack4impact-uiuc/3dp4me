@@ -24,18 +24,14 @@ describe('GET /roles', () => {
     });
 
     it('Gets all roles', async () => {
-        const res = await withAuthentication(
-            request(server).get('/api/roles'),
-        );
+        const res = await withAuthentication(request(server).get('/api/roles'));
 
         expect(res.status).toBe(200);
         const resContent = JSON.parse(res.text);
         expect(resContent.success).toBe(true);
         const actualResult = resContent.result;
 
-        const expectedResult = await models
-            .Role
-            .find({});
+        const expectedResult = await models.Role.find({});
 
         expect(actualResult.length).toBe(expectedResult.length);
     });
