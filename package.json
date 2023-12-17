@@ -21,6 +21,7 @@
         "init-repo": "chmod +x ./scripts/init-repo.sh && ./scripts/init-repo.sh",
         "format": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,jsx,json,md}}'",
         "gen-db": "node scripts/generate-db-data.js"
+
     },
     "repository": {
         "type": "git",
@@ -59,5 +60,6 @@
         "react-map-gl-geocoder": "^2.2.0",
         "react-native-web": "^0.17.1",
         "react-sortable-hoc": "^2.0.0"
-    }
+    },
+    "workspaces": ["packages/*", "apps/*"]
 }

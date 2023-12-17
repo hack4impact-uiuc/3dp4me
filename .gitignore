@@ -6,3 +6,4 @@ build/
 *.swp
 build.zip
 .DS_Store
+.turbo
