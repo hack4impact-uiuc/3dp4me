@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants';
-import { Model } from 'mongoose';
+import { HydratedDocument, Model } from 'mongoose';
+import { queryParamToString, queryParamToNum } from './request';
 
 /**
  * Convienience function for sending responses.
@@ -77,20 +78,20 @@ const filterPatientsBySearchQuery = <T extends Record<string, any>>(patients: T[
  * @returns {Object} data Documents recieved from db.collection.find()
  */
 // eslint-disable-next-line max-len
-export const getDataFromModelWithPaginationAndSearch = async (
+export const getDataFromModelWithPaginationAndSearch = async <T>(
     req: Request,
-    model: Model<any>,
+    model: Model<T>,
     findParameters = {},
-) => {
+): Promise<{ data: HydratedDocument<T>[], count: number }> => {
     // The default values below will get the first user in the database
     const {
         pageNumber = 1,
         nPerPage = DEFAULT_PATIENTS_ON_GET_REQUEST,
         searchQuery = '',
-    } = req.query;
-    const intPageNumber = parseInt(pageNumber, 10);
-    const intPatientsPerPage = parseInt(nPerPage, 10);
-    const lowerCaseSearchQuery = searchQuery.toLowerCase();
+    } = req.query; 
+    const intPageNumber = queryParamToNum(pageNumber);
+    const intPatientsPerPage = queryParamToNum(nPerPage)
+    const lowerCaseSearchQuery = queryParamToString(searchQuery).toLowerCase();
 
     // Calculates the number of patients to skip based on the request paramaters
     const documentsToSkip =
