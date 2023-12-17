@@ -29,7 +29,7 @@ const filterPatientsBySearchQuery = <T extends Record<string, any>>(patients: T[
         return patients;
     }
 
-    const filteredData = [];
+    const filteredData: T[] = [];
 
     if (searchQuery !== '') {
         /* The following fields below will be considered during the search.
