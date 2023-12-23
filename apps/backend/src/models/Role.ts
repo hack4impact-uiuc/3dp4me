@@ -1,13 +1,14 @@
 import mongoose from 'mongoose';
 
 import { languageSchema } from '../schemas/languageSchema';
+import { Role } from '@3dp4me/types';
 
 /**
  * Contains information about user roles. the name and description are just for
  * readability. We use _id to link roles to users in the DB. isHidden indicates if the
  * role should be visible on the dashboard. isMutable indicates if the role can be changed.
  */
-const roleSchema = new mongoose.Schema({
+const roleSchema = new mongoose.Schema<Role>({
     roleName: {
         type: languageSchema,
         required: true,

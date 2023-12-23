@@ -2,43 +2,6 @@ export const ADMIN_ID = process.env.ADMIN_ID!;
 
 export const ENV_TEST = 'test';
 
-export enum AccessLevel {
-    GRANTED= 'Granted',
-    REVOKED= 'Revoked',
-    PENDING= 'Pending',
-}
-
-export enum FIELDS {
-    STRING = 'String',
-    MULTILINE_STRING = 'MultilineString',
-    FILE ='File',
-    NUMBER =  'Number',
-    DATE = 'Date',
-    PHONE =  'Phone',
-    DIVIDER =  'Divider',
-    HEADER = 'Header',
-    RADIO_BUTTON = 'RadioButton',
-    MULTI_SELECT = 'MultiSelect',
-    AUDIO = 'Audio',
-    SIGNATURE = 'Signature',
-    PHOTO =  'Photo',
-    FIELD_GROUP ='FieldGroup',
-    MAP = 'Map',
-};
-
-export enum PATIENT_STATUS_ENUM  {
-    ACTIVE = 'Active',
-    ARCHIVED = 'Archived',
-    FEEDBACK = 'Feedback',
-    WAITLIST = 'Waitlist',
-};
-
-export enum STEP_STATUS_ENUM {
-    UNFINISHED = 'Unfinished',
-    PARTIAL = 'Partial',
-    FINISHED = 'Finished',
-};
-
 export const STEPS_COLLECTION_NAME = 'steps';
 
 export const ERR_NOT_APPROVED =

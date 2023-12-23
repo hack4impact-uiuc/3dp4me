@@ -1,8 +1,7 @@
 import mongoose, { ClientSession, InferSchemaType } from 'mongoose';
-
-import { TranslatedString, languageSchema } from '../schemas/languageSchema';
+import { Step, Field, FieldType } from "@3dp4me/types"
+import { languageSchema } from '../schemas/languageSchema';
 import {
-    FIELDS,
     ERR_FIELD_VALIDATION_FAILED,
     STEPS_COLLECTION_NAME,
 } from '../utils/constants';
@@ -48,12 +47,6 @@ export const isUniqueStepNumber = async (stepNumber: number, stepKey: string, se
     return steps[0].key === stepKey;
 };
 
-export interface QuestionOption {
-    Index: number,
-    IsHidden: boolean,
-    Question: TranslatedString
-}
-
 /**
  * Schema for a question option. E.g. radio button field.
  */
@@ -86,31 +79,16 @@ const validateStep = (field: InferSchemaType<typeof fieldSchema>[]) => {
     return true;
 };
 
-export interface Field {
-    fieldNumber: number,
-    key: string,
-    fieldType: FIELDS,
-    options: QuestionOption[],
-    isVisibleOnDashboard: boolean,
-    displayName: TranslatedString,
-    readableGroups: string[],
-    writableGroups: string[],
-    isHidden: boolean,
-    isDeleted: boolean,
-    additionalData: any
-    subFields: Field[]
-}
-
 /**
  * Schema for an individual field in a step.
  */
-export const fieldSchema = new mongoose.Schema({
+export const fieldSchema = new mongoose.Schema<Field>({
     fieldNumber: { type: Number, required: true },
     key: { type: String, required: true },
     fieldType: {
         type: String,
-        enum: Object.values(FIELDS),
-        default: FIELDS.STRING,
+        enum: Object.values(FieldType),
+        default: FieldType.STRING,
         required: true,
     },
     options: {
@@ -141,22 +119,11 @@ fieldSchema.add({
     },
 });
 
-export interface Step {
-    key: string,
-    displayName: TranslatedString,
-    stepNumber: number,
-    readableGroups: string[],
-    writableGroups: string[],
-    defaultToListView: boolean,
-    fields: Field[]
-    isHidden: boolean,
-    isDeleted: boolean
-}
 
 /**
  * Schema for a step's metadata.
  */
-const stepSchema = new mongoose.Schema({
+const stepSchema = new mongoose.Schema<Step>({
     key: { type: String, required: true, unique: true },
     displayName: { type: languageSchema, required: true },
     stepNumber: { type: Number, required: true },

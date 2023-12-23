@@ -1,7 +1,6 @@
-import mongoose, { InferSchemaType } from 'mongoose';
+import mongoose from 'mongoose';
 import encrypt from 'mongoose-encryption';
-
-import { PATIENT_STATUS_ENUM } from '../utils/constants';
+import { Patient, PatientStatus } from '@3dp4me/types';
 
 const UNECRYPTED_FIELDS = [
     'dateCreated',
@@ -17,7 +16,7 @@ const UNECRYPTED_FIELDS = [
  * Schema for basic patient information. This is the bare minnimum of info needed
  * to put a patient into the system.
  */
-const patientSchema = new mongoose.Schema({
+const patientSchema = new mongoose.Schema<Patient>({
     firstName: { type: String, required: false },
     fathersName: { type: String, required: false, default: '' },
     grandfathersName: { type: String, required: false, default: '' },
@@ -29,9 +28,9 @@ const patientSchema = new mongoose.Schema({
     lastEditedBy: { type: String, required: false },
     status: {
         type: String,
-        enum: Object.values(PATIENT_STATUS_ENUM),
+        enum: Object.values(PatientStatus),
         required: false,
-        default: PATIENT_STATUS_ENUM.ACTIVE,
+        default: PatientStatus.ACTIVE,
     },
     phoneNumber: { type: String, required: false },
     secret: { type: String, required: false },
@@ -44,5 +43,4 @@ patientSchema.plugin(encrypt, {
     excludeFromEncryption: UNECRYPTED_FIELDS,
 });
 
-export type Patient = InferSchemaType<typeof patientSchema>;
-export const PatientModel = mongoose.model('Patient', patientSchema, 'Patient');
+export const PatientModel = mongoose.model<Patient>('Patient', patientSchema, 'Patient');

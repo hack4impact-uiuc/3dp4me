@@ -1,16 +1,16 @@
-import { Patient, PatientModel } from "../../models/Patient";
+import { PatientModel } from "../../models/Patient";
 import { AuthenticatedRequest } from "../../middleware/types";
 import { HydratedDocument } from 'mongoose';
 
 import express, { Response } from 'express';
 import mongoose from 'mongoose';
-import { PATIENT_STATUS_ENUM } from '../../utils/constants';
 import {
     sendResponse,
     getDataFromModelWithPaginationAndSearch,
 } from '../../utils/response';
 import errorWrap from "../../utils/errorWrap";
 import { StepModel } from "../../models/Metadata";
+import { Patient, PatientStatus } from "@3dp4me/types";
 
 export const router = express.Router();
 
@@ -40,7 +40,7 @@ router.get(
 
         const getPatientDataResponse =
             await getDataFromModelWithPaginationAndSearch(req, PatientModel, {
-                status: PATIENT_STATUS_ENUM.ACTIVE,
+                status: PatientStatus.ACTIVE,
             });
 
         const patients = getPatientDataResponse.data;

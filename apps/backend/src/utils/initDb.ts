@@ -5,9 +5,8 @@ import mongoose, { Schema, SchemaDefinition, SchemaDefinitionProperty } from 'mo
 
 import { signatureSchema } from '../schemas/signatureSchema';
 import { fileSchema } from '../schemas/fileSchema';
-
-import { STEP_STATUS_ENUM, FIELDS } from './constants';
-import { StepModel, Step, Field } from '../models/Metadata';
+import { Step, FieldType, Field, StepStatus} from "@3dp4me/types"
+import { StepModel } from '../models/Metadata';
 
 /**
  * Initalizes and connects to the DB. Should be called at app startup.
@@ -87,8 +86,8 @@ const getStepBaseSchema = () => {
         status: {
             type: String,
             required: true,
-            enum: Object.values(STEP_STATUS_ENUM),
-            default: STEP_STATUS_ENUM.UNFINISHED,
+            enum: Object.values(StepStatus),
+            default: StepStatus.UNFINISHED,
         },
         lastEditedBy: {
             type: String,
@@ -105,31 +104,31 @@ const getStepBaseSchema = () => {
  */
 export const generateFieldSchema = (field: Field): SchemaDefinitionProperty | null => {
     switch (field.fieldType) {
-        case FIELDS.STRING:
+        case FieldType.STRING:
             return getStringSchema();
-        case FIELDS.MULTILINE_STRING:
+        case FieldType.MULTILINE_STRING:
             return getStringSchema();
-        case FIELDS.NUMBER:
+        case FieldType.NUMBER:
             return getNumberSchema();
-        case FIELDS.DATE:
+        case FieldType.DATE:
             return getDateSchema();
-        case FIELDS.PHONE:
+        case FieldType.PHONE:
             return getStringSchema();
-        case FIELDS.RADIO_BUTTON:
+        case FieldType.RADIO_BUTTON:
             return getRadioButtonSchema(field);
-        case FIELDS.FILE:
+        case FieldType.FILE:
             return getFileSchema();
-        case FIELDS.PHOTO:
+        case FieldType.PHOTO:
             return getFileSchema();
-        case FIELDS.AUDIO:
+        case FieldType.AUDIO:
             return getFileSchema();
-        case FIELDS.FIELD_GROUP:
+        case FieldType.FIELD_GROUP:
             return getFieldGroupSchema(field);
-        case FIELDS.SIGNATURE:
+        case FieldType.SIGNATURE:
             return getSignatureSchema(field);
-        case FIELDS.DIVIDER:
+        case FieldType.DIVIDER:
             return null;
-        case FIELDS.MAP:
+        case FieldType.MAP:
             return getMapSchema();
         default:
             log.error(`Unrecognized field type, ${field.fieldType}`);

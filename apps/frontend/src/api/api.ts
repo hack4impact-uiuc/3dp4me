@@ -1,8 +1,14 @@
 import instance from './axios-config';
 import fileDownload from 'js-file-download';
-import { Patient } from '@3dp4me/types';
+import { Patient, Role, Step } from '@3dp4me/types';
 
-export const getPatientsCount = async () => {
+export type ApiResponse<T> = {
+    success: boolean,
+    message: string,
+    result: T,
+}
+
+export const getPatientsCount = async (): Promise<ApiResponse<number>> => {
     const requestString = '/patients/count';
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
@@ -14,7 +20,7 @@ export const getPatientsByPageNumberAndSearch = async (
     pageNumber: number,
     nPerPage: number,
     searchQuery = '',
-) => {
+): Promise<ApiResponse<Patient[]>> => {
     const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
@@ -62,8 +68,7 @@ export const updateStage = async (patientId: string, stage: string, updatedStage
     return res.data;
 };
 
-// TODO: Type this
-export const updatePatient = async (patientId: string, updatedData: any) => {
+export const updatePatient = async (patientId: string, updatedData: Partial<Patient>) => {
     const requestString = `/patients/${patientId}`;
     const res = await instance.put(requestString, updatedData);
 
@@ -93,7 +98,7 @@ export const getAllStepsMetadata = async (showHiddenFieldsAndSteps = false) => {
     return res.data;
 };
 
-export const updateMultipleSteps = async (updatedSteps: any) => {
+export const updateMultipleSteps = async (updatedSteps: Step[]) => {
     const requestString = '/metadata/steps';
 
     const res = await instance.put(requestString, updatedSteps);
@@ -182,7 +187,7 @@ export const getAllRoles = async () => {
     return res.data;
 };
 
-export const addRole = async (roleInfo) => {
+export const addRole = async (roleInfo: Role) => {
     const requestString = `/roles`;
     const res = await instance.post(requestString, roleInfo);
     if (!res?.data?.success) throw new Error(res?.data?.message);
@@ -198,7 +203,7 @@ export const deleteRole = async (userId: string) => {
     return res.data;
 };
 
-export const editRole = async (userId: string, updatedRoleInfo) => {
+export const editRole = async (userId: string, updatedRoleInfo: Partial<Role>) => {
     const requestString = `/roles/${userId}`;
     const res = await instance.put(requestString, updatedRoleInfo);
     if (!res?.data?.success) throw new Error(res?.data?.message);
