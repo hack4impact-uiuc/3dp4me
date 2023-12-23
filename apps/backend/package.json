@@ -56,8 +56,6 @@
         "webpack-cli": "^4.6.0"
     },
     "scripts": {
-        "dev": "cross-env NODE_ENV=development nodemon ./src/index.ts",
-        "export": "cross-env NODE_ENV=production node ./scripts/export_csv.js",
         "build": "webpack",
         "start": "tsc && doppler run -- node ./dist/src/index.js",
         "test": "cross-env S3_BUCKET_NAME=test jest --runInBand --forceExit",
