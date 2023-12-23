@@ -1,6 +1,6 @@
 import instance from './axios-config';
-
-const FileDownload = require('js-file-download');
+import fileDownload from 'js-file-download';
+import { Patient } from '@3dp4me/types';
 
 export const getPatientsCount = async () => {
     const requestString = '/patients/count';
@@ -11,8 +11,8 @@ export const getPatientsCount = async () => {
 };
 
 export const getPatientsByPageNumberAndSearch = async (
-    pageNumber,
-    nPerPage,
+    pageNumber: number,
+    nPerPage: number,
     searchQuery = '',
 ) => {
     const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
@@ -23,9 +23,9 @@ export const getPatientsByPageNumberAndSearch = async (
 };
 
 export const getPatientsByStageAndPageNumberAndSearch = async (
-    stage,
-    pageNumber,
-    nPerPage,
+    stage: string,
+    pageNumber: number,
+    nPerPage: number,
     searchQuery = '',
 ) => {
     const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
@@ -35,7 +35,7 @@ export const getPatientsByStageAndPageNumberAndSearch = async (
     return res.data;
 };
 
-export const getPatientById = async (id) => {
+export const getPatientById = async (id: string) => {
     const requestString = `/patients/${id}`;
     const res = await instance.get(requestString);
 
@@ -44,7 +44,7 @@ export const getPatientById = async (id) => {
     return res.data;
 };
 
-export const postNewPatient = async (patientInfo) => {
+export const postNewPatient = async (patientInfo: string) => {
     const requestString = `/patients/`;
     const res = await instance.post(requestString, patientInfo);
 
@@ -53,7 +53,7 @@ export const postNewPatient = async (patientInfo) => {
     return res.data;
 };
 
-export const updateStage = async (patientId, stage, updatedStage) => {
+export const updateStage = async (patientId: string, stage: string, updatedStage: string) => {
     const requestString = `/patients/${patientId}/${stage}`;
     const res = await instance.post(requestString, updatedStage);
 
@@ -62,7 +62,8 @@ export const updateStage = async (patientId, stage, updatedStage) => {
     return res.data;
 };
 
-export const updatePatient = async (patientId, updatedData) => {
+// TODO: Type this
+export const updatePatient = async (patientId: string, updatedData: any) => {
     const requestString = `/patients/${patientId}`;
     const res = await instance.put(requestString, updatedData);
 
@@ -71,7 +72,7 @@ export const updatePatient = async (patientId, updatedData) => {
     return res.data;
 };
 
-export const deletePatientById = async (patientId) => {
+export const deletePatientById = async (patientId: string) => {
     const requestString = `/patients/${patientId}`;
     const res = await instance.delete(requestString);
 
@@ -92,7 +93,7 @@ export const getAllStepsMetadata = async (showHiddenFieldsAndSteps = false) => {
     return res.data;
 };
 
-export const updateMultipleSteps = async (updatedSteps) => {
+export const updateMultipleSteps = async (updatedSteps: any) => {
     const requestString = '/metadata/steps';
 
     const res = await instance.put(requestString, updatedSteps);
@@ -102,10 +103,10 @@ export const updateMultipleSteps = async (updatedSteps) => {
 };
 
 export const downloadBlobWithoutSaving = async (
-    patientId,
-    stepKey,
-    fieldKey,
-    filename,
+    patientId: string,
+    stepKey: string,
+    fieldKey: string,
+    filename: string,
 ) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     let res = null;
@@ -124,7 +125,7 @@ export const downloadBlobWithoutSaving = async (
     return res.data;
 };
 
-export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
+export const downloadFile = async (patientId: string, stepKey: string, fieldKey: string, filename: string) => {
     const blob = await downloadBlobWithoutSaving(
         patientId,
         stepKey,
@@ -135,18 +136,18 @@ export const downloadFile = async (patientId, stepKey, fieldKey, filename) => {
     if (!blob) throw new Error('Could not download file');
 
     try {
-        await FileDownload(blob, filename);
+        await fileDownload(blob, filename);
     } catch (error) {
         throw new Error('Could not download file');
     }
 };
 
 export const uploadFile = async (
-    patientId,
-    stepKey,
-    fieldKey,
-    filename,
-    filedata,
+    patientId: string,
+    stepKey: string,
+    fieldKey: string,
+    filename: string,
+    filedata: string | Blob,
 ) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     const formData = new FormData();
@@ -164,7 +165,7 @@ export const uploadFile = async (
     return res.data;
 };
 
-export const deleteFile = async (patientId, stepKey, fieldKey, filename) => {
+export const deleteFile = async (patientId: string, stepKey: string, fieldKey: string, filename: string) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     const res = await instance.delete(requestString);
 
@@ -189,7 +190,7 @@ export const addRole = async (roleInfo) => {
     return res.data;
 };
 
-export const deleteRole = async (userId) => {
+export const deleteRole = async (userId: string) => {
     const requestString = `/roles/${userId}`;
     const res = await instance.delete(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
@@ -197,7 +198,7 @@ export const deleteRole = async (userId) => {
     return res.data;
 };
 
-export const editRole = async (userId, updatedRoleInfo) => {
+export const editRole = async (userId: string, updatedRoleInfo) => {
     const requestString = `/roles/${userId}`;
     const res = await instance.put(requestString, updatedRoleInfo);
     if (!res?.data?.success) throw new Error(res?.data?.message);
@@ -206,14 +207,14 @@ export const editRole = async (userId, updatedRoleInfo) => {
 };
 
 // TODO: test endpoint or create issue for it
-export const deleteUser = async (username) => {
+export const deleteUser = async (username: string) => {
     const requestString = `/users/${username}`;
     const res = await instance.delete(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
     return res.data;
 };
 
-export const addUserRole = async (username, roleName) => {
+export const addUserRole = async (username: string, roleName: string) => {
     const requestString = `/users/${username}/roles/${roleName}`;
     const res = await instance.put(requestString);
 
@@ -222,7 +223,7 @@ export const addUserRole = async (username, roleName) => {
     return res.data;
 };
 
-export const removeUserRole = async (username, roleName) => {
+export const removeUserRole = async (username: string, roleName: string) => {
     const requestString = `/users/${username}/roles/${roleName}`;
     const res = await instance.delete(requestString);
 
@@ -231,7 +232,7 @@ export const removeUserRole = async (username, roleName) => {
     return res.data;
 };
 
-export const getUsersByPageNumber = async (nPerPage) => {
+export const getUsersByPageNumber = async (nPerPage: number) => {
     const requestString = `/users?nPerPage=${nPerPage}`;
 
     const res = await instance.get(requestString);
@@ -241,7 +242,7 @@ export const getUsersByPageNumber = async (nPerPage) => {
     return res.data;
 };
 
-export const getUsersByPageNumberAndToken = async (token, nPerPage) => {
+export const getUsersByPageNumberAndToken = async (token: string, nPerPage: number) => {
     const encodedToken = encodeURIComponent(token);
     const requestString = `/users?token=${encodedToken}&nPerPage=${nPerPage}`;
 
@@ -252,7 +253,7 @@ export const getUsersByPageNumberAndToken = async (token, nPerPage) => {
     return res.data;
 };
 
-export const setUserAccess = async (username, access) => {
+export const setUserAccess = async (username: string, access: string) => {
     const requestString = `/users/${username}/access/${access}`;
     const res = await instance.put(requestString);
 

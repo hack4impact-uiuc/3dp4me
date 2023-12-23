@@ -1,0 +1,43 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "downlevelIteration": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strictNullChecks": true,
+        "jsx": "react-jsx",
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strict": true,
+        "target": "es2017",
+        "types": ["node", "jest"],
+        "module": "commonjs",
+        "outDir": "./dist",
+        "declaration": true,
+        "declarationMap": true,
+        "isolatedModules": true,
+        "composite": true,
+        "incremental": true,
+        "emitDeclarationOnly": true,
+        "noEmit": false,
+        "baseUrl": ".",
+        "lib": [
+            "esnext"
+        ]
+    },
+    "exclude": [
+        "node_modules",
+        "**/node_modules",
+        "dist",
+        "**/dist",
+        "**/public",
+        "public",
+        "build",
+        "**/build",
+    ],
+    "include": ["src"]
+}
