@@ -80,9 +80,9 @@
                 "status": "Patient Status"
             },
             "bottombar": {
-                "unfinished": "Not Complete",
-                "partial": "Partially Complete",
-                "finished": "Complete",
+                "Unfinished": "Not Complete",
+                "Partial": "Partially Complete",
+                "Finished": "Complete",
                 "active": "Active",
                 "archived": "Archived",
                 "feedback": "Feedback",
@@ -178,6 +178,7 @@
                     }
                 },
                 "managePatient": {
+                    "profileInformation": "Profile Information",
                     "title": "Manage Patient",
                     "radioTitle": "Patient Status",
                     "firstName": "First Name",
@@ -339,9 +340,9 @@
                 "status": "حالة المريض"
             },
             "bottombar": {
-                "unfinished": "غير مكتمل",
-                "partial": "مكتمل جزئيا",
-                "finished": "اكتمل",
+                "Unfinished": "غير مكتمل",
+                "Partial": "مكتمل جزئيا",
+                "Finished": "اكتمل",
                 "active": "نشط",
                 "archived": "المؤرشفه",
                 "feedback": "التغذية المرتدة",
@@ -437,6 +438,7 @@
                     }
                 },
                 "managePatient": {
+                    "profileInformation": "معلومات الملف الشخصي",
                     "title": "إدارة المريض",
                     "radioTitle": "حالة المريض",
                     "firstName": "الاسم الأول",

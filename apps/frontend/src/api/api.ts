@@ -1,5 +1,6 @@
 import instance from './axios-config';
 import fileDownload from 'js-file-download';
+import { CognitoIdentityServiceProvider } from 'aws-sdk';
 import { Patient, Role, Step } from '@3dp4me/types';
 
 export type ApiResponse<T> = {
@@ -28,12 +29,17 @@ export const getPatientsByPageNumberAndSearch = async (
     return res.data;
 };
 
+interface PatientStageResponse {
+    data: Patient[],
+    count: number
+}
+
 export const getPatientsByStageAndPageNumberAndSearch = async (
     stage: string,
     pageNumber: number,
     nPerPage: number,
     searchQuery = '',
-) => {
+): Promise<ApiResponse<PatientStageResponse>> => {
     const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
@@ -41,7 +47,7 @@ export const getPatientsByStageAndPageNumberAndSearch = async (
     return res.data;
 };
 
-export const getPatientById = async (id: string) => {
+export const getPatientById = async (id: string): Promise<ApiResponse<Patient>> => {
     const requestString = `/patients/${id}`;
     const res = await instance.get(requestString);
 
@@ -50,7 +56,7 @@ export const getPatientById = async (id: string) => {
     return res.data;
 };
 
-export const postNewPatient = async (patientInfo: string) => {
+export const postNewPatient = async (patientInfo: Patient): Promise<ApiResponse<Patient>> => {
     const requestString = `/patients/`;
     const res = await instance.post(requestString, patientInfo);
 
@@ -59,7 +65,7 @@ export const postNewPatient = async (patientInfo: string) => {
     return res.data;
 };
 
-export const updateStage = async (patientId: string, stage: string, updatedStage: string) => {
+export const updateStage = async (patientId: string, stage: string, updatedStage: Step): Promise<ApiResponse<Step>> => {
     const requestString = `/patients/${patientId}/${stage}`;
     const res = await instance.post(requestString, updatedStage);
 
@@ -68,7 +74,7 @@ export const updateStage = async (patientId: string, stage: string, updatedStage
     return res.data;
 };
 
-export const updatePatient = async (patientId: string, updatedData: Partial<Patient>) => {
+export const updatePatient = async (patientId: string, updatedData: Partial<Patient>): Promise<ApiResponse<Patient>> => {
     const requestString = `/patients/${patientId}`;
     const res = await instance.put(requestString, updatedData);
 
@@ -77,7 +83,7 @@ export const updatePatient = async (patientId: string, updatedData: Partial<Pati
     return res.data;
 };
 
-export const deletePatientById = async (patientId: string) => {
+export const deletePatientById = async (patientId: string): Promise<ApiResponse<Patient>> => {
     const requestString = `/patients/${patientId}`;
     const res = await instance.delete(requestString);
 
@@ -86,7 +92,7 @@ export const deletePatientById = async (patientId: string) => {
     return res.data;
 };
 
-export const getAllStepsMetadata = async (showHiddenFieldsAndSteps = false) => {
+export const getAllStepsMetadata = async (showHiddenFieldsAndSteps = false): Promise<ApiResponse<Step[]>> => {
     const requestString = `/metadata/steps?showHiddenFields=${showHiddenFieldsAndSteps}&showHiddenSteps=${showHiddenFieldsAndSteps}`;
 
     /**
@@ -98,7 +104,7 @@ export const getAllStepsMetadata = async (showHiddenFieldsAndSteps = false) => {
     return res.data;
 };
 
-export const updateMultipleSteps = async (updatedSteps: Step[]) => {
+export const updateMultipleSteps = async (updatedSteps: Step[]): Promise<ApiResponse<Step[]>> => {
     const requestString = '/metadata/steps';
 
     const res = await instance.put(requestString, updatedSteps);
@@ -237,7 +243,7 @@ export const removeUserRole = async (username: string, roleName: string) => {
     return res.data;
 };
 
-export const getUsersByPageNumber = async (nPerPage: number) => {
+export const getUsersByPageNumber = async (nPerPage: number): Promise<ApiResponse<CognitoIdentityServiceProvider.ListUsersResponse>> => {
     const requestString = `/users?nPerPage=${nPerPage}`;
 
     const res = await instance.get(requestString);
@@ -247,7 +253,7 @@ export const getUsersByPageNumber = async (nPerPage: number) => {
     return res.data;
 };
 
-export const getUsersByPageNumberAndToken = async (token: string, nPerPage: number) => {
+export const getUsersByPageNumberAndToken = async (token: string, nPerPage: number): Promise<ApiResponse<CognitoIdentityServiceProvider.ListUsersResponse>> => {
     const encodedToken = encodeURIComponent(token);
     const requestString = `/users?token=${encodedToken}&nPerPage=${nPerPage}`;
 

@@ -28,8 +28,8 @@ import { generateOrderId } from '../../utils/generateOrderId';
 import errorWrap from '../../utils/errorWrap';
 import { AuthenticatedRequest } from '../../middleware/types';
 import { PatientModel } from '../../models/Patient';
-import { Patient } from '../../models/Patient';
-import { Field, StepModel } from '../../models/Metadata';
+import { Patient, Field } from '@3dp4me/types';
+import { StepModel } from '../../models/Metadata';
 import { HydratedDocument } from 'mongoose';
 import { FileData } from '../../schemas/fileSchema';
 
