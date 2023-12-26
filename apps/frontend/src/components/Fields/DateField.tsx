@@ -1,15 +1,20 @@
-import React from 'react';
 import DatePicker from 'react-datepicker';
-import PropTypes from 'prop-types';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import './Fields.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 
-const DateField = ({ displayName, isDisabled, fieldId, value, onChange }) => {
+export interface DateFieldProps {
+    displayName: string
+    isDisabled: boolean
+    fieldId: string
+    value: string,
+    onChange: (field: string, value: string) => void
+}
+
+const DateField = ({ displayName, isDisabled, fieldId, value, onChange }: DateFieldProps) => {
     const selectedLang = useTranslations()[1];
 
-    const sendChanges = (date) => {
+    const sendChanges = (date: Date) => {
         onChange(fieldId, date.toString());
     };
 
@@ -29,14 +34,6 @@ const DateField = ({ displayName, isDisabled, fieldId, value, onChange }) => {
             />
         </div>
     );
-};
-
-DateField.propTypes = {
-    displayName: PropTypes.string.isRequired,
-    isDisabled: PropTypes.bool.isRequired,
-    fieldId: PropTypes.string.isRequired,
-    value: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
 };
 
 export default DateField;
