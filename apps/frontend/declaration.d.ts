@@ -1,1 +1,1 @@
-declare module '*.scss'; 
+declare module 'react-map-gl-geocoder';

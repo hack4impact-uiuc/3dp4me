@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import ReactMapGL, { Marker } from 'react-map-gl';
+import ReactMapGL, { MapRef, Marker } from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
 
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
@@ -53,7 +53,7 @@ const MapField = ({
 
     const [viewport, setViewport] = useState(initialViewport);
     const [isDragging, setIsDragging] = useState(false);
-    const mapRef = useRef();
+    const mapRef = useRef<MapRef | null>(null);
     const translations = useTranslations()[0];
 
     /**
@@ -120,6 +120,7 @@ const MapField = ({
                 onLoad={() => setViewport(initialViewport)}
                 getCursor={(cursor) => {
                     setIsDragging(cursor.isDragging);
+                    return "crosshair"
                 }}
             >
                 <Marker

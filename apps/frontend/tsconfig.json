@@ -33,5 +33,5 @@
         "src/setupTests.ts"
     ],
     "types": ["typePatches"],
-    "include": ["src"]
+    "include": ["src", "declaration.d.ts"]
 }
