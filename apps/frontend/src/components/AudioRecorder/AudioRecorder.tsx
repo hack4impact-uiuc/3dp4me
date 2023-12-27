@@ -19,7 +19,7 @@ import {
     PERMISSION_STATUS_DENIED,
 } from '../../utils/constants';
 import swal from 'sweetalert';
-import { Language } from '@3dp4me/types';
+import { File as FileType, Language } from '@3dp4me/types';
 /*
  * For whatever reason, this component cannot be written functionally.
  * The MicRecorder object just doesn't work otherwise.
@@ -29,9 +29,17 @@ const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
 interface AudioRecorderProps {
     selectedLanguage: Language
+    fieldKey: string
+    stepKey: string
+    files: FileType[]
+    isDisabled: boolean
+    title: string
+    patientId: string
+    handleUpload: (key: string, file: File) => void
+    handleDelete: (key: string, file: File) => void
 }
 
-class AudioRecorder extends React.Component {
+class AudioRecorder extends React.Component<AudioRecorderProps> {
     constructor(props: AudioRecorderProps) {
         super(props);
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -62,7 +70,7 @@ class AudioRecorder extends React.Component {
         updatePermissionStatus();
     }
 
-    getMedia = async (constraints) => {
+    getMedia = async (constraints: MediaStreamConstraints) => {
         try {
             this.setState({ isBlocked: false });
             await navigator.mediaDevices.getUserMedia(constraints);
@@ -71,11 +79,11 @@ class AudioRecorder extends React.Component {
         }
     };
 
-    setIsBlocked = (val) => {
+    setIsBlocked = (val: boolean) => {
         this.setState({ isBlocked: val });
     };
 
-    setPermissionListener = (permissionStatus, setIsBlocked) => {
+    setPermissionListener = (permissionStatus: PermissionStatus, setIsBlocked: (v: boolean) => void) => {
         permissionStatus.onchange = function () {
             if (this.state === PERMISSION_STATUS_DENIED) {
                 setIsBlocked(true);
@@ -97,7 +105,7 @@ class AudioRecorder extends React.Component {
                     </h1>
                     <img
                         src={
-                            this.props.selectedLang === LANGUAGES.EN
+                            this.props.selectedLanguage === Language.EN
                                 ? promptInstructionsEN
                                 : promptInstructionsAR
                         }
@@ -244,7 +252,7 @@ class AudioRecorder extends React.Component {
         });
     };
 
-    handlePlay = async (file) => {
+    handlePlay = async (file: FileType) => {
         const blob = await trackPromise(
             downloadBlobWithoutSaving(
                 this.props.patientId,
@@ -260,7 +268,7 @@ class AudioRecorder extends React.Component {
         });
     };
 
-    onDeleteFile = (fieldKey, file) => {
+    onDeleteFile = (fieldKey: string, file: File) => {
         swal({
             title: this.state.lang.components.audio.deleteTitle,
             text: this.state.lang.components.audio.deleteWarning,
@@ -274,7 +282,7 @@ class AudioRecorder extends React.Component {
         });
     };
 
-    getDeleteFileButton = (file) => {
+    getDeleteFileButton = (file: File) => {
         if (this.props.isDisabled) return null;
 
         return (
@@ -348,6 +356,9 @@ class AudioRecorder extends React.Component {
                     type="button"
                     onClick={this.onModalOpen}
                     onChange={(e) => {
+                        if (!e.target.files)
+                            return
+
                         this.props.handleUpload(
                             this.props.fieldKey,
                             e.target.files[0],

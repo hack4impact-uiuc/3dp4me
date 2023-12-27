@@ -34,6 +34,7 @@ export interface Field {
 }
 
 export interface QuestionOption {
+    _id: string
     Index: number,
     IsHidden: boolean,
     Question: TranslatedString

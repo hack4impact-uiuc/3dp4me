@@ -28,10 +28,9 @@ import { generateOrderId } from '../../utils/generateOrderId';
 import errorWrap from '../../utils/errorWrap';
 import { AuthenticatedRequest } from '../../middleware/types';
 import { PatientModel } from '../../models/Patient';
-import { Patient, Field } from '@3dp4me/types';
+import { Patient, Field, File } from '@3dp4me/types';
 import { StepModel } from '../../models/Metadata';
 import { HydratedDocument } from 'mongoose';
-import { FileData } from '../../schemas/fileSchema';
 
 export const router = express.Router();
 /**
@@ -229,7 +228,7 @@ router.delete(
 
         // Get the file
         const index = stepData[fieldKey].findIndex(
-            (x: FileData) => x.filename === fileName,
+            (x: File) => x.filename === fileName,
         );
 
         if (index === -1) {

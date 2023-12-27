@@ -10,6 +10,19 @@ import XIcon from '../../assets/x-icon.png';
 import { useTranslations } from '../../hooks/useTranslations';
 import StepField from '../StepField/StepField';
 import './Fields.scss';
+import { Field } from '@3dp4me/types';
+
+export interface FieldGroupProps {
+    isDisabled: boolean
+    handleSimpleUpdate: (field: string, value: any) => void
+    handleFileDownload: (field: string, value: any) => void
+    handleFileUpload: (field: string, value: any) => void
+    handleFileDelete: (field: string, value: any) => void
+    stepKey?: string
+    patientId?: string
+    value?: any
+    metadata: Field
+}
 
 const FieldGroup = ({
     isDisabled,
@@ -17,18 +30,18 @@ const FieldGroup = ({
     handleFileDownload,
     handleFileUpload,
     handleFileDelete,
+    metadata,
     stepKey = '',
     patientId = '',
     value = {},
-    metadata = {},
-}) => {
+}: FieldGroupProps) => {
     const [translations, selectedLang] = useTranslations();
 
-    const getKeyBase = (index) => {
+    const getKeyBase = (index: number) => {
         return `${metadata.key}.${index}`;
     };
 
-    const getCompleteSubFieldKey = (index, subfieldKey) => {
+    const getCompleteSubFieldKey = (index: number, subfieldKey: string) => {
         return `${getKeyBase(index)}.${subfieldKey}`;
     };
 
@@ -36,19 +49,19 @@ const FieldGroup = ({
         return value?.length ?? 0;
     };
 
-    const onSimpleUpdate = (k, v, i) => {
+    const onSimpleUpdate = (k: string, v: any, i: number) => {
         handleSimpleUpdate(getCompleteSubFieldKey(i, k), v);
     };
 
-    const onFileUpload = (k, v, i) => {
+    const onFileUpload = (k: string, v: any, i: number) => {
         handleFileUpload(getCompleteSubFieldKey(i, k), v);
     };
 
-    const onFileDownload = (k, v, i) => {
+    const onFileDownload = (k: string, v: any, i: number) => {
         handleFileDownload(getCompleteSubFieldKey(i, k), v);
     };
 
-    const onFileDelete = (k, v, i) => {
+    const onFileDelete = (k: string, v: any, i: number) => {
         handleFileDelete(getCompleteSubFieldKey(i, k), v);
     };
 
@@ -56,7 +69,7 @@ const FieldGroup = ({
         handleSimpleUpdate(getKeyBase(getNumFields()), {});
     };
 
-    const onRemoveGroup = (groupNumber) => {
+    const onRemoveGroup = (groupNumber: number) => {
         if (isDisabled) return;
 
         swal({
@@ -73,16 +86,16 @@ const FieldGroup = ({
         });
     };
 
-    const doRemoveGroup = (groupNumber) => {
+    const doRemoveGroup = (groupNumber: number) => {
         const newData = _.cloneDeep(value);
         newData.splice(groupNumber, 1);
         handleSimpleUpdate(metadata.key, newData);
     };
 
-    const generateSingleGroup = (index) => {
+    const generateSingleGroup = (index: number) => {
         return metadata?.subFields?.map((field) => {
             return (
-                <div key={`${getCompleteSubFieldKey(field.key)}.${index}`}>
+                <div key={`${getCompleteSubFieldKey(index, field.key)}.${index}`}>
                     <div className="step-field">
                         <StepField
                             displayName={field.displayName[selectedLang]}
@@ -111,7 +124,7 @@ const FieldGroup = ({
         });
     };
 
-    const generateHeader = (groupNumber, displayName) => {
+    const generateHeader = (groupNumber: number, displayName: string) => {
         const buttonClass = `button-${isDisabled ? 'disabled' : 'active'}`;
 
         return (
@@ -120,7 +133,7 @@ const FieldGroup = ({
             >
                 <img
                     src={XIcon}
-                    alt={translations.components.button.discard}
+                    alt={translations.components.button.discard.title}
                     className={`xicon-base xicon-${selectedLang} ${buttonClass}`}
                     onClick={() => onRemoveGroup(groupNumber)}
                 />
@@ -156,18 +169,6 @@ const FieldGroup = ({
             </Button>
         </div>
     );
-};
-
-FieldGroup.propTypes = {
-    handleSimpleUpdate: PropTypes.func.isRequired,
-    handleFileUpload: PropTypes.func.isRequired,
-    handleFileDownload: PropTypes.func.isRequired,
-    handleFileDelete: PropTypes.func.isRequired,
-    stepKey: PropTypes.string,
-    value: PropTypes.array,
-    patientId: PropTypes.string,
-    metadata: PropTypes.object,
-    isDisabled: PropTypes.bool.isRequired,
 };
 
 export default FieldGroup;

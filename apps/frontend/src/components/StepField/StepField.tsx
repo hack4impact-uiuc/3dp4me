@@ -1,11 +1,7 @@
 /* eslint import/no-cycle: "off" */
 
 import { Divider } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import React from 'react';
-
 import { useTranslations } from '../../hooks/useTranslations';
-import { FIELD_TYPES } from '../../utils/constants';
 import AudioRecorder from '../AudioRecorder/AudioRecorder';
 import DateField from '../Fields/DateField';
 import FieldGroup from '../Fields/FieldGroup';
@@ -17,6 +13,21 @@ import SignatureField from '../Fields/SignatureField';
 import TextArea from '../Fields/TextArea';
 import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
+import { Field, FieldType, Step } from '@3dp4me/types';
+
+export interface StepFieldProps {
+    metadata: Field
+    value: any
+    initValue?: any
+    patientId: string
+    displayName: string
+    stepKey: string
+    isDisabled?: boolean
+    handleSimpleUpdate?: (key: string, value: any) => void
+    handleFileDownload?: (key: string, value: any) => void
+    handleFileUpload?: (key: string, value: any) => void
+    handleFileDelete?: (key: string, value: any) => void
+}
 
 const StepField = ({
     metadata,
@@ -30,12 +41,12 @@ const StepField = ({
     handleFileDownload = () => {},
     handleFileUpload = () => {},
     handleFileDelete = () => {},
-}) => {
+}: StepFieldProps) => {
     const selectedLang = useTranslations()[1];
 
     const generateField = () => {
         switch (metadata.fieldType) {
-            case FIELD_TYPES.STRING:
+            case FieldType.STRING:
                 return (
                     <TextField
                         displayName={displayName}
@@ -46,7 +57,7 @@ const StepField = ({
                         value={value}
                     />
                 );
-            case FIELD_TYPES.NUMBER:
+            case FieldType.NUMBER:
                 return (
                     <TextField
                         displayName={displayName}
@@ -57,7 +68,7 @@ const StepField = ({
                         value={value}
                     />
                 );
-            case FIELD_TYPES.PHONE:
+            case FieldType.PHONE:
                 return (
                     <PhoneField
                         displayName={displayName}
@@ -67,7 +78,7 @@ const StepField = ({
                         value={value}
                     />
                 );
-            case FIELD_TYPES.MULTILINE_STRING:
+            case FieldType.MULTILINE_STRING:
                 return (
                     <div>
                         <TextArea
@@ -79,7 +90,7 @@ const StepField = ({
                         />
                     </div>
                 );
-            case FIELD_TYPES.DATE:
+            case FieldType.DATE:
                 return (
                     <DateField
                         displayName={displayName}
@@ -89,7 +100,7 @@ const StepField = ({
                         value={value}
                     />
                 );
-            case FIELD_TYPES.FILE:
+            case FieldType.FILE:
                 return (
                     <Files
                         title={displayName}
@@ -102,7 +113,7 @@ const StepField = ({
                     />
                 );
 
-            case FIELD_TYPES.RADIO_BUTTON:
+            case FieldType.RADIO_BUTTON:
                 return (
                     <RadioButtonField
                         fieldId={metadata.key}
@@ -114,7 +125,7 @@ const StepField = ({
                     />
                 );
 
-            case FIELD_TYPES.AUDIO:
+            case FieldType.AUDIO:
                 return (
                     <AudioRecorder
                         handleUpload={handleFileUpload}
@@ -126,34 +137,31 @@ const StepField = ({
                         files={value}
                         title={displayName}
                         isDisabled={isDisabled}
-                        selectedLang={selectedLang}
                         key={stepKey}
                     />
                 );
-            case FIELD_TYPES.DIVIDER:
+            case FieldType.DIVIDER:
                 return (
                     <div className="patient-divider-wrapper">
                         <h2>{displayName}</h2>
                         <Divider className="patient-divider" />
                     </div>
                 );
-            case FIELD_TYPES.FIELD_GROUP:
+            case FieldType.FIELD_GROUP:
                 return (
                     <FieldGroup
                         metadata={metadata}
                         patientId={patientId}
-                        displayName={displayName}
                         stepKey={stepKey}
                         isDisabled={isDisabled}
                         handleSimpleUpdate={handleSimpleUpdate}
                         handleFileDownload={handleFileDownload}
                         handleFileUpload={handleFileUpload}
                         handleFileDelete={handleFileDelete}
-                        fieldId={metadata.key}
                         value={value}
                     />
                 );
-            case FIELD_TYPES.SIGNATURE:
+            case FieldType.SIGNATURE:
                 return (
                     <SignatureField
                         displayName={displayName}
@@ -166,9 +174,9 @@ const StepField = ({
                         }
                     />
                 );
-            case FIELD_TYPES.HEADER:
+            case FieldType.HEADER:
                 return <h3>{displayName}</h3>;
-            case FIELD_TYPES.MAP:
+            case FieldType.MAP:
                 return (
                     <MapField
                         value={value}
@@ -179,7 +187,7 @@ const StepField = ({
                         fieldId={metadata.key}
                     />
                 );
-            case FIELD_TYPES.PHOTO:
+            case FieldType.PHOTO:
                 return (
                     <PhotoField
                         handleFileUpload={handleFileUpload}
@@ -197,40 +205,6 @@ const StepField = ({
     };
 
     return <div>{generateField()}</div>;
-};
-
-StepField.propTypes = {
-    value: PropTypes.any,
-    initValue: PropTypes.any,
-    isDisabled: PropTypes.bool,
-    patientId: PropTypes.string,
-    handleSimpleUpdate: PropTypes.func,
-    handleFileDownload: PropTypes.func,
-    handleFileUpload: PropTypes.func,
-    handleFileDelete: PropTypes.func,
-    displayName: PropTypes.string,
-    stepKey: PropTypes.string,
-    metadata: PropTypes.shape({
-        key: PropTypes.string.isRequired,
-        fieldType: PropTypes.string.isRequired,
-        options: PropTypes.arrayOf(
-            PropTypes.shape({
-                Index: PropTypes.number,
-                IsHidden: PropTypes.bool,
-                Question: PropTypes.shape({
-                    _id: PropTypes.string,
-                    EN: PropTypes.string,
-                    AR: PropTypes.string,
-                }),
-            }),
-        ),
-        additionalData: PropTypes.shape({
-            defaultDocumentURL: PropTypes.shape({
-                AR: PropTypes.string,
-                EN: PropTypes.string,
-            }),
-        }),
-    }),
 };
 
 export default StepField;
