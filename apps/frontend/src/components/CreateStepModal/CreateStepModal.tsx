@@ -12,25 +12,35 @@ import {
     ERR_LANGUAGE_VALIDATION_FAILED,
     ADMIN_ID,
 } from '../../utils/constants';
+import { Field, Language, Role, Step } from '@3dp4me/types';
+import { FormOption } from '../Fields/FormOption';
 
-const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
+type BaseStep = Omit<Step, "key"|"stepNumber"| "defaultToListView"|"isHidden"|"isDeleted">
+export interface CreateStepModalProps {
+    isOpen: boolean
+    onModalClose: () => void
+    allRoles: FormOption[]
+    onAddNewStep: (step: BaseStep) => void
+}
+
+const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }: CreateStepModalProps) => {
     const [translations, selectedLang] = useTranslations();
     const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID]);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
 
     const errorWrap = useErrorWrap();
 
-    const onRolesChange = (id, roles) => {
-        setSelectedRoles(roles);
+    const onRolesChange = (id: string, roleIds: string[]) => {
+        setSelectedRoles(roleIds);
     };
-    const updateDisplayName = (value, language) => {
+    const updateDisplayName = (value: string, language: Language) => {
         const updatedDisplayName = _.clone(displayName);
         updatedDisplayName[language] = value;
 
         setDisplayName(updatedDisplayName);
     };
 
-    const validateStep = (stepData) => {
+    const validateStep = (stepData: BaseStep) => {
         if (
             stepData.displayName.EN.trim() === '' ||
             stepData.displayName.AR.trim() === ''
@@ -45,6 +55,7 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
                 <span>{translations.components.swal.step.stepTitle}</span>
                 <LanguageInput
                     fieldValues={displayName}
+                    fieldKey='displayName'
                     handleFieldChange={(value, language) => {
                         updateDisplayName(value, language);
                     }}
@@ -68,7 +79,7 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
             displayName,
-            fields: [],
+            fields: [] as Field[],
         };
 
         errorWrap(
@@ -118,13 +129,6 @@ const CreateStepModal = ({ isOpen, onModalClose, allRoles, onAddNewStep }) => {
             </div>
         </Modal>
     );
-};
-
-CreateStepModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onModalClose: PropTypes.func.isRequired,
-    allRoles: PropTypes.array.isRequired,
-    onAddNewStep: PropTypes.func.isRequired,
 };
 
 export default CreateStepModal;

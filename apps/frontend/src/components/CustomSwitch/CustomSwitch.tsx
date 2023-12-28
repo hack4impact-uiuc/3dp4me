@@ -4,7 +4,12 @@ import Switch from 'react-switch';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
-const CustomSwitch = ({ checked, setChecked }) => {
+export interface CustomSwitchProps {
+    checked: boolean
+    setChecked: (v: boolean) => void
+}
+
+const CustomSwitch = ({ checked, setChecked }: CustomSwitchProps) => {
     return (
         <Switch
             onChange={setChecked}

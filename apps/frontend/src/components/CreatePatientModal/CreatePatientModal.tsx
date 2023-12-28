@@ -4,15 +4,23 @@ import PropTypes from 'prop-types';
 
 import { useTranslations } from '../../hooks/useTranslations';
 import './CreatePatientModal.scss';
+import { BasePatient, Patient } from '@3dp4me/types';
 
-const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }) => {
+export interface CreatePatientModalProps {
+    isOpen: boolean
+    onClose: () => void
+    onSave: (patient: BasePatient) => void
+    onSaveAndEdit: (patient: BasePatient) => void
+}
+
+const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }: CreatePatientModalProps) => {
     const translations = useTranslations()[0];
     const [firstName, setFirstName] = useState('');
     const [fathersName, setFathersName] = useState('');
     const [grandfathersName, setGrandfathersName] = useState('');
     const [familyName, setFamilyName] = useState('');
 
-    const onSavePatient = (isSaveAndEdit) => {
+    const onSavePatient = (isSaveAndEdit: boolean) => {
         const patientData = {
             firstName,
             fathersName,

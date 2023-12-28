@@ -1,5 +1,5 @@
 import './EditFieldModal.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode, ChangeEvent } from 'react';
 import {
     Button,
     Checkbox,
@@ -16,11 +16,27 @@ import swal from 'sweetalert';
 
 import MultiSelectField from '../Fields/MultiSelectField';
 import CustomSwitch from '../CustomSwitch/CustomSwitch';
-import { FIELD_TYPES, ADMIN_ID } from '../../utils/constants';
+import { ADMIN_ID } from '../../utils/constants';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 import { validateField } from '../../utils/fields';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { Field, FieldType, Language, QuestionOption, TranslatedString } from '@3dp4me/types';
+import { FormOption } from '../Fields/FormOption';
+
+type OmitDeep<T, K extends keyof any> = T extends object
+  ? {
+      [P in Exclude<keyof T, K>]: OmitDeep<T[P], K>;
+    }
+  : T;
+
+export interface EditFieldModalProps {
+    isOpen: boolean
+    initialData: Field
+    onModalClose: () => void
+    allRoles: FormOption[]
+    onEditField: (field: Field) => void
+}
 
 const EditFieldModal = ({
     isOpen,
@@ -28,13 +44,13 @@ const EditFieldModal = ({
     onModalClose,
     allRoles,
     onEditField,
-}) => {
+}: EditFieldModalProps) => {
     const [translations, selectedLang] = useTranslations();
-    const [fieldType, setFieldType] = useState(FIELD_TYPES.STRING);
-    const [selectedRoles, setSelectedRoles] = useState([]);
+    const [fieldType, setFieldType] = useState(FieldType.STRING);
+    const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
-    const [options, setOptions] = useState([]);
+    const [options, setOptions] = useState<TranslatedString[]>([]);
     const [isHidden, setIsHidden] = useState(false);
 
     const errorWrap = useErrorWrap();
@@ -90,7 +106,7 @@ const EditFieldModal = ({
         },
     }))(InputBase);
 
-    const onRolesChange = (id, roles) => {
+    const onRolesChange = (id: string, roles: string[]) => {
         setSelectedRoles(roles);
     };
 
@@ -100,13 +116,13 @@ const EditFieldModal = ({
         setOptions(updatedOptions);
     };
 
-    const updateOptionField = (index, val, language) => {
+    const updateOptionField = (index: number, val: string, language: Language) => {
         const updatedOptions = _.cloneDeep(options);
         updatedOptions[index][language] = val;
         setOptions(updatedOptions);
     };
 
-    const moveOption = (currIndex, newIndex) => {
+    const moveOption = (currIndex: number, newIndex: number) => {
         if (newIndex >= 0 && newIndex < options.length) {
             const updatedOptions = _.cloneDeep(options);
             const removedChoice = updatedOptions.splice(currIndex, 1)[0];
@@ -115,7 +131,7 @@ const EditFieldModal = ({
         }
     };
 
-    const deleteOption = (index) => {
+    const deleteOption = (index: number) => {
         const updatedOptions = _.cloneDeep(options);
         updatedOptions.splice(index, 1);
         setOptions(updatedOptions);
@@ -132,6 +148,7 @@ const EditFieldModal = ({
                         }`}
                     </span>
                     <LanguageInput
+                        fieldKey='NewOption'
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
                         handleFieldChange={(value, language) => {
                             updateOptionField(i, value, language);
@@ -152,7 +169,7 @@ const EditFieldModal = ({
         return <div>{choices}</div>;
     };
 
-    const updateDisplayName = (value, language) => {
+    const updateDisplayName = (value: string, language: Language) => {
         const updatedDisplayName = _.clone(displayName);
         updatedDisplayName[language] = value;
 
@@ -161,23 +178,24 @@ const EditFieldModal = ({
 
     const generateFields = () => {
         switch (fieldType) {
-            case FIELD_TYPES.STRING:
-            case FIELD_TYPES.MULTILINE_STRING:
-            case FIELD_TYPES.DATE:
-            case FIELD_TYPES.PHONE:
-            case FIELD_TYPES.NUMBER:
-            case FIELD_TYPES.FILE:
-            case FIELD_TYPES.AUDIO:
-            case FIELD_TYPES.MAP:
-            case FIELD_TYPES.PHOTO:
-            case FIELD_TYPES.FIELD_GROUP:
-            case FIELD_TYPES.SIGNATURE:
+            case FieldType.STRING:
+            case FieldType.MULTILINE_STRING:
+            case FieldType.DATE:
+            case FieldType.PHONE:
+            case FieldType.NUMBER:
+            case FieldType.FILE:
+            case FieldType.AUDIO:
+            case FieldType.MAP:
+            case FieldType.PHOTO:
+            case FieldType.FIELD_GROUP:
+            case FieldType.SIGNATURE:
                 return (
                     <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.question}
                         </span>
                         <LanguageInput
+                            fieldKey='FieldTitle'
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
                                 updateDisplayName(value, language);
@@ -185,13 +203,14 @@ const EditFieldModal = ({
                         />
                     </div>
                 );
-            case FIELD_TYPES.RADIO_BUTTON:
+            case FieldType.RADIO_BUTTON:
                 return (
                     <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.question}
                         </span>
                         <LanguageInput
+                            fieldKey='Field Question'
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
                                 updateDisplayName(value, language);
@@ -209,13 +228,14 @@ const EditFieldModal = ({
                         {generateOptions()}
                     </div>
                 );
-            case FIELD_TYPES.DIVIDER:
+            case FieldType.DIVIDER:
                 return (
                     <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.dividerTitle}
                         </span>
                         <LanguageInput
+                            fieldKey='Field Question'
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
                                 updateDisplayName(value, language);
@@ -223,13 +243,14 @@ const EditFieldModal = ({
                         />
                     </div>
                 );
-            case FIELD_TYPES.HEADER:
+            case FieldType.HEADER:
                 return (
                     <div className="edit-field-div">
                         <span>
                             {translations.components.swal.field.headerTitle}
                         </span>
                         <LanguageInput
+                            fieldKey='Field Question'
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
                                 updateDisplayName(value, language);
@@ -243,8 +264,8 @@ const EditFieldModal = ({
     };
 
     const generateFieldDropdownOptions = () => {
-        const fieldDropdownOptions = [];
-        Object.values(FIELD_TYPES).forEach((value) => {
+        const fieldDropdownOptions: ReactNode[] = [];
+        Object.values(FieldType).forEach((value) => {
             fieldDropdownOptions.push(
                 <option key={value} value={value} className="edit-field-option">
                     {value}
@@ -260,7 +281,7 @@ const EditFieldModal = ({
             return { Index: index, Question: option };
         });
 
-        const updatedFieldData = {
+        const updatedFieldData: Field = {
             ...initialData,
             fieldType,
             isVisibleOnDashboard,
@@ -285,7 +306,7 @@ const EditFieldModal = ({
         editField(newFieldData);
     };
 
-    const editField = (newFieldData) => {
+    const editField = (newFieldData: Field) => {
         errorWrap(
             () => {
                 validateField(newFieldData);
@@ -297,7 +318,7 @@ const EditFieldModal = ({
         );
     };
 
-    const handleIsVisibleOnDashboard = (event) => {
+    const handleIsVisibleOnDashboard = (event: ChangeEvent<HTMLInputElement>) => {
         setIsVisibleOnDashboard(event.target.checked);
     };
 
@@ -307,10 +328,10 @@ const EditFieldModal = ({
 
     const onDelete = () => {
         swal({
-            title: translations.components.modal.delete,
+            title: translations.components.modal.deleteTitle,
             text: translations.components.modal.deleteFieldConfirmation,
             icon: 'warning',
-            buttons: true,
+            buttons: [true],
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
@@ -321,7 +342,7 @@ const EditFieldModal = ({
         });
     };
 
-    const handleHiddenFieldSwitchChange = (isChecked) => {
+    const handleHiddenFieldSwitchChange = (isChecked: boolean) => {
         // added the "not" operator because when the switch is on, we want isHidden to be false
         setIsHidden(!isChecked);
     };
@@ -329,6 +350,7 @@ const EditFieldModal = ({
     const generateHiddenFieldSwitch = () => {
         return (
             <FormControlLabel
+                label=""
                 className="hidden-field-switch"
                 control={
                     <CustomSwitch
@@ -372,9 +394,10 @@ const EditFieldModal = ({
                             </span>
                             <NativeSelect
                                 id="edit-field-type-dropdown"
-                                MenuProps={{
-                                    style: { zIndex: 35001 }, // for keeping this component on the top layer
-                                }}
+                                // TODO: Check that this still works
+                                // MenuProps={{
+                                //     style: { zIndex: 35001 }, // for keeping this component on the top layer
+                                // }}
                                 defaultValue={fieldType}
                                 input={<BootstrapInput />}
                                 disabled
@@ -434,14 +457,6 @@ const EditFieldModal = ({
             </div>
         </Modal>
     );
-};
-
-EditFieldModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    initialData: PropTypes.object.isRequired,
-    onModalClose: PropTypes.func.isRequired,
-    allRoles: PropTypes.array.isRequired,
-    onEditField: PropTypes.func.isRequired,
 };
 
 export default EditFieldModal;

@@ -6,11 +6,14 @@ export enum PatientStatus {
     WAITLIST = 'Waitlist',
 }
 
-export interface Patient {
+export interface BasePatient {
     firstName?: string,
     fathersName?: string,
     grandfathersName?: string
     familyName?: string
+}
+
+export interface Patient extends BasePatient {
     dateCreated: Date,
     orderYear: number,
     orderId: string,

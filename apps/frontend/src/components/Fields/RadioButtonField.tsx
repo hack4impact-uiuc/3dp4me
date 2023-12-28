@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useTranslations } from '../../hooks/useTranslations';
-import { FieldOptionsType } from '../../utils/custom-proptypes';
 import { FormOption } from './FormOption';
 
 export interface RadioButtonFieldProps {
@@ -57,15 +56,6 @@ const RadioButtonField = ({
             </RadioGroup>
         </div>
     );
-};
-
-RadioButtonField.propTypes = {
-    fieldId: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    value: PropTypes.string,
-    isDisabled: PropTypes.bool.isRequired,
-    onChange: PropTypes.func.isRequired,
-    options: FieldOptionsType,
 };
 
 export default RadioButtonField;
