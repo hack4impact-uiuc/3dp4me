@@ -1,17 +1,16 @@
 import { IconButton } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
 import Eyecon from '../assets/view.svg';
 import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
 import translations from '../translations.json';
-
-import { LANGUAGES, SORT_DIRECTIONS } from './constants';
 import { fieldToJSX } from './fields';
 import { resolveObjPath } from './object';
-import { Language, Step } from '@3dp4me/types';
+import { FieldType, Language, Step } from '@3dp4me/types';
+import { SortDirection } from './constants';
 
 /**
  * Given item data, a field key, and a field type, this function finds
@@ -21,8 +20,9 @@ import { Language, Step } from '@3dp4me/types';
  * @param {*} fieldType The field type of the data that will be retrieved
  * @returns A stringified, formated version of the data.
  */
-const getField = (data: Step, fieldKey: string, fieldType: string, selectedLang: Language) => {
-    const fieldData = resolveObjPath(data, fieldKey);
+const getField = (data: Step, fieldKey: string, fieldType: FieldType, selectedLang: Language): ReactNode => {
+    // Need to cast as any, TS can't resolve recursive generic
+    const fieldData = resolveObjPath<any, any>(data, fieldKey);
     return fieldToJSX(fieldData, fieldType, selectedLang);
 };
 
@@ -37,11 +37,11 @@ const renderSortArrow = (sortConfig, sortKey: string) => {
     if (!sortConfig || sortConfig.key !== sortKey) return null;
 
     switch (sortConfig.direction) {
-        case SORT_DIRECTIONS.AESC:
+        case SortDirection.Ascending:
             return <ArrowDropUpIcon className="dropdown-arrow" />;
-        case SORT_DIRECTIONS.DESC:
+        case SortDirection.Descending:
             return <ArrowDropDownIcon className="dropdown-arrow" />;
-        case SORT_DIRECTIONS.NONE:
+        case SortDirection.None:
             return null;
         default:
             console.error(`Invalid sort direction: '${sortConfig.direction}'`);
@@ -59,8 +59,8 @@ const renderSortArrow = (sortConfig, sortKey: string) => {
  * @returns Array of cells
  */
 export const defaultTableRowRenderer = (rowData, itemData, selectedLang) => {
-    const cellClassName = selectedLang === LANGUAGES.AR ? 'cell-rtl' : 'cell';
-    const cellAlign = selectedLang === LANGUAGES.AR ? 'right' : 'left';
+    const cellClassName = selectedLang === Language.AR ? 'cell-rtl' : 'cell';
+    const cellAlign = selectedLang === Language.AR ? 'right' : 'left';
 
     // Construct a cell for each piece of data
     const row = rowData.map(({ id, dataType }) => (
@@ -89,9 +89,9 @@ export const defaultTableHeaderRenderer = (
     onRequestSort,
     selectedLang,
 ) => {
-    const cellAlign = selectedLang === LANGUAGES.AR ? 'right' : 'left';
+    const cellAlign = selectedLang === Language.AR ? 'right' : 'left';
     const cellClassName =
-        selectedLang === LANGUAGES.AR ? 'cell-align-rtl' : 'cell-align';
+        selectedLang === Language.AR ? 'cell-align-rtl' : 'cell-align';
 
     const headerCells = headers.map((header) => (
         <StyledTableCell

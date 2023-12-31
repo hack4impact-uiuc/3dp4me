@@ -2,6 +2,7 @@ import instance from './axios-config';
 import fileDownload from 'js-file-download';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
 import { Patient, Role, Step } from '@3dp4me/types';
+import { isAdmin } from '../../../backend/src/utils/aws/awsUsers';
 
 export type ApiResponse<T> = {
     success: boolean,
@@ -273,7 +274,7 @@ export const setUserAccess = async (username: string, access: string) => {
     return res.data;
 };
 
-export const getSelf = async () => {
+export const getSelf = async (): Promise<ApiResponse<{ isAdmin: boolean }>> => {
     const requestString = `/users/self`;
     const res = await instance.get(requestString);
 

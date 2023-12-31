@@ -18,7 +18,6 @@ import swal from 'sweetalert';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import TextField from '../Fields/TextField';
 import MultiSelectField from '../Fields/MultiSelectField';
-import { AccessLevel } from '../../utils/constants';
 import './EditRoleModal.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import {
@@ -27,6 +26,17 @@ import {
     addUserRole,
     deleteUser,
 } from '../../api/api';
+import { AccessLevel, Role } from '@3dp4me/types';
+import { FormOption } from '../Fields/FormOption';
+
+export interface EditRoleModalProps {
+    isOpen: boolean
+    onUserEdited: (userId: string, accessLevel: AccessLevel, roles: string[]) => void
+    onUserDeleted: (username: string) => void
+    onClose: () => void
+    userInfo: any
+    allRoles: FormOption[]
+}
 
 const EditRoleModal = ({
     isOpen,
@@ -35,7 +45,7 @@ const EditRoleModal = ({
     onClose,
     userInfo,
     allRoles,
-}) => {
+}: EditRoleModalProps) => {
     const [translations, selectedLang] = useTranslations();
     const [userData, setUserData] = useState(_.cloneDeep(userInfo));
     const errorWrap = useErrorWrap();
@@ -44,11 +54,14 @@ const EditRoleModal = ({
         setUserData(_.cloneDeep(userInfo));
     }, [userInfo]);
 
-    const onRolesChange = (id, roles) => {
+    const onRolesChange = (id: string, roles: string[]) => {
         setUserData({ ...userData, roles });
     };
 
-    const onAccessChange = (event) => {
+    const onAccessChange = (event: React.ChangeEvent<{
+        name?: string | undefined;
+        value: unknown;
+    }>) => {
         setUserData({ ...userData, accessLevel: event.target.value });
     };
 
@@ -90,7 +103,7 @@ const EditRoleModal = ({
             title: translations.components.modal.deleteTitle,
             text: translations.components.modal.deleteUserConfirmation,
             icon: 'warning',
-            buttons: true,
+            buttons: [true],
             dangerMode: true,
         }).then(async (willDelete) => {
             if (willDelete) {
@@ -180,29 +193,6 @@ const EditRoleModal = ({
             </div>
         </Modal>
     );
-};
-
-EditRoleModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onUserEdited: PropTypes.func.isRequired,
-    onUserDeleted: PropTypes.func.isRequired,
-    allRoles: PropTypes.arrayOf(
-        PropTypes.shape({
-            _id: PropTypes.string,
-            IsHidden: PropTypes.bool,
-            Question: PropTypes.shape({
-                EN: PropTypes.string,
-                AR: PropTypes.string,
-            }),
-        }),
-    ),
-    userInfo: PropTypes.shape({
-        userId: PropTypes.string,
-        userName: PropTypes.string,
-        userEmail: PropTypes.string,
-        roles: PropTypes.arrayOf(PropTypes.string),
-    }),
 };
 
 export default EditRoleModal;

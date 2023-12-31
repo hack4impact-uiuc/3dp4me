@@ -8,16 +8,14 @@ import partiallyIcon from '../assets/half-circle.svg';
 import translations from '../translations.json';
 
 import {
-    AccessLevel,
     ERR_LANGUAGE_VALIDATION_FAILED,
     ERR_OPTION_VALIDATION_FAILED,
-    FIELD_TYPES,
     PATIENT_STATUS,
     SIGNATURE_STATUS,
     STEP_STATUS,
 } from './constants';
 import { formatDate } from './date';
-import { AccessLevel, AccessLevel, AccessLevel, Language, PatientStatus, StepStatus } from '@3dp4me/types';
+import { AccessLevel, FieldType, Language, PatientStatus, Step, StepStatus } from '@3dp4me/types';
 
 /**
  * Converts a step status to a string
@@ -238,35 +236,35 @@ const signatureToJSX = (signatureData) => {
  * @param {String} fieldType Type of field
  * @returns The user-friendly name
  */
-export const getFieldName = (fieldType) => {
+export const getFieldName = (fieldType: FieldType) => {
     switch (fieldType) {
-        case FIELD_TYPES.AUDIO:
+        case FieldType.AUDIO:
             return 'Audio Recording';
-        case FIELD_TYPES.DATE:
+        case FieldType.DATE:
             return 'Date';
-        case FIELD_TYPES.DIVIDER:
+        case FieldType.DIVIDER:
             return 'Divider';
-        case FIELD_TYPES.FIELD_GROUP:
+        case FieldType.FIELD_GROUP:
             return 'Field Group';
-        case FIELD_TYPES.FILE:
+        case FieldType.FILE:
             return 'File';
-        case FIELD_TYPES.HEADER:
+        case FieldType.HEADER:
             return 'Header';
-        case FIELD_TYPES.MAP:
+        case FieldType.MAP:
             return 'Location';
-        case FIELD_TYPES.MULTILINE_STRING:
+        case FieldType.MULTILINE_STRING:
             return 'Long text';
-        case FIELD_TYPES.NUMBER:
+        case FieldType.NUMBER:
             return 'Number';
-        case FIELD_TYPES.PHONE:
+        case FieldType.PHONE:
             return 'Phone Number';
-        case FIELD_TYPES.PHOTO:
+        case FieldType.PHOTO:
             return 'Photograph';
-        case FIELD_TYPES.RADIO_BUTTON:
+        case FieldType.RADIO_BUTTON:
             return 'Multiple Choice Question';
-        case FIELD_TYPES.SIGNATURE:
+        case FieldType.SIGNATURE:
             return 'Signature';
-        case FIELD_TYPES.STRING:
+        case FieldType.STRING:
             return 'Short text';
         default:
             return fieldType;
@@ -278,22 +276,22 @@ export const getFieldName = (fieldType) => {
  * @param {String} fieldType Type of field
  * @returns The user-friendly name
  */
-export const canFieldBeAddedToStep = (fieldType) => {
+export const canFieldBeAddedToStep = (fieldType: FieldType) => {
     switch (fieldType) {
-        case FIELD_TYPES.AUDIO:
-        case FIELD_TYPES.DATE:
-        case FIELD_TYPES.DIVIDER:
-        case FIELD_TYPES.FIELD_GROUP:
-        case FIELD_TYPES.FILE:
-        case FIELD_TYPES.HEADER:
-        case FIELD_TYPES.MAP:
-        case FIELD_TYPES.MULTILINE_STRING:
-        case FIELD_TYPES.NUMBER:
-        case FIELD_TYPES.PHONE:
-        case FIELD_TYPES.PHOTO:
-        case FIELD_TYPES.RADIO_BUTTON:
-        case FIELD_TYPES.SIGNATURE:
-        case FIELD_TYPES.STRING:
+        case FieldType.AUDIO:
+        case FieldType.DATE:
+        case FieldType.DIVIDER:
+        case FieldType.FIELD_GROUP:
+        case FieldType.FILE:
+        case FieldType.HEADER:
+        case FieldType.MAP:
+        case FieldType.MULTILINE_STRING:
+        case FieldType.NUMBER:
+        case FieldType.PHONE:
+        case FieldType.PHOTO:
+        case FieldType.RADIO_BUTTON:
+        case FieldType.SIGNATURE:
+        case FieldType.STRING:
             return true;
 
         default:
@@ -308,22 +306,22 @@ export const canFieldBeAddedToStep = (fieldType) => {
  * @param {String} selectedLang The currently selected language
  * @returns The stringified field
  */
-export const fieldToString = (fieldData, fieldType, selectedLang) => {
+export const fieldToString = (fieldData, fieldType: FieldType, selectedLang: Language) => {
     switch (fieldType) {
-        case FIELD_TYPES.MULTILINE_STRING:
-        case FIELD_TYPES.STRING:
-        case FIELD_TYPES.NUMBER:
-        case FIELD_TYPES.PHONE:
+        case FieldType.MULTILINE_STRING:
+        case FieldType.STRING:
+        case FieldType.NUMBER:
+        case FieldType.PHONE:
             return fieldData;
-        case FIELD_TYPES.DATE:
+        case FieldType.DATE:
             return formatDate(new Date(fieldData), selectedLang);
-        case FIELD_TYPES.STEP_STATUS:
+        case FieldType.STEP_STATUS:
             return stepStatusToString(fieldData, selectedLang);
-        case FIELD_TYPES.PATIENT_STATUS:
+        case FieldType.PATIENT_STATUS:
             return patientStatusToString(fieldData, selectedLang);
-        case FIELD_TYPES.ACCESS:
+        case FieldType.ACCESS:
             return accessToString(fieldData, selectedLang);
-        case FIELD_TYPES.SIGNATURE:
+        case FieldType.SIGNATURE:
             return signatureDataToValue(fieldData);
         default:
             console.error(`fieldToString(): Unrecognized field: ${fieldType}`);
@@ -339,23 +337,23 @@ export const fieldToString = (fieldData, fieldType, selectedLang) => {
  * @param {String} selectedLang The currently selected language
  * @returns The JSX
  */
-export const fieldToJSX = (fieldData, fieldType, selectedLang) => {
+export const fieldToJSX = (fieldData: any, fieldType: FieldType, selectedLang: Language) => {
     const stringifiedField = fieldToString(fieldData, fieldType, selectedLang);
 
     switch (fieldType) {
-        case FIELD_TYPES.MULTILINE_STRING:
-        case FIELD_TYPES.STRING:
-        case FIELD_TYPES.NUMBER:
-        case FIELD_TYPES.PHONE:
-        case FIELD_TYPES.DATE:
+        case FieldType.MULTILINE_STRING:
+        case FieldType.STRING:
+        case FieldType.NUMBER:
+        case FieldType.PHONE:
+        case FieldType.DATE:
             return stringifiedField;
-        case FIELD_TYPES.SIGNATURE:
+        case FieldType.SIGNATURE:
             return signatureToJSX(fieldData);
-        case FIELD_TYPES.STEP_STATUS:
+        case FieldType.STEP_STATUS:
             return stepStatusToJSX(fieldData, selectedLang);
-        case FIELD_TYPES.PATIENT_STATUS:
+        case FieldType.PATIENT_STATUS:
             return patientStatusToJSX(fieldData, selectedLang);
-        case FIELD_TYPES.ACCESS:
+        case FieldType.ACCESS:
             return accessToJSX(fieldData, selectedLang);
         default:
             console.error(`fieldToJSX(): Unrecognized field: ${fieldType}`);
@@ -377,7 +375,7 @@ export const validateField = (fieldData) => {
     }
 
     if (
-        fieldData.fieldType === FIELD_TYPES.RADIO_BUTTON &&
+        fieldData.fieldType === FieldType.RADIO_BUTTON &&
         fieldData.options.length === 0
     ) {
         throw new Error(ERR_OPTION_VALIDATION_FAILED);

@@ -41,7 +41,7 @@ import {
 } from '../../utils/table-renderers';
 import { rolesToMultiSelectFormat } from '../../utils/utils';
 import './AccountManagement.scss';
-import { Role, Document, Nullish, AccessLevel } from '@3dp4me/types';
+import { Role, Nullish, AccessLevel } from '@3dp4me/types';
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -50,10 +50,10 @@ import { Role, Document, Nullish, AccessLevel } from '@3dp4me/types';
 const AccountManagement = () => {
     const [translations, selectedLang] = useTranslations();
     const [userMetaData, setUserMetaData] = useState<CognitoIdentityServiceProvider.UserType[]>([]);
-    const [roles, setRoles] = useState<Document<Role>[]>([]);
+    const [roles, setRoles] = useState<Role[]>([]);
 
     const [selectedUser, setSelectedUser] = useState<Nullish<ReturnType<typeof userToRoleModalFormat>>>(null);
-    const [selectedRole, setSelectedRole] = useState<Document<Role>>(null);
+    const [selectedRole, setSelectedRole] = useState<Nullish<Role>>(null);
     const [paginationToken, setPaginationToken] = useState<string>('');
     const [isUserLeft, setIsUserLeft] = useState<boolean>(true);
     const [pageNumber, setPageNumber] = useState<number>(0);
@@ -152,7 +152,7 @@ const AccountManagement = () => {
     /**
      * Formats the roles response to be useable by the table
      */
-    const rolesToTableFormat = (rolesData: Document<Role>[]) => {
+    const rolesToTableFormat = (rolesData: Role[]) => {
         return rolesData.map((role) => ({
             Name: role?.roleName[selectedLang],
             _id: role?._id,
@@ -180,7 +180,7 @@ const AccountManagement = () => {
     /**
      * Called when a user's data is updated
      */
-    const onUserEdited = (username: string, accessLevel: AccessLevel, rolesData: Document<Role>[]) => {
+    const onUserEdited = (username: string, accessLevel: AccessLevel, rolesData: Role[]) => {
         setUserMetaData((metaData) => {
             // Create updated access attribute
             const updatedAccess = {
@@ -242,12 +242,14 @@ const AccountManagement = () => {
     /**
      * Called when a role's data is modified
      */
-    const onRoleEdited = (roleId: string, roleData: Document<Role>) => {
+    const onRoleEdited = (roleId: string, roleData: Role) => {
         setRoles((rolesData) => {
             const updatedRoles = _.cloneDeep(rolesData);
-            const updatedRole = updatedRoles.find(
-                (role) => role._id === roleId,
-            );
+            const updatedRole = updatedRoles.find((role) => role._id === roleId);
+            if (!updatedRole) {
+                return updatedRoles;
+            }
+
             updatedRole.roleName = roleData.roleName;
             updatedRole.roleDescription = roleData.roleDescription;
             return updatedRoles;
@@ -257,7 +259,7 @@ const AccountManagement = () => {
     /**
      * Called when a role's data is added
      */
-    const onRoleAdded = (role: Document<Role>) => {
+    const onRoleAdded = (role: Role) => {
         setRoles((rolesData) => {
             const updatedRoles = rolesData.concat([role]);
             return updatedRoles;
@@ -328,7 +330,7 @@ const AccountManagement = () => {
         return (
             <ManageRoleModal
                 isOpen={selectedRole !== null}
-                roleInfo={selectedRole}
+                roleInfo={selectedRole as Role}
                 onClose={() => setSelectedRole(null)}
                 onRoleDeleted={onRoleDeleted}
                 onRoleEdited={onRoleEdited}

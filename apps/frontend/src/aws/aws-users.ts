@@ -1,13 +1,13 @@
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import { COGNITO_ATTRIBUTES } from '../utils/constants';
-import { AccessLevel, Language, Nullish, Role } from '@3dp4me/types';
+import { AccessLevel, Language, Nullish, Role, TranslatedString } from '@3dp4me/types';
+import { CognitoAttribute } from '../utils/constants';
 
 const getAttr = (user: Nullish<CognitoIdentityServiceProvider.UserType>, atr: string) => {
     return user?.Attributes?.find((attribute) => attribute.Name === atr)?.Value;
 };
 
 export const getAccessLevel = (user: Nullish<CognitoIdentityServiceProvider.UserType>): AccessLevel => {
-    return (getAttr(user, COGNITO_ATTRIBUTES.ACCESS) as AccessLevel) || AccessLevel.PENDING;
+    return (getAttr(user, CognitoAttribute.Access) as AccessLevel) || AccessLevel.PENDING;
 };
 
 export const getName = (user: Nullish<CognitoIdentityServiceProvider.UserType>) => {
@@ -27,11 +27,17 @@ export const getId = (user: Nullish<CognitoIdentityServiceProvider.UserType>) =>
 };
 
 export const getRolesValue = (user: Nullish<CognitoIdentityServiceProvider.UserType>): string[] => {
-    const info = getAttr(user, COGNITO_ATTRIBUTES.ROLES);
+    const info = getAttr(user, CognitoAttribute.Roles);
     return info ? JSON.parse(info) : [];
 };
 
-export const getRoles = (user: Nullish<CognitoIdentityServiceProvider.UserType>, allRolesData: Role[], selectedLang: Language) => {
+interface RoleAsOption {
+    _id: string;
+    IsHidden: boolean;
+    Question: TranslatedString;
+}
+
+export const getRoles = (user: Nullish<CognitoIdentityServiceProvider.UserType>, allRolesData: RoleAsOption[], selectedLang: Language) => {
     let roles = getRolesValue(user);
     if (roles.length === 0) return 'Not Assigned';
 
