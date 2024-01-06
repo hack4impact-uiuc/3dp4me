@@ -14,6 +14,16 @@ import {
     ERR_LANGUAGE_VALIDATION_FAILED,
     ADMIN_ID,
 } from '../../utils/constants';
+import { Language, Role, Step, TranslatedString } from '@3dp4me/types';
+import { FormOption } from '../Fields/FormOption';
+
+export interface EditStepModalProps {
+    isOpen: boolean
+    onModalClose: () => void
+    allRoles: FormOption[]
+    initialData: Step
+    onEditStep: (step: Step) => void
+}
 
 const EditStepModal = ({
     isOpen,
@@ -21,10 +31,10 @@ const EditStepModal = ({
     allRoles,
     initialData,
     onEditStep,
-}) => {
+}: EditStepModalProps) => {
     const [translations, selectedLang] = useTranslations();
     const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID]);
-    const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
+    const [displayName, setDisplayName] = useState<TranslatedString>({ EN: '', AR: '' });
     const [isHidden, setIsHidden] = useState(false);
 
     const errorWrap = useErrorWrap();
@@ -43,17 +53,17 @@ const EditStepModal = ({
         setSelectedRoles(initialRoles);
     }, [initialData, isOpen]);
 
-    const onRolesChange = (id, roles) => {
+    const onRolesChange = (id: string, roles: string[]) => {
         setSelectedRoles(roles);
     };
-    const updateDisplayName = (value, language) => {
+    const updateDisplayName = (value: string, language: Language) => {
         const updatedDisplayName = _.clone(displayName);
         updatedDisplayName[language] = value;
 
         setDisplayName(updatedDisplayName);
     };
 
-    const validateStep = (stepData) => {
+    const validateStep = (stepData: Step) => {
         if (
             stepData.displayName.EN.trim() === '' ||
             stepData.displayName.AR.trim() === ''
@@ -65,8 +75,9 @@ const EditStepModal = ({
     const generateFields = () => {
         return (
             <div className="create-step-modal-field-container">
-                <span>{translations.components.swal.step.createStepTitle}</span>
+                <span>{translations.components.swal.step.createStepHeader}</span>
                 <LanguageInput
+                    fieldKey='displayName'
                     fieldValues={displayName}
                     handleFieldChange={(value, language) => {
                         updateDisplayName(value, language);
@@ -103,7 +114,7 @@ const EditStepModal = ({
         updateStep(newFieldData);
     };
 
-    const updateStep = (editStepData) => {
+    const updateStep = (editStepData: Step) => {
         errorWrap(
             () => {
                 validateStep(editStepData);
@@ -121,7 +132,7 @@ const EditStepModal = ({
             title: translations.components.modal.deleteTitle,
             text: translations.components.modal.deleteStepConfirmation,
             icon: 'warning',
-            buttons: true,
+            buttons: [true],
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
@@ -132,7 +143,7 @@ const EditStepModal = ({
         });
     };
 
-    const handleHiddenFieldSwitchChange = (isChecked) => {
+    const handleHiddenFieldSwitchChange = (isChecked: boolean) => {
         // added the "not" operator because when the switch is on, we want isHidden to be false
         setIsHidden(!isChecked);
     };
@@ -140,6 +151,8 @@ const EditStepModal = ({
     const generateHiddenFieldSwitch = () => {
         return (
             <FormControlLabel
+            // TODO: Make sure this doesn't appear
+                label={"is-hidden"}
                 className="hidden-field-switch"
                 control={
                     <CustomSwitch
