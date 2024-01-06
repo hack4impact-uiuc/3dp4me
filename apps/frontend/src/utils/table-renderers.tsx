@@ -10,7 +10,7 @@ import translations from '../translations.json';
 import { fieldToJSX } from './fields';
 import { Path, resolveObjPath } from './object';
 import { AccessLevel, FieldType, Language, Nullish, Patient, Step } from '@3dp4me/types';
-import { SortDirection } from './constants';
+import { DisplayFieldType, SortDirection } from './constants';
 import { SortConfig } from '../hooks/useSortableData';
 
 /**
@@ -21,7 +21,7 @@ import { SortConfig } from '../hooks/useSortableData';
  * @param {*} fieldType The field type of the data that will be retrieved
  * @returns A stringified, formated version of the data.
  */
-const getField = <T extends Record<string, any>, P extends Path<T>>(data: T, fieldKey: P, fieldType: FieldType, selectedLang: Language): ReactNode => {
+const getField = <T extends Record<string, any>, P extends Path<T>>(data: T, fieldKey: P, fieldType: FieldType | DisplayFieldType, selectedLang: Language): ReactNode => {
     // Need to cast as any, TS can't resolve recursive generic
     const fieldData = resolveObjPath<T, P>(data, fieldKey);
     return fieldToJSX(fieldData, fieldType, selectedLang);
@@ -54,7 +54,7 @@ const renderSortArrow = (sortConfig: Nullish<SortConfig>, sortKey: string) => {
 // Represents the data type and the id used to index the data for this column in a row
 export interface ColumnMetadata<T extends Record<string, any>> {
     id: Path<T>,
-    dataType: FieldType
+    dataType: DisplayFieldType | FieldType
 }
 
 /**
@@ -205,22 +205,13 @@ export interface UserRowData {
     Access: AccessLevel,
 }
 
-type OnUserSelected = (user: UserRowData) => void;
-
 /**
- * This is an object instead of a function because we need to bind onSelected. See generateUserTableRowRenderer.
+ * Creates a userTableRowRenderer with onSelected bound
+ * @param {Function} onSelected The function to bind to onSelected
+ * @returns The bound renderer
  */
-const userTableRowRenderer = {
-    /**
-     * Function called when a user is selected
-     */
-    onSelected: undefined as (OnUserSelected | undefined),
-
-    /**
-     * Renders a single row of user data. Uses the default render and adds a column
-     * at the end that links to user editing modal
-     */
-    Renderer(rowData: ColumnMetadata<UserRowData>[], user: UserRowData, selectedLang: Language) {
+export const generateSelectableRenderer = <T extends Record<string, any>>(onSelected: (item: T) => void): RowRenderer<T> => 
+    (rowData, user, selectedLang) => {
         // Construct the base row
         const row = defaultTableRowRenderer(rowData, user, selectedLang);
 
@@ -231,7 +222,7 @@ const userTableRowRenderer = {
                 className="cell cell-right"
                 align="center"
             >
-                <IconButton onClick={() => this.onSelected?.(user)}>
+                <IconButton onClick={() => onSelected(user)}>
                     <img
                         alt="status icon view-icon"
                         width="18px"
@@ -243,19 +234,7 @@ const userTableRowRenderer = {
         );
 
         return row;
-    },
-};
-
-/**
- * Creates a userTableRowRenderer with onSelected bound
- * @param {Function} onSelected The function to bind to onSelected
- * @returns The bound renderer
- */
-export const generateUserTableRowRenderer = (onSelected: OnUserSelected) =>
-    userTableRowRenderer.Renderer.bind({
-        onSelected,
-    });
-
+}
 /**
  * Renders header for user data. Uses the default render and adds a column
  * at the end for the 'view user' button

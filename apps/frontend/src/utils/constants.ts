@@ -1,5 +1,7 @@
 import { FieldType, Language } from '@3dp4me/types';
 import translations from '../translations.json';
+import { ColumnMetadata } from './table-renderers';
+import { RoleForTable, UserForTable } from '../pages/AccountManagement/AccountManagment';
 
 const PUBLIC_CLOUDFRONT_URL = 'https://d1m40dlonmuszr.cloudfront.net';
 
@@ -135,7 +137,7 @@ export const getRoleTableHeaders = (langKey: Language) => {
  * List of row data that the user table has.
  * 'id' must match 'sortKey' in the headers
  */
-export const USER_TABLE_ROW_DATA = [
+export const USER_TABLE_ROW_DATA: ColumnMetadata<UserForTable>[] = [
     { id: 'Name', dataType: FieldType.STRING },
     { id: 'Email', dataType: FieldType.STRING },
     { id: 'Roles', dataType: FieldType.STRING },
@@ -146,7 +148,7 @@ export const USER_TABLE_ROW_DATA = [
  * List of row data that the role table has.
  * 'id' must match 'sortKey' in the headers
  */
-export const ROLE_TABLE_ROW_DATA = [
+export const ROLE_TABLE_ROW_DATA: ColumnMetadata<RoleForTable>[] = [
     { id: 'Name', dataType: FieldType.STRING },
 ];
 

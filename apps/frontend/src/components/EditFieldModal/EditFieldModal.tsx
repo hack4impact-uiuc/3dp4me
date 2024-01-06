@@ -21,7 +21,7 @@ import LanguageInput from '../LanguageInput/LanguageInput';
 import { useTranslations } from '../../hooks/useTranslations';
 import { validateField } from '../../utils/fields';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
-import { Field, FieldType, Language, QuestionOption, TranslatedString } from '@3dp4me/types';
+import { Field, FieldType, Language, QuestionOption, TranslatedString, Unsaved } from '@3dp4me/types';
 import { FormOption } from '../Fields/FormOption';
 
 type OmitDeep<T, K extends keyof any> = T extends object
@@ -281,7 +281,7 @@ const EditFieldModal = ({
             return { Index: index, Question: option };
         });
 
-        const updatedFieldData: Field = {
+        const updatedFieldData: Unsaved<Field> = {
             ...initialData,
             fieldType,
             isVisibleOnDashboard,

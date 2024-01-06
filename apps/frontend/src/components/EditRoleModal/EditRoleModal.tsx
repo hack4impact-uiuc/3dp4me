@@ -26,15 +26,24 @@ import {
     addUserRole,
     deleteUser,
 } from '../../api/api';
-import { AccessLevel, Role } from '@3dp4me/types';
+import { AccessLevel, Nullish, Role } from '@3dp4me/types';
 import { FormOption } from '../Fields/FormOption';
+import { UserRowData } from '../../utils/table-renderers';
+
+export interface RoleModalUser {
+    accessLevel: AccessLevel,
+    userId: Nullish<string>
+    userName: string
+    userEmail: string
+    roles: string[]
+}
 
 export interface EditRoleModalProps {
     isOpen: boolean
     onUserEdited: (userId: string, accessLevel: AccessLevel, roles: string[]) => void
     onUserDeleted: (username: string) => void
     onClose: () => void
-    userInfo: any
+    userInfo: RoleModalUser
     allRoles: FormOption[]
 }
 

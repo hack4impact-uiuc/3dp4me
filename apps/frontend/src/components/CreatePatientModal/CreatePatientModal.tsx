@@ -5,12 +5,13 @@ import PropTypes from 'prop-types';
 import { useTranslations } from '../../hooks/useTranslations';
 import './CreatePatientModal.scss';
 import { BasePatient, Patient } from '@3dp4me/types';
+import { Unsaved } from '../../../../../packages/types/dist/src/utils/unsaved';
 
 export interface CreatePatientModalProps {
     isOpen: boolean
     onClose: () => void
-    onSave: (patient: BasePatient) => void
-    onSaveAndEdit: (patient: BasePatient) => void
+    onSave: (patient: Unsaved<BasePatient>) => void
+    onSaveAndEdit: (patient: Unsaved<BasePatient>) => void
 }
 
 const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }: CreatePatientModalProps) => {

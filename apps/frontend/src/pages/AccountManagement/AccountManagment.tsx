@@ -18,7 +18,7 @@ import {
     getUsername,
 } from '../../aws/aws-users';
 import AddRoleModal from '../../components/AddRoleModal/AddRoleModal';
-import EditRoleModal from '../../components/EditRoleModal/EditRoleModal';
+import EditRoleModal, { RoleModalUser } from '../../components/EditRoleModal/EditRoleModal';
 import ManageRoleModal from '../../components/ManageRoleModal/ManageRoleModal';
 import { NavTabs } from '../../components/NavTabs/NavTabs';
 import SimpleTable from '../../components/SimpleTable/SimpleTable';
@@ -28,20 +28,33 @@ import { useTranslations } from '../../hooks/useTranslations';
 import {
     ACCOUNT_MANAGEMENT_TABS,
     ACCOUNT_MANAGEMENT_TAB_NAMES,
-    COGNITO_ATTRIBUTES,
     getRoleTableHeaders,
     getUserTableHeaders,
     PEOPLE_PER_PAGE,
     ROLE_TABLE_ROW_DATA,
     USER_TABLE_ROW_DATA,
+    CognitoAttribute,
 } from '../../utils/constants';
 import {
-    generateUserTableRowRenderer,
+    generateSelectableRenderer,
     userTableHeaderRenderer,
 } from '../../utils/table-renderers';
 import { rolesToMultiSelectFormat } from '../../utils/utils';
 import './AccountManagement.scss';
 import { Role, Nullish, AccessLevel } from '@3dp4me/types';
+
+export interface RoleForTable {
+    Name: string,
+    _id: string,
+}
+
+export interface UserForTable {
+    Username: string,
+    Name: string,
+    Email: string,
+    Roles: string,
+    Access: AccessLevel,
+}
 
 /**
  * The account management screen. Allows admins to accept people into the
@@ -126,7 +139,7 @@ const AccountManagement = () => {
     /**
      * Formats a user to a format useable by the EditRoleModal
      */
-    const userToRoleModalFormat = (user: Nullish<CognitoIdentityServiceProvider.UserType>) => {
+    const userToRoleModalFormat = (user: Nullish<CognitoIdentityServiceProvider.UserType>): RoleModalUser => {
         return {
             accessLevel: getAccessLevel(user),
             userId: getId(user),
@@ -139,7 +152,7 @@ const AccountManagement = () => {
     /**
      * Formats the users response to be useable by the table
      */
-    const usersToTableFormat = (users: CognitoIdentityServiceProvider.UserType[]) => {
+    const usersToTableFormat = (users: CognitoIdentityServiceProvider.UserType[]): UserForTable[] => {
         return users.map((user) => ({
             Username: getUsername(user),
             Name: getName(user),
@@ -152,7 +165,7 @@ const AccountManagement = () => {
     /**
      * Formats the roles response to be useable by the table
      */
-    const rolesToTableFormat = (rolesData: Role[]) => {
+    const rolesToTableFormat = (rolesData: Role[]): RoleForTable[] => {
         return rolesData.map((role) => ({
             Name: role?.roleName[selectedLang],
             _id: role?._id,
@@ -171,26 +184,25 @@ const AccountManagement = () => {
     /**
      * Called when a role row is clicked on
      */
-    const onRoleSelected = (user: CognitoIdentityServiceProvider.UserType) => {
-        // TODO: This isn't right????
-        const roleData = roles.find((u) => u._id === user._id);
+    const onRoleSelected = (role: RoleForTable) => {
+        const roleData = roles.find((u) => u._id === role._id);
         setSelectedRole(roleData);
     };
 
     /**
      * Called when a user's data is updated
      */
-    const onUserEdited = (username: string, accessLevel: AccessLevel, rolesData: Role[]) => {
+    const onUserEdited = (username: string, accessLevel: AccessLevel, rolesData: string[]) => {
         setUserMetaData((metaData) => {
             // Create updated access attribute
             const updatedAccess = {
-                Name: COGNITO_ATTRIBUTES.ACCESS,
+                Name: CognitoAttribute.Access,
                 Value: accessLevel,
             };
 
             // Create update role attribute
             const updatedRoles = {
-                Name: COGNITO_ATTRIBUTES.ROLES,
+                Name: CognitoAttribute.Roles,
                 Value: JSON.stringify(rolesData),
             };
 
@@ -268,24 +280,24 @@ const AccountManagement = () => {
 
     const generateMainUserTable = () => {
         return (
-            <SimpleTable
+            <SimpleTable<UserForTable>
                 data={usersToTableFormat(userMetaData)}
                 headers={getUserTableHeaders(selectedLang)}
                 rowData={USER_TABLE_ROW_DATA}
                 renderHeader={userTableHeaderRenderer}
-                renderTableRow={generateUserTableRowRenderer(onUserSelected)}
+                renderTableRow={generateSelectableRenderer(onUserSelected)}
             />
         );
     };
 
     const generateMainRoleTable = () => {
         return (
-            <SimpleTable
+            <SimpleTable<RoleForTable>
                 data={rolesToTableFormat(roles)}
                 headers={getRoleTableHeaders(selectedLang)}
                 rowData={ROLE_TABLE_ROW_DATA}
                 renderHeader={userTableHeaderRenderer}
-                renderTableRow={generateUserTableRowRenderer(onRoleSelected)}
+                renderTableRow={generateSelectableRenderer(onRoleSelected)}
             />
         );
     };
@@ -314,6 +326,9 @@ const AccountManagement = () => {
     };
 
     const generateUserEditModal = () => {
+        if (!selectedUser)
+            return null
+
         return (
             <EditRoleModal
                 isOpen={selectedUser !== null}
