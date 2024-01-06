@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Button } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import { trackPromise } from 'react-promise-tracker';
 
 import TextField from '../Fields/TextField';
@@ -13,7 +12,7 @@ import {
     ERR_ROLE_INPUT_VALIDATION_FAILED,
     LANGUAGES,
 } from '../../utils/constants';
-import { Language, Role } from '@3dp4me/types';
+import { Language, Nullish, Role } from '@3dp4me/types';
 
 export interface AddRoleModalProps {
     isOpen: boolean
@@ -22,7 +21,7 @@ export interface AddRoleModalProps {
 }
 
 const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
-    const [role, setRole] = useState<Role>({});
+    const [role, setRole] = useState<Partial<Role>>({});
     const translations = useTranslations()[0];
     const errorWrap = useErrorWrap();
 
@@ -36,10 +35,12 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
     };
 
     const handleRoleUpdate = (key: "roleName" | "roleDescription", value: string, lang: Language) => {
-        setRole((prevState) => ({
-            ...prevState,
-            [key]: { ...prevState?.[key], [lang]: value },
-        }));
+        setRole((prevState) => {
+            return {
+                ...prevState,
+                [key]: { ...prevState?.[key], [lang]: value },
+            }
+        });
     };
 
     const validateRole = () => {
@@ -81,7 +82,7 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
                     value={role?.roleDescription?.[Language.EN]}
                     title={`${translations.roleManagement.roleDescription} (EN)`}
                     onChange={(key, value) =>
-                        handleRoleUpdate(key, value, Language.EN)
+                        handleRoleUpdate("roleDescription", value, Language.EN)
                     }
                     fieldId="roleDescription"
                     disabled={false}
@@ -90,7 +91,7 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
                     value={role?.roleDescription?.[Language.AR]}
                     title={`${translations.roleManagement.roleDescription} (AR)`}
                     onChange={(key, value) =>
-                        handleRoleUpdate(key, value, Language.AR)
+                        handleRoleUpdate("roleDescription", value, Language.AR)
                     }
                     fieldId="roleDescription"
                     disabled={false}
@@ -107,12 +108,6 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
             </div>
         </Modal>
     );
-};
-
-AddRoleModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onRoleAdded: PropTypes.func.isRequired,
 };
 
 export default AddRoleModal;

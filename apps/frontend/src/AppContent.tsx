@@ -21,6 +21,7 @@ import LoadingIndicator from './components/LoadingIndicator/LoadingIndicator';
 import { Language } from '@3dp4me/types';
 import { CognitoAttribute, Routes } from './utils/constants';
 import { ReducerActionType } from './store/Reducer';
+import { isLanguageValid } from './utils/language';
 
 interface AppContentProps {
     username: string
@@ -65,13 +66,6 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
         setLanguage();
         errorWrap(setAdminStatus);
     }, [dispatch, errorWrap]);
-
-    /**
-     * Returns true if the given string is a valid language identifier
-     */
-    const isLanguageValid = (language: string): language is Language => {
-        return Object.values(Language).includes(language as Language);
-    };
 
     /**
      * Sets store when the global error modal should be closed

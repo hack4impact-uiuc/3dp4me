@@ -2,7 +2,6 @@ import instance from './axios-config';
 import fileDownload from 'js-file-download';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
 import { BasePatient, Patient, Role, Step } from '@3dp4me/types';
-import { isAdmin } from '../../../backend/src/utils/aws/awsUsers';
 
 export type ApiResponse<T> = {
     success: boolean,
@@ -159,7 +158,7 @@ export const uploadFile = async (
     stepKey: string,
     fieldKey: string,
     filename: string,
-    filedata: string | Blob,
+    filedata: File,
 ) => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     const formData = new FormData();
@@ -194,7 +193,7 @@ export const getAllRoles = async () => {
     return res.data;
 };
 
-export const addRole = async (roleInfo: Role) => {
+export const addRole = async (roleInfo: Partial<Role>) => {
     const requestString = `/roles`;
     const res = await instance.post(requestString, roleInfo);
     if (!res?.data?.success) throw new Error(res?.data?.message);

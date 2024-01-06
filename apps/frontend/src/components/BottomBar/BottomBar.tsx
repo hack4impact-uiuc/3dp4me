@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
@@ -12,7 +12,7 @@ import { PatientStatus, StepStatus } from '@3dp4me/types';
 
 interface BottomBarProps {
     isEditing: boolean
-    onAddField: () => void
+    onAddField?: (step: string, key: string) => void
     onStatusChange: (status: 'status', value: StepStatus) => void
     onSave: () => void
     onDiscard: () => void
@@ -28,7 +28,7 @@ const BottomBar = ({
     onSave,
     onDiscard,
     onEdit,
-    status = null,
+    status = StepStatus.UNFINISHED,
     selectedStep,
 }: BottomBarProps) => {
     const [translations, selectedLang] = useTranslations();
@@ -45,6 +45,11 @@ const BottomBar = ({
         ),
     };
 
+    const onStatusSelected: MouseEventHandler<HTMLDivElement> = (e) => {
+        // TODO: Look into this
+        onStatusChange('status', e.target.value);
+    }
+
     /**
      * Renders the dropdown for step status. If status is null, then this isn't rendered at all.
      */
@@ -59,17 +64,17 @@ const BottomBar = ({
             <Select
                 className={className}
                 MenuProps={{ disableScrollLock: true }}
-                onClick={(e) => onStatusChange('status', e.target.value)}
+                onClick={onStatusSelected}
                 value={status}
             >
                 <MenuItem value={STEP_STATUS.UNFINISHED}>
-                    {translations.components.bottombar.unfinished}
+                    {translations.components.bottombar.Unfinished}
                 </MenuItem>
                 <MenuItem value={STEP_STATUS.PARTIALLY_FINISHED}>
-                    {translations.components.bottombar.partial}
+                    {translations.components.bottombar.Partial}
                 </MenuItem>
                 <MenuItem value={STEP_STATUS.FINISHED}>
-                    {translations.components.bottombar.finished}
+                    {translations.components.bottombar.Finished}
                 </MenuItem>
             </Select>
         );
