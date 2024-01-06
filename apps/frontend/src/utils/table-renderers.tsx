@@ -8,9 +8,10 @@ import Eyecon from '../assets/view.svg';
 import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
 import translations from '../translations.json';
 import { fieldToJSX } from './fields';
-import { resolveObjPath } from './object';
-import { FieldType, Language, Step } from '@3dp4me/types';
+import { Path, resolveObjPath } from './object';
+import { FieldType, Language, Patient, Step } from '@3dp4me/types';
 import { SortDirection } from './constants';
+import { SortConfig } from '../hooks/useSortableData';
 
 /**
  * Given item data, a field key, and a field type, this function finds
@@ -20,9 +21,9 @@ import { SortDirection } from './constants';
  * @param {*} fieldType The field type of the data that will be retrieved
  * @returns A stringified, formated version of the data.
  */
-const getField = (data: Step, fieldKey: string, fieldType: FieldType, selectedLang: Language): ReactNode => {
+const getField = <T extends Record<string, any>, P extends Path<T>>(data: T, fieldKey: P, fieldType: FieldType, selectedLang: Language): ReactNode => {
     // Need to cast as any, TS can't resolve recursive generic
-    const fieldData = resolveObjPath<any, any>(data, fieldKey);
+    const fieldData = resolveObjPath<T, P>(data, fieldKey);
     return fieldToJSX(fieldData, fieldType, selectedLang);
 };
 
@@ -33,7 +34,7 @@ const getField = (data: Step, fieldKey: string, fieldType: FieldType, selectedLa
  *                         visible when this column is being sorted.
  * @returns The arrow
  */
-const renderSortArrow = (sortConfig, sortKey: string) => {
+const renderSortArrow = (sortConfig: SortConfig, sortKey: string) => {
     if (!sortConfig || sortConfig.key !== sortKey) return null;
 
     switch (sortConfig.direction) {
@@ -50,6 +51,8 @@ const renderSortArrow = (sortConfig, sortKey: string) => {
     return null;
 };
 
+type WithIdAndType<T = Record<string, any>> = T & { id: string; dataType: FieldType };
+
 /**
  * Given data, constructs an array of cells for the row. By placing each
  * header item into it's own cell
@@ -58,7 +61,7 @@ const renderSortArrow = (sortConfig, sortKey: string) => {
  * @param {String} selectedLang The currently selected language.
  * @returns Array of cells
  */
-export const defaultTableRowRenderer = (rowData, itemData, selectedLang) => {
+export const defaultTableRowRenderer = <T extends Record<string, any>, P extends Path<T>>(rowData: { id: P, dataType: FieldType }[], itemData: T, selectedLang: Language) => {
     const cellClassName = selectedLang === Language.AR ? 'cell-rtl' : 'cell';
     const cellAlign = selectedLang === Language.AR ? 'right' : 'left';
 
@@ -75,6 +78,19 @@ export const defaultTableRowRenderer = (rowData, itemData, selectedLang) => {
 
     return row;
 };
+
+export type Renderer = (
+    headers: Header[],
+    sortConfig: SortConfig,
+    onRequestSort: (key: string) => void,
+    selectedLang: Language,
+) => ReactNode[];
+
+export interface Header {
+    title: string
+    sortKey: string
+}
+
 /**
  * Given data, constructs an array of cells for the header of a table.
  * @param {Array} headers An array containing a `title` and unique `sortKey` for each header
@@ -83,7 +99,7 @@ export const defaultTableRowRenderer = (rowData, itemData, selectedLang) => {
  * @param {String} selectedLang The currently selected language.
  * @returns Array of cells
  */
-export const defaultTableHeaderRenderer = (
+export const defaultTableHeaderRenderer: Renderer = (
     headers,
     sortConfig,
     onRequestSort,
@@ -115,10 +131,10 @@ export const defaultTableHeaderRenderer = (
  * at the end that links to patient data
  */
 export const patientTableRowRenderer = (
-    rowData,
-    patient,
-    selectedLang,
-    stepKey,
+    rowData: Step,
+    patient: Patient,
+    selectedLang: Language,
+    stepKey: string,
 ) => {
     // Construct the base row
     const row = defaultTableRowRenderer(rowData, patient, selectedLang);
@@ -149,8 +165,8 @@ export const patientTableRowRenderer = (
  * Renders header for patient data. Uses the default render and adds a column
  * at the end for the 'view patient' link
  */
-export const patientTableHeaderRenderer = (
-    headers,
+export const patientTableHeaderRenderer: Renderer = (
+    headers, 
     sortConfig,
     onRequestSort,
     selectedLang,
@@ -178,13 +194,13 @@ const userTableRowRenderer = {
     /**
      * Function called when a user is selected
      */
-    onSelected: undefined,
+    onSelected: undefined as (((user: User) => void) | undefined),
 
     /**
      * Renders a single row of user data. Uses the default render and adds a column
      * at the end that links to user editing modal
      */
-    Renderer(rowData, user, selectedLang) {
+    Renderer(rowData, user, selectedLang: Language) {
         // Construct the base row
         const row = defaultTableRowRenderer(rowData, user, selectedLang);
 
@@ -195,7 +211,7 @@ const userTableRowRenderer = {
                 className="cell cell-right"
                 align="center"
             >
-                <IconButton onClick={() => this.onSelected(user)}>
+                <IconButton onClick={() => this.onSelected?.(user)}>
                     <img
                         alt="status icon view-icon"
                         width="18px"
@@ -224,7 +240,7 @@ export const generateUserTableRowRenderer = (onSelected) =>
  * Renders header for user data. Uses the default render and adds a column
  * at the end for the 'view user' button
  */
-export const userTableHeaderRenderer = (
+export const userTableHeaderRenderer: Renderer = (
     headers,
     sortConfig,
     onRequestSort,

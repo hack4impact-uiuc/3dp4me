@@ -7,6 +7,7 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { postNewPatient } from '../../api/api';
 import {
+    Header,
     patientTableHeaderRenderer,
     patientTableRowRenderer,
 } from '../../utils/table-renderers';
@@ -14,6 +15,18 @@ import CreatePatientModal from '../CreatePatientModal/CreatePatientModal';
 import Table from '../Table/Table';
 import { TableRowType, TableHeaderType } from '../../utils/custom-proptypes';
 import { ROUTES } from '../../utils/constants';
+import { Patient } from '@3dp4me/types';
+
+export interface PatientTableProps {
+    onAddPatient: (patient: Patient) => void
+    tableTitle: string
+    patients: Patient[]
+    headers: Header[]
+    rowData: any // TODO
+    initialSearchQuery: string
+    handleSearchQuery: (query: string) => void
+    stepKey: string
+}
 
 /**
  * A table to be used with patient data. Same as a normal <Table/> element,
@@ -28,7 +41,7 @@ const PatientTable = ({
     initialSearchQuery,
     handleSearchQuery,
     stepKey,
-}) => {
+}: PatientTableProps) => {
     const errorWrap = useErrorWrap();
     const translations = useTranslations()[0];
     const [isCreatePatientModalOpen, setCreatePatientModalOpen] =
@@ -114,17 +127,6 @@ const PatientTable = ({
             />
         </div>
     );
-};
-
-PatientTable.propTypes = {
-    onAddPatient: PropTypes.func.isRequired,
-    tableTitle: PropTypes.string,
-    patients: PropTypes.arrayOf(PropTypes.object),
-    headers: PropTypes.arrayOf(TableHeaderType).isRequired,
-    rowData: PropTypes.arrayOf(TableRowType).isRequired,
-    handleSearchQuery: PropTypes.func.isRequired,
-    initialSearchQuery: PropTypes.string.isRequired,
-    stepKey: PropTypes.string,
 };
 
 export default PatientTable;

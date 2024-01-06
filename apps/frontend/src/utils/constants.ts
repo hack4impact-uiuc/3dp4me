@@ -43,6 +43,15 @@ export enum CognitoAttribute {
     Access = 'custom:access',
 };
 
+// These are special fields only used on the frontend for table rendering
+export enum DisplayFieldType {
+    STEP_STATUS = "StepStatus",
+    PATIENT_STATUS = "PatientStatus",
+    ACCESS = "Access",
+}
+
+export type AnyFieldType = FieldType | DisplayFieldType;
+
 /**
  * List of headers that every per step table has. These are
  * the leftmost columns on the dashboard screen.
@@ -94,7 +103,7 @@ export const ALL_PATIENT_DASHBOARD_ROW_DATA = [
     { id: 'familyName', dataType: FieldType.STRING },
     { id: 'orderId', dataType: FieldType.STRING },
     { id: 'lastEdited', dataType: FieldType.DATE },
-    { id: 'status', dataType: FieldType.PATIENT_STATUS },
+    { id: 'status', dataType: DisplayFieldType.PATIENT_STATUS },
 ];
 
 /**
@@ -130,7 +139,7 @@ export const USER_TABLE_ROW_DATA = [
     { id: 'Name', dataType: FieldType.STRING },
     { id: 'Email', dataType: FieldType.STRING },
     { id: 'Roles', dataType: FieldType.STRING },
-    { id: 'Access', dataType: FieldType.ACCESS },
+    { id: 'Access', dataType: DisplayFieldType.ACCESS },
 ];
 
 /**
@@ -138,7 +147,7 @@ export const USER_TABLE_ROW_DATA = [
  * 'id' must match 'sortKey' in the headers
  */
 export const ROLE_TABLE_ROW_DATA = [
-    { id: 'Name', dataType: FIELD_TYPES.STRING },
+    { id: 'Name', dataType: FieldType.STRING },
 ];
 
 /**

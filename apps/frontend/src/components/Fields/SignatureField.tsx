@@ -9,7 +9,7 @@ import SignaturePad, { PointGroup } from 'signature_pad';
 import './SignatureField.scss';
 
 import { useTranslations } from '../../hooks/useTranslations';
-import { Nullish, TranslatedString } from '@3dp4me/types';
+import { Nullish, SignaturePoint, SignatureValue, TranslatedString } from '@3dp4me/types';
 import ReactSignatureCanvas from 'react-signature-canvas';
 
 type Path<T> = T extends object 
@@ -40,20 +40,6 @@ export interface SignatureFieldProps {
     onChange?: <K extends Path<SignatureValue>>(key: K, value: PathValue<SignatureValue, K>) => void
 }
 
-interface SignatureValue {
-    signatureData: SignaturePoint[][]
-    signatureCanvasWidth: number
-    signatureCanvasHeight: number
-
-    // TODO: This is duplicated in value?
-    documentURL: TranslatedString
-}
-
-interface SignaturePoint {
-    x: number
-    y: number
-    time: number
-}
 
 const SignatureField = ({
     displayName,

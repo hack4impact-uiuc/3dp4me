@@ -5,7 +5,7 @@ import { SortDirection } from '../utils/constants';
 import { Path, resolveObjPath } from '../utils/object';
 import { Nullish } from '@3dp4me/types';
 
-interface SortConfig {
+export interface SortConfig {
     key: string,
     direction: SortDirection
 }

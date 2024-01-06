@@ -8,6 +8,8 @@ import partiallyIcon from '../assets/half-circle.svg';
 import translations from '../translations.json';
 
 import {
+    AnyFieldType,
+    DisplayFieldType,
     ERR_LANGUAGE_VALIDATION_FAILED,
     ERR_OPTION_VALIDATION_FAILED,
     PATIENT_STATUS,
@@ -15,7 +17,7 @@ import {
     STEP_STATUS,
 } from './constants';
 import { formatDate } from './date';
-import { AccessLevel, FieldType, Language, PatientStatus, Step, StepStatus } from '@3dp4me/types';
+import { AccessLevel, Field, FieldType, Language, PatientStatus, SignatureValue, Step, StepStatus } from '@3dp4me/types';
 
 /**
  * Converts a step status to a string
@@ -24,15 +26,15 @@ const stepStatusToString = (status: StepStatus, selectedLang: Language) => {
     const bottomBarTranslations =
         translations[selectedLang].components.bottombar;
 
-    if (!status) return bottomBarTranslations.unfinished;
+    if (!status) return bottomBarTranslations.Unfinished;
 
     switch (status) {
         case STEP_STATUS.FINISHED:
-            return bottomBarTranslations.finished;
+            return bottomBarTranslations.Finished;
         case STEP_STATUS.PARTIALLY_FINISHED:
-            return bottomBarTranslations.partial;
+            return bottomBarTranslations.Partial;
         case STEP_STATUS.UNFINISHED:
-            return bottomBarTranslations.unfinished;
+            return bottomBarTranslations.Unfinished;
         default:
             console.error(`statusToString(): Unrecognized status: ${status}`);
     }
@@ -70,11 +72,11 @@ const getStepStatusIcon = (status: StepStatus) => {
     if (!status) return unfinishedIcon;
 
     switch (status) {
-        case STEP_STATUS.FINISHED:
+        case StepStatus.FINISHED:
             return finishedIcon;
-        case STEP_STATUS.PARTIALLY_FINISHED:
+        case StepStatus.PARTIAL:
             return partiallyIcon;
-        case STEP_STATUS.UNFINISHED:
+        case StepStatus.UNFINISHED:
             return unfinishedIcon;
         default:
             console.error(
@@ -82,7 +84,7 @@ const getStepStatusIcon = (status: StepStatus) => {
             );
     }
 
-    return null;
+    return unfinishedIcon;
 };
 
 /**
@@ -197,7 +199,7 @@ const accessToJSX = (access: AccessLevel, selectedLang: Language) => {
 /**
  * Given signature data, converts it to a standard enum value
  */
-const signatureDataToValue = (signatureData) => {
+const signatureDataToValue = (signatureData: SignatureValue) => {
     return signatureData?.signatureData
         ? SIGNATURE_STATUS.SIGNED
         : SIGNATURE_STATUS.UNSIGNED;
@@ -206,7 +208,7 @@ const signatureDataToValue = (signatureData) => {
 /**
  * Gets the JSX associated with the given signature data
  */
-const signatureToJSX = (signatureData) => {
+const signatureToJSX = (signatureData: SignatureValue) => {
     const signatureStatus = signatureDataToValue(signatureData);
 
     switch (signatureStatus) {
@@ -306,7 +308,7 @@ export const canFieldBeAddedToStep = (fieldType: FieldType) => {
  * @param {String} selectedLang The currently selected language
  * @returns The stringified field
  */
-export const fieldToString = (fieldData, fieldType: FieldType, selectedLang: Language) => {
+export const fieldToString = (fieldData, fieldType: AnyFieldType, selectedLang: Language) => {
     switch (fieldType) {
         case FieldType.MULTILINE_STRING:
         case FieldType.STRING:
@@ -315,11 +317,11 @@ export const fieldToString = (fieldData, fieldType: FieldType, selectedLang: Lan
             return fieldData;
         case FieldType.DATE:
             return formatDate(new Date(fieldData), selectedLang);
-        case FieldType.STEP_STATUS:
+        case DisplayFieldType.STEP_STATUS:
             return stepStatusToString(fieldData, selectedLang);
-        case FieldType.PATIENT_STATUS:
+        case DisplayFieldType.PATIENT_STATUS:
             return patientStatusToString(fieldData, selectedLang);
-        case FieldType.ACCESS:
+        case DisplayFieldType.ACCESS:
             return accessToString(fieldData, selectedLang);
         case FieldType.SIGNATURE:
             return signatureDataToValue(fieldData);
@@ -337,7 +339,7 @@ export const fieldToString = (fieldData, fieldType: FieldType, selectedLang: Lan
  * @param {String} selectedLang The currently selected language
  * @returns The JSX
  */
-export const fieldToJSX = (fieldData: any, fieldType: FieldType, selectedLang: Language) => {
+export const fieldToJSX = (fieldData: any, fieldType: AnyFieldType, selectedLang: Language) => {
     const stringifiedField = fieldToString(fieldData, fieldType, selectedLang);
 
     switch (fieldType) {
@@ -349,11 +351,11 @@ export const fieldToJSX = (fieldData: any, fieldType: FieldType, selectedLang: L
             return stringifiedField;
         case FieldType.SIGNATURE:
             return signatureToJSX(fieldData);
-        case FieldType.STEP_STATUS:
+        case DisplayFieldType.STEP_STATUS:
             return stepStatusToJSX(fieldData, selectedLang);
-        case FieldType.PATIENT_STATUS:
+        case DisplayFieldType.PATIENT_STATUS:
             return patientStatusToJSX(fieldData, selectedLang);
-        case FieldType.ACCESS:
+        case DisplayFieldType.ACCESS:
             return accessToJSX(fieldData, selectedLang);
         default:
             console.error(`fieldToJSX(): Unrecognized field: ${fieldType}`);
@@ -366,7 +368,7 @@ export const fieldToJSX = (fieldData: any, fieldType: FieldType, selectedLang: L
  * Validates a field's data.
  * @param {JSON} fieldData
  */
-export const validateField = (fieldData) => {
+export const validateField = (fieldData: Field) => {
     if (
         fieldData.displayName.EN.trim() === '' ||
         fieldData.displayName.AR.trim() === ''

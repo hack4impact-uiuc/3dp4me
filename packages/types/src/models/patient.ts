@@ -7,6 +7,7 @@ export enum PatientStatus {
 }
 
 export interface BasePatient {
+    _id: string,
     firstName?: string,
     fathersName?: string,
     grandfathersName?: string

@@ -1,4 +1,7 @@
+import { Signature } from "typescript"
+import { File } from "./file"
 import { TranslatedString } from "./translatedString"
+import { MapPoint } from "./map"
 
 export enum FieldType {
     STRING = 'String',
@@ -17,6 +20,23 @@ export enum FieldType {
     FIELD_GROUP ='FieldGroup',
     MAP = 'Map',
 };
+
+export interface FieldTypeData {
+    [FieldType.STRING]: string
+    [FieldType.MULTILINE_STRING]: string
+    [FieldType.FILE]: File[]
+    [FieldType.NUMBER]: number
+    [FieldType.DATE]: Date
+    [FieldType.PHONE]: string
+    [FieldType.DIVIDER]: null
+    [FieldType.HEADER]: null
+    [FieldType.RADIO_BUTTON]: string
+    [FieldType.AUDIO]: File[]
+    [FieldType.SIGNATURE]: Signature
+    [FieldType.PHOTO]: File[]
+    [FieldType.FIELD_GROUP]: [Record<string, FieldTypeData>]
+    [FieldType.MAP]: MapPoint
+}
 
 export interface Field {
     fieldNumber: number,

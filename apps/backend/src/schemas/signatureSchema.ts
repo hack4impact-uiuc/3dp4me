@@ -1,3 +1,4 @@
+import { Signature } from '@3dp4me/types';
 import mongoose from 'mongoose';
 
 /**
@@ -5,7 +6,7 @@ import mongoose from 'mongoose';
  * while signatureCanvasWidth/Height are for recording the canvas size on which signatureData
  * is collected. DocumentURL records the default document URL for both EN and AR.
  */
-export const signatureSchema = new mongoose.Schema({
+export const signatureSchema = new mongoose.Schema<Signature>({
     signatureData: [
         [
             {
