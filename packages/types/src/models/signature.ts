@@ -4,7 +4,7 @@ export interface SignaturePoint {
     x: number
     y: number
     time: number
-    color: string
+    color?: string
 }
 
 export interface Signature {

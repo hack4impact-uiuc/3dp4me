@@ -65,7 +65,7 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
                     className="text-field"
                     displayName={`${translations.roleManagement.roleName} (EN)`}
                     onChange={(key, value) =>
-                        handleRoleUpdate("roleName", value, Language.EN)
+                        handleRoleUpdate(key, value, Language.EN)
                     }
                     fieldId="roleName"
                 />
@@ -74,7 +74,7 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
                     className="text-field"
                     displayName={`${translations.roleManagement.roleName} (AR)`}
                     onChange={(key, value) =>
-                        handleRoleUpdate("roleName", value, Language.AR)
+                        handleRoleUpdate(key, value, Language.AR)
                     }
                     fieldId="roleName"
                 />
@@ -82,7 +82,7 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
                     value={role?.roleDescription?.[Language.EN]}
                     title={`${translations.roleManagement.roleDescription} (EN)`}
                     onChange={(key, value) =>
-                        handleRoleUpdate("roleDescription", value, Language.EN)
+                        handleRoleUpdate(key, value, Language.EN)
                     }
                     fieldId="roleDescription"
                     disabled={false}
@@ -91,7 +91,7 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
                     value={role?.roleDescription?.[Language.AR]}
                     title={`${translations.roleManagement.roleDescription} (AR)`}
                     onChange={(key, value) =>
-                        handleRoleUpdate("roleDescription", value, Language.AR)
+                        handleRoleUpdate(key, value, Language.AR)
                     }
                     fieldId="roleDescription"
                     disabled={false}

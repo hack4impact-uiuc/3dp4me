@@ -1,23 +1,4 @@
-import { Nullish } from "@3dp4me/types";
-
-export type Path<T> = T extends object 
-    ? { [K in keyof T]: K extends string | number 
-        ? `${K}` | (Path<T[K]> extends never ? never : `${K}.${Path<T[K]>}`) 
-        : never 
-      }[keyof T] 
-    : never;
-
-// A type to extract the value type at a given path
-export type PathValue<T, P = Path<T>> = 
-  P extends `${infer K}.${infer Rest}`
-    ? K extends keyof T
-      ? Rest extends Path<T[K]>
-        ? PathValue<T[K], Rest>
-        : never
-      : never
-    : P extends keyof T
-      ? T[P]
-      : never;
+import { Nullish, Path, PathValue } from "@3dp4me/types";
 
 /**
  * Takes an object path and returns the underlying value at that locaiton.

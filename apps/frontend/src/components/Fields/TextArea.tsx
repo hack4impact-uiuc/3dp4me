@@ -2,15 +2,15 @@ import React from 'react';
 import './TextArea.scss';
 import PropTypes from 'prop-types';
 
-export interface TextAreaProps {
+export interface TextAreaProps<T extends string> {
     title: string
     disabled: boolean
-    fieldId: string
-    onChange: (key: string, value: string) => void
+    fieldId: T
+    onChange: (key: T, value: string) => void
     value?: string
 }
 
-const TextArea = ({ title, disabled, fieldId, onChange, value = '' }: TextAreaProps) => {
+const TextArea = <T extends string>({ title, disabled, fieldId, onChange, value = '' }: TextAreaProps<T>) => {
     return (
         <div className="text-area-wrapper">
             <h3>{title}</h3>

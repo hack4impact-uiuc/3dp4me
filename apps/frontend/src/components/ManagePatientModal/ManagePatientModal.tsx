@@ -11,7 +11,7 @@ import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants';
 import RadioButtonField from '../Fields/RadioButtonField';
 import TextField from '../Fields/TextField';
 import './ManagePatientModal.scss';
-import { Language, Patient } from '@3dp4me/types';
+import { Language, Patient, } from '@3dp4me/types';
 import { MultiSelectOption } from '../Fields/MultiSelectField';
 
 export interface ManagePatientModalProps {

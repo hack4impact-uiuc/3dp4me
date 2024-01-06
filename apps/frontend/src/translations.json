@@ -98,7 +98,8 @@
             "table": {
                 "loading": "Loading",
                 "noPatientsFound": "Sorry! No matching patients",
-                "view": "View"
+                "view": "View",
+                "edit": "Edit"
             },
             "selectQuestionFormat": {
                 "allQuestions": "All Questions",
@@ -358,7 +359,8 @@
             "table": {
                 "loading": "جاري التحميل",
                 "noPatientsFound": "معذرة! لا يوجد مرضى مطابقون",
-                "view": "View"
+                "view": "منظر",
+                "edit": "يحرر"
             },
             "selectQuestionFormat": {
                 "allQuestions": "جميع الأسئلة",

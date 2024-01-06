@@ -29,6 +29,7 @@ import {
 import { AccessLevel, Nullish, Role } from '@3dp4me/types';
 import { FormOption } from '../Fields/FormOption';
 import { UserRowData } from '../../utils/table-renderers';
+import { isAccessLevel } from '../../utils/access';
 
 export interface RoleModalUser {
     accessLevel: AccessLevel,
@@ -71,40 +72,44 @@ const EditRoleModal = ({
         name?: string | undefined;
         value: unknown;
     }>) => {
-        setUserData({ ...userData, accessLevel: event.target.value });
+        if (isAccessLevel(event.target.value))
+            setUserData({ ...userData, accessLevel: event.target.value });
     };
 
     const onSave = async () => {
         // Update users roles
         for (let i = 0; i < allRoles.length; i++) {
             const role = allRoles[i];
-
             // If user has role
             if (userData.roles.find((r) => r === role._id)) {
                 // If user didn't have role before, make request to backend
                 if (!userInfo.roles.find((r) => r === role._id)) {
-                    await errorWrap(async () =>
-                        trackPromise(addUserRole(userData.userId, role._id)),
-                    );
+                    await errorWrap(async () => {
+                        if (userData.userId)
+                            trackPromise(addUserRole(userData.userId, role._id))
+                    });
                 }
             } else {
                 // If user did have role before, make request to backend
                 if (userInfo.roles.find((r) => r === role._id)) {
-                    await errorWrap(async () =>
-                        trackPromise(removeUserRole(userData.userId, role._id)),
-                    );
+                    await errorWrap(async () => {
+                        if (userData.userId)
+                            trackPromise(removeUserRole(userData.userId, role._id))
+                    });
                 }
             }
         }
 
         // Update user access level
-        await errorWrap(async () =>
-            trackPromise(setUserAccess(userData.userId, userData.accessLevel)),
-        );
+        await errorWrap(async () => {
+            if (userData.userId)
+                trackPromise(setUserAccess(userData.userId, userData.accessLevel))
+        });
 
         // Close modal and update local data
         onClose();
-        onUserEdited(userData.userId, userData.accessLevel, userData.roles);
+        if (userData.userId)
+            onUserEdited(userData.userId, userData.accessLevel, userData.roles);
     };
 
     const onDelete = async () => {
@@ -116,11 +121,14 @@ const EditRoleModal = ({
             dangerMode: true,
         }).then(async (willDelete) => {
             if (willDelete) {
-                await errorWrap(async () =>
-                    trackPromise(deleteUser(userData?.userId)),
-                );
+                await errorWrap(async () => {
+                    if (userData.userId)
+                        trackPromise(deleteUser(userData?.userId))
+                });
                 onClose();
-                onUserDeleted(userData.userId);
+
+                if (userData.userId)
+                    onUserDeleted(userData.userId);
             }
         });
     };
@@ -151,6 +159,7 @@ const EditRoleModal = ({
             <div className="edit-role-modal-wrapper">
                 <h2>{translations.accountManagement.editAccount}</h2>
                 <TextField
+                    fieldId='username'
                     className="text-field"
                     displayName={translations.accountManagement.username}
                     type="text"
@@ -158,6 +167,7 @@ const EditRoleModal = ({
                     value={userData?.userName}
                 />
                 <TextField
+                    fieldId='email'
                     className="text-field"
                     displayName={translations.accountManagement.email}
                     type="text"

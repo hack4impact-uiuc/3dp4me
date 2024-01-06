@@ -7,52 +7,31 @@ import { LegacyRef, useEffect, useRef, useState } from 'react';
 import SignaturePadWrapper from 'react-signature-canvas';
 import SignaturePad, { PointGroup } from 'signature_pad';
 import './SignatureField.scss';
-
 import { useTranslations } from '../../hooks/useTranslations';
-import { Nullish, SignaturePoint, SignatureValue, TranslatedString } from '@3dp4me/types';
+import { Nullish, Signature, SignaturePoint, Path, PathValue, TranslatedString } from '@3dp4me/types';
 import ReactSignatureCanvas from 'react-signature-canvas';
 
-type Path<T> = T extends object 
-    ? { [K in keyof T]: K extends string | number 
-        ? `${K}` | (Path<T[K]> extends never ? never : `${K}.${Path<T[K]>}`) 
-        : never 
-      }[keyof T] 
-    : never;
-
-// A type to extract the value type at a given path
-type PathValue<T, P extends Path<T>> = 
-  P extends `${infer K}.${infer Rest}`
-    ? K extends keyof T
-      ? Rest extends Path<T[K]>
-        ? PathValue<T[K], Rest>
-        : never
-      : never
-    : P extends keyof T
-      ? T[P]
-      : never;
-
-export interface SignatureFieldProps {
+export interface SignatureFieldProps<T extends string> {
     displayName: string
     isDisabled: boolean
     documentURL: TranslatedString
-    fieldId?: string
-    value?: Nullish<SignatureValue>
-    onChange?: <K extends Path<SignatureValue>>(key: K, value: PathValue<SignatureValue, K>) => void
+    fieldId: T
+    value?: Nullish<Signature>
+    onChange?: (key: `${T}.${Path<Signature>}`, value: PathValue<Signature>) => void
 }
 
-
-const SignatureField = ({
+const SignatureField = <T extends string>({
     displayName,
     isDisabled,
     documentURL,
-    fieldId = '',
+    fieldId,
     value = null,
     onChange = () => {},
-}: SignatureFieldProps) => {
+}: SignatureFieldProps<T>) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDocumentVisible, setIsDocumentVisible] = useState(false);
     const translations = useTranslations()[0];
-    const sigCanvas = useRef<Nullish<ReactSignatureCanvas>>(undefined);
+    const sigCanvas = useRef<ReactSignatureCanvas | null>(null);
 
     useEffect(() => {
         if (!value?.signatureData || isModalOpen) return;
@@ -123,8 +102,9 @@ const SignatureField = ({
     const save = () => {
         const canvas = document.querySelector('canvas');
         if (!canvas) return
+        if (sigCanvas.current)
+            onChange(`${fieldId}.signatureData`, sigCanvas.current.toData());
 
-        onChange(`${fieldId}.signatureData`, sigCanvas.current.toData());
         onChange(`${fieldId}.signatureCanvasWidth`, canvas.width);
         onChange(`${fieldId}.signatureCanvasHeight`, canvas.height);
         onChange(`${fieldId}.documentURL.EN`, documentURL.EN);

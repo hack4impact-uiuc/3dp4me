@@ -1,18 +1,17 @@
 import { ChangeEvent, HTMLInputTypeAttribute } from 'react';
 import { TextField as Text } from '@material-ui/core';
-import { Path, PathValue } from '../../utils/object';
 
-export interface TextFieldProps<T extends Record<string, any>> {
+export interface TextFieldProps<T extends string> {
     displayName:  string
     type?: HTMLInputTypeAttribute,
     isDisabled?: boolean
-    fieldId: Path<T>
+    fieldId: T
     value?: string
     className?: string
-    onChange?: (key: Path<T>, value: string) => void
+    onChange?: (key: T, value: string) => void
 }
 
-const TextField = <T extends Record<string, any>>({
+const TextField = <T extends string>({
     displayName,
     type = '',
     isDisabled,
