@@ -8,7 +8,7 @@ export type Path<T> = T extends object
     : never;
 
 // A type to extract the value type at a given path
-export type PathValue<T, P extends Path<T>> = 
+export type PathValue<T, P = Path<T>> = 
   P extends `${infer K}.${infer Rest}`
     ? K extends keyof T
       ? Rest extends Path<T[K]>

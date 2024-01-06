@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { KeyboardEventHandler } from 'react';
 import { Modal, RootRef } from '@material-ui/core';
 
 import './ErrorModal.scss';
@@ -8,9 +8,15 @@ import WarningIcon from '../../assets/warning.svg';
 const KEYCODE_SPACE = 32;
 const DEFAULT_ERROR_MSG = 'An error occurred';
 
-const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }) => {
+export interface ErrorModalProps {
+    message?: string
+    isOpen: boolean
+    onClose: () => void
+}
+
+const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }: ErrorModalProps) => {
     // Have this for accessibility
-    const onKeyDown = (e) => {
+    const onKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
         // Space bar pressed
         if (e.keyCode === KEYCODE_SPACE) onClose();
     };
@@ -19,6 +25,7 @@ const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }) => {
         <Modal
             open={isOpen}
             onClose={onClose}
+            // @ts-ignore
             container={() => RootRef.current}
         >
             <div
@@ -37,12 +44,6 @@ const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }) => {
             </div>
         </Modal>
     );
-};
-
-ErrorModal.propTypes = {
-    message: PropTypes.string,
-    isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
 };
 
 export default ErrorModal;

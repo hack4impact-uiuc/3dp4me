@@ -7,7 +7,6 @@ import {
 import React, { ChangeEvent } from 'react';
 import PropTypes from 'prop-types';
 
-import { FieldOptionsType } from '../../utils/custom-proptypes';
 import { Language, TranslatedString } from '@3dp4me/types';
 import { FormOption } from './FormOption';
 

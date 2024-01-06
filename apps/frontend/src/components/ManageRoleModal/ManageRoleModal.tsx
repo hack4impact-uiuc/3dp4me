@@ -92,7 +92,7 @@ const ManageRoleModal = ({
         });
     };
 
-    const onRoleChange = async (fieldId: "roleName" | "roleDescription", value: PathValue<Role, "roleName" | "roleDescription">) => {
+    const onRoleChange = async (fieldId: "roleName" | "roleDescription", value: string) => {
         setRole((prevState) => {
             if (!prevState) {
                 return prevState;
@@ -115,15 +115,13 @@ const ManageRoleModal = ({
                     type="text"
                     isDisabled={!role?.isMutable}
                     value={role?.roleName?.[selectedLang]}
-                    onChange={onRoleChange}
-                    fieldId="roleName"
+                    onChange={(v) => onRoleChange("roleName", v)}
                 />
                 <TextArea
                     title={translations.roleManagement.roleDescription}
                     disabled={!role?.isMutable}
-                    fieldId="roleDescription"
                     value={role?.roleDescription?.[selectedLang]}
-                    onChange={onRoleChange}
+                    onChange={(v) => onRoleChange("roleDescription", v)}
                 />
                 <p>{translations.roleManagement.warning}</p>
 
