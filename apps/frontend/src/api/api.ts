@@ -1,7 +1,7 @@
 import instance from './axios-config';
 import fileDownload from 'js-file-download';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import { Patient, Role, Step } from '@3dp4me/types';
+import { BasePatient, Patient, Role, Step } from '@3dp4me/types';
 import { isAdmin } from '../../../backend/src/utils/aws/awsUsers';
 
 export type ApiResponse<T> = {
@@ -57,7 +57,7 @@ export const getPatientById = async (id: string): Promise<ApiResponse<Patient>> 
     return res.data;
 };
 
-export const postNewPatient = async (patientInfo: Patient): Promise<ApiResponse<Patient>> => {
+export const postNewPatient = async (patientInfo: BasePatient): Promise<ApiResponse<Patient>> => {
     const requestString = `/patients/`;
     const res = await instance.post(requestString, patientInfo);
 

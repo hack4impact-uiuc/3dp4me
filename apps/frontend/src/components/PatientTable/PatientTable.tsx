@@ -7,22 +7,22 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
 import { postNewPatient } from '../../api/api';
 import {
+    ColumnMetadata,
     Header,
     patientTableHeaderRenderer,
     patientTableRowRenderer,
 } from '../../utils/table-renderers';
 import CreatePatientModal from '../CreatePatientModal/CreatePatientModal';
 import Table from '../Table/Table';
-import { TableRowType, TableHeaderType } from '../../utils/custom-proptypes';
-import { ROUTES } from '../../utils/constants';
-import { Patient } from '@3dp4me/types';
+import { Routes } from '../../utils/constants';
+import { BasePatient, Language, Nullish, Patient } from '@3dp4me/types';
 
 export interface PatientTableProps {
     onAddPatient: (patient: Patient) => void
     tableTitle: string
     patients: Patient[]
     headers: Header[]
-    rowData: any // TODO
+    rowData: ColumnMetadata<Patient>[]
     initialSearchQuery: string
     handleSearchQuery: (query: string) => void
     stepKey: string
@@ -50,8 +50,8 @@ const PatientTable = ({
     /**
      * Saves a patient to the DB
      */
-    const onSavePatient = async (patientData) => {
-        let patient = null;
+    const onSavePatient = async (patientData: BasePatient) => {
+        let patient: Nullish<Patient> = null;
 
         await errorWrap(async () => {
             // Make the request
@@ -69,17 +69,18 @@ const PatientTable = ({
             onAddPatient(patient);
         }
 
-        return patient?._id;
+        // TODO: Get rid of the error wraps because ts has a hard time with it
+        return (patient as any as Patient)?._id;
     };
 
     /**
      * Saves patient to the DB and immediately navigates to the
      * detail view for that patient
      */
-    const onSaveAndEditPatient = async (patientData) => {
+    const onSaveAndEditPatient = async (patientData: BasePatient) => {
         const patientId = await onSavePatient(patientData);
         const currentRoute = window.location.href;
-        let relativeRoute = `${ROUTES.PATIENT_DETAIL}/${patientId}?stepKey=${stepKey}`;
+        let relativeRoute = `${Routes.PATIENT_DETAIL}/${patientId}?stepKey=${stepKey}`;
 
         // Remove double '/'
         if (
@@ -92,9 +93,9 @@ const PatientTable = ({
     };
 
     const PatientTableRowRendererForStep = (
-        patientRowData,
-        patient,
-        selectedLang,
+        patientRowData: ColumnMetadata<Patient>[],
+        patient: Patient,
+        selectedLang: Language,
     ) => {
         return patientTableRowRenderer(
             patientRowData,
@@ -113,7 +114,7 @@ const PatientTable = ({
                 onSaveAndEdit={onSaveAndEditPatient}
             />
 
-            <Table
+            <Table<Patient>
                 onCreateRow={() => setCreatePatientModalOpen(true)}
                 tableTitle={tableTitle}
                 addRowButtonTitle={translations.components.button.createPatient}

@@ -9,7 +9,7 @@ import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
 import translations from '../translations.json';
 import { fieldToJSX } from './fields';
 import { Path, resolveObjPath } from './object';
-import { FieldType, Language, Patient, Step } from '@3dp4me/types';
+import { AccessLevel, FieldType, Language, Nullish, Patient, Step } from '@3dp4me/types';
 import { SortDirection } from './constants';
 import { SortConfig } from '../hooks/useSortableData';
 
@@ -34,7 +34,7 @@ const getField = <T extends Record<string, any>, P extends Path<T>>(data: T, fie
  *                         visible when this column is being sorted.
  * @returns The arrow
  */
-const renderSortArrow = (sortConfig: SortConfig, sortKey: string) => {
+const renderSortArrow = (sortConfig: Nullish<SortConfig>, sortKey: string) => {
     if (!sortConfig || sortConfig.key !== sortKey) return null;
 
     switch (sortConfig.direction) {
@@ -51,7 +51,11 @@ const renderSortArrow = (sortConfig: SortConfig, sortKey: string) => {
     return null;
 };
 
-type WithIdAndType<T = Record<string, any>> = T & { id: string; dataType: FieldType };
+// Represents the data type and the id used to index the data for this column in a row
+export interface ColumnMetadata<T extends Record<string, any>> {
+    id: Path<T>,
+    dataType: FieldType
+}
 
 /**
  * Given data, constructs an array of cells for the row. By placing each
@@ -61,7 +65,7 @@ type WithIdAndType<T = Record<string, any>> = T & { id: string; dataType: FieldT
  * @param {String} selectedLang The currently selected language.
  * @returns Array of cells
  */
-export const defaultTableRowRenderer = <T extends Record<string, any>, P extends Path<T>>(rowData: { id: P, dataType: FieldType }[], itemData: T, selectedLang: Language) => {
+export const defaultTableRowRenderer = <T extends Record<string, any>>(rowData: ColumnMetadata<T>[], itemData: T, selectedLang: Language) => {
     const cellClassName = selectedLang === Language.AR ? 'cell-rtl' : 'cell';
     const cellAlign = selectedLang === Language.AR ? 'right' : 'left';
 
@@ -79,9 +83,9 @@ export const defaultTableRowRenderer = <T extends Record<string, any>, P extends
     return row;
 };
 
-export type Renderer = (
+export type HeaderRenderer = (
     headers: Header[],
-    sortConfig: SortConfig,
+    sortConfig: Nullish<SortConfig>,
     onRequestSort: (key: string) => void,
     selectedLang: Language,
 ) => ReactNode[];
@@ -99,7 +103,7 @@ export interface Header {
  * @param {String} selectedLang The currently selected language.
  * @returns Array of cells
  */
-export const defaultTableHeaderRenderer: Renderer = (
+export const defaultTableHeaderRenderer: HeaderRenderer = (
     headers,
     sortConfig,
     onRequestSort,
@@ -126,12 +130,18 @@ export const defaultTableHeaderRenderer: Renderer = (
     return headerCells;
 };
 
+export type RowRenderer<T extends Record<string, any>> = (
+    columns: ColumnMetadata<T>[], 
+    rowData: T,
+    selectedLang: Language
+) => ReactNode
+
 /**
  * Renders a single row of patient data. Uses the default render and adds a column
  * at the end that links to patient data
  */
 export const patientTableRowRenderer = (
-    rowData: Step,
+    rowData: ColumnMetadata<Patient>[],
     patient: Patient,
     selectedLang: Language,
     stepKey: string,
@@ -165,7 +175,7 @@ export const patientTableRowRenderer = (
  * Renders header for patient data. Uses the default render and adds a column
  * at the end for the 'view patient' link
  */
-export const patientTableHeaderRenderer: Renderer = (
+export const patientTableHeaderRenderer: HeaderRenderer = (
     headers, 
     sortConfig,
     onRequestSort,
@@ -187,6 +197,16 @@ export const patientTableHeaderRenderer: Renderer = (
     return headerCells;
 };
 
+export interface UserRowData {
+    Username: string,
+    Name: string,
+    Email: string,
+    Roles: string,
+    Access: AccessLevel,
+}
+
+type OnUserSelected = (user: UserRowData) => void;
+
 /**
  * This is an object instead of a function because we need to bind onSelected. See generateUserTableRowRenderer.
  */
@@ -194,13 +214,13 @@ const userTableRowRenderer = {
     /**
      * Function called when a user is selected
      */
-    onSelected: undefined as (((user: User) => void) | undefined),
+    onSelected: undefined as (OnUserSelected | undefined),
 
     /**
      * Renders a single row of user data. Uses the default render and adds a column
      * at the end that links to user editing modal
      */
-    Renderer(rowData, user, selectedLang: Language) {
+    Renderer(rowData: ColumnMetadata<UserRowData>[], user: UserRowData, selectedLang: Language) {
         // Construct the base row
         const row = defaultTableRowRenderer(rowData, user, selectedLang);
 
@@ -231,7 +251,7 @@ const userTableRowRenderer = {
  * @param {Function} onSelected The function to bind to onSelected
  * @returns The bound renderer
  */
-export const generateUserTableRowRenderer = (onSelected) =>
+export const generateUserTableRowRenderer = (onSelected: OnUserSelected) =>
     userTableRowRenderer.Renderer.bind({
         onSelected,
     });
@@ -240,7 +260,7 @@ export const generateUserTableRowRenderer = (onSelected) =>
  * Renders header for user data. Uses the default render and adds a column
  * at the end for the 'view user' button
  */
-export const userTableHeaderRenderer: Renderer = (
+export const userTableHeaderRenderer: HeaderRenderer = (
     headers,
     sortConfig,
     onRequestSort,

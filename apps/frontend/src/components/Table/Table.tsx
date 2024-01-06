@@ -1,17 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode, ChangeEventHandler, ChangeEvent } from 'react';
 import PropTypes from 'prop-types';
 import { Button, TextField } from '@material-ui/core';
 
 import search from '../../assets/search.svg';
 import SimpleTable from '../SimpleTable/SimpleTable';
-import { TableHeaderType, TableRowType } from '../../utils/custom-proptypes';
 import { LANGUAGES, PATIENT_TABLE_SEARCH_DELAY } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
+import { ColumnMetadata, Header, HeaderRenderer, RowRenderer } from '../../utils/table-renderers';
+import { Language } from '@3dp4me/types';
+
+// T is the type of the data that will be displayed in the table
+export interface TableProps<T extends Record<string, any>> {
+    tableTitle: string;
+    addRowButtonTitle: string;
+    onCreateRow: () => void;
+    data?: T[];
+    headers: Header[];
+    renderHeader: HeaderRenderer;
+    renderTableRow: RowRenderer<T>
+    rowData: ColumnMetadata<T>[];
+    initialSearchQuery: string;
+    handleSearchQuery: (query: string) => void;
+}
 
 /**
  * Wraps <SimpleTable />, adding search and the ability to add items
  */
-const Table = ({
+const Table = <T extends Record<string, any>>({
     tableTitle,
     addRowButtonTitle,
     onCreateRow,
@@ -22,7 +37,7 @@ const Table = ({
     renderTableRow,
     initialSearchQuery,
     handleSearchQuery,
-}) => {
+}: TableProps<T>) => {
     const [translations, selectedLang] = useTranslations();
 
     /* The search query is set to an initial value passed down from Dashboard.js. 
@@ -43,7 +58,7 @@ const Table = ({
         return () => clearTimeout(searchDelay);
     }, [searchQuery, isSearchQueryUpdated]);
 
-    const updateSearchQuery = (event) => {
+    const updateSearchQuery = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setSearchQuery(event.target.value);
         setIsSearchQueryUpdated(true);
     };
@@ -87,28 +102,15 @@ const Table = ({
                     </Button>
                 </div>
             </div>
-            <SimpleTable
+            { data && <SimpleTable<T>
                 data={data}
                 headers={headers}
                 rowData={rowData}
                 renderHeader={renderHeader}
                 renderTableRow={renderTableRow}
-            />
+            /> }
         </div>
     );
-};
-
-Table.propTypes = {
-    tableTitle: PropTypes.string,
-    addRowButtonTitle: PropTypes.string.isRequired,
-    onCreateRow: PropTypes.func.isRequired,
-    headers: PropTypes.arrayOf(TableHeaderType).isRequired,
-    renderHeader: PropTypes.func.isRequired,
-    renderTableRow: PropTypes.func.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object),
-    rowData: PropTypes.arrayOf(TableRowType).isRequired,
-    initialSearchQuery: PropTypes.string.isRequired,
-    handleSearchQuery: PropTypes.func.isRequired,
 };
 
 export default Table;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import MaterialUITable from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -8,22 +8,31 @@ import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 
 import useSortableData from '../../hooks/useSortableData';
-import { TableHeaderType, TableRowType } from '../../utils/custom-proptypes';
 import { useTranslations } from '../../hooks/useTranslations';
 
 import { StyledTableRow } from './SimpleTable.style';
 import './SimpleTable.scss';
+import { ColumnMetadata, Header, HeaderRenderer, RowRenderer } from '../../utils/table-renderers';
+import { Language } from '@3dp4me/types';
+
+export interface SimpleTableProps<T extends Record<string, any>> {
+    data: T[]
+    headers: Header[]
+    rowData: ColumnMetadata<T>[]
+    renderHeader: HeaderRenderer,
+    renderTableRow: RowRenderer<T>
+}
 
 /**
  * Just a normal, old, simple table.
  */
-const SimpleTable = ({
+const SimpleTable = <T extends Record<string, any>>({
     data,
     headers,
     rowData,
     renderHeader,
     renderTableRow,
-}) => {
+}: SimpleTableProps<T>) => {
     const selectedLang = useTranslations()[1];
     const { sortedData, requestSort, sortConfig } = useSortableData(data);
 
@@ -58,14 +67,6 @@ const SimpleTable = ({
             </TableContainer>
         </div>
     );
-};
-
-SimpleTable.propTypes = {
-    headers: PropTypes.arrayOf(TableHeaderType).isRequired,
-    renderHeader: PropTypes.func.isRequired,
-    renderTableRow: PropTypes.func.isRequired,
-    data: PropTypes.arrayOf(PropTypes.object),
-    rowData: PropTypes.arrayOf(TableRowType).isRequired,
 };
 
 export default SimpleTable;
