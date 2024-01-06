@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { ReactNode, useState } from 'react';
+import React, { ChangeEventHandler, ReactNode, useState } from 'react';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
@@ -17,18 +17,21 @@ import { ADMIN_ID } from '../../utils/constants';
 import {
     canFieldBeAddedToStep,
     getFieldName,
+    isFieldType,
     validateField,
 } from '../../utils/fields';
-import MultiSelectField, { MultiSelectOption } from '../Fields/MultiSelectField';
+import MultiSelectField from '../Fields/MultiSelectField';
 import LanguageInput from '../LanguageInput/LanguageInput';
 import './CreateFieldModal.scss';
-import { Field, FieldType, Language, TranslatedString } from '@3dp4me/types';
+import { Field, FieldType, Language, TranslatedString, Unsaved } from '@3dp4me/types';
+import { FormOption } from '../Fields/FormOption';
+
 
 export interface CreateFieldModalProps {
     isOpen: boolean
     onModalClose: () => void,
-    allRoles: MultiSelectOption[],
-    onAddNewField: (field: Omit<Field, "fieldNumber"|"key"|"isHidden"|"isDeleted"|"additionalData">) => void,
+    allRoles: FormOption[],
+    onAddNewField: (field: Unsaved<Omit<Field, "fieldNumber"|"key"|"isHidden"|"isDeleted"|"additionalData">>) => void,
     canAddFieldGroup?: boolean,
 
 }
@@ -82,8 +85,9 @@ const CreateFieldModal = ({
         setSelectedRoles(roles);
     };
 
-    const handleFieldTypeSelect = (e) => {
-        setFieldType(e.target.value);
+    const handleFieldTypeSelect: ChangeEventHandler<HTMLSelectElement> = (e) => {
+        if (isFieldType(e.target.value))
+            setFieldType(e.target.value);
     };
 
     const addOption = () => {
@@ -124,6 +128,7 @@ const CreateFieldModal = ({
                         }`}
                     </span>
                     <LanguageInput
+                        fieldKey={`lang-option-${i}`}
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
                         handleFieldChange={(value, language) => {
                             updateOptionField(i, value, language);
@@ -170,6 +175,7 @@ const CreateFieldModal = ({
                             {translations.components.swal.field.question}
                         </span>
                         <LanguageInput
+                            fieldKey={`lang-input-${fieldType}`}
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
                                 updateDisplayName(value, language);
@@ -184,6 +190,7 @@ const CreateFieldModal = ({
                             {translations.components.swal.field.question}
                         </span>
                         <LanguageInput
+                            fieldKey={`lang-input-${fieldType}`}
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
                                 updateDisplayName(value, language);
@@ -208,6 +215,7 @@ const CreateFieldModal = ({
                             {translations.components.swal.field.dividerTitle}
                         </span>
                         <LanguageInput
+                            fieldKey={`lang-input-${fieldType}`}
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
                                 updateDisplayName(value, language);
@@ -222,6 +230,7 @@ const CreateFieldModal = ({
                             {translations.components.swal.field.headerTitle}
                         </span>
                         <LanguageInput
+                            fieldKey={`lang-input-${fieldType}`}
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
                                 updateDisplayName(value, language);
@@ -282,7 +291,7 @@ const CreateFieldModal = ({
         );
     };
 
-    const handleIsVisibleOnDashboard = (event) => {
+    const handleIsVisibleOnDashboard = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsVisibleOnDashboard(event.target.checked);
     };
 

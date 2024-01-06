@@ -19,6 +19,10 @@ import {
 import { formatDate } from './date';
 import { AccessLevel, Field, FieldType, Language, PatientStatus, SignatureValue, Step, StepStatus } from '@3dp4me/types';
 
+export const isFieldType = (maybeFieldType: string): maybeFieldType is FieldType => {
+    return Object.values(FieldType).includes(maybeFieldType as FieldType);
+}
+
 /**
  * Converts a step status to a string
  */
@@ -364,11 +368,13 @@ export const fieldToJSX = (fieldData: any, fieldType: AnyFieldType, selectedLang
     return stringifiedField;
 };
 
+export type HasDisplayName<T> = T & { displayName: { [key in Language]: string } };
+
 /**
  * Validates a field's data.
  * @param {JSON} fieldData
  */
-export const validateField = (fieldData: Field) => {
+export const validateField = <T extends Record<string, any> = Record<string, any>>(fieldData: HasDisplayName<T>) => {
     if (
         fieldData.displayName.EN.trim() === '' ||
         fieldData.displayName.AR.trim() === ''
