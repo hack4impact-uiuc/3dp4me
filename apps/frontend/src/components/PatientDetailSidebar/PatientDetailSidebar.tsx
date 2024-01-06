@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,6 +15,8 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
 import { getPatientName } from '../../utils/utils';
 import './PatientDetailSidebar.scss';
+import { Nullish, Patient, Step } from '@3dp4me/types';
+import { hasNotesForStep } from '../../utils/metadataUtils';
 
 const arTheme = createTheme({
     direction: 'rtl',
@@ -25,14 +26,20 @@ const enTheme = createTheme({
     direction: 'ltr',
 });
 
-const PatientDetailSidebar = ({ stepMetaData, patientData, onViewPatient }) => {
-    const [expandedStepKey, setExpandedStepKey] = useState(null);
+export interface PatientDetailSidebarProps<T extends Patient = Patient> {
+    stepMetaData: Step[]
+    patientData: T
+    onViewPatient: () => void
+}
+
+const PatientDetailSidebar = ({ stepMetaData, patientData, onViewPatient }: PatientDetailSidebarProps) => {
+    const [expandedStepKey, setExpandedStepKey] = useState<Nullish<string>>(null);
     const [translations, selectedLang] = useTranslations();
 
     /**
      * Expands the notes panel for the given step, or closes all panels
      */
-    const expandNotePanel = (stepKey) => (event, isExpanded) => {
+    const expandNotePanel = (stepKey: string) => (_: unknown, isExpanded: boolean) => {
         setExpandedStepKey(isExpanded ? stepKey : null);
     };
 
@@ -55,7 +62,7 @@ const PatientDetailSidebar = ({ stepMetaData, patientData, onViewPatient }) => {
                     if (!notesField) return null;
 
                     // Check that we actually have data for this patient in the notes field
-                    if (!patientData[metaData.key]?.notes) return null;
+                    if (!hasNotesForStep(patientData, metaData)) return null;
 
                     return (
                         <Accordion
@@ -145,12 +152,6 @@ const PatientDetailSidebar = ({ stepMetaData, patientData, onViewPatient }) => {
             </Drawer>
         </ThemeProvider>
     );
-};
-
-PatientDetailSidebar.propTypes = {
-    stepMetaData: PropTypes.array,
-    patientData: PropTypes.object,
-    onViewPatient: PropTypes.func.isRequired,
 };
 
 export default PatientDetailSidebar;

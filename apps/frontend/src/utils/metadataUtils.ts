@@ -1,5 +1,22 @@
-import { Field, Step } from '@3dp4me/types';
+import { Field, Patient, Step } from '@3dp4me/types';
 import { camelCase } from 'lodash';
+import { Path, PathValue } from './object';
+
+
+function hasKey<T extends object, K extends PropertyKey>(obj: T, key: K): obj is T & Record<K, unknown> {
+    return key in obj;
+}
+
+type PatientDataWithStep<K extends PropertyKey> = Patient & Record<K, Record<string, any>>
+export function hasStepData<K extends PropertyKey>(patient: Patient, stepKey: K): patient is PatientDataWithStep<K> {
+    if (!hasKey(patient, stepKey)) return false
+    return typeof patient[stepKey] === "object"
+}
+
+export const hasNotesForStep = (data: Patient, meta: Step): data is PatientDataWithStep<typeof meta['key']> & Record<typeof meta['key'], Record<"notes", string>>  => {
+    if (!hasStepData(data, meta.key)) return false
+    return hasKey(data[meta.key], 'notes')
+}
 
 /* Returns a string of specified length composed of random alphanumeric characters */
 const randomAlphanumeric = (length: number) => {
