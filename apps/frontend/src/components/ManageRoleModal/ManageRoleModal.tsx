@@ -15,6 +15,16 @@ import {
     ERR_ROLE_INPUT_VALIDATION_FAILED,
     ERR_ROLE_IS_IMMUTABLE,
 } from '../../utils/constants';
+import { Nullish, Role } from '@3dp4me/types';
+import { Path, PathValue } from '../../utils/object';
+
+export interface ManageRoleModalProps {
+    isOpen: boolean
+    onClose: () => void
+    onRoleDeleted: (roleId: string) => void
+    onRoleEdited: (roleId: string, data: Role) => void
+    roleInfo: Role
+}
 
 const ManageRoleModal = ({
     isOpen,
@@ -22,9 +32,9 @@ const ManageRoleModal = ({
     onRoleDeleted,
     onRoleEdited,
     roleInfo,
-}) => {
+}: ManageRoleModalProps) => {
     const [translations, selectedLang] = useTranslations();
-    const [role, setRole] = useState({});
+    const [role, setRole] = useState<Nullish<Role>>(null);
     const errorWrap = useErrorWrap();
 
     useEffect(() => {
@@ -36,7 +46,7 @@ const ManageRoleModal = ({
             title: translations.components.modal.deleteTitle,
             text: translations.roleManagement.warning,
             icon: 'warning',
-            buttons: true,
+            buttons: [true],
             dangerMode: true,
         }).then(async (willDelete) => {
             if (willDelete) {
@@ -57,14 +67,17 @@ const ManageRoleModal = ({
 
     const validateRole = () => {
         if (
-            role.roleName[selectedLang].trim() === '' ||
-            role.roleDescription[selectedLang].trim() === ''
+            role?.roleName[selectedLang].trim() === '' ||
+            role?.roleDescription[selectedLang].trim() === ''
         ) {
             throw new Error(ERR_ROLE_INPUT_VALIDATION_FAILED);
         }
     };
 
     const onSave = async () => {
+        if (!role)
+            return
+
         errorWrap(async () => {
             validateRole();
             if (roleInfo?.isMutable) {
@@ -79,11 +92,17 @@ const ManageRoleModal = ({
         });
     };
 
-    const onRoleChange = async (fieldId, value) => {
-        setRole((prevState) => ({
-            ...prevState,
-            [fieldId]: { ...prevState?.[fieldId], [selectedLang]: value },
-        }));
+    const onRoleChange = async (fieldId: "roleName" | "roleDescription", value: PathValue<Role, "roleName" | "roleDescription">) => {
+        setRole((prevState) => {
+            if (!prevState) {
+                return prevState;
+            }
+
+            return {
+                ...prevState,
+                [fieldId]: { ...prevState?.[fieldId], [selectedLang]: value },
+            }
+        });
     };
 
     return (
