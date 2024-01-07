@@ -28,19 +28,20 @@ export function resolveMixedObjPath(obj: Nullish<Record<string, any>>, path: str
     if (!path) return obj;
 
     const r = path.split('.');
-    const nextPath = r.shift();
+    const nextPath = r.shift()!;
     const remainingPath = r.join('.');
 
     // Assume the next path component is a key/value
     let nextObj = null;
-    if (nextPath) nextObj = obj[nextPath];
+    if (nextPath)
+        nextObj = obj[nextPath];
 
     // If not, assume it is an array
     if (!nextObj) {
         const s = nextPath.split('[');
 
         // Name of the array
-        const arrayName = s.shift();
+        const arrayName = s.shift()!;
 
         // Extract the keyname and value from the condition
         let condition = s.join('[');
@@ -50,7 +51,7 @@ export function resolveMixedObjPath(obj: Nullish<Record<string, any>>, path: str
         const value = conditionArray[1];
 
         nextObj = obj[arrayName]?.find(
-            (item) => item[keyName]?.toString() === value,
+            (item: any) => item[keyName]?.toString() === value,
         );
     }
 

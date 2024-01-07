@@ -1,3 +1,4 @@
+import { Language, Nullish } from '@3dp4me/types';
 import { LANGUAGES } from './constants';
 
 /**
@@ -6,23 +7,21 @@ import { LANGUAGES } from './constants';
  * @param {String} language Should be one of the valid options defined in constants.js
  * @returns The formatted date string
  */
-export const formatDate = (date, language) => {
-    if (date == null) return 'Undefined';
+export const formatDate = (date: Nullish<Date | string>, language: Language) => {
+    if (date instanceof Date) return dateToString(date, language)
+    if (typeof date === 'string') return dateToString(new Date(date), language);
+    return "No date"
+};
 
-    let parsedDate = date;
-    if (!(typeof date === 'object' || date instanceof Object))
-        parsedDate = new Date(date);
-
+const dateToString = (date: Date, language: Language) => {
     let locale = 'ar-SA';
     if (language === LANGUAGES.EN) locale = 'en-US';
 
-    const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    };
-
-    return parsedDate.toLocaleDateString(locale, options);
-};
+    return date.toLocaleDateString(locale, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}

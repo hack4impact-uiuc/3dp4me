@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { trackPromise } from 'react-promise-tracker';
 
 import {
+    ApiResponse,
     getAllRoles,
     getAllStepsMetadata,
     updateMultipleSteps,
@@ -34,9 +35,10 @@ import {
 import './DashboardManagement.scss';
 import { drawerWidth, verticalMovementWidth } from '../../styles/variables';
 import { Field, Role, Step } from '@3dp4me/types';
+import { FormOption } from '../../components/Fields/FormOption';
 
 const expandedSidebarWidth = `${
-    parseInt(drawerWidth, 10) + 3 * parseInt(verticalMovementWidth, 10)
+    drawerWidth + 3 * verticalMovementWidth
 }px`;
 const retractedSidebarWidth = drawerWidth;
 
@@ -49,7 +51,7 @@ const SectionTab = () => {
     const [editFieldModalOpen, setEditFieldModalOpen] = useState(false);
     const [editStepModalOpen, setEditStepModalOpen] = useState(false);
     const [createStepModalOpen, setCreateStepModalOpen] = useState(false);
-    const [allRoles, setAllRoles] = useState<Role[]>([]);
+    const [allRoles, setAllRoles] = useState<FormOption[]>([]);
     const [selectedFieldNumberForEditing, setSelectedFieldNumberForEditing] =
         useState(0);
     const [selectedFieldRootForEditing, setSelectedFieldRootForEditing] =
@@ -68,14 +70,14 @@ const SectionTab = () => {
         setCreateStepModalOpen(true);
     };
 
-    const onAddField = (stepKey: string, fieldRoot: Field) => {
+    const onAddField = (stepKey: string, fieldRoot: string) => {
         setSelectedStep(stepKey);
         setSelectedFieldRootForCreating(fieldRoot);
         setCreateFieldModalOpen(true);
         setCanAddFieldGroup(true);
     };
 
-    const onAddSubfield = (stepKey: string, fieldRoot: Field) => {
+    const onAddSubfield = (stepKey: string, fieldRoot: string) => {
         setSelectedStep(stepKey);
         setSelectedFieldRootForCreating(fieldRoot);
         setCreateFieldModalOpen(true);
@@ -88,17 +90,17 @@ const SectionTab = () => {
         setEditFieldModalOpen(true);
     };
 
-    const onEditStep = (stepKey: string) => {
-        setSelectedStepNumberForEditing(stepKey);
+    // const onEditStep = (stepKey: string) => {
+    //     setSelectedStepNumberForEditing(stepKey);
 
-        const stepIndex = getStepIndexGivenKey(stepMetadata, stepKey);
-        setSelectedStep(stepMetadata[stepIndex].key);
-        setEditStepModalOpen(true);
-    };
+    //     const stepIndex = getStepIndexGivenKey(stepMetadata, stepKey);
+    //     setSelectedStep(stepMetadata[stepIndex].key);
+    //     setEditStepModalOpen(true);
+    // };
 
     // Sends a request for updating the database with the modified steps/fields
     const onSaveChanges = () => {
-        let updateResponse;
+        let updateResponse: ApiResponse<Step[]>;
 
         errorWrap(
             async () => {
@@ -133,7 +135,7 @@ const SectionTab = () => {
     };
 
     // Used to update the highlighted step whose fields the user will see
-    function UpdateSelectedStep(stepKey) {
+    function UpdateSelectedStep(stepKey: string) {
         setSelectedStep(stepKey);
     }
 
@@ -185,7 +187,7 @@ const SectionTab = () => {
      * @param {Number} fieldNumber The number of the field that we have to move
      * @param {Number} direction 1 indicates moving down (increasing fieldNumber), -1 indicates moving up (decreasing fieldNumber)
      */
-    function moveField(stepKey: string, fieldNumber: number, fieldRoot: Field, direction: Direction) {
+    function moveField(stepKey: string, fieldNumber: number, fieldRoot: string, direction: Direction) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
         const foundStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
@@ -221,12 +223,12 @@ const SectionTab = () => {
     }
 
     // Handles moving a field down
-    function onCardDownPressed(stepKey: string, fieldRoot: Field, fieldNumber: number) {
+    function onCardDownPressed(stepKey: string, fieldRoot: string, fieldNumber: number) {
         moveField(stepKey, fieldNumber, fieldRoot, Direction.DOWN);
     }
 
     // Handles moving a field up
-    function onCardUpPressed(stepKey: string, fieldRoot: Field, fieldNumber: number) {
+    function onCardUpPressed(stepKey: string, fieldRoot: string, fieldNumber: number) {
         moveField(stepKey, fieldNumber, fieldRoot, Direction.UP);
     }
 
@@ -372,7 +374,7 @@ const SectionTab = () => {
         will only be saved locally. 
     */
 
-    const addNewField = (newFieldData) => {
+    const addNewField = (newFieldData: Field) => {
         const updatedNewField = _.cloneDeep(newFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
@@ -403,14 +405,14 @@ const SectionTab = () => {
         setStepMetadata(updatedMetadata);
     };
 
-    const editStep = (updatedStepData) => {
+    const editStep = (updatedStepData: Step) => {
         const updatedMetadata = _.cloneDeep(stepMetadata);
         const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep);
         updatedMetadata[stepIndex] = updatedStepData;
         setStepMetadata(updatedMetadata);
     };
 
-    const editField = (updatedFieldData) => {
+    const editField = (updatedFieldData: Field) => {
         const updatedField = _.cloneDeep(updatedFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
@@ -437,7 +439,7 @@ const SectionTab = () => {
         setStepMetadata(updatedMetadata);
     };
 
-    const addNewStep = (newStepData) => {
+    const addNewStep = (newStepData: Step) => {
         const updatedNewStep = _.cloneDeep(newStepData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
@@ -476,10 +478,9 @@ const SectionTab = () => {
                         onDownPressed={onDownPressed}
                         onUpPressed={onUpPressed}
                         onAddStep={onAddStep}
-                        onAddField={onAddField}
-                        onEditStep={onEditStep}
+                        // onEditStep={onEditStep}
                         stepMetadata={stepMetadata}
-                        onEditSteps={() => setIsEditing(true)}
+                        onEditStep={() => setIsEditing(true)}
                         isEditing={isEditing}
                         selectedStep={selectedStep}
                     />
@@ -519,7 +520,5 @@ const SectionTab = () => {
         </div>
     );
 };
-
-SectionTab.propTypes = {};
 
 export default SectionTab;

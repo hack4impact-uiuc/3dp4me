@@ -196,9 +196,9 @@ export const LANGUAGES = {
  * List of signature statuses. Only used on the frontend, doesn't
  * need to match anything on the backend
  */
-export const SIGNATURE_STATUS = {
-    SIGNED: 'SIGNED',
-    UNSIGNED: 'UNSIGNED',
+export enum SignatureStatus {
+    SIGNED = 'SIGNED',
+    UNSIGNED = 'UNSIGNED',
 };
 
 /**

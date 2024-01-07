@@ -5,10 +5,9 @@ import {
     isUniqueStepNumber,
     FIELD_NUMBER_KEY,
     STEP_NUMBER_KEY,
-    Step,
-    Field,
     StepModel
 } from '../models/Metadata';
+import { Step, Field } from "@3dp4me/types"
 
 import { isAdmin } from './aws/awsUsers';
 import { addFieldsToSchema, getAddedFields } from './fieldUtils';
@@ -23,7 +22,7 @@ import { queryParamToBool } from './request';
 import { AuthenticatedRequest } from '../middleware/types';
 import { ClientSession, HydratedDocument, PipelineStage } from 'mongoose';
 
-export const getReadableSteps = async (req: AuthenticatedRequest) => {
+export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[]> => {
     const shouldShowHiddenFields = queryParamToBool(req.query.showHiddenFields ?? "false");
     const shouldShowHiddenSteps = queryParamToBool(req.query.showHiddenSteps ?? "false");
 

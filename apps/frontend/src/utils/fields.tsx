@@ -13,11 +13,11 @@ import {
     ERR_LANGUAGE_VALIDATION_FAILED,
     ERR_OPTION_VALIDATION_FAILED,
     PATIENT_STATUS,
-    SIGNATURE_STATUS,
+    SignatureStatus,
     STEP_STATUS,
 } from './constants';
 import { formatDate } from './date';
-import { AccessLevel, Field, FieldType, Language, PatientStatus, SignatureValue, Step, StepStatus } from '@3dp4me/types';
+import { AccessLevel, FieldType, Language, PatientStatus, Signature, StepStatus } from '@3dp4me/types';
 
 export const isFieldType = (maybeFieldType: string): maybeFieldType is FieldType => {
     return Object.values(FieldType).includes(maybeFieldType as FieldType);
@@ -203,26 +203,26 @@ const accessToJSX = (access: AccessLevel, selectedLang: Language) => {
 /**
  * Given signature data, converts it to a standard enum value
  */
-const signatureDataToValue = (signatureData: SignatureValue) => {
+const signatureDataToValue = (signatureData: Signature) => {
     return signatureData?.signatureData
-        ? SIGNATURE_STATUS.SIGNED
-        : SIGNATURE_STATUS.UNSIGNED;
+        ? SignatureStatus.SIGNED
+        : SignatureStatus.UNSIGNED;
 };
 
 /**
  * Gets the JSX associated with the given signature data
  */
-const signatureToJSX = (signatureData: SignatureValue) => {
+const signatureToJSX = (signatureData: Signature) => {
     const signatureStatus = signatureDataToValue(signatureData);
 
     switch (signatureStatus) {
-        case SIGNATURE_STATUS.SIGNED:
+        case SignatureStatus.SIGNED:
             return (
                 <div style={{ color: '#65d991' }}>
                     <CheckIcon />
                 </div>
             );
-        case SIGNATURE_STATUS.UNSIGNED:
+        case SignatureStatus.UNSIGNED:
             return (
                 <div style={{ color: 'red' }}>
                     <CloseIcon />
@@ -312,7 +312,7 @@ export const canFieldBeAddedToStep = (fieldType: FieldType) => {
  * @param {String} selectedLang The currently selected language
  * @returns The stringified field
  */
-export const fieldToString = (fieldData, fieldType: AnyFieldType, selectedLang: Language) => {
+export const fieldToString = (fieldData: any, fieldType: AnyFieldType, selectedLang: Language): string => {
     switch (fieldType) {
         case FieldType.MULTILINE_STRING:
         case FieldType.STRING:

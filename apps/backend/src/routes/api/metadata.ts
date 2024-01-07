@@ -13,7 +13,8 @@ import {
 import { reinitModels } from '../../utils/initDb';
 import errorWrap from '../../utils/errorWrap';
 import { AuthenticatedRequest } from '../../middleware/types';
-import { Step, StepModel } from '../../models/Metadata';
+import { StepModel } from '../../models/Metadata';
+import { Step } from '@3dp4me/types';
 
 export const router = Router();
 

@@ -6,12 +6,24 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
+import { Step } from '@3dp4me/types';
 
 const useStyles = makeStyles({
     paper: {
         background: '#dddef2',
     },
 });
+
+export interface SidebarProps {
+    onClick: (key: string) => void
+    onAddStep: () => void
+    onEditStep: (key: string) => void
+    stepMetadata: Step[]
+    onDownPressed: (key: string) => void
+    onUpPressed: (key: string) => void
+    isEditing: boolean
+    selectedStep: string
+}
 
 const Sidebar = ({
     onClick,
@@ -22,11 +34,11 @@ const Sidebar = ({
     onUpPressed,
     isEditing,
     selectedStep,
-}) => {
+}: SidebarProps) => {
     const selectedLang = useTranslations()[1];
     const styles = useStyles();
 
-    function onButtonClick(stepKey) {
+    function onButtonClick(stepKey: string) {
         onClick(stepKey);
     }
 
@@ -40,7 +52,7 @@ const Sidebar = ({
         );
     };
 
-    const generateReorderButtons = (stepKey, className) => {
+    const generateReorderButtons = (stepKey: string, className: string) => {
         if (!isEditing) return null;
 
         return [
@@ -65,7 +77,7 @@ const Sidebar = ({
         ];
     };
 
-    const getButtonClassname = (stepKey, isHidden) => {
+    const getButtonClassname = (stepKey: string, isHidden: boolean) => {
         let buttonClassNameByLanguage =
             selectedLang === LANGUAGES.AR ? 'main-button-ar' : 'main-button';
         if (selectedStep === stepKey) {
