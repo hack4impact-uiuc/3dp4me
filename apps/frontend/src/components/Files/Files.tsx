@@ -9,8 +9,19 @@ import swal from 'sweetalert';
 
 import { useTranslations } from '../../hooks/useTranslations';
 import { formatDate } from '../../utils/date';
+import { File as FileModel } from '@3dp4me/types';
 
-const Files = ({
+export interface FilesProps<T extends string> {
+    title: string
+    files: FileModel[],
+    fieldKey: T,
+    handleDownload: (key: T, filename: string) => void,
+    handleDelete: (key: T, file: FileModel) => void,
+    handleUpload: (key: T, file: File) => void,
+    isDisabled?: boolean
+}
+
+const Files = <T extends string>({
     title,
     files,
     fieldKey,
@@ -18,15 +29,15 @@ const Files = ({
     handleDelete,
     handleUpload,
     isDisabled = false,
-}) => {
+}: FilesProps<T>) => {
     const [translations, selectedLang] = useTranslations();
 
-    const onDeleteFile = (file) => {
+    const onDeleteFile = (file: FileModel) => {
         swal({
             title: translations.components.file.deleteTitle,
             text: translations.components.file.deleteWarning,
             icon: 'warning',
-            buttons: true,
+            buttons: [true],
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
@@ -35,7 +46,7 @@ const Files = ({
         });
     };
 
-    const getDeleteFileButton = (file) => {
+    const getDeleteFileButton = (file: FileModel) => {
         if (isDisabled) return null;
         return (
             <button
@@ -92,7 +103,8 @@ const Files = ({
                     className="upload-file-input"
                     type="file"
                     onChange={(e) => {
-                        handleUpload(fieldKey, e.target.files[0]);
+                        if (e.target.files)
+                            handleUpload(fieldKey, e.target.files[0]);
                     }}
                 />
                 <Button className="file-button" component="span">
@@ -116,21 +128,6 @@ const Files = ({
             </div>
         </div>
     );
-};
-
-Files.propTypes = {
-    title: PropTypes.string.isRequired,
-    fieldKey: PropTypes.string.isRequired,
-    handleDownload: PropTypes.func.isRequired,
-    handleDelete: PropTypes.func.isRequired,
-    handleUpload: PropTypes.func.isRequired,
-    files: PropTypes.arrayOf(
-        PropTypes.shape({
-            filename: PropTypes.string.isRequired,
-            uploadDate: PropTypes.instanceOf(Date).isRequired,
-        }),
-    ).isRequired,
-    isDisabled: PropTypes.bool,
 };
 
 export default Files;

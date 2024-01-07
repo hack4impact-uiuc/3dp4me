@@ -36,7 +36,7 @@ interface AudioRecorderProps {
     title: string
     patientId: string
     handleUpload: (key: string, file: File) => void
-    handleDelete: (key: string, file: File) => void
+    handleDelete: (key: string, file: FileType) => void
 }
 
 class AudioRecorder extends React.Component<AudioRecorderProps> {
@@ -268,7 +268,7 @@ class AudioRecorder extends React.Component<AudioRecorderProps> {
         });
     };
 
-    onDeleteFile = (fieldKey: string, file: File) => {
+    onDeleteFile = (fieldKey: string, file: FileType) => {
         swal({
             title: this.state.lang.components.audio.deleteTitle,
             text: this.state.lang.components.audio.deleteWarning,
@@ -282,7 +282,7 @@ class AudioRecorder extends React.Component<AudioRecorderProps> {
         });
     };
 
-    getDeleteFileButton = (file: File) => {
+    getDeleteFileButton = (file: FileType) => {
         if (this.props.isDisabled) return null;
 
         return (

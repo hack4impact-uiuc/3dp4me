@@ -13,7 +13,7 @@ import SignatureField from '../Fields/SignatureField';
 import TextArea from '../Fields/TextArea';
 import TextField from '../Fields/TextField';
 import Files from '../Files/Files';
-import { Field, FieldType, Step } from '@3dp4me/types';
+import { Field, FieldType, Step, File as FileModel } from '@3dp4me/types';
 
 export interface StepFieldProps {
     metadata: Field
@@ -24,9 +24,9 @@ export interface StepFieldProps {
     stepKey: string
     isDisabled?: boolean
     handleSimpleUpdate?: (key: string, value: any) => void
-    handleFileDownload?: (key: string, value: any) => void
-    handleFileUpload?: (key: string, value: any) => void
-    handleFileDelete?: (key: string, value: any) => void
+    handleFileDownload?: (key: string, name: string) => void
+    handleFileUpload?: (key: string, file: File) => void
+    handleFileDelete?: (key: string, file: FileModel) => void
 }
 
 const StepField = ({

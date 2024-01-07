@@ -14,13 +14,13 @@ import { trackPromise } from 'react-promise-tracker';
 import { deleteFile, downloadFile, uploadFile } from '../../api/api';
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { useTranslations } from '../../hooks/useTranslations';
-import { FIELD_TYPES, STEP_STATUS } from '../../utils/constants';
 import { formatDate } from '../../utils/date';
 import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
 import './StepContent.scss';
-import { Step } from '@3dp4me/types';
+import { FieldTypeData, Step, File as FileModel, FieldType, StepStatus } from '@3dp4me/types';
 
+// TODO: Generate typings for this. I don't think it's really possible though because stepData is fluid
 export interface StepContentProps {
     patientId: string,
     metaData: Step,
@@ -28,7 +28,7 @@ export interface StepContentProps {
     stepData: Record<string, any>,
     edit: boolean,
     setEdit: (edit: boolean) => void,
-    onDataSaved: () => void
+    onDataSaved: (key: string, value: any) => void
 }
 
 const StepContent = ({
@@ -51,7 +51,7 @@ const StepContent = ({
     }, [stepData]);
 
     useEffect(() => {
-        const determinePreventDefault = (e) => {
+        const determinePreventDefault = (e: BeforeUnloadEvent) => {
             // Check if any of the step is being edited
             if (edit) {
                 e.preventDefault();
@@ -63,7 +63,7 @@ const StepContent = ({
             window.removeEventListener('beforeunload', determinePreventDefault);
     }, [edit]);
 
-    const handleSimpleUpdate = (fieldKey: string, value) => {
+    const handleSimpleUpdate = (fieldKey: string, value: any) => {
         setUpdatedData((data) => {
             const dataCopy = _.cloneDeep(data);
             _.set(dataCopy, fieldKey, value);
@@ -71,14 +71,14 @@ const StepContent = ({
         });
     };
 
-    const handleFileDelete = async (fieldKey: string, file) => {
+    const handleFileDelete = async (fieldKey: string, file: FileModel) => {
         errorWrap(async () => {
             await trackPromise(
                 deleteFile(patientId, metaData.key, fieldKey, file.filename),
             );
             if (!updatedData[fieldKey]) return;
 
-            let updatedFiles = _.cloneDeep(updatedData[fieldKey]);
+            let updatedFiles = _.cloneDeep(updatedData[fieldKey]) as FileModel[];
             updatedFiles = updatedFiles.filter(
                 (f) => f.filename !== file.filename,
             );
@@ -126,7 +126,10 @@ const StepContent = ({
         );
     };
 
-    const handleQuestionFormatSelect = (e) => {
+    const handleQuestionFormatSelect = (e: React.ChangeEvent<{
+        name?: string | undefined;
+        value: boolean;
+    }>) => {
         setSingleQuestionFormat(e.target.value);
     };
 
@@ -146,7 +149,7 @@ const StepContent = ({
                     title: translations.components.button.discard.success,
                     icon: 'success',
                     buttons:
-                        translations.components.button.discard.confirmButton,
+                        [translations.components.button.discard.confirmButton],
                 });
                 // TODO: Nonexistent values don't get reset.
                 setUpdatedData(_.cloneDeep(stepData));
@@ -179,7 +182,6 @@ const StepContent = ({
                             stepData ? _.cloneDeep(stepData[field.key]) : null
                         }
                         key={field.key}
-                        langKey={selectedLang}
                         isDisabled={!edit}
                         patientId={patientId}
                         stepKey={metaData.key}
@@ -194,8 +196,8 @@ const StepContent = ({
             if (singleQuestionFormat) {
                 if (currentQuestion === field.fieldNumber) {
                     if (
-                        field.fieldType === FIELD_TYPES.HEADER ||
-                        field.fieldType === FIELD_TYPES.DIVIDER
+                        field.fieldType === FieldType.HEADER ||
+                        field.fieldType === FieldType.DIVIDER
                     ) {
                         if (currentQuestion !== metaData.fields.length - 1)
                             setCurrentQuestion(currentQuestion + 1);
@@ -238,13 +240,12 @@ const StepContent = ({
     };
 
     const generateFooter = () => {
+        // TODO: SelectedStep should be optional
         return (
             <BottomBar
-                lastEditedBy={stepData?.lastEditedBy}
-                lastEdited={stepData?.lastEdited}
                 onDiscard={discardData}
                 onSave={saveData}
-                status={updatedData?.status || STEP_STATUS.UNFINISHED}
+                status={updatedData?.status || StepStatus.UNFINISHED}
                 onStatusChange={handleSimpleUpdate}
                 isEditing={edit}
                 onEdit={() => setEdit(true)}
@@ -306,16 +307,6 @@ const StepContent = ({
             {generateFooter()}
         </form>
     );
-};
-
-StepContent.propTypes = {
-    patientId: PropTypes.string.isRequired,
-    metaData: PropTypes.object.isRequired,
-    loading: PropTypes.bool.isRequired,
-    stepData: PropTypes.object.isRequired,
-    onDataSaved: PropTypes.func.isRequired,
-    edit: PropTypes.bool.isRequired,
-    setEdit: PropTypes.func.isRequired,
 };
 
 export default StepContent;
