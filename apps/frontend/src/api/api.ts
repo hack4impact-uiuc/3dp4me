@@ -1,7 +1,7 @@
 import instance from './axios-config';
 import fileDownload from 'js-file-download';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import { BasePatient, OmitDeep, Patient, Role, Step } from '@3dp4me/types';
+import { BasePatient, Nullish, OmitDeep, Patient, Role, Step } from '@3dp4me/types';
 
 export type ApiResponse<T> = {
     success: boolean,
@@ -123,7 +123,7 @@ export const downloadBlobWithoutSaving = async (
     stepKey: string,
     fieldKey: string,
     filename: string,
-) => {
+): Promise<Nullish<Blob>> => {
     const requestString = `/patients/${patientId}/files/${stepKey}/${fieldKey}/${filename}`;
     let res = null;
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable */
 
 import translations from '../../translations.json';
@@ -39,7 +40,18 @@ interface AudioRecorderProps {
     handleDelete: (key: string, file: FileType) => void
 }
 
-class AudioRecorder extends React.Component<AudioRecorderProps> {
+interface AudioRecorderState {
+    isPlaybackModalOpen: boolean
+    isRecordModalOpen: boolean
+    isRecording: boolean
+    isPaused: boolean
+    blobURL: string
+    playbackBlobURL: string
+    isBlocked: boolean
+    lang: typeof translations[Language]
+}
+
+class AudioRecorder extends React.Component<AudioRecorderProps, AudioRecorderState> {
     constructor(props: AudioRecorderProps) {
         super(props);
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -169,7 +181,7 @@ class AudioRecorder extends React.Component<AudioRecorderProps> {
             .then(() => {
                 this.setState({ isRecording: true });
             })
-            .catch((e) => console.error(e));
+            .catch((e: unknown) => console.error(e));
     };
 
     stopRecording = () => {
@@ -273,7 +285,7 @@ class AudioRecorder extends React.Component<AudioRecorderProps> {
             title: this.state.lang.components.audio.deleteTitle,
             text: this.state.lang.components.audio.deleteWarning,
             icon: 'warning',
-            buttons: true,
+            buttons: [true],
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {

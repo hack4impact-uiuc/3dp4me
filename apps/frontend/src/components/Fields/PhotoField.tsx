@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import ImageGallery, { ReactImageGalleryItem } from 'react-image-gallery';
-
+import { File as FileType } from "@3dp4me/types"
 import 'react-image-gallery/styles/css/image-gallery.css';
 import promptInstructionsAR from '../../assets/camera-prompt-instructions-ar.gif';
 import promptInstructions from '../../assets/camera-prompt-instructions-en.gif';
@@ -22,17 +22,17 @@ import {
 import { StyledButton } from '../StyledButton/StyledButton';
 import './PhotoField.scss';
 
-export interface PhotoFieldProps {
-    value: string,
+export interface PhotoFieldProps<T extends string> {
+    value: FileType[],
     displayName: string,
     patientId: string
     stepKey: string
-    fieldId: string
-    handleFileUpload: (field: string, file: File) => void
+    fieldId: T
+    handleFileUpload: (field: T, file: File) => void
     isDisabled?: boolean
 }
 
-const PhotoField = ({
+const PhotoField = <T extends string>({
     value,
     displayName,
     patientId,
@@ -40,7 +40,7 @@ const PhotoField = ({
     fieldId,
     handleFileUpload,
     isDisabled = false,
-}: PhotoFieldProps) => {
+}: PhotoFieldProps<T>) => {
     const [images, setImages] = useState<ReactImageGalleryItem[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const [showImage, setShowImage] = useState(false);
@@ -87,7 +87,7 @@ const PhotoField = ({
         }
     };
 
-    const updateMetaDataPhotos = async (data) => {
+    const updateMetaDataPhotos = async (data: FileType[]) => {
         const newPhotoData = await convertPhotosToURI(
             data,
             stepKey,

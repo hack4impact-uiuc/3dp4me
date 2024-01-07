@@ -8,8 +8,8 @@ import Eyecon from '../assets/view.svg';
 import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style';
 import translations from '../translations.json';
 import { fieldToJSX } from './fields';
-import { Path, resolveObjPath } from './object';
-import { AccessLevel, FieldType, Language, Nullish, Patient, Step } from '@3dp4me/types';
+import { resolveObjPath } from './object';
+import { AccessLevel, FieldType, Language, Nullish, Path, Patient, Step } from '@3dp4me/types';
 import { DisplayFieldType, SortDirection } from './constants';
 import { SortConfig } from '../hooks/useSortableData';
 

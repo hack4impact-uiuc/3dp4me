@@ -2,38 +2,46 @@ import _ from 'lodash';
 import { trackPromise } from 'react-promise-tracker';
 
 import { downloadBlobWithoutSaving } from '../api/api';
+import { File as FileModel } from '@3dp4me/types';
 
-export const blobToDataURL = (blob: Blob) => {
+export const blobToDataURL = (blob: Blob): Promise<string> => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
+        reader.onload = () => resolve(reader.result as string);
         reader.onerror = () => reject(reader.error);
         reader.onabort = () => reject(new Error('Read aborted'));
         reader.readAsDataURL(blob);
     });
 };
 
+interface PhotoWithUri extends FileModel {
+    uri: string
+}
+
 export const convertPhotosToURI = async (
-    photoData,
+    photoData: FileModel[],
     stepKey: string,
     fieldKey: string,
     patientId: string,
-) => {
+): Promise<PhotoWithUri[]> => {
     const newPhotoData = photoData.map(async (photoObj) => {
-        const modifiedPhotoObj = _.cloneDeep(photoObj);
-        modifiedPhotoObj.uri = await photoToURI(
+        const uri = await photoToURI(
             photoObj,
             stepKey,
             fieldKey,
             patientId,
         );
-        return modifiedPhotoObj;
+
+        return {
+            ...photoObj,
+            uri
+        };
     });
 
     return Promise.all(newPhotoData);
 };
 
-export const photoToURI = async (photoObj, stepKey: string, fieldKey: string, patientId: string) => {
+export const photoToURI = async (photoObj: FileModel, stepKey: string, fieldKey: string, patientId: string) => {
     const blob = await trackPromise(
         downloadBlobWithoutSaving(
             patientId,
@@ -42,6 +50,12 @@ export const photoToURI = async (photoObj, stepKey: string, fieldKey: string, pa
             photoObj.filename,
         ),
     );
+
+    if (!blob) {
+        console.warn(`Blob was null for ${photoObj}-${stepKey}-${fieldKey}-${patientId}`)
+        return ""
+    }
+
     const uri = await blobToDataURL(blob);
     return uri;
 };
