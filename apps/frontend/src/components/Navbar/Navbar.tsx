@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, MouseEventHandler } from 'react';
 import { AppBar, Toolbar } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom';
@@ -7,22 +7,28 @@ import PropTypes from 'prop-types';
 import Logo from '../../assets/3dp4me_logo.png';
 import AccountDropdown from '../AccountDropdown/AccountDropdown';
 import { useTranslations } from '../../hooks/useTranslations';
-import { LANGUAGES, ROUTES } from '../../utils/constants';
 
 import './Navbar.scss';
 import { Context } from '../../store/Store';
 
 import { useStyles } from './Navbar.style';
+import { Routes } from '../../utils/constants';
+import { Language, Nullish } from '@3dp4me/types';
 
-const Navbar = ({ username, userEmail }) => {
+export interface NavbarProps {
+    username: string
+    userEmail: string
+}
+
+const Navbar = ({ username, userEmail }: NavbarProps) => {
     const state = useContext(Context)[0];
     const classes = useStyles();
     const [translations, selectedLang] = useTranslations();
     const [activeRoute, setActiveRoute] = useState(window.location.pathname);
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & SVGSVGElement>>(null);
     const navTranslations = translations.components.navbar;
 
-    const handleAccountClick = (e) => {
+    const handleAccountClick: MouseEventHandler<SVGSVGElement> = (e) => {
         setAnchorEl(e.currentTarget);
     };
 
@@ -30,7 +36,7 @@ const Navbar = ({ username, userEmail }) => {
         setAnchorEl(null);
     };
 
-    const renderLink = (text, route) => {
+    const renderLink = (text: string, route: Routes) => {
         // Replaced activeRoute with window.location.pathname since activeRoute defaults to '/' on page reload
         const activeClass = activeRoute === route ? 'active' : '';
 
@@ -48,8 +54,8 @@ const Navbar = ({ username, userEmail }) => {
 
     const renderLinks = () => {
         let links = [
-            renderLink(navTranslations.dashboard.navTitle, ROUTES.DASHBOARD),
-            renderLink(navTranslations.patients.navTitle, ROUTES.PATIENTS),
+            renderLink(navTranslations.dashboard.navTitle, Routes.DASHBOARD),
+            renderLink(navTranslations.patients.navTitle, Routes.PATIENTS),
         ];
 
         // If the user is admin, they can use account/dashboard management
@@ -57,11 +63,11 @@ const Navbar = ({ username, userEmail }) => {
             links = links.concat([
                 renderLink(
                     navTranslations.accountManagement.navTitle,
-                    ROUTES.ACCOUNT,
+                    Routes.ACCOUNT,
                 ),
                 renderLink(
                     navTranslations.dashboardManagement.navTitle,
-                    ROUTES.DASHBOARD_MANAGEMENT,
+                    Routes.DASHBOARD_MANAGEMENT,
                 ),
             ]);
         }
@@ -76,17 +82,17 @@ const Navbar = ({ username, userEmail }) => {
                     <img
                         alt="Logo"
                         className={
-                            selectedLang === LANGUAGES.AR ? 'logo-ar' : ''
+                            selectedLang === Language.AR ? 'logo-ar' : ''
                         }
                         height={32}
                         src={Logo}
                     />
 
                     <Link
-                        onClick={() => setActiveRoute(ROUTES.DASHBOARD)}
+                        onClick={() => setActiveRoute(Routes.DASHBOARD)}
                         id="nav-title"
                         className={`${classes.navTitle} nav-item`}
-                        to={ROUTES.DASHBOARD}
+                        to={Routes.DASHBOARD}
                     >
                         {translations.components.navbar.dashboard.navTitle}
                     </Link>

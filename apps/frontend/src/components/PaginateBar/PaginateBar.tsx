@@ -7,10 +7,16 @@ import PropTypes from 'prop-types';
 import RightArrow from '../../assets/right-arrow.svg';
 import LeftArrow from '../../assets/left-arrow.svg';
 
+export interface PaginateBarProps {
+    pageCount: number
+    onPageChange: (newPage: number) => void
+    currentPage: number
+}
+
 /**
  * Shows a pagination component with arrows and page numbers
  */
-const PaginateBar = ({ pageCount, onPageChange, currentPage }) => {
+const PaginateBar = ({ pageCount, onPageChange, currentPage }: PaginateBarProps) => {
     const nextLabel = <img className="arrow" alt="" src={RightArrow} />;
     const previousLabel = <img className="arrow" alt="" src={LeftArrow} />;
 

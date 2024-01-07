@@ -12,7 +12,7 @@ import RadioButtonField from '../Fields/RadioButtonField';
 import TextField from '../Fields/TextField';
 import './ManagePatientModal.scss';
 import { Language, Patient, } from '@3dp4me/types';
-import { MultiSelectOption } from '../Fields/MultiSelectField';
+import { FormOption } from '../Fields/FormOption';
 
 export interface ManagePatientModalProps {
     patientData: Patient
@@ -41,7 +41,7 @@ const ManagePatientModal = ({
         }));
     };
 
-    const patientStatusOptions: MultiSelectOption[] = [
+    const patientStatusOptions: FormOption[] = [
         {
             _id: PATIENT_STATUS.ACTIVE,
             IsHidden: false,
@@ -204,14 +204,6 @@ const ManagePatientModal = ({
             </div>
         </Modal>
     );
-};
-
-ManagePatientModal.propTypes = {
-    patientData: PropTypes.object.isRequired,
-    isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onDataSave: PropTypes.func.isRequired,
-    onDeleted: PropTypes.func.isRequired,
 };
 
 export default ManagePatientModal;

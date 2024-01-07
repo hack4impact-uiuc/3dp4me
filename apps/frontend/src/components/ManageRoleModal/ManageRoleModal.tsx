@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Button } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { trackPromise } from 'react-promise-tracker';
 import swal from 'sweetalert';
@@ -16,7 +15,6 @@ import {
     ERR_ROLE_IS_IMMUTABLE,
 } from '../../utils/constants';
 import { Nullish, Role } from '@3dp4me/types';
-import { Path, PathValue } from '../../utils/object';
 
 export interface ManageRoleModalProps {
     isOpen: boolean
@@ -112,16 +110,18 @@ const ManageRoleModal = ({
                 <TextField
                     className="text-field"
                     displayName={translations.roleManagement.roleName}
+                    fieldId="roleName"
                     type="text"
                     isDisabled={!role?.isMutable}
                     value={role?.roleName?.[selectedLang]}
-                    onChange={(v) => onRoleChange("roleName", v)}
+                    onChange={onRoleChange}
                 />
                 <TextArea
                     title={translations.roleManagement.roleDescription}
                     disabled={!role?.isMutable}
+                    fieldId="roleDescription"
                     value={role?.roleDescription?.[selectedLang]}
-                    onChange={(v) => onRoleChange("roleDescription", v)}
+                    onChange={onRoleChange}
                 />
                 <p>{translations.roleManagement.warning}</p>
 
@@ -150,19 +150,6 @@ const ManageRoleModal = ({
             </div>
         </Modal>
     );
-};
-
-ManageRoleModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onRoleDeleted: PropTypes.func.isRequired,
-    onRoleEdited: PropTypes.func.isRequired,
-    roleInfo: PropTypes.shape({
-        roleName: PropTypes.string,
-        _id: PropTypes.string,
-        roleDescription: PropTypes.string,
-        isMutable: PropTypes.bool,
-    }),
 };
 
 export default ManageRoleModal;

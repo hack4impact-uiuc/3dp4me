@@ -1,10 +1,17 @@
 import { Box, Tab, Tabs } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import './NavTabs.scss';
 
-const NavTabs = ({ value, setValue, labels, labelValues }) => {
-    const handleChange = (event, newValue) => {
+export interface NavTabsProps {
+    value: string
+    setValue: (v: string) => void
+    labels:  string[]
+    labelValues: string[]
+}
+
+const NavTabs = ({ value, setValue, labels, labelValues }: NavTabsProps) => {
+    const handleChange = (event: ChangeEvent<{}>, newValue: string) => {
         setValue(newValue);
     };
 
@@ -26,13 +33,6 @@ const NavTabs = ({ value, setValue, labels, labelValues }) => {
             </Tabs>
         </Box>
     );
-};
-
-NavTabs.propTypes = {
-    value: PropTypes.string,
-    setValue: PropTypes.func,
-    labels: PropTypes.array.isRequired,
-    labelValues: PropTypes.array.isRequired,
 };
 
 export { NavTabs };
