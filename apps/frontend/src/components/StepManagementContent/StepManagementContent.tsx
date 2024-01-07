@@ -4,9 +4,20 @@ import 'semantic-ui-css/semantic.min.css';
 import PropTypes from 'prop-types';
 
 import RadioButtonField from '../Fields/RadioButtonField';
-import { FIELD_TYPES, LANGUAGES } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
 import { getJSONReferenceByStringPath } from '../../utils/utils';
+import { FormOption } from '../Fields/FormOption';
+import { Field, FieldType, Language, Role } from '@3dp4me/types';
+
+export interface StepManagementContentProps {
+    onDownPressed: (key: string, root: string, index: number) => void
+    onUpPressed: (key: string, root: string, index: number) => void
+    onEditField: (root: string, index: number) => void
+    onAddSubfield: (key: string, rootKey: string) => void
+    stepMetadata: Record<string, any>
+    isEditing: boolean
+    allRoles: FormOption[]
+}
 
 const StepManagementContent = ({
     onDownPressed,
@@ -16,9 +27,9 @@ const StepManagementContent = ({
     stepMetadata,
     isEditing,
     allRoles,
-}) => {
+}: StepManagementContentProps) => {
     const selectedLang = useTranslations()[1];
-    const formatRoles = (roles) => {
+    const formatRoles = (roles: string[]) => {
         if (!roles?.length) return 'Admin';
 
         // Filters out all roles that aren't in roles
@@ -36,14 +47,14 @@ const StepManagementContent = ({
         return roleString.substring(2, roleString.length);
     };
 
-    const renderBottomSection = (field) => {
+    const renderBottomSection = (field: Field) => {
         switch (field?.fieldType) {
-            case FIELD_TYPES.RADIO_BUTTON:
+            case FieldType.RADIO_BUTTON:
                 return (
                     <div className="bottom-container">
                         <RadioButtonField
+                            title=""
                             fieldId={field?.key}
-                            langKey={selectedLang}
                             options={field?.options}
                             isDisabled
                         />
@@ -54,7 +65,7 @@ const StepManagementContent = ({
         }
     };
 
-    const renderEditButtons = (field, fieldRoot, fieldNumber, isSubField) => {
+    const renderEditButtons = (field: Field, fieldRoot: string, fieldNumber: number, isSubField: boolean) => {
         if (!isEditing) return null;
 
         // Since subfields are rendered from left to right, their buttons will have to change.
@@ -136,7 +147,7 @@ const StepManagementContent = ({
         );
     };
 
-    function generateAddSubFieldButton(stepKey, root) {
+    function generateAddSubFieldButton(stepKey: string, root: string) {
         if (!isEditing) return null;
         return (
             <div
@@ -148,8 +159,8 @@ const StepManagementContent = ({
         );
     }
 
-    function generateSubfieldInfo(field, fieldRoot, fieldNumber) {
-        if (field.fieldType !== FIELD_TYPES.FIELD_GROUP) return null;
+    function generateSubfieldInfo(field: Field, fieldRoot: string, fieldNumber: number) {
+        if (field.fieldType !== FieldType.FIELD_GROUP) return null;
 
         const root = `${fieldRoot}[${getFieldIndexGivenFieldNumber(
             fieldRoot,
@@ -163,19 +174,19 @@ const StepManagementContent = ({
         );
     }
 
-    function getFieldIndexGivenFieldNumber(fieldRoot, fieldNumber) {
-        return getJSONReferenceByStringPath(stepMetadata, fieldRoot).findIndex(
-            (field) => field.fieldNumber === fieldNumber,
+    function getFieldIndexGivenFieldNumber(fieldRoot: string, fieldNumber: number) {
+        return getJSONReferenceByStringPath(stepMetadata, fieldRoot)?.findIndex(
+            (field: Field) => field.fieldNumber === fieldNumber,
         );
     }
 
-    function getFieldClassName(field) {
+    function getFieldClassName(field: Field) {
         let fieldClassName = field.isHidden
             ? 'hidden-step-field-container'
             : 'step-field-container';
 
         // Handles case when the user has the language set to Arabic
-        if (selectedLang === LANGUAGES.AR) {
+        if (selectedLang === Language.AR) {
             fieldClassName += ' ';
             if (isEditing) {
                 fieldClassName += 'expanded-arabic-field-container';
@@ -187,7 +198,7 @@ const StepManagementContent = ({
         return fieldClassName;
     }
 
-    function generateButtonInfo(fields, fieldRoot, isSubField) {
+    function generateButtonInfo(fields: Field[], fieldRoot: string, isSubField: boolean) {
         if (!fields) return null;
 
         return fields.map((field) => {
@@ -238,16 +249,6 @@ const StepManagementContent = ({
             {generateButtonInfo(stepMetadata?.fields, 'fields', false)}
         </div>
     );
-};
-
-StepManagementContent.propTypes = {
-    isEditing: PropTypes.bool.isRequired,
-    onDownPressed: PropTypes.func.isRequired,
-    onEditField: PropTypes.func.isRequired,
-    onAddSubfield: PropTypes.func.isRequired,
-    stepMetadata: PropTypes.object,
-    onUpPressed: PropTypes.func.isRequired,
-    allRoles: PropTypes.array.isRequired,
 };
 
 export default StepManagementContent;

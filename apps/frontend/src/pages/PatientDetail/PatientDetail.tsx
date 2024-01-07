@@ -22,6 +22,7 @@ import { useTranslations } from '../../hooks/useTranslations';
 import { LANGUAGES } from '../../utils/constants';
 import { sortMetadata } from '../../utils/utils';
 import './PatientDetail.scss';
+import { Nullish, Patient, Step } from '@3dp4me/types';
 
 /**
  * The detail view for a patient. Shows their information
@@ -34,8 +35,8 @@ const PatientDetail = () => {
     const [translations, selectedLang] = useTranslations();
     const [loading, setLoading] = useState(true);
     const [selectedStep, setSelectedStep] = useState('');
-    const [stepMetaData, setStepMetaData] = useState(null);
-    const [patientData, setPatientData] = useState(null);
+    const [stepMetaData, setStepMetaData] = useState<Step[]>([]);
+    const [patientData, setPatientData] = useState<Nullish<Patient>>(null);
     const [isManagePatientModalOpen, setManagePatientModalOpen] =
         useState(false);
     const stepKeyParam = useQueryParam('stepKey', StringParam)[0];
@@ -49,12 +50,12 @@ const PatientDetail = () => {
         const getData = async () => {
             errorWrap(async () => {
                 // Step metadata
-                let res = await trackPromise(getAllStepsMetadata(false));
-                let metaData = res.result;
+                const metaRes = await trackPromise(getAllStepsMetadata(false));
+                let metaData = metaRes.result;
 
                 // Patient data
-                res = await trackPromise(getPatientById(patientId));
-                const data = res.result;
+                const patientRes = await trackPromise(getPatientById(patientId));
+                const data = patientRes.result;
 
                 // Sort it
                 metaData = sortMetadata(metaData);
@@ -75,7 +76,7 @@ const PatientDetail = () => {
      * Called when the patient data for a step is saved
      * Submits to the backend and displays a message
      */
-    const onStepSaved = (stepKey, stepData) => {
+    const onStepSaved = (stepKey: string, stepData: Record<string, any>) => {
         errorWrap(async () => {
             const newPatientData = _.cloneDeep(patientData);
             newPatientData[stepKey] = _.cloneDeep(stepData);
@@ -139,7 +140,7 @@ const PatientDetail = () => {
         };
     };
 
-    const displayUnsavedDataAlert = (newStep) => {
+    const displayUnsavedDataAlert = (newStep: string) => {
         swal({
             title: translations.components.swal.dataDiscarding
                 .confirmationQuestion,
@@ -154,14 +155,14 @@ const PatientDetail = () => {
         });
     };
 
-    const switchStep = (newStep) => {
+    const switchStep = (newStep: string) => {
         if (newStep === null) return;
         setSelectedStep(newStep);
         setEdit(false);
         window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`);
     };
 
-    const onStepChange = (newStep) => {
+    const onStepChange = (newStep: string) => {
         if (edit) {
             displayUnsavedDataAlert(newStep);
         } else {
@@ -192,7 +193,7 @@ const PatientDetail = () => {
                             onDataSaved={onStepSaved}
                             metaData={stepMetaData.find(
                                 (s) => s.key === step.key,
-                            )}
+                            )!}
                             stepData={patientData[step.key] ?? {}}
                             loading={loading}
                             edit={edit}

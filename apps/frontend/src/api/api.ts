@@ -1,12 +1,17 @@
 import instance from './axios-config';
 import fileDownload from 'js-file-download';
 import { CognitoIdentityServiceProvider } from 'aws-sdk';
-import { BasePatient, Patient, Role, Step } from '@3dp4me/types';
+import { BasePatient, OmitDeep, Patient, Role, Step } from '@3dp4me/types';
 
 export type ApiResponse<T> = {
     success: boolean,
     message: string,
     result: T,
+}
+
+export type Paginated<T> = {
+    data: T
+    count: number
 }
 
 export const getPatientsCount = async (): Promise<ApiResponse<number>> => {
@@ -21,7 +26,7 @@ export const getPatientsByPageNumberAndSearch = async (
     pageNumber: number,
     nPerPage: number,
     searchQuery = '',
-): Promise<ApiResponse<Patient[]>> => {
+): Promise<ApiResponse<Paginated<Patient[]>>> => {
     const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`;
     const res = await instance.get(requestString);
     if (!res?.data?.success) throw new Error(res?.data?.message);
@@ -56,7 +61,7 @@ export const getPatientById = async (id: string): Promise<ApiResponse<Patient>> 
     return res.data;
 };
 
-export const postNewPatient = async (patientInfo: BasePatient): Promise<ApiResponse<Patient>> => {
+export const postNewPatient = async (patientInfo: OmitDeep<BasePatient, "_id">): Promise<ApiResponse<Patient>> => {
     const requestString = `/patients/`;
     const res = await instance.post(requestString, patientInfo);
 

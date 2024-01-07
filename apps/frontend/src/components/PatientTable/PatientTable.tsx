@@ -15,7 +15,7 @@ import {
 import CreatePatientModal from '../CreatePatientModal/CreatePatientModal';
 import Table from '../Table/Table';
 import { Routes } from '../../utils/constants';
-import { BasePatient, Language, Nullish, Patient } from '@3dp4me/types';
+import { BasePatient, Language, Nullish, OmitDeep, Patient } from '@3dp4me/types';
 
 export interface PatientTableProps {
     onAddPatient: (patient: Patient) => void
@@ -50,7 +50,7 @@ const PatientTable = ({
     /**
      * Saves a patient to the DB
      */
-    const onSavePatient = async (patientData: BasePatient) => {
+    const onSavePatient = async (patientData: OmitDeep<BasePatient, "_id">) => {
         let patient: Nullish<Patient> = null;
 
         await errorWrap(async () => {
@@ -77,7 +77,7 @@ const PatientTable = ({
      * Saves patient to the DB and immediately navigates to the
      * detail view for that patient
      */
-    const onSaveAndEditPatient = async (patientData: BasePatient) => {
+    const onSaveAndEditPatient = async (patientData: OmitDeep<BasePatient, "_id">) => {
         const patientId = await onSavePatient(patientData);
         const currentRoute = window.location.href;
         let relativeRoute = `${Routes.PATIENT_DETAIL}/${patientId}?stepKey=${stepKey}`;

@@ -5,23 +5,23 @@ import PropTypes from 'prop-types';
 import { useTranslations } from '../../hooks/useTranslations';
 import { FormOption } from './FormOption';
 
-export interface RadioButtonFieldProps {
-    fieldId: string;
+export interface RadioButtonFieldProps<T extends string> {
+    fieldId: T;
     title: string;
     value?: string;
     options: FormOption[];
     isDisabled: boolean;
-    onChange: (field: string, value: string) => void;
+    onChange?: (field: T, value: string) => void;
 }
 
-const RadioButtonField = ({
+const RadioButtonField = <T extends string>({
     fieldId,
     title,
     value = '',
     options,
     isDisabled,
     onChange,
-}: RadioButtonFieldProps) => {
+}: RadioButtonFieldProps<T>) => {
     const selectedLang = useTranslations()[1];
 
     const shouldHideOption = (option: FormOption) => {
@@ -49,7 +49,7 @@ const RadioButtonField = ({
             <h3>{title}</h3>
             <RadioGroup
                 name={fieldId}
-                onChange={(e) => onChange(fieldId, e.target.value)}
+                onChange={(e) => onChange?.(fieldId, e.target.value)}
                 value={value}
             >
                 {generateQuestions()}

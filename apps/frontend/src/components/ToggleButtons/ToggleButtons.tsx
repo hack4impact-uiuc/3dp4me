@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent, MouseEventHandler, useState } from 'react';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton, { ToggleButtonProps } from '@material-ui/lab/ToggleButton';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,17 +18,18 @@ import HalfCircleIcon from '../../assets/half-circle.svg';
 import './ToggleButtons.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { useWindowDimensions } from '../../hooks/useWindowDimensions';
-import { Patient, Step } from '@3dp4me/types';
+import { Nullish, Patient, Step } from '@3dp4me/types';
+import { getStepData } from '../../utils/metadataUtils';
 
 interface ToggleButtonsProps {
     handleStep: (newStep: string) => void;
-    metaData: Step;
+    metaData: Step[];
     patientData: Patient;
     step: string
 }
 
 const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButtonsProps) => {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & HTMLButtonElement>>(null);
     const selectedLang = useTranslations()[1];
     const { width } = useWindowDimensions();
 
@@ -68,11 +69,11 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButton
         ),
     };
 
-    const handleClickSelector = (e) => {
+    const handleClickSelector: MouseEventHandler<HTMLButtonElement> = (e) => {
         setAnchorEl(e.currentTarget);
     };
 
-    const handleCloseSelector = (e, newStep) => {
+    const handleCloseSelector = (_: any, newStep: string) => {
         setAnchorEl(null);
         if (newStep !== 'close') {
             handleStep(newStep);
@@ -84,9 +85,10 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButton
 
         return metaData.map((element) => {
             let status = null;
+            const stepData = getStepData(patientData, element.key)
             if (patientData)
                 status =
-                    patientData[element.key]?.status ?? STEP_STATUS.UNFINISHED;
+                    stepData?.status ?? STEP_STATUS.UNFINISHED;
 
             return (
                 <ToggleButton
@@ -114,11 +116,12 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButton
         if (selectedStepIndex === -1) return null;
 
         const element = metaData[selectedStepIndex];
+        const stepData = getStepData(patientData, step)
 
         return (
             <div className="current-step-label">
-                {patientData && patientData[step]?.status
-                    ? statusIcons[patientData[step].status]
+                {stepData?.status
+                    ? statusIcons[stepData.status]
                     : null}{' '}
                 <b>{element.displayName[selectedLang]}</b>
             </div>
@@ -129,13 +132,15 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButton
         if (metaData == null) return null;
 
         return metaData.map((element) => {
+            const stepData = getStepData(patientData, element.key)
+
             return (
                 <MenuItem
                     key={`${element.key}-mi`}
                     onClick={(e) => handleCloseSelector(e, element.key)}
                 >
-                    {patientData && patientData[element.key]?.status
-                        ? statusIcons[patientData[element.key].status]
+                    {patientData && stepData?.status
+                        ? statusIcons[stepData.status]
                         : null}{' '}
                     <b className="selector-text">
                         {element.displayName[selectedLang]}

@@ -13,13 +13,14 @@ import {
 
 import './Patients.scss';
 import { trackPromise } from 'react-promise-tracker';
+import { Patient } from '@3dp4me/types';
 
 /**
  * Shows a table of all patients within the system
  */
 const Patients = () => {
     const [translations, selectedLang] = useTranslations();
-    const [allPatients, setAllPatients] = useState([]);
+    const [allPatients, setAllPatients] = useState<Patient[]>([]);
     const [patientsCount, setPatientsCount] = useState(0);
 
     // Currently selected page
@@ -30,7 +31,7 @@ const Patients = () => {
 
     const errorWrap = useErrorWrap();
 
-    const loadPatientData = async (pageNumber, query) => {
+    const loadPatientData = async (pageNumber: number, query: string) => {
         const res = await trackPromise(
             getPatientsByPageNumberAndSearch(
                 pageNumber,
@@ -42,7 +43,7 @@ const Patients = () => {
         setPatientsCount(res.result.count);
     };
 
-    const updatePage = async (newPage) => {
+    const updatePage = async (newPage: number) => {
         setSelectedPageNumber(newPage);
 
         errorWrap(async () => {
@@ -50,7 +51,7 @@ const Patients = () => {
         });
     };
 
-    const onSearchQueryChanged = (newSearchQuery) => {
+    const onSearchQueryChanged = (newSearchQuery: string) => {
         setSearchQuery(newSearchQuery);
 
         // The page number needs to be updated because the search query might filter the patient data
@@ -84,7 +85,7 @@ const Patients = () => {
      * Called when a patient is successfully added to the backend
      * @param {Object} patientData The patient data (returned from server)
      */
-    const onAddPatient = (patientData) => {
+    const onAddPatient = (patientData: Patient) => {
         setAllPatients((oldPatients) => oldPatients.concat(patientData));
     };
 
@@ -104,7 +105,7 @@ const Patients = () => {
                 />
 
                 <PaginateBar
-                    pageCount={Math.ceil(patientsCount / PEOPLE_PER_PAGE, 10)}
+                    pageCount={Math.ceil(patientsCount / PEOPLE_PER_PAGE)}
                     onPageChange={updatePage}
                     currentPage={selectedPageNumber - 1}
                 />

@@ -1,6 +1,6 @@
 import { Field, Patient, Step } from '@3dp4me/types';
 import { camelCase } from 'lodash';
-import { Path, PathValue } from './object';
+import { Nullish } from '../../../../packages/types/dist/src/utils/nullish';
 
 
 function hasKey<T extends object, K extends PropertyKey>(obj: T, key: K): obj is T & Record<K, unknown> {
@@ -16,6 +16,11 @@ export function hasStepData<K extends PropertyKey>(patient: Patient, stepKey: K)
 export const hasNotesForStep = (data: Patient, meta: Step): data is PatientDataWithStep<typeof meta['key']> & Record<typeof meta['key'], Record<"notes", string>>  => {
     if (!hasStepData(data, meta.key)) return false
     return hasKey(data[meta.key], 'notes')
+}
+
+export const getStepData = <T extends Patient>(data: T, key: string): Nullish<Record<string, any>> => {
+    if (hasKey(data, key)) return data[key] as any as Record<string, any>
+    return null
 }
 
 /* Returns a string of specified length composed of random alphanumeric characters */
