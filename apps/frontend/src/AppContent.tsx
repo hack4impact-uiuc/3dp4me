@@ -85,7 +85,7 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
                     {/* Global error popup */}
                     <ErrorModal
                         message={state.error}
-                        isOpen={state.isErrorVisible}
+                        isOpen={!!state.isErrorVisible}
                         onClose={handleErrorModalClose}
                     />
 

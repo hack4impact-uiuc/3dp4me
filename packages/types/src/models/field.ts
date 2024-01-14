@@ -2,6 +2,7 @@ import { Signature } from "typescript"
 import { File } from "./file"
 import { TranslatedString } from "./translatedString"
 import { MapPoint } from "./map"
+import { DecreaseDepth } from "src/utils"
 
 export enum FieldType {
     STRING = 'String',
@@ -49,7 +50,8 @@ export interface Field {
     writableGroups: string[],
     isHidden: boolean,
     isDeleted: boolean,
-    additionalData: any
+    // TODO: Better type
+    additionalData: {}
     subFields: Field[]
 }
 

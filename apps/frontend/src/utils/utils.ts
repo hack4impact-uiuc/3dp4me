@@ -1,4 +1,4 @@
-import { Field, Path, Patient, Role, Step } from "@3dp4me/types";
+import { Field, Nullish, Path, PathValue, Patient, Role, Step } from "@3dp4me/types";
 
 /**
  * Given a patient, constructs their full name
@@ -60,7 +60,7 @@ export const rolesToMultiSelectFormat = (roles: Role[]) => {
     Returns a value form a JSON object given a string path (ex: fields[0].subFields)
     Source: https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
 */
-export const getJSONReferenceByStringPath = <T extends Record<string, any>>(object: T, stringPath: Path<T>) => {
+export const getJSONReferenceByStringPath = <T extends Record<string, any>, P extends Path<T>>(object: T, stringPath: P): Nullish<PathValue<T, P>> => {
     const propertyStringPath = stringPath.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
     const strippedStringPath = propertyStringPath.replace(/^\./, ''); // strip a leading dot
     const splitStringPath = strippedStringPath.split('.');
@@ -73,5 +73,5 @@ export const getJSONReferenceByStringPath = <T extends Record<string, any>>(obje
             return undefined;
         }
     }
-    return object;
+    return object as PathValue<T, P>;
 };

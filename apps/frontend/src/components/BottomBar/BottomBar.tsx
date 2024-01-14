@@ -8,17 +8,17 @@ import exclamation from '../../assets/exclamation.svg';
 import halfCircle from '../../assets/half-circle.svg';
 import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
 import { useTranslations } from '../../hooks/useTranslations';
-import { PatientStatus, StepStatus } from '@3dp4me/types';
+import { PatientStatus, StepPathToField, StepStatus } from '@3dp4me/types';
 
 interface BottomBarProps {
     isEditing: boolean
-    onAddField?: (step: string, key: string) => void
+    onAddField?: (step: string, key: StepPathToField) => void
     onStatusChange: (status: 'status', value: StepStatus) => void
     onSave: () => void
     onDiscard: () => void
     onEdit: () => void
     status: StepStatus
-    selectedStep: string
+    selectedStep?: string
 }
 
 const BottomBar = ({
@@ -174,7 +174,7 @@ const BottomBar = ({
             }`;
         }
 
-        if (isEditing && onAddField) {
+        if (isEditing && onAddField && selectedStep) {
             button = (
                 <Button
                     className={buttonClassName}

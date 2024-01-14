@@ -23,6 +23,7 @@ import { LANGUAGES } from '../../utils/constants';
 import { sortMetadata } from '../../utils/utils';
 import './PatientDetail.scss';
 import { Nullish, Patient, Step } from '@3dp4me/types';
+import { getStepData } from '../../utils/metadataUtils';
 
 /**
  * The detail view for a patient. Shows their information
@@ -78,8 +79,10 @@ const PatientDetail = () => {
      */
     const onStepSaved = (stepKey: string, stepData: Record<string, any>) => {
         errorWrap(async () => {
-            const newPatientData = _.cloneDeep(patientData);
-            newPatientData[stepKey] = _.cloneDeep(stepData);
+            const newPatientData = {
+                ..._.cloneDeep(patientData),
+                [stepKey]: _.cloneDeep(stepData),
+            }
             await trackPromise(updateStage(patientId, stepKey, stepData));
             setPatientData(newPatientData);
         });
@@ -89,7 +92,7 @@ const PatientDetail = () => {
      * Called when the patient data is submitted from the modal.dd
      * Submits to the backend and displays a message
      */
-    const onPatientDataSaved = async (newPatientData) => {
+    const onPatientDataSaved = async (newPatientData: Patient) => {
         const patientDataCopy = _.cloneDeep(patientData);
         Object.assign(patientDataCopy, newPatientData);
         await errorWrap(async () => {
@@ -194,7 +197,7 @@ const PatientDetail = () => {
                             metaData={stepMetaData.find(
                                 (s) => s.key === step.key,
                             )!}
-                            stepData={patientData[step.key] ?? {}}
+                            stepData={getStepData(patientData, step.key) ?? {}}
                             loading={loading}
                             edit={edit}
                             setEdit={setEdit}
@@ -210,7 +213,7 @@ const PatientDetail = () => {
             <div className="root">
                 <ManagePatientModal
                     onDataSave={onPatientDataSaved}
-                    patientData={getCurrentPatientModelData()}
+                    patientData={patientData!}
                     isOpen={isManagePatientModalOpen}
                     onClose={() => setManagePatientModalOpen(false)}
                     onDeleted={onPatientDeleted}
@@ -218,7 +221,7 @@ const PatientDetail = () => {
 
                 <PatientDetailSidebar
                     stepMetaData={stepMetaData}
-                    patientData={patientData}
+                    patientData={patientData!}
                     onViewPatient={() => setManagePatientModalOpen(true)}
                 />
 
@@ -231,7 +234,7 @@ const PatientDetail = () => {
                 >
                     <ToggleButtons
                         step={selectedStep}
-                        patientData={patientData}
+                        patientData={patientData!}
                         metaData={stepMetaData}
                         handleStep={onStepChange}
                     />

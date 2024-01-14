@@ -6,6 +6,7 @@ import { trackPromise } from 'react-promise-tracker';
 
 import { useErrorWrap } from '../../hooks/useErrorWrap';
 import {
+    DisplayFieldType,
     getStepDashboardHeaders,
     PATIENTS_BY_STEP_TABLE_ROW_DATA,
     PEOPLE_PER_PAGE,
@@ -20,7 +21,7 @@ import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
 import { sortMetadata } from '../../utils/utils';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
-import { Field, Nullish, Patient, Step } from '@3dp4me/types';
+import { Field, FieldType, Nullish, Patient, Step } from '@3dp4me/types';
 
 const CLOSE_REASON_CLICKAWAY = 'clickaway';
 
@@ -199,7 +200,7 @@ const Dashboard = () => {
         const rowData = _.cloneDeep(PATIENTS_BY_STEP_TABLE_ROW_DATA);
         rowData.push({
             id: `${stepKey}.status`,
-            dataType: FIELD_TYPES.STEP_STATUS,
+            dataType: DisplayFieldType.STEP_STATUS,
         });
 
         fields.forEach((field) => {

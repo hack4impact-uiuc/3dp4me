@@ -18,7 +18,7 @@ import { formatDate } from '../../utils/date';
 import BottomBar from '../BottomBar/BottomBar';
 import StepField from '../StepField/StepField';
 import './StepContent.scss';
-import { FieldTypeData, Step, File as FileModel, FieldType, StepStatus } from '@3dp4me/types';
+import { FieldTypeData, Step, File as FileModel, FieldType, StepStatus, Patient } from '@3dp4me/types';
 
 // TODO: Generate typings for this. I don't think it's really possible though because stepData is fluid
 export interface StepContentProps {
@@ -128,9 +128,9 @@ const StepContent = ({
 
     const handleQuestionFormatSelect = (e: React.ChangeEvent<{
         name?: string | undefined;
-        value: boolean;
+        value: unknown;
     }>) => {
-        setSingleQuestionFormat(e.target.value);
+        setSingleQuestionFormat(Boolean(e.target.value));
     };
 
     const discardData = () => {
@@ -284,16 +284,16 @@ const StepContent = ({
                         MenuProps={{
                             style: { zIndex: 35001 },
                         }}
-                        defaultValue={false}
+                        defaultValue={"false"}
                         onChange={handleQuestionFormatSelect}
                     >
-                        <MenuItem value={false}>
+                        <MenuItem value={"false"}>
                             {
                                 translations.components.selectQuestionFormat
                                     .allQuestions
                             }
                         </MenuItem>
-                        <MenuItem value>
+                        <MenuItem value={"true"}>
                             {
                                 translations.components.selectQuestionFormat
                                     .singleQuestion

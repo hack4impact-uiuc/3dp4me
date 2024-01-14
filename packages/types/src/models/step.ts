@@ -18,3 +18,5 @@ export interface Step {
     isHidden: boolean,
     isDeleted: boolean
 }
+
+export type BaseStep = Omit<Step, "key"|"stepNumber"| "defaultToListView"|"isHidden"|"isDeleted">

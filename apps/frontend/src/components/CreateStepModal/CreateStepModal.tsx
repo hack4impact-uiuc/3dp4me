@@ -12,10 +12,9 @@ import {
     ERR_LANGUAGE_VALIDATION_FAILED,
     ADMIN_ID,
 } from '../../utils/constants';
-import { Field, Language, Role, Step } from '@3dp4me/types';
+import { BaseStep, Field, Language, Role, Step } from '@3dp4me/types';
 import { FormOption } from '../Fields/FormOption';
 
-type BaseStep = Omit<Step, "key"|"stepNumber"| "defaultToListView"|"isHidden"|"isDeleted">
 export interface CreateStepModalProps {
     isOpen: boolean
     onModalClose: () => void

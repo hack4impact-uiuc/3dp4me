@@ -7,13 +7,13 @@ import RadioButtonField from '../Fields/RadioButtonField';
 import { useTranslations } from '../../hooks/useTranslations';
 import { getJSONReferenceByStringPath } from '../../utils/utils';
 import { FormOption } from '../Fields/FormOption';
-import { Field, FieldType, Language, Role } from '@3dp4me/types';
+import { Field, FieldType, Language, PathToField, StepPathToField } from '@3dp4me/types';
 
 export interface StepManagementContentProps {
-    onDownPressed: (key: string, root: string, index: number) => void
-    onUpPressed: (key: string, root: string, index: number) => void
-    onEditField: (root: string, index: number) => void
-    onAddSubfield: (key: string, rootKey: string) => void
+    onDownPressed: (key: string, root: StepPathToField, index: number) => void
+    onUpPressed: (key: string, root: StepPathToField, index: number) => void
+    onEditField: (root: StepPathToField, index: number) => void
+    onAddSubfield: (key: string, rootKey: StepPathToField) => void
     stepMetadata: Record<string, any>
     isEditing: boolean
     allRoles: FormOption[]
@@ -65,7 +65,7 @@ const StepManagementContent = ({
         }
     };
 
-    const renderEditButtons = (field: Field, fieldRoot: string, fieldNumber: number, isSubField: boolean) => {
+    const renderEditButtons = (fieldRoot: StepPathToField, fieldNumber: number, isSubField: boolean) => {
         if (!isEditing) return null;
 
         // Since subfields are rendered from left to right, their buttons will have to change.
@@ -159,13 +159,24 @@ const StepManagementContent = ({
         );
     }
 
-    function generateSubfieldInfo(field: Field, fieldRoot: string, fieldNumber: number) {
-        if (field.fieldType !== FieldType.FIELD_GROUP) return null;
-
-        const root = `${fieldRoot}[${getFieldIndexGivenFieldNumber(
+    function getPathToSubfields(fieldRoot: StepPathToField, fieldNumber: number): StepPathToField {
+        const root: PathToField<`fields`, 6> = `${fieldRoot}[${getFieldIndexGivenFieldNumber(
             fieldRoot,
             fieldNumber,
         )}].subFields`;
+
+        // Have to cheat a little here with the type. Since we can technically recurse forever,
+        // we have to force the case to StepPathToField which has a recursion depth 1 less than 
+        // the type of root
+        return root as StepPathToField
+    }
+
+    // TODO Handle recurseive case fields[number].subfields
+    function generateSubfieldInfo(field: Field, fieldRoot: StepPathToField, fieldNumber: number) {
+        if (field.fieldType !== FieldType.FIELD_GROUP) return null;
+
+        const root = getPathToSubfields(fieldRoot, fieldNumber);
+
         return (
             <div className="subfield-container">
                 {generateButtonInfo(field.subFields, root, true)}
@@ -174,7 +185,7 @@ const StepManagementContent = ({
         );
     }
 
-    function getFieldIndexGivenFieldNumber(fieldRoot: string, fieldNumber: number) {
+    function getFieldIndexGivenFieldNumber(fieldRoot: string, fieldNumber: number): number {
         return getJSONReferenceByStringPath(stepMetadata, fieldRoot)?.findIndex(
             (field: Field) => field.fieldNumber === fieldNumber,
         );
@@ -198,7 +209,7 @@ const StepManagementContent = ({
         return fieldClassName;
     }
 
-    function generateButtonInfo(fields: Field[], fieldRoot: string, isSubField: boolean) {
+    function generateButtonInfo(fields: Field[], fieldRoot: StepPathToField, isSubField: boolean) {
         if (!fields) return null;
 
         return fields.map((field) => {
@@ -231,7 +242,6 @@ const StepManagementContent = ({
                         </div>
 
                         {renderEditButtons(
-                            field,
                             fieldRoot,
                             field.fieldNumber,
                             isSubField,

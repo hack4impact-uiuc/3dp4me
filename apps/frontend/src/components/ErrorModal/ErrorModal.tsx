@@ -4,12 +4,13 @@ import { Modal, RootRef } from '@material-ui/core';
 
 import './ErrorModal.scss';
 import WarningIcon from '../../assets/warning.svg';
+import { Nullish } from '@3dp4me/types';
 
 const KEYCODE_SPACE = 32;
 const DEFAULT_ERROR_MSG = 'An error occurred';
 
 export interface ErrorModalProps {
-    message?: string
+    message?: Nullish<string>
     isOpen: boolean
     onClose: () => void
 }
@@ -25,6 +26,7 @@ const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }: ErrorModal
         <Modal
             open={isOpen}
             onClose={onClose}
+            // TODO: Is this an issue
             // @ts-ignore
             container={() => RootRef.current}
         >

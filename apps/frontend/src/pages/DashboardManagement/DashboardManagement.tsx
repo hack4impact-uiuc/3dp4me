@@ -34,7 +34,7 @@ import {
 } from '../../utils/utils';
 import './DashboardManagement.scss';
 import { drawerWidth, verticalMovementWidth } from '../../styles/variables';
-import { Field, Role, Step } from '@3dp4me/types';
+import { BaseStep, Field, Role, Step, StepPathToField, Unsaved } from '@3dp4me/types';
 import { FormOption } from '../../components/Fields/FormOption';
 
 const expandedSidebarWidth = `${
@@ -55,11 +55,11 @@ const SectionTab = () => {
     const [selectedFieldNumberForEditing, setSelectedFieldNumberForEditing] =
         useState(0);
     const [selectedFieldRootForEditing, setSelectedFieldRootForEditing] =
-        useState('fields'); // Identifies where to edit a field in stepMetadata
+        useState<StepPathToField>('fields'); // Identifies where to edit a field in stepMetadata
     const [selectedStepNumberForEditing, setSelectedStepNumberForEditing] =
         useState(0);
     const [selectedFieldRootForCreating, setSelectedFieldRootForCreating] =
-        useState('fields'); // Identifies where to add a field in stepMetadata
+        useState<StepPathToField>('fields'); // Identifies where to add a field in stepMetadata
     const [canAddFieldGroup, setCanAddFieldGroup] = useState(true); // Toggled to false if the create field modal is open for creating a subfield
 
     const errorWrap = useErrorWrap();
@@ -70,21 +70,21 @@ const SectionTab = () => {
         setCreateStepModalOpen(true);
     };
 
-    const onAddField = (stepKey: string, fieldRoot: string) => {
+    const onAddField = (stepKey: string, fieldRoot: StepPathToField) => {
         setSelectedStep(stepKey);
         setSelectedFieldRootForCreating(fieldRoot);
         setCreateFieldModalOpen(true);
         setCanAddFieldGroup(true);
     };
 
-    const onAddSubfield = (stepKey: string, fieldRoot: string) => {
+    const onAddSubfield = (stepKey: string, fieldRoot: StepPathToField) => {
         setSelectedStep(stepKey);
         setSelectedFieldRootForCreating(fieldRoot);
         setCreateFieldModalOpen(true);
         setCanAddFieldGroup(false);
     };
 
-    const onEditField = (fieldRoot: string, fieldNumber: number) => {
+    const onEditField = (fieldRoot: StepPathToField, fieldNumber: number) => {
         setSelectedFieldNumberForEditing(fieldNumber);
         setSelectedFieldRootForEditing(fieldRoot);
         setEditFieldModalOpen(true);
@@ -187,7 +187,7 @@ const SectionTab = () => {
      * @param {Number} fieldNumber The number of the field that we have to move
      * @param {Number} direction 1 indicates moving down (increasing fieldNumber), -1 indicates moving up (decreasing fieldNumber)
      */
-    function moveField(stepKey: string, fieldNumber: number, fieldRoot: string, direction: Direction) {
+    function moveField(stepKey: string, fieldNumber: number, fieldRoot: StepPathToField, direction: Direction) {
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
         const foundStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
@@ -200,8 +200,9 @@ const SectionTab = () => {
             fieldRoot,
         );
 
-        const currFieldIndex = getFieldIndexByNumber(fieldsArray, fieldNumber);
+        if (!fieldsArray) return;
 
+        const currFieldIndex = getFieldIndexByNumber(fieldsArray, fieldNumber);
         const adjFieldIndex = getValidAdjacentElement(
             fieldsArray,
             currFieldIndex,
@@ -223,12 +224,12 @@ const SectionTab = () => {
     }
 
     // Handles moving a field down
-    function onCardDownPressed(stepKey: string, fieldRoot: string, fieldNumber: number) {
+    function onCardDownPressed(stepKey: string, fieldRoot: StepPathToField, fieldNumber: number) {
         moveField(stepKey, fieldNumber, fieldRoot, Direction.DOWN);
     }
 
     // Handles moving a field up
-    function onCardUpPressed(stepKey: string, fieldRoot: string, fieldNumber: number) {
+    function onCardUpPressed(stepKey: string, fieldRoot: StepPathToField, fieldNumber: number) {
         moveField(stepKey, fieldNumber, fieldRoot, Direction.UP);
     }
 
@@ -313,7 +314,7 @@ const SectionTab = () => {
         const fieldData = getJSONReferenceByStringPath(
             stepMetadata[stepIndex],
             selectedFieldRootForEditing,
-        )[fieldIndex];
+        )?.[fieldIndex];
 
         if (!fieldData) return null;
 
@@ -374,7 +375,7 @@ const SectionTab = () => {
         will only be saved locally. 
     */
 
-    const addNewField = (newFieldData: Field) => {
+    const addNewField = (newFieldData: Unsaved<Omit<Field, "fieldNumber"|"key"|"isHidden"|"isDeleted"|"additionalData">>) => {
         const updatedNewField = _.cloneDeep(newFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
@@ -391,16 +392,19 @@ const SectionTab = () => {
 
         // Set the field number to one more than the field number of the
         // last field for the selected step.
-        if (fieldArrayReference.length) {
-            updatedNewField.fieldNumber =
-                fieldArrayReference[fieldArrayReference.length - 1]
-                    .fieldNumber + 1;
-        } else {
-            updatedNewField.fieldNumber = 1;
+        let fieldNumber = 1;
+        if (fieldArrayReference?.length) {
+            fieldNumber = fieldArrayReference[fieldArrayReference.length - 1].fieldNumber + 1;
         }
+
         // Mark as not being deleted and not hidden
-        updatedNewField.isDeleted = false;
-        updatedNewField.isHidden = false;
+        const newField: Field = {
+            ...newFieldData,
+            isDeleted: false,
+            isHidden: false,
+            fieldNumber,
+        }
+
         fieldArrayReference.push(updatedNewField);
         setStepMetadata(updatedMetadata);
     };
@@ -439,34 +443,36 @@ const SectionTab = () => {
         setStepMetadata(updatedMetadata);
     };
 
-    const addNewStep = (newStepData: Step) => {
-        const updatedNewStep = _.cloneDeep(newStepData);
+    const addNewStep = (newStepData: BaseStep) => {
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
         // Set the step number to one more than the step number of the
         // last step in updatedMetadata.
+        let stepNumber = 0;
         if (updatedMetadata.length) {
-            updatedNewStep.stepNumber =
-                updatedMetadata[updatedMetadata.length - 1].stepNumber + 1;
-        } else {
-            // Default step number is 0
-            updatedNewStep.stepNumber = 0;
+            stepNumber = updatedMetadata[updatedMetadata.length - 1].stepNumber + 1;
         }
 
         // Generate a key for this step
         const currentStepKeys = updatedMetadata.map((step) => step.key);
-        updatedNewStep.key = generateKeyWithoutCollision(
-            updatedNewStep.displayName.EN,
+        const key = generateKeyWithoutCollision(
+            newStepData.displayName.EN,
             currentStepKeys,
         );
 
-        // Mark as not being deleted and not hidden
-        updatedNewStep.isDeleted = false;
-        updatedNewStep.isHidden = false;
+        const newFullStep: Step = {
+            ...newStepData,
+            stepNumber,
+            key,
+            isDeleted: false,
+            isHidden: false,
+            defaultToListView: false
+        }
 
-        updatedMetadata.push(updatedNewStep);
+        // TODO: Use setState mutator
+        updatedMetadata.push(newFullStep);
         setStepMetadata(updatedMetadata);
-        setSelectedStep(updatedNewStep.key);
+        setSelectedStep(newFullStep.key);
     };
 
     return (

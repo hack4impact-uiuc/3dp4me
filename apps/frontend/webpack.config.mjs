@@ -4,13 +4,19 @@ import path from "path";
 // import { Configuration } from "webpack";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import nodeExternals from "webpack-node-externals"
 
 const config = {
   mode: "production",
   entry: "./src/index.tsx",
+  externals: [
+    nodeExternals({
+      // modulesFromFile: true,
+      modulesDir: path.resolve(__dirname, '../../'),
+    }),
+  ],
   module: {
     rules: [
-
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
