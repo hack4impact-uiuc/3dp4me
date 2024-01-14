@@ -29,5 +29,7 @@
     "dependencies": {
         "eslint": "^8.54.0"
     },
-    "workspaces": ["packages/*", "apps/*"]
+    "workspaces": {
+        "packages": ["packages/*", "apps/*"]
+    }
 }

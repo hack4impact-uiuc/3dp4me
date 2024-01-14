@@ -22,7 +22,7 @@
         "isolatedModules": true,
         "composite": true,
         "incremental": true,
-        "emitDeclarationOnly": true,
+        "emitDeclarationOnly": false,
         "noEmit": false,
         "baseUrl": ".",
         "lib": [
