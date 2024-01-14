@@ -324,15 +324,12 @@ const CreateFieldModal = ({
                 <div className="create-field-title3">
                     <div>
                         <FormControl>
-                            <span htmlFor="create-field-type-dropdown">
+                            <span>
                                 {translations.components.swal.field.fieldType}
                             </span>
                             <NativeSelect
                                 id="create-field-type-dropdown"
                                 onChange={handleFieldTypeSelect}
-                                MenuProps={{
-                                    style: { zIndex: 35001 }, // for keeping this component on the top layer
-                                }}
                                 defaultValue={fieldType}
                                 input={<BootstrapInput />}
                             >

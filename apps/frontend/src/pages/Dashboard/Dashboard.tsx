@@ -21,7 +21,8 @@ import { useTranslations } from '../../hooks/useTranslations';
 import PatientTable from '../../components/PatientTable/PatientTable';
 import { sortMetadata } from '../../utils/utils';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
-import { Field, FieldType, Nullish, Patient, Step } from '@3dp4me/types';
+import { Field, Nullish, Patient, Step } from '@3dp4me/types';
+import { ColumnMetadata } from '../../utils/table-renderers';
 
 const CLOSE_REASON_CLICKAWAY = 'clickaway';
 
@@ -159,7 +160,7 @@ const Dashboard = () => {
         }
 
         console.error(`Unrecognized step: ${selectedStep}`);
-        return null;
+        return `Unnamed Step`;
     }
 
     /**
@@ -194,21 +195,21 @@ const Dashboard = () => {
      * if it should be visible on the dashboard. If so, adds to row data.
      * @returns Array of row data
      */
-    function generateRowData(stepKey: string, fields: Field[]) {
+    function generateRowData(stepKey: string, fields: Field[]): ColumnMetadata<Patient>[] {
         if (fields == null) return [];
 
         const rowData = _.cloneDeep(PATIENTS_BY_STEP_TABLE_ROW_DATA);
         rowData.push({
             id: `${stepKey}.status`,
             dataType: DisplayFieldType.STEP_STATUS,
-        });
+        } as any);
 
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
                 rowData.push({
                     id: `${stepKey}.${field?.key}`,
                     dataType: field?.fieldType,
-                });
+                } as any);
         });
 
         return rowData;
@@ -242,11 +243,12 @@ const Dashboard = () => {
     /**
      * Only close snackbar if the 'x' button is pressed
      */
-    const onCloseSnackbar = (event: SyntheticEvent<Element, Event>, reason: SnackbarCloseReason) => {
+    const onCloseSnackbar = (reason: SnackbarCloseReason) => {
         if (reason === CLOSE_REASON_CLICKAWAY) return;
-
         setSnackbarOpen(false);
     };
+
+    if (!stepsMetaData) return null;
 
     return (
         <div className="dashboard">
@@ -260,10 +262,10 @@ const Dashboard = () => {
             <Snackbar
                 open={isSnackbarOpen}
                 autoHideDuration={3000}
-                onClose={onCloseSnackbar}
+                onClose={(_, reason) => onCloseSnackbar(reason)}
             >
                 <MuiAlert
-                    onClose={onCloseSnackbar}
+                    onClose={() => onCloseSnackbar("timeout")}
                     severity="error"
                     elevation={6}
                     variant="filled"
@@ -280,7 +282,5 @@ const Dashboard = () => {
         </div>
     );
 };
-
-Dashboard.propTypes = {};
 
 export default Dashboard;

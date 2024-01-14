@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import pad from 'pad';
-import { Patient, PatientModel } from '../models/Patient';
+import { PatientModel } from '../models/Patient';
 import { ClientSession } from 'mongoose';
 
 const ALPHABET = [

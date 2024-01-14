@@ -3,8 +3,9 @@ import mongoose, { ClientSession, SchemaDefinitionProperty } from "mongoose"
 import { isAdmin } from './aws/awsUsers';
 import { generateFieldSchema } from './initDb';
 import { abortAndError } from './transactionUtils';
-import { StepModel, Field, Step } from '../models/Metadata';
+import { StepModel } from '../models/Metadata';
 import { AuthenticatedUser } from "./aws/types";
+import { Field } from "@3dp4me/types";
 
 /**
  * Returns the keys of all fields writable by a user in a step.

@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
 import log from 'loglevel';
 
-import { AccessLevel, ADMIN_ID } from '../constants';
+import { ADMIN_ID } from '../constants';
 
 import {
     COGNITO_REGION,
@@ -13,6 +13,7 @@ import {
 } from './awsExports'
 import { AdminGetUserResponse, GetUserResponse } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 import { AuthenticatedUser } from './types';
+import { AccessLevel } from '@3dp4me/types';
 
 export const getIdentityProvider = () =>
     new AWS.CognitoIdentityServiceProvider({

@@ -1,5 +1,5 @@
 import { usePromiseTracker } from 'react-promise-tracker';
-import Loader from 'react-loader-spinner';
+import { TailSpin } from 'react-loader-spinner';
 import './LoadingIndicator.scss';
 
 const LoadingIndicator = () => {
@@ -8,8 +8,7 @@ const LoadingIndicator = () => {
 
     return (
         <div className="loading-indicator">
-            <Loader
-                type="TailSpin"
+            <TailSpin
                 color="#323366"
                 height="100"
                 width="100"

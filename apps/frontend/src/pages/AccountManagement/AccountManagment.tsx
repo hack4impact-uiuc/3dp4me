@@ -175,7 +175,7 @@ const AccountManagement = () => {
     /**
      * Called when a user row is clicked on
      */
-    const onUserSelected = (user: CognitoIdentityServiceProvider.UserType) => {
+    const onUserSelected = (user: UserForTable) => {
         const userData = userMetaData.find((u) => u.Username === user.Username);
 
         setSelectedUser(userToRoleModalFormat(userData));

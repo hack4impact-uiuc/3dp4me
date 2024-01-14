@@ -20,12 +20,14 @@ import StepField from '../StepField/StepField';
 import './StepContent.scss';
 import { FieldTypeData, Step, File as FileModel, FieldType, StepStatus, Patient } from '@3dp4me/types';
 
-// TODO: Generate typings for this. I don't think it's really possible though because stepData is fluid
+// TODO: Break this wayy down
+// TODO: Type step data?
 export interface StepContentProps {
     patientId: string,
     metaData: Step,
     loading: boolean,
     stepData: Record<string, any>,
+    showStatus: boolean
     edit: boolean,
     setEdit: (edit: boolean) => void,
     onDataSaved: (key: string, value: any) => void
@@ -240,7 +242,6 @@ const StepContent = ({
     };
 
     const generateFooter = () => {
-        // TODO: SelectedStep should be optional
         return (
             <BottomBar
                 onDiscard={discardData}

@@ -34,7 +34,7 @@ import {
 } from '../../utils/utils';
 import './DashboardManagement.scss';
 import { drawerWidth, verticalMovementWidth } from '../../styles/variables';
-import { BaseStep, Field, Role, Step, StepPathToField, Unsaved } from '@3dp4me/types';
+import { BaseStep, Field, Nullish, Role, Step, StepPathToField, Unsaved, UnsavedField } from '@3dp4me/types';
 import { FormOption } from '../../components/Fields/FormOption';
 
 const expandedSidebarWidth = `${
@@ -56,8 +56,8 @@ const SectionTab = () => {
         useState(0);
     const [selectedFieldRootForEditing, setSelectedFieldRootForEditing] =
         useState<StepPathToField>('fields'); // Identifies where to edit a field in stepMetadata
-    const [selectedStepNumberForEditing, setSelectedStepNumberForEditing] =
-        useState(0);
+    const [selectedStepForEdit, setSelectedStepForEdit] =
+        useState<Nullish<string>>(null);
     const [selectedFieldRootForCreating, setSelectedFieldRootForCreating] =
         useState<StepPathToField>('fields'); // Identifies where to add a field in stepMetadata
     const [canAddFieldGroup, setCanAddFieldGroup] = useState(true); // Toggled to false if the create field modal is open for creating a subfield
@@ -90,13 +90,13 @@ const SectionTab = () => {
         setEditFieldModalOpen(true);
     };
 
-    // const onEditStep = (stepKey: string) => {
-    //     setSelectedStepNumberForEditing(stepKey);
+    const onEditStep = (stepKey: string) => {
+        setSelectedStepForEdit(stepKey);
 
-    //     const stepIndex = getStepIndexGivenKey(stepMetadata, stepKey);
-    //     setSelectedStep(stepMetadata[stepIndex].key);
-    //     setEditStepModalOpen(true);
-    // };
+        const stepIndex = getStepIndexGivenKey(stepMetadata, stepKey);
+        setSelectedStep(stepMetadata[stepIndex].key);
+        setEditStepModalOpen(true);
+    };
 
     // Sends a request for updating the database with the modified steps/fields
     const onSaveChanges = () => {
@@ -158,6 +158,8 @@ const SectionTab = () => {
         );
 
         if (adjStepIndex < 0) return;
+
+        console.log("SWAP", updatedMetadata)
 
         // Perform field number swap
         swapValuesInArrayByKey(
@@ -341,14 +343,11 @@ const SectionTab = () => {
     };
 
     const generateEditStepPopup = () => {
+        if (!selectedStepForEdit) return null;
+
         const updatedMetadata = _.cloneDeep(stepMetadata);
-
-        const stepIndex = getStepIndexGivenKey(
-            updatedMetadata,
-            selectedStepNumberForEditing,
-        );
+        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStepForEdit);
         const stepData = updatedMetadata[stepIndex];
-
         if (!stepData) return null;
 
         return (
@@ -376,7 +375,6 @@ const SectionTab = () => {
     */
 
     const addNewField = (newFieldData: Unsaved<Omit<Field, "fieldNumber"|"key"|"isHidden"|"isDeleted"|"additionalData">>) => {
-        const updatedNewField = _.cloneDeep(newFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
         const stepIndex = updatedMetadata.findIndex((element) => {
@@ -398,14 +396,16 @@ const SectionTab = () => {
         }
 
         // Mark as not being deleted and not hidden
-        const newField: Field = {
-            ...newFieldData,
+        const newField: UnsavedField = {
+            additionalData: undefined,
             isDeleted: false,
             isHidden: false,
+            ...newFieldData,
             fieldNumber,
         }
 
-        fieldArrayReference.push(updatedNewField);
+        // TODO: Need to type this
+        fieldArrayReference?.push(newField as any);
         setStepMetadata(updatedMetadata);
     };
 
@@ -484,9 +484,8 @@ const SectionTab = () => {
                         onDownPressed={onDownPressed}
                         onUpPressed={onUpPressed}
                         onAddStep={onAddStep}
-                        // onEditStep={onEditStep}
+                        onEditStep={onEditStep}
                         stepMetadata={stepMetadata}
-                        onEditStep={() => setIsEditing(true)}
                         isEditing={isEditing}
                         selectedStep={selectedStep}
                     />
@@ -502,20 +501,12 @@ const SectionTab = () => {
                 </div>
 
                 <BottomBar
+                    shouldShowStatus={false}
                     isEditing={isEditing}
                     onEdit={() => setIsEditing(true)}
                     onAddField={onAddField}
                     onSave={onSaveChanges}
                     onDiscard={onDiscardChanges}
-                    style={{
-                        editorSection: {
-                            marginLeft: `${
-                                isEditing
-                                    ? expandedSidebarWidth
-                                    : retractedSidebarWidth
-                            }`,
-                        },
-                    }}
                     selectedStep={selectedStep}
                 />
             </div>

@@ -1,8 +1,8 @@
-import { Signature } from "typescript"
 import { File } from "./file"
 import { TranslatedString } from "./translatedString"
 import { MapPoint } from "./map"
-import { DecreaseDepth } from "src/utils"
+import { Nullish, Unsaved } from "src/utils"
+import { Signature } from "./signature"
 
 export enum FieldType {
     STRING = 'String',
@@ -39,6 +39,13 @@ export interface FieldTypeData {
     [FieldType.MAP]: MapPoint
 }
 
+export interface QuestionOption {
+    _id: string
+    Index: number,
+    IsHidden: boolean,
+    Question: TranslatedString
+}
+
 export interface Field {
     fieldNumber: number,
     key: string,
@@ -50,14 +57,14 @@ export interface Field {
     writableGroups: string[],
     isHidden: boolean,
     isDeleted: boolean,
-    // TODO: Better type
-    additionalData: {}
+    additionalData: AdditionalFieldData
     subFields: Field[]
 }
 
-export interface QuestionOption {
-    _id: string
-    Index: number,
-    IsHidden: boolean,
-    Question: TranslatedString
+export type AdditionalFieldData = Nullish<SignatureAdditionalData>
+export type _unsavedField = Unsaved<Omit<Field, "key">>
+export type UnsavedField = Omit<_unsavedField, "subFields"> & { subFields: UnsavedField[] }
+
+export interface SignatureAdditionalData {
+    defaultDocumentURL: TranslatedString
 }

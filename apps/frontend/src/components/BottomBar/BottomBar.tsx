@@ -13,22 +13,24 @@ import { PatientStatus, StepPathToField, StepStatus } from '@3dp4me/types';
 interface BottomBarProps {
     isEditing: boolean
     onAddField?: (step: string, key: StepPathToField) => void
-    onStatusChange: (status: 'status', value: StepStatus) => void
+    onStatusChange?: (status: 'status', value: StepStatus) => void
     onSave: () => void
     onDiscard: () => void
     onEdit: () => void
-    status: StepStatus
+    status?: StepStatus
+    shouldShowStatus?: boolean
     selectedStep?: string
 }
 
 const BottomBar = ({
     isEditing,
     onAddField,
-    onStatusChange,
+    onStatusChange = () => {},
     onSave,
     onDiscard,
     onEdit,
     status = StepStatus.UNFINISHED,
+    shouldShowStatus = true,
     selectedStep,
 }: BottomBarProps) => {
     const [translations, selectedLang] = useTranslations();
@@ -54,7 +56,7 @@ const BottomBar = ({
      * Renders the dropdown for step status. If status is null, then this isn't rendered at all.
      */
     const renderStatusSelector = () => {
-        if (!status) return null;
+        if (!status || !shouldShowStatus) return null;
         const className =
             selectedLang === LANGUAGES.AR
                 ? 'status-selector-ar'
@@ -84,7 +86,7 @@ const BottomBar = ({
      * Renders the status icon and text
      */
     const renderStatus = () => {
-        if (!status) return null;
+        if (!status || !shouldShowStatus) return null;
 
         return (
             <div

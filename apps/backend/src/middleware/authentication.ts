@@ -2,7 +2,6 @@ import log from 'loglevel';
 
 import { getUserByAccessToken } from '../utils/aws/awsUsers';
 import {
-    AccessLevel,
     ERR_AUTH_FAILED,
     ERR_NOT_APPROVED,
     ADMIN_ID,
@@ -10,6 +9,7 @@ import {
 import { sendResponse } from '../utils/response';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { AuthenticatedRequest } from './types';
+import { AccessLevel } from '@3dp4me/types';
 
 /**
  * Middleware requires the incoming request to be authenticated. If not authenticated, a response

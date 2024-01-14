@@ -10,7 +10,7 @@ export interface RadioButtonFieldProps<T extends string> {
     title: string;
     value?: string;
     options: FormOption[];
-    isDisabled: boolean;
+    isDisabled?: boolean;
     onChange?: (field: T, value: string) => void;
 }
 
@@ -19,7 +19,7 @@ const RadioButtonField = <T extends string>({
     title,
     value = '',
     options,
-    isDisabled,
+    isDisabled = false,
     onChange,
 }: RadioButtonFieldProps<T>) => {
     const selectedLang = useTranslations()[1];

@@ -1,4 +1,4 @@
-import { FieldType, Language } from '@3dp4me/types';
+import { FieldType, Language, Patient } from '@3dp4me/types';
 import translations from '../translations.json';
 import { ColumnMetadata } from './table-renderers';
 import { RoleForTable, UserForTable } from '../pages/AccountManagement/AccountManagment';
@@ -73,7 +73,7 @@ export const getStepDashboardHeaders = (langKey: Language) => {
  * List of row data that every per step table has.
  * 'id' must match 'sortKey' in the headers
  */
-export const PATIENTS_BY_STEP_TABLE_ROW_DATA = [
+export const PATIENTS_BY_STEP_TABLE_ROW_DATA: ColumnMetadata<Patient>[] = [
     { id: 'firstName', dataType: FieldType.STRING },
     { id: 'familyName', dataType: FieldType.STRING },
     { id: 'orderId', dataType: FieldType.STRING },

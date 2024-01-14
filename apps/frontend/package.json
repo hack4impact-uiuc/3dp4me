@@ -47,7 +47,7 @@
         "semantic-ui-css": "^2.5.0",
         "signature_pad": "^3.0.0-beta.4",
         "sweetalert": "^2.1.2",
-        "typescript": "^5.2.2",
+        "typescript": "^5.3.3",
         "use-query-params": "^1.2.3"
     },
     "scripts": {

@@ -1,4 +1,5 @@
-import { Field } from "./field"
+import { Nullish, Path, PathValue, Unsaved } from "src/utils"
+import { Field, UnsavedField } from "./field"
 import { TranslatedString } from "./translatedString"
 
 export enum StepStatus {
@@ -19,4 +20,6 @@ export interface Step {
     isDeleted: boolean
 }
 
+
 export type BaseStep = Omit<Step, "key"|"stepNumber"| "defaultToListView"|"isHidden"|"isDeleted">
+export type UnsavedStep = Omit<Step, "fields"> & { fields: UnsavedField[] }

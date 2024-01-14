@@ -24,7 +24,7 @@ import { getStepData } from '../../utils/metadataUtils';
 interface ToggleButtonsProps {
     handleStep: (newStep: string) => void;
     metaData: Step[];
-    patientData: Patient;
+    patientData?: Patient;
     step: string
 }
 
@@ -199,13 +199,6 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButton
             </ToggleButtonGroup>
         </div>
     );
-};
-
-ToggleButtons.propTypes = {
-    handleStep: PropTypes.func.isRequired,
-    step: PropTypes.string.isRequired,
-    metaData: PropTypes.arrayOf(PropTypes.object),
-    patientData: PropTypes.object,
 };
 
 export default ToggleButtons;

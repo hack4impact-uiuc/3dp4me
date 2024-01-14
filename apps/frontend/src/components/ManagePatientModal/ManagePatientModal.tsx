@@ -81,7 +81,7 @@ const ManagePatientModal = ({
             title: translations.components.modal.deleteTitle,
             text: translations.components.modal.deletePatientConfirmation,
             icon: 'warning',
-            buttons: [true],
+            buttons: [true, true],
             dangerMode: true,
         }).then(async (willDelete) => {
             if (willDelete) {
@@ -165,10 +165,8 @@ const ManagePatientModal = ({
                     />
 
                     <RadioButtonField
-                        className="text-field"
                         value={updatedPatientData?.status}
                         fieldId="status"
-                        langKey={selectedLang}
                         title={
                             translations.components.swal.managePatient
                                 .radioTitle

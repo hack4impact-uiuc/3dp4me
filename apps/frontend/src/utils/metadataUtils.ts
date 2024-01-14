@@ -3,12 +3,13 @@ import { camelCase } from 'lodash';
 import { Nullish } from '../../../../packages/types/dist/src/utils/nullish';
 
 
-function hasKey<T extends object, K extends PropertyKey>(obj: T, key: K): obj is T & Record<K, unknown> {
+function hasKey<T extends object, K extends PropertyKey>(obj: Nullish<T>, key: K): obj is T & Record<K, unknown> {
+    if (!obj) return false
     return key in obj;
 }
 
 type PatientDataWithStep<K extends PropertyKey> = Patient & Record<K, Record<string, any>>
-export function hasStepData<K extends PropertyKey>(patient: Patient, stepKey: K): patient is PatientDataWithStep<K> {
+export function hasStepData<K extends PropertyKey>(patient: Nullish<Patient>, stepKey: K): patient is PatientDataWithStep<K> {
     if (!hasKey(patient, stepKey)) return false
     return typeof patient[stepKey] === "object"
 }
@@ -18,7 +19,7 @@ export const hasNotesForStep = (data: Patient, meta: Step): data is PatientDataW
     return hasKey(data[meta.key], 'notes')
 }
 
-export const getStepData = <T extends Patient>(data: T, key: string): Nullish<Record<string, any>> => {
+export const getStepData = <T extends Patient>(data: Nullish<T>, key: string): Nullish<Record<string, any>> => {
     if (hasKey(data, key)) return data[key] as any as Record<string, any>
     return null
 }

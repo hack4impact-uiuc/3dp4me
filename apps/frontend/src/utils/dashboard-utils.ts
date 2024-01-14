@@ -30,15 +30,15 @@ export const getValidAdjacentElement = <T extends Deletable>(arr: T[], currIndex
     return prevNextIndex;
 };
 
-type ArrayAtPath<T extends Record<string, any>, P extends string> =
-    P extends keyof T ?
-        T[P] extends Array<infer _U> ?
+type ArrayAtPath<T extends any[], P extends string> =
+    T extends Array<infer U> ?
+        P extends keyof U ?
             T
         : never
     : never
 
 // Swaps the value of two elements in an array given their indices and attribute key
-export const swapValuesInArrayByKey = <T extends Record<string, any>, P extends string>(arr: ArrayAtPath<T, P>, key: P, firstIndex: number, secondIndex: number) => {
+export const swapValuesInArrayByKey = <T extends any[], P extends string>(arr: ArrayAtPath<T, P>, key: P, firstIndex: number, secondIndex: number) => {
     const temp = arr[firstIndex][key];
     // eslint-disable-next-line no-param-reassign
     arr[firstIndex][key] = arr[secondIndex][key];
