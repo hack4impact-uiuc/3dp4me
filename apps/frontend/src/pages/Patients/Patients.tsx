@@ -102,6 +102,7 @@ const Patients = () => {
                     patients={allPatients}
                     handleSearchQuery={onSearchQueryChanged}
                     initialSearchQuery={searchQuery}
+                    stepKey={""}
                 />
 
                 <PaginateBar

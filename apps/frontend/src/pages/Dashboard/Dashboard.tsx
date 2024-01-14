@@ -1,4 +1,4 @@
-import React, { useState, useEffect, SyntheticEvent } from 'react';
+import { useState, useEffect } from 'react';
 import _ from 'lodash';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Snackbar, SnackbarCloseReason } from '@material-ui/core';
@@ -22,7 +22,7 @@ import PatientTable from '../../components/PatientTable/PatientTable';
 import { sortMetadata } from '../../utils/utils';
 import PaginateBar from '../../components/PaginateBar/PaginateBar';
 import { Field, Nullish, Patient, Step } from '@3dp4me/types';
-import { ColumnMetadata } from '../../utils/table-renderers';
+import { ColumnMetadata, Header } from '../../utils/table-renderers';
 
 const CLOSE_REASON_CLICKAWAY = 'clickaway';
 
@@ -168,7 +168,7 @@ const Dashboard = () => {
      * if it should be visible on the dashboard. If so, adds to headers.
      * @returns Array of headers
      */
-    function generateHeaders(stepKey: string, fields: Field[]) {
+    function generateHeaders(stepKey: string, fields: Field[]): Header<Patient>[] {
         if (fields == null) return [];
 
         const headers = getStepDashboardHeaders(selectedLang);
@@ -187,7 +187,7 @@ const Dashboard = () => {
                 });
         });
 
-        return headers;
+        return headers as any;
     }
 
     /**

@@ -2,11 +2,11 @@ import _ from 'lodash';
 import { useState, useMemo } from 'react';
 
 import { SortDirection } from '../utils/constants';
-import { Path, resolveObjPath } from '../utils/object';
-import { Nullish } from '@3dp4me/types';
+import { resolveObjPath } from '../utils/object';
+import { Nullish, Path, Patient } from '@3dp4me/types';
 
-export interface SortConfig {
-    key: string,
+export interface SortConfig<T> {
+    key: Path<T>,
     direction: SortDirection
 }
 
@@ -17,7 +17,7 @@ export interface SortConfig {
  *          that causes a resort when called, and `sortConfig` tells about the current sort config
  */
 const useSortableData = <T extends Record<string, any>>(data: T[]) => {
-    const [sortConfig, setSortConfig] = useState<Nullish<SortConfig>>(null);
+    const [sortConfig, setSortConfig] = useState<Nullish<SortConfig<T>>>(null);
     const sortableData = useMemo(() => _.cloneDeep(data), [data]);
     const sortedData = useMemo(() => {
         /**
@@ -27,8 +27,13 @@ const useSortableData = <T extends Record<string, any>>(data: T[]) => {
         const compare = (a: T, b: T, key: Path<T>) => {
             const aVal = resolveObjPath(a, key);
             const bVal = resolveObjPath(b, key);
-            if ((!aVal && bVal) || aVal > bVal) return -1;
-            if ((aVal && !bVal) || aVal < bVal) return 1;
+            if (!aVal && bVal) return -1
+            if (aVal && !bVal) return 1;
+            if (!aVal && !bVal) return 0;
+            
+
+            if (aVal! > bVal!) return -1;
+            if (aVal! < bVal!) return 1;
 
             return 0;
         };
@@ -51,7 +56,7 @@ const useSortableData = <T extends Record<string, any>>(data: T[]) => {
     /**
      * Circularly toggles from up to down to none
      */
-    const requestSort = (key: string) => {
+    const requestSort = (key: Path<T>) => {
         let direction = SortDirection.Ascending;
 
         if (

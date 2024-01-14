@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 import { StringParam, useQueryParam } from 'use-query-params';
@@ -31,8 +31,7 @@ import { getStepData } from '../../utils/metadataUtils';
  */
 const PatientDetail = () => {
     const errorWrap = useErrorWrap();
-    const params = useParams();
-    const { patientId } = params;
+    const { patientId } = useParams<{ patientId: string }>();
     const [translations, selectedLang] = useTranslations();
     const [loading, setLoading] = useState(true);
     const [selectedStep, setSelectedStep] = useState('');
@@ -78,11 +77,15 @@ const PatientDetail = () => {
      * Submits to the backend and displays a message
      */
     const onStepSaved = (stepKey: string, stepData: Record<string, any>) => {
+        if (!patientData)
+            return
+
         errorWrap(async () => {
-            const newPatientData = {
+            const newPatientData: Patient = {
                 ..._.cloneDeep(patientData),
                 [stepKey]: _.cloneDeep(stepData),
-            }
+            } 
+
             await trackPromise(updateStage(patientId, stepKey, stepData));
             setPatientData(newPatientData);
         });
@@ -93,6 +96,9 @@ const PatientDetail = () => {
      * Submits to the backend and displays a message
      */
     const onPatientDataSaved = async (newPatientData: Patient) => {
+        if (!patientData)
+            return
+
         const patientDataCopy = _.cloneDeep(patientData);
         Object.assign(patientDataCopy, newPatientData);
         await errorWrap(async () => {
@@ -127,20 +133,6 @@ const PatientDetail = () => {
                 );
             },
         );
-    };
-
-    /**
-     * Gets the current patient model data. (Removes all of the step data)
-     */
-    const getCurrentPatientModelData = () => {
-        return {
-            firstName: patientData?.firstName,
-            familyName: patientData?.familyName,
-            fathersName: patientData?.fathersName,
-            grandfathersName: patientData?.grandfathersName,
-            orderId: patientData?.orderId,
-            status: patientData?.status,
-        };
     };
 
     const displayUnsavedDataAlert = (newStep: string) => {

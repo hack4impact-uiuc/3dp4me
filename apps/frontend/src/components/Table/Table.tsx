@@ -15,8 +15,8 @@ export interface TableProps<T extends Record<string, any>> {
     addRowButtonTitle: string;
     onCreateRow: () => void;
     data?: T[];
-    headers: Header[];
-    renderHeader: HeaderRenderer;
+    headers: Header<T>[];
+    renderHeader: HeaderRenderer<T>;
     renderTableRow: RowRenderer<T>
     rowData: ColumnMetadata<T>[];
     initialSearchQuery: string;

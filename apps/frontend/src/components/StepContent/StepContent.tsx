@@ -27,7 +27,6 @@ export interface StepContentProps {
     metaData: Step,
     loading: boolean,
     stepData: Record<string, any>,
-    showStatus: boolean
     edit: boolean,
     setEdit: (edit: boolean) => void,
     onDataSaved: (key: string, value: any) => void

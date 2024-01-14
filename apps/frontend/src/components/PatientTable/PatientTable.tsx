@@ -21,7 +21,7 @@ export interface PatientTableProps {
     onAddPatient: (patient: Patient) => void
     tableTitle: string
     patients: Patient[]
-    headers: Header[]
+    headers: Header<Patient>[]
     rowData: ColumnMetadata<Patient>[]
     initialSearchQuery: string
     handleSearchQuery: (query: string) => void

@@ -34,7 +34,7 @@ const getField = <T extends Record<string, any>, P extends Path<T>>(data: T, fie
  *                         visible when this column is being sorted.
  * @returns The arrow
  */
-const renderSortArrow = (sortConfig: Nullish<SortConfig>, sortKey: string) => {
+const renderSortArrow = (sortConfig: Nullish<SortConfig<any>>, sortKey: string) => {
     if (!sortConfig || sortConfig.key !== sortKey) return null;
 
     switch (sortConfig.direction) {
@@ -83,16 +83,16 @@ export const defaultTableRowRenderer = <T extends Record<string, any>>(rowData: 
     return row;
 };
 
-export type HeaderRenderer = (
-    headers: Header[],
-    sortConfig: Nullish<SortConfig>,
-    onRequestSort: (key: string) => void,
+export type HeaderRenderer<T> = (
+    headers: Header<T>[],
+    sortConfig: Nullish<SortConfig<T>>,
+    onRequestSort: (key: Path<T>) => void,
     selectedLang: Language,
 ) => ReactNode[];
 
-export interface Header {
+export interface Header<T> {
     title: string
-    sortKey: string
+    sortKey: Path<T>
 }
 
 /**
@@ -103,11 +103,11 @@ export interface Header {
  * @param {String} selectedLang The currently selected language.
  * @returns Array of cells
  */
-export const defaultTableHeaderRenderer: HeaderRenderer = (
-    headers,
-    sortConfig,
-    onRequestSort,
-    selectedLang,
+export const defaultTableHeaderRenderer = <T extends Record<string, any>>(
+    headers: Header<T>[],
+    sortConfig: Nullish<SortConfig<T>>,
+    onRequestSort: (key: Path<T>) => void,
+    selectedLang: Language,
 ) => {
     const cellAlign = selectedLang === Language.AR ? 'right' : 'left';
     const cellClassName =
@@ -175,11 +175,11 @@ export const patientTableRowRenderer = (
  * Renders header for patient data. Uses the default render and adds a column
  * at the end for the 'view patient' link
  */
-export const patientTableHeaderRenderer: HeaderRenderer = (
-    headers, 
-    sortConfig,
-    onRequestSort,
-    selectedLang,
+export const patientTableHeaderRenderer = <T extends Record<string, any>>(
+    headers: Header<T>[],
+    sortConfig: Nullish<SortConfig<T>>,
+    onRequestSort: (key: Path<T>) => void,
+    selectedLang: Language,
 ) => {
     const headerCells = defaultTableHeaderRenderer(
         headers,
@@ -229,7 +229,6 @@ export const generateSelectableRenderer = <T extends Record<string, any>>(onSele
                         src={Eyecon}
                     />
                 </IconButton>{' '}
-                {translations[selectedLang].components.table.edit}
             </StyledTableCell>,
         );
 
@@ -239,11 +238,11 @@ export const generateSelectableRenderer = <T extends Record<string, any>>(onSele
  * Renders header for user data. Uses the default render and adds a column
  * at the end for the 'view user' button
  */
-export const userTableHeaderRenderer: HeaderRenderer = (
-    headers,
-    sortConfig,
-    onRequestSort,
-    selectedLang,
+export const userTableHeaderRenderer = <T extends Record<string, any>>(
+    headers: Header<T>[],
+    sortConfig: Nullish<SortConfig<T>>,
+    onRequestSort: (key: Path<T>) => void,
+    selectedLang: Language,
 ) => {
     const headerCells = defaultTableHeaderRenderer(
         headers,

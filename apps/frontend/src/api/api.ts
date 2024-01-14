@@ -70,7 +70,7 @@ export const postNewPatient = async (patientInfo: OmitDeep<BasePatient, "_id">):
     return res.data;
 };
 
-export const updateStage = async (patientId: string, stage: string, updatedStage: Step): Promise<ApiResponse<Step>> => {
+export const updateStage = async (patientId: string, stage: string, updatedStage: Record<string, any>): Promise<ApiResponse<Step>> => {
     const requestString = `/patients/${patientId}/${stage}`;
     const res = await instance.post(requestString, updatedStage);
 

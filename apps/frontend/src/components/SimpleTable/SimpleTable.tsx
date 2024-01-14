@@ -17,9 +17,9 @@ import { Language } from '@3dp4me/types';
 
 export interface SimpleTableProps<T extends Record<string, any>> {
     data: T[]
-    headers: Header[]
+    headers: Header<T>[]
     rowData: ColumnMetadata<T>[]
-    renderHeader: HeaderRenderer,
+    renderHeader: HeaderRenderer<T>
     renderTableRow: RowRenderer<T>
 }
 

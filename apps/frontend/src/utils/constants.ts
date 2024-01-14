@@ -1,6 +1,6 @@
 import { FieldType, Language, Patient } from '@3dp4me/types';
 import translations from '../translations.json';
-import { ColumnMetadata } from './table-renderers';
+import { ColumnMetadata, Header } from './table-renderers';
 import { RoleForTable, UserForTable } from '../pages/AccountManagement/AccountManagment';
 
 const PUBLIC_CLOUDFRONT_URL = 'https://d1m40dlonmuszr.cloudfront.net';
@@ -84,7 +84,7 @@ export const PATIENTS_BY_STEP_TABLE_ROW_DATA: ColumnMetadata<Patient>[] = [
  * List of headers that every patient table has. These are
  * the leftmost columns on the 'all patients' screen.
  */
-export const getPatientDashboardHeaders = (langKey: Language) => {
+export const getPatientDashboardHeaders = (langKey: Language): Header<Patient>[] => {
     const t = translations[langKey].tableHeaders;
 
     return [
@@ -100,7 +100,7 @@ export const getPatientDashboardHeaders = (langKey: Language) => {
  * List of row data that every patient table has.
  * 'id' must match 'sortKey' in the headers
  */
-export const ALL_PATIENT_DASHBOARD_ROW_DATA = [
+export const ALL_PATIENT_DASHBOARD_ROW_DATA: ColumnMetadata<Patient>[] = [
     { id: 'firstName', dataType: FieldType.STRING },
     { id: 'familyName', dataType: FieldType.STRING },
     { id: 'orderId', dataType: FieldType.STRING },
