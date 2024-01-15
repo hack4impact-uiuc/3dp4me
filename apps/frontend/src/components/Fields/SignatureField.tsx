@@ -8,6 +8,7 @@ import './SignatureField.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { Nullish, Signature, SignaturePoint, Path, PathValue, TranslatedString } from '@3dp4me/types';
 import type ReactSignatureCanvas from 'react-signature-canvas';
+import { NewSiganatureModal, SignatureData } from '../NewSignatureModal/NewSignatureModal';
 
 export interface SignatureFieldProps<T extends string> {
     displayName: string
@@ -32,20 +33,20 @@ const SignatureField = <T extends string>({
     const sigCanvas = useRef<ReactSignatureCanvas | null>(null);
 
     useEffect(() => {
-        if (!value?.signatureData || isModalOpen) return;
+        if (!value?.signatureData || isModalOpen || !sigCanvas.current) return;
 
-        const canvas = sigCanvas.current?.getCanvas()
+        const canvas = sigCanvas.current.getCanvas()
         if (!canvas) return
 
-        console.log("CANVS IS ", canvas)
         const data = transformSignatureData(
             canvas,
             value.signatureData,
             value.signatureCanvasWidth,
             value.signatureCanvasHeight,
         );
-        console.log("DATA IS ", data)
 
+        console.log("DATA IS ", data)
+        console.log("CANVAS ID ", sigCanvas.current)
         sigCanvas.current?.fromData(data as any)
     }, [value, isModalOpen, sigCanvas.current]);
 
@@ -65,8 +66,6 @@ const SignatureField = <T extends string>({
 
             const padPoints = withoutColor.map((point) => {
                 const scaleFactor = canvas.width / originalCanvasWidth;
-                console.log("OUR WIDTH IS ", canvas.width)
-                console.log("SCALE FACTOR IS ", scaleFactor)
                 const deltaT = point.time - firstTimestamp;
 
                 // Scale the data points so that they fit this canvas
@@ -86,25 +85,14 @@ const SignatureField = <T extends string>({
     };
 
     /**
-     * Clear the canvas
-     */
-    const clear = () => sigCanvas.current?.clear();
-
-    /**
      * Saves signature data points along with the canvas width and height so that
      * we can display it across different device sizes. Also save the document URL
      * that was shown at the time of signing (in case it's updated in the future)
      */
-    const save = () => {
-        const canvas = sigCanvas.current?.getCanvas();
-        if (!canvas || !sigCanvas.current) {
-            console.error(`Could not save signature data. Canvas was null`)
-            return
-        }
-
-        onChange(`${fieldId}.signatureData`, sigCanvas.current.toData());
-        onChange(`${fieldId}.signatureCanvasWidth`, canvas.width);
-        onChange(`${fieldId}.signatureCanvasHeight`, canvas.height);
+    const onNewSignature = (data: SignatureData) => {
+        onChange(`${fieldId}.signatureData`, data.points);
+        onChange(`${fieldId}.signatureCanvasWidth`, data.width);
+        onChange(`${fieldId}.signatureCanvasHeight`, data.height);
         onChange(`${fieldId}.documentURL.EN`, documentURL.EN);
         onChange(`${fieldId}.documentURL.AR`, documentURL.AR);
         setIsModalOpen(false);
@@ -156,35 +144,10 @@ const SignatureField = <T extends string>({
         <div className="signature-container">
             <h3>{displayName}</h3>
             {renderDocuments()}
-            <Modal open={isModalOpen} className="signature-modal">
-                <div>
-                    <SignatureCanvas
-                        ref={sigCanvas}
-                        canvasProps={{
-                            className: 'signature-canvas',
-                        }}
-                    />
-                    {/* Button to trigger save canvas image */}
-                    <Button
-                        className="signature-button save-signature"
-                        onClick={save}
-                    >
-                        {translations.components.signature.save}
-                    </Button>
-                    <Button
-                        className="signature-button clear-signature"
-                        onClick={clear}
-                    >
-                        {translations.components.signature.clear}
-                    </Button>
-                    <Button
-                        className="signature-button close-signature"
-                        onClick={() => setIsModalOpen(false)}
-                    >
-                        {translations.components.signature.close}
-                    </Button>
-                </div>
-            </Modal>
+            <NewSiganatureModal 
+                onClose={() => setIsModalOpen(false)}
+                onSave={onNewSignature}
+                isOpen={isModalOpen}/>
             <div className="sig-container">
                 {renderCanvas()}
                 <div className="sig-ctl-container">
