@@ -1,12 +1,10 @@
-import {
-    Button,
-    Checkbox,
-    FormControl,
-    InputBase,
-    Modal,
-    NativeSelect,
-    withStyles,
-} from '@material-ui/core';
+import Button from "@material-ui/core/Button"
+import Checkbox from "@material-ui/core/Checkbox"
+import FormControl from "@material-ui/core/FormControl"
+import InputBase from "@material-ui/core/InputBase"
+import Modal from "@material-ui/core/Modal"
+import NativeSelect from "@material-ui/core/NativeSelect"
+import withStyles from "@material-ui/core/styles/withStyles"
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { ChangeEventHandler, ReactNode, useState } from 'react';

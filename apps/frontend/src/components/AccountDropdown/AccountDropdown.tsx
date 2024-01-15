@@ -1,6 +1,6 @@
 import React, { ChangeEvent, ReactElement, ReactNode, useContext } from 'react';
 import Menu from '@material-ui/core/Menu';
-import { Button } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import PropTypes from 'prop-types';

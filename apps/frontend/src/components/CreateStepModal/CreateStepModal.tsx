@@ -1,7 +1,7 @@
 import './CreateStepModal.scss';
-import React, { useState } from 'react';
-import { Button, Modal } from '@material-ui/core';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+import Modal from '@material-ui/core/Modal';
+import Button from '@material-ui/core/Button';
 import _ from 'lodash';
 
 import { useTranslations } from '../../hooks/useTranslations';

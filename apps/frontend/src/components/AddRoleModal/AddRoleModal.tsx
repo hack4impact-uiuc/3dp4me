@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Modal, Button } from '@material-ui/core';
+import Modal from '@material-ui/core/Modal';
+import Button from '@material-ui/core/Button';
 import { trackPromise } from 'react-promise-tracker';
 
 import TextField from '../Fields/TextField';

@@ -1,6 +1,9 @@
 import React, { MouseEventHandler } from 'react';
-import { AppBar, Button, MenuItem, Select, Toolbar } from '@material-ui/core';
-import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import Toolbar from '@material-ui/core/Toolbar';
 
 import './BottomBar.scss';
 import check from '../../assets/check.svg';

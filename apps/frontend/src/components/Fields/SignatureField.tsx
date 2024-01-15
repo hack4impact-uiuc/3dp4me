@@ -8,7 +8,6 @@ import './SignatureField.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { Nullish, Signature, SignaturePoint, Path, PathValue, TranslatedString } from '@3dp4me/types';
 import type ReactSignatureCanvas from 'react-signature-canvas';
-import { Point } from 'signature_pad';
 
 export interface SignatureFieldProps<T extends string> {
     displayName: string
@@ -38,14 +37,16 @@ const SignatureField = <T extends string>({
         const canvas = sigCanvas.current?.getCanvas()
         if (!canvas) return
 
+        console.log("CANVS IS ", canvas)
         const data = transformSignatureData(
             canvas,
             value.signatureData,
             value.signatureCanvasWidth,
             value.signatureCanvasHeight,
         );
+        console.log("DATA IS ", data)
 
-        sigCanvas.current?.fromData(data)
+        sigCanvas.current?.fromData(data as any)
     }, [value, isModalOpen, sigCanvas.current]);
 
     /**
@@ -57,13 +58,15 @@ const SignatureField = <T extends string>({
         data: SignaturePoint[][],
         originalCanvasWidth: number,
         originalCanvasHeight: number,
-    ): SignaturePad.Point[][] => {
+    ) => {
         const formattedData = data.map((points) => {
             const withoutColor = points.map((point) => _.omit(point, 'color'));
             const firstTimestamp = withoutColor.length > 0 ? withoutColor[0].time : 0;
 
-            const padPoints: SignaturePad.Point[] = withoutColor.map((point) => {
+            const padPoints = withoutColor.map((point) => {
                 const scaleFactor = canvas.width / originalCanvasWidth;
+                console.log("OUR WIDTH IS ", canvas.width)
+                console.log("SCALE FACTOR IS ", scaleFactor)
                 const deltaT = point.time - firstTimestamp;
 
                 // Scale the data points so that they fit this canvas
@@ -73,7 +76,7 @@ const SignatureField = <T extends string>({
                 // Scales the time of each touch point.... doens't work great
                 const time = firstTimestamp + deltaT * scaleFactor
 
-                return new Point(x, y, time)
+                return { x, y, time }
             });
 
             return padPoints
@@ -93,11 +96,13 @@ const SignatureField = <T extends string>({
      * that was shown at the time of signing (in case it's updated in the future)
      */
     const save = () => {
-        const canvas = document.querySelector('canvas');
-        if (!canvas) return
-        if (sigCanvas.current)
-            onChange(`${fieldId}.signatureData`, sigCanvas.current.toData());
+        const canvas = sigCanvas.current?.getCanvas();
+        if (!canvas || !sigCanvas.current) {
+            console.error(`Could not save signature data. Canvas was null`)
+            return
+        }
 
+        onChange(`${fieldId}.signatureData`, sigCanvas.current.toData());
         onChange(`${fieldId}.signatureCanvasWidth`, canvas.width);
         onChange(`${fieldId}.signatureCanvasHeight`, canvas.height);
         onChange(`${fieldId}.documentURL.EN`, documentURL.EN);

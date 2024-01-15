@@ -1,4 +1,6 @@
-import { Button, Modal, TextField } from '@material-ui/core';
+import Modal from '@material-ui/core/Modal';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 

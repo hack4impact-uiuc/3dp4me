@@ -25,10 +25,10 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "js-file-download": "^0.4.12",
         "lodash": "^4.17.20",
-        "material-ui": "^0.20.2",
         "mic-recorder-to-mp3": "^2.2.2",
         "prettier": "^3.1.1",
         "react": "^18.2.0",
+        "react-app-rewired": "^2.2.1",
         "react-code-input": "^3.10.1",
         "react-datepicker": "^4.25.0",
         "react-dom": "^16.13.1",
@@ -51,7 +51,7 @@
         "use-query-params": "^1.2.3"
     },
     "scripts": {
-        "start": "doppler run -- node --max_old_space_size=8192 node_modules/.bin/react-scripts start",
+        "start": "doppler run -- node_modules/.bin/react-app-rewired --max-old-space-size=4096 start",
         "lint": "eslint --fix src -c .eslintrc.json --ext js,jsx",
         "format": "prettier --write \"./**/*.{js,jsx,css,scss,json,md}\"",
         "format:check": "prettier --check \"./**/*.{js,jsx,css,scss,json,md}\"",
