@@ -2,14 +2,13 @@
 
 import { Button, Modal } from '@material-ui/core';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import { LegacyRef, useEffect, useRef, useState } from 'react';
-import SignaturePadWrapper from 'react-signature-canvas';
-import SignaturePad, { PointGroup } from 'signature_pad';
+import SignatureCanvas from 'react-signature-canvas';
 import './SignatureField.scss';
 import { useTranslations } from '../../hooks/useTranslations';
 import { Nullish, Signature, SignaturePoint, Path, PathValue, TranslatedString } from '@3dp4me/types';
-import ReactSignatureCanvas from 'react-signature-canvas';
+import type ReactSignatureCanvas from 'react-signature-canvas';
+import { Point } from 'signature_pad';
 
 export interface SignatureFieldProps<T extends string> {
     displayName: string
@@ -36,11 +35,9 @@ const SignatureField = <T extends string>({
     useEffect(() => {
         if (!value?.signatureData || isModalOpen) return;
 
-        // Throw the existing signature data onto the canvas
-        const canvas = document.querySelector('canvas');
+        const canvas = sigCanvas.current?.getCanvas()
         if (!canvas) return
 
-        const signaturePad = new SignaturePad(canvas);
         const data = transformSignatureData(
             canvas,
             value.signatureData,
@@ -48,8 +45,8 @@ const SignatureField = <T extends string>({
             value.signatureCanvasHeight,
         );
 
-        signaturePad.fromData(data);
-    }, [value, isModalOpen]);
+        sigCanvas.current?.fromData(data)
+    }, [value, isModalOpen, sigCanvas.current]);
 
     /**
      * Transforms the signature data so that it is able to be displayed on the canvas.
@@ -60,30 +57,26 @@ const SignatureField = <T extends string>({
         data: SignaturePoint[][],
         originalCanvasWidth: number,
         originalCanvasHeight: number,
-    ): PointGroup[] => {
+    ): SignaturePad.Point[][] => {
         const formattedData = data.map((points) => {
-            let formattedPoints = points.map((point) => _.omit(point, 'color'));
-            const firstTimestamp =
-                formattedPoints.length > 0 ? formattedPoints[0].time : 0;
+            const withoutColor = points.map((point) => _.omit(point, 'color'));
+            const firstTimestamp = withoutColor.length > 0 ? withoutColor[0].time : 0;
 
-            formattedPoints = formattedPoints.map((point) => {
+            const padPoints: SignaturePad.Point[] = withoutColor.map((point) => {
                 const scaleFactor = canvas.width / originalCanvasWidth;
                 const deltaT = point.time - firstTimestamp;
 
-                return {
-                    // Scale the data points so that they fit this canvas
-                    x: (point.x / originalCanvasWidth) * canvas.width,
-                    y: (point.y / originalCanvasHeight) * canvas.height,
+                // Scale the data points so that they fit this canvas
+                const x = (point.x / originalCanvasWidth) * canvas.width
+                const y = (point.y / originalCanvasHeight) * canvas.height
 
-                    // Scales the time of each touch point.... doens't work great
-                    time: firstTimestamp + deltaT * scaleFactor,
-                };
+                // Scales the time of each touch point.... doens't work great
+                const time = firstTimestamp + deltaT * scaleFactor
+
+                return new Point(x, y, time)
             });
 
-            return {
-                color: "black",
-                points: formattedPoints,
-            }
+            return padPoints
         });
 
         return formattedData;
@@ -151,7 +144,7 @@ const SignatureField = <T extends string>({
         // We can't render the canvas while the other canvas is visible
         if (!value?.signatureData || isModalOpen) return null;
 
-        return <canvas />;
+        return <SignatureCanvas ref={sigCanvas}/>;
     };
 
     return (
@@ -160,7 +153,7 @@ const SignatureField = <T extends string>({
             {renderDocuments()}
             <Modal open={isModalOpen} className="signature-modal">
                 <div>
-                    <SignaturePadWrapper
+                    <SignatureCanvas
                         ref={sigCanvas}
                         canvasProps={{
                             className: 'signature-canvas',
@@ -210,26 +203,6 @@ const SignatureField = <T extends string>({
             </div>
         </div>
     );
-};
-
-SignatureField.propTypes = {
-    displayName: PropTypes.string.isRequired,
-    isDisabled: PropTypes.bool.isRequired,
-    documentURL: PropTypes.shape({
-        EN: PropTypes.string,
-        AR: PropTypes.string,
-    }).isRequired,
-    fieldId: PropTypes.string,
-    value: PropTypes.shape({
-        signatureData: PropTypes.array,
-        signatureCanvasWidth: PropTypes.number,
-        signatureCanvasHeight: PropTypes.number,
-        documentURL: PropTypes.shape({
-            EN: PropTypes.string,
-            AR: PropTypes.string,
-        }),
-    }),
-    onChange: PropTypes.func,
 };
 
 export default SignatureField;

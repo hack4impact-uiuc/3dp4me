@@ -285,7 +285,10 @@ class AudioRecorder extends React.Component<AudioRecorderProps, AudioRecorderSta
             title: this.state.lang.components.audio.deleteTitle,
             text: this.state.lang.components.audio.deleteWarning,
             icon: 'warning',
-            buttons: [true, true],
+            buttons: [
+                translations.components.button.discard.cancelButton,
+                translations.components.button.discard.confirmButton,
+            ],
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
