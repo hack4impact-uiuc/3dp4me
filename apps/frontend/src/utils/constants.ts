@@ -112,7 +112,7 @@ export const ALL_PATIENT_DASHBOARD_ROW_DATA: ColumnMetadata<Patient>[] = [
  * List of headers that the user table has. These are
  * the columns on the 'manage users' screen.
  */
-export const getUserTableHeaders = (langKey: Language) => {
+export const getUserTableHeaders = (langKey: Language): Header<UserForTable>[] => {
     const t = translations[langKey].tableHeaders;
 
     return [
@@ -127,7 +127,7 @@ export const getUserTableHeaders = (langKey: Language) => {
  * List of headers that the role table has. These are
  * the columns on the 'manage roles' screen.
  */
-export const getRoleTableHeaders = (langKey: Language) => {
+export const getRoleTableHeaders = (langKey: Language): Header<RoleForTable>[] => {
     const t = translations[langKey].tableHeaders;
 
     return [{ title: t.name, sortKey: 'Name' }];

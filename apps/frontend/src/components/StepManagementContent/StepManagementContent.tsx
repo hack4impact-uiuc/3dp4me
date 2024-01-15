@@ -147,7 +147,7 @@ const StepManagementContent = ({
         );
     };
 
-    function generateAddSubFieldButton(stepKey: string, root: string) {
+    function generateAddSubFieldButton(stepKey: string, root: StepPathToField) {
         if (!isEditing) return null;
         return (
             <div

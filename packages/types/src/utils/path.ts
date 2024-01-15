@@ -1,4 +1,4 @@
-import { Field, Step } from "src/models";
+import { Field, Signature, Step } from "src/models";
 /**
  * Thet literal keys and nested keys of T. Nested fields are separated by a dot (.)
  * 
@@ -19,19 +19,26 @@ import { Field, Step } from "src/models";
  * We have to limit the depth of the recursion to a reasonable amount, so we use the DecreaseDepth type
  */
 export type Path<T, D extends number = 6> = 
+  _Path<T, D> extends `.${infer P}` ?
+    P
+  : _Path<T, D>
+
+type _Path<T, D extends number = 6> = 
 D extends never ?
   never
-: T extends object 
+: 
+  T extends (infer A)[] ?
+    `[${number}]` | `[${number}]${_Path<A, DecreaseDepth<D>>}`
+  : T extends object 
     ? { [K in keyof T]: 
           K extends string | number 
-            ? T[K] extends (infer A)[] 
-                ? K | `${K}[${number}]` | `${K}[${number}].${Path<A, DecreaseDepth<D>>}`
-                : `${K}` | (Path<T[K], DecreaseDepth<D>> extends never ? never : `${K}.${Path<T[K], DecreaseDepth<D>>}`) 
+                ? `.${K}` 
+                  | `.${K}${_Path<T[K], DecreaseDepth<D>>}`
             : never 
       }[keyof T] 
     : never;
 
-    /** 
+/** 
  * Resolves to all types of the path P in object T.
  * This is every possible value that can be stored in T
  */
@@ -53,6 +60,7 @@ export type PathValue<T, P = Path<T>> =
           : never
       : never
     : never
+
 
 /**
  * This is just a helper type. In the below types, it's impossible to specify all paths for a recursive 
