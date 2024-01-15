@@ -1,6 +1,6 @@
 import ListItem from '@material-ui/core/ListItem';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { trackPromise } from 'react-promise-tracker';
 
 import {
@@ -36,11 +36,6 @@ import './DashboardManagement.scss';
 import { drawerWidth, verticalMovementWidth } from '../../styles/variables';
 import { BaseStep, Field, Nullish, Role, Step, StepPathToField, Unsaved, UnsavedField } from '@3dp4me/types';
 import { FormOption } from '../../components/Fields/FormOption';
-
-const expandedSidebarWidth = `${
-    drawerWidth + 3 * verticalMovementWidth
-}px`;
-const retractedSidebarWidth = drawerWidth;
 
 const SectionTab = () => {
     const [stepMetadata, setStepMetadata] = useState<Step[]>([]);
@@ -158,8 +153,6 @@ const SectionTab = () => {
         );
 
         if (adjStepIndex < 0) return;
-
-        console.log("SWAP", updatedMetadata)
 
         // Perform field number swap
         swapValuesInArrayByKey(
