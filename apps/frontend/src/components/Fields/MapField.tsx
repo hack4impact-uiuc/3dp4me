@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ReactMapGL, { MapRef, Marker } from 'react-map-gl';
 import Geocoder from 'react-map-gl-geocoder';
@@ -13,11 +12,11 @@ import {
     PIN_URL,
 } from '../../utils/constants';
 import './MapField.scss';
-import { MapPoint } from '@3dp4me/types';
+import { MapPoint, Nullish } from '@3dp4me/types';
 
 export interface MapFieldProps {
-    value: MapPoint
-    initValue: MapPoint,
+    value: Nullish<MapPoint>
+    initValue: Nullish<MapPoint>,
     displayName: string
     isDisabled: boolean
     onChange: (field: string, value: MapPoint) => void
@@ -131,8 +130,8 @@ const MapField = ({
                 >
                     <img
                         src={PIN_URL}
-                        width={viewport?.zoom * 5}
-                        height={viewport?.zoom * 5}
+                        width={viewport?.zoom * 2}
+                        height={viewport?.zoom * 2.5}
                         alt="Location marker"
                     />
                 </Marker>

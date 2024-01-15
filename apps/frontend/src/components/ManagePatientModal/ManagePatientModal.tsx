@@ -81,7 +81,10 @@ const ManagePatientModal = ({
             title: translations.components.modal.deleteTitle,
             text: translations.components.modal.deletePatientConfirmation,
             icon: 'warning',
-            buttons: [true, true],
+            buttons: [
+                translations.components.button.discard.cancelButton,
+                translations.components.button.discard.confirmButton,
+            ],
             dangerMode: true,
         }).then(async (willDelete) => {
             if (willDelete) {

@@ -44,7 +44,10 @@ const ManageRoleModal = ({
             title: translations.components.modal.deleteTitle,
             text: translations.roleManagement.warning,
             icon: 'warning',
-            buttons: [true],
+            buttons: [
+                translations.components.button.discard.cancelButton,
+                translations.components.button.discard.confirmButton,
+            ],
             dangerMode: true,
         }).then(async (willDelete) => {
             if (willDelete) {

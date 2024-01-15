@@ -324,7 +324,10 @@ const EditFieldModal = ({
             title: translations.components.modal.deleteTitle,
             text: translations.components.modal.deleteFieldConfirmation,
             icon: 'warning',
-            buttons: [true],
+            buttons: [
+                translations.components.button.discard.cancelButton,
+                translations.components.button.discard.confirmButton,
+            ],
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {

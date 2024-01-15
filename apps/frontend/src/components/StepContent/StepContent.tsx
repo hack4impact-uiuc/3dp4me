@@ -149,8 +149,7 @@ const StepContent = ({
                 swal({
                     title: translations.components.button.discard.success,
                     icon: 'success',
-                    buttons:
-                        [translations.components.button.discard.confirmButton],
+                    buttons: [translations.components.button.discard.confirmButton],
                 });
                 // TODO: Nonexistent values don't get reset.
                 setUpdatedData(_.cloneDeep(stepData));

@@ -64,6 +64,7 @@ const PatientTable = ({
             swal({
                 title: translations.components.swal.createPatient.successMsg,
                 icon: 'success',
+                buttons: [translations.components.button.discard.confirmButton],
             });
 
             onAddPatient(patient);

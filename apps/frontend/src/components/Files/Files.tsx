@@ -37,7 +37,10 @@ const Files = <T extends string>({
             title: translations.components.file.deleteTitle,
             text: translations.components.file.deleteWarning,
             icon: 'warning',
-            buttons: [true],
+            buttons: [
+                translations.components.button.discard.cancelButton,
+                translations.components.button.discard.confirmButton,
+            ],
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
