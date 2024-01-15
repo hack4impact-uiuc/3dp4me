@@ -10,7 +10,6 @@ import {
     FormControl,
     FormControlLabel,
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import _ from 'lodash';
 import swal from 'sweetalert';
 
@@ -24,18 +23,12 @@ import { useErrorWrap } from '../../hooks/useErrorWrap';
 import { Field, FieldType, Language, QuestionOption, TranslatedString, Unsaved } from '@3dp4me/types';
 import { FormOption } from '../Fields/FormOption';
 
-type OmitDeep<T, K extends keyof any> = T extends object
-  ? {
-      [P in Exclude<keyof T, K>]: OmitDeep<T[P], K>;
-    }
-  : T;
-
 export interface EditFieldModalProps {
     isOpen: boolean
     initialData: Field
     onModalClose: () => void
     allRoles: FormOption[]
-    onEditField: (field: Field) => void
+    onEditField: (field: Unsaved<Field>) => void
 }
 
 const EditFieldModal = ({
@@ -278,7 +271,7 @@ const EditFieldModal = ({
 
     const getUpdatedData = () => {
         const formattedOptions = options.map((option, index) => {
-            return { Index: index, Question: option };
+            return { Index: index, Question: option, IsHidden: false };
         });
 
         const updatedFieldData: Unsaved<Field> = {
@@ -306,7 +299,7 @@ const EditFieldModal = ({
         editField(newFieldData);
     };
 
-    const editField = (newFieldData: Field) => {
+    const editField = (newFieldData: Unsaved<Field>) => {
         errorWrap(
             () => {
                 validateField(newFieldData);

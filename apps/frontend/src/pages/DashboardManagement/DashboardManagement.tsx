@@ -366,7 +366,6 @@ const SectionTab = () => {
         The result is stepMetadata will be modified, meaning the changes
         will only be saved locally. 
     */
-
     const addNewField = (newFieldData: Unsaved<Omit<Field, "fieldNumber"|"key"|"isHidden"|"isDeleted"|"additionalData">>) => {
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
@@ -389,7 +388,8 @@ const SectionTab = () => {
         }
 
         // Mark as not being deleted and not hidden
-        const newField: UnsavedField = {
+        // const newField: UnsavedField = {
+        const newField = {
             additionalData: undefined,
             isDeleted: false,
             isHidden: false,
@@ -409,7 +409,7 @@ const SectionTab = () => {
         setStepMetadata(updatedMetadata);
     };
 
-    const editField = (updatedFieldData: Field) => {
+    const editField = (updatedFieldData: Unsaved<Field>) => {
         const updatedField = _.cloneDeep(updatedFieldData);
         const updatedMetadata = _.cloneDeep(stepMetadata);
 
@@ -431,7 +431,8 @@ const SectionTab = () => {
 
         if (fieldIndex < 0) return;
 
-        fieldArrayReference[fieldIndex] = updatedField;
+        // TODO: Type all this as unsaved
+        fieldArrayReference[fieldIndex] = updatedField as any;
 
         setStepMetadata(updatedMetadata);
     };

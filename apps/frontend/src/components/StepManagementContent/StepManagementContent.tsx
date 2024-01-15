@@ -7,7 +7,7 @@ import RadioButtonField from '../Fields/RadioButtonField';
 import { useTranslations } from '../../hooks/useTranslations';
 import { getJSONReferenceByStringPath } from '../../utils/utils';
 import { FormOption } from '../Fields/FormOption';
-import { Field, FieldType, Language, PathToField, StepPathToField } from '@3dp4me/types';
+import { Field, FieldType, Language, MaxRecursionDepth, PathToField, StepPathToField } from '@3dp4me/types';
 
 export interface StepManagementContentProps {
     onDownPressed: (key: string, root: StepPathToField, index: number) => void
@@ -160,7 +160,7 @@ const StepManagementContent = ({
     }
 
     function getPathToSubfields(fieldRoot: StepPathToField, fieldNumber: number): StepPathToField {
-        const root: PathToField<`fields`, 6> = `${fieldRoot}[${getFieldIndexGivenFieldNumber(
+        const root: PathToField<`fields`, MaxRecursionDepth> = `${fieldRoot}[${getFieldIndexGivenFieldNumber(
             fieldRoot,
             fieldNumber,
         )}].subFields`;

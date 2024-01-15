@@ -70,7 +70,7 @@ const PhotoField = <T extends string>({
             await getMedia(PERMISSION_CONSTRAINTS);
             if (navigator.permissions && navigator.permissions.query) {
                 const permissionStatus = await navigator.permissions.query({
-                    name: 'camera',
+                    name: 'camera' as any
                 });
                 setPermissionListener(permissionStatus);
             }
@@ -197,7 +197,6 @@ const PhotoField = <T extends string>({
             return (
                 <ImageGallery
                     items={images}
-                    className="image-gallery"
                     showBullets={
                         images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW
                     }

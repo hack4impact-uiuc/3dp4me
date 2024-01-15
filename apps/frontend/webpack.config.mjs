@@ -9,12 +9,12 @@ import nodeExternals from "webpack-node-externals"
 const config = {
   mode: "production",
   entry: "./src/index.tsx",
-  externals: [
-    nodeExternals({
-      // modulesFromFile: true,
-      modulesDir: path.resolve(__dirname, '../../'),
-    }),
-  ],
+  // externals: [
+  //   nodeExternals({
+  //     // modulesFromFile: true,
+  //     modulesDir: path.resolve(__dirname, '../../'),
+  //   }),
+  // ],
   module: {
     rules: [
       {
@@ -99,7 +99,7 @@ const config = {
     }),
 
     new Dotenv({
-      path: './production.env',
+      path: './.env',
       safe: true,
     }),
   ],

@@ -48,8 +48,7 @@ const BottomBar = ({
     };
 
     const onStatusSelected: MouseEventHandler<HTMLDivElement> = (e) => {
-        // TODO: Look into this
-        onStatusChange('status', e.target.value);
+        onStatusChange('status', (e.target as any).value);
     }
 
     /**
