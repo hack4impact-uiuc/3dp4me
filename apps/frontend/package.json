@@ -14,7 +14,7 @@
     ]
   },
   "dependencies": {
-    "@3dp4me/types": "0.0.0",
+    "@3dp4me/types": "*",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
@@ -82,7 +82,7 @@
     "cra-template": "1.1.2",
     "css-loader": "^6.8.1",
     "dotenv-webpack": "^8.0.1",
-    "eslint-config-3dp4me": "0.0.0",
+    "eslint-config-3dp4me": "*",
     "html-webpack-plugin": "^5.5.3",
     "image-webpack-loader": "^8.1.0",
     "react-app-env": "^1.2.3",

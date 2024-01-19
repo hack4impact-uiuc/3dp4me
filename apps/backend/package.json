@@ -34,13 +34,13 @@
     "twilio": "^3.71.1"
   },
   "devDependencies": {
-    "@3dp4me/types": "0.0.0",
+    "@3dp4me/types": "*",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/express-fileupload": "^1.4.4",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.9.4",
-    "eslint-config-3dp4me": "0.0.0",
+    "eslint-config-3dp4me": "*",
     "exceljs": "^4.4.0",
     "jest": "^27.0.6",
     "nodemon": "^2.0.4",
