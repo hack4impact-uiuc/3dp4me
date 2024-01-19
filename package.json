@@ -12,9 +12,11 @@
         "eslint-plugin-prettier": "^4.0.0",
         "eslint-plugin-react": "^7.25.2",
         "eslint-plugin-react-hooks": "^4.2.0",
-        "prettier": "^2.4.1"
+        "prettier": "^2.4.1",
+        "turbo": "^1.11.3"
     },
     "scripts": {
+        "publish:production": "git branch -D production ; git push origin --delete production ; git checkout -b production && git push -u origin production && git switch -",
         "format": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,jsx,json,md}}'",
         "build": "turbo build"
     },
@@ -30,6 +32,9 @@
         "eslint": "^8.54.0"
     },
     "workspaces": {
-        "packages": ["packages/*", "apps/*"]
+        "packages": [
+            "packages/*",
+            "apps/*"
+        ]
     }
 }

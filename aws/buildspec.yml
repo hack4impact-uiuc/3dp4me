@@ -3,11 +3,8 @@ version: 0.2
 phases:
     build:
         commands:
-            - yarn build
+            - zip -r build.zip ./
 
 artifacts:
     files:
-        - '**/*'
-    base-directory: 'apps/server/elb-build'
-
-base-directory: './'
+        - 'build.zip'
