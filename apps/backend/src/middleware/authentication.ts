@@ -45,8 +45,8 @@ export const requireRole =
                 next()
             })
         }
-        if (!req.user.roles.includes(role)) sendResponse(res, 403, ERR_NOT_APPROVED)
-        else next()
+        if (!req.user.roles.includes(role)) return sendResponse(res, 403, ERR_NOT_APPROVED)
+        return next()
     }
 
 /**

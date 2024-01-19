@@ -5,6 +5,14 @@
         "dependsOn": ["^build"],
         "outputs": ["dist/**", "build/**"]
       },
+      "backend#build": {
+        "env": [
+          "DB_URI",
+          "ENCRYPTION_KEY",
+          "SIGNING_KEY",
+          "ADMIN_ID"
+        ]
+      },
       "deploy": {
         "dependsOn": ["build", "test", "lint"]
       },

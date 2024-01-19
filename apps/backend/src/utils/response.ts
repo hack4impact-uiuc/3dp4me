@@ -4,6 +4,9 @@ import { HydratedDocument, Model } from 'mongoose'
 import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants'
 import { queryParamToNum, queryParamToString } from './request'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type RespData = Record<string, any>
+
 /**
  * Convienience function for sending responses.
  * @param {Object} res The response object
@@ -11,7 +14,7 @@ import { queryParamToNum, queryParamToString } from './request'
  * @param {String} message The message to send.
  * @param {Object} data The optional data to send back.
  */
-export const sendResponse = (res: Response, code: number, message: string, data: any = {}) =>
+export const sendResponse = (res: Response, code: number, message: string, data?: RespData) =>
     res.status(code).json({
         success: isCodeSuccessful(code),
         message,
@@ -24,6 +27,7 @@ export const sendResponse = (res: Response, code: number, message: string, data:
  * @param {String} searchQuery A word or phrase related to a specific patient/group of patients
  * @returns a List containing the filtering patients
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const filterPatientsBySearchQuery = <T extends Record<string, any>>(
     patients: T[],
     searchQuery: string
@@ -62,6 +66,7 @@ const filterPatientsBySearchQuery = <T extends Record<string, any>>(
     }
     return filteredData
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * Convienience function getting data from a model with pagination

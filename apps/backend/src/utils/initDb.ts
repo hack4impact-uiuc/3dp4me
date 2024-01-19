@@ -11,7 +11,7 @@ import { signatureSchema } from '../schemas/signatureSchema'
 /**
  * Initalizes and connects to the DB. Should be called at app startup.
  */
-export const initDB = (callback?: Function) => {
+export const initDB = (callback?: () => void) => {
     mongoose.connect(process.env.DB_URI!, {
         // useNewUrlParser: true,
         // useUnifiedTopology: true,
@@ -29,7 +29,7 @@ export const initDB = (callback?: Function) => {
 const clearModels = async () => {
     const steps = await StepModel.find()
     steps.forEach((step) => {
-        // @ts-ignore
+        // @ts-expect-error this is a hack
         delete mongoose.connection.models[step.key]
     })
 }

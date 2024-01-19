@@ -24,11 +24,13 @@ export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[
     const userRole = req.user.roles.toString()
 
     // TODO: Give this a type
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const fieldSearchParams: any[] = [
         {
             $or: [{ $ne: ['$$field.isDeleted', true] }],
         },
     ] // Don't return any deleted fields
+    /* eslint-enable @typescript-eslint/no-explicit-any */
 
     // Don't return any deleted steps
     const aggregation: PipelineStage[] = [{ $match: { isDeleted: { $ne: true } } }]
@@ -197,7 +199,7 @@ const updateElementNumbers = <T extends Step | Field, K extends keyof T>(
             deletedElementPointer += 1 // Skip over since deleted fields have priority
         } else if (goodElementPointer < updatedElements.length) {
             // TODO: Give better typings
-            // @ts-ignore
+            // @ts-expect-error TODO: Fix this
             updatedElements[goodElementPointer][numberKey] = currElementNumber
             goodElementPointer += 1
         }
@@ -394,6 +396,7 @@ const updateStepInTransaction = async (
 
     // TODO: Type
     // Build up a list of all the new fields added
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v'] as any) as Step
 
     // Recursive update the field's numbers and keys
@@ -446,14 +449,14 @@ const validateStep = async (step: HydratedDocument<Step>, session: ClientSession
     const error = step.validateSync()
     if (error) {
         await session.abortTransaction()
-        throw `Validation error: ${error}`
+        throw new Error(`Validation error: ${error}`)
     }
 
     // Run async test manually
     const isValid = await isUniqueStepNumber(step.stepNumber, step.key, session)
     if (!isValid) {
         await session.abortTransaction()
-        throw `Validation error: ${step.key} does not have unique stepNumber`
+        throw new Error(`Validation error: ${step.key} does not have unique stepNumber`)
     }
 }
 
