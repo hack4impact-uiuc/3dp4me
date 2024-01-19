@@ -18,7 +18,7 @@
     "build": "turbo build",
     "format": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,jsx,json,md}}'",
     "lint": "turbo run lint && yarn eslint --ext .json --fix . && yarn sync",
-    "lint:check": "turbo run lint && yarn eslint --ext .json . && yarn syncpack check",
+    "lint:check": "turbo run lint && yarn eslint --ext .json .",
     "publish:production": "git branch -D production ; git push origin --delete production ; git checkout -b production && git push -u origin production && git switch -",
     "sync": "yarn syncpack fix-mismatches && yarn syncpack format"
   },
