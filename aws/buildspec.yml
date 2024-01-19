@@ -3,7 +3,7 @@ version: 0.2
 phases:
     build:
         commands:
-            - sh ./package-ebs.sh
+            - sh aws/package-ebs.sh
 
 artifacts:
     files:
