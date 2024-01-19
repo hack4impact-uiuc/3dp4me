@@ -3,7 +3,7 @@ version: 0.2
 phases:
     build:
         commands:
-            - git archive --format=zip --output build.zip HEAD 
+            - zip -r build.zip ./
 
 artifacts:
     files:
