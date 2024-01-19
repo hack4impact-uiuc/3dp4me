@@ -15,6 +15,7 @@
         "prettier": "^2.4.1"
     },
     "scripts": {
+        "publish": "git branch -D production ; git push origin --delete production ; git checkout -b production && git push -u origin production && git switch -",
         "format": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,jsx,json,md}}'",
         "build": "turbo build"
     },
