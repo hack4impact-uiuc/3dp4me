@@ -1,6 +1,13 @@
+.vscode
+yarn-error.log
 node_modules/
 prod-build/
 build/
 
 .vercel
 *.swp
+build.zip
+.DS_Store
+.turbo
+
+**/dist/
