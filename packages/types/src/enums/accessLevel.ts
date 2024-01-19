@@ -1,6 +1,5 @@
-
 export enum AccessLevel {
-    GRANTED= 'Granted',
-    REVOKED= 'Revoked',
-    PENDING= 'Pending',
+    GRANTED = 'Granted',
+    REVOKED = 'Revoked',
+    PENDING = 'Pending',
 }

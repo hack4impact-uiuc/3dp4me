@@ -9,7 +9,8 @@
   },
   "devDependencies": {
     "ts-loader": "^9.4.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "eslint-config-3dp4me": "*"
   },
   "files": [
     "/dist"
@@ -18,7 +19,9 @@
   "main": "dist/src/index.js",
   "module": "dist/esm/index.js",
   "scripts": {
-    "build": "yarn tsc"
+    "build": "yarn tsc",
+    "lint": "yarn lint:check --fix",
+    "lint:check": "eslint src --ext js,jsx,ts,tsx"
   },
   "types": "dist/src/index.d.ts"
 }

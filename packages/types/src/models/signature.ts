@@ -1,4 +1,4 @@
-import { TranslatedString } from "./translatedString"
+import { TranslatedString } from './translatedString'
 
 export interface SignaturePoint {
     x: number

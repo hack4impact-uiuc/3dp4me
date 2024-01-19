@@ -1,3 +1,3 @@
-import { OmitDeep } from "./omitDeep";
+import { OmitDeep } from './omitDeep'
 
-export type Unsaved<T> = OmitDeep<T, "_id">
+export type Unsaved<T> = OmitDeep<T, '_id'>
