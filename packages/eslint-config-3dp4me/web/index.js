@@ -27,6 +27,7 @@ module.exports = {
         "import/extensions": ["error", "never", { 
             "svg": "always",
         }],
+        "no-underscore-dangle": ["error", {"allow": ["_id"]}],
         "jsx-a11y/label-has-associated-control": "off",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-empty-interface": "off",
