@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
-import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants';
-import { HydratedDocument, Model } from 'mongoose';
-import { queryParamToString, queryParamToNum } from './request';
+import { Request, Response } from 'express'
+import { HydratedDocument, Model } from 'mongoose'
+
+import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants'
+import { queryParamToNum, queryParamToString } from './request'
 
 /**
  * Convienience function for sending responses.
@@ -10,13 +11,12 @@ import { queryParamToString, queryParamToNum } from './request';
  * @param {String} message The message to send.
  * @param {Object} data The optional data to send back.
  */
-export const sendResponse = (res: Response, code: number, message: string, data: any = {}) => {
-    return res.status(code).json({
+export const sendResponse = (res: Response, code: number, message: string, data: any = {}) =>
+    res.status(code).json({
         success: isCodeSuccessful(code),
         message,
         result: data,
-    });
-};
+    })
 
 /**
  * Removes patients whose name, phone nunber, or unique _id contains the searchQuery
@@ -24,12 +24,15 @@ export const sendResponse = (res: Response, code: number, message: string, data:
  * @param {String} searchQuery A word or phrase related to a specific patient/group of patients
  * @returns a List containing the filtering patients
  */
-const filterPatientsBySearchQuery = <T extends Record<string, any>>(patients: T[], searchQuery: string): T[] => {
+const filterPatientsBySearchQuery = <T extends Record<string, any>>(
+    patients: T[],
+    searchQuery: string
+): T[] => {
     if (searchQuery === '') {
-        return patients;
+        return patients
     }
 
-    const filteredData: T[] = [];
+    const filteredData: T[] = []
 
     if (searchQuery !== '') {
         /* The following fields below will be considered during the search.
@@ -44,31 +47,21 @@ const filterPatientsBySearchQuery = <T extends Record<string, any>>(patients: T[
             'familyName',
             'phoneNumber',
             'orderId',
-        ];
+        ]
 
         for (let dataIdx = 0; dataIdx < patients.length; dataIdx++) {
-            for (
-                let fieldsIdx = 0;
-                fieldsIdx < fieldsToCheckList.length;
-                fieldsIdx++
-            ) {
-                const fieldToCheck = fieldsToCheckList[fieldsIdx];
-                const patientDataByField =
-                    patients[dataIdx][fieldToCheck] || '';
-                if (
-                    patientDataByField
-                        .toString()
-                        .toLowerCase()
-                        .includes(searchQuery)
-                ) {
-                    filteredData.push(patients[dataIdx]);
-                    break;
+            for (let fieldsIdx = 0; fieldsIdx < fieldsToCheckList.length; fieldsIdx++) {
+                const fieldToCheck = fieldsToCheckList[fieldsIdx]
+                const patientDataByField = patients[dataIdx][fieldToCheck] || ''
+                if (patientDataByField.toString().toLowerCase().includes(searchQuery)) {
+                    filteredData.push(patients[dataIdx])
+                    break
                 }
             }
         }
     }
-    return filteredData;
-};
+    return filteredData
+}
 
 /**
  * Convienience function getting data from a model with pagination
@@ -81,57 +74,50 @@ const filterPatientsBySearchQuery = <T extends Record<string, any>>(patients: T[
 export const getDataFromModelWithPaginationAndSearch = async <T>(
     req: Request,
     model: Model<T>,
-    findParameters = {},
-): Promise<{ data: HydratedDocument<T>[], count: number }> => {
+    findParameters = {}
+): Promise<{ data: HydratedDocument<T>[]; count: number }> => {
     // The default values below will get the first user in the database
     const {
         pageNumber = 1,
         nPerPage = DEFAULT_PATIENTS_ON_GET_REQUEST,
         searchQuery = '',
-    } = req.query; 
-    const intPageNumber = queryParamToNum(pageNumber);
+    } = req.query
+    const intPageNumber = queryParamToNum(pageNumber)
     const intPatientsPerPage = queryParamToNum(nPerPage)
-    const lowerCaseSearchQuery = queryParamToString(searchQuery).toLowerCase();
+    const lowerCaseSearchQuery = queryParamToString(searchQuery).toLowerCase()
 
     // Calculates the number of patients to skip based on the request paramaters
-    const documentsToSkip =
-        intPageNumber > 0 ? (intPageNumber - 1) * intPatientsPerPage : 0;
+    const documentsToSkip = intPageNumber > 0 ? (intPageNumber - 1) * intPatientsPerPage : 0
 
     // Perform pagination while doing .find() if there isn't a search query
     if (lowerCaseSearchQuery === '') {
-        const patientCount = await model.count(findParameters);
+        const patientCount = await model.count(findParameters)
         const data = await model
             .find(findParameters)
             .sort({ lastEdited: -1 })
             .skip(documentsToSkip)
-            .limit(intPatientsPerPage);
+            .limit(intPatientsPerPage)
 
         return {
             data,
             count: patientCount,
-        };
+        }
     }
 
-    const data = await model.find(findParameters).sort({ lastEdited: -1 });
+    const data = await model.find(findParameters).sort({ lastEdited: -1 })
 
     // Filter by search
-    const filteredData = filterPatientsBySearchQuery(
-        data,
-        lowerCaseSearchQuery,
-    );
+    const filteredData = filterPatientsBySearchQuery(data, lowerCaseSearchQuery)
 
     // Filter by page number
-    const countTotalPatients = filteredData.length;
+    const countTotalPatients = filteredData.length
 
-    const paginatedData = filteredData.splice(
-        documentsToSkip,
-        intPatientsPerPage,
-    );
+    const paginatedData = filteredData.splice(documentsToSkip, intPatientsPerPage)
 
     return {
         data: paginatedData,
         count: countTotalPatients,
-    };
-};
+    }
+}
 
-const isCodeSuccessful = (code: number) => code >= 200 && code < 300;
+const isCodeSuccessful = (code: number) => code >= 200 && code < 300

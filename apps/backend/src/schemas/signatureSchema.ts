@@ -1,5 +1,5 @@
-import { Signature } from '@3dp4me/types';
-import mongoose from 'mongoose';
+import { Signature } from '@3dp4me/types'
+import mongoose from 'mongoose'
 
 /**
  * Schema used to collect signature data. SignatureData is all of the data points,
@@ -23,4 +23,4 @@ export const signatureSchema = new mongoose.Schema<Signature>({
         EN: { type: String, required: true },
         AR: { type: String, required: true },
     },
-});
+})

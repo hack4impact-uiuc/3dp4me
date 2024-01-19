@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import { Role } from '@3dp4me/types'
+import mongoose from 'mongoose'
 
-import { languageSchema } from '../schemas/languageSchema';
-import { Role } from '@3dp4me/types';
+import { languageSchema } from '../schemas/languageSchema'
 
 /**
  * Contains information about user roles. the name and description are just for
@@ -19,6 +19,6 @@ const roleSchema = new mongoose.Schema<Role>({
     },
     isHidden: { type: Boolean, required: false, default: false },
     isMutable: { type: Boolean, required: false, default: true },
-});
+})
 
-export const RoleModel = mongoose.model('Role', roleSchema, 'Role');
+export const RoleModel = mongoose.model('Role', roleSchema, 'Role')

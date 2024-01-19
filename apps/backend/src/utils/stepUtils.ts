@@ -1,62 +1,57 @@
-import _ from 'lodash';
+import { Field, Step } from '@3dp4me/types'
+import _ from 'lodash'
+import { ClientSession, HydratedDocument, PipelineStage } from 'mongoose'
 
 import { removeAttributesFrom } from '../middleware/requests'
+import { AuthenticatedRequest } from '../middleware/types'
 import {
-    isUniqueStepNumber,
     FIELD_NUMBER_KEY,
+    isUniqueStepNumber,
     STEP_NUMBER_KEY,
-    StepModel
-} from '../models/Metadata';
-import { Step, Field } from "@3dp4me/types"
-
-import { isAdmin } from './aws/awsUsers';
-import { addFieldsToSchema, getAddedFields } from './fieldUtils';
-import { abortAndError } from './transactionUtils';
-import { generateSchemaFromMetadata } from './initDb';
-import {
-    generateKeyWithoutCollision,
-    checkNumOccurencesInList,
-} from './keyUtils';
-import { Request, Response } from 'express';
-import { queryParamToBool } from './request';
-import { AuthenticatedRequest } from '../middleware/types';
-import { ClientSession, HydratedDocument, PipelineStage } from 'mongoose';
+    StepModel,
+} from '../models/Metadata'
+import { isAdmin } from './aws/awsUsers'
+import { addFieldsToSchema, getAddedFields } from './fieldUtils'
+import { generateSchemaFromMetadata } from './initDb'
+import { checkNumOccurencesInList, generateKeyWithoutCollision } from './keyUtils'
+import { queryParamToBool } from './request'
+import { abortAndError } from './transactionUtils'
 
 export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[]> => {
-    const shouldShowHiddenFields = queryParamToBool(req.query.showHiddenFields ?? "false");
-    const shouldShowHiddenSteps = queryParamToBool(req.query.showHiddenSteps ?? "false");
+    const shouldShowHiddenFields = queryParamToBool(req.query.showHiddenFields ?? 'false')
+    const shouldShowHiddenSteps = queryParamToBool(req.query.showHiddenSteps ?? 'false')
 
-    const userRole = req.user.roles.toString();
+    const userRole = req.user.roles.toString()
 
     // TODO: Give this a type
     const fieldSearchParams: any[] = [
         {
             $or: [{ $ne: ['$$field.isDeleted', true] }],
         },
-    ]; // Don't return any deleted fields
+    ] // Don't return any deleted fields
 
     // Don't return any deleted steps
-    const aggregation: PipelineStage[] = [{ $match: { isDeleted: { $ne: true } } }];
+    const aggregation: PipelineStage[] = [{ $match: { isDeleted: { $ne: true } } }]
 
     // If not admin, then return limit what steps/fields can be returned using readableGroups
     if (!isAdmin(req.user)) {
         aggregation.push({
             $match: { $expr: { $in: [userRole, '$readableGroups'] } }, // limit returning steps that don't contain the user role
-        });
+        })
         fieldSearchParams.push({
             $in: [userRole, '$$field.readableGroups'], // limit returning fields that don't contain the user role
-        });
+        })
     }
 
     if (!shouldShowHiddenFields) {
         fieldSearchParams.push({
             $or: [{ $ne: ['$$field.isHidden', true] }],
-        }); // limit returning fields that are hidden
+        }) // limit returning fields that are hidden
     }
 
     // Limit returning steps that are hidden
     if (!shouldShowHiddenSteps) {
-        aggregation.push({ $match: { isHidden: { $ne: true } } });
+        aggregation.push({ $match: { isHidden: { $ne: true } } })
     }
 
     // Adds operation for filtering out fields to the aggregation.
@@ -72,7 +67,7 @@ export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[
                 },
             },
         },
-    });
+    })
 
     /*
         Adds operation for filtering out subfields in fields to the aggregation.
@@ -108,11 +103,11 @@ export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[
                 },
             },
         },
-    });
+    })
 
-    const data = await StepModel.aggregate(aggregation);
-    return data;
-};
+    const data = await StepModel.aggregate(aggregation)
+    return data
+}
 
 /* eslint-disable no-restricted-syntax, no-await-in-loop */
 /**
@@ -123,48 +118,39 @@ export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[
  * @returns Returns the updated step array.
  */
 export const updateStepsInTransaction = async (updatedSteps: Step[], session: ClientSession) => {
-    const stepData: HydratedDocument<Step>[] = [];
+    const stepData: HydratedDocument<Step>[] = []
 
     /* Steps in the database cannot have keys that are the same. If that is the
        case, then they have collided.
        Let's assume that none of the saved steps in the database don't have keys that collide.
        Then, we would only need to check new steps being created for key collision. */
 
-    const currentStepsInDB = await StepModel.find({}).session(session);
-    let stepsToNotChange: Step[] = [];
-    const requestStepKeys = updatedSteps.map((step) => step.key);
+    const currentStepsInDB = await StepModel.find({}).session(session)
+    let stepsToNotChange: Step[] = []
+    const requestStepKeys = updatedSteps.map((step) => step.key)
 
     // Build up a list of steps that were not included in the request or are deleted.
     // The stepNumbers of these steps won't be changed.
     for (let i = 0; i < currentStepsInDB.length; i++) {
-        if (
-            currentStepsInDB[i].isDeleted ||
-            !requestStepKeys.includes(currentStepsInDB[i].key)
-        ) {
-            stepsToNotChange.push(currentStepsInDB[i]);
+        if (currentStepsInDB[i].isDeleted || !requestStepKeys.includes(currentStepsInDB[i].key)) {
+            stepsToNotChange.push(currentStepsInDB[i])
         }
     }
 
-    stepsToNotChange = stepsToNotChange.sort(
-        (a, b) => a[STEP_NUMBER_KEY] - b[STEP_NUMBER_KEY],
-    );
+    stepsToNotChange = stepsToNotChange.sort((a, b) => a[STEP_NUMBER_KEY] - b[STEP_NUMBER_KEY])
 
     // Get a list of the key
-    const stepsToNotChangeKeys = stepsToNotChange.map((step) => step.key);
+    const stepsToNotChangeKeys = stepsToNotChange.map((step) => step.key)
 
     // Combine to create a list of all keys that will be used to check for.
     // key collision.
-    const combinedKeys = requestStepKeys.concat(stepsToNotChangeKeys);
+    const combinedKeys = requestStepKeys.concat(stepsToNotChangeKeys)
 
     /* We also need to update step field numbers before saving each step.
        This is because step field numbers were generated without considering
        deleted steps. */
 
-    const requestSteps = updateElementNumbers(
-        updatedSteps,
-        stepsToNotChange,
-        STEP_NUMBER_KEY,
-    );
+    const requestSteps = updateElementNumbers(updatedSteps, stepsToNotChange, STEP_NUMBER_KEY)
 
     // Go through all of the step updates in the request body and apply them
     for (let stepIdx = 0; stepIdx < requestSteps.length; stepIdx++) {
@@ -172,18 +158,22 @@ export const updateStepsInTransaction = async (updatedSteps: Step[], session: Cl
         const updatedStepModel = await updateStepInTransaction(
             requestSteps[stepIdx],
             session,
-            combinedKeys,
-        );
-        stepData.push(updatedStepModel);
+            combinedKeys
+        )
+        stepData.push(updatedStepModel)
     }
 
     // Go through the updated models and check validation
-    await validateSteps(stepData, session);
-    return stepData;
-};
+    await validateSteps(stepData, session)
+    return stepData
+}
 
-// Elemnts is an 
-const updateElementNumbers = <T extends Step | Field, K extends keyof T>(goodElements: T[], deletedElements: T[], numberKey: K) => {
+// Elemnts is an
+const updateElementNumbers = <T extends Step | Field, K extends keyof T>(
+    goodElements: T[],
+    deletedElements: T[],
+    numberKey: K
+) => {
     // We need to update the fieldNumber for each field in order to prevent duplicates.
     // The same goes for updating the stepNumber for each step.
     // In order to do this, we iterate through the goodElements and deletedElements fields.
@@ -191,52 +181,51 @@ const updateElementNumbers = <T extends Step | Field, K extends keyof T>(goodEle
     // number for the field that it is pointing at. The elements in deletedElements get priority,
     // meaning they always keep the same field number.
 
-    const updatedElements = _.cloneDeep(goodElements);
+    const updatedElements = _.cloneDeep(goodElements)
 
-    let currElementNumber = 0;
-    let deletedElementPointer = 0;
-    let goodElementPointer = 0;
+    let currElementNumber = 0
+    let deletedElementPointer = 0
+    let goodElementPointer = 0
 
-    const numTotalFields = deletedElements.length + updatedElements.length;
+    const numTotalFields = deletedElements.length + updatedElements.length
 
     while (currElementNumber < numTotalFields) {
         if (
             deletedElementPointer < deletedElements.length &&
-            currElementNumber ===
-                deletedElements[deletedElementPointer][numberKey]
+            currElementNumber === deletedElements[deletedElementPointer][numberKey]
         ) {
-            deletedElementPointer += 1; // Skip over since deleted fields have priority
+            deletedElementPointer += 1 // Skip over since deleted fields have priority
         } else if (goodElementPointer < updatedElements.length) {
             // TODO: Give better typings
             // @ts-ignore
-            updatedElements[goodElementPointer][numberKey] = currElementNumber;
-            goodElementPointer += 1;
+            updatedElements[goodElementPointer][numberKey] = currElementNumber
+            goodElementPointer += 1
         }
-        currElementNumber += 1; // Move onto the next field number to assign
+        currElementNumber += 1 // Move onto the next field number to assign
     }
 
-    return updatedElements;
-};
+    return updatedElements
+}
 
 const updateFieldKeys = (fields: Field[]) => {
-    const clonedFields = _.cloneDeep(fields);
-    const currentFieldKeys = clonedFields.map((field) => field.key ?? '');
+    const clonedFields = _.cloneDeep(fields)
+    const currentFieldKeys = clonedFields.map((field) => field.key ?? '')
 
     for (let i = 0; i < clonedFields.length; i++) {
-        const currentField = clonedFields[i];
-        const currentKey = currentField.key;
+        const currentField = clonedFields[i]
+        const currentKey = currentField.key
         if (!currentKey) {
             const generatedKey = generateKeyWithoutCollision(
                 currentField.displayName.EN,
-                currentFieldKeys,
-            );
-            currentField.key = generatedKey;
-            currentFieldKeys.push(generatedKey);
+                currentFieldKeys
+            )
+            currentField.key = generatedKey
+            currentFieldKeys.push(generatedKey)
         }
     }
 
-    return clonedFields;
-};
+    return clonedFields
+}
 
 /**
  * A recursive function that updates a set of fields before being saved in the database.
@@ -252,103 +241,84 @@ const updateFieldInTransaction = async (
     fieldsFromRequest: Field[],
     stepKey: string,
     session: ClientSession,
-    level: number,
+    level: number
 ) => {
-    const savedFields = _.cloneDeep(fieldsInDB);
-    let updatedFields = _.cloneDeep(fieldsFromRequest);
+    const savedFields = _.cloneDeep(fieldsInDB)
+    let updatedFields = _.cloneDeep(fieldsFromRequest)
 
-    const addedFields = await getAddedFields(
-        session,
-        savedFields,
-        updatedFields,
-    );
+    const addedFields = await getAddedFields(session, savedFields, updatedFields)
 
     // Checks that fields were not deleted
-    const deletedFields = getDeletedFields(savedFields);
+    const deletedFields = getDeletedFields(savedFields)
 
-    const numDeletedFields = deletedFields.length;
-    const numUnchangedFields = updatedFields.length - addedFields.length;
+    const numDeletedFields = deletedFields.length
+    const numUnchangedFields = updatedFields.length - addedFields.length
 
-    const currentNumFields = savedFields.length - numDeletedFields;
+    const currentNumFields = savedFields.length - numDeletedFields
     if (numUnchangedFields < currentNumFields)
-        await abortAndError(session, new Error('Cannot delete fields'));
+        await abortAndError(session, new Error('Cannot delete fields'))
 
     // Update the field numbers in order to account for deleted fields
     // eslint-disable-next-line no-param-reassign
-    updatedFields = updateElementNumbers(
-        updatedFields,
-        deletedFields,
-        FIELD_NUMBER_KEY,
-    );
+    updatedFields = updateElementNumbers(updatedFields, deletedFields, FIELD_NUMBER_KEY)
 
     // Add deleted fields so they will be remain in the database.
     // They are added to the end in order to give easy access when
     // restoring them manually.
     for (let i = 0; i < deletedFields.length; i++) {
-        updatedFields.push(deletedFields[i]);
+        updatedFields.push(deletedFields[i])
     }
 
     // Generate keys for the fields that do not have a key
     // eslint-disable-next-line no-param-reassign
-    updatedFields = updateFieldKeys(updatedFields);
+    updatedFields = updateFieldKeys(updatedFields)
 
     if (level === 0) {
         // Update the schema with new fields
-        const addedFieldsWithKeys = await getAddedFields(
-            session,
-            savedFields,
-            updatedFields,
-        );
-        addFieldsToSchema(stepKey, addedFieldsWithKeys);
+        const addedFieldsWithKeys = await getAddedFields(session, savedFields, updatedFields)
+        addFieldsToSchema(stepKey, addedFieldsWithKeys)
     }
 
-    const fieldsToUpdateInSchema: Field[] = [];
-    let subFieldWasAdded = false;
+    const fieldsToUpdateInSchema: Field[] = []
+    let subFieldWasAdded = false
 
     // Recursively call updateFieldInTransaction() on each field's subfields
-    const subFieldUpdateArray = updatedFields.map(
-        async (updatedField, updatedFieldIndex) => {
-            if (updatedField.subFields) {
-                const updatedFieldKey = updatedField.key;
-                const savedFieldIndex = getFieldIndexGivenKey(
-                    savedFields,
-                    updatedFieldKey,
-                );
+    const subFieldUpdateArray = updatedFields.map(async (updatedField, updatedFieldIndex) => {
+        if (updatedField.subFields) {
+            const updatedFieldKey = updatedField.key
+            const savedFieldIndex = getFieldIndexGivenKey(savedFields, updatedFieldKey)
 
-                let newSavedFields: Field[] = [];
-                if (savedFieldIndex > 0) {
-                    newSavedFields =
-                        savedFields[savedFieldIndex].subFields || [];
-                }
-
-                // eslint-disable-next-line max-len
-                const updateFieldResponse = await updateFieldInTransaction(
-                    newSavedFields,
-                    updatedField.subFields,
-                    stepKey,
-                    session,
-                    level + 1,
-                );
-                const { didAddFields } = updateFieldResponse;
-
-                updatedFields[updatedFieldIndex].subFields =
-                    updateFieldResponse.updatedFields;
-                subFieldWasAdded = subFieldWasAdded || didAddFields;
-                // Build up a list of field's whose schema need to be updated
-                if (didAddFields && level === 0) {
-                    fieldsToUpdateInSchema.push(updatedField);
-                }
-                return true;
+            let newSavedFields: Field[] = []
+            if (savedFieldIndex > 0) {
+                newSavedFields = savedFields[savedFieldIndex].subFields || []
             }
-            return false;
-        },
-    );
 
-    await Promise.all(subFieldUpdateArray);
+            // eslint-disable-next-line max-len
+            const updateFieldResponse = await updateFieldInTransaction(
+                newSavedFields,
+                updatedField.subFields,
+                stepKey,
+                session,
+                level + 1
+            )
+            const { didAddFields } = updateFieldResponse
+
+            updatedFields[updatedFieldIndex].subFields = updateFieldResponse.updatedFields
+            subFieldWasAdded = subFieldWasAdded || didAddFields
+            // Build up a list of field's whose schema need to be updated
+            if (didAddFields && level === 0) {
+                fieldsToUpdateInSchema.push(updatedField)
+            }
+            return true
+        }
+        return false
+    })
+
+    await Promise.all(subFieldUpdateArray)
 
     // Update schema
     if (fieldsToUpdateInSchema.length > 0) {
-        addFieldsToSchema(stepKey, fieldsToUpdateInSchema);
+        addFieldsToSchema(stepKey, fieldsToUpdateInSchema)
     }
 
     // Along with other data, return true if a field was added at this level
@@ -356,29 +326,31 @@ const updateFieldInTransaction = async (
     return {
         updatedFields,
         didAddFields: subFieldWasAdded || addedFields.length > 0,
-    };
-};
+    }
+}
 
 // Returns the index for a step given its key
 const getFieldIndexGivenKey = (fields: Field[], key: string) => {
-    if (!fields) return -1;
-    return fields.findIndex((field) => field.key === key);
-};
+    if (!fields) return -1
+    return fields.findIndex((field) => field.key === key)
+}
 
 /* eslint-enable no-restricted-syntax, no-await-in-loop */
 
-const updateStepInTransaction = async (stepBody: Step, session: ClientSession, combinedKeys: string[]): Promise<HydratedDocument<Step>> => {
+const updateStepInTransaction = async (
+    stepBody: Step,
+    session: ClientSession,
+    combinedKeys: string[]
+): Promise<HydratedDocument<Step>> => {
     // Cannot find step
-    if (!stepBody?.key) await abortAndError(session, 'stepKey missing');
+    if (!stepBody?.key) await abortAndError(session, 'stepKey missing')
 
     /*  Get the step to edit.
         .lean() is used to return POJO (Plain Old JavaScript Object)
         instead of MongoDB document.
     */
-    const stepKey = stepBody.key;
-    const stepToEdit = await StepModel.findOne({ key: stepKey })
-        .session(session)
-        .lean();
+    const stepKey = stepBody.key
+    const stepToEdit = await StepModel.findOne({ key: stepKey }).session(session).lean()
 
     // Treat a field as new if it doesn't show up in the database
     // or it is marked as deleted in the database. This based on the assumption
@@ -388,44 +360,41 @@ const updateStepInTransaction = async (stepBody: Step, session: ClientSession, c
         // Make sure the key for this new step won't collide with any deleted steps
         // Using the value 2 since the key should be in combinedKeys at least once.
         if (checkNumOccurencesInList(stepBody.key, combinedKeys) >= 2) {
-            const newKey = generateKeyWithoutCollision(
-                stepBody.displayName.EN || '',
-                combinedKeys,
-            );
-            const oldKey = stepBody.key;
+            const newKey = generateKeyWithoutCollision(stepBody.displayName.EN || '', combinedKeys)
+            const oldKey = stepBody.key
             // eslint-disable-next-line no-param-reassign
-            stepBody.key = newKey;
+            stepBody.key = newKey
             // Add the new key to the list of keys
-            combinedKeys.push(newKey);
+            combinedKeys.push(newKey)
             // Remove the old key
-            combinedKeys.splice(combinedKeys.indexOf(oldKey), 1);
+            combinedKeys.splice(combinedKeys.indexOf(oldKey), 1)
         }
 
         if (stepBody.fields) {
-            generateSchemaFromMetadata(stepBody);
+            generateSchemaFromMetadata(stepBody)
             // eslint-disable-next-line max-len
             const { updatedFields } = await updateFieldInTransaction(
                 [],
                 stepBody.fields,
                 stepBody.key,
                 session,
-                0,
-            );
+                0
+            )
             // eslint-disable-next-line no-param-reassign
-            stepBody.fields = updatedFields;
+            stepBody.fields = updatedFields
         } else {
             // eslint-disable-next-line no-param-reassign
-            stepBody.fields = [];
-            generateSchemaFromMetadata(stepBody);
+            stepBody.fields = []
+            generateSchemaFromMetadata(stepBody)
         }
-        const newStep = new StepModel(stepBody);
-        await newStep.save({ session, validateBeforeSave: false });
-        return newStep;
+        const newStep = new StepModel(stepBody)
+        await newStep.save({ session, validateBeforeSave: false })
+        return newStep
     }
 
     // TODO: Type
     // Build up a list of all the new fields added
-    const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v'] as any) as Step;
+    const strippedBody = removeAttributesFrom(stepBody, ['_id', '__v'] as any) as Step
 
     // Recursive update the field's numbers and keys
     // while making sure deleted fields are properly handled.
@@ -435,84 +404,78 @@ const updateStepInTransaction = async (stepBody: Step, session: ClientSession, c
         strippedBody.fields as Field[],
         stepKey,
         session,
-        0,
-    );
-    strippedBody.fields = updatedFields;
+        0
+    )
+    strippedBody.fields = updatedFields
 
     // Finally, update the metadata for this step
-    const step = await StepModel.findOne({ key: stepKey }).session(session);
+    const step = await StepModel.findOne({ key: stepKey }).session(session)
     if (!step) {
-        return abortAndError(session, 'Step not found on final update');
+        return abortAndError(session, 'Step not found on final update')
     }
 
-    _.assign(step, strippedBody);
-    await step.save({ session, validateBeforeSave: false });
+    _.assign(step, strippedBody)
+    await step.save({ session, validateBeforeSave: false })
 
     // Return the model so that we can do validation later
-    return step;
-};
+    return step
+}
 
 const getDeletedFields = (fields: Field[]) => {
-    const deletedFields: Field[] = [];
+    const deletedFields: Field[] = []
 
     fields.forEach((field) => {
         if (field.isDeleted) {
-            deletedFields.push(field);
+            deletedFields.push(field)
         }
-    });
+    })
 
     // Returns the deleted fields in ascending order of field number
-    const sortedFields = deletedFields.sort(
-        (a, b) => a[FIELD_NUMBER_KEY] - b[FIELD_NUMBER_KEY],
-    );
+    const sortedFields = deletedFields.sort((a, b) => a[FIELD_NUMBER_KEY] - b[FIELD_NUMBER_KEY])
 
-    return sortedFields;
-};
+    return sortedFields
+}
 
 const validateSteps = async (steps: HydratedDocument<Step>[], session: ClientSession) => {
-    const validations = steps.map(async (step) => validateStep(step, session));
-    await Promise.all(validations);
-};
+    const validations = steps.map(async (step) => validateStep(step, session))
+    await Promise.all(validations)
+}
 
 const validateStep = async (step: HydratedDocument<Step>, session: ClientSession) => {
     // Run synchronous tests
-    const error = step.validateSync();
+    const error = step.validateSync()
     if (error) {
-        await session.abortTransaction();
-        throw `Validation error: ${error}`;
+        await session.abortTransaction()
+        throw `Validation error: ${error}`
     }
 
     // Run async test manually
-    const isValid = await isUniqueStepNumber(
-        step.stepNumber,
-        step.key,
-        session,
-    );
+    const isValid = await isUniqueStepNumber(step.stepNumber, step.key, session)
     if (!isValid) {
-        await session.abortTransaction();
-        throw `Validation error: ${step.key} does not have unique stepNumber`;
+        await session.abortTransaction()
+        throw `Validation error: ${step.key} does not have unique stepNumber`
     }
-};
+}
 
 // Filters out deleted steps and fields from stepData
 export const filterOutDeletedSteps = (stepData: Step[]) => {
     for (let i = 0; i < stepData.length; i++) {
         if (stepData[i].isDeleted) {
-            stepData.splice(i, 1);
-            i -= 1;
+            stepData.splice(i, 1)
+            i -= 1
         } else {
-            filterOutDeletedFields(stepData[i].fields);
+            filterOutDeletedFields(stepData[i].fields)
         }
     }
-};
+}
 
 const filterOutDeletedFields = (fields: Field[]) => {
     for (let i = 0; i < fields.length; i++) {
         if (fields[i].isDeleted) {
-            fields.splice(i, 1);
-            i -= 1;
+            fields.splice(i, 1)
+            i -= 1
         } else if (fields[i].subFields) {
-            filterOutDeletedFields(fields[i].subFields);
+            filterOutDeletedFields(fields[i].subFields)
         }
     }
-};
+}

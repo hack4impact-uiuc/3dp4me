@@ -1,15 +1,11 @@
-import log from 'loglevel';
+import { AccessLevel } from '@3dp4me/types'
+import { NextFunction, Request, Response } from 'express'
+import log from 'loglevel'
 
-import { getUserByAccessToken } from '../utils/aws/awsUsers';
-import {
-    ERR_AUTH_FAILED,
-    ERR_NOT_APPROVED,
-    ADMIN_ID,
-} from '../utils/constants';
-import { sendResponse } from '../utils/response';
-import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { AuthenticatedRequest } from './types';
-import { AccessLevel } from '@3dp4me/types';
+import { getUserByAccessToken } from '../utils/aws/awsUsers'
+import { ADMIN_ID, ERR_AUTH_FAILED, ERR_NOT_APPROVED } from '../utils/constants'
+import { sendResponse } from '../utils/response'
+import { AuthenticatedRequest } from './types'
 
 /**
  * Middleware requires the incoming request to be authenticated. If not authenticated, a response
@@ -19,20 +15,20 @@ import { AccessLevel } from '@3dp4me/types';
  */
 export const requireAuthentication = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = await getUserFromRequest(req);
+        const user = await getUserFromRequest(req)
         if (!user) {
-            sendResponse(res, 401, ERR_AUTH_FAILED);
+            sendResponse(res, 401, ERR_AUTH_FAILED)
         } else if (user.accessLevel !== AccessLevel.GRANTED) {
-            sendResponse(res, 403, ERR_NOT_APPROVED);
+            sendResponse(res, 403, ERR_NOT_APPROVED)
         } else {
-            (req as AuthenticatedRequest).user = user;
-            next();
+            ;(req as AuthenticatedRequest).user = user
+            next()
         }
     } catch (error) {
-        log.error(error);
-        sendResponse(res, 401, ERR_AUTH_FAILED);
+        log.error(error)
+        sendResponse(res, 401, ERR_AUTH_FAILED)
     }
-};
+}
 
 /**
  * Constructs a middleware function that requires the user to
@@ -40,28 +36,28 @@ export const requireAuthentication = async (req: Request, res: Response, next: N
  * @param {String} role The mongo ID of the role required.
  * @returns A middleware function that requires the role.
  */
-export const requireRole = (role: string) => async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    // If there isn't a user, authenticate
-    if (!req.user) {
-        return requireAuthentication(req, res, () => {
-            requireRole(role)
-            next()
-        })
+export const requireRole =
+    (role: string) => async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+        // If there isn't a user, authenticate
+        if (!req.user) {
+            return requireAuthentication(req, res, () => {
+                requireRole(role)
+                next()
+            })
+        }
+        if (!req.user.roles.includes(role)) sendResponse(res, 403, ERR_NOT_APPROVED)
+        else next()
     }
-    if (!req.user.roles.includes(role))
-        sendResponse(res, 403, ERR_NOT_APPROVED);
-    else next();
-};
 
 /**
  * Convienience middleware to require a user to be Admin before proceeding.
  */
-export const requireAdmin = requireRole(ADMIN_ID);
+export const requireAdmin = requireRole(ADMIN_ID)
 
 const getUserFromRequest = async (req: Request) => {
-    const authHeader = req?.headers?.authorization?.split(' ');
-    if (authHeader?.length !== 2) return null;
+    const authHeader = req?.headers?.authorization?.split(' ')
+    if (authHeader?.length !== 2) return null
 
-    const accessToken = authHeader[1];
-    return getUserByAccessToken(accessToken);
-};
+    const accessToken = authHeader[1]
+    return getUserByAccessToken(accessToken)
+}
