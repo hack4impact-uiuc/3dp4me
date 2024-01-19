@@ -13,7 +13,6 @@ interface ControlledSignatureCanvasProps {
  * @returns 
  */
 export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ value }) => {
-    // TODO: Maybe set key??
     const sigCanvas = useRef<ReactSignatureCanvas | null>(null)
     const [doesCanvasHaveData, setDoesCanvasHaveData] = useState(false)
 

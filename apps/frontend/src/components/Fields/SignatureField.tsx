@@ -3,13 +3,12 @@
 import { Button, Modal } from '@material-ui/core';
 import _ from 'lodash';
 import { LegacyRef, useEffect, useRef, useState } from 'react';
-import SignatureCanvas from 'react-signature-canvas';
 import './SignatureField.scss';
 import { useTranslations } from '../../hooks/useTranslations';
-import { Nullish, Signature, SignaturePoint, Path, PathValue, TranslatedString } from '@3dp4me/types';
-import type ReactSignatureCanvas from 'react-signature-canvas';
+import { Nullish, Signature, Path, PathValue, TranslatedString } from '@3dp4me/types';
 import { NewSiganatureModal, SignatureData } from '../NewSignatureModal/NewSignatureModal';
 import { ControlledSignatureCanvas } from '../ControlledSignatureCanvas/ControlledSignatureCanvas';
+import hash from 'object-hash';
 
 export interface SignatureFieldProps<T extends string> {
     displayName: string
@@ -85,7 +84,8 @@ const SignatureField = <T extends string>({
                 onSave={onNewSignature}
                 isOpen={isModalOpen}/>
             <div className="sig-container">
-                <ControlledSignatureCanvas value={value} />
+                {/* We need to keep changing the key to force a rerender */}
+                <ControlledSignatureCanvas key={hash(value || {})} value={value} />
                 <div className="sig-ctl-container">
                     <Button
                         className="sig-ctl-button doc-btn"
