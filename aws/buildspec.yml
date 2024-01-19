@@ -3,11 +3,8 @@ version: 0.2
 phases:
     build:
         commands:
-            - yarn build
+            - sh ./package-ebs.sh
 
 artifacts:
     files:
-        - '**/*'
-    base-directory: 'apps/server/elb-build'
-
-base-directory: './'
+        - 'aws/build.zip'
