@@ -1,11 +1,11 @@
-import { TableCell, TableRow, withStyles } from '@material-ui/core';
+import { TableCell, TableRow, withStyles } from '@material-ui/core'
 
 export const StyledTableCell = withStyles((theme) => ({
     head: {
         backgroundColor: theme.palette.common.white,
         color: theme.palette.common.black,
     },
-}))(TableCell);
+}))(TableCell)
 
 export const StyledTableRow = withStyles(() => ({
     root: {
@@ -13,4 +13,4 @@ export const StyledTableRow = withStyles(() => ({
             backgroundColor: '#f0f0f0',
         },
     },
-}))(TableRow);
+}))(TableRow)

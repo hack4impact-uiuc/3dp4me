@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types';
-import React, { KeyboardEventHandler } from 'react';
-import { Modal, RootRef } from '@material-ui/core';
+import './ErrorModal.scss'
 
-import './ErrorModal.scss';
-import WarningIcon from '../../assets/warning.svg';
-import { Nullish } from '@3dp4me/types';
+import { Nullish } from '@3dp4me/types'
+import { Modal, RootRef } from '@material-ui/core'
+import React, { KeyboardEventHandler } from 'react'
 
-const KEYCODE_SPACE = 32;
-const DEFAULT_ERROR_MSG = 'An error occurred';
+import WarningIcon from '../../assets/warning.svg'
+
+const KEYCODE_SPACE = 32
+const DEFAULT_ERROR_MSG = 'An error occurred'
 
 export interface ErrorModalProps {
     message?: Nullish<string>
@@ -19,8 +19,8 @@ const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }: ErrorModal
     // Have this for accessibility
     const onKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
         // Space bar pressed
-        if (e.keyCode === KEYCODE_SPACE) onClose();
-    };
+        if (e.keyCode === KEYCODE_SPACE) onClose()
+    }
 
     return (
         <Modal
@@ -45,7 +45,7 @@ const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }: ErrorModal
                 </div>
             </div>
         </Modal>
-    );
-};
+    )
+}
 
-export default ErrorModal;
+export default ErrorModal

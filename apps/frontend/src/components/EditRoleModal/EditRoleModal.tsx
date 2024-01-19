@@ -2,37 +2,25 @@
 /* eslint-disable no-await-in-loop */
 // More readable without this
 /* eslint-disable no-lonely-if */
-import React, { useEffect, useState } from 'react';
-import _ from 'lodash';
-import {
-    Modal,
-    FormControl,
-    InputLabel,
-    Select,
-    Button,
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
-import { trackPromise } from 'react-promise-tracker';
-import swal from 'sweetalert';
+import './EditRoleModal.scss'
 
-import { useErrorWrap } from '../../hooks/useErrorWrap';
-import TextField from '../Fields/TextField';
-import MultiSelectField from '../Fields/MultiSelectField';
-import './EditRoleModal.scss';
-import { useTranslations } from '../../hooks/useTranslations';
-import {
-    removeUserRole,
-    setUserAccess,
-    addUserRole,
-    deleteUser,
-} from '../../api/api';
-import { AccessLevel, Nullish, Role } from '@3dp4me/types';
-import { FormOption } from '../Fields/FormOption';
-import { UserRowData } from '../../utils/table-renderers';
-import { isAccessLevel } from '../../utils/access';
+import { AccessLevel, Nullish } from '@3dp4me/types'
+import { Button, FormControl, InputLabel, Modal, Select } from '@material-ui/core'
+import _ from 'lodash'
+import React, { useEffect, useState } from 'react'
+import { trackPromise } from 'react-promise-tracker'
+import swal from 'sweetalert'
+
+import { addUserRole, deleteUser, removeUserRole, setUserAccess } from '../../api/api'
+import { useErrorWrap } from '../../hooks/useErrorWrap'
+import { useTranslations } from '../../hooks/useTranslations'
+import { isAccessLevel } from '../../utils/access'
+import { FormOption } from '../Fields/FormOption'
+import MultiSelectField from '../Fields/MultiSelectField'
+import TextField from '../Fields/TextField'
 
 export interface RoleModalUser {
-    accessLevel: AccessLevel,
+    accessLevel: AccessLevel
     userId: Nullish<string>
     userName: string
     userEmail: string
@@ -56,61 +44,59 @@ const EditRoleModal = ({
     userInfo,
     allRoles,
 }: EditRoleModalProps) => {
-    const [translations, selectedLang] = useTranslations();
-    const [userData, setUserData] = useState(_.cloneDeep(userInfo));
-    const errorWrap = useErrorWrap();
+    const [translations, selectedLang] = useTranslations()
+    const [userData, setUserData] = useState(_.cloneDeep(userInfo))
+    const errorWrap = useErrorWrap()
 
     useEffect(() => {
-        setUserData(_.cloneDeep(userInfo));
-    }, [userInfo]);
+        setUserData(_.cloneDeep(userInfo))
+    }, [userInfo])
 
     const onRolesChange = (id: string, roles: string[]) => {
-        setUserData({ ...userData, roles });
-    };
+        setUserData({ ...userData, roles })
+    }
 
-    const onAccessChange = (event: React.ChangeEvent<{
-        name?: string | undefined;
-        value: unknown;
-    }>) => {
+    const onAccessChange = (
+        event: React.ChangeEvent<{
+            name?: string | undefined
+            value: unknown
+        }>
+    ) => {
         if (isAccessLevel(event.target.value))
-            setUserData({ ...userData, accessLevel: event.target.value });
-    };
+            setUserData({ ...userData, accessLevel: event.target.value })
+    }
 
     const onSave = async () => {
         // Update users roles
         for (let i = 0; i < allRoles.length; i++) {
-            const role = allRoles[i];
+            const role = allRoles[i]
             // If user has role
             if (userData.roles.find((r) => r === role._id)) {
                 // If user didn't have role before, make request to backend
                 if (!userInfo.roles.find((r) => r === role._id)) {
                     await errorWrap(async () => {
-                        if (userData.userId)
-                            trackPromise(addUserRole(userData.userId, role._id))
-                    });
+                        if (userData.userId) trackPromise(addUserRole(userData.userId, role._id))
+                    })
                 }
             } else {
                 // If user did have role before, make request to backend
                 if (userInfo.roles.find((r) => r === role._id)) {
                     await errorWrap(async () => {
-                        if (userData.userId)
-                            trackPromise(removeUserRole(userData.userId, role._id))
-                    });
+                        if (userData.userId) trackPromise(removeUserRole(userData.userId, role._id))
+                    })
                 }
             }
         }
 
         // Update user access level
         await errorWrap(async () => {
-            if (userData.userId)
-                trackPromise(setUserAccess(userData.userId, userData.accessLevel))
-        });
+            if (userData.userId) trackPromise(setUserAccess(userData.userId, userData.accessLevel))
+        })
 
         // Close modal and update local data
-        onClose();
-        if (userData.userId)
-            onUserEdited(userData.userId, userData.accessLevel, userData.roles);
-    };
+        onClose()
+        if (userData.userId) onUserEdited(userData.userId, userData.accessLevel, userData.roles)
+    }
 
     const onDelete = async () => {
         swal({
@@ -125,44 +111,34 @@ const EditRoleModal = ({
         }).then(async (willDelete) => {
             if (willDelete) {
                 await errorWrap(async () => {
-                    if (userData.userId)
-                        trackPromise(deleteUser(userData?.userId))
-                });
-                onClose();
+                    if (userData.userId) trackPromise(deleteUser(userData?.userId))
+                })
+                onClose()
 
-                if (userData.userId)
-                    onUserDeleted(userData.userId);
+                if (userData.userId) onUserDeleted(userData.userId)
             }
-        });
-    };
+        })
+    }
 
-    const renderAccessDropdown = () => {
-        return (
-            <Select
-                native
-                value={userData?.accessLevel}
-                onChange={onAccessChange}
-                className="access-dropdown"
-            >
-                <option value={AccessLevel.GRANTED}>
-                    {translations.accountManagement.Approved}
-                </option>
-                <option value={AccessLevel.REVOKED}>
-                    {translations.accountManagement.Revoked}
-                </option>
-                <option value={AccessLevel.PENDING}>
-                    {translations.accountManagement.Pending}
-                </option>
-            </Select>
-        );
-    };
+    const renderAccessDropdown = () => (
+        <Select
+            native
+            value={userData?.accessLevel}
+            onChange={onAccessChange}
+            className="access-dropdown"
+        >
+            <option value={AccessLevel.GRANTED}>{translations.accountManagement.Approved}</option>
+            <option value={AccessLevel.REVOKED}>{translations.accountManagement.Revoked}</option>
+            <option value={AccessLevel.PENDING}>{translations.accountManagement.Pending}</option>
+        </Select>
+    )
 
     return (
         <Modal open={isOpen} onClose={onClose} className="edit-role-modal">
             <div className="edit-role-modal-wrapper">
                 <h2>{translations.accountManagement.editAccount}</h2>
                 <TextField
-                    fieldId='username'
+                    fieldId="username"
                     className="text-field"
                     displayName={translations.accountManagement.username}
                     type="text"
@@ -170,7 +146,7 @@ const EditRoleModal = ({
                     value={userData?.userName}
                 />
                 <TextField
-                    fieldId='email'
+                    fieldId="email"
                     className="text-field"
                     displayName={translations.accountManagement.email}
                     type="text"
@@ -196,25 +172,19 @@ const EditRoleModal = ({
                         <Button className="save-user-button" onClick={onSave}>
                             {translations.accountManagement.Save}
                         </Button>
-                        <Button
-                            className="discard-user-button"
-                            onClick={onClose}
-                        >
+                        <Button className="discard-user-button" onClick={onClose}>
                             {translations.accountManagement.Discard}
                         </Button>
                     </div>
                     <div>
-                        <Button
-                            className="delete-user-button"
-                            onClick={onDelete}
-                        >
+                        <Button className="delete-user-button" onClick={onDelete}>
                             {translations.accountManagement.deleteUser}
                         </Button>
                     </div>
                 </div>
             </div>
         </Modal>
-    );
-};
+    )
+}
 
-export default EditRoleModal;
+export default EditRoleModal

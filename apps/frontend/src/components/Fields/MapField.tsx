@@ -1,22 +1,18 @@
-import _ from 'lodash';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import ReactMapGL, { MapRef, Marker } from 'react-map-gl';
-import Geocoder from 'react-map-gl-geocoder';
+import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
+import './MapField.scss'
 
-import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { useTranslations } from '../../hooks/useTranslations';
-import {
-    COORDINATES,
-    MAPBOX_TOKEN,
-    MAP_STYLE,
-    PIN_URL,
-} from '../../utils/constants';
-import './MapField.scss';
-import { MapPoint, Nullish } from '@3dp4me/types';
+import { MapPoint, Nullish } from '@3dp4me/types'
+import _ from 'lodash'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import ReactMapGL, { MapRef, Marker } from 'react-map-gl'
+import Geocoder from 'react-map-gl-geocoder'
+
+import { useTranslations } from '../../hooks/useTranslations'
+import { COORDINATES, MAP_STYLE, MAPBOX_TOKEN, PIN_URL } from '../../utils/constants'
 
 export interface MapFieldProps {
     value: Nullish<MapPoint>
-    initValue: Nullish<MapPoint>,
+    initValue: Nullish<MapPoint>
     displayName: string
     isDisabled: boolean
     onChange: (field: string, value: MapPoint) => void
@@ -47,59 +43,58 @@ const MapField = ({
             zoom: 17,
             transitionDuration: 100,
         }),
-        [initValue],
-    );
+        [initValue]
+    )
 
-    const [viewport, setViewport] = useState(initialViewport);
-    const [isDragging, setIsDragging] = useState(false);
-    const mapRef = useRef<MapRef | null>(null);
-    const translations = useTranslations()[0];
+    const [viewport, setViewport] = useState(initialViewport)
+    const [isDragging, setIsDragging] = useState(false)
+    const mapRef = useRef<MapRef | null>(null)
+    const translations = useTranslations()[0]
 
     /**
      * Conversely, updates viewport when value changed.
      * Important for automatically resetting the viewport when clicking Discard.
      */
     useEffect(() => {
-        const newViewport = _.cloneDeep(viewport);
-        newViewport.latitude = value?.latitude || COORDINATES.DEFAULT_MAP_LAT;
-        newViewport.longitude =
-            value?.longitude || COORDINATES.DEFAULT_MAP_LONG;
-        setViewport(newViewport);
-    }, [value]);
+        const newViewport = _.cloneDeep(viewport)
+        newViewport.latitude = value?.latitude || COORDINATES.DEFAULT_MAP_LAT
+        newViewport.longitude = value?.longitude || COORDINATES.DEFAULT_MAP_LONG
+        setViewport(newViewport)
+    }, [value])
 
     /**
      * Update value to the current viewport lat/long upon the end of a drag.
      * Update on drag end to minimize unnecessary network updates.
      */
     useEffect(() => {
-        if (isDragging) return;
+        if (isDragging) return
 
         const coordinates = {
             latitude: viewport?.latitude,
             longitude: viewport?.longitude,
-        };
+        }
 
-        onChange(fieldId, coordinates);
-    }, [isDragging]);
+        onChange(fieldId, coordinates)
+    }, [isDragging])
 
     const updateViewport = (newView: Viewport) => {
-        if (isDisabled) return;
+        if (isDisabled) return
 
-        setViewport(newView);
-    };
+        setViewport(newView)
+    }
 
     /**
      * Standard Geocoder method, not written by me.
      * Provides for updating viewport after selecting search result.
      */
     const handleGeocoderViewportChange = (newView: Viewport) => {
-        const geocoderDefaultOverrides = { transitionDuration: 1000 };
+        const geocoderDefaultOverrides = { transitionDuration: 1000 }
 
         return setViewport({
             ...newView,
             ...geocoderDefaultOverrides,
-        });
-    };
+        })
+    }
 
     return (
         <div className="mapStyling">
@@ -118,8 +113,8 @@ const MapField = ({
                 onViewportChange={updateViewport}
                 onLoad={() => setViewport(initialViewport)}
                 getCursor={(cursor) => {
-                    setIsDragging(cursor.isDragging);
-                    return "crosshair"
+                    setIsDragging(cursor.isDragging)
+                    return 'crosshair'
                 }}
             >
                 <Marker
@@ -154,13 +149,11 @@ const MapField = ({
             </ReactMapGL>
 
             <div className="coordinateLabel">
-                {translations.components.map.latitude}:{' '}
-                {viewport?.latitude.toFixed(4)}{' '}
-                {translations.components.map.longitude}:{' '}
-                {viewport?.longitude.toFixed(4)}
+                {translations.components.map.latitude}: {viewport?.latitude.toFixed(4)}{' '}
+                {translations.components.map.longitude}: {viewport?.longitude.toFixed(4)}
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default MapField;
+export default MapField

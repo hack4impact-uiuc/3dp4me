@@ -14,15 +14,6 @@
         "axios": "^1.6.0",
         "compose": "^0.1.2",
         "date-fns": "^2.24.0",
-        "eslint": "^8.56.0",
-        "eslint-config-airbnb": "^19.0.4",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-flowtype": "^8.0.3",
-        "eslint-plugin-import": "^2.29.1",
-        "eslint-plugin-jsx-a11y": "^6.8.0",
-        "eslint-plugin-prettier": "^5.1.2",
-        "eslint-plugin-react": "^7.33.2",
-        "eslint-plugin-react-hooks": "^4.6.0",
         "js-file-download": "^0.4.12",
         "lodash": "^4.17.20",
         "lodash.omit": "^4.5.0",
@@ -54,13 +45,9 @@
     },
     "scripts": {
         "start": "doppler run -- node_modules/.bin/react-app-rewired --max-old-space-size=4096 start",
-        "lint": "eslint --fix src -c .eslintrc.json --ext js,jsx",
-        "format": "prettier --write \"./**/*.{js,jsx,css,scss,json,md}\"",
-        "format:check": "prettier --check \"./**/*.{js,jsx,css,scss,json,md}\"",
+        "lint": "yarn lint:check --fix",
+        "lint:check": "eslint src --ext js,jsx,ts,tsx",
         "build": "webpack"
-    },
-    "eslintConfig": {
-        "extends": "react-app"
     },
     "browserslist": {
         "production": [
@@ -103,12 +90,9 @@
         "cra-template": "1.1.2",
         "css-loader": "^6.8.1",
         "dotenv-webpack": "^8.0.1",
-        "eslint-config-airbnb": "^18.2.1",
-        "eslint-config-airbnb-base": "^14.2.1",
-        "eslint-plugin-import": "^2.22.1",
+        "eslint-config-3dp4me": "*",
         "html-webpack-plugin": "^5.5.3",
         "image-webpack-loader": "^8.1.0",
-        "prettier": "^2.4.1",
         "react-app-env": "^1.2.3",
         "react-app-rewired": "^2.2.1",
         "rollup": "^4.5.0",

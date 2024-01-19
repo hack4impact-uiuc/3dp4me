@@ -1,19 +1,18 @@
-import React, { useState, useContext, MouseEventHandler } from 'react';
-import { AppBar, Toolbar } from '@material-ui/core';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import './Navbar.scss'
 
-import Logo from '../../assets/3dp4me_logo.png';
-import AccountDropdown from '../AccountDropdown/AccountDropdown';
-import { useTranslations } from '../../hooks/useTranslations';
+import { Language, Nullish } from '@3dp4me/types'
+import { AppBar, Toolbar } from '@material-ui/core'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import PropTypes from 'prop-types'
+import React, { MouseEventHandler, useContext, useState } from 'react'
+import { Link } from 'react-router-dom'
 
-import './Navbar.scss';
-import { Context } from '../../store/Store';
-
-import { useStyles } from './Navbar.style';
-import { Routes } from '../../utils/constants';
-import { Language, Nullish } from '@3dp4me/types';
+import Logo from '../../assets/3dp4me_logo.png'
+import { useTranslations } from '../../hooks/useTranslations'
+import { Context } from '../../store/Store'
+import { Routes } from '../../utils/constants'
+import AccountDropdown from '../AccountDropdown/AccountDropdown'
+import { useStyles } from './Navbar.style'
 
 export interface NavbarProps {
     username: string
@@ -21,24 +20,24 @@ export interface NavbarProps {
 }
 
 const Navbar = ({ username, userEmail }: NavbarProps) => {
-    const state = useContext(Context)[0];
-    const classes = useStyles();
-    const [translations, selectedLang] = useTranslations();
-    const [activeRoute, setActiveRoute] = useState(window.location.pathname);
-    const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & SVGSVGElement>>(null);
-    const navTranslations = translations.components.navbar;
+    const state = useContext(Context)[0]
+    const classes = useStyles()
+    const [translations, selectedLang] = useTranslations()
+    const [activeRoute, setActiveRoute] = useState(window.location.pathname)
+    const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & SVGSVGElement>>(null)
+    const navTranslations = translations.components.navbar
 
     const handleAccountClick: MouseEventHandler<SVGSVGElement> = (e) => {
-        setAnchorEl(e.currentTarget);
-    };
+        setAnchorEl(e.currentTarget)
+    }
 
     const handleAccountClose = () => {
-        setAnchorEl(null);
-    };
+        setAnchorEl(null)
+    }
 
     const renderLink = (text: string, route: Routes) => {
         // Replaced activeRoute with window.location.pathname since activeRoute defaults to '/' on page reload
-        const activeClass = activeRoute === route ? 'active' : '';
+        const activeClass = activeRoute === route ? 'active' : ''
 
         return (
             <Link
@@ -49,31 +48,28 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
             >
                 {text}
             </Link>
-        );
-    };
+        )
+    }
 
     const renderLinks = () => {
         let links = [
             renderLink(navTranslations.dashboard.navTitle, Routes.DASHBOARD),
             renderLink(navTranslations.patients.navTitle, Routes.PATIENTS),
-        ];
+        ]
 
         // If the user is admin, they can use account/dashboard management
         if (state.isAdmin) {
             links = links.concat([
-                renderLink(
-                    navTranslations.accountManagement.navTitle,
-                    Routes.ACCOUNT,
-                ),
+                renderLink(navTranslations.accountManagement.navTitle, Routes.ACCOUNT),
                 renderLink(
                     navTranslations.dashboardManagement.navTitle,
-                    Routes.DASHBOARD_MANAGEMENT,
+                    Routes.DASHBOARD_MANAGEMENT
                 ),
-            ]);
+            ])
         }
 
-        return links;
-    };
+        return links
+    }
 
     return (
         <div className="wrap-nav">
@@ -81,9 +77,7 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                 <Toolbar className={`navbar ${classes.toolBar}`}>
                     <img
                         alt="Logo"
-                        className={
-                            selectedLang === Language.AR ? 'logo-ar' : ''
-                        }
+                        className={selectedLang === Language.AR ? 'logo-ar' : ''}
                         height={32}
                         src={Logo}
                     />
@@ -114,12 +108,12 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                 </Toolbar>
             </AppBar>
         </div>
-    );
-};
+    )
+}
 
 Navbar.propTypes = {
     username: PropTypes.string.isRequired,
     userEmail: PropTypes.string.isRequired,
-};
+}
 
-export default Navbar;
+export default Navbar

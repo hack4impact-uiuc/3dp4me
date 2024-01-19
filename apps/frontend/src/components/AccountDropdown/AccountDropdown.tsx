@@ -1,24 +1,23 @@
-import React, { ChangeEvent, ReactElement, ReactNode, useContext } from 'react';
-import Menu from '@material-ui/core/Menu';
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import PropTypes from 'prop-types';
-import MenuItem from '@material-ui/core/MenuItem';
+import { Language } from '@3dp4me/types'
+import Button from '@material-ui/core/Button'
+import FormControl from '@material-ui/core/FormControl'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import PropTypes from 'prop-types'
+import React, { ChangeEvent, useContext } from 'react'
 
-import { saveLanguagePreference, signOut } from '../../aws/aws-helper';
-import { useTranslations } from '../../hooks/useTranslations';
-import { Context } from '../../store/Store';
-
-import { useStyles } from './AccountDropdown.styles';
-import { isLanguageValid } from '../../utils/language';
-import { ReducerActionType } from '../../store/Reducer';
-import { Language } from '@3dp4me/types';
+import { saveLanguagePreference, signOut } from '../../aws/aws-helper'
+import { useTranslations } from '../../hooks/useTranslations'
+import { ReducerActionType } from '../../store/Reducer'
+import { Context } from '../../store/Store'
+import { isLanguageValid } from '../../utils/language'
+import { useStyles } from './AccountDropdown.styles'
 
 export interface AccountDropdownProps {
     anchorEl: Element | ((element: Element) => Element) | null | undefined
-    handleClose: () => void,
-    username: string,
+    handleClose: () => void
+    username: string
     userEmail: string
 }
 
@@ -28,23 +27,25 @@ const AccountDropdown = ({
     username = '',
     userEmail = '',
 }: AccountDropdownProps) => {
-    const styles = useStyles();
-    const dispatch = useContext(Context)[1];
-    const [translations, selectedLang] = useTranslations();
+    const styles = useStyles()
+    const dispatch = useContext(Context)[1]
+    const [translations, selectedLang] = useTranslations()
 
-    const handleLanguageSelect = (e: ChangeEvent<{
-        name?: string | undefined;
-        value: unknown;
-    }>,) => {
-        if (typeof e.target.value !== 'string') return;
-        if (!isLanguageValid(e.target.value)) return;
+    const handleLanguageSelect = (
+        e: ChangeEvent<{
+            name?: string | undefined
+            value: unknown
+        }>
+    ) => {
+        if (typeof e.target.value !== 'string') return
+        if (!isLanguageValid(e.target.value)) return
 
-        saveLanguagePreference(e.target.value);
+        saveLanguagePreference(e.target.value)
         dispatch({
             type: ReducerActionType.SET_LANGUAGE,
             language: e.target.value,
-        });
-    };
+        })
+    }
 
     return (
         <div>
@@ -81,14 +82,14 @@ const AccountDropdown = ({
                 </div>
             </Menu>
         </div>
-    );
-};
+    )
+}
 
 AccountDropdown.propTypes = {
     handleClose: PropTypes.func.isRequired,
     username: PropTypes.string,
     userEmail: PropTypes.string,
     anchorEl: PropTypes.elementType,
-};
+}
 
-export default AccountDropdown;
+export default AccountDropdown

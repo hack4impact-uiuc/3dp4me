@@ -1,13 +1,15 @@
-import { Hub } from 'aws-amplify';
+import { Hub } from 'aws-amplify'
 
-export const AUTHENTICATED = 'AUTH';
-export const UNAUTHENTICATED = 'UNAUTH';
-export const UNDEFINED_AUTH = 'UNDEFINED';
+export const AUTHENTICATED = 'AUTH'
+export const UNAUTHENTICATED = 'UNAUTH'
+export const UNDEFINED_AUTH = 'UNDEFINED'
 
-const EVENT_SIGN_IN = 'signIn';
-const EVENT_SIGN_OUT = 'signOut';
+const EVENT_SIGN_IN = 'signIn'
+const EVENT_SIGN_OUT = 'signOut'
 
-type AuthListener = (state: typeof AUTHENTICATED | typeof UNAUTHENTICATED | typeof UNDEFINED_AUTH) => void
+type AuthListener = (
+    state: typeof AUTHENTICATED | typeof UNAUTHENTICATED | typeof UNDEFINED_AUTH
+) => void
 
 /**
  * Sets up a listener that is called every time the authentication level changes
@@ -17,14 +19,14 @@ export const setAuthListener = (listener: AuthListener) => {
     Hub.listen('auth', (data) => {
         switch (data.payload.event) {
             case EVENT_SIGN_IN:
-                listener(AUTHENTICATED);
-                break;
+                listener(AUTHENTICATED)
+                break
 
             case EVENT_SIGN_OUT:
-                listener(UNAUTHENTICATED);
-                break;
+                listener(UNAUTHENTICATED)
+                break
 
             default:
         }
-    });
-};
+    })
+}

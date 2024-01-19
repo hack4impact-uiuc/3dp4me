@@ -1,17 +1,18 @@
-import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css'
+import './Fields.scss'
 
-import 'react-phone-number-input/style.css';
-import { FLAG_URL } from '../../utils/constants';
-import './Fields.scss';
+import PhoneInput from 'react-phone-number-input'
 
-const DEFAULT_COUNTRY = 'JO';
+import { FLAG_URL } from '../../utils/constants'
+
+const DEFAULT_COUNTRY = 'JO'
 
 export interface PhoneFieldProps {
-    displayName: string;
-    isDisabled: boolean;
-    fieldId: string;
-    value?: string;
-    onChange: (field: string, value: string) => void;
+    displayName: string
+    isDisabled: boolean
+    fieldId: string
+    value?: string
+    onChange: (field: string, value: string) => void
 }
 
 const PhoneField = ({
@@ -22,8 +23,8 @@ const PhoneField = ({
     onChange,
 }: PhoneFieldProps) => {
     const sendChanges = (phone: string) => {
-        onChange(fieldId, phone);
-    };
+        onChange(fieldId, phone)
+    }
 
     return (
         <div>
@@ -37,7 +38,7 @@ const PhoneField = ({
                 value={value}
             />
         </div>
-    );
-};
+    )
+}
 
-export default PhoneField;
+export default PhoneField
