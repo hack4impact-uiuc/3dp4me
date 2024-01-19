@@ -42,13 +42,8 @@
         "@types/express-fileupload": "^1.4.4",
         "@types/lodash": "^4.14.202",
         "@types/node": "^20.9.4",
-        "eslint": "^8.54.0",
-        "eslint-config-airbnb": "^18.2.1",
-        "eslint-plugin-import": "^2.24.2",
-        "eslint-plugin-jest": "^27.6.0",
-        "eslint-plugin-jsx-a11y": "^6.4.1",
-        "eslint-plugin-react": "^7.25.2",
         "exceljs": "^4.4.0",
+        "eslint-config-3dp4me": "*",
         "jest": "^27.0.6",
         "nodemon": "^2.0.4",
         "ts-loader": "^9.5.1",
@@ -60,8 +55,8 @@
         "build": "webpack",
         "start": "tsc && doppler run -- node ./dist/src/index.js",
         "test": "cross-env S3_BUCKET_NAME=test jest --runInBand --forceExit",
-        "lint": "eslint --fix \"./**/*.{js,jsx}\" -c .eslintrc.json",
-        "lint:check": "eslint \"./**/*.{js,jsx}\" -c .eslintrc.json"
+        "lint": "eslint --fix src/**/*.ts",
+        "lint:check": "eslint src/**/*.ts"
     },
     "jest": {
         "testEnvironment": "node",

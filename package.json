@@ -4,19 +4,14 @@
     "private": "true",
     "description": "Package with the development tools for 3DP4ME (such as Prettier and Husky). Please see the individual client and api sub-packages for the actual dependencies.",
     "devDependencies": {
-        "eslint-config-airbnb": "^18.0.1",
-        "eslint-config-prettier": "^6.3.0",
-        "eslint-plugin-flowtype": "^6.0.1",
-        "eslint-plugin-import": "^2.24.2",
-        "eslint-plugin-jsx-a11y": "^6.2.3",
-        "eslint-plugin-prettier": "^4.0.0",
-        "eslint-plugin-react": "^7.25.2",
-        "eslint-plugin-react-hooks": "^4.2.0",
-        "prettier": "^2.4.1",
+        "syncpack": "^12.3.0",
         "turbo": "^1.11.3"
     },
     "scripts": {
         "publish:production": "git branch -D production ; git push origin --delete production ; git checkout -b production && git push -u origin production && git switch -",
+        "lint": "turbo run lint && yarn eslint --ext .json --fix . && yarn sync",
+        "lint:check": "turbo run lint && yarn eslint --ext .json . && yarn syncpack check",
+        "sync": "yarn syncpack fix-mismatches && yarn syncpack format",
         "format": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,jsx,json,md}}'",
         "build": "turbo build"
     },
@@ -29,7 +24,8 @@
     },
     "homepage": "https://github.com/hack4impact-uiuc/3dp4me#readme",
     "dependencies": {
-        "eslint": "^8.54.0"
+        "eslint": "^8.54.0",
+        "json": "^11.0.0"
     },
     "workspaces": {
         "packages": [

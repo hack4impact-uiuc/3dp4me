@@ -1,0 +1,25 @@
+{
+  "name": "eslint-config-3dp4me",
+  "version": "0.0.0",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "5.41.0",
+    "@typescript-eslint/parser": "5.41.0",
+    "eslint": "8.26.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-config-turbo": "0.0.4",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jest": "26.9.0",
+    "eslint-plugin-json-format": "^2.0.1",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0"
+  },
+  "main": "index.js",
+  "private": true,
+  "repository": "ShapeCI/shapeci.git"
+}
