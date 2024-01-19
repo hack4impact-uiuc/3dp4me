@@ -50,7 +50,7 @@ module.exports = {
         'import/no-extraneous-dependencies': 'off',
         'no-unused-vars': 'off',
         'no-shadow': 'off',
-        '@typescript-eslint/no-shadow': ['error'],
+        '@typescript-eslint/no-shadow': ['error', { allow: ['_'] }],
         'unused-imports/no-unused-imports': 'error',
         'import/prefer-default-export': 'off',
         'import/no-unresolved': 'off',

@@ -1,7 +1,7 @@
 import './NavTabs.scss'
 
 import { Box, Tab, Tabs } from '@material-ui/core'
-import React, { ChangeEvent } from 'react'
+import React from 'react'
 
 export interface NavTabsProps {
     value: string
@@ -11,7 +11,8 @@ export interface NavTabsProps {
 }
 
 const NavTabs = ({ value, setValue, labels, labelValues }: NavTabsProps) => {
-    const handleChange = (event: ChangeEvent<{}>, newValue: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleChange = (_: any, newValue: string) => {
         setValue(newValue)
     }
 

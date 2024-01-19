@@ -1,6 +1,5 @@
 import { Button, Modal } from '@material-ui/core'
 import { FC, useRef } from 'react'
-import SignatureCanvas from 'react-signature-canvas'
 import ReactSignatureCanvas from 'react-signature-canvas'
 import SignaturePad from 'signature_pad'
 
@@ -48,7 +47,7 @@ export const NewSiganatureModal: FC<NewSignatureModalProps> = ({ isOpen, onSave,
     return (
         <Modal open={isOpen} className="signature-modal">
             <div>
-                <SignatureCanvas
+                <ReactSignatureCanvas
                     ref={canvasRef}
                     canvasProps={{
                         className: 'signature-canvas',

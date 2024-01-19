@@ -1,4 +1,4 @@
-import { FieldType, Language, Patient } from '@3dp4me/types'
+import { FieldType, Language as Lang, Patient } from '@3dp4me/types'
 
 import { RoleForTable, UserForTable } from '../pages/AccountManagement/AccountManagment'
 import translations from '../translations.json'
@@ -59,7 +59,7 @@ export type AnyFieldType = FieldType | DisplayFieldType
  * List of headers that every per step table has. These are
  * the leftmost columns on the dashboard screen.
  */
-export const getStepDashboardHeaders = (langKey: Language) => {
+export const getStepDashboardHeaders = (langKey: Lang) => {
     const t = translations[langKey].tableHeaders
 
     return [
@@ -85,7 +85,7 @@ export const PATIENTS_BY_STEP_TABLE_ROW_DATA: ColumnMetadata<Patient>[] = [
  * List of headers that every patient table has. These are
  * the leftmost columns on the 'all patients' screen.
  */
-export const getPatientDashboardHeaders = (langKey: Language): Header<Patient>[] => {
+export const getPatientDashboardHeaders = (langKey: Lang): Header<Patient>[] => {
     const t = translations[langKey].tableHeaders
 
     return [
@@ -113,7 +113,7 @@ export const ALL_PATIENT_DASHBOARD_ROW_DATA: ColumnMetadata<Patient>[] = [
  * List of headers that the user table has. These are
  * the columns on the 'manage users' screen.
  */
-export const getUserTableHeaders = (langKey: Language): Header<UserForTable>[] => {
+export const getUserTableHeaders = (langKey: Lang): Header<UserForTable>[] => {
     const t = translations[langKey].tableHeaders
 
     return [
@@ -128,7 +128,7 @@ export const getUserTableHeaders = (langKey: Language): Header<UserForTable>[] =
  * List of headers that the role table has. These are
  * the columns on the 'manage roles' screen.
  */
-export const getRoleTableHeaders = (langKey: Language): Header<RoleForTable>[] => {
+export const getRoleTableHeaders = (langKey: Lang): Header<RoleForTable>[] => {
     const t = translations[langKey].tableHeaders
 
     return [{ title: t.name, sortKey: 'Name' }]

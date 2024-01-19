@@ -27,7 +27,7 @@ const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }: ErrorModal
             open={isOpen}
             onClose={onClose}
             // TODO: Is this an issue
-            // @ts-ignore
+            // @ts-expect-error we need to update this logic
             container={() => RootRef.current}
         >
             <div

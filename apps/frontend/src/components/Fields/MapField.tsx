@@ -118,15 +118,15 @@ const MapField = ({
                 }}
             >
                 <Marker
-                    latitude={viewport?.latitude}
-                    longitude={viewport?.longitude}
-                    offsetLeft={viewport?.zoom * -2.5}
-                    offsetTop={viewport?.zoom * -5}
+                    latitude={viewport.latitude}
+                    longitude={viewport.longitude}
+                    offsetLeft={viewport.zoom * -2.5}
+                    offsetTop={viewport.zoom * -5}
                 >
                     <img
                         src={PIN_URL}
-                        width={viewport?.zoom * 2}
-                        height={viewport?.zoom * 2.5}
+                        width={viewport.zoom * 2}
+                        height={viewport.zoom * 2.5}
                         alt="Location marker"
                     />
                 </Marker>

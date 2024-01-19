@@ -23,10 +23,10 @@ export const getPatientName = (patient: Patient) => {
  * @returns The sorted metadata.
  */
 export const sortMetadata = (stepMetaData: Step[]) => {
-    const data = stepMetaData?.sort((a, b) => a?.stepNumber - b?.stepNumber)
+    const data = stepMetaData?.sort((a, b) => a.stepNumber - b.stepNumber)
 
     data.forEach((stepData) => {
-        stepData.fields.sort((a, b) => a?.fieldNumber - b?.fieldNumber)
+        stepData.fields.sort((a, b) => a.fieldNumber - b.fieldNumber)
         sortSubFields(stepData?.fields)
     })
 
@@ -40,7 +40,7 @@ const sortSubFields = (fields: Field[]) => {
     if (!fields) return
 
     fields.forEach((field) => {
-        field.subFields.sort((a, b) => a?.fieldNumber - b?.fieldNumber)
+        field.subFields.sort((a, b) => a.fieldNumber - b.fieldNumber)
         sortSubFields(field?.subFields)
     })
 }
