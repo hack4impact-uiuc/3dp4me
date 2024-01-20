@@ -1,4 +1,4 @@
-name: lint
+name: build
 
 on:
   push:
@@ -23,5 +23,5 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Run linter
-        run: yarn lint:check
+      - name: Build
+        run: yarn build
