@@ -31,6 +31,7 @@ import { PatientModel } from '../../models/Patient';
 import { Patient, Field, File } from '@3dp4me/types';
 import { StepModel } from '../../models/Metadata';
 import { HydratedDocument } from 'mongoose';
+import { Readable } from 'stream';
 
 export const router = express.Router();
 /**
@@ -180,7 +181,18 @@ router.get(
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
         )
 
-        res.write(s3Stream)
+
+        // Setup callbacks for stream error and stream close
+        s3Stream
+            .on('error', (err) => {
+                res.json(`S3 Error:${err}`);
+            })
+            .on('close', () => {
+                res.end();
+            });
+
+        // Pipe the stream to the client
+        s3Stream.pipe(res);
     }),
 );
 

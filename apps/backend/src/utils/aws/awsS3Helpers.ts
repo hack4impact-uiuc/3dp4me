@@ -6,6 +6,7 @@ import {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
 } from './awsExports';
+import { Readable } from 'stream';
 
 // S3 Credential Object created with access id and secret key
 const S3_CREDENTIALS = {
@@ -33,7 +34,7 @@ export const uploadFile = async (content: string, remoteFileName: string) => {
  * Downloads file from the S3 bucket
  * @param objectKey The key as defined in S3 console. Usually is just the full path of the file.
  */
-export const downloadFile = async (objectKey: string) => {
+export const downloadFile = async (objectKey: string): Promise<Readable> => {
     const params = {
         Bucket: S3_BUCKET_NAME,
         Key: objectKey,
@@ -45,7 +46,8 @@ export const downloadFile = async (objectKey: string) => {
     if (!stream)
         throw new Error(`No read stream for ${objectKey}`);
 
-    return stream.transformToWebStream()
+    const webstream = stream.transformToWebStream()
+    return  Readable.fromWeb(webstream as any)
 };
 
 export const deleteFile = async (filePath: string) => {
