@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk';
+import { AdminGetUserCommandOutput, CognitoIdentityProvider, GetUserCommandOutput } from '@aws-sdk/client-cognito-identity-provider';
 import log from 'loglevel';
 
 import { ADMIN_ID } from '../constants';
@@ -11,15 +11,17 @@ import {
     ACCESS_KEY_ID,
     SECRET_ACCESS_KEY,
 } from './awsExports'
-import { AdminGetUserResponse, GetUserResponse } from 'aws-sdk/clients/cognitoidentityserviceprovider';
 import { AuthenticatedUser } from './types';
 import { AccessLevel } from '@3dp4me/types';
 
 export const getIdentityProvider = () =>
-    new AWS.CognitoIdentityServiceProvider({
+    new CognitoIdentityProvider({
         region: COGNITO_REGION,
-        accessKeyId: ACCESS_KEY_ID,
-        secretAccessKey: SECRET_ACCESS_KEY,
+
+        credentials: {
+            accessKeyId: ACCESS_KEY_ID,
+            secretAccessKey: SECRET_ACCESS_KEY,
+        },
     });
 
 /**
@@ -52,7 +54,7 @@ export const getUserByAccessToken = async (accessToken: string): Promise<Authent
  * @param {Object} user The user returned by AWS Cognito.
  * @returns An array of strings, where each entry is a role ID. Defaults to empty array of no roles.
  */
-export const parseUserSecurityRoles = (user: AdminGetUserResponse) => {
+export const parseUserSecurityRoles = (user: AdminGetUserCommandOutput) => {
     const securityRolesString = user?.UserAttributes?.find(
         (attribute) => attribute.Name === SECURITY_ROLE_ATTRIBUTE_NAME,
     );
@@ -80,14 +82,14 @@ const getUserByUsername = async (username: string) => {
     };
 
     const identityProvider = getIdentityProvider();
-    let user = null;
     try {
-        user = await identityProvider.adminGetUser(params).promise();
+        const user = await identityProvider.adminGetUser(params);
+        return user
     } catch (e) {
         log.error(e);
     }
 
-    return user;
+    return null;
 };
 
 const getUser = async (accessToken: string) => {
@@ -96,11 +98,11 @@ const getUser = async (accessToken: string) => {
     };
 
     const region = { region: COGNITO_REGION };
-    const cip = new AWS.CognitoIdentityServiceProvider(region);
-    return cip.getUser(params).promise();
+    const cip = new CognitoIdentityProvider(region);
+    return cip.getUser(params);
 };
 
-const parseUserAccess = (user: GetUserResponse): AccessLevel => {
+const parseUserAccess = (user: GetUserCommandOutput): AccessLevel => {
     const accessLevelString = user?.UserAttributes?.find(
         (attribute) => attribute.Name === SECURITY_ACCESS_ATTRIBUTE_NAME,
     )?.Value;
@@ -109,7 +111,7 @@ const parseUserAccess = (user: GetUserResponse): AccessLevel => {
     return accessLevelString as AccessLevel;
 };
 
-const parseUserName = (user: AdminGetUserResponse) => {
+const parseUserName = (user: AdminGetUserCommandOutput) => {
     const userNameString = user?.UserAttributes?.find(
         (attribute) => attribute.Name === 'name',
     )?.Value;
@@ -119,7 +121,7 @@ const parseUserName = (user: AdminGetUserResponse) => {
     return userNameString;
 };
 
-const parseUserEmail = (user: AdminGetUserResponse) => {
+const parseUserEmail = (user: AdminGetUserCommandOutput) => {
     const name = user?.UserAttributes?.find(
         (attribute) => attribute.Name === 'email',
     );

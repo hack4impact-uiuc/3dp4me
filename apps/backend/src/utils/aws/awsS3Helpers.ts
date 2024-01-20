@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk';
+import { S3 } from '@aws-sdk/client-s3';
 
 import {
     S3_BUCKET_NAME,
@@ -26,7 +26,7 @@ export const uploadFile = async (content: string, remoteFileName: string) => {
     };
 
     const s3 = getS3(S3_CREDENTIALS);
-    await s3.putObject(params).promise();
+    await s3.putObject(params);
 };
 
 /**
@@ -52,7 +52,7 @@ export const deleteFile = async (filePath: string) => {
     };
 
     const s3 = getS3(S3_CREDENTIALS);
-    await s3.deleteObject(params).promise();
+    await s3.deleteObject(params);
 };
 
 /**
@@ -69,7 +69,7 @@ export const deleteFolder = async (folderName: string) => {
     const s3 = getS3(S3_CREDENTIALS);
 
     // Gets up to 1000 files that need to be deleted
-    const listedObjects = await s3.listObjectsV2(params).promise();
+    const listedObjects = await s3.listObjectsV2(params);
     if (listedObjects.Contents?.length === 0) return;
 
     const deleteParams = {
@@ -84,7 +84,7 @@ export const deleteFolder = async (folderName: string) => {
     });
 
     // Deletes the files from S3
-    await s3.deleteObjects(deleteParams).promise();
+    await s3.deleteObjects(deleteParams);
 
     // If there are more than 1000 objects that need to be deleted from the folder
     if (listedObjects.IsTruncated)
@@ -92,9 +92,12 @@ export const deleteFolder = async (folderName: string) => {
 };
 
 function getS3(credentials: typeof S3_CREDENTIALS) {
-    const s3 = new AWS.S3({
-        accessKeyId: credentials.accessKeyId,
-        secretAccessKey: credentials.secretAccessKey,
+    const s3 = new S3({
+        credentials: {
+            accessKeyId: credentials.accessKeyId,
+            secretAccessKey: credentials.secretAccessKey,
+        },
+
         region: S3_REGION,
     });
 
