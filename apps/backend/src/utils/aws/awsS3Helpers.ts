@@ -33,16 +33,19 @@ export const uploadFile = async (content: string, remoteFileName: string) => {
  * Downloads file from the S3 bucket
  * @param objectKey The key as defined in S3 console. Usually is just the full path of the file.
  */
-export const downloadFile = (objectKey: string) => {
+export const downloadFile = async (objectKey: string) => {
     const params = {
         Bucket: S3_BUCKET_NAME,
         Key: objectKey,
     };
 
     const s3 = getS3(S3_CREDENTIALS);
-    const object = s3.getObject(params);
+    const object = await s3.getObject(params);
+    const stream = object.Body;
+    if (!stream)
+        throw new Error(`No read stream for ${objectKey}`);
 
-    return object;
+    return stream.transformToWebStream()
 };
 
 export const deleteFile = async (filePath: string) => {

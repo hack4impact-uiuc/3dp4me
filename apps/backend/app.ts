@@ -1,5 +1,4 @@
 import "express-async-errors"
-import "./src/utils/aws/awsSetup"
 import path from "path"
 import { router } from "./src/routes"
 

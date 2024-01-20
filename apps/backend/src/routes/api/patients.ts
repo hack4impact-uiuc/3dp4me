@@ -176,21 +176,11 @@ router.get(
         }
 
         // Open a stream from the S3 bucket
-        const s3Stream = downloadFile(
+        const s3Stream = await downloadFile(
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
-        ).createReadStream();
+        )
 
-        // Setup callbacks for stream error and stream close
-        s3Stream
-            .on('error', (err) => {
-                res.json(`S3 Error:${err}`);
-            })
-            .on('close', () => {
-                res.end();
-            });
-
-        // Pipe the stream to the client
-        s3Stream.pipe(res);
+        res.write(s3Stream)
     }),
 );
 
