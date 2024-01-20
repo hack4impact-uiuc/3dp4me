@@ -17,6 +17,7 @@
   "repository": "hack4impact-uiuc/3dp4me.git",
   "scripts": {
     "build": "turbo build",
+    "test": "turbo test",
     "format": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,jsx,json,md}}'",
     "lint": "turbo run lint && yarn eslint --ext .json --fix . && yarn sync",
     "lint:check": "turbo run lint && yarn eslint --ext .json .",
