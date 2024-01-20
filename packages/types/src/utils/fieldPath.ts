@@ -9,7 +9,7 @@ type DoubleDecrease<T extends number> = DecreaseDepth<DecreaseDepth<T>>
 export type StepPathToField = PathToField<`fields`>
 export type PathToField<
     T extends string,
-    D extends number = DoubleDecrease<MaxRecursionDepth>,
+    D extends number = DoubleDecrease<MaxRecursionDepth>
 > = D extends never
     ? never
     : T | `${T}[${number}].subFields` | PathToField<`${T}[${number}].subFields`, DoubleDecrease<D>>

@@ -29,8 +29,11 @@ export const getValidAdjacentElement = <T extends Deletable>(
     return prevNextIndex
 }
 
-type ArrayAtPath<T extends any[], P extends string> =
-    T extends Array<infer U> ? (P extends keyof U ? T : never) : never
+type ArrayAtPath<T extends any[], P extends string> = T extends Array<infer U>
+    ? P extends keyof U
+        ? T
+        : never
+    : never
 
 // Swaps the value of two elements in an array given their indices and attribute key
 export const swapValuesInArrayByKey = <T extends any[], P extends string>(

@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "bugs": "https://github.com/hack4impact-uiuc/3dp4me/issues",
   "dependencies": {
-    "eslint": "^8.56.0",
     "json": "^11.0.0"
   },
   "devDependencies": {
@@ -17,12 +16,11 @@
   "repository": "hack4impact-uiuc/3dp4me.git",
   "scripts": {
     "build": "turbo build",
-    "test": "turbo test",
-    "format": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,jsx,json,md}}'",
     "lint": "turbo run lint && yarn eslint --ext .json --fix . && yarn sync",
     "lint:check": "turbo run lint && yarn eslint --ext .json .",
     "publish:production": "git branch -D production ; git push origin --delete production ; git checkout -b production && git push -u origin production && git switch -",
-    "sync": "yarn syncpack fix-mismatches && yarn syncpack format"
+    "sync": "yarn syncpack fix-mismatches && yarn syncpack format",
+    "test": "turbo test"
   },
   "workspaces": {
     "packages": [

@@ -142,8 +142,10 @@ const StepManagementContent = ({
     }
 
     function getPathToSubfields(fieldRoot: StepPathToField, fieldNumber: number): StepPathToField {
-        const root: PathToField<`fields`, MaxRecursionDepth> =
-            `${fieldRoot}[${getFieldIndexGivenFieldNumber(fieldRoot, fieldNumber)}].subFields`
+        const root: PathToField<
+            `fields`,
+            MaxRecursionDepth
+        > = `${fieldRoot}[${getFieldIndexGivenFieldNumber(fieldRoot, fieldNumber)}].subFields`
 
         // Have to cheat a little here with the type. Since we can technically recurse forever,
         // we have to force the case to StepPathToField which has a recursion depth 1 less than

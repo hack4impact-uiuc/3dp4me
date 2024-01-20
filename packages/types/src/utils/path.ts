@@ -23,14 +23,14 @@ export type MaxRecursionDepth = 12
 export type Path<T, D extends number = MaxRecursionDepth> = D extends never
     ? never
     : T extends (infer A)[]
-      ? `[${number}]` | `[${number}]${WithSeparator<A, Path<A, DecreaseDepth<D>>>}`
-      : T extends object
-        ? {
-              [K in keyof T]: K extends string | number
-                  ? `${K}` | `${K}${WithSeparator<T[K], Path<T[K], DecreaseDepth<D>>>}`
-                  : never
-          }[keyof T]
-        : never
+    ? `[${number}]` | `[${number}]${WithSeparator<A, Path<A, DecreaseDepth<D>>>}`
+    : T extends object
+    ? {
+          [K in keyof T]: K extends string | number
+              ? `${K}` | `${K}${WithSeparator<T[K], Path<T[K], DecreaseDepth<D>>>}`
+              : never
+      }[keyof T]
+    : never
 
 type WithSeparator<T, P extends string> = T extends any[] ? P : `.${P}`
 
@@ -41,20 +41,20 @@ type WithSeparator<T, P extends string> = T extends any[] ? P : `.${P}`
 export type PathValue<T, P = Path<T>> = P extends keyof T
     ? T[P]
     : P extends `${infer K}.${infer Rest}`
-      ? PathValue<PathValue<T, K>, Rest>
-      : P extends `${infer K}[${number}]`
-        ? K extends keyof T
-            ? T[K] extends (infer A)[]
-                ? A
-                : never
+    ? PathValue<PathValue<T, K>, Rest>
+    : P extends `${infer K}[${number}]`
+    ? K extends keyof T
+        ? T[K] extends (infer A)[]
+            ? A
             : never
-        : P extends `${infer K}[${number}].${infer Rest}`
-          ? K extends keyof T
-              ? T[K] extends (infer A)[]
-                  ? PathValue<A, Rest>
-                  : never
-              : never
-          : never
+        : never
+    : P extends `${infer K}[${number}].${infer Rest}`
+    ? K extends keyof T
+        ? T[K] extends (infer A)[]
+            ? PathValue<A, Rest>
+            : never
+        : never
+    : never
 
 /**
  * This is just a helper type. In the below types, it's impossible to specify all paths for a recursive
@@ -63,25 +63,25 @@ export type PathValue<T, P = Path<T>> = P extends keyof T
 export type DecreaseDepth<T extends number> = T extends 1
     ? never
     : T extends 2
-      ? 1
-      : T extends 3
-        ? 2
-        : T extends 4
-          ? 3
-          : T extends 5
-            ? 4
-            : T extends 6
-              ? 5
-              : T extends 7
-                ? 6
-                : T extends 8
-                  ? 7
-                  : T extends 9
-                    ? 8
-                    : T extends 10
-                      ? 9
-                      : T extends 11
-                        ? 10
-                        : T extends 12
-                          ? 11
-                          : never
+    ? 1
+    : T extends 3
+    ? 2
+    : T extends 4
+    ? 3
+    : T extends 5
+    ? 4
+    : T extends 6
+    ? 5
+    : T extends 7
+    ? 6
+    : T extends 8
+    ? 7
+    : T extends 9
+    ? 8
+    : T extends 10
+    ? 9
+    : T extends 11
+    ? 10
+    : T extends 12
+    ? 11
+    : never

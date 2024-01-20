@@ -1,9 +1,9 @@
+import { Nullish } from '@3dp4me/types'
 import { Request, Response } from 'express'
 import { HydratedDocument, Model } from 'mongoose'
 
 import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants'
 import { queryParamToNum, queryParamToString } from './request'
-import { Nullish } from '@3dp4me/types'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RespData = Record<string, any>
@@ -15,7 +15,12 @@ type RespData = Record<string, any>
  * @param {String} message The message to send.
  * @param {Object} data The optional data to send back.
  */
-export const sendResponse = (res: Response, code: number, message: string, data?: Nullish<RespData | number>) =>
+export const sendResponse = (
+    res: Response,
+    code: number,
+    message: string,
+    data?: Nullish<RespData | number>
+) =>
     res.status(code).json({
         success: isCodeSuccessful(code),
         message,
