@@ -1,5 +1,5 @@
-// @ts-nocheck
 /* eslint-disable */
+// @ts-nocheck
 
 import translations from '../../translations.json';
 import MicRecorder from 'mic-recorder-to-mp3';

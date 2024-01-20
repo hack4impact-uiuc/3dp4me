@@ -1,27 +1,28 @@
-import './EditFieldModal.scss';
-import React, { useState, useEffect, ReactNode, ChangeEvent } from 'react';
+import './EditFieldModal.scss'
+
+import { Field, FieldType, Language, TranslatedString, Unsaved } from '@3dp4me/types'
 import {
     Button,
     Checkbox,
+    FormControl,
+    FormControlLabel,
+    InputBase,
     Modal,
     NativeSelect,
     withStyles,
-    InputBase,
-    FormControl,
-    FormControlLabel,
-} from '@material-ui/core';
-import _ from 'lodash';
-import swal from 'sweetalert';
+} from '@material-ui/core'
+import _ from 'lodash'
+import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react'
+import swal from 'sweetalert'
 
-import MultiSelectField from '../Fields/MultiSelectField';
-import CustomSwitch from '../CustomSwitch/CustomSwitch';
-import { ADMIN_ID } from '../../utils/constants';
-import LanguageInput from '../LanguageInput/LanguageInput';
-import { useTranslations } from '../../hooks/useTranslations';
-import { validateField } from '../../utils/fields';
-import { useErrorWrap } from '../../hooks/useErrorWrap';
-import { Field, FieldType, Language, QuestionOption, TranslatedString, Unsaved } from '@3dp4me/types';
-import { FormOption } from '../Fields/FormOption';
+import { useErrorWrap } from '../../hooks/useErrorWrap'
+import { useTranslations } from '../../hooks/useTranslations'
+import { ADMIN_ID } from '../../utils/constants'
+import { validateField } from '../../utils/fields'
+import CustomSwitch from '../CustomSwitch/CustomSwitch'
+import { FormOption } from '../Fields/FormOption'
+import MultiSelectField from '../Fields/MultiSelectField'
+import LanguageInput from '../LanguageInput/LanguageInput'
 
 export interface EditFieldModalProps {
     isOpen: boolean
@@ -38,37 +39,35 @@ const EditFieldModal = ({
     allRoles,
     onEditField,
 }: EditFieldModalProps) => {
-    const [translations, selectedLang] = useTranslations();
-    const [fieldType, setFieldType] = useState(FieldType.STRING);
-    const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-    const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false);
-    const [displayName, setDisplayName] = useState({ EN: '', AR: '' });
-    const [options, setOptions] = useState<TranslatedString[]>([]);
-    const [isHidden, setIsHidden] = useState(false);
+    const [translations, selectedLang] = useTranslations()
+    const [fieldType, setFieldType] = useState(FieldType.STRING)
+    const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+    const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false)
+    const [displayName, setDisplayName] = useState({ EN: '', AR: '' })
+    const [options, setOptions] = useState<TranslatedString[]>([])
+    const [isHidden, setIsHidden] = useState(false)
 
-    const errorWrap = useErrorWrap();
+    const errorWrap = useErrorWrap()
 
     useEffect(() => {
-        setFieldType(initialData.fieldType);
-        setIsVisibleOnDashboard(initialData.isVisibleOnDashboard);
-        setDisplayName(initialData.displayName);
-        setIsHidden(initialData.isHidden);
+        setFieldType(initialData.fieldType)
+        setIsVisibleOnDashboard(initialData.isVisibleOnDashboard)
+        setDisplayName(initialData.displayName)
+        setIsHidden(initialData.isHidden)
 
-        const initialRoles = initialData.readableGroups;
+        const initialRoles = initialData.readableGroups
 
         // Automatically select the admin role
         if (initialRoles.indexOf(ADMIN_ID) === -1) {
-            initialRoles.push(ADMIN_ID);
+            initialRoles.push(ADMIN_ID)
         }
 
-        setSelectedRoles(initialRoles);
+        setSelectedRoles(initialRoles)
 
-        const formattedOptions = initialData.options.map((option) => {
-            return option.Question;
-        });
+        const formattedOptions = initialData.options.map((option) => option.Question)
 
-        setOptions(formattedOptions);
-    }, [initialData, isOpen]);
+        setOptions(formattedOptions)
+    }, [initialData, isOpen])
 
     const BootstrapInput = withStyles((theme) => ({
         root: {
@@ -83,10 +82,7 @@ const EditFieldModal = ({
             border: '1px solid #ced4da',
             fontSize: 16,
             padding: '10px 26px 10px 12px',
-            transition: theme.transitions.create([
-                'border-color',
-                'box-shadow',
-            ]),
+            transition: theme.transitions.create(['border-color', 'box-shadow']),
             // Use the system font instead of the default Roboto font.
             '&:focus': {
                 borderRadius: 4,
@@ -97,77 +93,73 @@ const EditFieldModal = ({
                 backgroundColor: '#dedffb',
             },
         },
-    }))(InputBase);
+    }))(InputBase)
 
     const onRolesChange = (id: string, roles: string[]) => {
-        setSelectedRoles(roles);
-    };
+        setSelectedRoles(roles)
+    }
 
     const addOption = () => {
-        const updatedOptions = _.cloneDeep(options);
-        updatedOptions.push({ EN: '', AR: '' });
-        setOptions(updatedOptions);
-    };
+        const updatedOptions = _.cloneDeep(options)
+        updatedOptions.push({ EN: '', AR: '' })
+        setOptions(updatedOptions)
+    }
 
     const updateOptionField = (index: number, val: string, language: Language) => {
-        const updatedOptions = _.cloneDeep(options);
-        updatedOptions[index][language] = val;
-        setOptions(updatedOptions);
-    };
+        const updatedOptions = _.cloneDeep(options)
+        updatedOptions[index][language] = val
+        setOptions(updatedOptions)
+    }
 
     const moveOption = (currIndex: number, newIndex: number) => {
         if (newIndex >= 0 && newIndex < options.length) {
-            const updatedOptions = _.cloneDeep(options);
-            const removedChoice = updatedOptions.splice(currIndex, 1)[0];
-            updatedOptions.splice(newIndex, 0, removedChoice);
-            setOptions(updatedOptions);
+            const updatedOptions = _.cloneDeep(options)
+            const removedChoice = updatedOptions.splice(currIndex, 1)[0]
+            updatedOptions.splice(newIndex, 0, removedChoice)
+            setOptions(updatedOptions)
         }
-    };
+    }
 
     const deleteOption = (index: number) => {
-        const updatedOptions = _.cloneDeep(options);
-        updatedOptions.splice(index, 1);
-        setOptions(updatedOptions);
-    };
+        const updatedOptions = _.cloneDeep(options)
+        updatedOptions.splice(index, 1)
+        setOptions(updatedOptions)
+    }
 
     const generateOptions = () => {
-        const choices = [];
+        const choices = []
         for (let i = 0; i < options.length; i++) {
             choices.push(
                 <div>
-                    <span>
-                        {`${translations.components.swal.field.option} ${
-                            i + 1
-                        }`}
-                    </span>
+                    <span>{`${translations.components.swal.field.option} ${i + 1}`}</span>
                     <LanguageInput
-                        fieldKey='NewOption'
+                        fieldKey="NewOption"
                         fieldValues={{ EN: options[i].EN, AR: options[i].AR }}
                         handleFieldChange={(value, language) => {
-                            updateOptionField(i, value, language);
+                            updateOptionField(i, value, language)
                         }}
                         onDelete={() => {
-                            deleteOption(i);
+                            deleteOption(i)
                         }}
                         onUpPressed={() => {
-                            moveOption(i, i - 1);
+                            moveOption(i, i - 1)
                         }}
                         onDownPressed={() => {
-                            moveOption(i, i + 1);
+                            moveOption(i, i + 1)
                         }}
                     />
-                </div>,
-            );
+                </div>
+            )
         }
-        return <div>{choices}</div>;
-    };
+        return <div>{choices}</div>
+    }
 
     const updateDisplayName = (value: string, language: Language) => {
-        const updatedDisplayName = _.clone(displayName);
-        updatedDisplayName[language] = value;
+        const updatedDisplayName = _.clone(displayName)
+        updatedDisplayName[language] = value
 
-        setDisplayName(updatedDisplayName);
-    };
+        setDisplayName(updatedDisplayName)
+    }
 
     const generateFields = () => {
         switch (fieldType) {
@@ -184,95 +176,83 @@ const EditFieldModal = ({
             case FieldType.SIGNATURE:
                 return (
                     <div className="edit-field-div">
-                        <span>
-                            {translations.components.swal.field.question}
-                        </span>
+                        <span>{translations.components.swal.field.question}</span>
                         <LanguageInput
-                            fieldKey='FieldTitle'
+                            fieldKey="FieldTitle"
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
-                                updateDisplayName(value, language);
+                                updateDisplayName(value, language)
                             }}
                         />
                     </div>
-                );
+                )
             case FieldType.RADIO_BUTTON:
                 return (
                     <div className="edit-field-div">
-                        <span>
-                            {translations.components.swal.field.question}
-                        </span>
+                        <span>{translations.components.swal.field.question}</span>
                         <LanguageInput
-                            fieldKey='Field Question'
+                            fieldKey="Field Question"
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
-                                updateDisplayName(value, language);
+                                updateDisplayName(value, language)
                             }}
                         />
-                        <Button
-                            className="add-option-button"
-                            onClick={addOption}
-                        >
-                            {
-                                translations.components.swal.field.buttons
-                                    .addChoice
-                            }
+                        <Button className="add-option-button" onClick={addOption}>
+                            {translations.components.swal.field.buttons.addChoice}
                         </Button>
                         {generateOptions()}
                     </div>
-                );
+                )
             case FieldType.DIVIDER:
                 return (
                     <div className="edit-field-div">
-                        <span>
-                            {translations.components.swal.field.dividerTitle}
-                        </span>
+                        <span>{translations.components.swal.field.dividerTitle}</span>
                         <LanguageInput
-                            fieldKey='Field Question'
+                            fieldKey="Field Question"
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
-                                updateDisplayName(value, language);
+                                updateDisplayName(value, language)
                             }}
                         />
                     </div>
-                );
+                )
             case FieldType.HEADER:
                 return (
                     <div className="edit-field-div">
-                        <span>
-                            {translations.components.swal.field.headerTitle}
-                        </span>
+                        <span>{translations.components.swal.field.headerTitle}</span>
                         <LanguageInput
-                            fieldKey='Field Question'
+                            fieldKey="Field Question"
                             fieldValues={displayName}
                             handleFieldChange={(value, language) => {
-                                updateDisplayName(value, language);
+                                updateDisplayName(value, language)
                             }}
                         />
                     </div>
-                );
+                )
             default:
-                return <p>This field is not yet supported</p>;
+                return <p>This field is not yet supported</p>
         }
-    };
+    }
 
     const generateFieldDropdownOptions = () => {
-        const fieldDropdownOptions: ReactNode[] = [];
+        const fieldDropdownOptions: ReactNode[] = []
         Object.values(FieldType).forEach((value) => {
             fieldDropdownOptions.push(
                 <option key={value} value={value} className="edit-field-option">
                     {value}
-                </option>,
-            );
-        });
+                </option>
+            )
+        })
 
-        return fieldDropdownOptions;
-    };
+        return fieldDropdownOptions
+    }
 
     const getUpdatedData = () => {
-        const formattedOptions = options.map((option, index) => {
-            return { Index: index, Question: option, IsHidden: false };
-        });
+        const formattedOptions = options.map((option, index) => ({
+            Index: index,
+            Question: option,
+            IsHidden: false,
+        }))
 
         const updatedFieldData: Unsaved<Field> = {
             ...initialData,
@@ -284,40 +264,40 @@ const EditFieldModal = ({
             writableGroups: selectedRoles,
             subFields: [],
             isHidden,
-        };
+        }
 
         // Add sub fields if they exist
         if (initialData.subFields) {
-            updatedFieldData.subFields = initialData.subFields;
+            updatedFieldData.subFields = initialData.subFields
         }
 
-        return updatedFieldData;
-    };
+        return updatedFieldData
+    }
 
     const saveField = () => {
-        const newFieldData = getUpdatedData();
-        editField(newFieldData);
-    };
+        const newFieldData = getUpdatedData()
+        editField(newFieldData)
+    }
 
     const editField = (newFieldData: Unsaved<Field>) => {
         errorWrap(
             () => {
-                validateField(newFieldData);
+                validateField(newFieldData)
             },
             () => {
-                onEditField(newFieldData);
-                onModalClose();
-            },
-        );
-    };
+                onEditField(newFieldData)
+                onModalClose()
+            }
+        )
+    }
 
     const handleIsVisibleOnDashboard = (event: ChangeEvent<HTMLInputElement>) => {
-        setIsVisibleOnDashboard(event.target.checked);
-    };
+        setIsVisibleOnDashboard(event.target.checked)
+    }
 
     const onDiscard = () => {
-        onModalClose();
-    };
+        onModalClose()
+    }
 
     const onDelete = () => {
         swal({
@@ -331,39 +311,30 @@ const EditFieldModal = ({
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                const deletedFieldData = getUpdatedData();
-                deletedFieldData.isDeleted = true;
-                editField(deletedFieldData);
+                const deletedFieldData = getUpdatedData()
+                deletedFieldData.isDeleted = true
+                editField(deletedFieldData)
             }
-        });
-    };
+        })
+    }
 
     const handleHiddenFieldSwitchChange = (isChecked: boolean) => {
         // added the "not" operator because when the switch is on, we want isHidden to be false
-        setIsHidden(!isChecked);
-    };
+        setIsHidden(!isChecked)
+    }
 
-    const generateHiddenFieldSwitch = () => {
-        return (
-            <FormControlLabel
-                label=""
-                className="hidden-field-switch"
-                control={
-                    <CustomSwitch
-                        checked={!isHidden}
-                        setChecked={handleHiddenFieldSwitchChange}
-                    />
-                }
-            />
-        );
-    };
+    const generateHiddenFieldSwitch = () => (
+        <FormControlLabel
+            label=""
+            className="hidden-field-switch"
+            control={
+                <CustomSwitch checked={!isHidden} setChecked={handleHiddenFieldSwitchChange} />
+            }
+        />
+    )
 
     return (
-        <Modal
-            open={isOpen}
-            onClose={onModalClose}
-            className="edit-field-modal"
-        >
+        <Modal open={isOpen} onClose={onModalClose} className="edit-field-modal">
             <div className="edit-field-modal-wrapper">
                 <div
                     style={{
@@ -385,9 +356,7 @@ const EditFieldModal = ({
                 <div className="edit-field-title3">
                     <div>
                         <FormControl>
-                            <span>
-                                {translations.components.swal.field.fieldType}
-                            </span>
+                            <span>{translations.components.swal.field.fieldType}</span>
                             <NativeSelect
                                 id="edit-field-type-dropdown"
                                 // TODO: Check that this still works
@@ -413,18 +382,14 @@ const EditFieldModal = ({
                             disabledOptions={[ADMIN_ID]}
                         />
                     </div>
-                    <span>
-                        {translations.components.swal.field.customization}
-                    </span>
+                    <span>{translations.components.swal.field.customization}</span>
                     <div>
                         <Checkbox
                             size="medium"
                             checked={isVisibleOnDashboard}
                             onChange={handleIsVisibleOnDashboard}
                         />
-                        <span>
-                            {translations.components.swal.field.showOnDashBoard}
-                        </span>
+                        <span>{translations.components.swal.field.showOnDashBoard}</span>
                     </div>
                 </div>
                 <span className="edit-field-title3">
@@ -440,10 +405,7 @@ const EditFieldModal = ({
                     <Button onClick={saveField} className="save-field-button">
                         {translations.components.swal.field.buttons.save}
                     </Button>
-                    <Button
-                        onClick={onDiscard}
-                        className="discard-field-button"
-                    >
+                    <Button onClick={onDiscard} className="discard-field-button">
                         {translations.components.swal.field.buttons.discard}
                     </Button>
                     <Button onClick={onDelete} className="delete-field-button">
@@ -452,7 +414,7 @@ const EditFieldModal = ({
                 </div>
             </div>
         </Modal>
-    );
-};
+    )
+}
 
-export default EditFieldModal;
+export default EditFieldModal

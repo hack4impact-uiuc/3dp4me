@@ -1,9 +1,9 @@
-import { ChangeEvent, HTMLInputTypeAttribute } from 'react';
-import { TextField as Text } from '@material-ui/core';
+import { TextField as Text } from '@material-ui/core'
+import { ChangeEvent, HTMLInputTypeAttribute } from 'react'
 
 export interface TextFieldProps<T extends string> {
-    displayName:  string
-    type?: HTMLInputTypeAttribute,
+    displayName: string
+    type?: HTMLInputTypeAttribute
     isDisabled?: boolean
     fieldId: T
     value?: string
@@ -20,11 +20,11 @@ const TextField = <T extends string>({
     fieldId,
     onChange = () => {},
 }: TextFieldProps<T>) => {
-    const inputClassName = !isDisabled ? 'active-input' : 'input-field';
+    const inputClassName = !isDisabled ? 'active-input' : 'input-field'
 
     const sendChanges = (e: ChangeEvent<HTMLInputElement>) => {
-        onChange(fieldId, e.target.value);
-    };
+        onChange(fieldId, e.target.value)
+    }
 
     return (
         <div>
@@ -38,7 +38,7 @@ const TextField = <T extends string>({
                 value={value}
             />
         </div>
-    );
-};
+    )
+}
 
-export default TextField;
+export default TextField

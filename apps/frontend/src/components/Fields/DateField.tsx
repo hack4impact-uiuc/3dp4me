@@ -1,43 +1,40 @@
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import './Fields.scss';
-import { useTranslations } from '../../hooks/useTranslations';
-import { formToJSON } from 'axios';
-import { Nullish } from '@3dp4me/types';
-import { useMemo } from 'react';
+import 'react-datepicker/dist/react-datepicker.css'
+import './Fields.scss'
+
+import { Nullish } from '@3dp4me/types'
+import DatePicker from 'react-datepicker'
+
+import { useTranslations } from '../../hooks/useTranslations'
 
 export interface DateFieldProps {
     displayName: string
     isDisabled: boolean
     fieldId: string
-    value: Nullish<string>,
+    value: Nullish<string>
     onChange: (field: string, value: string) => void
 }
 
 const DateField = ({ displayName, isDisabled, fieldId, value, onChange }: DateFieldProps) => {
-    const selectedLang = useTranslations()[1];
+    const selectedLang = useTranslations()[1]
 
     const sendChanges = (date: Date) => {
-        onChange(fieldId, date.toString());
-    };
+        onChange(fieldId, date.toString())
+    }
 
-    const className = isDisabled
-        ? 'input-field datepicker'
-        : 'active-input datepicker';
-
+    const className = isDisabled ? 'input-field datepicker' : 'active-input datepicker'
 
     return (
         <div>
             <h3>{displayName}</h3>
             <DatePicker
-                selected={value ? new Date(Date.parse(value)): null}
+                selected={value ? new Date(Date.parse(value)) : null}
                 disabled={isDisabled}
                 locale={selectedLang}
                 className={className}
                 onChange={sendChanges}
             />
         </div>
-    );
-};
+    )
+}
 
-export default DateField;
+export default DateField

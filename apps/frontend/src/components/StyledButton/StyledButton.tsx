@@ -1,11 +1,10 @@
-import React, { ReactNode } from 'react';
+import './StyledButton.scss'
 
-import './StyledButton.scss';
-import { Button } from '@material-ui/core';
-import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core'
+import React, { ReactNode } from 'react'
 
-import { LANGUAGES } from '../../utils/constants';
-import { useTranslations } from '../../hooks/useTranslations';
+import { useTranslations } from '../../hooks/useTranslations'
+import { LANGUAGES } from '../../utils/constants'
 
 export interface StyledButtonProps {
     onClick: () => void
@@ -22,29 +21,22 @@ const StyledButton = ({
     children,
     isDisabled = false,
 }: StyledButtonProps) => {
-    const selectedLang = useTranslations()[1];
-    const saveBtnClassName =
-        selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button';
+    const selectedLang = useTranslations()[1]
+    const saveBtnClassName = selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button'
 
-    let className = primary
-        ? 'button-wrapper-primary'
-        : 'button-wrapper-secondary';
+    let className = primary ? 'button-wrapper-primary' : 'button-wrapper-secondary'
 
     if (danger) {
-        className = 'button-wrapper-danger';
+        className = 'button-wrapper-danger'
     }
 
     return (
         <div className={className}>
-            <Button
-                className={saveBtnClassName}
-                onClick={onClick}
-                disabled={isDisabled}
-            >
+            <Button className={saveBtnClassName} onClick={onClick} disabled={isDisabled}>
                 {children}
             </Button>
         </div>
-    );
-};
+    )
+}
 
-export { StyledButton };
+export { StyledButton }

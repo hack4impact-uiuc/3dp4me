@@ -1,7 +1,7 @@
-import omit from "lodash.omit"
-import { Nullish, Signature, SignaturePoint } from "@3dp4me/types";
-import { FC, useEffect, useRef, useState } from "react";
-import ReactSignatureCanvas from "react-signature-canvas"
+import { Nullish, Signature, SignaturePoint } from '@3dp4me/types'
+import omit from 'lodash.omit'
+import { FC, useEffect, useRef, useState } from 'react'
+import ReactSignatureCanvas from 'react-signature-canvas'
 
 interface ControlledSignatureCanvasProps {
     value: Nullish<Signature>
@@ -10,14 +10,14 @@ interface ControlledSignatureCanvasProps {
 /**
  * This library doesn't work great for "controlled" canvases. So we just encapsulate it here so that
  * we can make it mount and unmout on every value update
- * @returns 
+ * @returns
  */
 export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ value }) => {
     const sigCanvas = useRef<ReactSignatureCanvas | null>(null)
     const [doesCanvasHaveData, setDoesCanvasHaveData] = useState(false)
 
     useEffect(() => {
-        if (!value?.signatureData || !sigCanvas.current || doesCanvasHaveData) return;
+        if (!value?.signatureData || !sigCanvas.current || doesCanvasHaveData) return
 
         const canvas = sigCanvas.current.getCanvas()
         if (!canvas) return
@@ -26,12 +26,12 @@ export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ 
             canvas,
             value.signatureData,
             value.signatureCanvasWidth,
-            value.signatureCanvasHeight,
-        );
+            value.signatureCanvasHeight
+        )
 
         setDoesCanvasHaveData(true)
         setImmediate(() => sigCanvas.current?.fromData(data as any))
-    }, [value, sigCanvas.current, doesCanvasHaveData]);
+    }, [value, sigCanvas.current, doesCanvasHaveData])
 
     /**
      * Transforms the signature data so that it is able to be displayed on the canvas.
@@ -41,15 +41,15 @@ export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ 
         canvas: HTMLCanvasElement,
         data: SignaturePoint[][],
         originalCanvasWidth: number,
-        originalCanvasHeight: number,
+        originalCanvasHeight: number
     ) => {
         const formattedData = data.map((points) => {
-            const withoutColor = points.map((point) => omit(point, 'color'));
-            const firstTimestamp = withoutColor.length > 0 ? withoutColor[0].time : 0;
+            const withoutColor = points.map((point) => omit(point, 'color'))
+            const firstTimestamp = withoutColor.length > 0 ? withoutColor[0].time : 0
 
             const padPoints = withoutColor.map((point) => {
-                const scaleFactor = canvas.width / originalCanvasWidth;
-                const deltaT = point.time - firstTimestamp;
+                const scaleFactor = canvas.width / originalCanvasWidth
+                const deltaT = point.time - firstTimestamp
 
                 // Scale the data points so that they fit this canvas
                 const x = (point.x / originalCanvasWidth) * canvas.width
@@ -58,14 +58,13 @@ export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ 
                 // Scales the time of each touch point.... doens't work great
                 const time = firstTimestamp + deltaT * scaleFactor
                 return { x, y, time }
-            });
+            })
 
             return padPoints
-        });
+        })
 
-        return formattedData;
-    };
+        return formattedData
+    }
 
-    return <ReactSignatureCanvas ref={sigCanvas}/>
-
+    return <ReactSignatureCanvas ref={sigCanvas} />
 }

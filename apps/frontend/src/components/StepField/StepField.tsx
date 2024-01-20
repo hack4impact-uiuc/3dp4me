@@ -1,19 +1,20 @@
 /* eslint import/no-cycle: "off" */
 
-import { Divider } from '@material-ui/core';
-import { useTranslations } from '../../hooks/useTranslations';
-import AudioRecorder from '../AudioRecorder/AudioRecorder';
-import DateField from '../Fields/DateField';
-import FieldGroup from '../Fields/FieldGroup';
-import MapField from '../Fields/MapField';
-import PhoneField from '../Fields/PhoneField';
-import PhotoField from '../Fields/PhotoField';
-import RadioButtonField from '../Fields/RadioButtonField';
-import SignatureField from '../Fields/SignatureField';
-import TextArea from '../Fields/TextArea';
-import TextField from '../Fields/TextField';
-import Files from '../Files/Files';
-import { Field, FieldType, Step, File as FileModel } from '@3dp4me/types';
+import { Field, FieldType, File as FileModel } from '@3dp4me/types'
+import { Divider } from '@material-ui/core'
+
+import { useTranslations } from '../../hooks/useTranslations'
+import AudioRecorder from '../AudioRecorder/AudioRecorder'
+import DateField from '../Fields/DateField'
+import FieldGroup from '../Fields/FieldGroup'
+import MapField from '../Fields/MapField'
+import PhoneField from '../Fields/PhoneField'
+import PhotoField from '../Fields/PhotoField'
+import RadioButtonField from '../Fields/RadioButtonField'
+import SignatureField from '../Fields/SignatureField'
+import TextArea from '../Fields/TextArea'
+import TextField from '../Fields/TextField'
+import Files from '../Files/Files'
 
 export interface StepFieldProps {
     metadata: Field
@@ -42,7 +43,7 @@ const StepField = ({
     handleFileUpload = () => {},
     handleFileDelete = () => {},
 }: StepFieldProps) => {
-    const selectedLang = useTranslations()[1];
+    const selectedLang = useTranslations()[1]
 
     const generateField = () => {
         switch (metadata.fieldType) {
@@ -56,7 +57,7 @@ const StepField = ({
                         fieldId={metadata.key}
                         value={value}
                     />
-                );
+                )
             case FieldType.NUMBER:
                 return (
                     <TextField
@@ -67,7 +68,7 @@ const StepField = ({
                         fieldId={metadata.key}
                         value={value}
                     />
-                );
+                )
             case FieldType.PHONE:
                 return (
                     <PhoneField
@@ -77,7 +78,7 @@ const StepField = ({
                         fieldId={metadata.key}
                         value={value}
                     />
-                );
+                )
             case FieldType.MULTILINE_STRING:
                 return (
                     <div>
@@ -89,7 +90,7 @@ const StepField = ({
                             value={value}
                         />
                     </div>
-                );
+                )
             case FieldType.DATE:
                 return (
                     <DateField
@@ -99,7 +100,7 @@ const StepField = ({
                         fieldId={metadata.key}
                         value={value}
                     />
-                );
+                )
             case FieldType.FILE:
                 return (
                     <Files
@@ -111,7 +112,7 @@ const StepField = ({
                         handleDelete={handleFileDelete}
                         isDisabled={isDisabled}
                     />
-                );
+                )
 
             case FieldType.RADIO_BUTTON:
                 return (
@@ -123,7 +124,7 @@ const StepField = ({
                         options={metadata.options}
                         onChange={handleSimpleUpdate}
                     />
-                );
+                )
 
             case FieldType.AUDIO:
                 return (
@@ -139,14 +140,14 @@ const StepField = ({
                         isDisabled={isDisabled}
                         key={stepKey}
                     />
-                );
+                )
             case FieldType.DIVIDER:
                 return (
                     <div className="patient-divider-wrapper">
                         <h2>{displayName}</h2>
                         <Divider className="patient-divider" />
                     </div>
-                );
+                )
             case FieldType.FIELD_GROUP:
                 return (
                     <FieldGroup
@@ -160,7 +161,7 @@ const StepField = ({
                         handleFileDelete={handleFileDelete}
                         value={value}
                     />
-                );
+                )
             case FieldType.SIGNATURE:
                 return (
                     <SignatureField
@@ -169,13 +170,11 @@ const StepField = ({
                         onChange={handleSimpleUpdate}
                         fieldId={metadata.key}
                         value={value}
-                        documentURL={
-                            metadata?.additionalData?.defaultDocumentURL
-                        }
+                        documentURL={metadata?.additionalData?.defaultDocumentURL}
                     />
-                );
+                )
             case FieldType.HEADER:
-                return <h3>{displayName}</h3>;
+                return <h3>{displayName}</h3>
             case FieldType.MAP:
                 return (
                     <MapField
@@ -186,7 +185,7 @@ const StepField = ({
                         onChange={handleSimpleUpdate}
                         fieldId={metadata.key}
                     />
-                );
+                )
             case FieldType.PHOTO:
                 return (
                     <PhotoField
@@ -198,13 +197,13 @@ const StepField = ({
                         fieldId={metadata.key}
                         isDisabled={isDisabled}
                     />
-                );
+                )
             default:
-                return null;
+                return null
         }
-    };
+    }
 
-    return <div>{generateField()}</div>;
-};
+    return <div>{generateField()}</div>
+}
 
-export default StepField;
+export default StepField

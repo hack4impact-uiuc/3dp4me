@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import ReactCodeInput from 'react-code-input';
-import { useParams } from 'react-router-dom';
+import './Patient2FALogin.scss'
+import './TokenInput.scss'
 
-import Logo from '../../assets/3dp4me_logo.png';
-import { useTranslations } from '../../hooks/useTranslations';
+import React, { useState } from 'react'
+import ReactCodeInput from 'react-code-input'
+import { useParams } from 'react-router-dom'
 
-import './Patient2FALogin.scss';
-import './TokenInput.scss';
+import Logo from '../../assets/3dp4me_logo.png'
+import { useTranslations } from '../../hooks/useTranslations'
 
 const Patient2FALogin = () => {
-    const [isTokenSent, setIsTokenSent] = useState();
-    const translations = useTranslations()[0];
-    const params = useParams();
-    const { patientId } = params;
+    const [isTokenSent, setIsTokenSent] = useState()
+    const translations = useTranslations()[0]
+    const params = useParams()
+    const { patientId } = params
 
     const inputStyle = {
         fontFamily: 'monospace',
@@ -28,15 +28,13 @@ const Patient2FALogin = () => {
         fontSize: '2.2em',
         boxSizing: 'border-box',
         backgroundColor: '#DEDFFB',
-    };
+    }
 
     const displayAuthPage = () => {
         if (!isTokenSent) {
             return (
                 <div>
-                    <h4 className="sub-header">
-                        {translations.patient2FA.patientID}
-                    </h4>
+                    <h4 className="sub-header">{translations.patient2FA.patientID}</h4>
                     <h5 className="details">{patientId}</h5>
 
                     <button
@@ -47,21 +45,15 @@ const Patient2FALogin = () => {
                         {translations.patient2FA.sendCode}
                     </button>
                 </div>
-            );
+            )
         }
 
         return (
             <div>
-                <h4 className="sub-header">
-                    {translations.patient2FA.patientID}
-                </h4>
+                <h4 className="sub-header">{translations.patient2FA.patientID}</h4>
                 <h5 className="details">{patientId}</h5>
-                <h4 className="sub-header">
-                    {translations.patient2FA.twoFactorAuth}
-                </h4>
-                <h5 className="details">
-                    {translations.patient2FA.enterDigits}
-                </h5>
+                <h4 className="sub-header">{translations.patient2FA.twoFactorAuth}</h4>
+                <h5 className="details">{translations.patient2FA.enterDigits}</h5>
 
                 <div className="centered-token-content">
                     <ReactCodeInput fields={6} inputStyle={inputStyle} />
@@ -69,16 +61,13 @@ const Patient2FALogin = () => {
                     <button className="verification-button" type="submit">
                         {translations.patient2FA.verify}
                     </button>
-                    <div
-                        className="new-token-link"
-                        onClick={() => setIsTokenSent(false)}
-                    >
+                    <div className="new-token-link" onClick={() => setIsTokenSent(false)}>
                         {translations.patient2FA.resendCode}
                     </div>
                 </div>
             </div>
-        );
-    };
+        )
+    }
 
     return (
         <div className="wrapper login-body">
@@ -90,7 +79,7 @@ const Patient2FALogin = () => {
                 {displayAuthPage()}
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default Patient2FALogin;
+export default Patient2FALogin

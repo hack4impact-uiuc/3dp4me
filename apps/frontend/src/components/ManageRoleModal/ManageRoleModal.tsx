@@ -1,20 +1,18 @@
-import { useState, useEffect } from 'react';
-import { Modal, Button } from '@material-ui/core';
-import _ from 'lodash';
-import { trackPromise } from 'react-promise-tracker';
-import swal from 'sweetalert';
+import './ManageRoleModal.scss'
 
-import TextField from '../Fields/TextField';
-import TextArea from '../Fields/TextArea';
-import './ManageRoleModal.scss';
-import { useTranslations } from '../../hooks/useTranslations';
-import { deleteRole, editRole } from '../../api/api';
-import { useErrorWrap } from '../../hooks/useErrorWrap';
-import {
-    ERR_ROLE_INPUT_VALIDATION_FAILED,
-    ERR_ROLE_IS_IMMUTABLE,
-} from '../../utils/constants';
-import { Nullish, Role } from '@3dp4me/types';
+import { Nullish, Role } from '@3dp4me/types'
+import { Button, Modal } from '@material-ui/core'
+import _ from 'lodash'
+import { useEffect, useState } from 'react'
+import { trackPromise } from 'react-promise-tracker'
+import swal from 'sweetalert'
+
+import { deleteRole, editRole } from '../../api/api'
+import { useErrorWrap } from '../../hooks/useErrorWrap'
+import { useTranslations } from '../../hooks/useTranslations'
+import { ERR_ROLE_INPUT_VALIDATION_FAILED, ERR_ROLE_IS_IMMUTABLE } from '../../utils/constants'
+import TextArea from '../Fields/TextArea'
+import TextField from '../Fields/TextField'
 
 export interface ManageRoleModalProps {
     isOpen: boolean
@@ -31,13 +29,13 @@ const ManageRoleModal = ({
     onRoleEdited,
     roleInfo,
 }: ManageRoleModalProps) => {
-    const [translations, selectedLang] = useTranslations();
-    const [role, setRole] = useState<Nullish<Role>>(null);
-    const errorWrap = useErrorWrap();
+    const [translations, selectedLang] = useTranslations()
+    const [role, setRole] = useState<Nullish<Role>>(null)
+    const errorWrap = useErrorWrap()
 
     useEffect(() => {
-        setRole(_.cloneDeep(roleInfo));
-    }, [roleInfo]);
+        setRole(_.cloneDeep(roleInfo))
+    }, [roleInfo])
 
     const onDelete = async () => {
         swal({
@@ -53,58 +51,53 @@ const ManageRoleModal = ({
             if (willDelete) {
                 errorWrap(async () => {
                     if (roleInfo?.isMutable) {
-                        await errorWrap(async () =>
-                            trackPromise(deleteRole(roleInfo?._id)),
-                        );
-                        onRoleDeleted(roleInfo?._id);
-                        onClose();
+                        await errorWrap(async () => trackPromise(deleteRole(roleInfo?._id)))
+                        onRoleDeleted(roleInfo?._id)
+                        onClose()
                     } else {
-                        throw new Error(ERR_ROLE_IS_IMMUTABLE);
+                        throw new Error(ERR_ROLE_IS_IMMUTABLE)
                     }
-                });
+                })
             }
-        });
-    };
+        })
+    }
 
     const validateRole = () => {
         if (
             role?.roleName[selectedLang].trim() === '' ||
             role?.roleDescription[selectedLang].trim() === ''
         ) {
-            throw new Error(ERR_ROLE_INPUT_VALIDATION_FAILED);
+            throw new Error(ERR_ROLE_INPUT_VALIDATION_FAILED)
         }
-    };
+    }
 
     const onSave = async () => {
-        if (!role)
-            return
+        if (!role) return
 
         errorWrap(async () => {
-            validateRole();
+            validateRole()
             if (roleInfo?.isMutable) {
-                await errorWrap(async () =>
-                    trackPromise(editRole(roleInfo?._id, role)),
-                );
-                onRoleEdited(roleInfo?._id, role);
-                onClose();
+                await errorWrap(async () => trackPromise(editRole(roleInfo?._id, role)))
+                onRoleEdited(roleInfo?._id, role)
+                onClose()
             } else {
-                throw new Error(ERR_ROLE_IS_IMMUTABLE);
+                throw new Error(ERR_ROLE_IS_IMMUTABLE)
             }
-        });
-    };
+        })
+    }
 
-    const onRoleChange = async (fieldId: "roleName" | "roleDescription", value: string) => {
+    const onRoleChange = async (fieldId: 'roleName' | 'roleDescription', value: string) => {
         setRole((prevState) => {
             if (!prevState) {
-                return prevState;
+                return prevState
             }
 
             return {
                 ...prevState,
                 [fieldId]: { ...prevState?.[fieldId], [selectedLang]: value },
             }
-        });
-    };
+        })
+    }
 
     return (
         <Modal open={isOpen} onClose={onClose} className="manage-role-modal">
@@ -133,26 +126,20 @@ const ManageRoleModal = ({
                         <Button className="save-user-button" onClick={onSave}>
                             {translations.accountManagement.Save}
                         </Button>
-                        <Button
-                            className="discard-user-button"
-                            onClick={onClose}
-                        >
+                        <Button className="discard-user-button" onClick={onClose}>
                             {translations.accountManagement.Discard}
                         </Button>
                     </div>
 
                     <div>
-                        <Button
-                            className="delete-user-button"
-                            onClick={onDelete}
-                        >
+                        <Button className="delete-user-button" onClick={onDelete}>
                             {translations.roleManagement.deleteRole}
                         </Button>
                     </div>
                 </div>
             </div>
         </Modal>
-    );
-};
+    )
+}
 
-export default ManageRoleModal;
+export default ManageRoleModal

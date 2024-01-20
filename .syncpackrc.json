@@ -1,0 +1,3 @@
+{
+    "filter": "^(?:(?!(@3dp4me|eslint-config-3dp4me)).)*$"
+}

@@ -1,10 +1,8 @@
-import './LanguageInput.scss';
-import React from 'react';
-import PropTypes from 'prop-types';
-import { TextField } from '@material-ui/core';
+import './LanguageInput.scss'
 
-import { LANGUAGES } from '../../utils/constants';
-import { Language, TranslatedString } from '@3dp4me/types';
+import { Language, TranslatedString } from '@3dp4me/types'
+import { TextField } from '@material-ui/core'
+import React from 'react'
 
 export interface LanguageInputProps {
     onUpPressed?: (fieldKey: string) => void
@@ -24,46 +22,29 @@ const LanguageInput = ({
     handleFieldChange,
 }: LanguageInputProps) => {
     const generateArrows = () => {
-        const shouldShowArrows = !!onUpPressed && !!onDownPressed;
+        const shouldShowArrows = !!onUpPressed && !!onDownPressed
 
         return (
             <div className="language-col vertical-center">
-                <div
-                    onClick={() => onUpPressed?.(fieldKey)}
-                    className="field-up-button"
-                >
-                    <i
-                        className={`${
-                            shouldShowArrows ? 'chevron up icon' : 'icon'
-                        }`}
-                    />
+                <div onClick={() => onUpPressed?.(fieldKey)} className="field-up-button">
+                    <i className={`${shouldShowArrows ? 'chevron up icon' : 'icon'}`} />
                 </div>
-                <div
-                    onClick={() => onDownPressed?.(fieldKey)}
-                    className="field-down-button"
-                >
-                    <i
-                        className={`${
-                            shouldShowArrows ? 'chevron down icon' : 'icon'
-                        }`}
-                    />
+                <div onClick={() => onDownPressed?.(fieldKey)} className="field-down-button">
+                    <i className={`${shouldShowArrows ? 'chevron down icon' : 'icon'}`} />
                 </div>
             </div>
-        );
-    };
+        )
+    }
 
     const generateDeleteButton = () => {
-        const shouldShowDelete = !!onDelete;
+        const shouldShowDelete = !!onDelete
 
         return (
-            <div
-                className="language-col remove-field-button"
-                onClick={() => onDelete?.(fieldKey)}
-            >
+            <div className="language-col remove-field-button" onClick={() => onDelete?.(fieldKey)}>
                 <i className={`${shouldShowDelete ? 'remove icon' : 'icon'}`} />
             </div>
-        );
-    };
+        )
+    }
 
     return (
         <div className="language-input-container">
@@ -82,7 +63,7 @@ const LanguageInput = ({
                     InputProps={{ className: 'lang-input' }}
                     value={fieldValues.EN}
                     onChange={(event) => {
-                        handleFieldChange(event.target.value, Language.EN);
+                        handleFieldChange(event.target.value, Language.EN)
                     }}
                 />
                 <TextField
@@ -93,13 +74,13 @@ const LanguageInput = ({
                     InputProps={{ className: 'lang-input' }}
                     value={fieldValues.AR}
                     onChange={(event) => {
-                        handleFieldChange(event.target.value, Language.AR);
+                        handleFieldChange(event.target.value, Language.AR)
                     }}
                 />
             </div>
             {generateDeleteButton()}
         </div>
-    );
-};
+    )
+}
 
-export default LanguageInput;
+export default LanguageInput

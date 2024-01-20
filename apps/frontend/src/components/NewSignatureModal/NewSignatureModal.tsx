@@ -1,10 +1,9 @@
-import { Button, Modal } from '@material-ui/core';
-import _ from 'lodash';
-import SignatureCanvas from 'react-signature-canvas';
-import { FC, useRef } from 'react';
-import ReactSignatureCanvas from 'react-signature-canvas';
-import SignaturePad from 'signature_pad';
-import { useTranslations } from '../../hooks/useTranslations';
+import { Button, Modal } from '@material-ui/core'
+import { FC, useRef } from 'react'
+import ReactSignatureCanvas from 'react-signature-canvas'
+import SignaturePad from 'signature_pad'
+
+import { useTranslations } from '../../hooks/useTranslations'
 
 interface NewSignatureModalProps {
     isOpen: boolean
@@ -13,18 +12,14 @@ interface NewSignatureModalProps {
 }
 
 export interface SignatureData {
-    points: SignaturePad.Point[][],
+    points: SignaturePad.Point[][]
     width: number
     height: number
 }
 
-export const NewSiganatureModal: FC<NewSignatureModalProps> = ({
-    isOpen,
-    onSave,
-    onClose,
-}) => {
-    const translations = useTranslations()[0];
-    const canvasRef = useRef<ReactSignatureCanvas | null>(null);
+export const NewSiganatureModal: FC<NewSignatureModalProps> = ({ isOpen, onSave, onClose }) => {
+    const translations = useTranslations()[0]
+    const canvasRef = useRef<ReactSignatureCanvas | null>(null)
 
     /**
      * Saves signature data points along with the canvas width and height so that
@@ -32,7 +27,7 @@ export const NewSiganatureModal: FC<NewSignatureModalProps> = ({
      * that was shown at the time of signing (in case it's updated in the future)
      */
     const save = () => {
-        const canvas = canvasRef.current?.getCanvas();
+        const canvas = canvasRef.current?.getCanvas()
         if (!canvas || !canvasRef.current) {
             console.error(`Could not save signature data. Canvas was null`)
             return
@@ -43,39 +38,29 @@ export const NewSiganatureModal: FC<NewSignatureModalProps> = ({
             width: canvas.width,
             height: canvas.height,
         })
-    };
-
+    }
 
     const clear = () => {
-        canvasRef.current?.clear();
+        canvasRef.current?.clear()
     }
 
     return (
         <Modal open={isOpen} className="signature-modal">
             <div>
-                <SignatureCanvas
+                <ReactSignatureCanvas
                     ref={canvasRef}
                     canvasProps={{
                         className: 'signature-canvas',
                     }}
                 />
                 {/* Button to trigger save canvas image */}
-                <Button
-                    className="signature-button save-signature"
-                    onClick={save}
-                >
+                <Button className="signature-button save-signature" onClick={save}>
                     {translations.components.signature.save}
                 </Button>
-                <Button
-                    className="signature-button clear-signature"
-                    onClick={clear}
-                >
+                <Button className="signature-button clear-signature" onClick={clear}>
                     {translations.components.signature.clear}
                 </Button>
-                <Button
-                    className="signature-button close-signature"
-                    onClick={onClose}
-                >
+                <Button className="signature-button close-signature" onClick={onClose}>
                     {translations.components.signature.close}
                 </Button>
             </div>

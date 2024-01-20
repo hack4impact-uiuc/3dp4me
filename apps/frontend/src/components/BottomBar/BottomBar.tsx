@@ -1,17 +1,18 @@
-import React, { MouseEventHandler } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import Toolbar from '@material-ui/core/Toolbar';
+import './BottomBar.scss'
 
-import './BottomBar.scss';
-import check from '../../assets/check.svg';
-import exclamation from '../../assets/exclamation.svg';
-import halfCircle from '../../assets/half-circle.svg';
-import { LANGUAGES, STEP_STATUS } from '../../utils/constants';
-import { useTranslations } from '../../hooks/useTranslations';
-import { PatientStatus, StepPathToField, StepStatus } from '@3dp4me/types';
+import { StepPathToField, StepStatus } from '@3dp4me/types'
+import AppBar from '@material-ui/core/AppBar'
+import Button from '@material-ui/core/Button'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import Toolbar from '@material-ui/core/Toolbar'
+import React, { MouseEventHandler } from 'react'
+
+import check from '../../assets/check.svg'
+import exclamation from '../../assets/exclamation.svg'
+import halfCircle from '../../assets/half-circle.svg'
+import { useTranslations } from '../../hooks/useTranslations'
+import { LANGUAGES, STEP_STATUS } from '../../utils/constants'
 
 interface BottomBarProps {
     isEditing: boolean
@@ -36,33 +37,28 @@ const BottomBar = ({
     shouldShowStatus = true,
     selectedStep,
 }: BottomBarProps) => {
-    const [translations, selectedLang] = useTranslations();
+    const [translations, selectedLang] = useTranslations()
 
     const statusIcons = {
-        [STEP_STATUS.FINISHED]: (
-            <img alt="complete" src={check} className="status-icon" />
-        ),
+        [STEP_STATUS.FINISHED]: <img alt="complete" src={check} className="status-icon" />,
         [STEP_STATUS.UNFINISHED]: (
             <img alt="incomplete" src={exclamation} className="status-icon" />
         ),
         [STEP_STATUS.PARTIALLY_FINISHED]: (
             <img alt="partial" src={halfCircle} className="status-icon" />
         ),
-    };
+    }
 
     const onStatusSelected: MouseEventHandler<HTMLDivElement> = (e) => {
-        onStatusChange('status', (e.target as any).value);
+        onStatusChange('status', (e.target as any).value)
     }
 
     /**
      * Renders the dropdown for step status. If status is null, then this isn't rendered at all.
      */
     const renderStatusSelector = () => {
-        if (!status || !shouldShowStatus) return null;
-        const className =
-            selectedLang === LANGUAGES.AR
-                ? 'status-selector-ar'
-                : 'status-selector';
+        if (!status || !shouldShowStatus) return null
+        const className = selectedLang === LANGUAGES.AR ? 'status-selector-ar' : 'status-selector'
 
         return (
             <Select
@@ -81,55 +77,40 @@ const BottomBar = ({
                     {translations.components.bottombar.Finished}
                 </MenuItem>
             </Select>
-        );
-    };
+        )
+    }
 
     /**
      * Renders the status icon and text
      */
     const renderStatus = () => {
-        if (!status || !shouldShowStatus) return null;
+        if (!status || !shouldShowStatus) return null
 
         return (
-            <div
-                className={`status ${status}`}
-                style={{ display: 'flex', alignItems: 'center' }}
-            >
-                {statusIcons[status]}{' '}
-                {translations.components.bottombar[status]}
+            <div className={`status ${status}`} style={{ display: 'flex', alignItems: 'center' }}>
+                {statusIcons[status]} {translations.components.bottombar[status]}
             </div>
-        );
-    };
+        )
+    }
 
     /**
      * Renders the discard and save buttons side by side
      */
     const renderDiscardAndSaveButtons = () => {
-        const saveBtnClassName =
-            selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button';
+        const saveBtnClassName = selectedLang === LANGUAGES.AR ? 'save-button-ar' : 'save-button'
 
         const discardBtnClassName =
-            selectedLang === LANGUAGES.AR
-                ? 'discard-button-ar'
-                : 'discard-button';
+            selectedLang === LANGUAGES.AR ? 'discard-button-ar' : 'discard-button'
 
         return [
-            <Button
-                key="bottom-bar-save"
-                className={saveBtnClassName}
-                onClick={onSave}
-            >
+            <Button key="bottom-bar-save" className={saveBtnClassName} onClick={onSave}>
                 {translations.components.button.save}
             </Button>,
-            <Button
-                key="bottom-bar-discard"
-                className={discardBtnClassName}
-                onClick={onDiscard}
-            >
+            <Button key="bottom-bar-discard" className={discardBtnClassName} onClick={onDiscard}>
                 <b>{translations.components.button.discard.title}</b>
             </Button>,
-        ];
-    };
+        ]
+    }
 
     /**
      * Renders the edit controls for the bottom bar (status selector, save, discard)
@@ -147,7 +128,7 @@ const BottomBar = ({
                     {renderStatusSelector()}
                     {renderDiscardAndSaveButtons()}
                 </div>
-            );
+            )
         }
 
         return (
@@ -157,8 +138,8 @@ const BottomBar = ({
                     {translations.components.button.edit}
                 </Button>
             </div>
-        );
-    };
+        )
+    }
 
     /**
      *
@@ -166,16 +147,14 @@ const BottomBar = ({
      */
 
     const renderAddFieldButton = () => {
-        let button = null;
+        let button = null
 
-        let buttonClassName = 'add-field-button';
+        let buttonClassName = 'add-field-button'
 
         if (selectedLang !== LANGUAGES.AR) {
             buttonClassName += ` ${
-                isEditing
-                    ? 'add-field-expanded-width'
-                    : 'add-field-retracted-width'
-            }`;
+                isEditing ? 'add-field-expanded-width' : 'add-field-retracted-width'
+            }`
         }
 
         if (isEditing && onAddField && selectedStep) {
@@ -186,11 +165,11 @@ const BottomBar = ({
                 >
                     {translations.components.bottombar.addField}
                 </Button>
-            );
+            )
         }
 
-        return <div className="add-field-div">{button}</div>;
-    };
+        return <div className="add-field-div">{button}</div>
+    }
 
     // The edit steps and discard button needs to remain in the same location on the screen,
     // regardless of the language. This allows the user to keep the mouse in the same position when
@@ -208,7 +187,7 @@ const BottomBar = ({
                 {renderAddFieldButton()}
                 {renderToolbarControls()}
             </>
-        );
+        )
 
     return (
         <AppBar
@@ -222,7 +201,7 @@ const BottomBar = ({
         >
             <Toolbar className="bottom-toolbar">{controlToolbar}</Toolbar>
         </AppBar>
-    );
-};
+    )
+}
 
-export default BottomBar;
+export default BottomBar

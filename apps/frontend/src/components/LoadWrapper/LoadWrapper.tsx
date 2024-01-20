@@ -1,5 +1,4 @@
-import React, { ReactNode } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react'
 
 export interface LoadWrapperProps {
     loading: boolean
@@ -12,9 +11,9 @@ export interface LoadWrapperProps {
  */
 const LoadWrapper = ({ loading, children }: LoadWrapperProps) => {
     if (loading) {
-        return <></>;
+        return <></>
     }
-    return <>{children}</>;
-};
+    return <>{children}</>
+}
 
-export default LoadWrapper;
+export default LoadWrapper

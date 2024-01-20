@@ -1,14 +1,15 @@
 /* eslint-disable no-use-before-define */
 
-import { Button, Modal } from '@material-ui/core';
-import _ from 'lodash';
-import { LegacyRef, useEffect, useRef, useState } from 'react';
-import './SignatureField.scss';
-import { useTranslations } from '../../hooks/useTranslations';
-import { Nullish, Signature, Path, PathValue, TranslatedString } from '@3dp4me/types';
-import { NewSiganatureModal, SignatureData } from '../NewSignatureModal/NewSignatureModal';
-import { ControlledSignatureCanvas } from '../ControlledSignatureCanvas/ControlledSignatureCanvas';
-import hash from 'object-hash';
+import './SignatureField.scss'
+
+import { Nullish, Path, PathValue, Signature, TranslatedString } from '@3dp4me/types'
+import { Button } from '@material-ui/core'
+import hash from 'object-hash'
+import { useState } from 'react'
+
+import { useTranslations } from '../../hooks/useTranslations'
+import { ControlledSignatureCanvas } from '../ControlledSignatureCanvas/ControlledSignatureCanvas'
+import { NewSiganatureModal, SignatureData } from '../NewSignatureModal/NewSignatureModal'
 
 export interface SignatureFieldProps<T extends string> {
     displayName: string
@@ -27,9 +28,9 @@ const SignatureField = <T extends string>({
     value = null,
     onChange = () => {},
 }: SignatureFieldProps<T>) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDocumentVisible, setIsDocumentVisible] = useState(false);
-    const translations = useTranslations()[0];
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isDocumentVisible, setIsDocumentVisible] = useState(false)
+    const translations = useTranslations()[0]
 
     /**
      * Saves signature data points along with the canvas width and height so that
@@ -37,26 +38,26 @@ const SignatureField = <T extends string>({
      * that was shown at the time of signing (in case it's updated in the future)
      */
     const onNewSignature = (data: SignatureData) => {
-        onChange(`${fieldId}.signatureData`, data.points);
-        onChange(`${fieldId}.signatureCanvasWidth`, data.width);
-        onChange(`${fieldId}.signatureCanvasHeight`, data.height);
-        onChange(`${fieldId}.documentURL.EN`, documentURL.EN);
-        onChange(`${fieldId}.documentURL.AR`, documentURL.AR);
-        setIsModalOpen(false);
-    };
+        onChange(`${fieldId}.signatureData`, data.points)
+        onChange(`${fieldId}.signatureCanvasWidth`, data.width)
+        onChange(`${fieldId}.signatureCanvasHeight`, data.height)
+        onChange(`${fieldId}.documentURL.EN`, documentURL.EN)
+        onChange(`${fieldId}.documentURL.AR`, documentURL.AR)
+        setIsModalOpen(false)
+    }
 
     /**
      * Toggles whether the signing docs are visible
      */
     const onToggleDocument = () => {
-        setIsDocumentVisible((visible) => !visible);
-    };
+        setIsDocumentVisible((visible) => !visible)
+    }
 
     /**
      * Shows the documents that the user is signing
      */
     const renderDocuments = () => {
-        if (!isDocumentVisible) return null;
+        if (!isDocumentVisible) return null
 
         return (
             <div>
@@ -72,17 +73,18 @@ const SignatureField = <T extends string>({
                     src={value?.documentURL?.AR || documentURL?.AR}
                 />
             </div>
-        );
-    };
+        )
+    }
 
     return (
         <div className="signature-container">
             <h3>{displayName}</h3>
             {renderDocuments()}
-            <NewSiganatureModal 
+            <NewSiganatureModal
                 onClose={() => setIsModalOpen(false)}
                 onSave={onNewSignature}
-                isOpen={isModalOpen}/>
+                isOpen={isModalOpen}
+            />
             <div className="sig-container">
                 {/* We need to keep changing the key to force a rerender */}
                 <ControlledSignatureCanvas key={hash(value || {})} value={value} />
@@ -106,7 +108,7 @@ const SignatureField = <T extends string>({
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default SignatureField;
+export default SignatureField

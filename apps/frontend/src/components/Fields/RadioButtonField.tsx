@@ -1,17 +1,16 @@
-import { FormControlLabel, Radio, RadioGroup } from '@material-ui/core';
-import React from 'react';
-import PropTypes from 'prop-types';
+import { FormControlLabel, Radio, RadioGroup } from '@material-ui/core'
+import React from 'react'
 
-import { useTranslations } from '../../hooks/useTranslations';
-import { FormOption } from './FormOption';
+import { useTranslations } from '../../hooks/useTranslations'
+import { FormOption } from './FormOption'
 
 export interface RadioButtonFieldProps<T extends string> {
-    fieldId: T;
-    title: string;
-    value?: string;
-    options: FormOption[];
-    isDisabled?: boolean;
-    onChange?: (field: T, value: string) => void;
+    fieldId: T
+    title: string
+    value?: string
+    options: FormOption[]
+    isDisabled?: boolean
+    onChange?: (field: T, value: string) => void
 }
 
 const RadioButtonField = <T extends string>({
@@ -22,15 +21,14 @@ const RadioButtonField = <T extends string>({
     isDisabled = false,
     onChange,
 }: RadioButtonFieldProps<T>) => {
-    const selectedLang = useTranslations()[1];
+    const selectedLang = useTranslations()[1]
 
-    const shouldHideOption = (option: FormOption) => {
-        return option.IsHidden && value?.toString() !== option._id.toString();
-    };
+    const shouldHideOption = (option: FormOption) =>
+        option.IsHidden && value?.toString() !== option._id.toString()
 
-    const generateQuestions = () => {
-        return options.map((option) => {
-            if (shouldHideOption(option)) return null;
+    const generateQuestions = () =>
+        options.map((option) => {
+            if (shouldHideOption(option)) return null
 
             return (
                 <FormControlLabel
@@ -40,9 +38,8 @@ const RadioButtonField = <T extends string>({
                     label={option.Question[selectedLang]}
                     disabled={isDisabled}
                 />
-            );
-        });
-    };
+            )
+        })
 
     return (
         <div>
@@ -55,7 +52,7 @@ const RadioButtonField = <T extends string>({
                 {generateQuestions()}
             </RadioGroup>
         </div>
-    );
-};
+    )
+}
 
-export default RadioButtonField;
+export default RadioButtonField
