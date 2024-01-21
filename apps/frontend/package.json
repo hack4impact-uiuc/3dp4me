@@ -54,7 +54,6 @@
   "devDependencies": {
     "@babel/core": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
-    "rimraf": "^5.0.5",
     "@babel/preset-react": "^7.23.3",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-image": "^3.0.3",
@@ -84,6 +83,7 @@
     "image-webpack-loader": "^8.1.0",
     "react-app-env": "^1.2.3",
     "react-app-rewired": "^2.2.1",
+    "rimraf": "^5.0.5",
     "rollup": "^4.5.0",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-postcss": "^4.0.2",

@@ -9,8 +9,8 @@
   },
   "devDependencies": {
     "eslint-config-3dp4me": "*",
-    "ts-loader": "^9.5.1",
     "rimraf": "^5.0.5",
+    "ts-loader": "^9.5.1",
     "typescript": "^5.3.3"
   },
   "files": [
