@@ -10,6 +10,7 @@
   "devDependencies": {
     "eslint-config-3dp4me": "*",
     "ts-loader": "^9.5.1",
+    "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
   },
   "files": [
@@ -20,6 +21,7 @@
   "module": "dist/esm/index.js",
   "scripts": {
     "build": "yarn tsc",
+    "clean": "rimraf .turbo dist node_modules",
     "lint": "yarn lint:check --fix",
     "lint:check": "eslint src --ext js,jsx,ts,tsx"
   },

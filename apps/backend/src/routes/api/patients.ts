@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Response } from 'express';
 import mongoose from 'mongoose';
 
 import _ from 'lodash';
@@ -31,7 +31,6 @@ import { PatientModel } from '../../models/Patient';
 import { Patient, Field, File } from '@3dp4me/types';
 import { StepModel } from '../../models/Metadata';
 import { HydratedDocument } from 'mongoose';
-import { Readable } from 'stream';
 
 export const router = express.Router();
 /**
