@@ -1,6 +1,6 @@
 {
-  "name": "3DP4ME",
-  "description": "Package with the development tools for 3DP4ME (such as Prettier and Husky). Please see the individual client and api sub-packages for the actual dependencies.",
+  "name": "3dp4me",
+  "description": "Monorepo that contains the entire codebase for the 3DP4ME dashboard",
   "version": "1.0.0",
   "bugs": "https://github.com/hack4impact-uiuc/3dp4me/issues",
   "devDependencies": {
