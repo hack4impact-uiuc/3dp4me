@@ -23,5 +23,5 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Build
-        run: yarn build
+      - name: Run Docker Build
+        run: yarn build:docker

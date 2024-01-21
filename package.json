@@ -13,6 +13,7 @@
   "repository": "hack4impact-uiuc/3dp4me.git",
   "scripts": {
     "build": "turbo build",
+    "build:docker": "docker build -t 3dp4me .",
     "lint": "turbo run lint && yarn eslint --ext .json --fix . && yarn sync",
     "lint:check": "turbo run lint && yarn eslint --ext .json .",
     "publish:production": "git branch -D production ; git push origin --delete production ; git checkout -b production && git push -u origin production && git switch -",
