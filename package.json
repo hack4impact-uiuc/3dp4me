@@ -3,8 +3,6 @@
   "description": "Package with the development tools for 3DP4ME (such as Prettier and Husky). Please see the individual client and api sub-packages for the actual dependencies.",
   "version": "1.0.0",
   "bugs": "https://github.com/hack4impact-uiuc/3dp4me/issues",
-  "dependencies": {
-  },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "syncpack": "^12.3.0",
