@@ -10,8 +10,6 @@ import { StringParam, useQueryParam } from 'use-query-params'
 
 import {
     deletePatientById,
-    getAllStepsMetadata,
-    getPatientById,
     updatePatient,
     updateStage,
 } from '../../api/api'
@@ -25,6 +23,8 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
 import { getStepData } from '../../utils/metadataUtils'
 import { sortMetadata } from '../../utils/utils'
+import { useInvalidatePatient, usePatient } from '../../query/usePatient'
+import { useSteps } from '../../query/useSteps'
 
 /**
  * The detail view for a patient. Shows their information
@@ -34,43 +34,34 @@ const PatientDetail = () => {
     const errorWrap = useErrorWrap()
     const { patientId } = useParams<{ patientId: string }>()
     const [translations, selectedLang] = useTranslations()
-    const [loading, setLoading] = useState(true)
     const [selectedStep, setSelectedStep] = useState('')
-    const [stepMetaData, setStepMetaData] = useState<Step[]>([])
-    const [patientData, setPatientData] = useState<Nullish<Patient>>(null)
     const [isManagePatientModalOpen, setManagePatientModalOpen] = useState(false)
     const stepKeyParam = useQueryParam('stepKey', StringParam)[0]
     const [edit, setEdit] = useState(false)
+    const { data: patientData, isLoading: isPatientLoading } = usePatient(patientId)
+    const { data: stepMetaData, isLoading: areStepsLoading } = useSteps({ includeHiddenFields: false })
+    const invalidatePatient = useInvalidatePatient(patientId)
+    const isLoading = isPatientLoading || areStepsLoading
 
     /**
      * Fetch metadata for all steps and the patient's data.
      * Then sort it.
      */
     useEffect(() => {
-        const getData = async () => {
-            errorWrap(async () => {
-                // Step metadata
-                const metaRes = await trackPromise(getAllStepsMetadata(false))
-                let metaData = metaRes.result
+        if (!stepMetaData)
+            return
 
-                // Patient data
-                const patientRes = await trackPromise(getPatientById(patientId))
-                const data = patientRes.result
+        if (!!stepMetaData.find((s) => s.key === selectedStep))
+            return
 
-                // Sort it
-                metaData = sortMetadata(metaData)
-
-                if (stepKeyParam) setSelectedStep(stepKeyParam)
-                else if (metaData?.length) setSelectedStep(metaData[0].key)
-
-                setStepMetaData(metaData)
-                setPatientData(data)
-                setLoading(false)
-            })
+        if (stepKeyParam) {
+            setSelectedStep(stepKeyParam)
+            return
         }
 
-        getData()
-    }, [setStepMetaData, setPatientData, setLoading, errorWrap, patientId])
+        if (stepMetaData?.length) 
+            setSelectedStep(stepMetaData[0].key)
+    }, [stepMetaData, stepKeyParam])
 
     /**
      * Called when the patient data for a step is saved
@@ -80,13 +71,8 @@ const PatientDetail = () => {
         if (!patientData) return
 
         errorWrap(async () => {
-            const newPatientData: Patient = {
-                ..._.cloneDeep(patientData),
-                [stepKey]: _.cloneDeep(stepData),
-            }
-
             await trackPromise(updateStage(patientId, stepKey, stepData))
-            setPatientData(newPatientData)
+            invalidatePatient()
         })
     }
 
@@ -97,14 +83,12 @@ const PatientDetail = () => {
     const onPatientDataSaved = async (newPatientData: Patient) => {
         if (!patientData) return
 
-        const patientDataCopy = _.cloneDeep(patientData)
-        Object.assign(patientDataCopy, newPatientData)
         await errorWrap(async () => {
-            await trackPromise(updatePatient(patientId, patientDataCopy))
-            setPatientData(patientDataCopy)
+            await trackPromise(updatePatient(patientId, newPatientData))
             swal(translations.components.swal.managePatient.successMsg, '', 'success')
         })
 
+        invalidatePatient()
         setManagePatientModalOpen(false)
     }
 
@@ -113,6 +97,7 @@ const PatientDetail = () => {
             async () => {
                 setEdit(false)
                 await trackPromise(deletePatientById(patientId))
+                invalidatePatient()
             },
             () => {
                 // Success - Go back to the home page
@@ -180,7 +165,7 @@ const PatientDetail = () => {
                             onDataSaved={onStepSaved}
                             metaData={stepMetaData.find((s) => s.key === step.key)!}
                             stepData={getStepData(patientData, step.key) ?? {}}
-                            loading={loading}
+                            loading={isLoading}
                             edit={edit}
                             setEdit={setEdit}
                         />
@@ -191,7 +176,7 @@ const PatientDetail = () => {
     }
 
     return (
-        <LoadWrapper loading={loading}>
+        <LoadWrapper loading={isLoading}>
             <div className="root">
                 <ManagePatientModal
                     onDataSave={onPatientDataSaved}
@@ -202,7 +187,6 @@ const PatientDetail = () => {
                 />
 
                 <PatientDetailSidebar
-                    stepMetaData={stepMetaData}
                     patientData={patientData!}
                     onViewPatient={() => setManagePatientModalOpen(true)}
                 />
@@ -215,7 +199,6 @@ const PatientDetail = () => {
                     <ToggleButtons
                         step={selectedStep}
                         patientData={patientData!}
-                        metaData={stepMetaData}
                         handleStep={onStepChange}
                     />
                     {generateStepContent()}

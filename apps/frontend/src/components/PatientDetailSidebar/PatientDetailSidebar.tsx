@@ -18,6 +18,7 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
 import { hasNotesForStep } from '../../utils/metadataUtils'
 import { getPatientName } from '../../utils/utils'
+import { useSteps } from '../../query/useSteps'
 
 const arTheme = createTheme({
     direction: 'rtl',
@@ -28,16 +29,15 @@ const enTheme = createTheme({
 })
 
 export interface PatientDetailSidebarProps<T extends Patient = Patient> {
-    stepMetaData: Step[]
     patientData: T
     onViewPatient: () => void
 }
 
 const PatientDetailSidebar = ({
-    stepMetaData,
     patientData,
     onViewPatient,
 }: PatientDetailSidebarProps) => {
+    const { data: stepMetaData } = useSteps({ includeHiddenFields: false })
     const [expandedStepKey, setExpandedStepKey] = useState<Nullish<string>>(null)
     const [translations, selectedLang] = useTranslations()
 

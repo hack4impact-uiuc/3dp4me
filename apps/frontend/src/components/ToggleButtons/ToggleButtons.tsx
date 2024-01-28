@@ -16,18 +16,19 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { useWindowDimensions } from '../../hooks/useWindowDimensions'
 import { LANGUAGES, RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH, STEP_STATUS } from '../../utils/constants'
 import { getStepData } from '../../utils/metadataUtils'
+import { useSteps } from '../../query/useSteps'
 
 interface ToggleButtonsProps {
     handleStep: (newStep: string) => void
-    metaData: Step[]
     patientData?: Patient
     step: string
 }
 
-const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButtonsProps) => {
+const ToggleButtons = ({ handleStep, patientData, step }: ToggleButtonsProps) => {
     const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & HTMLButtonElement>>(null)
     const selectedLang = useTranslations()[1]
     const { width } = useWindowDimensions()
+    const { data: metaData } = useSteps({ includeHiddenFields: false })
 
     const statusIcons = {
         [STEP_STATUS.UNFINISHED]: (

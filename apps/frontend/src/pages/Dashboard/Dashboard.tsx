@@ -248,7 +248,6 @@ const Dashboard = () => {
             <div className="tabs">
                 <ToggleButtons
                     step={selectedStep}
-                    metaData={stepsMetaData}
                     handleStep={onStepSelected}
                 />
             </div>

@@ -10,6 +10,8 @@ import { getCurrentUserInfo } from './aws/aws-helper'
 import Login from './pages/Login/Login'
 import Store from './store/Store'
 import { LANGUAGES } from './utils/constants'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from './query/query'
 
 // Configure amplify
 Amplify.configure(awsconfig)
@@ -62,9 +64,11 @@ function App() {
     // If the user is authenticated, show the app
     if (authLevel === AUTHENTICATED)
         return (
-            <Store>
-                <AppContent username={username} userEmail={userEmail} />
-            </Store>
+            <QueryClientProvider client={queryClient}>
+                <Store>
+                    <AppContent username={username} userEmail={userEmail} />
+                </Store>
+            </QueryClientProvider>
         )
 
     // This should never get executed
