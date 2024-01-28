@@ -1,8 +1,13 @@
 FROM node:20 AS builder
 
 # Builds frontend and backend
+WORKDIR /
 COPY . /
 RUN yarn install
+
+# For some reason we need to build types first. Turbo should be able to figure this
+# out, but it isn't working
+RUN yarn build --filter types
 RUN yarn build
 
 # Create runtime image

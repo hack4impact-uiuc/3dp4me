@@ -11,12 +11,6 @@
         "outDir": "dist",
         "baseUrl": "./src",
         "skipLibCheck": true,
-        "paths": {
-            "*": [
-                "node_modules/*",
-                "src/types/*"
-            ]
-        }
     },
     "lib": [
         "es2015"
