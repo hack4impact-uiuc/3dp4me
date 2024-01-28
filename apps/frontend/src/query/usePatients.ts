@@ -1,7 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys, queryClient } from "./query";
-import { Paginated, getPatientsByPageNumberAndSearch, getPatientsByStageAndPageNumberAndSearch } from "../api/api";
-import { Patient } from "@3dp4me/types";
+import { Patient } from '@3dp4me/types'
+import { useQuery } from '@tanstack/react-query'
+
+import {
+    getPatientsByPageNumberAndSearch,
+    getPatientsByStageAndPageNumberAndSearch,
+    Paginated,
+} from '../api/api'
+import { queryClient, QueryKeys } from './query'
 
 export interface UsePatientsOptions {
     stepKey?: string
@@ -10,12 +15,10 @@ export interface UsePatientsOptions {
     query: string
 }
 
-const getPatientsQueryKey = ({
-    stepKey,
-    page,
-    limit,
-    query
-}: UsePatientsOptions) => [QueryKeys.Patients, `${page}-${limit}-${query}$${stepKey}`]
+const getPatientsQueryKey = ({ stepKey, page, limit, query }: UsePatientsOptions) => [
+    QueryKeys.Patients,
+    `${page}-${limit}-${query}$${stepKey}`,
+]
 
 const getPatientsQuery = (opts: UsePatientsOptions) => ({
     queryKey: getPatientsQueryKey(opts),
@@ -25,22 +28,22 @@ const getPatientsQuery = (opts: UsePatientsOptions) => ({
             return res.result
         }
 
-        if (opts.stepKey === '')
-            return { data: [], count: 0 }
+        if (opts.stepKey === '') return { data: [], count: 0 }
 
-        const res = await getPatientsByStageAndPageNumberAndSearch(opts.stepKey, opts.page, opts.limit, opts.query)
+        const res = await getPatientsByStageAndPageNumberAndSearch(
+            opts.stepKey,
+            opts.page,
+            opts.limit,
+            opts.query
+        )
         return res.result
     },
 })
 
-
-export const usePatients = (opts: UsePatientsOptions) => {
-    return useQuery<Paginated<Patient[]>>(
-        getPatientsQuery(opts)
-    )
-}
+export const usePatients = (opts: UsePatientsOptions) =>
+    useQuery<Paginated<Patient[]>>(getPatientsQuery(opts))
 
 export const useInvalidatePatients = () => () =>
     queryClient.invalidateQueries({
-        queryKey: [QueryKeys.Patients]
+        queryKey: [QueryKeys.Patients],
     })

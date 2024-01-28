@@ -1,11 +1,11 @@
-import { QueryClient } from "@tanstack/react-query"
+import { QueryClient } from '@tanstack/react-query'
 
 const STALE_TIME_MS = 10_000 // 10 seconds
 
 export enum QueryKeys {
-    Patient = "Patient",
-    Patients = "Patients",
-    Steps = "Steps",
+    Patient = 'Patient',
+    Patients = 'Patients',
+    Steps = 'Steps',
 }
 
 /**

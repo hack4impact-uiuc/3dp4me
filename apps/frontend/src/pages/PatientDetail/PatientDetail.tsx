@@ -1,18 +1,13 @@
 import './PatientDetail.scss'
 
-import { Nullish, Patient, Step } from '@3dp4me/types'
-import _ from 'lodash'
+import { Patient } from '@3dp4me/types'
 import { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { useParams } from 'react-router-dom'
 import swal from 'sweetalert'
 import { StringParam, useQueryParam } from 'use-query-params'
 
-import {
-    deletePatientById,
-    updatePatient,
-    updateStage,
-} from '../../api/api'
+import { deletePatientById, updatePatient, updateStage } from '../../api/api'
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper'
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal'
 import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar'
@@ -20,11 +15,10 @@ import StepContent from '../../components/StepContent/StepContent'
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons'
 import { useErrorWrap } from '../../hooks/useErrorWrap'
 import { useTranslations } from '../../hooks/useTranslations'
-import { LANGUAGES } from '../../utils/constants'
-import { getStepData } from '../../utils/metadataUtils'
-import { sortMetadata } from '../../utils/utils'
 import { useInvalidatePatient, usePatient } from '../../query/usePatient'
 import { useSteps } from '../../query/useSteps'
+import { LANGUAGES } from '../../utils/constants'
+import { getStepData } from '../../utils/metadataUtils'
 
 /**
  * The detail view for a patient. Shows their information
@@ -39,7 +33,9 @@ const PatientDetail = () => {
     const stepKeyParam = useQueryParam('stepKey', StringParam)[0]
     const [edit, setEdit] = useState(false)
     const { data: patientData, isLoading: isPatientLoading } = usePatient(patientId)
-    const { data: stepMetaData, isLoading: areStepsLoading } = useSteps({ includeHiddenFields: false })
+    const { data: stepMetaData, isLoading: areStepsLoading } = useSteps({
+        includeHiddenFields: false,
+    })
     const invalidatePatient = useInvalidatePatient(patientId)
     const isLoading = isPatientLoading || areStepsLoading
 
@@ -48,19 +44,16 @@ const PatientDetail = () => {
      * Then sort it.
      */
     useEffect(() => {
-        if (!stepMetaData)
-            return
+        if (!stepMetaData) return
 
-        if (!!stepMetaData.find((s) => s.key === selectedStep))
-            return
+        if (stepMetaData.find((s) => s.key === selectedStep)) return
 
         if (stepKeyParam) {
             setSelectedStep(stepKeyParam)
             return
         }
 
-        if (stepMetaData?.length) 
-            setSelectedStep(stepMetaData[0].key)
+        if (stepMetaData?.length) setSelectedStep(stepMetaData[0].key)
     }, [stepMetaData, stepKeyParam])
 
     /**

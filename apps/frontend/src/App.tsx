@@ -1,3 +1,4 @@
+import { QueryClientProvider } from '@tanstack/react-query'
 import { Amplify, Auth } from 'aws-amplify'
 import { arSA, enUS } from 'date-fns/locale'
 import React, { useEffect, useState } from 'react'
@@ -8,10 +9,9 @@ import { AUTHENTICATED, setAuthListener, UNAUTHENTICATED, UNDEFINED_AUTH } from 
 import { awsconfig } from './aws/aws-exports'
 import { getCurrentUserInfo } from './aws/aws-helper'
 import Login from './pages/Login/Login'
+import { queryClient } from './query/query'
 import Store from './store/Store'
 import { LANGUAGES } from './utils/constants'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { queryClient } from './query/query'
 
 // Configure amplify
 Amplify.configure(awsconfig)

@@ -1,16 +1,16 @@
 import './Patients.scss'
 
 import { useState } from 'react'
+
 import PaginateBar from '../../components/PaginateBar/PaginateBar'
 import PatientTable from '../../components/PatientTable/PatientTable'
-import { useErrorWrap } from '../../hooks/useErrorWrap'
 import { useTranslations } from '../../hooks/useTranslations'
+import { useInvalidatePatients, usePatients } from '../../query/usePatients'
 import {
     ALL_PATIENT_DASHBOARD_ROW_DATA,
     getPatientDashboardHeaders,
     PEOPLE_PER_PAGE,
 } from '../../utils/constants'
-import { useInvalidatePatients, usePatients } from '../../query/usePatients'
 
 /**
  * Shows a table of all patients within the system
@@ -27,7 +27,7 @@ const Patients = () => {
     const { data: patients } = usePatients({
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
-        query: searchQuery
+        query: searchQuery,
     })
 
     const allPatients = patients?.data || []

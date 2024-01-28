@@ -1,18 +1,19 @@
 import './Dashboard.scss'
 
-import { Field, Nullish, Patient, Step } from '@3dp4me/types'
+import { Field, Patient } from '@3dp4me/types'
 import { Snackbar, SnackbarCloseReason } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
-import { trackPromise } from 'react-promise-tracker'
 
-import { getAllStepsMetadata, getPatientsByStageAndPageNumberAndSearch } from '../../api/api'
 import PaginateBar from '../../components/PaginateBar/PaginateBar'
 import PatientTable from '../../components/PatientTable/PatientTable'
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons'
+import { useSetError } from '../../hooks/uesSetError'
 import { useErrorWrap } from '../../hooks/useErrorWrap'
 import { useTranslations } from '../../hooks/useTranslations'
+import { useInvalidatePatients, usePatients } from '../../query/usePatients'
+import { useSteps } from '../../query/useSteps'
 import {
     DisplayFieldType,
     getStepDashboardHeaders,
@@ -20,10 +21,6 @@ import {
     PEOPLE_PER_PAGE,
 } from '../../utils/constants'
 import { ColumnMetadata, Header } from '../../utils/table-renderers'
-import { sortMetadata } from '../../utils/utils'
-import { useSteps } from '../../query/useSteps'
-import { useInvalidatePatients, usePatients } from '../../query/usePatients'
-import { useSetError } from '../../hooks/uesSetError'
 
 const CLOSE_REASON_CLICKAWAY = 'clickaway'
 
@@ -36,7 +33,9 @@ const Dashboard = () => {
     const [translations, selectedLang] = useTranslations()
 
     // The metadata for all steps
-    const { data: stepsMetaData, isLoading: areStepsLoading } = useSteps({ includeHiddenFields: false })
+    const { data: stepsMetaData, isLoading: areStepsLoading } = useSteps({
+        includeHiddenFields: false,
+    })
 
     // Currently selected step
     const [selectedStep, setSelectedStep] = useState('')
@@ -51,9 +50,8 @@ const Dashboard = () => {
         stepKey: selectedStep,
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
-        query: searchQuery
+        query: searchQuery,
     })
-
 
     const patients = patientsData?.data || []
     const patientsCount = patientsData?.count || 0
@@ -75,15 +73,14 @@ const Dashboard = () => {
      * Gets metadata for all setps
      */
     useEffect(() => {
-        if (areStepsLoading)
-            return
+        if (areStepsLoading) return
 
         if (!stepsMetaData || stepsMetaData.length === 0) {
             setError(translations.errors.noMetadata)
             return
         }
 
-        if (!!stepsMetaData?.find((s) => s.key === selectedStep)) {
+        if (stepsMetaData?.find((s) => s.key === selectedStep)) {
             return
         }
 
@@ -226,10 +223,7 @@ const Dashboard = () => {
     return (
         <div className="dashboard">
             <div className="tabs">
-                <ToggleButtons
-                    step={selectedStep}
-                    handleStep={onStepSelected}
-                />
+                <ToggleButtons step={selectedStep} handleStep={onStepSelected} />
             </div>
             <Snackbar
                 open={isSnackbarOpen}

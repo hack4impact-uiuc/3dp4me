@@ -1,15 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys, queryClient } from "./query";
-import { getPatientById } from "../api/api";
-import { Patient } from "@3dp4me/types";
+import { Patient } from '@3dp4me/types'
+import { useQuery } from '@tanstack/react-query'
 
-const getPatientQueryKey = (
-    patientId: string,
-) => [QueryKeys.Patient, patientId]
+import { getPatientById } from '../api/api'
+import { queryClient, QueryKeys } from './query'
 
-const getPatientQuery = (
-    patientId: string
-) => ({
+const getPatientQueryKey = (patientId: string) => [QueryKeys.Patient, patientId]
+
+const getPatientQuery = (patientId: string) => ({
     queryKey: getPatientQueryKey(patientId),
     queryFn: async () => {
         const res = await getPatientById(patientId)
@@ -17,14 +14,9 @@ const getPatientQuery = (
     },
 })
 
-
-export const usePatient = (patientId: string) => {
-    return useQuery<Patient>(
-        getPatientQuery(patientId)
-    )
-}
+export const usePatient = (patientId: string) => useQuery<Patient>(getPatientQuery(patientId))
 
 export const useInvalidatePatient = (patientId: string) => () =>
     queryClient.invalidateQueries({
-        queryKey: getPatientQueryKey(patientId)
+        queryKey: getPatientQueryKey(patientId),
     })

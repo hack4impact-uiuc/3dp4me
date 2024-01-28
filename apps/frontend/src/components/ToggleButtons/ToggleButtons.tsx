@@ -1,6 +1,6 @@
 import './ToggleButtons.scss'
 
-import { Nullish, Patient, Step } from '@3dp4me/types'
+import { Nullish, Patient } from '@3dp4me/types'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -14,9 +14,9 @@ import ExclamationIcon from '../../assets/exclamation.svg'
 import HalfCircleIcon from '../../assets/half-circle.svg'
 import { useTranslations } from '../../hooks/useTranslations'
 import { useWindowDimensions } from '../../hooks/useWindowDimensions'
+import { useSteps } from '../../query/useSteps'
 import { LANGUAGES, RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH, STEP_STATUS } from '../../utils/constants'
 import { getStepData } from '../../utils/metadataUtils'
-import { useSteps } from '../../query/useSteps'
 
 interface ToggleButtonsProps {
     handleStep: (newStep: string) => void
