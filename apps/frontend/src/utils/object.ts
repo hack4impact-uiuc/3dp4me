@@ -1,4 +1,4 @@
-import { Nullish, Path, PathValue } from "@3dp4me/types";
+import { Nullish, Path, PathValue } from '@3dp4me/types'
 
 /**
  * Takes an object path and returns the underlying value at that locaiton.
@@ -6,15 +6,18 @@ import { Nullish, Path, PathValue } from "@3dp4me/types";
  * @param {Object} obj Object to get data from
  * @param {String} path Dot seperated path
  */
-export function resolveObjPath<T extends Record<string, any>, P extends Path<T>>(obj: T, path: P): Nullish<PathValue<T, P>> {
-    if (!obj) return null;
+export function resolveObjPath<T extends Record<string, any>, P extends Path<T>>(
+    obj: T,
+    path: P
+): Nullish<PathValue<T, P>> {
+    if (!obj) return null
 
-    const r = path?.split('.');
+    const r = path?.split('.')
     if (r.length === 1) {
         return obj[r[0]]
     }
 
-    return resolveObjPath(obj[r.shift()!], r.join('.'));
+    return resolveObjPath(obj[r.shift()!], r.join('.'))
 }
 
 /**
@@ -24,36 +27,33 @@ export function resolveObjPath<T extends Record<string, any>, P extends Path<T>>
  * Note that this only compares the stringified value for 'key'
  */
 export function resolveMixedObjPath(obj: Nullish<Record<string, any>>, path: string) {
-    if (!obj) return null;
-    if (!path) return obj;
+    if (!obj) return null
+    if (!path) return obj
 
-    const r = path.split('.');
-    const nextPath = r.shift()!;
-    const remainingPath = r.join('.');
+    const r = path.split('.')
+    const nextPath = r.shift()!
+    const remainingPath = r.join('.')
 
     // Assume the next path component is a key/value
-    let nextObj = null;
-    if (nextPath)
-        nextObj = obj[nextPath];
+    let nextObj = null
+    if (nextPath) nextObj = obj[nextPath]
 
     // If not, assume it is an array
     if (!nextObj) {
-        const s = nextPath.split('[');
+        const s = nextPath.split('[')
 
         // Name of the array
-        const arrayName = s.shift()!;
+        const arrayName = s.shift()!
 
         // Extract the keyname and value from the condition
-        let condition = s.join('[');
-        condition = condition.substr(0, condition.length - 1);
-        const conditionArray = condition.split('===');
-        const keyName = conditionArray[0];
-        const value = conditionArray[1];
+        let condition = s.join('[')
+        condition = condition.substr(0, condition.length - 1)
+        const conditionArray = condition.split('===')
+        const keyName = conditionArray[0]
+        const value = conditionArray[1]
 
-        nextObj = obj[arrayName]?.find(
-            (item: any) => item[keyName]?.toString() === value,
-        );
+        nextObj = obj[arrayName]?.find((item: any) => item[keyName]?.toString() === value)
     }
 
-    return resolveMixedObjPath(nextObj, remainingPath);
+    return resolveMixedObjPath(nextObj, remainingPath)
 }

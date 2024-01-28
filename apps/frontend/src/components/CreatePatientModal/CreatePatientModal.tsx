@@ -1,13 +1,14 @@
-import Modal from '@material-ui/core/Modal';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import './CreatePatientModal.scss'
 
-import { useTranslations } from '../../hooks/useTranslations';
-import './CreatePatientModal.scss';
-import { BasePatient, Patient } from '@3dp4me/types';
-import { Unsaved } from '../../../../../packages/types/dist/src/utils/unsaved';
+import { BasePatient } from '@3dp4me/types'
+import { Unsaved } from '@3dp4me/types/dist/src/utils/unsaved'
+import Button from '@material-ui/core/Button'
+import Modal from '@material-ui/core/Modal'
+import TextField from '@material-ui/core/TextField'
+import PropTypes from 'prop-types'
+import React, { useState } from 'react'
+
+import { useTranslations } from '../../hooks/useTranslations'
 
 export interface CreatePatientModalProps {
     isOpen: boolean
@@ -16,12 +17,17 @@ export interface CreatePatientModalProps {
     onSaveAndEdit: (patient: Unsaved<BasePatient>) => void
 }
 
-const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }: CreatePatientModalProps) => {
-    const translations = useTranslations()[0];
-    const [firstName, setFirstName] = useState('');
-    const [fathersName, setFathersName] = useState('');
-    const [grandfathersName, setGrandfathersName] = useState('');
-    const [familyName, setFamilyName] = useState('');
+const CreatePatientModal = ({
+    isOpen,
+    onClose,
+    onSave,
+    onSaveAndEdit,
+}: CreatePatientModalProps) => {
+    const translations = useTranslations()[0]
+    const [firstName, setFirstName] = useState('')
+    const [fathersName, setFathersName] = useState('')
+    const [grandfathersName, setGrandfathersName] = useState('')
+    const [familyName, setFamilyName] = useState('')
 
     const onSavePatient = (isSaveAndEdit: boolean) => {
         const patientData = {
@@ -29,25 +35,25 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }: CreatePa
             fathersName,
             grandfathersName,
             familyName,
-        };
+        }
 
-        if (isSaveAndEdit) onSaveAndEdit(patientData);
-        else onSave(patientData);
+        if (isSaveAndEdit) onSaveAndEdit(patientData)
+        else onSave(patientData)
 
-        onClose();
-    };
+        onClose()
+    }
 
     const clearState = () => {
-        setFirstName('');
-        setFathersName('');
-        setGrandfathersName('');
-        setFamilyName('');
-    };
+        setFirstName('')
+        setFathersName('')
+        setGrandfathersName('')
+        setFamilyName('')
+    }
 
     const onDiscard = () => {
-        clearState();
-        onClose();
-    };
+        clearState()
+        onClose()
+    }
 
     return (
         <Modal className="create-patient-modal" open={isOpen} onClose={onClose}>
@@ -56,9 +62,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }: CreatePa
                     {translations.components.swal.createPatient.title}
                 </h2>
                 <div className="create-patient-input-wrapper">
-                    <span>
-                        {translations.components.swal.createPatient.firstName}
-                    </span>
+                    <span>{translations.components.swal.createPatient.firstName}</span>
                     <TextField
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
@@ -67,9 +71,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }: CreatePa
                         variant="outlined"
                         fullWidth
                     />
-                    <span>
-                        {translations.components.swal.createPatient.middleName}
-                    </span>
+                    <span>{translations.components.swal.createPatient.middleName}</span>
                     <div className="create-patient-row">
                         <TextField
                             value={fathersName}
@@ -81,18 +83,14 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }: CreatePa
                         />
                         <TextField
                             value={grandfathersName}
-                            onChange={(e) =>
-                                setGrandfathersName(e.target.value)
-                            }
+                            onChange={(e) => setGrandfathersName(e.target.value)}
                             className="create-patient-text-field"
                             size="small"
                             variant="outlined"
                             fullWidth
                         />
                     </div>
-                    <span>
-                        {translations.components.swal.createPatient.lastName}
-                    </span>
+                    <span>{translations.components.swal.createPatient.lastName}</span>
                     <TextField
                         value={familyName}
                         onChange={(e) => setFamilyName(e.target.value)}
@@ -108,10 +106,7 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }: CreatePa
                             className="create-patient-button create-patient-edit-button"
                             onClick={() => onSavePatient(true)}
                         >
-                            {
-                                translations.components.swal.createPatient
-                                    .buttons.edit
-                            }
+                            {translations.components.swal.createPatient.buttons.edit}
                         </Button>
                     </div>
                     <div className="close-delete-button-container">
@@ -119,33 +114,27 @@ const CreatePatientModal = ({ isOpen, onClose, onSave, onSaveAndEdit }: CreatePa
                             className="create-patient-button create-patient-close-button"
                             onClick={() => onSavePatient(false)}
                         >
-                            {
-                                translations.components.swal.createPatient
-                                    .buttons.noEdit
-                            }
+                            {translations.components.swal.createPatient.buttons.noEdit}
                         </Button>
 
                         <Button
                             className="create-patient-button create-patient-delete-button"
                             onClick={onDiscard}
                         >
-                            {
-                                translations.components.swal.createPatient
-                                    .buttons.discard
-                            }
+                            {translations.components.swal.createPatient.buttons.discard}
                         </Button>
                     </div>
                 </div>
             </div>
         </Modal>
-    );
-};
+    )
+}
 
 CreatePatientModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     onSaveAndEdit: PropTypes.func.isRequired,
-};
+}
 
-export default CreatePatientModal;
+export default CreatePatientModal

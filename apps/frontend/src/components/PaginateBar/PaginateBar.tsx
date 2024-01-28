@@ -1,11 +1,11 @@
-import React from 'react';
+import './PaginateBar.scss'
 
-import './PaginateBar.scss';
-import ReactPaginate from 'react-paginate'; // see: https://www.npmjs.com/package/react-paginate
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import React from 'react'
+import ReactPaginate from 'react-paginate' // see: https://www.npmjs.com/package/react-paginate
 
-import RightArrow from '../../assets/right-arrow.svg';
-import LeftArrow from '../../assets/left-arrow.svg';
+import LeftArrow from '../../assets/left-arrow.svg'
+import RightArrow from '../../assets/right-arrow.svg'
 
 export interface PaginateBarProps {
     pageCount: number
@@ -17,8 +17,8 @@ export interface PaginateBarProps {
  * Shows a pagination component with arrows and page numbers
  */
 const PaginateBar = ({ pageCount, onPageChange, currentPage }: PaginateBarProps) => {
-    const nextLabel = <img className="arrow" alt="" src={RightArrow} />;
-    const previousLabel = <img className="arrow" alt="" src={LeftArrow} />;
+    const nextLabel = <img className="arrow" alt="" src={RightArrow} />
+    const previousLabel = <img className="arrow" alt="" src={LeftArrow} />
 
     return (
         <ReactPaginate
@@ -29,7 +29,7 @@ const PaginateBar = ({ pageCount, onPageChange, currentPage }: PaginateBarProps)
             marginPagesDisplayed={10}
             pageRangeDisplayed={5}
             onPageChange={(newPage) => {
-                onPageChange(newPage.selected + 1);
+                onPageChange(newPage.selected + 1)
             }}
             containerClassName="paginate-container"
             pageClassName="paginate-element"
@@ -43,13 +43,13 @@ const PaginateBar = ({ pageCount, onPageChange, currentPage }: PaginateBarProps)
             nextLabel={nextLabel}
             previousLabel={previousLabel}
         />
-    );
-};
+    )
+}
 
 PaginateBar.propTypes = {
     pageCount: PropTypes.number,
     onPageChange: PropTypes.func.isRequired,
     currentPage: PropTypes.number,
-};
+}
 
-export default PaginateBar;
+export default PaginateBar

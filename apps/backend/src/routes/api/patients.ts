@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Response } from 'express';
 import mongoose from 'mongoose';
 
 import _ from 'lodash';
@@ -176,9 +176,10 @@ router.get(
         }
 
         // Open a stream from the S3 bucket
-        const s3Stream = downloadFile(
+        const s3Stream = await downloadFile(
             `${id}/${stepKey}/${fieldKey}/${fileName}`,
-        ).createReadStream();
+        )
+
 
         // Setup callbacks for stream error and stream close
         s3Stream

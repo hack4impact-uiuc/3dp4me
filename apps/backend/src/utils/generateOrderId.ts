@@ -1,7 +1,8 @@
 /* eslint-disable no-await-in-loop */
-import pad from 'pad';
-import { PatientModel } from '../models/Patient';
-import { ClientSession } from 'mongoose';
+import { ClientSession } from 'mongoose'
+import pad from 'pad'
+
+import { PatientModel } from '../models/Patient'
 
 const ALPHABET = [
     'A',
@@ -30,37 +31,33 @@ const ALPHABET = [
     'X',
     'Y',
     'Z',
-];
-const STARTING_YEAR = 2023;
+]
+const STARTING_YEAR = 2023
 
 export const generateOrderId = async (session: ClientSession) => {
-    const currentYear = new Date().getFullYear();
-    const numOrdersInYear = await PatientModel.count({ orderYear: currentYear });
-    let offset = 1;
+    const currentYear = new Date().getFullYear()
+    const numOrdersInYear = await PatientModel.count({ orderYear: currentYear })
+    let offset = 1
 
     // while true should be fine, but this is just a failsafe
     while (offset < 100000) {
         // Generate the order ID
-        const orderNumber = numOrdersInYear + offset;
-        const paddedOrderNumber = pad(5, orderNumber.toString(), '0');
-        const orderId = `${getYearLetter()}${paddedOrderNumber}`;
+        const orderNumber = numOrdersInYear + offset
+        const paddedOrderNumber = pad(5, orderNumber.toString(), '0')
+        const orderId = `${getYearLetter()}${paddedOrderNumber}`
 
         // See if a patient already has this ID
-        const patientWithId = await PatientModel.findOne(
-            { orderId },
-            {},
-            { session },
-        );
-        if (!patientWithId) return orderId;
+        const patientWithId = await PatientModel.findOne({ orderId }, {}, { session })
+        if (!patientWithId) return orderId
 
         // If a patient already has that ID, we try to up the order number by one
-        offset++;
+        offset++
     }
 
-    throw new Error('Could not generate order ID');
-};
+    throw new Error('Could not generate order ID')
+}
 
 const getYearLetter = () => {
-    const year = new Date().getFullYear();
-    return ALPHABET[(year - STARTING_YEAR) % ALPHABET.length];
-};
+    const year = new Date().getFullYear()
+    return ALPHABET[(year - STARTING_YEAR) % ALPHABET.length]
+}

@@ -61,7 +61,7 @@ router.get(
 
         const identityProvider = getIdentityProvider();
         try {
-            const users = await identityProvider.listUsers(params).promise();
+            const users = await identityProvider.listUsers(params);
             await sendResponse(res, 200, '', users);
         } catch (error) {
             await sendResponse(
@@ -100,7 +100,7 @@ router.put(
 
         // Do the update
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminUpdateUserAttributes(params).promise();
+        await identityProvider.adminUpdateUserAttributes(params);
         return sendResponse(res, 200, 'Role added to user');
     }),
 );
@@ -131,7 +131,7 @@ router.delete(
 
         // Do the update
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminUpdateUserAttributes(params).promise();
+        await identityProvider.adminUpdateUserAttributes(params);
         return sendResponse(res, 200, 'Role removed');
     }),
 );
@@ -160,7 +160,7 @@ router.put(
 
         // Do the update
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminUpdateUserAttributes(params).promise();
+        await identityProvider.adminUpdateUserAttributes(params);
         await sendResponse(res, 200, 'Access updated');
     }),
 );
@@ -183,7 +183,7 @@ router.delete(
 
         // Do the deletion
         const identityProvider = getIdentityProvider();
-        await identityProvider.adminDeleteUser(params).promise();
+        await identityProvider.adminDeleteUser(params);
         await sendResponse(res, 200, 'Access updated');
     }),
 );

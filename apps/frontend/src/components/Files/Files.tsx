@@ -1,23 +1,23 @@
-import React from 'react';
-import './Files.scss';
-import { Button, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import AddIcon from '@material-ui/icons/Add';
-import CloseIcon from '@material-ui/icons/Close';
-import swal from 'sweetalert';
+import './Files.scss'
 
-import { useTranslations } from '../../hooks/useTranslations';
-import { formatDate } from '../../utils/date';
-import { File as FileModel } from '@3dp4me/types';
+import { File as FileModel } from '@3dp4me/types'
+import { Button, Typography } from '@material-ui/core'
+import AddIcon from '@material-ui/icons/Add'
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import CloseIcon from '@material-ui/icons/Close'
+import React from 'react'
+import swal from 'sweetalert'
+
+import { useTranslations } from '../../hooks/useTranslations'
+import { formatDate } from '../../utils/date'
 
 export interface FilesProps<T extends string> {
     title: string
-    files: FileModel[],
-    fieldKey: T,
-    handleDownload: (key: T, filename: string) => void,
-    handleDelete: (key: T, file: FileModel) => void,
-    handleUpload: (key: T, file: File) => void,
+    files: FileModel[]
+    fieldKey: T
+    handleDownload: (key: T, filename: string) => void
+    handleDelete: (key: T, file: FileModel) => void
+    handleUpload: (key: T, file: File) => void
     isDisabled?: boolean
 }
 
@@ -30,7 +30,7 @@ const Files = <T extends string>({
     handleUpload,
     isDisabled = false,
 }: FilesProps<T>) => {
-    const [translations, selectedLang] = useTranslations();
+    const [translations, selectedLang] = useTranslations()
 
     const onDeleteFile = (file: FileModel) => {
         swal({
@@ -44,47 +44,41 @@ const Files = <T extends string>({
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                handleDelete(fieldKey, file);
+                handleDelete(fieldKey, file)
             }
-        });
-    };
+        })
+    }
 
     const getDeleteFileButton = (file: FileModel) => {
-        if (isDisabled) return null;
+        if (isDisabled) return null
         return (
             <button
                 className="file-close-button"
                 type="button"
                 onClick={() => {
-                    onDeleteFile(file);
+                    onDeleteFile(file)
                 }}
             >
                 <CloseIcon />
             </button>
-        );
-    };
+        )
+    }
 
     const RenderExistingFiles = () => {
-        if (files == null) return null;
+        if (files == null) return null
 
         return files.map((file) => (
             <div className="file-row-wrapper" key={file.filename}>
                 <Button
                     className="file-button"
                     onClick={() => {
-                        handleDownload(fieldKey, file.filename);
+                        handleDownload(fieldKey, file.filename)
                     }}
                 >
                     <div className="file-info-wrapper">
                         <ArrowDownwardIcon />
-                        <div
-                            className={
-                                isDisabled ? `file-info-view` : `file-info-edit`
-                            }
-                        >
-                            <Typography align="left">
-                                {`${file.filename}`}
-                            </Typography>
+                        <div className={isDisabled ? `file-info-view` : `file-info-edit`}>
+                            <Typography align="left">{`${file.filename}`}</Typography>
                             <p id="file-upload-timestamp">
                                 {formatDate(file.uploadDate, selectedLang)}
                             </p>
@@ -93,11 +87,11 @@ const Files = <T extends string>({
                 </Button>
                 {getDeleteFileButton(file)}
             </div>
-        ));
-    };
+        ))
+    }
 
     const getAddFileButton = () => {
-        if (isDisabled) return null;
+        if (isDisabled) return null
 
         return (
             <label htmlFor={`upload-file-input-${title}`}>
@@ -106,8 +100,7 @@ const Files = <T extends string>({
                     className="upload-file-input"
                     type="file"
                     onChange={(e) => {
-                        if (e.target.files)
-                            handleUpload(fieldKey, e.target.files[0]);
+                        if (e.target.files) handleUpload(fieldKey, e.target.files[0])
                     }}
                 />
                 <Button className="file-button" component="span">
@@ -117,8 +110,8 @@ const Files = <T extends string>({
                     </Typography>
                 </Button>
             </label>
-        );
-    };
+        )
+    }
 
     return (
         <div className="files-wrapper">
@@ -130,7 +123,7 @@ const Files = <T extends string>({
                 {getAddFileButton()}
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default Files;
+export default Files

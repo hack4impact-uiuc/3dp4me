@@ -1,137 +1,128 @@
-import ListItem from '@material-ui/core/ListItem';
-import _ from 'lodash';
-import { useEffect, useState } from 'react';
-import { trackPromise } from 'react-promise-tracker';
+import './DashboardManagement.scss'
 
-import {
-    ApiResponse,
-    getAllRoles,
-    getAllStepsMetadata,
-    updateMultipleSteps,
-} from '../../api/api';
-import BottomBar from '../../components/BottomBar/BottomBar';
-import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal';
-import CreateStepModal from '../../components/CreateStepModal/CreateStepModal';
-import EditStepModal from '../../components/EditStepModal/EditStepModal';
-import EditFieldModal from '../../components/EditFieldModal/EditFieldModal';
-import Sidebar from '../../components/Sidebar/Sidebar';
-import StepManagementContent from '../../components/StepManagementContent/StepManagementContent';
-import { useErrorWrap } from '../../hooks/useErrorWrap';
+import { BaseStep, Field, Nullish, Step, StepPathToField, Unsaved } from '@3dp4me/types'
+import ListItem from '@material-ui/core/ListItem'
+import _ from 'lodash'
+import { useEffect, useState } from 'react'
+import { trackPromise } from 'react-promise-tracker'
+
+import { ApiResponse, getAllRoles, getAllStepsMetadata, updateMultipleSteps } from '../../api/api'
+import BottomBar from '../../components/BottomBar/BottomBar'
+import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal'
+import CreateStepModal from '../../components/CreateStepModal/CreateStepModal'
+import EditFieldModal from '../../components/EditFieldModal/EditFieldModal'
+import EditStepModal from '../../components/EditStepModal/EditStepModal'
+import { FormOption } from '../../components/Fields/FormOption'
+import Sidebar from '../../components/Sidebar/Sidebar'
+import StepManagementContent from '../../components/StepManagementContent/StepManagementContent'
+import { useErrorWrap } from '../../hooks/useErrorWrap'
 import {
     Direction,
     getValidAdjacentElement,
     swapValuesInArrayByKey,
-} from '../../utils/dashboard-utils';
+} from '../../utils/dashboard-utils'
 import {
     generateKeyWithoutCollision,
-    getStepIndexGivenKey,
     getFieldIndexByNumber,
-} from '../../utils/metadataUtils';
+    getStepIndexGivenKey,
+} from '../../utils/metadataUtils'
 import {
+    getJSONReferenceByStringPath,
     rolesToMultiSelectFormat,
     sortMetadata,
-    getJSONReferenceByStringPath,
-} from '../../utils/utils';
-import './DashboardManagement.scss';
-import { drawerWidth, verticalMovementWidth } from '../../styles/variables';
-import { BaseStep, Field, Nullish, Role, Step, StepPathToField, Unsaved, UnsavedField } from '@3dp4me/types';
-import { FormOption } from '../../components/Fields/FormOption';
+} from '../../utils/utils'
 
 const SectionTab = () => {
-    const [stepMetadata, setStepMetadata] = useState<Step[]>([]);
-    const [originalStepMetadata, setOriginalStepMetadata] = useState<Step[]>([]);
-    const [selectedStep, setSelectedStep] = useState<string>('');
-    const [isEditing, setIsEditing] = useState(false);
-    const [createFieldModalOpen, setCreateFieldModalOpen] = useState(false);
-    const [editFieldModalOpen, setEditFieldModalOpen] = useState(false);
-    const [editStepModalOpen, setEditStepModalOpen] = useState(false);
-    const [createStepModalOpen, setCreateStepModalOpen] = useState(false);
-    const [allRoles, setAllRoles] = useState<FormOption[]>([]);
-    const [selectedFieldNumberForEditing, setSelectedFieldNumberForEditing] =
-        useState(0);
+    const [stepMetadata, setStepMetadata] = useState<Step[]>([])
+    const [originalStepMetadata, setOriginalStepMetadata] = useState<Step[]>([])
+    const [selectedStep, setSelectedStep] = useState<string>('')
+    const [isEditing, setIsEditing] = useState(false)
+    const [createFieldModalOpen, setCreateFieldModalOpen] = useState(false)
+    const [editFieldModalOpen, setEditFieldModalOpen] = useState(false)
+    const [editStepModalOpen, setEditStepModalOpen] = useState(false)
+    const [createStepModalOpen, setCreateStepModalOpen] = useState(false)
+    const [allRoles, setAllRoles] = useState<FormOption[]>([])
+    const [selectedFieldNumberForEditing, setSelectedFieldNumberForEditing] = useState(0)
     const [selectedFieldRootForEditing, setSelectedFieldRootForEditing] =
-        useState<StepPathToField>('fields'); // Identifies where to edit a field in stepMetadata
-    const [selectedStepForEdit, setSelectedStepForEdit] =
-        useState<Nullish<string>>(null);
+        useState<StepPathToField>('fields') // Identifies where to edit a field in stepMetadata
+    const [selectedStepForEdit, setSelectedStepForEdit] = useState<Nullish<string>>(null)
     const [selectedFieldRootForCreating, setSelectedFieldRootForCreating] =
-        useState<StepPathToField>('fields'); // Identifies where to add a field in stepMetadata
-    const [canAddFieldGroup, setCanAddFieldGroup] = useState(true); // Toggled to false if the create field modal is open for creating a subfield
+        useState<StepPathToField>('fields') // Identifies where to add a field in stepMetadata
+    const [canAddFieldGroup, setCanAddFieldGroup] = useState(true) // Toggled to false if the create field modal is open for creating a subfield
 
-    const errorWrap = useErrorWrap();
+    const errorWrap = useErrorWrap()
 
     /* Event handlers for when a user wants to create/edit a step/field. The outcome is a modal will open. */
 
     const onAddStep = () => {
-        setCreateStepModalOpen(true);
-    };
+        setCreateStepModalOpen(true)
+    }
 
     const onAddField = (stepKey: string, fieldRoot: StepPathToField) => {
-        setSelectedStep(stepKey);
-        setSelectedFieldRootForCreating(fieldRoot);
-        setCreateFieldModalOpen(true);
-        setCanAddFieldGroup(true);
-    };
+        setSelectedStep(stepKey)
+        setSelectedFieldRootForCreating(fieldRoot)
+        setCreateFieldModalOpen(true)
+        setCanAddFieldGroup(true)
+    }
 
     const onAddSubfield = (stepKey: string, fieldRoot: StepPathToField) => {
-        setSelectedStep(stepKey);
-        setSelectedFieldRootForCreating(fieldRoot);
-        setCreateFieldModalOpen(true);
-        setCanAddFieldGroup(false);
-    };
+        setSelectedStep(stepKey)
+        setSelectedFieldRootForCreating(fieldRoot)
+        setCreateFieldModalOpen(true)
+        setCanAddFieldGroup(false)
+    }
 
     const onEditField = (fieldRoot: StepPathToField, fieldNumber: number) => {
-        setSelectedFieldNumberForEditing(fieldNumber);
-        setSelectedFieldRootForEditing(fieldRoot);
-        setEditFieldModalOpen(true);
-    };
+        setSelectedFieldNumberForEditing(fieldNumber)
+        setSelectedFieldRootForEditing(fieldRoot)
+        setEditFieldModalOpen(true)
+    }
 
     const onEditStep = (stepKey: string) => {
-        setSelectedStepForEdit(stepKey);
+        setSelectedStepForEdit(stepKey)
 
-        const stepIndex = getStepIndexGivenKey(stepMetadata, stepKey);
-        setSelectedStep(stepMetadata[stepIndex].key);
-        setEditStepModalOpen(true);
-    };
+        const stepIndex = getStepIndexGivenKey(stepMetadata, stepKey)
+        setSelectedStep(stepMetadata[stepIndex].key)
+        setEditStepModalOpen(true)
+    }
 
     // Sends a request for updating the database with the modified steps/fields
     const onSaveChanges = () => {
-        let updateResponse: ApiResponse<Step[]>;
+        let updateResponse: ApiResponse<Step[]>
 
         errorWrap(
             async () => {
-                setIsEditing(false);
-                updateResponse = await trackPromise(
-                    updateMultipleSteps(stepMetadata),
-                );
+                setIsEditing(false)
+                updateResponse = await trackPromise(updateMultipleSteps(stepMetadata))
             },
             () => {
-                setIsEditing(false);
-                setOriginalStepMetadata(updateResponse.result);
-                setStepMetadata(updateResponse.result);
+                setIsEditing(false)
+                setOriginalStepMetadata(updateResponse.result)
+                setStepMetadata(updateResponse.result)
 
                 // Update selected
                 if (updateResponse.result.length >= 1) {
-                    setSelectedStep(updateResponse.result[0].key);
+                    setSelectedStep(updateResponse.result[0].key)
                 } else {
-                    setSelectedStep('');
+                    setSelectedStep('')
                 }
             },
             () => {
                 // Allow editing when the save fails
-                setIsEditing(true);
-            },
-        );
-    };
+                setIsEditing(true)
+            }
+        )
+    }
 
     // Discards any changes the user made to the fields/steps
     const onDiscardChanges = async () => {
-        setStepMetadata(originalStepMetadata);
-        setIsEditing(false);
-    };
+        setStepMetadata(originalStepMetadata)
+        setIsEditing(false)
+    }
 
     // Used to update the highlighted step whose fields the user will see
     function UpdateSelectedStep(stepKey: string) {
-        setSelectedStep(stepKey);
+        setSelectedStep(stepKey)
     }
 
     /**
@@ -140,40 +131,31 @@ const SectionTab = () => {
      * @param {Number} direction 1 indicates increasing stepNumber, -1 indicates decreasing fieldNumber
      */
     function moveStep(stepKey: string, direction: Direction) {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
+        const updatedMetadata = _.cloneDeep(stepMetadata)
 
-        const currStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
+        const currStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey)
 
-        if (currStepIndex < 0) return;
+        if (currStepIndex < 0) return
 
-        const adjStepIndex = getValidAdjacentElement(
-            updatedMetadata,
-            currStepIndex,
-            direction,
-        );
+        const adjStepIndex = getValidAdjacentElement(updatedMetadata, currStepIndex, direction)
 
-        if (adjStepIndex < 0) return;
+        if (adjStepIndex < 0) return
 
         // Perform field number swap
-        swapValuesInArrayByKey(
-            updatedMetadata,
-            'stepNumber',
-            currStepIndex,
-            adjStepIndex,
-        );
+        swapValuesInArrayByKey(updatedMetadata, 'stepNumber', currStepIndex, adjStepIndex)
 
-        const sortedMetadata = sortMetadata(updatedMetadata);
-        setStepMetadata(sortedMetadata);
+        const sortedMetadata = sortMetadata(updatedMetadata)
+        setStepMetadata(sortedMetadata)
     }
 
     // Handles moving a step down
     function onDownPressed(stepKey: string) {
-        moveStep(stepKey, Direction.DOWN);
+        moveStep(stepKey, Direction.DOWN)
     }
 
     // Handles moving a step up
     function onUpPressed(stepKey: string) {
-        moveStep(stepKey, Direction.UP);
+        moveStep(stepKey, Direction.UP)
     }
 
     /**
@@ -182,57 +164,48 @@ const SectionTab = () => {
      * @param {Number} fieldNumber The number of the field that we have to move
      * @param {Number} direction 1 indicates moving down (increasing fieldNumber), -1 indicates moving up (decreasing fieldNumber)
      */
-    function moveField(stepKey: string, fieldNumber: number, fieldRoot: StepPathToField, direction: Direction) {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
+    function moveField(
+        stepKey: string,
+        fieldNumber: number,
+        fieldRoot: StepPathToField,
+        direction: Direction
+    ) {
+        const updatedMetadata = _.cloneDeep(stepMetadata)
 
-        const foundStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey);
+        const foundStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey)
 
-        if (foundStepIndex < 0) return;
+        if (foundStepIndex < 0) return
 
         // Reference to the fields/subfields array we are modifying.
-        const fieldsArray = getJSONReferenceByStringPath(
-            updatedMetadata[foundStepIndex],
-            fieldRoot,
-        );
+        const fieldsArray = getJSONReferenceByStringPath(updatedMetadata[foundStepIndex], fieldRoot)
 
-        if (!fieldsArray) return;
+        if (!fieldsArray) return
 
-        const currFieldIndex = getFieldIndexByNumber(fieldsArray, fieldNumber);
-        const adjFieldIndex = getValidAdjacentElement(
-            fieldsArray,
-            currFieldIndex,
-            direction,
-        );
+        const currFieldIndex = getFieldIndexByNumber(fieldsArray, fieldNumber)
+        const adjFieldIndex = getValidAdjacentElement(fieldsArray, currFieldIndex, direction)
 
-        if (adjFieldIndex < 0) return;
+        if (adjFieldIndex < 0) return
 
         // Perform field number swap
-        swapValuesInArrayByKey(
-            fieldsArray,
-            'fieldNumber',
-            currFieldIndex,
-            adjFieldIndex,
-        );
+        swapValuesInArrayByKey(fieldsArray, 'fieldNumber', currFieldIndex, adjFieldIndex)
 
-        const sortedMetadata = sortMetadata(updatedMetadata);
-        setStepMetadata(sortedMetadata);
+        const sortedMetadata = sortMetadata(updatedMetadata)
+        setStepMetadata(sortedMetadata)
     }
 
     // Handles moving a field down
     function onCardDownPressed(stepKey: string, fieldRoot: StepPathToField, fieldNumber: number) {
-        moveField(stepKey, fieldNumber, fieldRoot, Direction.DOWN);
+        moveField(stepKey, fieldNumber, fieldRoot, Direction.DOWN)
     }
 
     // Handles moving a field up
     function onCardUpPressed(stepKey: string, fieldRoot: StepPathToField, fieldNumber: number) {
-        moveField(stepKey, fieldNumber, fieldRoot, Direction.UP);
+        moveField(stepKey, fieldNumber, fieldRoot, Direction.UP)
     }
 
     function GenerateStepManagementContent() {
-        const selectedStepMetadata = stepMetadata.find(
-            (step) => step.key === selectedStep,
-        );
-        if (!selectedStepMetadata) return null;
+        const selectedStepMetadata = stepMetadata.find((step) => step.key === selectedStep)
+        if (!selectedStepMetadata) return null
 
         return (
             <StepManagementContent
@@ -244,74 +217,69 @@ const SectionTab = () => {
                 onAddSubfield={onAddSubfield}
                 allRoles={allRoles}
             />
-        );
+        )
     }
 
     useEffect(() => {
         errorWrap(async () => {
             const fetchData = async () => {
-                const res = await trackPromise(getAllStepsMetadata(true)); // true indicates that we want to get hidden field
+                const res = await trackPromise(getAllStepsMetadata(true)) // true indicates that we want to get hidden field
 
-                const sortedMetadata = sortMetadata(res.result);
+                const sortedMetadata = sortMetadata(res.result)
 
                 if (sortedMetadata.length > 0) {
-                    setSelectedStep(sortedMetadata[0].key);
+                    setSelectedStep(sortedMetadata[0].key)
                 }
 
-                setStepMetadata(sortedMetadata);
-                setOriginalStepMetadata(sortedMetadata);
-            };
+                setStepMetadata(sortedMetadata)
+                setOriginalStepMetadata(sortedMetadata)
+            }
 
             const fetchRoles = async () => {
-                const rolesRes = await trackPromise(getAllRoles());
-                const roles = rolesToMultiSelectFormat(rolesRes.result);
-                setAllRoles(roles);
-            };
+                const rolesRes = await trackPromise(getAllRoles())
+                const roles = rolesToMultiSelectFormat(rolesRes.result)
+                setAllRoles(roles)
+            }
 
-            await fetchData();
-            await fetchRoles();
-        });
-    }, [setStepMetadata, errorWrap]);
+            await fetchData()
+            await fetchRoles()
+        })
+    }, [setStepMetadata, errorWrap])
 
     /* The functions below generate modals for altering fields/steps. */
 
-    const generateNewFieldPopup = () => {
-        return (
-            <CreateFieldModal
-                isOpen={createFieldModalOpen}
-                onModalClose={onCreateFieldModalClose}
-                allRoles={allRoles}
-                onAddNewField={addNewField}
-                canAddFieldGroup={canAddFieldGroup}
-            />
-        );
-    };
+    const generateNewFieldPopup = () => (
+        <CreateFieldModal
+            isOpen={createFieldModalOpen}
+            onModalClose={onCreateFieldModalClose}
+            allRoles={allRoles}
+            onAddNewField={addNewField}
+            canAddFieldGroup={canAddFieldGroup}
+        />
+    )
 
     const generateEditFieldPopup = () => {
-        const stepIndex = getStepIndexGivenKey(stepMetadata, selectedStep);
+        const stepIndex = getStepIndexGivenKey(stepMetadata, selectedStep)
 
-        if (stepIndex < 0) return null;
+        if (stepIndex < 0) return null
 
         const fieldArrayReference = getJSONReferenceByStringPath(
             stepMetadata[stepIndex],
-            selectedFieldRootForEditing,
-        );
+            selectedFieldRootForEditing
+        )
 
-        if (!fieldArrayReference) return null;
+        if (!fieldArrayReference) return null
 
-        const fieldIndex = getFieldIndexByNumber(
-            fieldArrayReference,
-            selectedFieldNumberForEditing,
-        );
+        const fieldIndex = getFieldIndexByNumber(fieldArrayReference, selectedFieldNumberForEditing)
 
-        if (fieldIndex < 0) return null;
+        if (fieldIndex < 0) return null
 
         const fieldData = getJSONReferenceByStringPath(
             stepMetadata[stepIndex],
-            selectedFieldRootForEditing,
-        )?.[fieldIndex];
+            selectedFieldRootForEditing
+        )?.[fieldIndex]
 
-        if (!fieldData) return null;
+        if (!fieldData) return null
 
         return (
             <EditFieldModal
@@ -321,27 +289,25 @@ const SectionTab = () => {
                 allRoles={allRoles}
                 onEditField={editField}
             />
-        );
-    };
+        )
+    }
 
-    const generateNewStepPopup = () => {
-        return (
-            <CreateStepModal
-                isOpen={createStepModalOpen}
-                onModalClose={() => setCreateStepModalOpen(false)}
-                allRoles={allRoles}
-                onAddNewStep={addNewStep}
-            />
-        );
-    };
+    const generateNewStepPopup = () => (
+        <CreateStepModal
+            isOpen={createStepModalOpen}
+            onModalClose={() => setCreateStepModalOpen(false)}
+            allRoles={allRoles}
+            onAddNewStep={addNewStep}
+        />
+    )
 
     const generateEditStepPopup = () => {
-        if (!selectedStepForEdit) return null;
+        if (!selectedStepForEdit) return null
 
-        const updatedMetadata = _.cloneDeep(stepMetadata);
-        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStepForEdit);
-        const stepData = updatedMetadata[stepIndex];
-        if (!stepData) return null;
+        const updatedMetadata = _.cloneDeep(stepMetadata)
+        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStepForEdit)
+        const stepData = updatedMetadata[stepIndex]
+        if (!stepData) return null
 
         return (
             <EditStepModal
@@ -351,40 +317,42 @@ const SectionTab = () => {
                 allRoles={allRoles}
                 onEditStep={editStep}
             />
-        );
-    };
+        )
+    }
 
     const onCreateFieldModalClose = () => {
-        setCreateFieldModalOpen(false);
-    };
+        setCreateFieldModalOpen(false)
+    }
 
     const onEditFieldModalClose = () => {
-        setEditFieldModalOpen(false);
-    };
+        setEditFieldModalOpen(false)
+    }
 
     /*  The functions below perform the action of adding or editing a field/step. 
         The result is stepMetadata will be modified, meaning the changes
         will only be saved locally. 
     */
-    const addNewField = (newFieldData: Unsaved<Omit<Field, "fieldNumber"|"key"|"isHidden"|"isDeleted"|"additionalData">>) => {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
+    const addNewField = (
+        newFieldData: Unsaved<
+            Omit<Field, 'fieldNumber' | 'key' | 'isHidden' | 'isDeleted' | 'additionalData'>
+        >
+    ) => {
+        const updatedMetadata = _.cloneDeep(stepMetadata)
 
-        const stepIndex = updatedMetadata.findIndex((element) => {
-            return element.key === selectedStep;
-        });
+        const stepIndex = updatedMetadata.findIndex((element) => element.key === selectedStep)
 
-        if (stepIndex < 0) return;
+        if (stepIndex < 0) return
 
         const fieldArrayReference = getJSONReferenceByStringPath(
             updatedMetadata[stepIndex],
-            selectedFieldRootForCreating,
-        );
+            selectedFieldRootForCreating
+        )
 
         // Set the field number to one more than the field number of the
         // last field for the selected step.
-        let fieldNumber = 1;
+        let fieldNumber = 1
         if (fieldArrayReference?.length) {
-            fieldNumber = fieldArrayReference[fieldArrayReference.length - 1].fieldNumber + 1;
+            fieldNumber = fieldArrayReference[fieldArrayReference.length - 1].fieldNumber + 1
         }
 
         // Mark as not being deleted and not hidden
@@ -398,61 +366,55 @@ const SectionTab = () => {
         }
 
         // TODO: Need to type this
-        fieldArrayReference?.push(newField as any);
-        setStepMetadata(updatedMetadata);
-    };
+        fieldArrayReference?.push(newField as any)
+        setStepMetadata(updatedMetadata)
+    }
 
     const editStep = (updatedStepData: Step) => {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
-        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep);
-        updatedMetadata[stepIndex] = updatedStepData;
-        setStepMetadata(updatedMetadata);
-    };
+        const updatedMetadata = _.cloneDeep(stepMetadata)
+        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep)
+        updatedMetadata[stepIndex] = updatedStepData
+        setStepMetadata(updatedMetadata)
+    }
 
     const editField = (updatedFieldData: Unsaved<Field>) => {
-        const updatedField = _.cloneDeep(updatedFieldData);
-        const updatedMetadata = _.cloneDeep(stepMetadata);
+        const updatedField = _.cloneDeep(updatedFieldData)
+        const updatedMetadata = _.cloneDeep(stepMetadata)
 
-        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep);
+        const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep)
 
-        if (stepIndex < 0) return;
+        if (stepIndex < 0) return
 
         const fieldArrayReference = getJSONReferenceByStringPath(
             updatedMetadata[stepIndex],
-            selectedFieldRootForEditing,
-        );
+            selectedFieldRootForEditing
+        )
 
-        if (!fieldArrayReference) return;
+        if (!fieldArrayReference) return
 
-        const fieldIndex = getFieldIndexByNumber(
-            fieldArrayReference,
-            selectedFieldNumberForEditing,
-        );
+        const fieldIndex = getFieldIndexByNumber(fieldArrayReference, selectedFieldNumberForEditing)
 
-        if (fieldIndex < 0) return;
+        if (fieldIndex < 0) return
 
         // TODO: Type all this as unsaved
-        fieldArrayReference[fieldIndex] = updatedField as any;
+        fieldArrayReference[fieldIndex] = updatedField as any
 
-        setStepMetadata(updatedMetadata);
-    };
+        setStepMetadata(updatedMetadata)
+    }
 
     const addNewStep = (newStepData: BaseStep) => {
-        const updatedMetadata = _.cloneDeep(stepMetadata);
+        const updatedMetadata = _.cloneDeep(stepMetadata)
 
         // Set the step number to one more than the step number of the
         // last step in updatedMetadata.
-        let stepNumber = 0;
+        let stepNumber = 0
         if (updatedMetadata.length) {
-            stepNumber = updatedMetadata[updatedMetadata.length - 1].stepNumber + 1;
+            stepNumber = updatedMetadata[updatedMetadata.length - 1].stepNumber + 1
         }
 
         // Generate a key for this step
-        const currentStepKeys = updatedMetadata.map((step) => step.key);
-        const key = generateKeyWithoutCollision(
-            newStepData.displayName.EN,
-            currentStepKeys,
-        );
+        const currentStepKeys = updatedMetadata.map((step) => step.key)
+        const key = generateKeyWithoutCollision(newStepData.displayName.EN, currentStepKeys)
 
         const newFullStep: Step = {
             ...newStepData,
@@ -460,14 +422,14 @@ const SectionTab = () => {
             key,
             isDeleted: false,
             isHidden: false,
-            defaultToListView: false
+            defaultToListView: false,
         }
 
         // TODO: Use setState mutator
-        updatedMetadata.push(newFullStep);
-        setStepMetadata(updatedMetadata);
-        setSelectedStep(newFullStep.key);
-    };
+        updatedMetadata.push(newFullStep)
+        setStepMetadata(updatedMetadata)
+        setSelectedStep(newFullStep.key)
+    }
 
     return (
         <div>
@@ -486,7 +448,7 @@ const SectionTab = () => {
                     <ListItem
                         button
                         onClick={() => {
-                            setCreateStepModalOpen(false);
+                            setCreateStepModalOpen(false)
                         }}
                     />
                 </div>
@@ -509,7 +471,7 @@ const SectionTab = () => {
             {generateEditStepPopup()}
             {generateEditFieldPopup()}
         </div>
-    );
-};
+    )
+}
 
-export default SectionTab;
+export default SectionTab

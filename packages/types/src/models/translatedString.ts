@@ -4,6 +4,6 @@ export enum Language {
 }
 
 export interface TranslatedString {
-    EN: string,
+    EN: string
     AR: string
 }

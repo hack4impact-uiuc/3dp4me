@@ -1,7 +1,7 @@
-import { useContext, useCallback } from 'react';
+import { useCallback, useContext } from 'react'
 
-import { Context } from '../store/Store';
-import { ReducerActionType } from '../store/Reducer';
+import { ReducerActionType } from '../store/Reducer'
+import { Context } from '../store/Store'
 
 /**
  * Custom hook that creates an error wrapper. If an error is thrown in the
@@ -10,31 +10,31 @@ import { ReducerActionType } from '../store/Reducer';
  * and a callback when a request errors out.
  */
 
-const defaultSuccessCallback = () => {};
-const defaultErrorCallback = () => {};
+const defaultSuccessCallback = () => {}
+const defaultErrorCallback = () => {}
 
 export const useErrorWrap = () => {
-    const dispatch = useContext(Context)[1];
+    const dispatch = useContext(Context)[1]
     const errorWrapper = useCallback(
         async (
             func: () => Promise<void> | void,
             successCallback = defaultSuccessCallback,
-            errorCallback = defaultErrorCallback,
+            errorCallback = defaultErrorCallback
         ) => {
             try {
-                if (func) await func();
-                successCallback();
+                if (func) await func()
+                successCallback()
             } catch (error) {
-                console.error(error);
+                console.error(error)
                 dispatch({
                     type: ReducerActionType.SET_ERROR,
-                    error: (error as any)?.message || "An error occurred",
-                });
-                errorCallback();
+                    error: (error as any)?.message || 'An error occurred',
+                })
+                errorCallback()
             }
         },
-        [dispatch],
-    );
+        [dispatch]
+    )
 
-    return errorWrapper;
-};
+    return errorWrapper
+}

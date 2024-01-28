@@ -1,524 +1,524 @@
 {
-    "EN": {
-        "patient2FA": {
-            "patientLogin": "Patient Login",
-            "patientID": "Patient ID:",
-            "sendCode": "Send Two-Factor Code",
-            "twoFactorAuth": "Two Factor Authentication:",
-            "enterDigits": "Enter 6-Digit Code from ****",
-            "verify": "Verify",
-            "resendCode": "Send code again"
-        },
-        "errors": {
-            "noMetadata": "You aren't allowed to view any steps. Contact an administrator to give you the proper roles."
-        },
-        "tableHeaders": {
-            "firstName": "First Name",
-            "orderId": "Order ID",
-            "familyName": "Family Name",
-            "lastEdited": "Last Edited",
-            "status": "Status",
-            "name": "Name",
-            "email": "Email",
-            "roles": "Roles",
-            "access": "Access"
-        },
-        "status": {
-            "active": "Active",
-            "feedback": "Feedback",
-            "archive": "Archive",
-            "waitlist": "Waitlist"
-        },
-        "components": {
-            "login": {
-                "signOut": "Sign Out"
-            },
-            "modal": {
-                "deleteTitle": "Are you sure?",
-                "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
-                "deleteUserConfirmation": "Once deleted, you will not be able to see this user, and the user will not have access to the site.",
-                "deleteFieldConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
-                "deleteStepConfirmation": "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
-                "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."
-            },
-            "signature": {
-                "save": "Save",
-                "clear": "Clear",
-                "close": "Close",
-                "sign": "Sign",
-                "hideDoc": "Hide document",
-                "viewDoc": "Show document"
-            },
-            "navbar": {
-                "dropdown": {
-                    "language": "Language",
-                    "EN": "EN",
-                    "AR": "AR"
-                },
-                "dashboard": {
-                    "navTitle": "Dashboard"
-                },
-                "patients": {
-                    "navTitle": "Patients",
-                    "pageTitle": "All Patients"
-                },
-                "accountManagement": {
-                    "navTitle": "Account Management"
-                },
-                "dashboardManagement": {
-                    "navTitle": "Dashboard Management"
-                }
-            },
-            "step": {
-                "lastEditedBy": "Last edited by",
-                "on": "on",
-                "none": "None"
-            },
-            "sidebar": {
-                "name": "Name",
-                "orderID": "Order ID",
-                "status": "Patient Status"
-            },
-            "bottombar": {
-                "Unfinished": "Not Complete",
-                "Partial": "Partially Complete",
-                "Finished": "Complete",
-                "active": "Active",
-                "archived": "Archived",
-                "feedback": "Feedback",
-                "waitlisted": "Waitlisted",
-                "default": "Update Status",
-                "lastEditedBy": "Last edited by",
-                "on": "on",
-                "savedMessage": {
-                    "patientInfo": "Patient Info Saved"
-                },
-                "addField": "Add Field"
-            },
-            "table": {
-                "loading": "Loading",
-                "noPatientsFound": "Sorry! No matching patients",
-                "view": "View",
-                "edit": "Edit"
-            },
-            "selectQuestionFormat": {
-                "allQuestions": "All Questions",
-                "singleQuestion": "Single Question"
-            },
-            "fieldGroup": {
-                "add": "Add"
-            },
-            "camera": {
-                "promptInstructions": "Please allow camera access following the steps below"
-            },
-            "microphone": {
-                "promptInstructions": "Please allow microphone access following the steps below"
-            },
-            "button": {
-                "createPatient": "Create Patient",
-                "save": "Save",
-                "edit": "Edit Steps",
-                "next": "Next",
-                "previous": "Previous",
-                "photo": "Take Photo",
-                "loadMore": "Load More",
-                "discard": {
-                    "title": "Discard",
-                    "question": "Are you sure?",
-                    "warningMessage": "You are about to discard your current form changes! This is unchangeable!",
-                    "success": "Discarded changes!",
-                    "confirmButton": "Ok",
-                    "cancelButton": "Cancel",
-                    "saveButton": "Save",
-                    "retakeButton": "Retake"
-                },
-                "managePatient": "Manage Patient",
-                "noMoreUsers": "No More Users"
-            },
-            "search": {
-                "placeholder": "Search..."
-            },
-            "notes": {
-                "title": "Notes"
-            },
-            "file": {
-                "addAnother": "Add Another",
-                "deleteTitle": "Are you sure?",
-                "deleteWarning": "Once deleted, this file will be lost forever. This is unchangeable!"
-            },
-            "audio": {
-                "start": "Start Recording",
-                "stop": "Stop Recording",
-                "addAnother": "Add Another",
-                "save": "Save",
-                "close": "Close",
-                "discard": "Discard",
-                "deleteTitle": "Are you sure?",
-                "deleteWarning": "Once deleted, this audio recording will be lost forever. This is unchangeable!"
-            },
-            "swal": {
-                "patientDetail": {
-                    "errorTitle": "Error!",
-                    "errorMessage": "Please try deleting the patient again."
-                },
-                "dataDiscarding": {
-                    "stay": "Stay",
-                    "leave": "Leave",
-                    "confirmationQuestion": "You have unsaved changes. Do you want to leave this page?"
-                },
-                "createPatient": {
-                    "title": "New Patient",
-                    "firstName": "Name",
-                    "middleName": "Middle Names",
-                    "lastName": "Last Name",
-                    "successMsg": "Created Patient",
-                    "buttons": {
-                        "noEdit": "Save and Close",
-                        "edit": "Save and Continue Editing",
-                        "discard": "Discard"
-                    }
-                },
-                "managePatient": {
-                    "profileInformation": "Profile Information",
-                    "title": "Manage Patient",
-                    "radioTitle": "Patient Status",
-                    "firstName": "First Name",
-                    "fatherName": "Father Name",
-                    "grandfatherName": "Grandfather Name",
-                    "familyName": "Family Name",
-                    "successMsg": "Updated Patient",
-                    "buttons": {
-                        "save": "Save",
-                        "delete": "Delete"
-                    },
-                    "orderId": "Order Id"
-                },
-                "field": {
-                    "createFieldTitle": "New Field",
-                    "editFieldTitle": "Edit Field",
-                    "fieldSettings": "Field Settings",
-                    "fieldType": "Field Type",
-                    "clearance": "Clearance Level",
-                    "customization": "Customization",
-                    "showOnDashBoard": "Show on Dashboard",
-                    "showToPatient": "Show to Patient",
-                    "field": "Field",
-                    "buttons": {
-                        "save": "Save",
-                        "discard": "Discard",
-                        "addChoice": "Add Choice",
-                        "cancel": "Cancel",
-                        "delete": "Delete"
-                    },
-                    "option": "Option",
-                    "question": "Question",
-                    "dividerTitle": "Divider Title",
-                    "headerTitle": "Header Title"
-                },
-                "step": {
-                    "createStepHeader": "New Step",
-                    "editStepHeader": "Edit Step",
-                    "stepTitle": "Step Title",
-                    "clearance": "Clearance Level",
-                    "buttons": {
-                        "save": "Save",
-                        "discard": "Discard"
-                    }
-                }
-            },
-            "map": {
-                "patientLocation": "Patient Location",
-                "reset": "Reset",
-                "latitude": "Latitude",
-                "longitude": "Longitude"
-            }
-        },
-        "accountManagement": {
-            "userDatabase": "User Database",
-            "editAccount": "Edit Account",
-            "username": "Username",
-            "email": "Email",
-            "Access": "Access",
-            "Approved": "Approved",
-            "Revoked": "Revoked",
-            "Pending": "Pending",
-            "Save": "Save",
-            "Discard": "Discard",
-            "deleteUser": "Delete User"
-        },
-        "roleManagement": {
-            "roleDatabase": "Role Database",
-            "addRole": "Add Role",
-            "roleName": "Role Name",
-            "manageRole": "Manage Role",
-            "deleteRole": "Delete Role",
-            "warning": "Warning: If this role is deleted, accounts need to be reassigned to another role",
-            "roleDescription": "Role Description"
-        },
-        "tabs": {
-            "Roles": "ROLES",
-            "Users": "USERS"
-        }
+  "EN": {
+    "patient2FA": {
+      "patientLogin": "Patient Login",
+      "patientID": "Patient ID:",
+      "sendCode": "Send Two-Factor Code",
+      "twoFactorAuth": "Two Factor Authentication:",
+      "enterDigits": "Enter 6-Digit Code from ****",
+      "verify": "Verify",
+      "resendCode": "Send code again"
     },
-    "AR": {
-        "patient2FA": {
-            "patientLogin": "تسجيل دخول المريض",
-            "patientID": "هوية المريض:",
-            "sendCode": "إرسال رمز ثنائي العوامل",
-            "twoFactorAuth": "المصادقة الثنائية:",
-            "enterDigits": "أدخل الرمز المكون من 6 أرقام من ****",
-            "verify": "تثبت",
-            "resendCode": "إرسال الرمز مرة أخرى"
+    "errors": {
+      "noMetadata": "You aren't allowed to view any steps. Contact an administrator to give you the proper roles."
+    },
+    "tableHeaders": {
+      "firstName": "First Name",
+      "orderId": "Order ID",
+      "familyName": "Family Name",
+      "lastEdited": "Last Edited",
+      "status": "Status",
+      "name": "Name",
+      "email": "Email",
+      "roles": "Roles",
+      "access": "Access"
+    },
+    "status": {
+      "active": "Active",
+      "feedback": "Feedback",
+      "archive": "Archive",
+      "waitlist": "Waitlist"
+    },
+    "components": {
+      "login": {
+        "signOut": "Sign Out"
+      },
+      "modal": {
+        "deleteTitle": "Are you sure?",
+        "deleteConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
+        "deleteUserConfirmation": "Once deleted, you will not be able to see this user, and the user will not have access to the site.",
+        "deleteFieldConfirmation": "Once deleted, you will not be able to see this field. However, it can be recovered in the database.",
+        "deleteStepConfirmation": "Once deleted, you will not be able to see this step. However, it can be recovered in the database.",
+        "deletePatientConfirmation": "Once deleted, this patient will be gone forever. It CANNOT be recovered in the database."
+      },
+      "signature": {
+        "save": "Save",
+        "clear": "Clear",
+        "close": "Close",
+        "sign": "Sign",
+        "hideDoc": "Hide document",
+        "viewDoc": "Show document"
+      },
+      "navbar": {
+        "dropdown": {
+          "language": "Language",
+          "EN": "EN",
+          "AR": "AR"
         },
-        "errors": {
-            "noMetadata": "لا يسمح لك بعرض أي خطوات. اتصل بمسؤول لمنحك الأدوار المناسبة."
+        "dashboard": {
+          "navTitle": "Dashboard"
         },
-        "tableHeaders": {
-            "firstName": "الاسم الأول",
-            "orderId": "رقم الأمر",
-            "familyName": "اسم العائلة",
-            "lastEdited": "التعديل الأخير",
-            "status": "الحالة",
-            "name": "الاسم",
-            "email": "البريد الإلكتروني",
-            "roles": "الأدوار",
-            "access": "الوصول"
-        },
-        "status": {
-            "active": "نشط",
-            "feedback": "التغذية المرتدة",
-            "archive": "الأرشيف",
-            "waitlist": "قائمة الانتظار"
-        },
-        "components": {
-            "login": {
-                "signOut": "تسجيل الخروج"
-            },
-            "modal": {
-                "deleteTitle": "هل أنت متأكد?",
-                "deleteConfirmation": "بمجرد حذفها ، لن تتمكن من رؤية هذا الحقل. ومع ذلك ، يمكن استرداده في قاعدة البيانات.",
-                "deleteUserConfirmation": "بمجرد حذفها ، لن تتمكن من رؤية هذا المستخدم ، ولن يتمكن المستخدم من الوصول إلى الموقع.",
-                "deleteFieldConfirmation": "بمجرد حذفها ، لن تتمكن من رؤية هذا الحقل. ومع ذلك ، يمكن استرداده في قاعدة البيانات.",
-                "deleteStepConfirmation": "بمجرد حذفها ، لن تتمكن من رؤية هذه الخطوة. ومع ذلك ، يمكن استرداده في قاعدة البيانات.",
-                "deletePatientConfirmation": "بمجرد حذفه ، سيختفي هذا المريض إلى الأبد. لا يمكن استرداده في قاعدة البيانات."
-            },
-            "signature": {
-                "save": "حفظ",
-                "clear": "مسح",
-                "close": "إغلاق",
-                "sign": "وقع",
-                "hideDoc": "إخفاء المستند",
-                "viewDoc": "إظهار المستند"
-            },
-            "navbar": {
-                "dropdown": {
-                    "language": "اللغة",
-                    "EN": "الإنجليزية",
-                    "AR": "العربية"
-                },
-                "dashboard": {
-                    "navTitle": "لوحة المعلومات"
-                },
-                "patients": {
-                    "navTitle": "المرضي",
-                    "pageTitle": "جميع المرضى"
-                },
-                "accountManagement": {
-                    "navTitle": "إدارة الحساب"
-                },
-                "dashboardManagement": {
-                    "navTitle": "إدارة لوحة المعلومات"
-                }
-            },
-            "step": {
-                "lastEditedBy": "التعديل الأخير تم بواسطة",
-                "on": "على",
-                "none": "لا يوجد"
-            },
-            "sidebar": {
-                "name": "الاسم",
-                "orderID": "معرف الطلب",
-                "status": "حالة المريض"
-            },
-            "bottombar": {
-                "Unfinished": "غير مكتمل",
-                "Partial": "مكتمل جزئيا",
-                "Finished": "اكتمل",
-                "active": "نشط",
-                "archived": "المؤرشفه",
-                "feedback": "التغذية المرتدة",
-                "waitlisted": "قائمة الانتظار",
-                "default": "تحديث الحالة",
-                "lastEditedBy": "التعديل الأخير تم بواسطة",
-                "on": "on",
-                "savedMessage": {
-                    "patientInfo": "تم حفظ معلومات المريض"
-                },
-                "addField": "إضافة حقل"
-            },
-            "table": {
-                "loading": "جاري التحميل",
-                "noPatientsFound": "معذرة! لا يوجد مرضى مطابقون",
-                "view": "منظر",
-                "edit": "يحرر"
-            },
-            "selectQuestionFormat": {
-                "allQuestions": "جميع الأسئلة",
-                "singleQuestion": "سؤال واحد"
-            },
-            "fieldGroup": {
-                "add": "إضافة"
-            },
-            "camera": {
-                "promptInstructions": "يرجى السماح بالوصول إلى الكاميرا باتباع الخطوات أدناه"
-            },
-            "microphone": {
-                "promptInstructions": "يرجى السماح بالوصول إلى الميكروفون باتباع الخطوات أدناه"
-            },
-            "button": {
-                "createPatient": "إنشاء مريض",
-                "save": "حفظ",
-                "edit": "تحرير الخطوات",
-                "next": "التالي",
-                "previous": "سابق",
-                "photo": "التقط صورة",
-                "loadMore": "تحميل المزيد",
-                "discard": {
-                    "title": "تجاهل",
-                    "question": "هل أنت متأكد?",
-                    "warningMessage": "أنت على وشك تجاهل تغييرات النموذج الحالية! هذا غير قابل للتغيير!",
-                    "success": "التغييرات المتجاهلة!",
-                    "confirmButton": "موافق",
-                    "cancelButton": "إلغاء",
-                    "saveButton": "حفظ",
-                    "retakeButton": "استعاده"
-                },
-                "managePatient": "إدارة المريض",
-                "noMoreUsers": "لا مزيد من المستخدمين"
-            },
-            "search": {
-                "placeholder": "بحث..."
-            },
-            "notes": {
-                "title": "ملاحظات"
-            },
-            "file": {
-                "addAnother": "إضافة آخر",
-                "deleteTitle": "هل أنت متأكد?",
-                "deleteWarning": "بمجرد حذفه ، سيتم فقد هذا الملف إلى الأبد. هذا غير قابل للتغيير!"
-            },
-            "audio": {
-                "start": "بدء التسجيل",
-                "stop": "إيقاف التسجيل",
-                "addAnother": "إضافة آخر",
-                "save": "حفظ",
-                "close": "إغلاق",
-                "discard": "تجاهل",
-                "deleteTitle": "هل أنت متأكد?",
-                "deleteWarning": "بمجرد حذفه ، سيتم فقدان هذا التسجيل الصوتي إلى الأبد. هذا غير قابل للتغيير!"
-            },
-            "swal": {
-                "patientDetail": {
-                    "errorTitle": "خطأ!",
-                    "errorMessage": "يرجى محاولة حذف المريض مرة أخرى."
-                },
-                "dataDiscarding": {
-                    "stay": "البقاء",
-                    "leave": "مغادرة",
-                    "confirmationQuestion": "لديك تغييرات غير محفوظة. هل تريد مغادرة هذه الصفحة?"
-                },
-                "createPatient": {
-                    "title": "مريض جديد",
-                    "firstName": "الاسم",
-                    "middleName": "الأسماء الوسطى",
-                    "lastName": "اسم العائلة",
-                    "successMsg": "تم إنشاء المريض",
-                    "buttons": {
-                        "noEdit": "حفظ وإغلاق",
-                        "edit": "حفظ ومتابعة التحرير",
-                        "discard": "تجاهل"
-                    }
-                },
-                "managePatient": {
-                    "profileInformation": "معلومات الملف الشخصي",
-                    "title": "إدارة المريض",
-                    "radioTitle": "حالة المريض",
-                    "firstName": "الاسم الأول",
-                    "fatherName": "اسم الأب",
-                    "grandfatherName": "اسم الجد",
-                    "familyName": "اسم العائلة",
-                    "successMsg": "المريض المحدث",
-                    "buttons": {
-                        "save": "حفظ",
-                        "delete": "حذف"
-                    },
-                    "orderId": "معرف الطلب"
-                },
-                "field": {
-                    "createFieldTitle": "حقل جديد",
-                    "editFieldTitle": "تعديل الحقل",
-                    "fieldSettings": "إعدادات الحقل",
-                    "fieldType": "نوع الحقل",
-                    "clearance": "مستوى التخليص",
-                    "customization": "التخصيص",
-                    "showOnDashBoard": "إظهار على لوحة المعلومات",
-                    "showToPatient": "عرض للمريض",
-                    "field": "الحقل",
-                    "buttons": {
-                        "save": "حفظ",
-                        "discard": "تجاهل",
-                        "addChoice": "إضافة خيار",
-                        "cancel": "إلغاء",
-                        "delete": "حذف"
-                    },
-                    "option": "خيار",
-                    "question": "سؤال",
-                    "dividerTitle": "عنوان المقسم",
-                    "headerTitle": "عنوان الترويسة"
-                },
-                "step": {
-                    "createStepHeader": "خطوة جديدة",
-                    "editStepHeader": "تعديل الخطوة",
-                    "stepTitle": "عنوان الخطوة",
-                    "clearance": "مستوى التخليص",
-                    "buttons": {
-                        "save": "حفظ",
-                        "discard": "تجاهل"
-                    }
-                }
-            },
-            "map": {
-                "patientLocation": "موقع المريض",
-                "reset": "اعاده تعيين",
-                "latitude": "العرض",
-                "longitude": " الطول"
-            }
+        "patients": {
+          "navTitle": "Patients",
+          "pageTitle": "All Patients"
         },
         "accountManagement": {
-            "userDatabase": "قاعدة بيانات المستخدم",
-            "editAccount": "تعديل الحساب",
-            "username": "اسم المستخدم",
-            "email": "البريد الإلكتروني",
-            "Access": "الوصول",
-            "Approved": "موافق عليه",
-            "Revoked": "مبطل",
-            "Pending": "معلق",
-            "Save": "حفظ",
-            "Discard": "تجاهل",
-            "deleteUser": "حذف المستخدم"
+          "navTitle": "Account Management"
         },
-        "roleManagement": {
-            "roleDatabase": "قاعدة بيانات الأدوار",
-            "addRole": "إضافة دور",
-            "roleName": "اسم الدور",
-            "manageRole": "إدارة الدور",
-            "deleteRole": "حذف الدور",
-            "warning": "تحذير: إذا تم حذف هذا الدور، يجب إعادة تعيين الحسابات إلى دور آخر",
-            "roleDescription": "وصف الدور"
-        },
-        "tabs": {
-            "Roles": "الأدوار",
-            "Users": "المستخدمين"
+        "dashboardManagement": {
+          "navTitle": "Dashboard Management"
         }
+      },
+      "step": {
+        "lastEditedBy": "Last edited by",
+        "on": "on",
+        "none": "None"
+      },
+      "sidebar": {
+        "name": "Name",
+        "orderID": "Order ID",
+        "status": "Patient Status"
+      },
+      "bottombar": {
+        "Unfinished": "Not Complete",
+        "Partial": "Partially Complete",
+        "Finished": "Complete",
+        "active": "Active",
+        "archived": "Archived",
+        "feedback": "Feedback",
+        "waitlisted": "Waitlisted",
+        "default": "Update Status",
+        "lastEditedBy": "Last edited by",
+        "on": "on",
+        "savedMessage": {
+          "patientInfo": "Patient Info Saved"
+        },
+        "addField": "Add Field"
+      },
+      "table": {
+        "loading": "Loading",
+        "noPatientsFound": "Sorry! No matching patients",
+        "view": "View",
+        "edit": "Edit"
+      },
+      "selectQuestionFormat": {
+        "allQuestions": "All Questions",
+        "singleQuestion": "Single Question"
+      },
+      "fieldGroup": {
+        "add": "Add"
+      },
+      "camera": {
+        "promptInstructions": "Please allow camera access following the steps below"
+      },
+      "microphone": {
+        "promptInstructions": "Please allow microphone access following the steps below"
+      },
+      "button": {
+        "createPatient": "Create Patient",
+        "save": "Save",
+        "edit": "Edit Steps",
+        "next": "Next",
+        "previous": "Previous",
+        "photo": "Take Photo",
+        "loadMore": "Load More",
+        "discard": {
+          "title": "Discard",
+          "question": "Are you sure?",
+          "warningMessage": "You are about to discard your current form changes! This is unchangeable!",
+          "success": "Discarded changes!",
+          "confirmButton": "Ok",
+          "cancelButton": "Cancel",
+          "saveButton": "Save",
+          "retakeButton": "Retake"
+        },
+        "managePatient": "Manage Patient",
+        "noMoreUsers": "No More Users"
+      },
+      "search": {
+        "placeholder": "Search..."
+      },
+      "notes": {
+        "title": "Notes"
+      },
+      "file": {
+        "addAnother": "Add Another",
+        "deleteTitle": "Are you sure?",
+        "deleteWarning": "Once deleted, this file will be lost forever. This is unchangeable!"
+      },
+      "audio": {
+        "start": "Start Recording",
+        "stop": "Stop Recording",
+        "addAnother": "Add Another",
+        "save": "Save",
+        "close": "Close",
+        "discard": "Discard",
+        "deleteTitle": "Are you sure?",
+        "deleteWarning": "Once deleted, this audio recording will be lost forever. This is unchangeable!"
+      },
+      "swal": {
+        "patientDetail": {
+          "errorTitle": "Error!",
+          "errorMessage": "Please try deleting the patient again."
+        },
+        "dataDiscarding": {
+          "stay": "Stay",
+          "leave": "Leave",
+          "confirmationQuestion": "You have unsaved changes. Do you want to leave this page?"
+        },
+        "createPatient": {
+          "title": "New Patient",
+          "firstName": "Name",
+          "middleName": "Middle Names",
+          "lastName": "Last Name",
+          "successMsg": "Created Patient",
+          "buttons": {
+            "noEdit": "Save and Close",
+            "edit": "Save and Continue Editing",
+            "discard": "Discard"
+          }
+        },
+        "managePatient": {
+          "profileInformation": "Profile Information",
+          "title": "Manage Patient",
+          "radioTitle": "Patient Status",
+          "firstName": "First Name",
+          "fatherName": "Father Name",
+          "grandfatherName": "Grandfather Name",
+          "familyName": "Family Name",
+          "successMsg": "Updated Patient",
+          "buttons": {
+            "save": "Save",
+            "delete": "Delete"
+          },
+          "orderId": "Order Id"
+        },
+        "field": {
+          "createFieldTitle": "New Field",
+          "editFieldTitle": "Edit Field",
+          "fieldSettings": "Field Settings",
+          "fieldType": "Field Type",
+          "clearance": "Clearance Level",
+          "customization": "Customization",
+          "showOnDashBoard": "Show on Dashboard",
+          "showToPatient": "Show to Patient",
+          "field": "Field",
+          "buttons": {
+            "save": "Save",
+            "discard": "Discard",
+            "addChoice": "Add Choice",
+            "cancel": "Cancel",
+            "delete": "Delete"
+          },
+          "option": "Option",
+          "question": "Question",
+          "dividerTitle": "Divider Title",
+          "headerTitle": "Header Title"
+        },
+        "step": {
+          "createStepHeader": "New Step",
+          "editStepHeader": "Edit Step",
+          "stepTitle": "Step Title",
+          "clearance": "Clearance Level",
+          "buttons": {
+            "save": "Save",
+            "discard": "Discard"
+          }
+        }
+      },
+      "map": {
+        "patientLocation": "Patient Location",
+        "reset": "Reset",
+        "latitude": "Latitude",
+        "longitude": "Longitude"
+      }
+    },
+    "accountManagement": {
+      "userDatabase": "User Database",
+      "editAccount": "Edit Account",
+      "username": "Username",
+      "email": "Email",
+      "Access": "Access",
+      "Approved": "Approved",
+      "Revoked": "Revoked",
+      "Pending": "Pending",
+      "Save": "Save",
+      "Discard": "Discard",
+      "deleteUser": "Delete User"
+    },
+    "roleManagement": {
+      "roleDatabase": "Role Database",
+      "addRole": "Add Role",
+      "roleName": "Role Name",
+      "manageRole": "Manage Role",
+      "deleteRole": "Delete Role",
+      "warning": "Warning: If this role is deleted, accounts need to be reassigned to another role",
+      "roleDescription": "Role Description"
+    },
+    "tabs": {
+      "Roles": "ROLES",
+      "Users": "USERS"
     }
+  },
+  "AR": {
+    "patient2FA": {
+      "patientLogin": "تسجيل دخول المريض",
+      "patientID": "هوية المريض:",
+      "sendCode": "إرسال رمز ثنائي العوامل",
+      "twoFactorAuth": "المصادقة الثنائية:",
+      "enterDigits": "أدخل الرمز المكون من 6 أرقام من ****",
+      "verify": "تثبت",
+      "resendCode": "إرسال الرمز مرة أخرى"
+    },
+    "errors": {
+      "noMetadata": "لا يسمح لك بعرض أي خطوات. اتصل بمسؤول لمنحك الأدوار المناسبة."
+    },
+    "tableHeaders": {
+      "firstName": "الاسم الأول",
+      "orderId": "رقم الأمر",
+      "familyName": "اسم العائلة",
+      "lastEdited": "التعديل الأخير",
+      "status": "الحالة",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "roles": "الأدوار",
+      "access": "الوصول"
+    },
+    "status": {
+      "active": "نشط",
+      "feedback": "التغذية المرتدة",
+      "archive": "الأرشيف",
+      "waitlist": "قائمة الانتظار"
+    },
+    "components": {
+      "login": {
+        "signOut": "تسجيل الخروج"
+      },
+      "modal": {
+        "deleteTitle": "هل أنت متأكد?",
+        "deleteConfirmation": "بمجرد حذفها ، لن تتمكن من رؤية هذا الحقل. ومع ذلك ، يمكن استرداده في قاعدة البيانات.",
+        "deleteUserConfirmation": "بمجرد حذفها ، لن تتمكن من رؤية هذا المستخدم ، ولن يتمكن المستخدم من الوصول إلى الموقع.",
+        "deleteFieldConfirmation": "بمجرد حذفها ، لن تتمكن من رؤية هذا الحقل. ومع ذلك ، يمكن استرداده في قاعدة البيانات.",
+        "deleteStepConfirmation": "بمجرد حذفها ، لن تتمكن من رؤية هذه الخطوة. ومع ذلك ، يمكن استرداده في قاعدة البيانات.",
+        "deletePatientConfirmation": "بمجرد حذفه ، سيختفي هذا المريض إلى الأبد. لا يمكن استرداده في قاعدة البيانات."
+      },
+      "signature": {
+        "save": "حفظ",
+        "clear": "مسح",
+        "close": "إغلاق",
+        "sign": "وقع",
+        "hideDoc": "إخفاء المستند",
+        "viewDoc": "إظهار المستند"
+      },
+      "navbar": {
+        "dropdown": {
+          "language": "اللغة",
+          "EN": "الإنجليزية",
+          "AR": "العربية"
+        },
+        "dashboard": {
+          "navTitle": "لوحة المعلومات"
+        },
+        "patients": {
+          "navTitle": "المرضي",
+          "pageTitle": "جميع المرضى"
+        },
+        "accountManagement": {
+          "navTitle": "إدارة الحساب"
+        },
+        "dashboardManagement": {
+          "navTitle": "إدارة لوحة المعلومات"
+        }
+      },
+      "step": {
+        "lastEditedBy": "التعديل الأخير تم بواسطة",
+        "on": "على",
+        "none": "لا يوجد"
+      },
+      "sidebar": {
+        "name": "الاسم",
+        "orderID": "معرف الطلب",
+        "status": "حالة المريض"
+      },
+      "bottombar": {
+        "Unfinished": "غير مكتمل",
+        "Partial": "مكتمل جزئيا",
+        "Finished": "اكتمل",
+        "active": "نشط",
+        "archived": "المؤرشفه",
+        "feedback": "التغذية المرتدة",
+        "waitlisted": "قائمة الانتظار",
+        "default": "تحديث الحالة",
+        "lastEditedBy": "التعديل الأخير تم بواسطة",
+        "on": "on",
+        "savedMessage": {
+          "patientInfo": "تم حفظ معلومات المريض"
+        },
+        "addField": "إضافة حقل"
+      },
+      "table": {
+        "loading": "جاري التحميل",
+        "noPatientsFound": "معذرة! لا يوجد مرضى مطابقون",
+        "view": "منظر",
+        "edit": "يحرر"
+      },
+      "selectQuestionFormat": {
+        "allQuestions": "جميع الأسئلة",
+        "singleQuestion": "سؤال واحد"
+      },
+      "fieldGroup": {
+        "add": "إضافة"
+      },
+      "camera": {
+        "promptInstructions": "يرجى السماح بالوصول إلى الكاميرا باتباع الخطوات أدناه"
+      },
+      "microphone": {
+        "promptInstructions": "يرجى السماح بالوصول إلى الميكروفون باتباع الخطوات أدناه"
+      },
+      "button": {
+        "createPatient": "إنشاء مريض",
+        "save": "حفظ",
+        "edit": "تحرير الخطوات",
+        "next": "التالي",
+        "previous": "سابق",
+        "photo": "التقط صورة",
+        "loadMore": "تحميل المزيد",
+        "discard": {
+          "title": "تجاهل",
+          "question": "هل أنت متأكد?",
+          "warningMessage": "أنت على وشك تجاهل تغييرات النموذج الحالية! هذا غير قابل للتغيير!",
+          "success": "التغييرات المتجاهلة!",
+          "confirmButton": "موافق",
+          "cancelButton": "إلغاء",
+          "saveButton": "حفظ",
+          "retakeButton": "استعاده"
+        },
+        "managePatient": "إدارة المريض",
+        "noMoreUsers": "لا مزيد من المستخدمين"
+      },
+      "search": {
+        "placeholder": "بحث..."
+      },
+      "notes": {
+        "title": "ملاحظات"
+      },
+      "file": {
+        "addAnother": "إضافة آخر",
+        "deleteTitle": "هل أنت متأكد?",
+        "deleteWarning": "بمجرد حذفه ، سيتم فقد هذا الملف إلى الأبد. هذا غير قابل للتغيير!"
+      },
+      "audio": {
+        "start": "بدء التسجيل",
+        "stop": "إيقاف التسجيل",
+        "addAnother": "إضافة آخر",
+        "save": "حفظ",
+        "close": "إغلاق",
+        "discard": "تجاهل",
+        "deleteTitle": "هل أنت متأكد?",
+        "deleteWarning": "بمجرد حذفه ، سيتم فقدان هذا التسجيل الصوتي إلى الأبد. هذا غير قابل للتغيير!"
+      },
+      "swal": {
+        "patientDetail": {
+          "errorTitle": "خطأ!",
+          "errorMessage": "يرجى محاولة حذف المريض مرة أخرى."
+        },
+        "dataDiscarding": {
+          "stay": "البقاء",
+          "leave": "مغادرة",
+          "confirmationQuestion": "لديك تغييرات غير محفوظة. هل تريد مغادرة هذه الصفحة?"
+        },
+        "createPatient": {
+          "title": "مريض جديد",
+          "firstName": "الاسم",
+          "middleName": "الأسماء الوسطى",
+          "lastName": "اسم العائلة",
+          "successMsg": "تم إنشاء المريض",
+          "buttons": {
+            "noEdit": "حفظ وإغلاق",
+            "edit": "حفظ ومتابعة التحرير",
+            "discard": "تجاهل"
+          }
+        },
+        "managePatient": {
+          "profileInformation": "معلومات الملف الشخصي",
+          "title": "إدارة المريض",
+          "radioTitle": "حالة المريض",
+          "firstName": "الاسم الأول",
+          "fatherName": "اسم الأب",
+          "grandfatherName": "اسم الجد",
+          "familyName": "اسم العائلة",
+          "successMsg": "المريض المحدث",
+          "buttons": {
+            "save": "حفظ",
+            "delete": "حذف"
+          },
+          "orderId": "معرف الطلب"
+        },
+        "field": {
+          "createFieldTitle": "حقل جديد",
+          "editFieldTitle": "تعديل الحقل",
+          "fieldSettings": "إعدادات الحقل",
+          "fieldType": "نوع الحقل",
+          "clearance": "مستوى التخليص",
+          "customization": "التخصيص",
+          "showOnDashBoard": "إظهار على لوحة المعلومات",
+          "showToPatient": "عرض للمريض",
+          "field": "الحقل",
+          "buttons": {
+            "save": "حفظ",
+            "discard": "تجاهل",
+            "addChoice": "إضافة خيار",
+            "cancel": "إلغاء",
+            "delete": "حذف"
+          },
+          "option": "خيار",
+          "question": "سؤال",
+          "dividerTitle": "عنوان المقسم",
+          "headerTitle": "عنوان الترويسة"
+        },
+        "step": {
+          "createStepHeader": "خطوة جديدة",
+          "editStepHeader": "تعديل الخطوة",
+          "stepTitle": "عنوان الخطوة",
+          "clearance": "مستوى التخليص",
+          "buttons": {
+            "save": "حفظ",
+            "discard": "تجاهل"
+          }
+        }
+      },
+      "map": {
+        "patientLocation": "موقع المريض",
+        "reset": "اعاده تعيين",
+        "latitude": "العرض",
+        "longitude": " الطول"
+      }
+    },
+    "accountManagement": {
+      "userDatabase": "قاعدة بيانات المستخدم",
+      "editAccount": "تعديل الحساب",
+      "username": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "Access": "الوصول",
+      "Approved": "موافق عليه",
+      "Revoked": "مبطل",
+      "Pending": "معلق",
+      "Save": "حفظ",
+      "Discard": "تجاهل",
+      "deleteUser": "حذف المستخدم"
+    },
+    "roleManagement": {
+      "roleDatabase": "قاعدة بيانات الأدوار",
+      "addRole": "إضافة دور",
+      "roleName": "اسم الدور",
+      "manageRole": "إدارة الدور",
+      "deleteRole": "حذف الدور",
+      "warning": "تحذير: إذا تم حذف هذا الدور، يجب إعادة تعيين الحسابات إلى دور آخر",
+      "roleDescription": "وصف الدور"
+    },
+    "tabs": {
+      "Roles": "الأدوار",
+      "Users": "المستخدمين"
+    }
+  }
 }

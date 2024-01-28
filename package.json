@@ -1,35 +1,31 @@
 {
-    "name": "3DP4ME",
-    "version": "1.0.0",
-    "private": "true",
-    "description": "Package with the development tools for 3DP4ME (such as Prettier and Husky). Please see the individual client and api sub-packages for the actual dependencies.",
-    "devDependencies": {
-        "eslint-config-airbnb": "^18.0.1",
-        "eslint-config-prettier": "^6.3.0",
-        "eslint-plugin-flowtype": "^6.0.1",
-        "eslint-plugin-import": "^2.24.2",
-        "eslint-plugin-jsx-a11y": "^6.2.3",
-        "eslint-plugin-prettier": "^4.0.0",
-        "eslint-plugin-react": "^7.25.2",
-        "eslint-plugin-react-hooks": "^4.2.0",
-        "prettier": "^2.4.1"
-    },
-    "scripts": {
-        "format": "prettier --write '{frontend/**/*.{js,jsx,css,scss,json,md},backend/**/*.{js,jsx,json,md}}'",
-        "build": "turbo build"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/hack4impact-uiuc/3dp4me.git"
-    },
-    "bugs": {
-        "url": "https://github.com/hack4impact-uiuc/3dp4me/issues"
-    },
-    "homepage": "https://github.com/hack4impact-uiuc/3dp4me#readme",
-    "dependencies": {
-        "eslint": "^8.54.0"
-    },
-    "workspaces": {
-        "packages": ["packages/*", "apps/*"]
-    }
+  "name": "3dp4me",
+  "description": "Monorepo that contains the entire codebase for the 3DP4ME dashboard",
+  "version": "1.0.0",
+  "bugs": "https://github.com/hack4impact-uiuc/3dp4me/issues",
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "rimraf": "^5.0.5",
+    "syncpack": "^12.3.0",
+    "turbo": "^1.11.3"
+  },
+  "homepage": "https://github.com/hack4impact-uiuc/3dp4me#readme",
+  "private": "true",
+  "repository": "hack4impact-uiuc/3dp4me.git",
+  "scripts": {
+    "build": "turbo build",
+    "build:docker": "docker build -t 3dp4me .",
+    "clean": "turbo clean && rimraf .turbo prod-build node_modules",
+    "lint": "turbo run lint && yarn eslint --ext .json --fix . && yarn sync",
+    "lint:check": "turbo run lint && yarn eslint --ext .json .",
+    "publish:production": "git branch -D production ; git push origin --delete production ; git checkout -b production && git push -u origin production && git switch -",
+    "sync": "yarn syncpack fix-mismatches && yarn syncpack format",
+    "test": "turbo test"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "apps/*"
+    ]
+  }
 }

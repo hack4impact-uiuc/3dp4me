@@ -1,18 +1,19 @@
-import './Sidebar.scss';
-import React from 'react';
-import { Button, Drawer, AppBar, Toolbar } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import './Sidebar.scss'
 
-import { LANGUAGES } from '../../utils/constants';
-import { useTranslations } from '../../hooks/useTranslations';
-import { Step } from '@3dp4me/types';
+import { Step } from '@3dp4me/types'
+import { AppBar, Button, Drawer, Toolbar } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
+import React from 'react'
+
+import { useTranslations } from '../../hooks/useTranslations'
+import { LANGUAGES } from '../../utils/constants'
 
 const useStyles = makeStyles({
     paper: {
         background: '#dddef2',
     },
-});
+})
 
 export interface SidebarProps {
     onClick: (key: string) => void
@@ -35,31 +36,28 @@ const Sidebar = ({
     isEditing,
     selectedStep,
 }: SidebarProps) => {
-    const selectedLang = useTranslations()[1];
-    const styles = useStyles();
+    const selectedLang = useTranslations()[1]
+    const styles = useStyles()
 
     function onButtonClick(stepKey: string) {
-        onClick(stepKey);
+        onClick(stepKey)
     }
 
     const generateBottomButton = () => {
-        if (!isEditing) return null;
+        if (!isEditing) return null
 
         return (
             <Button className="edit-steps-button" onClick={onAddStep}>
                 Add Step
             </Button>
-        );
-    };
+        )
+    }
 
     const generateReorderButtons = (stepKey: string, className: string) => {
-        if (!isEditing) return null;
+        if (!isEditing) return null
 
         return [
-            <div
-                className={`button order-button ${className}`}
-                onClick={() => onEditStep(stepKey)}
-            >
+            <div className={`button order-button ${className}`} onClick={() => onEditStep(stepKey)}>
                 <i className="pencil alternate icon" />
             </div>,
             <div
@@ -74,31 +72,28 @@ const Sidebar = ({
             >
                 <i className="chevron up icon" />
             </div>,
-        ];
-    };
+        ]
+    }
 
     const getButtonClassname = (stepKey: string, isHidden: boolean) => {
         let buttonClassNameByLanguage =
-            selectedLang === LANGUAGES.AR ? 'main-button-ar' : 'main-button';
+            selectedLang === LANGUAGES.AR ? 'main-button-ar' : 'main-button'
         if (selectedStep === stepKey) {
-            buttonClassNameByLanguage += ' selected';
+            buttonClassNameByLanguage += ' selected'
         } else {
-            buttonClassNameByLanguage += isHidden ? ' hidden' : ' unselected';
+            buttonClassNameByLanguage += isHidden ? ' hidden' : ' unselected'
         }
-        return buttonClassNameByLanguage;
-    };
+        return buttonClassNameByLanguage
+    }
 
-    const generateButtons = () => {
-        return stepMetadata.map((element) => {
+    const generateButtons = () =>
+        stepMetadata.map((element) => {
             // Don't render deleted steps
             if (element.isDeleted) {
-                return null;
+                return null
             }
 
-            const buttonClassName = getButtonClassname(
-                element.key,
-                element.isHidden || false,
-            );
+            const buttonClassName = getButtonClassname(element.key, element.isHidden || false)
 
             return (
                 <div className="sidebar-button-container">
@@ -110,24 +105,19 @@ const Sidebar = ({
                     </div>
                     {generateReorderButtons(element.key, buttonClassName)}
                 </div>
-            );
-        });
-    };
+            )
+        })
 
     return (
         <Drawer
-            className={`sidebar ${
-                isEditing ? 'sidebar-expanded' : 'sidebar-retracted'
-            }`}
+            className={`sidebar ${isEditing ? 'sidebar-expanded' : 'sidebar-retracted'}`}
             variant="permanent"
             classes={{ paper: styles.paper }}
         >
             <div className="sidebar-container">{generateButtons()}</div>
             <AppBar
                 className={`side-bottom-bar-wrapper ${
-                    isEditing
-                        ? 'side-bottom-bar-expanded'
-                        : 'side-bottom-bar-retracted'
+                    isEditing ? 'side-bottom-bar-expanded' : 'side-bottom-bar-retracted'
                 }`}
                 color="inherit"
                 style={{
@@ -137,13 +127,11 @@ const Sidebar = ({
                     zIndex: '100',
                 }}
             >
-                <Toolbar className="side-bottom-bar-toolbar">
-                    {generateBottomButton()}
-                </Toolbar>
+                <Toolbar className="side-bottom-bar-toolbar">{generateBottomButton()}</Toolbar>
             </AppBar>
         </Drawer>
-    );
-};
+    )
+}
 
 Sidebar.propTypes = {
     onClick: PropTypes.func.isRequired,
@@ -154,6 +142,6 @@ Sidebar.propTypes = {
     stepMetadata: PropTypes.array,
     isEditing: PropTypes.bool.isRequired,
     selectedStep: PropTypes.string.isRequired,
-};
+}
 
-export default Sidebar;
+export default Sidebar

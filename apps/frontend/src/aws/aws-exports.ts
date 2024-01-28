@@ -8,15 +8,9 @@ export const awsconfig = {
     },
     oauth: {
         domain: process.env.REACT_APP_OAUTH_DOMAIN,
-        scope: [
-            'phone',
-            'email',
-            'openid',
-            'aws.cognito.signin.user.admin',
-            'profile',
-        ],
+        scope: ['phone', 'email', 'openid', 'aws.cognito.signin.user.admin', 'profile'],
         redirectSignIn: process.env.REACT_APP_CALLBACK_URL,
         redirectSignOut: process.env.REACT_APP_CALLBACK_URL,
         responseType: 'code',
     },
-};
+}

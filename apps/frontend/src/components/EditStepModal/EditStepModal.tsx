@@ -1,21 +1,19 @@
-import './EditStepModal.scss';
-import React, { useState, useEffect } from 'react';
-import { Button, Modal, FormControlLabel } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import _ from 'lodash';
-import swal from 'sweetalert';
+import './EditStepModal.scss'
 
-import CustomSwitch from '../CustomSwitch/CustomSwitch';
-import { useTranslations } from '../../hooks/useTranslations';
-import MultiSelectField from '../Fields/MultiSelectField';
-import LanguageInput from '../LanguageInput/LanguageInput';
-import { useErrorWrap } from '../../hooks/useErrorWrap';
-import {
-    ERR_LANGUAGE_VALIDATION_FAILED,
-    ADMIN_ID,
-} from '../../utils/constants';
-import { Language, Role, Step, TranslatedString } from '@3dp4me/types';
-import { FormOption } from '../Fields/FormOption';
+import { Language, Step, TranslatedString } from '@3dp4me/types'
+import { Button, FormControlLabel, Modal } from '@material-ui/core'
+import _ from 'lodash'
+import PropTypes from 'prop-types'
+import React, { useEffect, useState } from 'react'
+import swal from 'sweetalert'
+
+import { useErrorWrap } from '../../hooks/useErrorWrap'
+import { useTranslations } from '../../hooks/useTranslations'
+import { ADMIN_ID, ERR_LANGUAGE_VALIDATION_FAILED } from '../../utils/constants'
+import CustomSwitch from '../CustomSwitch/CustomSwitch'
+import { FormOption } from '../Fields/FormOption'
+import MultiSelectField from '../Fields/MultiSelectField'
+import LanguageInput from '../LanguageInput/LanguageInput'
 
 export interface EditStepModalProps {
     isOpen: boolean
@@ -32,70 +30,65 @@ const EditStepModal = ({
     initialData,
     onEditStep,
 }: EditStepModalProps) => {
-    const [translations, selectedLang] = useTranslations();
-    const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID]);
-    const [displayName, setDisplayName] = useState<TranslatedString>({ EN: '', AR: '' });
-    const [isHidden, setIsHidden] = useState(false);
+    const [translations, selectedLang] = useTranslations()
+    const [selectedRoles, setSelectedRoles] = useState([ADMIN_ID])
+    const [displayName, setDisplayName] = useState<TranslatedString>({ EN: '', AR: '' })
+    const [isHidden, setIsHidden] = useState(false)
 
-    const errorWrap = useErrorWrap();
+    const errorWrap = useErrorWrap()
 
     useEffect(() => {
-        setDisplayName(initialData.displayName);
-        setIsHidden(initialData.isHidden);
+        setDisplayName(initialData.displayName)
+        setIsHidden(initialData.isHidden)
 
-        const initialRoles = initialData.readableGroups;
+        const initialRoles = initialData.readableGroups
 
         // Automatically select the admin role
         if (initialRoles.indexOf(ADMIN_ID) === -1) {
-            initialRoles.push(ADMIN_ID);
+            initialRoles.push(ADMIN_ID)
         }
 
-        setSelectedRoles(initialRoles);
-    }, [initialData, isOpen]);
+        setSelectedRoles(initialRoles)
+    }, [initialData, isOpen])
 
     const onRolesChange = (id: string, roles: string[]) => {
-        setSelectedRoles(roles);
-    };
+        setSelectedRoles(roles)
+    }
     const updateDisplayName = (value: string, language: Language) => {
-        const updatedDisplayName = _.clone(displayName);
-        updatedDisplayName[language] = value;
+        const updatedDisplayName = _.clone(displayName)
+        updatedDisplayName[language] = value
 
-        setDisplayName(updatedDisplayName);
-    };
+        setDisplayName(updatedDisplayName)
+    }
 
     const validateStep = (stepData: Step) => {
-        if (
-            stepData.displayName.EN.trim() === '' ||
-            stepData.displayName.AR.trim() === ''
-        ) {
-            throw new Error(ERR_LANGUAGE_VALIDATION_FAILED);
+        if (stepData.displayName.EN.trim() === '' || stepData.displayName.AR.trim() === '') {
+            throw new Error(ERR_LANGUAGE_VALIDATION_FAILED)
         }
-    };
+    }
 
-    const generateFields = () => {
-        return (
-            <div className="create-step-modal-field-container">
-                <span>{translations.components.swal.step.createStepHeader}</span>
-                <LanguageInput
-                    fieldKey='displayName'
-                    fieldValues={displayName}
-                    handleFieldChange={(value, language) => {
-                        updateDisplayName(value, language);
-                    }}
-                />
-            </div>
-        );
-    };
+    const generateFields = () => (
+        <div className="create-step-modal-field-container">
+            <span>{translations.components.swal.step.createStepHeader}</span>
+            <LanguageInput
+                fieldKey="displayName"
+                fieldValues={displayName}
+                handleFieldChange={(value, language) => {
+                    updateDisplayName(value, language)
+                }}
+            />
+        </div>
+    )
 
     const clearState = () => {
-        setSelectedRoles([ADMIN_ID]);
-        setDisplayName({ EN: '', AR: '' });
-    };
+        setSelectedRoles([ADMIN_ID])
+        setDisplayName({ EN: '', AR: '' })
+    }
 
     const onDiscard = () => {
-        clearState();
-        onModalClose();
-    };
+        clearState()
+        onModalClose()
+    }
 
     const getUpdatedData = () => {
         const editStepData = {
@@ -104,28 +97,28 @@ const EditStepModal = ({
             writableGroups: selectedRoles,
             displayName,
             isHidden,
-        };
+        }
 
-        return editStepData;
-    };
+        return editStepData
+    }
 
     const saveField = () => {
-        const newFieldData = getUpdatedData();
-        updateStep(newFieldData);
-    };
+        const newFieldData = getUpdatedData()
+        updateStep(newFieldData)
+    }
 
     const updateStep = (editStepData: Step) => {
         errorWrap(
             () => {
-                validateStep(editStepData);
+                validateStep(editStepData)
             },
             () => {
-                onEditStep(editStepData);
-                onModalClose();
-                clearState();
-            },
-        );
-    };
+                onEditStep(editStepData)
+                onModalClose()
+                clearState()
+            }
+        )
+    }
 
     const onDelete = () => {
         swal({
@@ -139,33 +132,28 @@ const EditStepModal = ({
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                const deletedFieldData = getUpdatedData();
-                deletedFieldData.isDeleted = true;
-                updateStep(deletedFieldData);
+                const deletedFieldData = getUpdatedData()
+                deletedFieldData.isDeleted = true
+                updateStep(deletedFieldData)
             }
-        });
-    };
+        })
+    }
 
     const handleHiddenFieldSwitchChange = (isChecked: boolean) => {
         // added the "not" operator because when the switch is on, we want isHidden to be false
-        setIsHidden(!isChecked);
-    };
+        setIsHidden(!isChecked)
+    }
 
-    const generateHiddenFieldSwitch = () => {
-        return (
-            <FormControlLabel
+    const generateHiddenFieldSwitch = () => (
+        <FormControlLabel
             // TODO: Make sure this doesn't appear
-                label={"is-hidden"}
-                className="hidden-field-switch"
-                control={
-                    <CustomSwitch
-                        checked={!isHidden}
-                        setChecked={handleHiddenFieldSwitchChange}
-                    />
-                }
-            />
-        );
-    };
+            label={'is-hidden'}
+            className="hidden-field-switch"
+            control={
+                <CustomSwitch checked={!isHidden} setChecked={handleHiddenFieldSwitchChange} />
+            }
+        />
+    )
 
     return (
         <Modal open={isOpen} onClose={onModalClose} className="edit-step-modal">
@@ -209,8 +197,8 @@ const EditStepModal = ({
                 </div>
             </div>
         </Modal>
-    );
-};
+    )
+}
 
 EditStepModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
@@ -218,6 +206,6 @@ EditStepModal.propTypes = {
     allRoles: PropTypes.array.isRequired,
     initialData: PropTypes.object.isRequired,
     onEditStep: PropTypes.func.isRequired,
-};
+}
 
-export default EditStepModal;
+export default EditStepModal

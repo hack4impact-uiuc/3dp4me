@@ -1,21 +1,14 @@
-import {
-    Checkbox,
-    FormControl,
-    FormControlLabel,
-    FormGroup,
-} from '@material-ui/core';
-import React, { ChangeEvent } from 'react';
-import PropTypes from 'prop-types';
+import { Language } from '@3dp4me/types'
+import { Checkbox, FormControl, FormControlLabel, FormGroup } from '@material-ui/core'
+import React, { ChangeEvent } from 'react'
 
-import { Language, TranslatedString } from '@3dp4me/types';
-import { FormOption } from './FormOption';
-
+import { FormOption } from './FormOption'
 
 export interface MultiSelectFieldProps {
-    title: string,
-    langKey: Language,
-    options: FormOption[],
-    selectedOptions: string[],
+    title: string
+    langKey: Language
+    options: FormOption[]
+    selectedOptions: string[]
     fieldId?: string
     isDisabled?: boolean
     disabledOptions?: string[]
@@ -33,28 +26,24 @@ const MultiSelectField = ({
     onChange = () => {},
 }: MultiSelectFieldProps) => {
     const onSelectionChange = (e: ChangeEvent<HTMLInputElement>) => {
-        let updatedOptions = [];
+        let updatedOptions = []
 
         if (!e.target.checked) {
             updatedOptions = selectedOptions.filter(
-                (option) => option.toString() !== e.target.name.toString(),
-            );
+                (option) => option.toString() !== e.target.name.toString()
+            )
         } else {
-            updatedOptions = selectedOptions.concat([e.target.name.toString()]);
+            updatedOptions = selectedOptions.concat([e.target.name.toString()])
         }
 
-        onChange(fieldId, updatedOptions);
-    };
+        onChange(fieldId, updatedOptions)
+    }
 
-    const generateQuestions = () => {
-        return options.map((option) => {
-            const isOptionChecked = selectedOptions.includes(
-                option._id.toString(),
-            );
-            const isOptionDisabled = disabledOptions.includes(
-                option._id.toString(),
-            );
-            if (option.IsHidden && !isOptionChecked) return null;
+    const generateQuestions = () =>
+        options.map((option) => {
+            const isOptionChecked = selectedOptions.includes(option._id.toString())
+            const isOptionDisabled = disabledOptions.includes(option._id.toString())
+            if (option.IsHidden && !isOptionChecked) return null
 
             return (
                 <FormControlLabel
@@ -71,16 +60,15 @@ const MultiSelectField = ({
                     label={option.Question[langKey]}
                     disabled={isDisabled || isOptionDisabled}
                 />
-            );
-        });
-    };
+            )
+        })
 
     return (
         <FormControl>
             <span>{title}</span>
             <FormGroup>{generateQuestions()}</FormGroup>
         </FormControl>
-    );
-};
+    )
+}
 
-export default MultiSelectField;
+export default MultiSelectField

@@ -1,135 +1,111 @@
-import React, { MouseEvent, MouseEventHandler, useState } from 'react';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import ToggleButton, { ToggleButtonProps } from '@material-ui/lab/ToggleButton';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import PropTypes from 'prop-types';
+import './ToggleButtons.scss'
 
-import {
-    LANGUAGES,
-    STEP_STATUS,
-    RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH,
-} from '../../utils/constants';
-import CheckIcon from '../../assets/check.svg';
-import ExclamationIcon from '../../assets/exclamation.svg';
-import HalfCircleIcon from '../../assets/half-circle.svg';
-import './ToggleButtons.scss';
-import { useTranslations } from '../../hooks/useTranslations';
-import { useWindowDimensions } from '../../hooks/useWindowDimensions';
-import { Nullish, Patient, Step } from '@3dp4me/types';
-import { getStepData } from '../../utils/metadataUtils';
+import { Nullish, Patient, Step } from '@3dp4me/types'
+import IconButton from '@material-ui/core/IconButton'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ToggleButton from '@material-ui/lab/ToggleButton'
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
+import React, { MouseEventHandler, useState } from 'react'
+
+import CheckIcon from '../../assets/check.svg'
+import ExclamationIcon from '../../assets/exclamation.svg'
+import HalfCircleIcon from '../../assets/half-circle.svg'
+import { useTranslations } from '../../hooks/useTranslations'
+import { useWindowDimensions } from '../../hooks/useWindowDimensions'
+import { LANGUAGES, RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH, STEP_STATUS } from '../../utils/constants'
+import { getStepData } from '../../utils/metadataUtils'
 
 interface ToggleButtonsProps {
-    handleStep: (newStep: string) => void;
-    metaData: Step[];
-    patientData?: Patient;
+    handleStep: (newStep: string) => void
+    metaData: Step[]
+    patientData?: Patient
     step: string
 }
 
 const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButtonsProps) => {
-    const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & HTMLButtonElement>>(null);
-    const selectedLang = useTranslations()[1];
-    const { width } = useWindowDimensions();
+    const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & HTMLButtonElement>>(null)
+    const selectedLang = useTranslations()[1]
+    const { width } = useWindowDimensions()
 
     const statusIcons = {
         [STEP_STATUS.UNFINISHED]: (
             <img
                 alt="incomplete"
                 src={ExclamationIcon}
-                className={`${
-                    selectedLang === LANGUAGES.AR
-                        ? 'status-icon-ar'
-                        : 'status-icon'
-                }`}
+                className={`${selectedLang === LANGUAGES.AR ? 'status-icon-ar' : 'status-icon'}`}
             />
         ),
         [STEP_STATUS.PARTIALLY_FINISHED]: (
             <img
                 alt="partial"
                 src={HalfCircleIcon}
-                className={`${
-                    selectedLang === LANGUAGES.AR
-                        ? 'status-icon-ar'
-                        : 'status-icon'
-                }`}
+                className={`${selectedLang === LANGUAGES.AR ? 'status-icon-ar' : 'status-icon'}`}
             />
         ),
         [STEP_STATUS.FINISHED]: (
             <img
                 alt="complete"
                 src={CheckIcon}
-                className={`${
-                    selectedLang === LANGUAGES.AR
-                        ? 'status-icon-ar'
-                        : 'status-icon'
-                }`}
+                className={`${selectedLang === LANGUAGES.AR ? 'status-icon-ar' : 'status-icon'}`}
             />
         ),
-    };
+    }
 
     const handleClickSelector: MouseEventHandler<HTMLButtonElement> = (e) => {
-        setAnchorEl(e.currentTarget);
-    };
+        setAnchorEl(e.currentTarget)
+    }
 
     const handleCloseSelector = (_: any, newStep: string) => {
-        setAnchorEl(null);
+        setAnchorEl(null)
         if (newStep !== 'close') {
-            handleStep(newStep);
+            handleStep(newStep)
         }
-    };
+    }
 
     function generateToggleButtons() {
-        if (metaData == null) return null;
+        if (metaData == null) return null
 
         return metaData.map((element) => {
-            let status = null;
+            let status = null
             const stepData = getStepData(patientData, element.key)
-            if (patientData)
-                status =
-                    stepData?.status ?? STEP_STATUS.UNFINISHED;
+            if (patientData) status = stepData?.status ?? STEP_STATUS.UNFINISHED
 
             return (
                 <ToggleButton
                     disableRipple
                     key={`${element.key}-tb`}
-                    className={`toggle-button ${
-                        step === element.key ? 'active' : ''
-                    }`}
+                    className={`toggle-button ${step === element.key ? 'active' : ''}`}
                     value={element.key}
                 >
                     {patientData ? statusIcons[status] : null}{' '}
                     <b>{element.displayName[selectedLang]}</b>
                 </ToggleButton>
-            );
-        });
+            )
+        })
     }
 
     function generateSelectedStepLabel() {
-        if (metaData == null) return null;
+        if (metaData == null) return null
 
-        const selectedStepIndex = metaData.findIndex(
-            (element) => element.key === step,
-        );
+        const selectedStepIndex = metaData.findIndex((element) => element.key === step)
 
-        if (selectedStepIndex === -1) return null;
+        if (selectedStepIndex === -1) return null
 
-        const element = metaData[selectedStepIndex];
+        const element = metaData[selectedStepIndex]
         const stepData = getStepData(patientData, step)
 
         return (
             <div className="current-step-label">
-                {stepData?.status
-                    ? statusIcons[stepData.status]
-                    : null}{' '}
+                {stepData?.status ? statusIcons[stepData.status] : null}{' '}
                 <b>{element.displayName[selectedLang]}</b>
             </div>
-        );
+        )
     }
 
     function generateMenuItems() {
-        if (metaData == null) return null;
+        if (metaData == null) return null
 
         return metaData.map((element) => {
             const stepData = getStepData(patientData, element.key)
@@ -139,15 +115,11 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButton
                     key={`${element.key}-mi`}
                     onClick={(e) => handleCloseSelector(e, element.key)}
                 >
-                    {patientData && stepData?.status
-                        ? statusIcons[stepData.status]
-                        : null}{' '}
-                    <b className="selector-text">
-                        {element.displayName[selectedLang]}
-                    </b>
+                    {patientData && stepData?.status ? statusIcons[stepData.status] : null}{' '}
+                    <b className="selector-text">{element.displayName[selectedLang]}</b>
                 </MenuItem>
-            );
-        });
+            )
+        })
     }
 
     /*  To determine whether to show the dropdown or tabs,
@@ -156,10 +128,7 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButton
         and check if that exceeds the width of the screen.
         If so, we must show a dropdown.
     */
-    if (
-        metaData &&
-        width < RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH * metaData.length
-    ) {
+    if (metaData && width < RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH * metaData.length) {
         return (
             <div className="toggle-buttons-wrapper-dropdown">
                 <div className="toggle-button-selector-dropdown">
@@ -183,7 +152,7 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButton
                     </Menu>
                 </div>
             </div>
-        );
+        )
     }
 
     return (
@@ -198,7 +167,7 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButton
                 {generateToggleButtons()}
             </ToggleButtonGroup>
         </div>
-    );
-};
+    )
+}
 
-export default ToggleButtons;
+export default ToggleButtons

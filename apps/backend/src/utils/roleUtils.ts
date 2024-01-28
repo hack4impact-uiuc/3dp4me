@@ -1,37 +1,37 @@
-import { ObjectId } from 'mongoose';
-import { RoleModel } from '../models/Role';
+import { AdminUpdateUserAttributesRequest } from 'aws-sdk/clients/cognitoidentityserviceprovider'
+
+import { RoleModel } from '../models/Role'
 import {
     SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
     SECURITY_ROLE_ATTRIBUTE_NAME,
     USER_POOL_ID,
-} from './aws/awsExports';
-import { AdminUpdateUserAttributesRequest } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+} from './aws/awsExports'
 
 export const isRoleValid = async (role: string) => {
-    const roles = await RoleModel.find({});
+    const roles = await RoleModel.find({})
     for (let i = 0; i < roles.length; ++i) {
-        if (role.toString() === roles[i]._id.toString()) return true;
+        if (role.toString() === roles[i]._id.toString()) return true
     }
 
-    return false;
-};
+    return false
+}
 
 /**
  * Removes invalid roles from the incoming roles array. For example, if a user has a role
  * that is later deleted, this will remove that old role from the user.
  */
 export const getValidRoles = async (roles: string[]) => {
-    const validRoles = [] as string[];
+    const validRoles = [] as string[]
 
     const addRoles = roles.map(async (role) => {
-        const roleIsValid = await isRoleValid(role);
-        if (roleIsValid) validRoles.push(role);
-    });
+        const roleIsValid = await isRoleValid(role)
+        if (roleIsValid) validRoles.push(role)
+    })
 
-    await Promise.all(addRoles);
+    await Promise.all(addRoles)
 
-    return validRoles;
-};
+    return validRoles
+}
 
 /**
  * Creates the AWS parameters to perform a role update on the user.
@@ -40,14 +40,18 @@ export const getValidRoles = async (roles: string[]) => {
  * @param {Array} newRole Array of IDs of the user's new roles to add.
  * @returns The update parameter.
  */
-export const createRoleUpdateParams = (username: string, oldRoles: string[], newRole: string | null): AdminUpdateUserAttributesRequest | null => {
-    let roles = oldRoles;
-    if (newRole) roles = arrayUnique(oldRoles.concat(newRole));
+export const createRoleUpdateParams = (
+    username: string,
+    oldRoles: string[],
+    newRole: string | null
+): AdminUpdateUserAttributesRequest | null => {
+    let roles = oldRoles
+    if (newRole) roles = arrayUnique(oldRoles.concat(newRole))
 
-    const rolesStringified = JSON.stringify(roles);
+    const rolesStringified = JSON.stringify(roles)
 
     // AWS puts a hard limit on how many roles we can store
-    if (rolesStringified.length > SECURITY_ROLE_ATTRIBUTE_MAX_LEN) return null;
+    if (rolesStringified.length > SECURITY_ROLE_ATTRIBUTE_MAX_LEN) return null
 
     const params = {
         UserAttributes: [
@@ -58,18 +62,18 @@ export const createRoleUpdateParams = (username: string, oldRoles: string[], new
         ],
         UserPoolId: USER_POOL_ID,
         Username: username,
-    };
+    }
 
-    return params;
-};
+    return params
+}
 
 function arrayUnique<T>(array: T[]) {
-    const a = array.concat();
+    const a = array.concat()
     for (let i = 0; i < a.length; ++i) {
         for (let j = i + 1; j < a.length; ++j) {
-            if (a[i] === a[j]) a.splice(j--, 1);
+            if (a[i] === a[j]) a.splice(j--, 1)
         }
     }
 
-    return a;
+    return a
 }
