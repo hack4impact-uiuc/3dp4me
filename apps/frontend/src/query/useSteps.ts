@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { QueryKeys, queryClient } from "./query";
 import { getAllStepsMetadata, getPatientById } from "../api/api";
 import { Patient, Step } from "@3dp4me/types";
+import { sortMetadata } from "../utils/utils";
 
 export interface UseStepsOptions {
     includeHiddenFields: boolean
@@ -18,7 +19,7 @@ const getStepsQuery = ({
     queryKey: getStepsQueryKey(includeHiddenFields),
     queryFn: async () => {
         const res = await getAllStepsMetadata(includeHiddenFields)
-        return res.result
+        return sortMetadata(res.result)
     },
 })
 

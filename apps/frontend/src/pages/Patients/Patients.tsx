@@ -1,10 +1,6 @@
 import './Patients.scss'
 
-import { Patient } from '@3dp4me/types'
-import React, { useEffect, useState } from 'react'
-import { trackPromise } from 'react-promise-tracker'
-
-import { getPatientsByPageNumberAndSearch } from '../../api/api'
+import { useState } from 'react'
 import PaginateBar from '../../components/PaginateBar/PaginateBar'
 import PatientTable from '../../components/PatientTable/PatientTable'
 import { useErrorWrap } from '../../hooks/useErrorWrap'
@@ -36,8 +32,6 @@ const Patients = () => {
 
     const allPatients = patients?.data || []
     const patientsCount = patients?.count || 0
-
-    const errorWrap = useErrorWrap()
 
     const updatePage = async (newPage: number) => {
         setSelectedPageNumber(newPage)

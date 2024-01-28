@@ -21,6 +21,9 @@ import {
 } from '../../utils/constants'
 import { ColumnMetadata, Header } from '../../utils/table-renderers'
 import { sortMetadata } from '../../utils/utils'
+import { useSteps } from '../../query/useSteps'
+import { useInvalidatePatients, usePatients } from '../../query/usePatients'
+import { useSetError } from '../../hooks/uesSetError'
 
 const CLOSE_REASON_CLICKAWAY = 'clickaway'
 
@@ -29,13 +32,11 @@ const CLOSE_REASON_CLICKAWAY = 'clickaway'
  */
 const Dashboard = () => {
     const errorWrap = useErrorWrap()
+    const setError = useSetError()
     const [translations, selectedLang] = useTranslations()
 
-    // All patients for the selected step
-    const [patients, setPatients] = useState<Patient[]>([])
-
     // The metadata for all steps
-    const [stepsMetaData, setStepsMetaData] = useState<Nullish<Step[]>>(null)
+    const { data: stepsMetaData, isLoading: areStepsLoading } = useSteps({ includeHiddenFields: false })
 
     // Currently selected step
     const [selectedStep, setSelectedStep] = useState('')
@@ -43,65 +44,58 @@ const Dashboard = () => {
     // Currently selected page
     const [selectedPageNumber, setSelectedPageNumber] = useState(1)
 
-    // Number of total patients in the database
-    const [patientsCount, setPatientsCount] = useState(0)
-
     // Words to filter out patients by
     const [searchQuery, setSearchQuery] = useState('')
+    const invalidatePatients = useInvalidatePatients()
+    const { data: patientsData } = usePatients({
+        stepKey: selectedStep,
+        page: selectedPageNumber,
+        limit: PEOPLE_PER_PAGE,
+        query: searchQuery
+    })
+
+
+    const patients = patientsData?.data || []
+    const patientsCount = patientsData?.count || 0
 
     const [isSnackbarOpen, setSnackbarOpen] = useState(false)
 
-    /**
-     * Gets patient data based on page number and step
-     */
+    // TODO: WHAT IS THE SNCKBAR
+    // /**
+    //  * Gets patient data based on page number and step
+    //  */
 
-    const loadPatientData = async (stepKey: string, pageNumber: number, query: string) => {
-        const res = await trackPromise(
-            getPatientsByStageAndPageNumberAndSearch(stepKey, pageNumber, PEOPLE_PER_PAGE, query)
-        )
-        setPatients(res.result.data)
-        setPatientsCount(res.result.count)
-
-        if (res.result.data.length === 0) {
-            setSnackbarOpen(true)
-        }
-    }
+    // const loadPatientData = async (stepKey: string, pageNumber: number, query: string) => {
+    //     if (res.result.data.length === 0) {
+    //         setSnackbarOpen(true)
+    //     }
+    // }
 
     /**
      * Gets metadata for all setps
      */
     useEffect(() => {
-        /**
-         * Gets metadata for all steps, only called once
-         */
-        const loadMetadataAndPatientData = async () => {
-            const res = await trackPromise(getAllStepsMetadata(false))
+        if (areStepsLoading)
+            return
 
-            const metaData = sortMetadata(res.result)
-            setStepsMetaData(metaData)
-            if (metaData.length > 0) {
-                setSelectedStep(metaData[0].key)
-                await loadPatientData(metaData[0].key, 1, '')
-            } else {
-                throw new Error(translations.errors.noMetadata)
-            }
+        if (!stepsMetaData || stepsMetaData.length === 0) {
+            setError(translations.errors.noMetadata)
+            return
         }
 
-        const loadAllDashboardData = async () => {
-            errorWrap(async () => {
-                await loadMetadataAndPatientData()
-            })
+        if (!!stepsMetaData?.find((s) => s.key === selectedStep)) {
+            return
         }
 
-        loadAllDashboardData()
-    }, [translations, setSelectedStep, setStepsMetaData, errorWrap])
+        setSelectedStep(stepsMetaData[0].key)
+    }, [translations, setSelectedStep, stepsMetaData, areStepsLoading])
 
     /**
      * Called when a patient is successfully added to the backend
      * @param {Object} patientData The patient data (returned from server)
      */
-    const onAddPatient = (patientData: Patient) => {
-        setPatients((oldPatients) => oldPatients.concat(patientData))
+    const onAddPatient = () => {
+        invalidatePatients()
     }
 
     /**
@@ -110,23 +104,13 @@ const Dashboard = () => {
      */
     const onStepSelected = async (stepKey: string) => {
         if (!stepKey) return
-
-        // TODO: Put the patient data in a store
         setSelectedStep(stepKey)
-
-        errorWrap(async () => {
-            await loadPatientData(stepKey, selectedPageNumber, searchQuery)
-        })
     }
 
     const onPageNumberChanged = async (newPageNumber: number) => {
         if (selectedStep === '') return
 
         setSelectedPageNumber(newPageNumber)
-
-        errorWrap(async () => {
-            await loadPatientData(selectedStep, newPageNumber, searchQuery)
-        })
     }
 
     const onSearchQueryChanged = (newSearchQuery: string) => {
@@ -135,10 +119,6 @@ const Dashboard = () => {
         // The page number needs to be updated because the search query might filter the patient data
         // such that there aren't as many pages as the one the user is currently on.
         setSelectedPageNumber(1)
-
-        errorWrap(async () => {
-            await loadPatientData(selectedStep, 1, newSearchQuery)
-        })
     }
 
     /**
