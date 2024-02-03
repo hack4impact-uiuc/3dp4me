@@ -1,4 +1,4 @@
-import { Field, Step } from '@3dp4me/types'
+import { Field, ReservedStep, Step } from '@3dp4me/types'
 import _ from 'lodash'
 import { ClientSession, HydratedDocument, PipelineStage } from 'mongoose'
 
@@ -32,8 +32,13 @@ export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[
     ] // Don't return any deleted fields
     /* eslint-enable @typescript-eslint/no-explicit-any */
 
-    // Don't return any deleted steps
-    const aggregation: PipelineStage[] = [{ $match: { isDeleted: { $ne: true } } }]
+    const aggregation: PipelineStage[] = [
+        // Don't return any deleted steps
+        { $match: { isDeleted: { $ne: true } } },
+
+        // Don't return reserved steps
+        { $match: { key: { $nin: Object.values(ReservedStep) } } },
+    ]
 
     // If not admin, then return limit what steps/fields can be returned using readableGroups
     if (!isAdmin(req.user)) {

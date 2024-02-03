@@ -1,17 +1,30 @@
 /* eslint-disable no-restricted-syntax */
-import { FieldType, File, Patient, ReservedStep, Step } from '@3dp4me/types'
+import { FieldType, File, Patient, ReservedStep, RootStepFieldKeys, Step } from '@3dp4me/types'
 
 import { getStepData } from './metadataUtils'
 import { photoToURI } from './photoManipulation'
 
 export const getProfilePictureUrl = (patient: Patient) => {
     const rootStep = getStepData(patient, ReservedStep.Root)
+    if (!rootStep) return null
 
-    return photoToURI(imageData[0], step.key, field.key, patientData._id)
+    if (!rootStep[RootStepFieldKeys.ProfilePicture]?.length)
+        return null
+
+    return photoToURI(
+        rootStep[RootStepFieldKeys.ProfilePicture][0], 
+        ReservedStep.Root, 
+        RootStepFieldKeys.ProfilePicture, 
+        patient._id
+    )
 }
 
 export const getProfilePictureAsFileArray = (patient: Patient): File[] => {
-    if (!patient.profilePicture)
+    const rootStep = getStepData(patient, ReservedStep.Root)
+    if (!rootStep) return []
+
+    if (!rootStep[RootStepFieldKeys.ProfilePicture]?.length)
         return []
-    return [patient.profilePicture]
+
+    return rootStep[RootStepFieldKeys.ProfilePicture]
 }

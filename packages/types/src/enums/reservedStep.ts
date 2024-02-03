@@ -1,4 +1,4 @@
-import { FieldType, Step } from "src/models";
+import { FieldType, Step } from "../models";
 
 export enum ReservedStep {
     // This is where inherent data for the patient can be stored, like the profile picture
