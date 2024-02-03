@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { Field, FieldType, Patient, Step } from '@3dp4me/types'
+import { FieldType, Patient, Step } from '@3dp4me/types'
 
 import { getStepData } from './metadataUtils'
 import { photoToURI } from './photoManipulation'
@@ -20,8 +20,5 @@ export const getProfilePictureUrl = (steps: Step[], patientData: Patient) => {
 
     return null
 }
-
-const getAllPhotoFields = (steps: Step[]) =>
-    steps.reduce((acc: Field[], step: Step) => acc.concat(getPhotoFields(step)), [])
 
 const getPhotoFields = (step: Step) => step.fields.filter((f) => f.fieldType === FieldType.PHOTO)
