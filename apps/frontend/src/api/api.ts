@@ -35,17 +35,12 @@ export const getPatientsByPageNumberAndSearch = async (
     return res.data
 }
 
-interface PatientStageResponse {
-    data: Patient[]
-    count: number
-}
-
 export const getPatientsByStageAndPageNumberAndSearch = async (
     stage: string,
     pageNumber: number,
     nPerPage: number,
     searchQuery = ''
-): Promise<ApiResponse<PatientStageResponse>> => {
+): Promise<ApiResponse<Paginated<Patient[]>>> => {
     const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`
     const res = await instance.get(requestString)
     if (!res?.data?.success) throw new Error(res?.data?.message)

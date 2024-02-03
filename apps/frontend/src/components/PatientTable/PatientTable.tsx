@@ -1,5 +1,5 @@
 import { BasePatient, Language, Nullish, OmitDeep, Patient } from '@3dp4me/types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import swal from 'sweetalert'
 

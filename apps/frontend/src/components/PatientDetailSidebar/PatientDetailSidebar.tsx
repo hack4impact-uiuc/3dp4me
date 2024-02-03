@@ -1,6 +1,6 @@
 import './PatientDetailSidebar.scss'
 
-import { Nullish, Patient, Step } from '@3dp4me/types'
+import { Nullish, Patient } from '@3dp4me/types'
 import {
     Accordion,
     AccordionDetails,
@@ -15,6 +15,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { useEffect, useState } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
+import { useSteps } from '../../query/useSteps'
 import { LANGUAGES } from '../../utils/constants'
 import { hasNotesForStep } from '../../utils/metadataUtils'
 import { getProfilePictureUrl } from '../../utils/profilePicture'
@@ -29,16 +30,12 @@ const enTheme = createTheme({
 })
 
 export interface PatientDetailSidebarProps<T extends Patient = Patient> {
-    stepMetaData: Step[]
     patientData: T
     onViewPatient: () => void
 }
 
-const PatientDetailSidebar = ({
-    stepMetaData,
-    patientData,
-    onViewPatient,
-}: PatientDetailSidebarProps) => {
+const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSidebarProps) => {
+    const { data: stepMetaData } = useSteps({ includeHiddenFields: false })
     const [expandedStepKey, setExpandedStepKey] = useState<Nullish<string>>(null)
     const [translations, selectedLang] = useTranslations()
     const [profilePicUrl, setProfilePicUrl] = useState<Nullish<string>>(null)
@@ -52,6 +49,9 @@ const PatientDetailSidebar = ({
 
     useEffect(() => {
         const updateProfilePic = async () => {
+            if (!stepMetaData)
+                return
+
             const url = await getProfilePictureUrl(stepMetaData, patientData)
             setProfilePicUrl(url)
         }

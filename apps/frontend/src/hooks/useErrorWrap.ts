@@ -23,14 +23,14 @@ export const useErrorWrap = () => {
         ) => {
             try {
                 if (func) await func()
-                successCallback()
+                await successCallback()
             } catch (error) {
                 console.error(error)
                 dispatch({
                     type: ReducerActionType.SET_ERROR,
                     error: (error as any)?.message || 'An error occurred',
                 })
-                errorCallback()
+                await errorCallback()
             }
         },
         [dispatch]
