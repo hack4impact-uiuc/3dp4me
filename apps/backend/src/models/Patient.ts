@@ -35,7 +35,6 @@ const patientSchema = new mongoose.Schema<Patient>({
     },
     phoneNumber: { type: String, required: false },
     secret: { type: String, required: false },
-    profilePicture: { type: fileSchema, required: false }
 })
 
 // Encrypt everything personal

@@ -1,4 +1,4 @@
-import { Field, FieldType, Step, StepStatus } from '@3dp4me/types'
+import { Field, FieldType, ReservedStep, RootStep, Step, StepStatus } from '@3dp4me/types'
 import _ from 'lodash'
 import log from 'loglevel'
 import mongoose, { SchemaDefinitionProperty } from 'mongoose'
@@ -18,9 +18,10 @@ export const initDB = (callback?: () => void) => {
     })
 
     mongoose.connection
-        .once('open', () => {
+        .once('open', async () => {
             log.info('Connected to the DB')
-            initModels()
+            await initReservedSteps()
+            await initModels()
             callback?.()
         })
         .on('error', (error) => log.error('Error connecting to the database: ', error))
@@ -32,6 +33,14 @@ const clearModels = async () => {
         // @ts-expect-error this is a hack
         delete mongoose.connection.models[step.key]
     })
+}
+
+const initReservedSteps = async () => {
+    const exists = await StepModel.findOne({ key: ReservedStep.Root }).count()
+    if (exists > 0)
+        return
+
+    await StepModel.create(RootStep)
 }
 
 export const reinitModels = async () => {

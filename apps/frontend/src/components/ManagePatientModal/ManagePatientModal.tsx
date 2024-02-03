@@ -1,6 +1,6 @@
 import './ManagePatientModal.scss'
 
-import { Language, Patient } from '@3dp4me/types'
+import { Language, Patient, ReservedStep } from '@3dp4me/types'
 import { Button, Modal } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
 import _ from 'lodash'
@@ -15,6 +15,7 @@ import RadioButtonField from '../Fields/RadioButtonField'
 import TextField from '../Fields/TextField'
 import PhotoField from '../Fields/PhotoField'
 import { getProfilePictureAsFileArray } from '../../utils/profilePicture'
+import { updatePatient, uploadFile } from '../../api/api'
 
 export interface ManagePatientModalProps {
     patientData: Patient
@@ -94,8 +95,9 @@ const ManagePatientModal = ({
         })
     }
 
-    const onProfileUpload = () => {
+    const onProfileUpload = async (key: string, file: File) => {
         // TODO: Invalidate patient when we use react query
+        await uploadFile(patientData._id, ReservedStep.Root, key, file.name, file)
     }
 
     return (
@@ -120,7 +122,7 @@ const ManagePatientModal = ({
                         fieldId="profilePicture"
                         patientId={patientData._id}
                         handleFileUpload={onProfileUpload}
-                        
+                        stepKey={ReservedStep.Root}
                     />
 
                     <TextField

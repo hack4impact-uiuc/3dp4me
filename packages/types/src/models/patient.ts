@@ -24,5 +24,4 @@ export interface Patient extends BasePatient {
     status: PatientStatus
     phoneNumber?: string
     secret?: string
-    profilePicture?: File
 }
