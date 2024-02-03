@@ -21,10 +21,17 @@ interface ToggleButtonsProps {
     handleStep: (newStep: string) => void
     metaData: Step[]
     patientData?: Patient
+    toggleButtonClasses?: string
     step: string
 }
 
-const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButtonsProps) => {
+const ToggleButtons = ({
+    handleStep,
+    metaData,
+    patientData,
+    step,
+    toggleButtonClasses = '',
+}: ToggleButtonsProps) => {
     const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & HTMLButtonElement>>(null)
     const selectedLang = useTranslations()[1]
     const { width } = useWindowDimensions()
@@ -158,7 +165,7 @@ const ToggleButtons = ({ handleStep, metaData, patientData, step }: ToggleButton
     return (
         <div className="toggle-buttons-wrapper">
             <ToggleButtonGroup
-                className="toggle-button-group"
+                className={`toggle-button-group ${toggleButtonClasses}`}
                 size="large"
                 exclusive
                 value={step}

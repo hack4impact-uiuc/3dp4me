@@ -217,6 +217,7 @@ const PatientDetail = () => {
                         patientData={patientData!}
                         metaData={stepMetaData}
                         handleStep={onStepChange}
+                        toggleButtonClasses={`drawer-shift-${selectedLang}`}
                     />
                     {generateStepContent()}
                 </div>
