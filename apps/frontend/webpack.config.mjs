@@ -89,7 +89,8 @@ const config = {
     }),
 
     new HtmlWebpackPlugin({
-      template: "./public/index.html"
+      template: "./public/index.html",
+      base: "https://3dp4me-software.org/"
     }),
 
     new Dotenv({
