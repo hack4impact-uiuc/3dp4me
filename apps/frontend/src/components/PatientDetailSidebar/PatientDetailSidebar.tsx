@@ -17,9 +17,8 @@ import { useEffect, useState } from 'react'
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
 import { hasNotesForStep } from '../../utils/metadataUtils'
-import { getPatientName } from '../../utils/utils'
-import PhotoField from '../Fields/PhotoField'
 import { getProfilePictureUrl } from '../../utils/profilePicture'
+import { getPatientName } from '../../utils/utils'
 
 const arTheme = createTheme({
     direction: 'rtl',
@@ -110,7 +109,7 @@ const PatientDetailSidebar = ({
                 <Toolbar />
                 <div className="drawer-container">
                     <div>
-                        { profilePicUrl && <img id="profile-pic" src={profilePicUrl} />}
+                        {profilePicUrl && <img id="profile-pic" src={profilePicUrl} />}
                         <div className="drawer-text-section">
                             <span className="drawer-text-label">
                                 {translations.components.sidebar.name}
