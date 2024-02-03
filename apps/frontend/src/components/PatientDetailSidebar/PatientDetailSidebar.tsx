@@ -12,11 +12,12 @@ import {
 import Drawer from '@material-ui/core/Drawer'
 import Toolbar from '@material-ui/core/Toolbar'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
 import { hasNotesForStep } from '../../utils/metadataUtils'
+import { getProfilePictureUrl } from '../../utils/profilePicture'
 import { getPatientName } from '../../utils/utils'
 
 const arTheme = createTheme({
@@ -40,6 +41,7 @@ const PatientDetailSidebar = ({
 }: PatientDetailSidebarProps) => {
     const [expandedStepKey, setExpandedStepKey] = useState<Nullish<string>>(null)
     const [translations, selectedLang] = useTranslations()
+    const [profilePicUrl, setProfilePicUrl] = useState<Nullish<string>>(null)
 
     /**
      * Expands the notes panel for the given step, or closes all panels
@@ -47,6 +49,15 @@ const PatientDetailSidebar = ({
     const expandNotePanel = (stepKey: string) => (_: unknown, isExpanded: boolean) => {
         setExpandedStepKey(isExpanded ? stepKey : null)
     }
+
+    useEffect(() => {
+        const updateProfilePic = async () => {
+            const url = await getProfilePictureUrl(stepMetaData, patientData)
+            setProfilePicUrl(url)
+        }
+
+        updateProfilePic()
+    }, [stepMetaData, patientData])
 
     /**
      * Generates the sidebar with notes for each step. We make the field with key, 'notes', a special reserved
@@ -98,6 +109,7 @@ const PatientDetailSidebar = ({
                 <Toolbar />
                 <div className="drawer-container">
                     <div>
+                        {profilePicUrl && <img id="profile-pic" src={profilePicUrl} />}
                         <div className="drawer-text-section">
                             <span className="drawer-text-label">
                                 {translations.components.sidebar.name}
