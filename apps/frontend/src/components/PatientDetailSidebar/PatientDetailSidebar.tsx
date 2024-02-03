@@ -49,6 +49,9 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
 
     useEffect(() => {
         const updateProfilePic = async () => {
+            if (!stepMetaData)
+                return
+
             const url = await getProfilePictureUrl(stepMetaData, patientData)
             setProfilePicUrl(url)
         }
