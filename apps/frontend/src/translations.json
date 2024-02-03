@@ -180,6 +180,7 @@
         },
         "managePatient": {
           "profileInformation": "Profile Information",
+          "profilePicture": "Profile Picture",
           "title": "Manage Patient",
           "radioTitle": "Patient Status",
           "firstName": "First Name",
@@ -441,6 +442,7 @@
         },
         "managePatient": {
           "profileInformation": "معلومات الملف الشخصي",
+          "profilePicture": "الصوره الشخصيه",
           "title": "إدارة المريض",
           "radioTitle": "حالة المريض",
           "firstName": "الاسم الأول",

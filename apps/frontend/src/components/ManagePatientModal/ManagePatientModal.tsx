@@ -13,6 +13,8 @@ import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants'
 import { FormOption } from '../Fields/FormOption'
 import RadioButtonField from '../Fields/RadioButtonField'
 import TextField from '../Fields/TextField'
+import PhotoField from '../Fields/PhotoField'
+import { getProfilePictureAsFileArray } from '../../utils/profilePicture'
 
 export interface ManagePatientModalProps {
     patientData: Patient
@@ -92,6 +94,10 @@ const ManagePatientModal = ({
         })
     }
 
+    const onProfileUpload = () => {
+        // TODO: Invalidate patient when we use react query
+    }
+
     return (
         <Modal open={isOpen} onClose={onClose} className="manage-patient-modal">
             <div
@@ -108,6 +114,15 @@ const ManagePatientModal = ({
 
                 <div className="profile-information-wrapper">
                     <h3>{translations.components.swal.managePatient.profileInformation}</h3>
+                    <PhotoField 
+                        displayName={translations.components.swal.managePatient.profilePicture}
+                        value={getProfilePictureAsFileArray(patientData)}
+                        fieldId="profilePicture"
+                        patientId={patientData._id}
+                        handleFileUpload={onProfileUpload}
+                        
+                    />
+
                     <TextField
                         className="text-field"
                         value={updatedPatientData?.orderId}

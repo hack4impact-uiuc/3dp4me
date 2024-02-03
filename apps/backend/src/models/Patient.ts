@@ -1,6 +1,7 @@
 import { Patient, PatientStatus } from '@3dp4me/types'
 import mongoose from 'mongoose'
 import encrypt from 'mongoose-encryption'
+import { fileSchema } from 'schemas/fileSchema'
 
 const UNECRYPTED_FIELDS = [
     'dateCreated',
@@ -34,6 +35,7 @@ const patientSchema = new mongoose.Schema<Patient>({
     },
     phoneNumber: { type: String, required: false },
     secret: { type: String, required: false },
+    profilePicture: { type: fileSchema, required: false }
 })
 
 // Encrypt everything personal

@@ -3,8 +3,6 @@ import './Sidebar.scss'
 import { Step } from '@3dp4me/types'
 import { AppBar, Button, Drawer, Toolbar } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import PropTypes from 'prop-types'
-import React from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
@@ -131,17 +129,6 @@ const Sidebar = ({
             </AppBar>
         </Drawer>
     )
-}
-
-Sidebar.propTypes = {
-    onClick: PropTypes.func.isRequired,
-    onUpPressed: PropTypes.func.isRequired,
-    onDownPressed: PropTypes.func.isRequired,
-    onAddStep: PropTypes.func.isRequired,
-    onEditStep: PropTypes.func.isRequired,
-    stepMetadata: PropTypes.array,
-    isEditing: PropTypes.bool.isRequired,
-    selectedStep: PropTypes.string.isRequired,
 }
 
 export default Sidebar

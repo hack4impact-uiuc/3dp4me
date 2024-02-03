@@ -52,12 +52,12 @@ const PatientDetailSidebar = ({
 
     useEffect(() => {
         const updateProfilePic = async () => {
-            const url = await getProfilePictureUrl(stepMetaData, patientData)
+            const url = await getProfilePictureUrl(patientData)
             setProfilePicUrl(url)
         }
 
         updateProfilePic()
-    }, [stepMetaData, patientData])
+    }, [patientData])
 
     /**
      * Generates the sidebar with notes for each step. We make the field with key, 'notes', a special reserved

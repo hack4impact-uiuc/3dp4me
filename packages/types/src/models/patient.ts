@@ -1,4 +1,5 @@
-// TODO: Import this everywhere else in backend
+import { File } from "./file"
+
 export enum PatientStatus {
     ACTIVE = 'Active',
     ARCHIVED = 'Archived',
@@ -23,4 +24,5 @@ export interface Patient extends BasePatient {
     status: PatientStatus
     phoneNumber?: string
     secret?: string
+    profilePicture?: File
 }
