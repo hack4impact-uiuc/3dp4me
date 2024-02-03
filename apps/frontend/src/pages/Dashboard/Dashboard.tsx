@@ -28,7 +28,6 @@ const CLOSE_REASON_CLICKAWAY = 'clickaway'
  * Shows a table of active patients, with a different table for each step
  */
 const Dashboard = () => {
-    const errorWrap = useErrorWrap()
     const setError = useSetError()
     const [translations, selectedLang] = useTranslations()
 
@@ -36,6 +35,9 @@ const Dashboard = () => {
     const { data: stepsMetaData, isLoading: areStepsLoading } = useSteps({
         includeHiddenFields: false,
     })
+
+    // Controls toast that says "no patients found"
+    const [isSnackbarOpen, setSnackbarOpen] = useState(false)
 
     // Currently selected step
     const [selectedStep, setSelectedStep] = useState('')
@@ -46,7 +48,7 @@ const Dashboard = () => {
     // Words to filter out patients by
     const [searchQuery, setSearchQuery] = useState('')
     const invalidatePatients = useInvalidatePatients()
-    const { data: patientsData } = usePatients({
+    const { data: patientsData, isLoading: arePatientsLoading } = usePatients({
         stepKey: selectedStep,
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
@@ -55,10 +57,14 @@ const Dashboard = () => {
 
     const patients = patientsData?.data || []
     const patientsCount = patientsData?.count || 0
+    const isLoading = arePatientsLoading || areStepsLoading
 
-    const [isSnackbarOpen, setSnackbarOpen] = useState(false)
+    useEffect(() => {
+        if (!isLoading && patientsData?.count === 0)
+            setSnackbarOpen(true)
+    }, [patientsData, isLoading])
 
-    // TODO: WHAT IS THE SNCKBAR
+    // TODO: NEED TO SHOW SNACKBAR FOR IF NO PATIENTS ARE FOUND
     // /**
     //  * Gets patient data based on page number and step
     //  */
