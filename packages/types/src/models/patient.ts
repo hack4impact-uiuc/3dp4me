@@ -1,4 +1,3 @@
-// TODO: Import this everywhere else in backend
 export enum PatientStatus {
     ACTIVE = 'Active',
     ARCHIVED = 'Archived',

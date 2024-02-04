@@ -1,6 +1,6 @@
 import './ManagePatientModal.scss'
 
-import { Language, Patient } from '@3dp4me/types'
+import { Language, Patient, ReservedStep } from '@3dp4me/types'
 import { Button, Modal } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
 import _ from 'lodash'
@@ -10,7 +10,9 @@ import swal from 'sweetalert'
 import { useTranslations } from '../../hooks/useTranslations'
 import language from '../../translations.json'
 import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants'
+import { getProfilePictureAsFileArray } from '../../utils/profilePicture'
 import { FormOption } from '../Fields/FormOption'
+import PhotoField from '../Fields/PhotoField'
 import RadioButtonField from '../Fields/RadioButtonField'
 import TextField from '../Fields/TextField'
 
@@ -20,6 +22,7 @@ export interface ManagePatientModalProps {
     onClose: () => void
     onDataSave: (patient: Patient) => void
     onDeleted: () => void
+    onUploadProfilePicture: (file: File) => void
 }
 
 const ManagePatientModal = ({
@@ -28,6 +31,7 @@ const ManagePatientModal = ({
     onClose,
     onDataSave,
     onDeleted,
+    onUploadProfilePicture,
 }: ManagePatientModalProps) => {
     const [translations, selectedLang] = useTranslations()
     const [updatedPatientData, setUpdatedPatientData] = useState(_.cloneDeep(patientData))
@@ -92,6 +96,10 @@ const ManagePatientModal = ({
         })
     }
 
+    const onProfileUpload = async (_: string, file: File) => {
+        onUploadProfilePicture(file)
+    }
+
     return (
         <Modal open={isOpen} onClose={onClose} className="manage-patient-modal">
             <div
@@ -108,6 +116,16 @@ const ManagePatientModal = ({
 
                 <div className="profile-information-wrapper">
                     <h3>{translations.components.swal.managePatient.profileInformation}</h3>
+                    <PhotoField
+                        displayName={translations.components.swal.managePatient.profilePicture}
+                        value={getProfilePictureAsFileArray(patientData)}
+                        fieldId="profilePicture"
+                        patientId={patientData._id}
+                        handleFileUpload={onProfileUpload}
+                        stepKey={ReservedStep.Root}
+                        allowMultiplePhotos={false}
+                    />
+
                     <TextField
                         className="text-field"
                         value={updatedPatientData?.orderId}

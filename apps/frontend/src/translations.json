@@ -121,6 +121,7 @@
         "next": "Next",
         "previous": "Previous",
         "photo": "Take Photo",
+        "upload": "Upload Photo",
         "loadMore": "Load More",
         "discard": {
           "title": "Discard",
@@ -180,6 +181,7 @@
         },
         "managePatient": {
           "profileInformation": "Profile Information",
+          "profilePicture": "Profile Picture",
           "title": "Manage Patient",
           "radioTitle": "Patient Status",
           "firstName": "First Name",
@@ -381,6 +383,7 @@
         "edit": "تحرير الخطوات",
         "next": "التالي",
         "previous": "سابق",
+        "upload": "حمل الصورة",
         "photo": "التقط صورة",
         "loadMore": "تحميل المزيد",
         "discard": {
@@ -441,6 +444,7 @@
         },
         "managePatient": {
           "profileInformation": "معلومات الملف الشخصي",
+          "profilePicture": "الصوره الشخصيه",
           "title": "إدارة المريض",
           "radioTitle": "حالة المريض",
           "firstName": "الاسم الأول",
