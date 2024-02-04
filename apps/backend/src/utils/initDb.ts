@@ -37,8 +37,7 @@ const clearModels = async () => {
 
 const initReservedSteps = async () => {
     const exists = await StepModel.findOne({ key: ReservedStep.Root }).count()
-    if (exists > 0)
-        return
+    if (exists > 0) return
 
     await StepModel.create(RootStep)
 }

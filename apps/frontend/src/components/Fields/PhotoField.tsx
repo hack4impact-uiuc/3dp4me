@@ -7,6 +7,7 @@ import { Modal } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import Camera from 'react-html5-camera-photo'
 import ImageGallery, { ReactImageGalleryItem } from 'react-image-gallery'
+import styled from 'styled-components'
 
 import promptInstructionsAR from '../../assets/camera-prompt-instructions-ar.gif'
 import promptInstructions from '../../assets/camera-prompt-instructions-en.gif'
@@ -18,7 +19,17 @@ import {
     PERMISSION_STATUS_DENIED,
 } from '../../utils/constants'
 import { convertPhotosToURI, dataURItoBlob } from '../../utils/photoManipulation'
+import { FileUploadButton } from '../FileUploadButton/FileUploadButton'
 import { StyledButton } from '../StyledButton/StyledButton'
+
+const ButtonWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+`
+
+const Space = styled.div`
+    width: 10px;
+`
 
 export interface PhotoFieldProps<T extends string> {
     value: FileType[]
@@ -28,6 +39,7 @@ export interface PhotoFieldProps<T extends string> {
     fieldId: T
     handleFileUpload: (field: T, file: File) => void
     isDisabled?: boolean
+    allowMultiplePhotos?: boolean
 }
 
 const PhotoField = <T extends string>({
@@ -37,6 +49,7 @@ const PhotoField = <T extends string>({
     stepKey,
     fieldId,
     handleFileUpload,
+    allowMultiplePhotos = true,
     isDisabled = false,
 }: PhotoFieldProps<T>) => {
     const [images, setImages] = useState<ReactImageGalleryItem[]>([])
@@ -121,6 +134,10 @@ const PhotoField = <T extends string>({
         setIsOpen(true)
     }
 
+    const onFileSelectedForUpload = (file: File) => {
+        handleFileUpload(fieldId, file)
+    }
+
     const handleOnClose = () => {
         setIsOpen(false)
         resetUpload()
@@ -174,7 +191,9 @@ const PhotoField = <T extends string>({
     }
 
     const renderImageGallery = () => {
-        if (images.length > 0) {
+        if (images.length === 0) return null
+
+        if (allowMultiplePhotos) {
             return (
                 <ImageGallery
                     items={images}
@@ -183,7 +202,8 @@ const PhotoField = <T extends string>({
             )
         }
 
-        return null
+        const lastImg = images[images.length - 1]
+        return <img src={lastImg.original} width={300} alt="Image" />
     }
 
     const renderCamera = () => {
@@ -213,14 +233,24 @@ const PhotoField = <T extends string>({
     return (
         <div>
             <h3>{displayName}</h3>
-            <StyledButton onClick={handleOpenCamera} primary isDisabled={isDisabled}>
-                {translations.components.button.photo}
-            </StyledButton>
+            {renderImageGallery()}
+            <ButtonWrapper>
+                <StyledButton onClick={handleOpenCamera} primary isDisabled={isDisabled}>
+                    {translations.components.button.photo}
+                </StyledButton>
+                <Space />
+                <FileUploadButton
+                    fileTypes="image/*"
+                    onSelectFile={onFileSelectedForUpload}
+                    style={{ isDisabled }}
+                >
+                    {translations.components.button.upload}
+                </FileUploadButton>
+            </ButtonWrapper>
             <br />
             <Modal open={isOpen} onClose={handleOnClose} className="take-photo-modal">
                 <div className="take-photo-modal-wrapper">{renderCamera()}</div>
             </Modal>
-            {renderImageGallery()}
         </div>
     )
 }

@@ -1,7 +1,6 @@
 import { Patient, PatientStatus } from '@3dp4me/types'
 import mongoose from 'mongoose'
 import encrypt from 'mongoose-encryption'
-import { fileSchema } from 'schemas/fileSchema'
 
 const UNECRYPTED_FIELDS = [
     'dateCreated',

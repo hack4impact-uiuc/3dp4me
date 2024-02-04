@@ -1,5 +1,3 @@
-import { File } from "./file"
-
 export enum PatientStatus {
     ACTIVE = 'Active',
     ARCHIVED = 'Archived',

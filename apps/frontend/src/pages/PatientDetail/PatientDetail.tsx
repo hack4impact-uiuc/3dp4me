@@ -1,6 +1,13 @@
 import './PatientDetail.scss'
 
-import { Nullish, Patient, Step } from '@3dp4me/types'
+import {
+    File as FileType,
+    Nullish,
+    Patient,
+    ReservedStep,
+    RootStepFieldKeys,
+    Step,
+} from '@3dp4me/types'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
@@ -14,6 +21,7 @@ import {
     getPatientById,
     updatePatient,
     updateStage,
+    uploadFile,
 } from '../../api/api'
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper'
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal'
@@ -108,6 +116,44 @@ const PatientDetail = () => {
         setManagePatientModalOpen(false)
     }
 
+    const onUploadProfilePicture = async (file: File) => {
+        errorWrap(async () => {
+            const res = await trackPromise(
+                uploadFile(
+                    patientId,
+                    ReservedStep.Root,
+                    RootStepFieldKeys.ProfilePicture,
+                    file.name,
+                    file
+                )
+            )
+
+            const newFile: FileType = {
+                filename: res.result.name,
+                uploadedBy: res.result.uploadedBy,
+                uploadDate: res.result.uploadDate,
+            }
+
+            setPatientData((p) => {
+                if (!p) return p
+
+                const rootStep = getStepData(patientData, ReservedStep.Root)
+                if (!rootStep) return
+
+                let files: FileType[] = rootStep[RootStepFieldKeys.ProfilePicture]
+                if (files) files = files.concat(newFile)
+                else files = [newFile]
+
+                rootStep[RootStepFieldKeys.ProfilePicture] = files
+
+                return {
+                    ...p,
+                    [ReservedStep.Root]: rootStep,
+                }
+            })
+        })
+    }
+
     const onPatientDeleted = async () => {
         errorWrap(
             async () => {
@@ -199,6 +245,7 @@ const PatientDetail = () => {
                     isOpen={isManagePatientModalOpen}
                     onClose={() => setManagePatientModalOpen(false)}
                     onDeleted={onPatientDeleted}
+                    onUploadProfilePicture={onUploadProfilePicture}
                 />
 
                 <PatientDetailSidebar

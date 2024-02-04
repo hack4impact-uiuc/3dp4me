@@ -10,12 +10,11 @@ import swal from 'sweetalert'
 import { useTranslations } from '../../hooks/useTranslations'
 import language from '../../translations.json'
 import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants'
+import { getProfilePictureAsFileArray } from '../../utils/profilePicture'
 import { FormOption } from '../Fields/FormOption'
+import PhotoField from '../Fields/PhotoField'
 import RadioButtonField from '../Fields/RadioButtonField'
 import TextField from '../Fields/TextField'
-import PhotoField from '../Fields/PhotoField'
-import { getProfilePictureAsFileArray } from '../../utils/profilePicture'
-import { updatePatient, uploadFile } from '../../api/api'
 
 export interface ManagePatientModalProps {
     patientData: Patient
@@ -23,6 +22,7 @@ export interface ManagePatientModalProps {
     onClose: () => void
     onDataSave: (patient: Patient) => void
     onDeleted: () => void
+    onUploadProfilePicture: (file: File) => void
 }
 
 const ManagePatientModal = ({
@@ -31,6 +31,7 @@ const ManagePatientModal = ({
     onClose,
     onDataSave,
     onDeleted,
+    onUploadProfilePicture,
 }: ManagePatientModalProps) => {
     const [translations, selectedLang] = useTranslations()
     const [updatedPatientData, setUpdatedPatientData] = useState(_.cloneDeep(patientData))
@@ -95,9 +96,8 @@ const ManagePatientModal = ({
         })
     }
 
-    const onProfileUpload = async (key: string, file: File) => {
-        // TODO: Invalidate patient when we use react query
-        await uploadFile(patientData._id, ReservedStep.Root, key, file.name, file)
+    const onProfileUpload = async (_: string, file: File) => {
+        onUploadProfilePicture(file)
     }
 
     return (
@@ -116,13 +116,14 @@ const ManagePatientModal = ({
 
                 <div className="profile-information-wrapper">
                     <h3>{translations.components.swal.managePatient.profileInformation}</h3>
-                    <PhotoField 
+                    <PhotoField
                         displayName={translations.components.swal.managePatient.profilePicture}
                         value={getProfilePictureAsFileArray(patientData)}
                         fieldId="profilePicture"
                         patientId={patientData._id}
                         handleFileUpload={onProfileUpload}
                         stepKey={ReservedStep.Root}
+                        allowMultiplePhotos={false}
                     />
 
                     <TextField

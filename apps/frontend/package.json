@@ -47,6 +47,7 @@
     "react-switch": "^6.0.0",
     "semantic-ui-css": "^2.5.0",
     "signature_pad": "^2.3.2",
+    "styled-components": "^6.1.8",
     "sweetalert": "^2.1.2",
     "typescript": "^5.3.3",
     "use-query-params": "^1.2.3"
