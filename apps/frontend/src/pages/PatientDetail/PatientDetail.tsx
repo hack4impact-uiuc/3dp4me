@@ -138,7 +138,7 @@ const PatientDetail = () => {
                 if (!p) return p
 
                 const rootStep = getStepData(patientData, ReservedStep.Root)
-                if (!rootStep) return
+                if (!rootStep) return p
 
                 let files: FileType[] = rootStep[RootStepFieldKeys.ProfilePicture]
                 if (files) files = files.concat(newFile)

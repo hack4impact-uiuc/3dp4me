@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from 'react'
+import { ChangeEventHandler, ReactNode, useRef } from 'react'
 
 import { StyledButton, StyledButtonProps } from '../StyledButton/StyledButton'
 
@@ -22,7 +22,7 @@ export const FileUploadButton = ({
         hiddenFileInput.current?.click()
     }
 
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
         if (!event.target.files) return
 
         const fileUploaded = event.target.files[0]
