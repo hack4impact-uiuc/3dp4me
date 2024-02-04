@@ -137,14 +137,15 @@ const PatientDetail = () => {
             setPatientData((p) => {
                 if (!p) return p
 
-                const rootStep = getStepData(patientData, ReservedStep.Root)
-                if (!rootStep) return p
+                const rootStep = getStepData(patientData, ReservedStep.Root) || {}
+                console.log('ROOT STEP DATA', rootStep)
 
                 let files: FileType[] = rootStep[RootStepFieldKeys.ProfilePicture]
                 if (files) files = files.concat(newFile)
                 else files = [newFile]
 
                 rootStep[RootStepFieldKeys.ProfilePicture] = files
+                console.log('AT END IS', rootStep)
 
                 return {
                     ...p,
