@@ -24,7 +24,7 @@ const generateKeyWithCamelCase = (input: string) => {
 const checkKeyCollision = (newKey: string, otherKeys: string[]) =>
     checkNumOccurencesInList(newKey, otherKeys) >= 1 || isKeyForbidden(newKey)
 
-const isKeyForbidden = (key: string) => Object.values(ReservedStep).includes(key as any)
+const isKeyForbidden = (key: string) => Object.values(ReservedStep).includes(key as ReservedStep)
 
 export const generateKeyWithoutCollision = (input: string, otherKeys: string[]) => {
     const newKey = generateKeyWithCamelCase(input)
