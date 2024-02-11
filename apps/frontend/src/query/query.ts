@@ -20,6 +20,3 @@ export const queryClient = new QueryClient({
         },
     },
 })
-
-// TODO: Maybe implement
-// export const localStoragePersister = createSyncStoragePersister({ storage: window.localStorage })
