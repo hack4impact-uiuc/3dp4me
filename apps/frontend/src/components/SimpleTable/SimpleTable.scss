@@ -56,7 +56,8 @@
 
     .cell {
         font-size: 13px;
-        padding: 0px;
+        padding-top: 3.85px;
+        padding-bottom: 3.85px;
         padding-left: 20px;
         div {
             display: flex;
@@ -66,6 +67,8 @@
 
     .cell-rtl {
         font-size: 13px;
+        padding-top: 3.85px;
+        padding-bottom: 3.85px;
         padding: 0px;
         padding-right: 30px;
     }

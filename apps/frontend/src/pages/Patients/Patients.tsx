@@ -24,7 +24,7 @@ const Patients = () => {
     const [searchQuery, setSearchQuery] = useState('')
 
     const invalidatePatients = useInvalidatePatients()
-    const { data: patients } = usePatients({
+    const { data: patients, isLoading } = usePatients({
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
         query: searchQuery,
@@ -63,6 +63,7 @@ const Patients = () => {
                     patients={allPatients}
                     handleSearchQuery={onSearchQueryChanged}
                     initialSearchQuery={searchQuery}
+                    isLoading={isLoading}
                     stepKey={''}
                 />
 
