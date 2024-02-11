@@ -48,7 +48,7 @@ const Dashboard = () => {
     // Words to filter out patients by
     const [searchQuery, setSearchQuery] = useState('')
     const invalidatePatients = useInvalidatePatients()
-    const { data: patientsData, isLoading: arePatientsLoading } = usePatients({
+    const { data: patientsData, isLoading: arePatientsLoading} = usePatients({
         stepKey: selectedStep,
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
@@ -57,23 +57,12 @@ const Dashboard = () => {
 
     const patients = patientsData?.data || []
     const patientsCount = patientsData?.count || 0
-    const isLoading = arePatientsLoading || areStepsLoading
+    const isLoading = arePatientsLoading || areStepsLoading || selectedStep === ''
 
     useEffect(() => {
-        if (!isLoading && patientsData?.count === 0)
+        if (!isLoading && patientsCount === 0)
             setSnackbarOpen(true)
-    }, [patientsData, isLoading])
-
-    // TODO: NEED TO SHOW SNACKBAR FOR IF NO PATIENTS ARE FOUND
-    // /**
-    //  * Gets patient data based on page number and step
-    //  */
-
-    // const loadPatientData = async (stepKey: string, pageNumber: number, query: string) => {
-    //     if (res.result.data.length === 0) {
-    //         setSnackbarOpen(true)
-    //     }
-    // }
+    }, [patientsCount, isLoading])
 
     /**
      * Gets metadata for all setps
@@ -202,6 +191,7 @@ const Dashboard = () => {
 
             return (
                 <PatientTable
+                    isLoading={isLoading}
                     onAddPatient={onAddPatient}
                     key={`table-${element.key}`}
                     tableTitle={getTableTitle()}

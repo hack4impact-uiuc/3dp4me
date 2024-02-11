@@ -37,6 +37,7 @@
     "react-html5-camera-photo": "^1.5.5",
     "react-image-gallery": "^1.2.7",
     "react-loader-spinner": "^6.1.6",
+    "react-loading-skeleton": "^3.4.0",
     "react-map-gl": "^6.1.17",
     "react-map-gl-geocoder": "^2.2.0",
     "react-paginate": "^7.1.3",

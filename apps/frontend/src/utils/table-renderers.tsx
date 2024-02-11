@@ -12,6 +12,7 @@ import translations from '../translations.json'
 import { DisplayFieldType, SortDirection } from './constants'
 import { fieldToJSX } from './fields'
 import { resolveObjPath } from './object'
+import Skeleton from 'react-loading-skeleton'
 
 /**
  * Given item data, a field key, and a field type, this function finds
@@ -73,26 +74,48 @@ export interface ColumnMetadata<T extends Record<string, any>> {
 export const defaultTableRowRenderer = <T extends Record<string, any>>(
     rowData: ColumnMetadata<T>[],
     itemData: T,
-    selectedLang: Language
+    selectedLang: Language,
 ) => {
     const cellClassName = selectedLang === Language.AR ? 'cell-rtl' : 'cell'
     const cellAlign = selectedLang === Language.AR ? 'right' : 'left'
 
     // Construct a cell for each piece of data
-    const row = rowData.map(({ id, dataType }) => (
-        <StyledTableCell className={cellClassName} key={`${itemData._id}-${id}`} align={cellAlign}>
-            {getField(itemData, id, dataType, selectedLang)}
-        </StyledTableCell>
-    ))
+    const row = rowData.map(({ id, dataType }) => {
+        return (
+            <StyledTableCell className={cellClassName} key={`${itemData._id}-${id}`} align={cellAlign}>
+                { getField(itemData, id, dataType, selectedLang) }
+            </StyledTableCell>
+        )
+    })
 
     return row
 }
+
+export const defaultTableRowLoadingRenderer = (numCols: number, selectedLang: Language) => {
+    const row = []
+    const loadDirection = selectedLang === Language.AR ? 'rtl' : 'ltr'
+
+    for (let i = 0; i < numCols; i++) {
+        row.push(
+            <StyledTableCell>
+                <Skeleton direction={loadDirection} inline={true} />
+            </StyledTableCell>
+        )
+    }
+
+    return row
+}
+
+export type RowLoadingRenderer = (
+    numCols: number,
+    selectedLang: Language,
+) => ReactNode
 
 export type HeaderRenderer<T> = (
     headers: Header<T>[],
     sortConfig: Nullish<SortConfig<T>>,
     onRequestSort: (key: Path<T>) => void,
-    selectedLang: Language
+    selectedLang: Language,
 ) => ReactNode[]
 
 export interface Header<T> {
@@ -137,7 +160,7 @@ export const defaultTableHeaderRenderer = <T extends Record<string, any>>(
 export type RowRenderer<T extends Record<string, any>> = (
     columns: ColumnMetadata<T>[],
     rowData: T,
-    selectedLang: Language
+    selectedLang: Language,
 ) => ReactNode
 
 /**
@@ -148,7 +171,7 @@ export const patientTableRowRenderer = (
     rowData: ColumnMetadata<Patient>[],
     patient: Patient,
     selectedLang: Language,
-    stepKey: string
+    stepKey: string,
 ) => {
     // Construct the base row
     const row = defaultTableRowRenderer(rowData, patient, selectedLang)
