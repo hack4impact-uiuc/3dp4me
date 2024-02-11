@@ -41,7 +41,7 @@ const PatientTable = ({
     initialSearchQuery,
     handleSearchQuery,
     stepKey,
-    isLoading = false
+    isLoading = false,
 }: PatientTableProps) => {
     const errorWrap = useErrorWrap()
     const translations = useTranslations()[0]

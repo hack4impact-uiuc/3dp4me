@@ -36,7 +36,7 @@ const Table = <T extends Record<string, any>>({
     renderTableRow,
     initialSearchQuery,
     handleSearchQuery,
-    isLoading = false
+    isLoading = false,
 }: TableProps<T>) => {
     const [translations, selectedLang] = useTranslations()
 

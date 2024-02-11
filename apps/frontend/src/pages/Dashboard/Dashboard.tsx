@@ -10,7 +10,6 @@ import PaginateBar from '../../components/PaginateBar/PaginateBar'
 import PatientTable from '../../components/PatientTable/PatientTable'
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons'
 import { useSetError } from '../../hooks/uesSetError'
-import { useErrorWrap } from '../../hooks/useErrorWrap'
 import { useTranslations } from '../../hooks/useTranslations'
 import { useInvalidatePatients, usePatients } from '../../query/usePatients'
 import { useSteps } from '../../query/useSteps'
@@ -48,7 +47,7 @@ const Dashboard = () => {
     // Words to filter out patients by
     const [searchQuery, setSearchQuery] = useState('')
     const invalidatePatients = useInvalidatePatients()
-    const { data: patientsData, isLoading: arePatientsLoading} = usePatients({
+    const { data: patientsData, isLoading: arePatientsLoading } = usePatients({
         stepKey: selectedStep,
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
@@ -60,8 +59,7 @@ const Dashboard = () => {
     const isLoading = arePatientsLoading || areStepsLoading || selectedStep === ''
 
     useEffect(() => {
-        if (!isLoading && patientsCount === 0)
-            setSnackbarOpen(true)
+        if (!isLoading && patientsCount === 0) setSnackbarOpen(true)
     }, [patientsCount, isLoading])
 
     /**
