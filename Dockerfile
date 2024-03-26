@@ -30,6 +30,5 @@ RUN apt-get update && apt-get install -y apt-transport-https ca-certificates cur
     apt-get update && \
     apt-get -y install doppler
 
-ENTRYPOINT [ "doppler", "run", "-p", "backend", "-c", "${DOPPLER_CONFIG}", "--"]
-CMD ["node", "/build/bundle.js" ]
+ENTRYPOINT doppler run -p backend -c ${DOPPLER_CONFIG} -- node /build/bundle.js
 EXPOSE 8080
