@@ -13,6 +13,7 @@ RUN yarn build
 # Create runtime image
 FROM node:20
 ARG DOPPLER_TOKEN
+ARG DOPPLER_CONFIG
 
 # Get the builds
 COPY --from=builder /apps/backend/build /build/
@@ -29,6 +30,6 @@ RUN apt-get update && apt-get install -y apt-transport-https ca-certificates cur
     apt-get update && \
     apt-get -y install doppler
 
-ENTRYPOINT [ "doppler", "run", "--"]
+ENTRYPOINT [ "doppler", "run", "-p", "backend", "-c", "${DOPPLER_CONFIG}", "--"]
 CMD ["node", "/build/bundle.js" ]
 EXPOSE 8080
