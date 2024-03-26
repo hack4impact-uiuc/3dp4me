@@ -94,7 +94,7 @@ const config = {
     }),
 
     new Dotenv({
-      path: './production.env',
+      path: `./production.${process.env.PROJECT_NAME}.env`,
       safe: true,
     }),
   ],
