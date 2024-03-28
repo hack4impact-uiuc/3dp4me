@@ -109,6 +109,7 @@
     "clean": "rimraf .turbo dist node_modules",
     "lint": "yarn lint:check --fix",
     "lint:check": "eslint src --ext js,jsx,ts,tsx",
-    "start": "doppler run -- node_modules/.bin/react-app-rewired --max-old-space-size=4096 start"
+    "start": "doppler run -- node_modules/.bin/react-app-rewired --max-old-space-size=4096 start",
+    "start:prod_prosthetics": "doppler run -p frontend -c dev_prosthetics -- node_modules/.bin/react-app-rewired --max-old-space-size=4096 start"
   }
 }
