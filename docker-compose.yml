@@ -2,20 +2,22 @@
 # DOPPLER_TOKEN_3DP4ME should be a doppler access token for 3DP4ME backend project
 services:
   hearing_aid_web_app:
-    build: .
-    environment:
-      DOPPLER_TOKEN: ${DOPPLER_TOKEN_3DP4ME}
-      DOPPLER_CONFIG: ${ENV_3DP4ME}
-      PROJECT_NAME: "hearing"
+    build: 
+      context: .
+      args:
+        DOPPLER_TOKEN: ${DOPPLER_TOKEN_3DP4ME}
+        DOPPLER_CONFIG: ${ENV_3DP4ME}
+        PROJECT_NAME: "hearing"
     ports:
       - "5050:8080"
   
   prosthetics_web_app:
-    build: .
-    environment:
-      DOPPLER_TOKEN: ${DOPPLER_TOKEN_3DP4ME}
-      DOPPLER_CONFIG: "${ENV_3DP4ME}_prosthetics"
-      PROJECT_NAME: "prosthetics"
+    build:
+      context: .
+      args:
+        DOPPLER_TOKEN: ${DOPPLER_TOKEN_3DP4ME}
+        DOPPLER_CONFIG: "${ENV_3DP4ME}_prosthetics"
+        PROJECT_NAME: "prosthetics"
     ports:
       - "5051:8080"
 
