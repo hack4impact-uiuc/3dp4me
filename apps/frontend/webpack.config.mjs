@@ -90,7 +90,7 @@ const config = {
 
     new HtmlWebpackPlugin({
       template: "./public/index.html",
-      base: "https://3dp4me-software.org/"
+      base: `https://${process.env.PROJECT_NAME}.3dp4me-software.org/`
     }),
 
     new Dotenv({
