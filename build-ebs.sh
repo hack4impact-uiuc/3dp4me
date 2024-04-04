@@ -1,1 +1,1 @@
-zip -r build.zip . -x '*node_modules*/*' -x '*.git/*' -x '*docker-compose.yml'
+zip -r build.zip . -x '*node_modules*/*' -x '*.git/*'
