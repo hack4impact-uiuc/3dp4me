@@ -57,7 +57,6 @@
     "lint": "eslint --fix src/**/*.ts",
     "lint:check": "eslint src/**/*.ts",
     "start": "tsc && doppler run -- node ./dist/src/index.js",
-    "start:prd_prosthetics": "tsc && doppler run -p backend -c prd_prosthetics -- node ./dist/src/index.js",
     "test": "cross-env S3_BUCKET_NAME=test jest --runInBand --forceExit"
   }
 }

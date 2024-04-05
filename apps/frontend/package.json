@@ -22,7 +22,6 @@
     "@sweetalert/with-react": "^0.1.1",
     "aws-amplify": "4.2.11",
     "axios": "^1.6.0",
-    "cross-env": "^7.0.3",
     "date-fns": "^3.3.0",
     "js-file-download": "^0.4.12",
     "lodash": "^4.17.21",
@@ -54,6 +53,7 @@
     "use-query-params": "^1.2.3"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "@babel/core": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
     "@babel/preset-react": "^7.23.3",
@@ -109,7 +109,6 @@
     "clean": "rimraf .turbo dist node_modules",
     "lint": "yarn lint:check --fix",
     "lint:check": "eslint src --ext js,jsx,ts,tsx",
-    "start": "doppler run -- node_modules/.bin/react-app-rewired --max-old-space-size=4096 start",
-    "start:prod_prosthetics": "doppler run -p frontend -c dev_prosthetics -- node_modules/.bin/react-app-rewired --max-old-space-size=4096 start"
+    "start": "doppler run -- node_modules/.bin/react-app-rewired --max-old-space-size=4096 start"
   }
 }
