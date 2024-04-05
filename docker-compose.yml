@@ -1,0 +1,32 @@
+# DOPPLER_TOKEN_3DP4ME should be a doppler access token for 3DP4ME backend project
+services:
+  hearing_aid_web_app:
+    env_file: .env
+    build: 
+      context: .
+      args:
+        PROJECT_NAME: "hearing"
+    environment:
+      - PORT=5050
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN_3DP4ME_HEARING}
+      - DOPPLER_CONFIG=prd_hearing
+  
+  prosthetics_web_app:
+    env_file: .env
+    build:
+      context: .
+      args:
+        PROJECT_NAME: prosthetics
+    environment:
+      - PORT=5051
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN_3DP4ME_PROSTHETICS}
+      - DOPPLER_CONFIG=prd_prosthetics
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 8080:80
+    restart: always
+    depends_on:
+      - prosthetics_web_app
+      - hearing_aid_web_app
