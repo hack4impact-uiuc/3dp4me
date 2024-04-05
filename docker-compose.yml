@@ -19,7 +19,7 @@ services:
         PROJECT_NAME: prosthetics
     environment:
       - PORT=5051
-      - DOPPLER_TOKEN=${DOPPLER_TOKEN_3DP4ME}
+      - DOPPLER_TOKEN=${DOPPLER_TOKEN_3DP4ME_PROSTHETICS}
       - DOPPLER_CONFIG=prd_prosthetics
 
   nginx:
