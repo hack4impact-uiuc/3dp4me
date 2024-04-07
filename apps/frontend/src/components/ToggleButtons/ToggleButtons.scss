@@ -3,6 +3,7 @@
 
 .toggle-buttons-wrapper,
 .toggle-buttons-wrapper-dropdown {
+    overflow-x: auto;
     display: flex;
     width: 100%;
     height: $buttonGroupHeight;
@@ -21,6 +22,14 @@
 
     .status-icon-ar {
         margin-left: 6px;
+    }
+
+    .drawer-shift-EN {
+        margin-right: $drawerWidth;
+    }
+
+    .drawer-shift-AR {
+        margin-left: $drawerWidth;
     }
 
     .toggle-button-group {

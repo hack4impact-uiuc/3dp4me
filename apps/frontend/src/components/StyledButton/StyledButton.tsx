@@ -7,10 +7,10 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
 
 export interface StyledButtonProps {
-    onClick: () => void
+    onClick?: () => void
     primary?: boolean
     danger?: boolean
-    children: ReactNode
+    children?: ReactNode
     isDisabled?: boolean
 }
 

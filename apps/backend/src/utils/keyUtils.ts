@@ -1,3 +1,4 @@
+import { ReservedStep } from '@3dp4me/types'
 import _ from 'lodash'
 
 /* Returns a string of specified length composed of random alphanumeric characters */
@@ -21,15 +22,15 @@ const generateKeyWithCamelCase = (input: string) => {
 }
 
 const checkKeyCollision = (newKey: string, otherKeys: string[]) =>
-    checkNumOccurencesInList(newKey, otherKeys) >= 1
+    checkNumOccurencesInList(newKey, otherKeys) >= 1 || isKeyForbidden(newKey)
+
+const isKeyForbidden = (key: string) => Object.values(ReservedStep).includes(key as ReservedStep)
 
 export const generateKeyWithoutCollision = (input: string, otherKeys: string[]) => {
     const newKey = generateKeyWithCamelCase(input)
 
     let keySuffix = 1
-
     let noCollisionKey = newKey
-
     while (checkKeyCollision(noCollisionKey, otherKeys)) {
         noCollisionKey = newKey + keySuffix
         keySuffix += 1

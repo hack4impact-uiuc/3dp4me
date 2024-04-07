@@ -21,6 +21,7 @@ import { getStepData } from '../../utils/metadataUtils'
 interface ToggleButtonsProps {
     handleStep: (newStep: string) => void
     patientData?: Patient
+    toggleButtonClasses?: string
     step: string
 }
 
@@ -159,7 +160,7 @@ const ToggleButtons = ({ handleStep, patientData, step }: ToggleButtonsProps) =>
     return (
         <div className="toggle-buttons-wrapper">
             <ToggleButtonGroup
-                className="toggle-button-group"
+                className={`toggle-button-group ${toggleButtonClasses}`}
                 size="large"
                 exclusive
                 value={step}

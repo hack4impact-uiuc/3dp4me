@@ -8,6 +8,7 @@ const SRC_SELF = ["'self'", 'blob:', 'data:']
 const SRC_COGNITO = [
     'https://cognito-idp.eu-north-1.amazonaws.com/',
     'https://3dp4me-users.auth.eu-north-1.amazoncognito.com/oauth2/token',
+    'https://3dp4me-prosthetic-users.auth.eu-north-1.amazoncognito.com/oauth2/token',
     'https://cognito-identity.eu-north-1.amazonaws.com/',
 ]
 
@@ -15,6 +16,7 @@ const SRC_COGNITO = [
 const SRC_S3 = [
     'https://3dp4me-public.s3.eu-north-1.amazonaws.com/',
     'https://3dp4me-patient-data.s3.eu-north-1.amazonaws.com/',
+    'https://3dp4me-prosthetics-patient-data.s3.eu-north-1.amazonaws.com/',
     'https://d1m40dlonmuszr.cloudfront.net/',
 ]
 

@@ -1,13 +1,28 @@
 import './PatientDetail.scss'
 
-import { Patient } from '@3dp4me/types'
+import {
+    File as FileType,
+    Nullish,
+    Patient,
+    ReservedStep,
+    RootStepFieldKeys,
+    Step,
+} from '@3dp4me/types'
+import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { useParams } from 'react-router-dom'
 import swal from 'sweetalert'
 import { StringParam, useQueryParam } from 'use-query-params'
 
-import { deletePatientById, updatePatient, updateStage } from '../../api/api'
+import {
+    deletePatientById,
+    getAllStepsMetadata,
+    getPatientById,
+    updatePatient,
+    updateStage,
+    uploadFile,
+} from '../../api/api'
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper'
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal'
 import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar'
@@ -83,6 +98,45 @@ const PatientDetail = () => {
 
         invalidatePatient()
         setManagePatientModalOpen(false)
+    }
+
+    const onUploadProfilePicture = async (file: File) => {
+        errorWrap(async () => {
+            const res = await trackPromise(
+                uploadFile(
+                    patientId,
+                    ReservedStep.Root,
+                    RootStepFieldKeys.ProfilePicture,
+                    file.name,
+                    file
+                )
+            )
+
+            const newFile: FileType = {
+                filename: res.result.name,
+                uploadedBy: res.result.uploadedBy,
+                uploadDate: res.result.uploadDate,
+            }
+
+            setPatientData((p) => {
+                if (!p) return p
+
+                const rootStep = getStepData(patientData, ReservedStep.Root) || {}
+                console.log('ROOT STEP DATA', rootStep)
+
+                let files: FileType[] = rootStep[RootStepFieldKeys.ProfilePicture]
+                if (files) files = files.concat(newFile)
+                else files = [newFile]
+
+                rootStep[RootStepFieldKeys.ProfilePicture] = files
+                console.log('AT END IS', rootStep)
+
+                return {
+                    ...p,
+                    [ReservedStep.Root]: rootStep,
+                }
+            })
+        })
     }
 
     const onPatientDeleted = async () => {
@@ -177,6 +231,7 @@ const PatientDetail = () => {
                     isOpen={isManagePatientModalOpen}
                     onClose={() => setManagePatientModalOpen(false)}
                     onDeleted={onPatientDeleted}
+                    onUploadProfilePicture={onUploadProfilePicture}
                 />
 
                 <PatientDetailSidebar
@@ -193,6 +248,7 @@ const PatientDetail = () => {
                         step={selectedStep}
                         patientData={patientData!}
                         handleStep={onStepChange}
+                        toggleButtonClasses={`drawer-shift-${selectedLang}`}
                     />
                     {generateStepContent()}
                 </div>

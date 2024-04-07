@@ -28,7 +28,7 @@ import { generateOrderId } from '../../utils/generateOrderId';
 import errorWrap from '../../utils/errorWrap';
 import { AuthenticatedRequest } from '../../middleware/types';
 import { PatientModel } from '../../models/Patient';
-import { Patient, Field, File } from '@3dp4me/types';
+import { Patient, Field, File, RootStep } from '@3dp4me/types';
 import { StepModel } from '../../models/Metadata';
 import { HydratedDocument } from 'mongoose';
 
@@ -75,6 +75,7 @@ router.get(
 
         // Get all steps/fields that the user is allowed to view
         const steps = await getReadableSteps(req);
+        steps.push(RootStep)
 
         // Create promises for each step so that we can do this in parallel
         const stepDataPromises = steps.map(async (step) => {
