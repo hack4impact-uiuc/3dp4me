@@ -1,8 +1,8 @@
 import './Dashboard.scss'
 
 import { Field, Patient } from '@3dp4me/types'
-import Snackbar from '@material-ui/core/Snackbar'
 import type { SnackbarCloseReason } from '@material-ui/core/Snackbar'
+import Snackbar from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
@@ -32,7 +32,11 @@ const Dashboard = () => {
     const [translations, selectedLang] = useTranslations()
 
     // The metadata for all steps
-    const { data: stepsMetaData, isLoading: areStepsLoading, isError: isStepsError } = useSteps({
+    const {
+        data: stepsMetaData,
+        isLoading: areStepsLoading,
+        isError: isStepsError,
+    } = useSteps({
         includeHiddenFields: false,
     })
 
@@ -48,7 +52,11 @@ const Dashboard = () => {
     // Words to filter out patients by
     const [searchQuery, setSearchQuery] = useState('')
     const invalidatePatients = useInvalidatePatients()
-    const { data: patientsData, isLoading: arePatientsLoading, isError: isPatientsError } = usePatients({
+    const {
+        data: patientsData,
+        isLoading: arePatientsLoading,
+        isError: isPatientsError,
+    } = usePatients({
         stepKey: selectedStep,
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,

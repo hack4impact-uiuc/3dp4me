@@ -1,26 +1,13 @@
 import './PatientDetail.scss'
 
-import {
-    File as FileType,
-    Nullish,
-    Patient,
-    ReservedStep,
-    RootStepFieldKeys,
-    Step,
-} from '@3dp4me/types'
-import _ from 'lodash'
+import { Patient, ReservedStep, RootStepFieldKeys } from '@3dp4me/types'
 import { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { useParams } from 'react-router-dom'
 import swal from 'sweetalert'
 import { StringParam, useQueryParam } from 'use-query-params'
 
-import {
-    deletePatientById,
-    updatePatient,
-    updateStage,
-    uploadFile,
-} from '../../api/api'
+import { deletePatientById, updatePatient, updateStage, uploadFile } from '../../api/api'
 import LoadWrapper from '../../components/LoadWrapper/LoadWrapper'
 import ManagePatientModal from '../../components/ManagePatientModal/ManagePatientModal'
 import PatientDetailSidebar from '../../components/PatientDetailSidebar/PatientDetailSidebar'
@@ -45,8 +32,16 @@ const PatientDetail = () => {
     const [isManagePatientModalOpen, setManagePatientModalOpen] = useState(false)
     const stepKeyParam = useQueryParam('stepKey', StringParam)[0]
     const [edit, setEdit] = useState(false)
-    const { data: patientData, isLoading: isPatientLoading, isError: isPatientError } = usePatient(patientId)
-    const { data: stepMetaData, isLoading: areStepsLoading, isError: isStepsError } = useSteps({
+    const {
+        data: patientData,
+        isLoading: isPatientLoading,
+        isError: isPatientError,
+    } = usePatient(patientId)
+    const {
+        data: stepMetaData,
+        isLoading: areStepsLoading,
+        isError: isStepsError,
+    } = useSteps({
         includeHiddenFields: false,
     })
     const invalidatePatient = useInvalidatePatient(patientId)
@@ -103,13 +98,15 @@ const PatientDetail = () => {
     }
 
     const onUploadProfilePicture = async (file: File) => {
-        await trackPromise(uploadFile(
-            patientId,
-            ReservedStep.Root,
-            RootStepFieldKeys.ProfilePicture,
-            file.name,
-            file
-        ))
+        await trackPromise(
+            uploadFile(
+                patientId,
+                ReservedStep.Root,
+                RootStepFieldKeys.ProfilePicture,
+                file.name,
+                file
+            )
+        )
 
         invalidatePatient()
     }
@@ -198,7 +195,7 @@ const PatientDetail = () => {
     }
 
     if (isError) {
-        return null;
+        return null
     }
 
     return (

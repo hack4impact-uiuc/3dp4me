@@ -3,7 +3,7 @@
 import './SignatureField.scss'
 
 import { Nullish, Path, PathValue, Signature, TranslatedString } from '@3dp4me/types'
-import Button from "@material-ui/core/Button"
+import Button from '@material-ui/core/Button'
 import hash from 'object-hash'
 import { useState } from 'react'
 

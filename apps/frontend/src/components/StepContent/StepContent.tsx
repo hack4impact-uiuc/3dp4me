@@ -2,7 +2,7 @@ import './StepContent.scss'
 
 import { FieldType, File as FileModel, Step, StepStatus } from '@3dp4me/types'
 import Backdrop from '@material-ui/core/Backdrop'
-import Button from "@material-ui/core/Button"
+import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'

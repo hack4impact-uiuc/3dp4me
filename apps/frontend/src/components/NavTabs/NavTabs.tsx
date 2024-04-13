@@ -1,8 +1,8 @@
 import './NavTabs.scss'
 
-import Box from "@material-ui/core/Box"
-import Tab from "@material-ui/core/Tab"
-import Tabs from "@material-ui/core/Tabs"
+import Box from '@material-ui/core/Box'
+import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
 
 export interface NavTabsProps {
     value: string

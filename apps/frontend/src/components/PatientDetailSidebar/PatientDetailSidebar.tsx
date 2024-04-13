@@ -1,16 +1,16 @@
 import './PatientDetailSidebar.scss'
 
 import { Nullish, Patient } from '@3dp4me/types'
-import Accordion from "@material-ui/core/Accordion"
-import AccordionDetails from "@material-ui/core/AccordionDetails"
-import AccordionSummary from "@material-ui/core/AccordionSummary"
-import Button from "@material-ui/core/Button"
-import createTheme from "@material-ui/core/styles/createTheme"
-import ThemeProvider from "@material-ui/styles/ThemeProvider"
+import Accordion from '@material-ui/core/Accordion'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import Button from '@material-ui/core/Button'
 import Drawer from '@material-ui/core/Drawer'
+import createTheme from '@material-ui/core/styles/createTheme'
 import Toolbar from '@material-ui/core/Toolbar'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import { useState, useEffect } from 'react'
+import ThemeProvider from '@material-ui/styles/ThemeProvider'
+import { useState } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { useSteps } from '../../query/useSteps'

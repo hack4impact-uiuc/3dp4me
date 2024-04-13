@@ -1,5 +1,4 @@
 import { File as FileModel } from '@3dp4me/types'
-import { trackPromise } from 'react-promise-tracker'
 
 import { downloadBlobWithoutSaving } from '../api/api'
 

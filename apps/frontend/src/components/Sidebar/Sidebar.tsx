@@ -1,11 +1,11 @@
 import './Sidebar.scss'
 
 import { Step } from '@3dp4me/types'
-import AppBar from "@material-ui/core/AppBar"
-import Button from "@material-ui/core/Button"
-import Drawer from "@material-ui/core/Drawer"
-import Toolbar from "@material-ui/core/Toolbar"
+import AppBar from '@material-ui/core/AppBar'
+import Button from '@material-ui/core/Button'
+import Drawer from '@material-ui/core/Drawer'
 import makeStyles from '@material-ui/core/styles/makeStyles'
+import Toolbar from '@material-ui/core/Toolbar'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'

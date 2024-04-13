@@ -1,6 +1,6 @@
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Radio from "@material-ui/core/Radio"
-import RadioGroup from "@material-ui/core/RadioGroup"
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { FormOption } from './FormOption'

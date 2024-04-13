@@ -1,5 +1,4 @@
 import { Step } from '@3dp4me/types'
-import { useQuery } from '@tanstack/react-query'
 
 import { getAllStepsMetadata } from '../api/api'
 import { sortMetadata } from '../utils/utils'

@@ -1,5 +1,4 @@
 import { Patient } from '@3dp4me/types'
-import { useQuery } from '@tanstack/react-query'
 
 import { getPatientById } from '../api/api'
 import { queryClient, QueryKeys } from './query'
@@ -15,7 +14,8 @@ const getPatientQuery = (patientId: string) => ({
     },
 })
 
-export const usePatient = (patientId: string) => useErrorWrappedQuery<Patient>(getPatientQuery(patientId))
+export const usePatient = (patientId: string) =>
+    useErrorWrappedQuery<Patient>(getPatientQuery(patientId))
 
 export const useInvalidatePatient = (patientId: string) => () =>
     queryClient.invalidateQueries({

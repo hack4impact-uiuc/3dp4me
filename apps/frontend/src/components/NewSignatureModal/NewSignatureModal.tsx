@@ -1,5 +1,5 @@
-import Button from "@material-ui/core/Button"
-import Modal from "@material-ui/core/Modal"
+import Button from '@material-ui/core/Button'
+import Modal from '@material-ui/core/Modal'
 import { FC, useRef } from 'react'
 import ReactSignatureCanvas from 'react-signature-canvas'
 import SignaturePad from 'signature_pad'

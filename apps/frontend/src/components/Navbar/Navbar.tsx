@@ -1,8 +1,8 @@
 import './Navbar.scss'
 
 import { Language, Nullish } from '@3dp4me/types'
-import AppBar from "@material-ui/core/AppBar"
-import Toolbar from "@material-ui/core/Toolbar"
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import PropTypes from 'prop-types'
 import React, { MouseEventHandler, useContext, useState } from 'react'
