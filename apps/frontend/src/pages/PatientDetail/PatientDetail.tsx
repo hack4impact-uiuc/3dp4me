@@ -54,7 +54,6 @@ const PatientDetail = () => {
      */
     useEffect(() => {
         if (!stepMetaData) return
-
         if (stepMetaData.find((s) => s.key === selectedStep)) return
 
         if (stepKeyParam) {
@@ -64,13 +63,6 @@ const PatientDetail = () => {
 
         if (stepMetaData?.length) setSelectedStep(stepMetaData[0].key)
     }, [stepMetaData, stepKeyParam])
-
-    // useEffect(() => {
-    //     if (isPatientError)
-    //         setError(patientError.toString())
-    //     if (isStepsError)
-    //         setError(stepError.toString())
-    // }, [isPatientError, isStepsError, patientError, stepError])
 
     /**
      * Called when the patient data for a step is saved

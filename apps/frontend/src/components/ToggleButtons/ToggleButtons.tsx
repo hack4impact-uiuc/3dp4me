@@ -29,7 +29,7 @@ const ToggleButtons = ({
     handleStep,
     patientData,
     step,
-    toggleButtonClasses,
+    toggleButtonClasses = '',
 }: ToggleButtonsProps) => {
     const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & HTMLButtonElement>>(null)
     const selectedLang = useTranslations()[1]

@@ -4,6 +4,10 @@ import { useEffect } from 'react'
 
 import { useSetError } from '../hooks/uesSetError'
 
+/**
+ * This is a wrapper around useQuery that will set the global error state
+ * if an error returns. We should be using this for all of our queries.
+ */
 export const useErrorWrappedQuery = <
     TQueryFnData = unknown,
     TError = DefaultError,
@@ -21,7 +25,7 @@ export const useErrorWrappedQuery = <
         if (isError) {
             setError(error?.toString() || 'An error occurred')
         }
-    }, [isError, error])
+    }, [isError, error, setError])
 
     return queryResults
 }
