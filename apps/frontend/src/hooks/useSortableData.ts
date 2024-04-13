@@ -16,10 +16,12 @@ export interface SortConfig<T> {
  * @returns Three items: `sortedData` is the data after sorting. `requestSort` is a function
  *          that causes a resort when called, and `sortConfig` tells about the current sort config
  */
-const useSortableData = <T extends Record<string, any>>(data: T[]) => {
+const useSortableData = <T extends Record<string, any>>(data: Nullish<T[]>) => {
     const [sortConfig, setSortConfig] = useState<Nullish<SortConfig<T>>>(null)
     const sortableData = useMemo(() => _.cloneDeep(data), [data])
     const sortedData = useMemo(() => {
+        if (!sortableData) return sortableData
+
         /**
          * Compares the two objects with comparison operator. A
          * non-null object is always treated as greater than null

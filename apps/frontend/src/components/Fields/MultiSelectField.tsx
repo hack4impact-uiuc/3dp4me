@@ -1,5 +1,8 @@
 import { Language } from '@3dp4me/types'
-import { Checkbox, FormControl, FormControlLabel, FormGroup } from '@material-ui/core'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormGroup from '@material-ui/core/FormGroup'
 import React, { ChangeEvent } from 'react'
 
 import { FormOption } from './FormOption'

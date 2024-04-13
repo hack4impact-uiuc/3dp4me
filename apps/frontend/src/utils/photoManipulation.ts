@@ -1,5 +1,4 @@
 import { File as FileModel } from '@3dp4me/types'
-import { trackPromise } from 'react-promise-tracker'
 
 import { downloadBlobWithoutSaving } from '../api/api'
 
@@ -40,9 +39,7 @@ export const photoToURI = async (
     fieldKey: string,
     patientId: string
 ) => {
-    const blob = await trackPromise(
-        downloadBlobWithoutSaving(patientId, stepKey, fieldKey, photoObj.filename)
-    )
+    const blob = await downloadBlobWithoutSaving(patientId, stepKey, fieldKey, photoObj.filename)
 
     if (!blob) {
         console.warn(`Blob was null for ${photoObj}-${stepKey}-${fieldKey}-${patientId}`)

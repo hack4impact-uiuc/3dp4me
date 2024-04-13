@@ -1,8 +1,9 @@
 import { AccessLevel, FieldType, Language, Nullish, Path, Patient } from '@3dp4me/types'
-import { IconButton } from '@material-ui/core'
+import IconButton from '@material-ui/core/IconButton'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
 import React, { ReactNode } from 'react'
+import Skeleton from 'react-loading-skeleton'
 import { Link } from 'react-router-dom'
 
 import Eyecon from '../assets/view.svg'
@@ -87,6 +88,23 @@ export const defaultTableRowRenderer = <T extends Record<string, any>>(
 
     return row
 }
+
+export const defaultTableRowLoadingRenderer = (numCols: number, selectedLang: Language) => {
+    const row = []
+    const loadDirection = selectedLang === Language.AR ? 'rtl' : 'ltr'
+
+    for (let i = 0; i < numCols; i++) {
+        row.push(
+            <StyledTableCell>
+                <Skeleton direction={loadDirection} inline={true} />
+            </StyledTableCell>
+        )
+    }
+
+    return row
+}
+
+export type RowLoadingRenderer = (numCols: number, selectedLang: Language) => ReactNode
 
 export type HeaderRenderer<T> = (
     headers: Header<T>[],

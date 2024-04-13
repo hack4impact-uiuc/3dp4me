@@ -1,5 +1,5 @@
 import { BasePatient, Language, Nullish, OmitDeep, Patient } from '@3dp4me/types'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import swal from 'sweetalert'
 
@@ -25,6 +25,7 @@ export interface PatientTableProps {
     initialSearchQuery: string
     handleSearchQuery: (query: string) => void
     stepKey: string
+    isLoading?: boolean
 }
 
 /**
@@ -40,6 +41,7 @@ const PatientTable = ({
     initialSearchQuery,
     handleSearchQuery,
     stepKey,
+    isLoading = false,
 }: PatientTableProps) => {
     const errorWrap = useErrorWrap()
     const translations = useTranslations()[0]
@@ -104,6 +106,7 @@ const PatientTable = ({
             />
 
             <Table<Patient>
+                isLoading={isLoading}
                 onCreateRow={() => setCreatePatientModalOpen(true)}
                 tableTitle={tableTitle}
                 addRowButtonTitle={translations.components.button.createPatient}

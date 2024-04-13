@@ -3,7 +3,7 @@ import 'react-image-gallery/styles/css/image-gallery.css'
 import './PhotoField.scss'
 
 import { File as FileType } from '@3dp4me/types'
-import { Modal } from '@material-ui/core'
+import Modal from '@material-ui/core/Modal'
 import React, { useEffect, useState } from 'react'
 import Camera from 'react-html5-camera-photo'
 import ImageGallery, { ReactImageGalleryItem } from 'react-image-gallery'

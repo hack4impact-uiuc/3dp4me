@@ -1,7 +1,9 @@
 import './EditStepModal.scss'
 
 import { Language, Step, TranslatedString } from '@3dp4me/types'
-import { Button, FormControlLabel, Modal } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Modal from '@material-ui/core/Modal'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'

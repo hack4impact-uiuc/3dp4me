@@ -5,7 +5,11 @@
 import './EditRoleModal.scss'
 
 import { AccessLevel, Nullish } from '@3dp4me/types'
-import { Button, FormControl, InputLabel, Modal, Select } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
+import Modal from '@material-ui/core/Modal'
+import Select from '@material-ui/core/Select'
 import _ from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'

@@ -1,6 +1,6 @@
 import './StyledButton.scss'
 
-import { Button } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
 import React, { ReactNode } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'

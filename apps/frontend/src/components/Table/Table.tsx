@@ -1,4 +1,5 @@
-import { Button, TextField } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 
 import search from '../../assets/search.svg'
@@ -19,6 +20,7 @@ export interface TableProps<T extends Record<string, any>> {
     rowData: ColumnMetadata<T>[]
     initialSearchQuery: string
     handleSearchQuery: (query: string) => void
+    isLoading?: boolean
 }
 
 /**
@@ -35,6 +37,7 @@ const Table = <T extends Record<string, any>>({
     renderTableRow,
     initialSearchQuery,
     handleSearchQuery,
+    isLoading = false,
 }: TableProps<T>) => {
     const [translations, selectedLang] = useTranslations()
 
@@ -97,15 +100,14 @@ const Table = <T extends Record<string, any>>({
                     </Button>
                 </div>
             </div>
-            {data && (
-                <SimpleTable<T>
-                    data={data}
-                    headers={headers}
-                    rowData={rowData}
-                    renderHeader={renderHeader}
-                    renderTableRow={renderTableRow}
-                />
-            )}
+            <SimpleTable<T>
+                isLoading={isLoading}
+                data={data}
+                headers={headers}
+                rowData={rowData}
+                renderHeader={renderHeader}
+                renderTableRow={renderTableRow}
+            />
         </div>
     )
 }

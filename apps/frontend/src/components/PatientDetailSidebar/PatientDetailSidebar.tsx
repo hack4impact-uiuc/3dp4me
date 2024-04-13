@@ -1,20 +1,19 @@
 import './PatientDetailSidebar.scss'
 
-import { Nullish, Patient, Step } from '@3dp4me/types'
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Button,
-    createTheme,
-    ThemeProvider,
-} from '@material-ui/core'
+import { Nullish, Patient } from '@3dp4me/types'
+import Accordion from '@material-ui/core/Accordion'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import Button from '@material-ui/core/Button'
 import Drawer from '@material-ui/core/Drawer'
+import createTheme from '@material-ui/core/styles/createTheme'
 import Toolbar from '@material-ui/core/Toolbar'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ThemeProvider from '@material-ui/styles/ThemeProvider'
 import { useState } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
+import { useSteps } from '../../query/useSteps'
 import { LANGUAGES } from '../../utils/constants'
 import { hasNotesForStep } from '../../utils/metadataUtils'
 import { getPatientName } from '../../utils/utils'
@@ -29,16 +28,12 @@ const enTheme = createTheme({
 })
 
 export interface PatientDetailSidebarProps<T extends Patient = Patient> {
-    stepMetaData: Step[]
     patientData: T
     onViewPatient: () => void
 }
 
-const PatientDetailSidebar = ({
-    stepMetaData,
-    patientData,
-    onViewPatient,
-}: PatientDetailSidebarProps) => {
+const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSidebarProps) => {
+    const { data: stepMetaData } = useSteps({ includeHiddenFields: false })
     const [expandedStepKey, setExpandedStepKey] = useState<Nullish<string>>(null)
     const [translations, selectedLang] = useTranslations()
 

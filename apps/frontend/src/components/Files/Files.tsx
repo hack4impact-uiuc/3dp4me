@@ -1,11 +1,11 @@
 import './Files.scss'
 
 import { File as FileModel } from '@3dp4me/types'
-import { Button, Typography } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 import AddIcon from '@material-ui/icons/Add'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import CloseIcon from '@material-ui/icons/Close'
-import React from 'react'
 import swal from 'sweetalert'
 
 import { useTranslations } from '../../hooks/useTranslations'

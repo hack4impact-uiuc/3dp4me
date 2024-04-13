@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react'
 
+import LoadingIndicator from '../LoadingIndicator/LoadingIndicator'
+
 export interface LoadWrapperProps {
     loading: boolean
     children: ReactNode
@@ -11,7 +13,7 @@ export interface LoadWrapperProps {
  */
 const LoadWrapper = ({ loading, children }: LoadWrapperProps) => {
     if (loading) {
-        return <></>
+        return <LoadingIndicator />
     }
     return <>{children}</>
 }

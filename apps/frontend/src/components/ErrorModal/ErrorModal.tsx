@@ -1,7 +1,8 @@
 import './ErrorModal.scss'
 
 import { Nullish } from '@3dp4me/types'
-import { Modal, RootRef } from '@material-ui/core'
+import Modal from '@material-ui/core/Modal'
+import RootRef from '@material-ui/core/RootRef'
 import React, { KeyboardEventHandler } from 'react'
 
 import WarningIcon from '../../assets/warning.svg'
