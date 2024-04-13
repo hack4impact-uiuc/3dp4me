@@ -14,7 +14,7 @@
   "repository": "hack4impact-uiuc/3dp4me.git",
   "scripts": {
     "build": "turbo build",
-    "build:docker": "docker build -t 3dp4me .",
+    "build:docker": "docker build --build-arg PROJECT_NAME=hearing -t 3dp4me .",
     "clean": "turbo clean && rimraf .turbo prod-build node_modules",
     "lint": "turbo run lint && yarn eslint --ext .json --fix . && yarn sync",
     "lint:check": "turbo run lint && yarn eslint --ext .json .",
