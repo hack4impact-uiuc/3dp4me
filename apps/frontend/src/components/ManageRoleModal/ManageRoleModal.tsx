@@ -1,7 +1,8 @@
 import './ManageRoleModal.scss'
 
 import { Nullish, Role } from '@3dp4me/types'
-import { Button, Modal } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import Modal from '@material-ui/core/Modal'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'

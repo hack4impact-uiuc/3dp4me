@@ -1,7 +1,8 @@
 import './ManagePatientModal.scss'
 
 import { Language, Patient, ReservedStep } from '@3dp4me/types'
-import { Button, Modal } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import Modal from '@material-ui/core/Modal'
 import CloseIcon from '@material-ui/icons/Close'
 import _ from 'lodash'
 import React, { useState } from 'react'

@@ -25,7 +25,7 @@ interface ToggleButtonsProps {
     step: string
 }
 
-const ToggleButtons = ({ handleStep, patientData, step }: ToggleButtonsProps) => {
+const ToggleButtons = ({ handleStep, patientData, step, toggleButtonClasses }: ToggleButtonsProps) => {
     const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & HTMLButtonElement>>(null)
     const selectedLang = useTranslations()[1]
     const { width } = useWindowDimensions()

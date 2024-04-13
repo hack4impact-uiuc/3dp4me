@@ -1,7 +1,7 @@
 /* eslint import/no-cycle: "off" */
 
 import { Field, FieldType, File as FileModel } from '@3dp4me/types'
-import { Divider } from '@material-ui/core'
+import Divider from "@material-ui/core/Divider"
 
 import { useTranslations } from '../../hooks/useTranslations'
 import AudioRecorder from '../AudioRecorder/AudioRecorder'

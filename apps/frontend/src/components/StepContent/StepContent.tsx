@@ -1,7 +1,11 @@
 import './StepContent.scss'
 
 import { FieldType, File as FileModel, Step, StepStatus } from '@3dp4me/types'
-import { Backdrop, Button, CircularProgress, MenuItem, Select } from '@material-ui/core'
+import Backdrop from '@material-ui/core/Backdrop'
+import Button from "@material-ui/core/Button"
+import CircularProgress from '@material-ui/core/CircularProgress'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
 import _ from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'

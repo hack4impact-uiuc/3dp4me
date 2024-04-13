@@ -3,9 +3,8 @@
 import './Fields.scss'
 
 import { Field } from '@3dp4me/types'
-import { Button } from '@material-ui/core'
+import Button from "@material-ui/core/Button"
 import _ from 'lodash'
-import React from 'react'
 import swal from 'sweetalert'
 
 import XIcon from '../../assets/x-icon.png'

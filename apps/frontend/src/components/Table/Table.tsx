@@ -1,4 +1,5 @@
-import { Button, TextField } from '@material-ui/core'
+import Button from "@material-ui/core/Button"
+import TextField from "@material-ui/core/TextField"
 import React, { ChangeEvent, useEffect, useState } from 'react'
 
 import search from '../../assets/search.svg'

@@ -1,5 +1,5 @@
 import { AccessLevel, FieldType, Language, Nullish, Path, Patient } from '@3dp4me/types'
-import { IconButton } from '@material-ui/core'
+import IconButton from '@material-ui/core/IconButton'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
 import React, { ReactNode } from 'react'

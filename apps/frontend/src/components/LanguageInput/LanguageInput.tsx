@@ -1,7 +1,7 @@
 import './LanguageInput.scss'
 
 import { Language, TranslatedString } from '@3dp4me/types'
-import { TextField } from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
 import React from 'react'
 
 export interface LanguageInputProps {

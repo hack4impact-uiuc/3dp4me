@@ -1,18 +1,16 @@
 import './PatientDetailSidebar.scss'
 
 import { Nullish, Patient } from '@3dp4me/types'
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Button,
-    createTheme,
-    ThemeProvider,
-} from '@material-ui/core'
+import Accordion from "@material-ui/core/Accordion"
+import AccordionDetails from "@material-ui/core/AccordionDetails"
+import AccordionSummary from "@material-ui/core/AccordionSummary"
+import Button from "@material-ui/core/Button"
+import createTheme from "@material-ui/core/styles/createTheme"
+import ThemeProvider from "@material-ui/styles/ThemeProvider"
 import Drawer from '@material-ui/core/Drawer'
 import Toolbar from '@material-ui/core/Toolbar'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { useSteps } from '../../query/useSteps'
@@ -20,6 +18,7 @@ import { LANGUAGES } from '../../utils/constants'
 import { hasNotesForStep } from '../../utils/metadataUtils'
 import { getPatientName } from '../../utils/utils'
 import { ProfilePicture } from '../ProfilePicture/ProfilePicture'
+import { getProfilePictureUrl } from '../../utils/profilePicture'
 
 const arTheme = createTheme({
     direction: 'rtl',
@@ -46,16 +45,16 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
         setExpandedStepKey(isExpanded ? stepKey : null)
     }
 
-    useEffect(() => {
-        const updateProfilePic = async () => {
-            if (!stepMetaData) return
+    // useEffect(() => {
+    //     const updateProfilePic = async () => {
+    //         if (!stepMetaData) return
 
-            const url = await getProfilePictureUrl(stepMetaData, patientData)
-            setProfilePicUrl(url)
-        }
+    //         const url = await getProfilePictureUrl(stepMetaData, patientData)
+    //         setProfilePicUrl(url)
+    //     }
 
-        updateProfilePic()
-    }, [stepMetaData, patientData])
+    //     updateProfilePic()
+    // }, [stepMetaData, patientData])
 
     /**
      * Generates the sidebar with notes for each step. We make the field with key, 'notes', a special reserved

@@ -1,7 +1,8 @@
 import './Dashboard.scss'
 
 import { Field, Patient } from '@3dp4me/types'
-import { Snackbar, SnackbarCloseReason } from '@material-ui/core'
+import Snackbar from '@material-ui/core/Snackbar'
+import type { SnackbarCloseReason } from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
