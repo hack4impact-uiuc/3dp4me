@@ -18,7 +18,6 @@ WORKDIR /
 COPY . /
 RUN yarn install
 
-# out, but it isn't working
 ARG PROJECT_NAME hearing
 
 # For some reason we need to build types first. Turbo should be able to figure this
