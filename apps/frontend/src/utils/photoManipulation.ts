@@ -40,9 +40,7 @@ export const photoToURI = async (
     fieldKey: string,
     patientId: string
 ) => {
-    const blob = await trackPromise(
-        downloadBlobWithoutSaving(patientId, stepKey, fieldKey, photoObj.filename)
-    )
+    const blob = await downloadBlobWithoutSaving(patientId, stepKey, fieldKey, photoObj.filename)
 
     if (!blob) {
         console.warn(`Blob was null for ${photoObj}-${stepKey}-${fieldKey}-${patientId}`)

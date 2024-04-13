@@ -32,7 +32,6 @@ import { useInvalidatePatient, usePatient } from '../../query/usePatient'
 import { useSteps } from '../../query/useSteps'
 import { LANGUAGES } from '../../utils/constants'
 import { getStepData } from '../../utils/metadataUtils'
-import { useSetError } from '../../hooks/uesSetError'
 
 /**
  * The detail view for a patient. Shows their information

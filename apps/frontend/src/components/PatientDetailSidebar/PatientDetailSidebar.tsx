@@ -18,7 +18,6 @@ import { LANGUAGES } from '../../utils/constants'
 import { hasNotesForStep } from '../../utils/metadataUtils'
 import { getPatientName } from '../../utils/utils'
 import { ProfilePicture } from '../ProfilePicture/ProfilePicture'
-import { getProfilePictureUrl } from '../../utils/profilePicture'
 
 const arTheme = createTheme({
     direction: 'rtl',
