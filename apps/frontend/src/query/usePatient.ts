@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { getPatientById } from '../api/api'
 import { queryClient, QueryKeys } from './query'
-import { withErrorPopup } from './withErrorPopup'
+import { useErrorWrappedQuery } from './useErrorWrappedQuery'
 
 const getPatientQueryKey = (patientId: string) => [QueryKeys.Patient, patientId]
 
@@ -15,7 +15,7 @@ const getPatientQuery = (patientId: string) => ({
     },
 })
 
-export const usePatient = (patientId: string) => withErrorPopup(useQuery<Patient>(getPatientQuery(patientId)))
+export const usePatient = (patientId: string) => useErrorWrappedQuery<Patient>(getPatientQuery(patientId))
 
 export const useInvalidatePatient = (patientId: string) => () =>
     queryClient.invalidateQueries({

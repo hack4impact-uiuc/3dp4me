@@ -45,17 +45,6 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
         setExpandedStepKey(isExpanded ? stepKey : null)
     }
 
-    // useEffect(() => {
-    //     const updateProfilePic = async () => {
-    //         if (!stepMetaData) return
-
-    //         const url = await getProfilePictureUrl(stepMetaData, patientData)
-    //         setProfilePicUrl(url)
-    //     }
-
-    //     updateProfilePic()
-    // }, [stepMetaData, patientData])
-
     /**
      * Generates the sidebar with notes for each step. We make the field with key, 'notes', a special reserved
      * field that should only be used for notes. So we go through each step, looking for a field with

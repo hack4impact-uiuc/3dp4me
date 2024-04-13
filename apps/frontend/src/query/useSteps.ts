@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getAllStepsMetadata } from '../api/api'
 import { sortMetadata } from '../utils/utils'
 import { queryClient, QueryKeys } from './query'
+import { useErrorWrappedQuery } from './useErrorWrappedQuery'
 
 export interface UseStepsOptions {
     includeHiddenFields: boolean
@@ -19,7 +20,7 @@ const getStepsQuery = ({ includeHiddenFields }: UseStepsOptions) => ({
     },
 })
 
-export const useSteps = (opts: UseStepsOptions) => useQuery<Step[]>(getStepsQuery(opts))
+export const useSteps = (opts: UseStepsOptions) => useErrorWrappedQuery<Step[]>(getStepsQuery(opts))
 
 export const useInvalidateSteps = () => () =>
     queryClient.invalidateQueries({

@@ -17,8 +17,6 @@ import { StringParam, useQueryParam } from 'use-query-params'
 
 import {
     deletePatientById,
-    getAllStepsMetadata,
-    getPatientById,
     updatePatient,
     updateStage,
     uploadFile,
@@ -34,6 +32,7 @@ import { useInvalidatePatient, usePatient } from '../../query/usePatient'
 import { useSteps } from '../../query/useSteps'
 import { LANGUAGES } from '../../utils/constants'
 import { getStepData } from '../../utils/metadataUtils'
+import { useSetError } from '../../hooks/uesSetError'
 
 /**
  * The detail view for a patient. Shows their information
@@ -47,11 +46,12 @@ const PatientDetail = () => {
     const [isManagePatientModalOpen, setManagePatientModalOpen] = useState(false)
     const stepKeyParam = useQueryParam('stepKey', StringParam)[0]
     const [edit, setEdit] = useState(false)
-    const { data: patientData, isLoading: isPatientLoading } = usePatient(patientId)
-    const { data: stepMetaData, isLoading: areStepsLoading } = useSteps({
+    const { data: patientData, isLoading: isPatientLoading, isError: isPatientError } = usePatient(patientId)
+    const { data: stepMetaData, isLoading: areStepsLoading, isError: isStepsError } = useSteps({
         includeHiddenFields: false,
     })
     const invalidatePatient = useInvalidatePatient(patientId)
+    const isError = isPatientError || isStepsError
     const isLoading = isPatientLoading || areStepsLoading
 
     /**
@@ -71,17 +71,22 @@ const PatientDetail = () => {
         if (stepMetaData?.length) setSelectedStep(stepMetaData[0].key)
     }, [stepMetaData, stepKeyParam])
 
+    // useEffect(() => {
+    //     if (isPatientError)
+    //         setError(patientError.toString())
+    //     if (isStepsError)
+    //         setError(stepError.toString())
+    // }, [isPatientError, isStepsError, patientError, stepError])
+
     /**
      * Called when the patient data for a step is saved
      * Submits to the backend and displays a message
      */
-    const onStepSaved = (stepKey: string, stepData: Record<string, any>) => {
+    const onStepSaved = async (stepKey: string, stepData: Record<string, any>) => {
         if (!patientData) return
 
-        errorWrap(async () => {
-            await trackPromise(updateStage(patientId, stepKey, stepData))
-            invalidatePatient()
-        })
+        await updateStage(patientId, stepKey, stepData)
+        invalidatePatient()
     }
 
     /**
@@ -91,52 +96,23 @@ const PatientDetail = () => {
     const onPatientDataSaved = async (newPatientData: Patient) => {
         if (!patientData) return
 
-        await errorWrap(async () => {
-            await trackPromise(updatePatient(patientId, newPatientData))
-            swal(translations.components.swal.managePatient.successMsg, '', 'success')
-        })
+        await updatePatient(patientId, newPatientData)
+        swal(translations.components.swal.managePatient.successMsg, '', 'success')
 
         invalidatePatient()
         setManagePatientModalOpen(false)
     }
 
     const onUploadProfilePicture = async (file: File) => {
-        errorWrap(async () => {
-            const res = await trackPromise(
-                uploadFile(
-                    patientId,
-                    ReservedStep.Root,
-                    RootStepFieldKeys.ProfilePicture,
-                    file.name,
-                    file
-                )
-            )
+        await trackPromise(uploadFile(
+            patientId,
+            ReservedStep.Root,
+            RootStepFieldKeys.ProfilePicture,
+            file.name,
+            file
+        ))
 
-            const newFile: FileType = {
-                filename: res.result.name,
-                uploadedBy: res.result.uploadedBy,
-                uploadDate: res.result.uploadDate,
-            }
-
-            setPatientData((p) => {
-                if (!p) return p
-
-                const rootStep = getStepData(patientData, ReservedStep.Root) || {}
-                console.log('ROOT STEP DATA', rootStep)
-
-                let files: FileType[] = rootStep[RootStepFieldKeys.ProfilePicture]
-                if (files) files = files.concat(newFile)
-                else files = [newFile]
-
-                rootStep[RootStepFieldKeys.ProfilePicture] = files
-                console.log('AT END IS', rootStep)
-
-                return {
-                    ...p,
-                    [ReservedStep.Root]: rootStep,
-                }
-            })
-        })
+        invalidatePatient()
     }
 
     const onPatientDeleted = async () => {
@@ -195,8 +171,8 @@ const PatientDetail = () => {
      * Renders all of the fields in the selected step
      */
     const generateStepContent = () => {
-        if (stepMetaData == null) return null
-        if (patientData == null) return null
+        if (!stepMetaData) return null
+        if (!patientData) return null
 
         const className = selectedLang === LANGUAGES.AR ? 'steps steps-ar' : 'steps'
 
@@ -220,6 +196,10 @@ const PatientDetail = () => {
                 })}
             </div>
         )
+    }
+
+    if (isError) {
+        return null;
     }
 
     return (

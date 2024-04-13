@@ -7,6 +7,7 @@ import {
     Paginated,
 } from '../api/api'
 import { queryClient, QueryKeys } from './query'
+import { useErrorWrappedQuery } from './useErrorWrappedQuery'
 
 export interface UsePatientsOptions {
     stepKey?: string
@@ -41,7 +42,7 @@ const getPatientsQuery = (opts: UsePatientsOptions) => ({
 })
 
 export const usePatients = (opts: UsePatientsOptions) =>
-    useQuery<Paginated<Patient[]>>(getPatientsQuery(opts))
+    useErrorWrappedQuery<Paginated<Patient[]>>(getPatientsQuery(opts))
 
 export const useInvalidatePatients = () => () =>
     queryClient.invalidateQueries({

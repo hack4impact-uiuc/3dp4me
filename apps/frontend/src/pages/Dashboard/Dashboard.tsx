@@ -32,7 +32,7 @@ const Dashboard = () => {
     const [translations, selectedLang] = useTranslations()
 
     // The metadata for all steps
-    const { data: stepsMetaData, isLoading: areStepsLoading } = useSteps({
+    const { data: stepsMetaData, isLoading: areStepsLoading, isError: isStepsError } = useSteps({
         includeHiddenFields: false,
     })
 
@@ -48,7 +48,7 @@ const Dashboard = () => {
     // Words to filter out patients by
     const [searchQuery, setSearchQuery] = useState('')
     const invalidatePatients = useInvalidatePatients()
-    const { data: patientsData, isLoading: arePatientsLoading } = usePatients({
+    const { data: patientsData, isLoading: arePatientsLoading, isError: isPatientsError } = usePatients({
         stepKey: selectedStep,
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
@@ -58,6 +58,7 @@ const Dashboard = () => {
     const patients = patientsData?.data || []
     const patientsCount = patientsData?.count || 0
     const isLoading = arePatientsLoading || areStepsLoading || selectedStep === ''
+    const isError = isPatientsError || isStepsError
 
     useEffect(() => {
         if (!isLoading && patientsCount === 0) setSnackbarOpen(true)
@@ -213,7 +214,7 @@ const Dashboard = () => {
         setSnackbarOpen(false)
     }
 
-    if (!stepsMetaData) return null
+    if (!stepsMetaData || isError) return null
 
     return (
         <div className="dashboard">
