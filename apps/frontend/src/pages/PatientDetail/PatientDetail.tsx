@@ -17,7 +17,7 @@ import { useErrorWrap } from '../../hooks/useErrorWrap'
 import { useTranslations } from '../../hooks/useTranslations'
 import { useInvalidatePatient, usePatient } from '../../query/usePatient'
 import { useSteps } from '../../query/useSteps'
-import { LANGUAGES } from '../../utils/constants'
+import { LANGUAGES, Routes } from '../../utils/constants'
 import { getStepData } from '../../utils/metadataUtils'
 
 /**
@@ -143,7 +143,7 @@ const PatientDetail = () => {
         if (newStep === null) return
         setSelectedStep(newStep)
         setEdit(false)
-        window.history.pushState({}, '', `${patientId}?stepKey=${newStep}`)
+        window.history.pushState({}, '', `${Routes.PATIENT_DETAIL}/${patientId}?stepKey=${newStep}`)
     }
 
     const onStepChange = (newStep: string) => {
