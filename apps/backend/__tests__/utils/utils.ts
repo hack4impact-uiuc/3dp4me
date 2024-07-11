@@ -9,7 +9,7 @@
  * @param {Object} a The first item to compare. This should contain the lower bound on lastEdited.
  * @param {Object} b The second item to compare. This should contain the upper bound on lastEdited.
  */
-module.exports.expectStrictEqualWithTimestampOrdering = (a, b) => {
+module.exports.expectStrictEqualWithTimestampOrdering = (a: any, b: any) => {
     // Doing the parsing and stringifying allows us to ignore underlying types.
     // For example, normally toEqual will fail if we have a Date and String that are equivalent
     const aCopy = JSON.parse(JSON.stringify(a));
@@ -36,7 +36,7 @@ module.exports.expectStrictEqualWithTimestampOrdering = (a, b) => {
  * @param {Object} b The second object to check
  * @returns True if a and b are disjoint, false otherwise
  */
-module.exports.areObjectsDisjoint = (a, b) => {
+module.exports.areObjectsDisjoint = (a: any, b: any) => {
     for (const k of Object.keys(a)) {
         if (b[k] && a[k] === b[k]) return false;
     }

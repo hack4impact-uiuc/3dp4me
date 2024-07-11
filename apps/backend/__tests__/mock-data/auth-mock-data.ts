@@ -1,3 +1,4 @@
+import { GetUserCommandOutput } from '@aws-sdk/client-cognito-identity-provider';
 module.exports.MOCK_AUTH_TOKEN =
     'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
 
@@ -18,6 +19,6 @@ module.exports.MOCK_USER = {
             Value: 'https://lh3.googleusercontent.com/a/AATXAJyQEIaUPej-ijfcwWLwCP8CeA5r10tiL1RmPLlj=s96-c',
         },
     ],
-};
+} as GetUserCommandOutput;
 
 module.exports.MOCK_ROLE_ID = '606e0a4602b23d02bc77673b';

@@ -1,3 +1,5 @@
+import { GetUserCommandOutput } from '@aws-sdk/client-cognito-identity-provider';
+import { Nullish } from '../../../../packages/types/dist/src/utils/nullish';
 const _ = require('lodash');
 const AWS_SDK = require('aws-sdk');
 
@@ -8,7 +10,7 @@ const {
 const { MOCK_USER, MOCK_AUTH_TOKEN } = require('../mock-data/auth-mock-data');
 const { AccessLevel, ADMIN_ID } = require('../../utils/constants');
 
-let currentAuthenticatedUser = null;
+let currentAuthenticatedUser: Nullish<GetUserCommandOutput> = null;
 let lastUploadedFileParams = null;
 let identityServiceParams = null;
 
@@ -68,7 +70,7 @@ module.exports.initS3Mocker = (AWS) => {
 };
 
 module.exports.initS3GetMocker = (AWS) => {
-    path = require('path');
+    const path = require('path');
     AWS.mock(
         'S3',
         'getObject',
@@ -109,7 +111,7 @@ module.exports.initS3DeleteObjectsMocker = (AWS) => {
  */
 module.exports.setCurrentUser = (
     AWS,
-    user = this.createUserDataWithRolesAndAccess(
+    user = module.exports.createUserDataWithRolesAndAccess(
         AccessLevel.GRANTED,
         ADMIN_ID,
     ),
@@ -133,9 +135,9 @@ module.exports.withAuthentication = (request) =>
 module.exports.getCurrentAuthenticatedUser = () => currentAuthenticatedUser;
 
 module.exports.getCurrentAuthenticatedUserAttribute = (attribName) =>
-    currentAuthenticatedUser.UserAttributes.find(
+    currentAuthenticatedUser?.UserAttributes?.find(
         (attrib) => attrib.Name === attribName,
-    ).Value;
+    )?.Value;
 
 module.exports.getLastUploadedFileParams = () => lastUploadedFileParams;
 module.exports.identityServiceParams = () => identityServiceParams;

@@ -27,6 +27,7 @@
     "twilio": "^3.71.1"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.24.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/express-fileupload": "^1.4.4",
