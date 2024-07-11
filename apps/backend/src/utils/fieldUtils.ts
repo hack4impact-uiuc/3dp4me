@@ -1,4 +1,4 @@
-import { Field, ReservedStep, RootStep } from '@3dp4me/types'
+import { Field, ReservedStep } from '@3dp4me/types'
 import mongoose, { ClientSession, SchemaDefinitionProperty } from 'mongoose'
 
 import { StepModel } from '../models/Metadata'
@@ -49,7 +49,7 @@ export const isFieldReadable = async (
     fieldKey: string
 ) => {
     if (isAdmin(user)) return true
-    if (stepKey == ReservedStep.Root) return true
+    if (stepKey === ReservedStep.Root) return true
 
     const fieldData = await getFieldMetadata(stepKey, fieldKey)
     if (!fieldData) return false
@@ -72,7 +72,7 @@ export const isFieldWritable = async (
     fieldKey: string
 ) => {
     if (isAdmin(user)) return true
-    if (stepKey == ReservedStep.Root) return true
+    if (stepKey === ReservedStep.Root) return true
 
     const fieldData = await getFieldMetadata(stepKey, fieldKey)
     if (!fieldData) return false
