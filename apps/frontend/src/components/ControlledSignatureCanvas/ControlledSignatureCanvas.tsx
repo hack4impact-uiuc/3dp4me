@@ -19,6 +19,7 @@ export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ 
     useEffect(() => {
         if (!value?.signatureData || !sigCanvas.current || doesCanvasHaveData) return
 
+        sigCanvas?.current?.off()
         const canvas = sigCanvas.current.getCanvas()
         if (!canvas) return
 
@@ -66,5 +67,5 @@ export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ 
         return formattedData
     }
 
-    return <ReactSignatureCanvas ref={sigCanvas} />
+    return <ReactSignatureCanvas ref={sigCanvas} clearOnResize={false} />
 }
