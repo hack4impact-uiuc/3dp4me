@@ -19,6 +19,7 @@ export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ 
     useEffect(() => {
         if (!value?.signatureData || !sigCanvas.current || doesCanvasHaveData) return
 
+        sigCanvas?.current?.off()
         const canvas = sigCanvas.current.getCanvas()
         if (!canvas) return
 

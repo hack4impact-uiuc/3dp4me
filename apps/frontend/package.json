@@ -46,7 +46,6 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
     "react-signature-canvas": "^1.0.6",
-    "react-signature-pad-wrapper": "^4.1.0",
     "react-switch": "^6.0.0",
     "semantic-ui-css": "^2.5.0",
     "signature_pad": "^2.3.2",
