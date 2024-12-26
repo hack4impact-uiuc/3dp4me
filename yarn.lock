@@ -14955,6 +14955,15 @@ react-signature-canvas@^1.0.6:
     signature_pad "^2.3.2"
     trim-canvas "^0.1.0"
 
+react-signature-pad-wrapper@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-signature-pad-wrapper/-/react-signature-pad-wrapper-4.1.0.tgz#f35199249a6c6da59ad45428b6d395a017a69043"
+  integrity sha512-HtqUrlIKST5RcpKNZs3M9WeT0GOlGc/HmA5OnEVBxK+8MdYbK6BgdjgrNLlme8YinaWLWUFcPdPifGDFXdMY8w==
+  dependencies:
+    prop-types "^15.8.1"
+    signature_pad "^5.0.1"
+    throttle-debounce "^5.0.0"
+
 react-switch@^6.0.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/react-switch/-/react-switch-6.1.0.tgz#46239535820f6cf1331aecd948ba585d8a7b532a"
@@ -15827,6 +15836,11 @@ signature_pad@^2.3.2:
   resolved "https://registry.yarnpkg.com/signature_pad/-/signature_pad-2.3.2.tgz#ca7230021c89cedeead27b33d8d16ff254e5f04a"
   integrity sha512-peYXLxOsIY6MES2TrRLDiNg2T++8gGbpP2yaC+6Ohtxr+a2dzoaqWosWDY9sWqTAAk6E/TyQO+LJw9zQwyu5kA==
 
+signature_pad@^5.0.1:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/signature_pad/-/signature_pad-5.0.4.tgz#81d15a75eb6c86a73c4f33b1cdec29068f057c64"
+  integrity sha512-nngOixbwLAUOuH3QnZwlgwmynQblxmo4iWacKFwfymJfiY+Qt+9icNtcIe/okqXKun4hJ5QTFmHyC7dmv6lf2w==
+
 sinon@^14.0.1:
   version "14.0.2"
   resolved "https://registry.yarnpkg.com/sinon/-/sinon-14.0.2.tgz#585a81a3c7b22cf950762ac4e7c28eb8b151c46f"
@@ -16672,6 +16686,11 @@ throat@^6.0.1:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/throat/-/throat-6.0.2.tgz#51a3fbb5e11ae72e2cf74861ed5c8020f89f29fe"
   integrity sha512-WKexMoJj3vEuK0yFEapj8y64V0A6xcuPuK9Gt1d0R+dzCSJc0lHqQytAbSB4cDAK0dWh4T0E2ETkoLE2WZ41OQ==
+
+throttle-debounce@^5.0.0:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-5.0.2.tgz#ec5549d84e053f043c9fd0f2a6dd892ff84456b1"
+  integrity sha512-B71/4oyj61iNH0KeCamLuE2rmKuTO5byTOSVwECM5FA7TiAiAW+UqTKZ9ERueC4qvgSttUhdmq1mXC3kJqGX7A==
 
 through@^2.3.8:
   version "2.3.8"

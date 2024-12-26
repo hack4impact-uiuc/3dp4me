@@ -34,8 +34,11 @@ export const NewSiganatureModal: FC<NewSignatureModalProps> = ({ isOpen, onSave,
             return
         }
 
+        const data = canvasRef.current.toData()
+        console.log("NEW DATA IS ", data)
+
         onSave({
-            points: canvasRef.current.toData(),
+            points: data,
             width: canvas.width,
             height: canvas.height,
         })

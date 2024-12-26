@@ -87,7 +87,7 @@ const SignatureField = <T extends string>({
             />
             <div className="sig-container">
                 {/* We need to keep changing the key to force a rerender */}
-                <ControlledSignatureCanvas key={hash(value || {})} value={value} />
+                <ControlledSignatureCanvas key={hashSignature(value)} value={value} />
                 <div className="sig-ctl-container">
                     <Button
                         className="sig-ctl-button doc-btn"
@@ -109,6 +109,11 @@ const SignatureField = <T extends string>({
             </div>
         </div>
     )
+}
+
+const hashSignature = (sig: Nullish<Signature>): string => {
+    const sigString = JSON.stringify(sig) + Math.random()
+    return hash(sigString)
 }
 
 export default SignatureField

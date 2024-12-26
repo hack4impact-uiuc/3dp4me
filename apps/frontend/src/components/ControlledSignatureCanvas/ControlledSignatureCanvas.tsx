@@ -66,5 +66,5 @@ export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ 
         return formattedData
     }
 
-    return <ReactSignatureCanvas ref={sigCanvas} />
+    return <ReactSignatureCanvas ref={sigCanvas} clearOnResize={false} />
 }

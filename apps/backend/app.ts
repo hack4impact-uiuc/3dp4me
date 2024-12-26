@@ -17,6 +17,9 @@ import {
 import { logRequest } from './src/middleware/logging';
 import { ENV_TEST } from './src/utils/constants';
 import { errorHandler } from "./src/utils/errorHandler"
+import { StepModel } from "./src/models/Metadata"
+import { Signature } from '../../packages/types/dist/src/models/signature';
+import { FieldType } from "@3dp4me/types"
 
 const app = express();
 
@@ -29,6 +32,40 @@ app.use(
         createParentPath: true,
     }),
 );
+
+// const makeSig = async () => {
+//     const steps = await StepModel.findOne({ key: 'interview'})
+//     console.log(steps)
+//     if (steps === null)
+//         return
+
+//     steps.fields.push(
+//         {
+//             fieldNumber: 6,
+//             key: 'sig2',
+//             fieldType: FieldType.SIGNATURE,
+//             options: [],
+//             isVisibleOnDashboard: false,
+//             displayName: {
+//                 EN: "Sig 2",
+//                 AR: "Sign 2",
+//             },
+//             readableGroups: [],
+//             writableGroups: [],
+//             isHidden: false,
+//             isDeleted: false,
+//             additionalData: {
+//                 defaultDocumentURL: {
+//                     EN: "https://d1m40dlonmuszr.cloudfront.net/PatientConsentForm.png",
+//                     AR: "https://d1m40dlonmuszr.cloudfront.net/PatientConsentForm.png",
+//                 }
+//             },
+//             subFields: []
+//           },
+//     )
+
+//     await steps.save()
+// }
 
 if (process.env.NODE_ENV !== ENV_TEST) initDB();
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -341,6 +341,8 @@ router.post(
     errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id, stepKey } = req.params;
 
+        console.log(req.body)
+
         // Make sure patient exists
         const patient = await PatientModel.findById(id);
         if (!patient)
@@ -350,6 +352,7 @@ router.post(
         const writableFields = await getWritableFields(req.user, stepKey);
         req.body = _.pick(req.body, writableFields);
 
+        console.log("Writable fields: ", writableFields)
         // Find the patient's step data
         let Model;
         try {
@@ -370,6 +373,8 @@ router.post(
         patient.lastEdited = new Date()
         patient.lastEditedBy = req.user.name;
         await patient.save();
+
+        console.log("UPDATED ", patientStepData)
 
         return sendResponse(res, 200, 'Step updated', patientStepData);
     }),
