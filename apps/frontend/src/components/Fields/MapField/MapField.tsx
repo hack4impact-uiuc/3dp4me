@@ -8,6 +8,8 @@ import { AdvancedMarker, ControlPosition, Map, MapControl, MapMouseEvent, Pin } 
 import { PlaceAutocomplete } from './PlaceAutocomplete'
 import { MapHandler } from './MapHandler'
 import { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { Autocomplete } from '@material-ui/lab'
 
 export interface MapFieldProps {
     value: Nullish<MapPoint>
@@ -28,6 +30,11 @@ const AMMAN_LAT_LNG = {
 }
 
 const DEMO_MAP_ID = 'DEMO_MAP_ID'
+const AutoCompleteControl = styled.div`
+    box-sizing: border-box;
+    margin: 24px;
+    background: #fff;
+`
 
 const MapField = ({
     value,
@@ -104,9 +111,9 @@ const MapField = ({
                 position={ControlPosition.TOP}
                 key={`${fieldId}-map-control`}
             >
-                <div className="autocomplete-control">
+                <AutoCompleteControl>
                     <PlaceAutocomplete onPlaceSelect={onPlaceSelect}/>
-                </div>
+                </AutoCompleteControl>
             </MapControl>,
             <MapHandler key={`${fieldId}-map-handler`} place={location} />,
         ]
