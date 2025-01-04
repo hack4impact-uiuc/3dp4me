@@ -1,4 +1,3 @@
-import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import './MapField.scss'
 import _ from 'lodash'
 import { useEffect, useRef, useState } from 'react'

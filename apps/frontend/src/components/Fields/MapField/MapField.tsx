@@ -1,4 +1,3 @@
-import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css'
 import './MapField.scss'
 
 import { MapPoint, Nullish } from '@3dp4me/types'
@@ -7,10 +6,11 @@ import _ from 'lodash'
 import { useTranslations } from '../../../hooks/useTranslations'
 import { AdvancedMarker, ControlPosition, Map, MapControl, MapMouseEvent, Pin } from '@vis.gl/react-google-maps'
 import { PlaceAutocomplete } from './PlaceAutocomplete'
+import { MapHandler } from './MapHandler'
+import { useEffect, useState } from 'react'
 
 export interface MapFieldProps {
     value: Nullish<MapPoint>
-    initValue: Nullish<MapPoint>
     displayName: string
     isDisabled: boolean
     onChange: (field: string, value: MapPoint) => void
@@ -31,13 +31,17 @@ const DEMO_MAP_ID = 'DEMO_MAP_ID'
 
 const MapField = ({
     value,
-    initValue,
     displayName,
     isDisabled,
     onChange,
     fieldId,
 }: MapFieldProps) => {
     const translations = useTranslations()[0]
+    const [location, setLocation] = useState<Nullish<MapPoint>>(null)
+
+    useEffect(() => {
+        setLocation(value ? value : { latitude: AMMAN_LAT_LNG.lat, longitude: AMMAN_LAT_LNG.lng })
+    }, [])
 
     const addMarker = (event: MapMouseEvent) => {
         if (!event.detail.latLng) return
@@ -52,10 +56,13 @@ const MapField = ({
         const location = place?.geometry?.location
         if (!location) return
 
-        onChange(fieldId, {
+        const selectedLocation = {
             latitude: location.lat(),
             longitude: location.lng(),
-        })
+        }
+
+        onChange(fieldId, selectedLocation)
+        setLocation(selectedLocation)
     }
 
     const pinForLocation = (lat: number , lng: number) => {
@@ -69,8 +76,8 @@ const MapField = ({
     }
 
     const displayMap = () => {
+        const center = !!value ? { lat: value.latitude, lng: value.longitude } : AMMAN_LAT_LNG
         if (isDisabled) {
-            const center = !!value ? { lat: value.latitude, lng: value.longitude } : AMMAN_LAT_LNG
             return (
                 <Map
                     mapId={DEMO_MAP_ID}
@@ -87,7 +94,7 @@ const MapField = ({
                 key={`${fieldId}-map`}
                 mapId={DEMO_MAP_ID}
                 defaultZoom={13}
-                defaultCenter={ AMMAN_LAT_LNG }
+                defaultCenter={ center }
                 disableDefaultUI={true}
                 onClick={addMarker}
             >
@@ -95,10 +102,13 @@ const MapField = ({
             </Map>,
             <MapControl 
                 position={ControlPosition.TOP}
-                key={`${fieldId}-map`}
+                key={`${fieldId}-map-control`}
             >
-                <PlaceAutocomplete onPlaceSelect={onPlaceSelect}/>
-            </MapControl>
+                <div className="autocomplete-control">
+                    <PlaceAutocomplete onPlaceSelect={onPlaceSelect}/>
+                </div>
+            </MapControl>,
+            <MapHandler key={`${fieldId}-map-handler`} place={location} />,
         ]
     }
 

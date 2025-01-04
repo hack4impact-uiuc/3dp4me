@@ -163,7 +163,6 @@ const StepContent = ({
                         displayName={field.displayName[selectedLang]}
                         metadata={field}
                         value={updatedData ? _.cloneDeep(updatedData[field.key]) : null}
-                        initValue={stepData ? _.cloneDeep(stepData[field.key]) : null}
                         key={field.key}
                         isDisabled={!edit}
                         patientId={patientId}
