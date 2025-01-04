@@ -51,7 +51,7 @@ export const configureHelment = () =>
                 'img-src': [...SRC_SELF, ...SRC_S3, ...SRC_GOOGLE_MAPS],
                 'frame-src': [...SRC_SELF, '*.google.com'],
                 'font-src': [...SRC_SELF, 'https://fonts.gstatic.com'],
-                'style-src': [...SRC_SELF, 'https://fonts.googleapis.com'],
+                'style-src': [...SRC_SELF, 'https://fonts.googleapis.com', 'unsafe-inline'],
                 'media-src': [...SRC_SELF, ...SRC_S3],
                 'object-src': [...SRC_SELF],
                 'worker-src': [...SRC_SELF],
