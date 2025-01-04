@@ -17,6 +17,7 @@ const SRC_S3 = [
     'https://3dp4me-public.s3.eu-north-1.amazonaws.com/',
     'https://3dp4me-patient-data.s3.eu-north-1.amazonaws.com/',
     'https://3dp4me-prosthetics-patient-data.s3.eu-north-1.amazonaws.com/',
+    'https://*.3dp4me-software.org',
     'https://d1m40dlonmuszr.cloudfront.net/',
 ]
 
@@ -49,14 +50,14 @@ export const configureHelment = () =>
             directives: {
                 'connect-src': [...SRC_SELF, ...SRC_COGNITO, ...SRC_GOOGLE_MAPS],
                 'img-src': [...SRC_SELF, ...SRC_S3, ...SRC_GOOGLE_MAPS],
-                'frame-src': ['*.google.com'],
-                'font-src': ['https://fonts.gstatic.com'],
-                'style-src': ['https://fonts.googleapis.com'],
+                'frame-src': [...SRC_SELF, '*.google.com'],
+                'font-src': [...SRC_SELF, 'https://fonts.gstatic.com'],
+                'style-src': [...SRC_SELF, 'https://fonts.googleapis.com'],
                 'media-src': [...SRC_SELF, ...SRC_S3],
                 'object-src': [...SRC_SELF],
                 'worker-src': [...SRC_SELF],
                 'child-src': [...SRC_SELF],
-                'script-src': [...SRC_GOOGLE_MAPS],
+                'script-src': [...SRC_SELF, ...SRC_GOOGLE_MAPS],
             },
         },
     })
