@@ -1,6 +1,7 @@
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import { QueryClientProvider } from '@tanstack/react-query'
+import { APIProvider } from '@vis.gl/react-google-maps'
 import { Amplify, Auth } from 'aws-amplify'
 import { arSA, enUS } from 'date-fns/locale'
 import React, { useEffect, useState } from 'react'
@@ -14,7 +15,6 @@ import Login from './pages/Login/Login'
 import { queryClient } from './query/query'
 import Store from './store/Store'
 import { LANGUAGES } from './utils/constants'
-import { APIProvider } from '@vis.gl/react-google-maps'
 
 // Configure amplify
 Amplify.configure(awsconfig)

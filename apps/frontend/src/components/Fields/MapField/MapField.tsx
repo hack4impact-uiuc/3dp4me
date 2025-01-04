@@ -1,14 +1,21 @@
+/* global google */
 import './MapField.scss'
 
 import { MapPoint, Nullish } from '@3dp4me/types'
-import _ from 'lodash'
-
-import { useTranslations } from '../../../hooks/useTranslations'
-import { AdvancedMarker, ControlPosition, Map, MapControl, MapMouseEvent, Pin } from '@vis.gl/react-google-maps'
-import { PlaceAutocomplete } from './PlaceAutocomplete'
-import { MapHandler } from './MapHandler'
+import {
+    AdvancedMarker,
+    ControlPosition,
+    Map,
+    MapControl,
+    MapMouseEvent,
+    Pin,
+} from '@vis.gl/react-google-maps'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+
+import { useTranslations } from '../../../hooks/useTranslations'
+import { MapHandler } from './MapHandler'
+import { PlaceAutocomplete } from './PlaceAutocomplete'
 
 export interface MapFieldProps {
     value: Nullish<MapPoint>
@@ -16,11 +23,6 @@ export interface MapFieldProps {
     isDisabled: boolean
     onChange: (field: string, value: MapPoint) => void
     fieldId: string
-}
-
-interface Viewport extends MapPoint {
-    zoom: number
-    transitionDuration: number
 }
 
 const AMMAN_LAT_LNG = {
@@ -35,18 +37,12 @@ const AutoCompleteControl = styled.div`
     background: #fff;
 `
 
-const MapField = ({
-    value,
-    displayName,
-    isDisabled,
-    onChange,
-    fieldId,
-}: MapFieldProps) => {
+const MapField = ({ value, displayName, isDisabled, onChange, fieldId }: MapFieldProps) => {
     const translations = useTranslations()[0]
     const [location, setLocation] = useState<Nullish<MapPoint>>(null)
 
     useEffect(() => {
-        setLocation(value ? value : { latitude: AMMAN_LAT_LNG.lat, longitude: AMMAN_LAT_LNG.lng })
+        setLocation(value || { latitude: AMMAN_LAT_LNG.lat, longitude: AMMAN_LAT_LNG.lng })
     }, [])
 
     const addMarker = (event: MapMouseEvent) => {
@@ -59,37 +55,29 @@ const MapField = ({
     }
 
     const onPlaceSelect = (place: Nullish<google.maps.places.PlaceResult>) => {
-        const location = place?.geometry?.location
-        if (!location) return
+        const loc = place?.geometry?.location
+        if (!loc) return
 
         const selectedLocation = {
-            latitude: location.lat(),
-            longitude: location.lng(),
+            latitude: loc.lat(),
+            longitude: loc.lng(),
         }
 
         onChange(fieldId, selectedLocation)
         setLocation(selectedLocation)
     }
 
-    const pinForLocation = (lat: number , lng: number) => {
-        return (
-            <AdvancedMarker
-                position={{lat: lat, lng: lng}}>
-
-                <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
-            </AdvancedMarker>
-        )
-    }
+    const pinForLocation = (lat: number, lng: number) => (
+        <AdvancedMarker position={{ lat, lng }}>
+            <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
+        </AdvancedMarker>
+    )
 
     const displayMap = () => {
-        const center = !!value ? { lat: value.latitude, lng: value.longitude } : AMMAN_LAT_LNG
+        const center = value ? { lat: value.latitude, lng: value.longitude } : AMMAN_LAT_LNG
         if (isDisabled) {
             return (
-                <Map
-                    mapId={DEMO_MAP_ID}
-                    defaultZoom={13}
-                    defaultCenter={center}
-                >
+                <Map mapId={DEMO_MAP_ID} defaultZoom={13} defaultCenter={center}>
                     {!!value && pinForLocation(value.latitude, value.longitude)}
                 </Map>
             )
@@ -100,18 +88,15 @@ const MapField = ({
                 key={`${fieldId}-map`}
                 mapId={DEMO_MAP_ID}
                 defaultZoom={13}
-                defaultCenter={ center }
+                defaultCenter={center}
                 disableDefaultUI={true}
                 onClick={addMarker}
             >
                 {!!value && pinForLocation(value.latitude, value.longitude)}
             </Map>,
-            <MapControl 
-                position={ControlPosition.TOP}
-                key={`${fieldId}-map-control`}
-            >
+            <MapControl position={ControlPosition.TOP} key={`${fieldId}-map-control`}>
                 <AutoCompleteControl>
-                    <PlaceAutocomplete onPlaceSelect={onPlaceSelect}/>
+                    <PlaceAutocomplete onPlaceSelect={onPlaceSelect} />
                 </AutoCompleteControl>
             </MapControl>,
             <MapHandler key={`${fieldId}-map-handler`} place={location} />,
@@ -119,7 +104,7 @@ const MapField = ({
     }
 
     const getMapLink = () => {
-        const lat= value?.latitude
+        const lat = value?.latitude
         const lng = value?.longitude
         return `https://maps.google.com/?q=${lat},${lng}`
     }
