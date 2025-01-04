@@ -34,6 +34,7 @@ const SRC_GOOGLE_MAPS = [
 export const setResponseHeaders = (req: Request, res: Response, next: NextFunction) => {
     res.append('Cross-Origin-Embedder-Policy', 'require-corp')
     res.append('Cross-Origin-Opener-Policy', 'same-origin')
+    res.append('Cross-Origin-Resource-Policy', 'cross-origin')
     res.append('Strict-Transport-Security', 'max-age=31536000; preload')
     next()
 }
@@ -51,7 +52,6 @@ export const configureHelment = () =>
                 'img-src': [...SRC_SELF, ...SRC_S3, ...SRC_GOOGLE_MAPS],
                 'frame-src': [...SRC_SELF, '*.google.com'],
                 'font-src': [...SRC_SELF, 'https://fonts.gstatic.com'],
-                // 'style-src': ['self', 'unsafe-inline', 'https://fonts.googleapis.com'],
                 'media-src': [...SRC_SELF, ...SRC_S3],
                 'object-src': [...SRC_SELF],
                 'worker-src': [...SRC_SELF],
