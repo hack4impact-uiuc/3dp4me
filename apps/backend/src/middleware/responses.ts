@@ -32,9 +32,9 @@ const SRC_GOOGLE_MAPS = [
  * Middleware to set response headers. These are just for some extra security precautions.
  */
 export const setResponseHeaders = (req: Request, res: Response, next: NextFunction) => {
-    res.append('Cross-Origin-Embedder-Policy', 'require-corp')
+    // res.append('Cross-Origin-Embedder-Policy', 'require-corp')
     res.append('Cross-Origin-Opener-Policy', 'same-origin')
-    res.append('Cross-Origin-Resource-Policy', 'cross-origin')
+    // res.append('Cross-Origin-Resource-Policy', 'cross-origin')
     res.append('Strict-Transport-Security', 'max-age=31536000; preload')
     next()
 }
