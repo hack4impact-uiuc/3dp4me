@@ -7,7 +7,7 @@ import { useTranslations } from '../../hooks/useTranslations'
 import AudioRecorder from '../AudioRecorder/AudioRecorder'
 import DateField from '../Fields/DateField'
 import FieldGroup from '../Fields/FieldGroup'
-import MapField from '../Fields/MapField'
+import MapField from '../Fields/MapField/MapField'
 import PhoneField from '../Fields/PhoneField'
 import PhotoField from '../Fields/PhotoField'
 import RadioButtonField from '../Fields/RadioButtonField'
@@ -19,7 +19,6 @@ import Files from '../Files/Files'
 export interface StepFieldProps {
     metadata: Field
     value: any
-    initValue?: any
     patientId: string
     displayName: string
     stepKey: string
@@ -33,7 +32,6 @@ export interface StepFieldProps {
 const StepField = ({
     metadata,
     value,
-    initValue,
     patientId = '',
     displayName,
     stepKey,
@@ -179,7 +177,6 @@ const StepField = ({
                 return (
                     <MapField
                         value={value}
-                        initValue={initValue}
                         displayName={displayName}
                         isDisabled={isDisabled}
                         onChange={handleSimpleUpdate}

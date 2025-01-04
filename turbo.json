@@ -32,7 +32,8 @@
         "REACT_APP_COGNITO_WEB_CLIENT_ID",
         "REACT_APP_OAUTH_DOMAIN",
         "REACT_APP_CALLBACK_URL",
-        "REACT_APP_BACKEND_BASE_URL"
+        "REACT_APP_BACKEND_BASE_URL",
+        "REACT_APP_GOOGLE_MAPS_API_KEY"
       ]
     },
     "deploy": {

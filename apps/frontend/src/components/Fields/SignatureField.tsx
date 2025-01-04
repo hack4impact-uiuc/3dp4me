@@ -112,8 +112,7 @@ const SignatureField = <T extends string>({
 }
 
 const hashSignature = (sig: Nullish<Signature>): string => {
-    if (!sig)
-        return hash(Math.random())
+    if (!sig) return hash(Math.random())
 
     return hash(JSON.stringify(sig))
 }

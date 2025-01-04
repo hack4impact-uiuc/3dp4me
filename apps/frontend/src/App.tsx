@@ -1,6 +1,7 @@
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import { QueryClientProvider } from '@tanstack/react-query'
+import { APIProvider } from '@vis.gl/react-google-maps'
 import { Amplify, Auth } from 'aws-amplify'
 import { arSA, enUS } from 'date-fns/locale'
 import React, { useEffect, useState } from 'react'
@@ -66,11 +67,13 @@ function App() {
     // If the user is authenticated, show the app
     if (authLevel === AUTHENTICATED)
         return (
-            <QueryClientProvider client={queryClient}>
-                <Store>
-                    <AppContent username={username} userEmail={userEmail} />
-                </Store>
-            </QueryClientProvider>
+            <APIProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}>
+                <QueryClientProvider client={queryClient}>
+                    <Store>
+                        <AppContent username={username} userEmail={userEmail} />
+                    </Store>
+                </QueryClientProvider>
+            </APIProvider>
         )
 
     // This should never get executed
