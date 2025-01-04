@@ -15,7 +15,6 @@ export const MapHandler = ({ place }: MapHandlerProps) => {
         if (!map || !place) return
 
         if (place) {
-            // const bounds = new google.maps.LatLngBounds({ lat: place.latitude, lng: place.longitude });
             map.setCenter({ lat: place.latitude, lng: place.longitude })
         }
     }, [map, place])
