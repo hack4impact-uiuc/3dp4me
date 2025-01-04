@@ -20,10 +20,12 @@ const SRC_S3 = [
     'https://d1m40dlonmuszr.cloudfront.net/',
 ]
 
-const SRC_MAPBOX = [
-    'https://*.tiles.mapbox.com',
-    'https://api.mapbox.com',
-    'https://events.mapbox.com',
+const SRC_GOOGLE_MAPS = [
+    'https://*.googleapis.com',
+    'https://*.gstatic.com',
+    '*.google.com',
+    'https://*.ggpht.com',
+    '*.googleusercontent.com',
 ]
 
 /**
@@ -45,12 +47,16 @@ export const configureHelment = () =>
         contentSecurityPolicy: {
             useDefaults: true,
             directives: {
-                'connect-src': [...SRC_SELF, ...SRC_COGNITO, ...SRC_MAPBOX],
-                'img-src': [...SRC_SELF, ...SRC_S3],
+                'connect-src': [...SRC_SELF, ...SRC_COGNITO, ...SRC_GOOGLE_MAPS],
+                'img-src': [...SRC_SELF, ...SRC_S3, ...SRC_GOOGLE_MAPS],
+                'frame-src': ['*.google.com'],
+                'font-src': ['https://fonts.gstatic.com'],
+                'style-src': ['https://fonts.googleapis.com'],
                 'media-src': [...SRC_SELF, ...SRC_S3],
                 'object-src': [...SRC_SELF],
                 'worker-src': [...SRC_SELF],
                 'child-src': [...SRC_SELF],
+                'script-src': [...SRC_GOOGLE_MAPS],
             },
         },
     })
