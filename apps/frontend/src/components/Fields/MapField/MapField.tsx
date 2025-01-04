@@ -9,7 +9,6 @@ import { PlaceAutocomplete } from './PlaceAutocomplete'
 import { MapHandler } from './MapHandler'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Autocomplete } from '@material-ui/lab'
 
 export interface MapFieldProps {
     value: Nullish<MapPoint>
@@ -119,6 +118,12 @@ const MapField = ({
         ]
     }
 
+    const getMapLink = () => {
+        const lat= value?.latitude
+        const lng = value?.longitude
+        return `https://maps.google.com/?q=${lat},${lng}`
+    }
+
     return (
         <div className="mapStyling">
             <h3>{displayName}</h3>
@@ -126,8 +131,10 @@ const MapField = ({
             {displayMap()}
 
             <div className="coordinateLabel">
-                {translations.components.map.latitude}: {value?.latitude.toFixed(4)}{' '}
-                {translations.components.map.longitude}: {value?.longitude.toFixed(4)}
+                <a href={getMapLink()} target="_blank">
+                    {translations.components.map.latitude}: {value?.latitude.toFixed(4)}{' '}
+                    {translations.components.map.longitude}: {value?.longitude.toFixed(4)}
+                </a>
             </div>
         </div>
     )
