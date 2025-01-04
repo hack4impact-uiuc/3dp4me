@@ -14,6 +14,7 @@ import Login from './pages/Login/Login'
 import { queryClient } from './query/query'
 import Store from './store/Store'
 import { LANGUAGES } from './utils/constants'
+import { APIProvider } from '@vis.gl/react-google-maps'
 
 // Configure amplify
 Amplify.configure(awsconfig)
@@ -66,11 +67,13 @@ function App() {
     // If the user is authenticated, show the app
     if (authLevel === AUTHENTICATED)
         return (
-            <QueryClientProvider client={queryClient}>
-                <Store>
-                    <AppContent username={username} userEmail={userEmail} />
-                </Store>
-            </QueryClientProvider>
+            <APIProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}>
+                <QueryClientProvider client={queryClient}>
+                    <Store>
+                        <AppContent username={username} userEmail={userEmail} />
+                    </Store>
+                </QueryClientProvider>
+            </APIProvider>
         )
 
     // This should never get executed

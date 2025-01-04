@@ -4,11 +4,13 @@ import './MapField.scss'
 import { MapPoint, Nullish } from '@3dp4me/types'
 import _ from 'lodash'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+
 import ReactMapGL, { MapRef, Marker } from 'react-map-gl'
 import Geocoder from 'react-map-gl-geocoder'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { COORDINATES, MAP_STYLE, MAPBOX_TOKEN, PIN_URL } from '../../utils/constants'
+import { AdvancedMarker, Map, MapCameraChangedEvent, MapMouseEvent, Pin } from '@vis.gl/react-google-maps'
 
 export interface MapFieldProps {
     value: Nullish<MapPoint>
@@ -23,6 +25,13 @@ interface Viewport extends MapPoint {
     zoom: number
     transitionDuration: number
 }
+
+const AMMAN_LAT_LNG = {
+    lat: 31.9544,
+    lng: 35.9106,
+}
+
+const DEMO_MAP_ID = 'DEMO_MAP_ID'
 
 const MapField = ({
     value,
@@ -83,6 +92,16 @@ const MapField = ({
         setViewport(newView)
     }
 
+    const addMarker = (event: MapMouseEvent) => {
+        console.log("ADDING MARKER ", event)
+        if (!event.detail.latLng) return
+
+        onChange(fieldId, {
+            latitude: event.detail.latLng.lat,
+            longitude: event.detail.latLng.lng,
+        })
+    }
+
     /**
      * Standard Geocoder method, not written by me.
      * Provides for updating viewport after selecting search result.
@@ -96,11 +115,51 @@ const MapField = ({
         })
     }
 
+    const pinForLocation = (lat: number , lng: number) => {
+        return (
+            <AdvancedMarker
+                position={{lat: lat, lng: lng}}>
+
+                <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'} />
+            </AdvancedMarker>
+        )
+    }
+
+    const displayMap = () => {
+        if (isDisabled) {
+            const center = !!value ? { lat: value.latitude, lng: value.longitude } : AMMAN_LAT_LNG
+            console.log("VALUE IS ", value, "CENTER IS ", center)
+            return (
+                <Map
+                    mapId={DEMO_MAP_ID}
+                    defaultZoom={13}
+                    defaultCenter={center}
+                >
+                    {!!value && pinForLocation(value.latitude, value.longitude)}
+                </Map>
+            )
+        }
+
+            return (
+                <Map
+                    mapId={DEMO_MAP_ID}
+                    defaultZoom={13}
+                    defaultCenter={ AMMAN_LAT_LNG }
+                    onClick={addMarker}
+                >
+                    {!!value && pinForLocation(value.latitude, value.longitude)}
+                </Map>
+            )
+    }
+
     return (
         <div className="mapStyling">
             <h3>{displayName}</h3>
 
-            <ReactMapGL
+            {displayMap()}
+
+
+            {/* <ReactMapGL
                 ref={mapRef}
                 mapStyle={MAP_STYLE}
                 mapboxApiAccessToken={MAPBOX_TOKEN}
@@ -146,7 +205,7 @@ const MapField = ({
                     mapboxApiAccessToken={MAPBOX_TOKEN}
                     position="top-left"
                 />
-            </ReactMapGL>
+            </ReactMapGL> */}
 
             <div className="coordinateLabel">
                 {translations.components.map.latitude}: {viewport?.latitude.toFixed(4)}{' '}
