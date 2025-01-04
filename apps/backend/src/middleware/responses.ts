@@ -17,7 +17,6 @@ const SRC_S3 = [
     'https://3dp4me-public.s3.eu-north-1.amazonaws.com/',
     'https://3dp4me-patient-data.s3.eu-north-1.amazonaws.com/',
     'https://3dp4me-prosthetics-patient-data.s3.eu-north-1.amazonaws.com/',
-    'https://*.3dp4me-software.org',
     'https://d1m40dlonmuszr.cloudfront.net/',
 ]
 
