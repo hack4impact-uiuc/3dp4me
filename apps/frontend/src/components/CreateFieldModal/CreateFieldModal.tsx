@@ -18,6 +18,7 @@ import { canFieldBeAddedToStep, getFieldName, isFieldType, validateField } from 
 import { FormOption } from '../Fields/FormOption'
 import MultiSelectField from '../Fields/MultiSelectField'
 import LanguageInput from '../LanguageInput/LanguageInput'
+import { FileUploadButton } from '../FileUploadButton/FileUploadButton'
 
 export interface CreateFieldModalProps {
     isOpen: boolean
@@ -143,6 +144,10 @@ const CreateFieldModal = ({
         setDisplayName(updatedDisplayName)
     }
 
+    const updateSignatureDocument = (file: File) => {
+        console.log("FILE UPLOADED", file)
+    }
+
     const generateFields = () => {
         switch (fieldType) {
             case FieldType.STRING:
@@ -155,7 +160,6 @@ const CreateFieldModal = ({
             case FieldType.MAP:
             case FieldType.PHOTO:
             case FieldType.FIELD_GROUP:
-            case FieldType.SIGNATURE:
                 return (
                     <div className="create-field-div">
                         <span>{translations.components.swal.field.question}</span>
@@ -209,6 +213,26 @@ const CreateFieldModal = ({
                                 updateDisplayName(value, language)
                             }}
                         />
+                    </div>
+                )
+            case FieldType.SIGNATURE:
+                return (
+                    <div className="create-field-div">
+                        <span>{translations.components.swal.field.dividerTitle}</span>
+                        <LanguageInput
+                            fieldKey={`lang-input-${fieldType}`}
+                            fieldValues={displayName}
+                            handleFieldChange={(value, language) => {
+                                updateDisplayName(value, language)
+                            }}
+                        />
+                        <span>Document to Sign</span>
+                        <FileUploadButton 
+                            fileTypes="image/*"
+                            onSelectFile={updateSignatureDocument}
+                        >
+                            {translations.components.button.uploadDocument}
+                        </FileUploadButton>
                     </div>
                 )
             default:
