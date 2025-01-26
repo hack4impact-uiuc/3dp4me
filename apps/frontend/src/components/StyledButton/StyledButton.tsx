@@ -5,6 +5,7 @@ import React, { ReactNode } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
+import { CircularProgress } from '@material-ui/core'
 
 export interface StyledButtonProps {
     onClick?: () => void
@@ -12,6 +13,7 @@ export interface StyledButtonProps {
     danger?: boolean
     children?: ReactNode
     isDisabled?: boolean
+    isLoading?: boolean
 }
 
 const StyledButton = ({
@@ -19,6 +21,7 @@ const StyledButton = ({
     primary,
     danger,
     children,
+    isLoading = false,
     isDisabled = false,
 }: StyledButtonProps) => {
     const selectedLang = useTranslations()[1]
@@ -32,7 +35,7 @@ const StyledButton = ({
 
     return (
         <div className={className}>
-            <Button className={saveBtnClassName} onClick={onClick} disabled={isDisabled}>
+            <Button className={saveBtnClassName} onClick={onClick} disabled={isDisabled || isLoading} startIcon={isLoading ? <CircularProgress size='1.5rem'/> : null }>
                 {children}
             </Button>
         </div>

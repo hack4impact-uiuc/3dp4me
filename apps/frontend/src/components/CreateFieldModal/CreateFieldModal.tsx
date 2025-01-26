@@ -1,6 +1,6 @@
 import './CreateFieldModal.scss'
 
-import { Field, FieldType, Language, TranslatedString, Unsaved } from '@3dp4me/types'
+import { AdditionalFieldData, Field, FieldType, Language, SignatureAdditionalData, TranslatedString, Unsaved } from '@3dp4me/types'
 import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControl from '@material-ui/core/FormControl'
@@ -13,23 +13,25 @@ import React, { ChangeEventHandler, ReactNode, useState } from 'react'
 
 import { useErrorWrap } from '../../hooks/useErrorWrap'
 import { useTranslations } from '../../hooks/useTranslations'
-import { ADMIN_ID } from '../../utils/constants'
+import { ADMIN_ID, PUBLIC_CLOUDFRONT_URL } from '../../utils/constants'
 import { canFieldBeAddedToStep, getFieldName, isFieldType, validateField } from '../../utils/fields'
 import { FormOption } from '../Fields/FormOption'
 import MultiSelectField from '../Fields/MultiSelectField'
 import LanguageInput from '../LanguageInput/LanguageInput'
 import { FileUploadButton } from '../FileUploadButton/FileUploadButton'
+import { randomAlphaNumericString } from '../../utils/math'
 import { uploadSignatureDocument } from '../../api/api'
+import { trackPromise } from 'react-promise-tracker'
+
+export type NewField = Unsaved<
+    Omit<Field, 'fieldNumber' | 'key' | 'isHidden' | 'isDeleted' >
+> 
 
 export interface CreateFieldModalProps {
     isOpen: boolean
     onModalClose: () => void
     allRoles: FormOption[]
-    onAddNewField: (
-        field: Unsaved<
-            Omit<Field, 'fieldNumber' | 'key' | 'isHidden' | 'isDeleted' | 'additionalData'>
-        >
-    ) => void
+    onAddNewField: (field: NewField) => void
     canAddFieldGroup?: boolean
 }
 
@@ -46,6 +48,8 @@ const CreateFieldModal = ({
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false)
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' })
     const [options, setOptions] = useState<TranslatedString[]>([])
+    const [documentURL, setDocumentURL] = useState<string>("")
+    const [isUploading, setIsUploading] = useState(false)
 
     const errorWrap = useErrorWrap()
 
@@ -145,9 +149,17 @@ const CreateFieldModal = ({
         setDisplayName(updatedDisplayName)
     }
 
-    const updateSignatureDocument = (file: File) => {
-        console.log("FILE UPLOADED", file)
-        uploadSignatureDocument("test", file)
+    const updateSignatureDocument = async (file: File) => {
+        const filename = `${randomAlphaNumericString(32)}.png`
+        setIsUploading(true)
+        try {
+            await trackPromise(errorWrap(async () => {
+                await uploadSignatureDocument(filename, file)
+                setDocumentURL(`${PUBLIC_CLOUDFRONT_URL}/${filename}`)
+            }))
+        } finally {
+            setIsUploading(false)
+        }
     }
 
     const generateFields = () => {
@@ -229,12 +241,13 @@ const CreateFieldModal = ({
                                 updateDisplayName(value, language)
                             }}
                         />
-                        <span>Document to Sign</span>
+                        <p>Document to Sign:</p>
                         <FileUploadButton 
                             fileTypes="application/pdf"
                             onSelectFile={updateSignatureDocument}
+                            style={{ isLoading: isUploading, isDisabled: !!documentURL }}
                         >
-                            {translations.components.button.uploadDocument}
+                            {!!documentURL ? "Document uploaded" : translations.components.button.uploadDocument}
                         </FileUploadButton>
                     </div>
                 )
@@ -275,6 +288,16 @@ const CreateFieldModal = ({
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
             subFields: [],
+            additionalData: undefined as AdditionalFieldData
+        }
+
+        if (!!documentURL) {
+            newFieldData.additionalData = {
+                defaultDocumentURL: {
+                    EN: documentURL,
+                    AR: documentURL,
+                }
+            }
         }
 
         errorWrap(
@@ -299,6 +322,7 @@ const CreateFieldModal = ({
         setDisplayName({ EN: '', AR: '' })
         setOptions([])
         setFieldType(FieldType.STRING)
+        setDocumentURL("")
     }
 
     const onDiscard = () => {
@@ -360,7 +384,7 @@ const CreateFieldModal = ({
                         paddingBottom: '10px',
                     }}
                 >
-                    <Button onClick={saveNewField} className="save-field-button">
+                    <Button onClick={saveNewField} className="save-field-button" disabled={isUploading}>
                         {translations.components.swal.field.buttons.save}
                     </Button>
                     <Button onClick={onDiscard} className="discard-field-button">

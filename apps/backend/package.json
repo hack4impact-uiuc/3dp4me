@@ -30,6 +30,7 @@
     "twilio": "^3.71.1"
   },
   "devDependencies": {
+    "@smithy/types": "^4.1.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/express-fileupload": "^1.4.4",

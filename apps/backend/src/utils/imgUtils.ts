@@ -11,5 +11,5 @@ export const pdfToPng = async (buffer: Buffer): Promise<Nullish<Buffer>> => {
 
     const pngBuffers = pngPages.map((page) => page.buffer).filter(<T>(buffer: T | undefined): buffer is T => !!buffer)
     const img = await joinImages(pngBuffers, { direction: "vertical"  })
-    return img.toBuffer()
+    return img.toFormat("png").toBuffer()
 }

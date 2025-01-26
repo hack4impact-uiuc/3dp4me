@@ -1,5 +1,18 @@
-export const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME!;
-export const S3_REGION = process.env.S3_REGION!;
+export interface BucketConfig {
+    bucketName: string;
+    region: string;
+}
+
+export const PATIENT_BUCKET: BucketConfig = {
+    bucketName: process.env.S3_BUCKET_NAME!,
+    region: process.env.S3_REGION!,
+}
+
+export const PUBLIC_BUCKET: BucketConfig = {
+    bucketName: process.env.S3_PUBLIC_BUCKET_NAME!,
+    region: process.env.S3_PUBLIC_REGION!,
+}
+
 export const COGNITO_REGION = process.env.COGNITO_REGION!;
 export const USER_POOL_ID = process.env.USER_POOL_ID!;
 export const ACCESS_KEY_ID = process.env.ACCESS_KEY_ID!;

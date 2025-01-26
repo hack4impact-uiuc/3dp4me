@@ -1,5 +1,6 @@
 import {
     AccessLevel,
+    AdditionalFieldData,
     FieldType,
     Language,
     PatientStatus,
@@ -18,12 +19,14 @@ import {
     AnyFieldType,
     DisplayFieldType,
     ERR_LANGUAGE_VALIDATION_FAILED,
+    ERR_MISSING_SIGNATURE_DOCUMENT,
     ERR_OPTION_VALIDATION_FAILED,
     PATIENT_STATUS,
     SignatureStatus,
     STEP_STATUS,
 } from './constants'
 import { formatDate } from './date'
+import { SignatureData } from '../components/NewSignatureModal/NewSignatureModal'
 
 export const isFieldType = (maybeFieldType: string): maybeFieldType is FieldType =>
     Object.values(FieldType).includes(maybeFieldType as FieldType)
@@ -360,13 +363,14 @@ export const fieldToJSX = (fieldData: any, fieldType: AnyFieldType, selectedLang
 }
 
 export type HasDisplayName<T> = T & { displayName: { [key in Language]: string } }
+export type HasAdditionalData<T> = T & { additionalData: AdditionalFieldData }
 
 /**
  * Validates a field's data.
  * @param {JSON} fieldData
  */
 export const validateField = <T extends Record<string, any> = Record<string, any>>(
-    fieldData: HasDisplayName<T>
+    fieldData: HasAdditionalData<HasDisplayName<T>>
 ) => {
     if (fieldData.displayName.EN.trim() === '' || fieldData.displayName.AR.trim() === '') {
         throw new Error(ERR_LANGUAGE_VALIDATION_FAILED)
@@ -374,5 +378,9 @@ export const validateField = <T extends Record<string, any> = Record<string, any
 
     if (fieldData.fieldType === FieldType.RADIO_BUTTON && fieldData.options.length === 0) {
         throw new Error(ERR_OPTION_VALIDATION_FAILED)
+    }
+
+    if (fieldData.fieldType === FieldType.SIGNATURE && !fieldData.additionalData?.defaultDocumentURL) {
+        throw new Error(ERR_MISSING_SIGNATURE_DOCUMENT)
     }
 }
