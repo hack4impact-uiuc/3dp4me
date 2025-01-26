@@ -1,6 +1,13 @@
 import './CreateFieldModal.scss'
 
-import { Field, FieldType, Language, TranslatedString, Unsaved } from '@3dp4me/types'
+import {
+    AdditionalFieldData,
+    Field,
+    FieldType,
+    Language,
+    TranslatedString,
+    Unsaved,
+} from '@3dp4me/types'
 import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControl from '@material-ui/core/FormControl'
@@ -10,24 +17,26 @@ import NativeSelect from '@material-ui/core/NativeSelect'
 import withStyles from '@material-ui/core/styles/withStyles'
 import _ from 'lodash'
 import React, { ChangeEventHandler, ReactNode, useState } from 'react'
+import { trackPromise } from 'react-promise-tracker'
 
+import { uploadSignatureDocument } from '../../api/api'
 import { useErrorWrap } from '../../hooks/useErrorWrap'
 import { useTranslations } from '../../hooks/useTranslations'
-import { ADMIN_ID } from '../../utils/constants'
+import { ADMIN_ID, PUBLIC_CLOUDFRONT_URL } from '../../utils/constants'
 import { canFieldBeAddedToStep, getFieldName, isFieldType, validateField } from '../../utils/fields'
+import { randomAlphaNumericString } from '../../utils/math'
 import { FormOption } from '../Fields/FormOption'
 import MultiSelectField from '../Fields/MultiSelectField'
+import { FileUploadButton } from '../FileUploadButton/FileUploadButton'
 import LanguageInput from '../LanguageInput/LanguageInput'
+
+export type NewField = Unsaved<Omit<Field, 'fieldNumber' | 'key' | 'isHidden' | 'isDeleted'>>
 
 export interface CreateFieldModalProps {
     isOpen: boolean
     onModalClose: () => void
     allRoles: FormOption[]
-    onAddNewField: (
-        field: Unsaved<
-            Omit<Field, 'fieldNumber' | 'key' | 'isHidden' | 'isDeleted' | 'additionalData'>
-        >
-    ) => void
+    onAddNewField: (field: NewField) => void
     canAddFieldGroup?: boolean
 }
 
@@ -44,6 +53,8 @@ const CreateFieldModal = ({
     const [isVisibleOnDashboard, setIsVisibleOnDashboard] = useState(false)
     const [displayName, setDisplayName] = useState({ EN: '', AR: '' })
     const [options, setOptions] = useState<TranslatedString[]>([])
+    const [documentURL, setDocumentURL] = useState<string>('')
+    const [isUploading, setIsUploading] = useState(false)
 
     const errorWrap = useErrorWrap()
 
@@ -143,6 +154,21 @@ const CreateFieldModal = ({
         setDisplayName(updatedDisplayName)
     }
 
+    const updateSignatureDocument = async (file: File) => {
+        const filename = `${randomAlphaNumericString(32)}.png`
+        setIsUploading(true)
+        try {
+            await trackPromise(
+                errorWrap(async () => {
+                    await uploadSignatureDocument(filename, file)
+                    setDocumentURL(`${PUBLIC_CLOUDFRONT_URL}/${filename}`)
+                })
+            )
+        } finally {
+            setIsUploading(false)
+        }
+    }
+
     const generateFields = () => {
         switch (fieldType) {
             case FieldType.STRING:
@@ -155,7 +181,6 @@ const CreateFieldModal = ({
             case FieldType.MAP:
             case FieldType.PHOTO:
             case FieldType.FIELD_GROUP:
-            case FieldType.SIGNATURE:
                 return (
                     <div className="create-field-div">
                         <span>{translations.components.swal.field.question}</span>
@@ -211,6 +236,29 @@ const CreateFieldModal = ({
                         />
                     </div>
                 )
+            case FieldType.SIGNATURE:
+                return (
+                    <div className="create-field-div">
+                        <span>{translations.components.swal.field.dividerTitle}</span>
+                        <LanguageInput
+                            fieldKey={`lang-input-${fieldType}`}
+                            fieldValues={displayName}
+                            handleFieldChange={(value, language) => {
+                                updateDisplayName(value, language)
+                            }}
+                        />
+                        <p>Document to Sign:</p>
+                        <FileUploadButton
+                            fileTypes="application/pdf"
+                            onSelectFile={updateSignatureDocument}
+                            style={{ isLoading: isUploading, isDisabled: !!documentURL }}
+                        >
+                            {documentURL
+                                ? 'Document uploaded'
+                                : translations.components.button.uploadDocument}
+                        </FileUploadButton>
+                    </div>
+                )
             default:
                 return <p>This field is not yet supported</p>
         }
@@ -248,6 +296,16 @@ const CreateFieldModal = ({
             readableGroups: selectedRoles,
             writableGroups: selectedRoles,
             subFields: [],
+            additionalData: undefined as AdditionalFieldData,
+        }
+
+        if (documentURL) {
+            newFieldData.additionalData = {
+                defaultDocumentURL: {
+                    EN: documentURL,
+                    AR: documentURL,
+                },
+            }
         }
 
         errorWrap(
@@ -272,6 +330,7 @@ const CreateFieldModal = ({
         setDisplayName({ EN: '', AR: '' })
         setOptions([])
         setFieldType(FieldType.STRING)
+        setDocumentURL('')
     }
 
     const onDiscard = () => {
@@ -333,7 +392,11 @@ const CreateFieldModal = ({
                         paddingBottom: '10px',
                     }}
                 >
-                    <Button onClick={saveNewField} className="save-field-button">
+                    <Button
+                        onClick={saveNewField}
+                        className="save-field-button"
+                        disabled={isUploading}
+                    >
                         {translations.components.swal.field.buttons.save}
                     </Button>
                     <Button onClick={onDiscard} className="discard-field-button">

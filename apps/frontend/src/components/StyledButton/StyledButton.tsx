@@ -1,5 +1,6 @@
 import './StyledButton.scss'
 
+import { CircularProgress } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import React, { ReactNode } from 'react'
 
@@ -12,6 +13,7 @@ export interface StyledButtonProps {
     danger?: boolean
     children?: ReactNode
     isDisabled?: boolean
+    isLoading?: boolean
 }
 
 const StyledButton = ({
@@ -19,6 +21,7 @@ const StyledButton = ({
     primary,
     danger,
     children,
+    isLoading = false,
     isDisabled = false,
 }: StyledButtonProps) => {
     const selectedLang = useTranslations()[1]
@@ -32,7 +35,12 @@ const StyledButton = ({
 
     return (
         <div className={className}>
-            <Button className={saveBtnClassName} onClick={onClick} disabled={isDisabled}>
+            <Button
+                className={saveBtnClassName}
+                onClick={onClick}
+                disabled={isDisabled || isLoading}
+                startIcon={isLoading ? <CircularProgress size="1.5rem" /> : null}
+            >
                 {children}
             </Button>
         </div>

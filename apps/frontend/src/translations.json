@@ -122,6 +122,7 @@
         "previous": "Previous",
         "photo": "Take Photo",
         "upload": "Upload Photo",
+        "uploadDocument": "Upload Document",
         "loadMore": "Load More",
         "discard": {
           "title": "Discard",
@@ -384,6 +385,7 @@
         "next": "التالي",
         "previous": "سابق",
         "upload": "حمل الصورة",
+        "uploadDocument": "تحميل الوثيقة",
         "photo": "التقط صورة",
         "loadMore": "تحميل المزيد",
         "discard": {

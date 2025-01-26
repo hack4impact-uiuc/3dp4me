@@ -188,6 +188,23 @@ export const uploadFile = async (
     return res.data
 }
 
+export const uploadSignatureDocument = async (filename: string, filedata: File) => {
+    const requestString = `/public/upload/signatureDocument`
+    const formData = new FormData()
+    formData.append('uploadedFile', filedata)
+    formData.append('uploadedFileName', filename || filedata.name)
+
+    const res = await instance.post(requestString, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    })
+
+    if (!res?.data?.success) throw new Error(res?.data?.message)
+
+    return res.data
+}
+
 export const deleteFile = async (
     patientId: string,
     stepKey: string,

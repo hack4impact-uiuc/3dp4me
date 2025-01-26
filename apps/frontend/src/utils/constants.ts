@@ -4,7 +4,7 @@ import { RoleForTable, UserForTable } from '../pages/AccountManagement/AccountMa
 import translations from '../translations.json'
 import { ColumnMetadata, Header } from './table-renderers'
 
-const PUBLIC_CLOUDFRONT_URL = 'https://d1m40dlonmuszr.cloudfront.net'
+export const PUBLIC_CLOUDFRONT_URL = 'https://d1m40dlonmuszr.cloudfront.net'
 
 /**
  * Generic URL for phone number country flags. {XX} will be replaced by two letter country code.
@@ -213,6 +213,7 @@ export const NUMBER_OF_PHOTOS_FOR_BULLET_VIEW = 16
 
 export const ERR_LANGUAGE_VALIDATION_FAILED = 'Please submit a field in English and Arabic.'
 export const ERR_OPTION_VALIDATION_FAILED = 'Please enter options.'
+export const ERR_MISSING_SIGNATURE_DOCUMENT = 'Please upload a document to sign.'
 
 export const ERR_ROLE_INPUT_VALIDATION_FAILED =
     'Do not leave role name and description fields empty, please enter values.'

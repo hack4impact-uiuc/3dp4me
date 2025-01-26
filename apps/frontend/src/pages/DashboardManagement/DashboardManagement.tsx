@@ -8,7 +8,7 @@ import { trackPromise } from 'react-promise-tracker'
 
 import { ApiResponse, getAllRoles, getAllStepsMetadata, updateMultipleSteps } from '../../api/api'
 import BottomBar from '../../components/BottomBar/BottomBar'
-import CreateFieldModal from '../../components/CreateFieldModal/CreateFieldModal'
+import CreateFieldModal, { NewField } from '../../components/CreateFieldModal/CreateFieldModal'
 import CreateStepModal from '../../components/CreateStepModal/CreateStepModal'
 import EditFieldModal from '../../components/EditFieldModal/EditFieldModal'
 import EditStepModal from '../../components/EditStepModal/EditStepModal'
@@ -332,11 +332,7 @@ const SectionTab = () => {
         The result is stepMetadata will be modified, meaning the changes
         will only be saved locally. 
     */
-    const addNewField = (
-        newFieldData: Unsaved<
-            Omit<Field, 'fieldNumber' | 'key' | 'isHidden' | 'isDeleted' | 'additionalData'>
-        >
-    ) => {
+    const addNewField = async (newFieldData: NewField) => {
         const updatedMetadata = _.cloneDeep(stepMetadata)
 
         const stepIndex = updatedMetadata.findIndex((element) => element.key === selectedStep)
@@ -358,7 +354,6 @@ const SectionTab = () => {
         // Mark as not being deleted and not hidden
         // const newField: UnsavedField = {
         const newField = {
-            additionalData: undefined,
             isDeleted: false,
             isHidden: false,
             ...newFieldData,
