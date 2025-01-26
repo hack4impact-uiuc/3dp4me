@@ -19,6 +19,7 @@ import { FormOption } from '../Fields/FormOption'
 import MultiSelectField from '../Fields/MultiSelectField'
 import LanguageInput from '../LanguageInput/LanguageInput'
 import { FileUploadButton } from '../FileUploadButton/FileUploadButton'
+import { uploadSignatureDocument } from '../../api/api'
 
 export interface CreateFieldModalProps {
     isOpen: boolean
@@ -146,6 +147,7 @@ const CreateFieldModal = ({
 
     const updateSignatureDocument = (file: File) => {
         console.log("FILE UPLOADED", file)
+        uploadSignatureDocument("test", file)
     }
 
     const generateFields = () => {
@@ -216,6 +218,7 @@ const CreateFieldModal = ({
                     </div>
                 )
             case FieldType.SIGNATURE:
+                // TODO: Copy to edit
                 return (
                     <div className="create-field-div">
                         <span>{translations.components.swal.field.dividerTitle}</span>
@@ -228,7 +231,7 @@ const CreateFieldModal = ({
                         />
                         <span>Document to Sign</span>
                         <FileUploadButton 
-                            fileTypes="image/*"
+                            fileTypes="application/pdf"
                             onSelectFile={updateSignatureDocument}
                         >
                             {translations.components.button.uploadDocument}
