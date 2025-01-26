@@ -1,12 +1,12 @@
 import './DashboardManagement.scss'
 
-import { AdditionalFieldData, BaseStep, Field, FieldType, Nullish, Step, StepPathToField, Unsaved } from '@3dp4me/types'
+import { BaseStep, Field, Nullish, Step, StepPathToField, Unsaved } from '@3dp4me/types'
 import ListItem from '@material-ui/core/ListItem'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
-import { ApiResponse, getAllRoles, getAllStepsMetadata, updateMultipleSteps, uploadSignatureDocument } from '../../api/api'
+import { ApiResponse, getAllRoles, getAllStepsMetadata, updateMultipleSteps } from '../../api/api'
 import BottomBar from '../../components/BottomBar/BottomBar'
 import CreateFieldModal, { NewField } from '../../components/CreateFieldModal/CreateFieldModal'
 import CreateStepModal from '../../components/CreateStepModal/CreateStepModal'
@@ -31,8 +31,6 @@ import {
     rolesToMultiSelectFormat,
     sortMetadata,
 } from '../../utils/utils'
-import { randomAlphaNumericString } from '../../utils/math'
-import { PUBLIC_CLOUDFRONT_URL } from '../../utils/constants'
 
 const SectionTab = () => {
     const [stepMetadata, setStepMetadata] = useState<Step[]>([])
@@ -334,9 +332,7 @@ const SectionTab = () => {
         The result is stepMetadata will be modified, meaning the changes
         will only be saved locally. 
     */
-    const addNewField = async (
-        newFieldData: NewField
-    ) => {
+    const addNewField = async (newFieldData: NewField) => {
         const updatedMetadata = _.cloneDeep(stepMetadata)
 
         const stepIndex = updatedMetadata.findIndex((element) => element.key === selectedStep)
@@ -363,7 +359,6 @@ const SectionTab = () => {
             ...newFieldData,
             fieldNumber,
         }
-
 
         // TODO: Need to type this
         fieldArrayReference?.push(newField as any)

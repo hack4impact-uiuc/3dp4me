@@ -1,11 +1,11 @@
 import './StyledButton.scss'
 
+import { CircularProgress } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import React, { ReactNode } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
-import { CircularProgress } from '@material-ui/core'
 
 export interface StyledButtonProps {
     onClick?: () => void
@@ -35,7 +35,12 @@ const StyledButton = ({
 
     return (
         <div className={className}>
-            <Button className={saveBtnClassName} onClick={onClick} disabled={isDisabled || isLoading} startIcon={isLoading ? <CircularProgress size='1.5rem'/> : null }>
+            <Button
+                className={saveBtnClassName}
+                onClick={onClick}
+                disabled={isDisabled || isLoading}
+                startIcon={isLoading ? <CircularProgress size="1.5rem" /> : null}
+            >
                 {children}
             </Button>
         </div>

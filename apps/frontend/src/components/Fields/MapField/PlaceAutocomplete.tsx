@@ -1,4 +1,3 @@
-
 /* global google */
 import './MapField.scss'
 

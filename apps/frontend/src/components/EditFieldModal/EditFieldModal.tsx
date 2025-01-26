@@ -171,7 +171,6 @@ const EditFieldModal = ({
             case FieldType.MAP:
             case FieldType.PHOTO:
             case FieldType.FIELD_GROUP:
-            case FieldType.SIGNATURE:
                 return (
                     <div className="edit-field-div">
                         <span>{translations.components.swal.field.question}</span>

@@ -188,10 +188,7 @@ export const uploadFile = async (
     return res.data
 }
 
-export const uploadSignatureDocument = async (
-    filename: string,
-    filedata: File
-) => {
+export const uploadSignatureDocument = async (filename: string, filedata: File) => {
     const requestString = `/public/upload/signatureDocument`
     const formData = new FormData()
     formData.append('uploadedFile', filedata)

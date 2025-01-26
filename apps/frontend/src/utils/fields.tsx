@@ -26,7 +26,6 @@ import {
     STEP_STATUS,
 } from './constants'
 import { formatDate } from './date'
-import { SignatureData } from '../components/NewSignatureModal/NewSignatureModal'
 
 export const isFieldType = (maybeFieldType: string): maybeFieldType is FieldType =>
     Object.values(FieldType).includes(maybeFieldType as FieldType)
@@ -380,7 +379,10 @@ export const validateField = <T extends Record<string, any> = Record<string, any
         throw new Error(ERR_OPTION_VALIDATION_FAILED)
     }
 
-    if (fieldData.fieldType === FieldType.SIGNATURE && !fieldData.additionalData?.defaultDocumentURL) {
+    if (
+        fieldData.fieldType === FieldType.SIGNATURE &&
+        !fieldData.additionalData?.defaultDocumentURL
+    ) {
         throw new Error(ERR_MISSING_SIGNATURE_DOCUMENT)
     }
 }
