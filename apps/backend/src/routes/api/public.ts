@@ -3,18 +3,17 @@ import _ from 'lodash';
 import {
     sendResponse,
 } from '../../utils/response';
-import { generateOrderId } from '../../utils/generateOrderId';
 import errorWrap from '../../utils/errorWrap';
 import { AuthenticatedRequest } from '../../middleware/types';
 import fileUpload from 'express-fileupload';
 import { pdfToPng } from '../../utils/imgUtils';
 import { Nullish } from '@3dp4me/types';
 import { uploadPublicFile } from '../../utils/aws/awsS3Helpers';
-import { writeFileSync } from 'fs';
 
 export const router = express.Router();
+
 /**
- * Returns everything in the patients collection (basic patient info)
+ * Converts a pdf to a png and uploads it to the public bucket
  */
 router.post(
     '/upload/signatureDocument',
