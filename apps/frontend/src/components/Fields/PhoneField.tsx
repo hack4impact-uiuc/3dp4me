@@ -2,6 +2,7 @@ import 'react-phone-number-input/style.css'
 import './Fields.scss'
 
 import PhoneInput from 'react-phone-number-input'
+import type { Value } from 'react-phone-number-input'
 
 import { FLAG_URL } from '../../utils/constants'
 
@@ -22,7 +23,7 @@ const PhoneField = ({
     value = '',
     onChange,
 }: PhoneFieldProps) => {
-    const sendChanges = (phone: string) => {
+    const sendChanges = (phone: Value) => {
         onChange(fieldId, phone)
     }
 
