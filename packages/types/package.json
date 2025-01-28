@@ -20,7 +20,7 @@
   "main": "dist/src/index.js",
   "module": "dist/esm/index.js",
   "scripts": {
-    "build": "yarn tsc",
+    "build": "tsc",
     "clean": "rimraf .turbo dist node_modules",
     "lint": "yarn lint:check --fix",
     "lint:check": "eslint src --ext js,jsx,ts,tsx"

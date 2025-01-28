@@ -1,6 +1,6 @@
 import { Request } from 'express'
 
-type QueryParam = string | Request['query'] | string[] | Request['query'][]
+type QueryParam = string | Request['query'] | (string | Request['query'])[]
 
 export const queryParamToString = (param: QueryParam): string => {
     if (typeof param === 'string') {

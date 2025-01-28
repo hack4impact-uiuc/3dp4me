@@ -104,7 +104,7 @@
   "homepage": ".",
   "private": true,
   "scripts": {
-    "build": "yarn build:hearing && yarn build:prosthetics",
+    "build": "npm run build:hearing && npm run build:prosthetics",
     "build:hearing": "cross-env PROJECT_NAME=hearing webpack",
     "build:prosthetics": "cross-env PROJECT_NAME=prosthetics webpack",
     "clean": "rimraf .turbo dist node_modules",
