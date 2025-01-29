@@ -1,6 +1,5 @@
 import './PaginateBar.scss'
 
-import PropTypes from 'prop-types'
 import React from 'react'
 import ReactPaginate from 'react-paginate' // see: https://www.npmjs.com/package/react-paginate
 
@@ -44,12 +43,6 @@ const PaginateBar = ({ pageCount, onPageChange, currentPage }: PaginateBarProps)
             previousLabel={previousLabel}
         />
     )
-}
-
-PaginateBar.propTypes = {
-    pageCount: PropTypes.number,
-    onPageChange: PropTypes.func.isRequired,
-    currentPage: PropTypes.number,
 }
 
 export default PaginateBar

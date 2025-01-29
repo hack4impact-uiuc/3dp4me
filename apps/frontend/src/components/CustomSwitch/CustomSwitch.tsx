@@ -2,8 +2,6 @@ import './CustomSwitch.scss'
 
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
-import PropTypes from 'prop-types'
-import React from 'react'
 import Switch from 'react-switch'
 
 export interface CustomSwitchProps {
@@ -27,10 +25,5 @@ const CustomSwitch = ({ checked, setChecked }: CustomSwitchProps) => (
         }
     />
 )
-
-CustomSwitch.propTypes = {
-    checked: PropTypes.bool.isRequired,
-    setChecked: PropTypes.func.isRequired,
-}
 
 export default CustomSwitch

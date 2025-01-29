@@ -1,7 +1,7 @@
 import './AccountManagement.scss'
 
 import { AccessLevel, Nullish, Role } from '@3dp4me/types'
-import { CognitoIdentityServiceProvider } from 'aws-sdk'
+import type { CognitoIdentityServiceProvider } from 'aws-sdk'
 import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
