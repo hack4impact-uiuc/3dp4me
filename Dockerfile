@@ -23,7 +23,6 @@ RUN corepack enable
 # -----------------------------------------------
 FROM doppler AS builder
 
-
 # Install dependencies
 WORKDIR /app
 COPY package.json ./
@@ -39,24 +38,23 @@ RUN pnpm install
 COPY . .
 
 ARG PROJECT_NAME hearing
-
 # For some reason we need to build types first. Turbo should be able to figure this
 # Build everything, then build the frontend for the specific project
 RUN pnpm run build --filter types
-RUN pnpm run build --filter='!frontend'
-WORKDIR /apps/frontend
-RUN pnpm run build:${PROJECT_NAME}
+# RUN pnpm run build --filter='!frontend'
+# WORKDIR /apps/frontend
+# RUN pnpm run build:${PROJECT_NAME}
 
-# -----------------------------------------------
-# Runtime Image
-# -----------------------------------------------
-FROM doppler AS runtime
+# # -----------------------------------------------
+# # Runtime Image
+# # -----------------------------------------------
+# FROM doppler AS runtime
 
-# Get the builds
-COPY --from=builder /apps/backend/build /build/
-COPY --from=builder /apps/frontend/dist /build/frontend
+# # Get the builds
+# COPY --from=builder /apps/backend/build /build/
+# COPY --from=builder /apps/frontend/dist /build/frontend
 
-# Install production deps
-WORKDIR /build
-RUN pnpm install --production
-ENTRYPOINT doppler run -p backend -c ${DOPPLER_CONFIG} -- node /build/bundle.js
+# # Install production deps
+# WORKDIR /build
+# RUN pnpm install --production
+# ENTRYPOINT doppler run -p backend -c ${DOPPLER_CONFIG} -- node /build/bundle.js

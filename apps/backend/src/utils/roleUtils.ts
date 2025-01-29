@@ -1,5 +1,4 @@
-import { AdminUpdateUserAttributesRequest } from 'aws-sdk/clients/cognitoidentityserviceprovider'
-
+import { AdminUpdateUserAttributesCommandInput } from '@aws-sdk/client-cognito-identity-provider'
 import { RoleModel } from '../models/Role'
 import {
     SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
@@ -44,7 +43,7 @@ export const createRoleUpdateParams = (
     username: string,
     oldRoles: string[],
     newRole: string | null
-): AdminUpdateUserAttributesRequest | null => {
+): AdminUpdateUserAttributesCommandInput | null => {
     let roles = oldRoles
     if (newRole) roles = arrayUnique(oldRoles.concat(newRole))
 

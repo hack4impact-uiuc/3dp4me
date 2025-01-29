@@ -16,7 +16,6 @@
         "target": "es2017",
         "types": [
             "node", 
-            "jest"
         ],
         "module": "commonjs",
         "outDir": "./dist",

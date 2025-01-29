@@ -22,7 +22,7 @@ import {
 import errorWrap from '../../utils/errorWrap';
 import { AuthenticatedRequest } from '../../middleware/types';
 import { queryParamToNum, queryParamToString } from '../../utils/request';
-import { ListUsersRequest } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import { ListUsersCommandInput } from '@aws-sdk/client-cognito-identity-provider';
 
 export const router = express.Router();
 
@@ -52,7 +52,7 @@ router.get(
         const token = queryParamToString(req.query.token ?? "")
         const nPerPage = queryParamToNum(req.query.nPerPage ?? DEFAULT_USERS_ON_GET_REQUEST);
 
-        const params: ListUsersRequest = {
+        const params: ListUsersCommandInput = {
             UserPoolId: USER_POOL_ID,
             Limit: nPerPage,
         };
