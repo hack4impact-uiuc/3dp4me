@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Modal from '@material-ui/core/Modal'
 import _ from 'lodash'
-import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert'
 
@@ -200,14 +199,6 @@ const EditStepModal = ({
             </div>
         </Modal>
     )
-}
-
-EditStepModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onModalClose: PropTypes.func.isRequired,
-    allRoles: PropTypes.array.isRequired,
-    initialData: PropTypes.object.isRequired,
-    onEditStep: PropTypes.func.isRequired,
 }
 
 export default EditStepModal

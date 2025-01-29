@@ -8,7 +8,7 @@
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
-    "eslint-config-3dp4me": "*",
+    "eslint-config-3dp4me": "workspace:*",
     "rimraf": "^5.0.5",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3"
@@ -20,9 +20,9 @@
   "main": "dist/src/index.js",
   "module": "dist/esm/index.js",
   "scripts": {
-    "build": "yarn tsc",
+    "build": "tsc",
     "clean": "rimraf .turbo dist node_modules",
-    "lint": "yarn lint:check --fix",
+    "lint": "pnpm run lint:check --fix",
     "lint:check": "eslint src --ext js,jsx,ts,tsx"
   },
   "types": "dist/src/index.d.ts"

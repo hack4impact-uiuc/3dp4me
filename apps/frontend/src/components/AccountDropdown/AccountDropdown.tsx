@@ -4,7 +4,6 @@ import FormControl from '@material-ui/core/FormControl'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
-import PropTypes from 'prop-types'
 import React, { ChangeEvent, useContext } from 'react'
 
 import { saveLanguagePreference, signOut } from '../../aws/aws-helper'
@@ -83,13 +82,6 @@ const AccountDropdown = ({
             </Menu>
         </div>
     )
-}
-
-AccountDropdown.propTypes = {
-    handleClose: PropTypes.func.isRequired,
-    username: PropTypes.string,
-    userEmail: PropTypes.string,
-    anchorEl: PropTypes.elementType,
 }
 
 export default AccountDropdown

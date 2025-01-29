@@ -3,7 +3,7 @@
         "module": "commonjs",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "target": "es6",
+        "target": "ESNext",
         "noImplicitAny": true,
         "moduleResolution": "node",
         "sourceMap": true,
@@ -13,7 +13,7 @@
         "skipLibCheck": true,
     },
     "lib": [
-        "es2015"
+        "ESNext"
     ],
     "include": [
         "src/**/*"

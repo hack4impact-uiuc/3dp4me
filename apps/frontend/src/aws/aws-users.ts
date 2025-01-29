@@ -1,5 +1,5 @@
 import { AccessLevel, Language, Nullish, TranslatedString } from '@3dp4me/types'
-import { CognitoIdentityServiceProvider } from 'aws-sdk'
+import type { CognitoIdentityServiceProvider } from 'aws-sdk'
 
 import { CognitoAttribute } from '../utils/constants'
 

@@ -5,27 +5,27 @@
   "bugs": "https://github.com/hack4impact-uiuc/3dp4me/issues",
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
+    "ajv": "^8.17.1",
     "rimraf": "^5.0.5",
     "syncpack": "^12.3.0",
     "turbo": "^1.11.3"
   },
   "homepage": "https://github.com/hack4impact-uiuc/3dp4me#readme",
-  "private": "true",
+  "packageManager": "pnpm@9.15.4",
   "repository": "hack4impact-uiuc/3dp4me.git",
   "scripts": {
     "build": "turbo build",
-    "build:docker": "docker build --build-arg PROJECT_NAME=hearing -t 3dp4me .",
+    "build:docker": "docker build --build-arg PROJECT_NAME=hearing --tag '3dp4me' .",
     "clean": "turbo clean && rimraf .turbo prod-build node_modules",
-    "lint": "turbo run lint && yarn eslint --ext .json --fix . && yarn sync",
-    "lint:check": "turbo run lint && yarn eslint --ext .json .",
+    "lint": "turbo run lint && pnpm eslint --ext .json --fix . && pnpm run sync",
+    "lint:check": "turbo run lint && pnpm eslint --ext .json .",
+    "preinstall": "npx only-allow pnpm",
     "publish:production": "git branch -D production ; git push origin --delete production ; git checkout -b production && git push -u origin production && git switch -",
-    "sync": "yarn syncpack fix-mismatches && yarn syncpack format",
+    "sync": "pnpm syncpack fix-mismatches && pnpm syncpack format",
     "test": "turbo test"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "apps/*"
-    ]
-  }
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
 }

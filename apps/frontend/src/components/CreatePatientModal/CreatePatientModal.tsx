@@ -5,7 +5,6 @@ import { Unsaved } from '@3dp4me/types/dist/src/utils/unsaved'
 import Button from '@material-ui/core/Button'
 import Modal from '@material-ui/core/Modal'
 import TextField from '@material-ui/core/TextField'
-import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
@@ -128,13 +127,6 @@ const CreatePatientModal = ({
             </div>
         </Modal>
     )
-}
-
-CreatePatientModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired,
-    onSaveAndEdit: PropTypes.func.isRequired,
 }
 
 export default CreatePatientModal
