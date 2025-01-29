@@ -26,18 +26,12 @@ importers:
 
   apps/backend:
     dependencies:
-      '@3dp4me/types':
-        specifier: workspace:*
-        version: link:../../packages/types
       '@aws-sdk/client-cognito-identity-provider':
         specifier: ^3.496.0
         version: 3.734.0
       '@aws-sdk/client-s3':
         specifier: ^3.496.0
         version: 3.735.0
-      '@types/pad':
-        specifier: ^1.0.2
-        version: 1.0.2
       aws-sdk-mock:
         specifier: ^5.1.0
         version: 5.9.0
@@ -105,6 +99,9 @@ importers:
         specifier: ^3.71.1
         version: 3.84.1
     devDependencies:
+      '@3dp4me/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@smithy/types':
         specifier: ^4.1.0
         version: 4.1.0
@@ -126,6 +123,9 @@ importers:
       '@types/node':
         specifier: ^20.9.4
         version: 20.17.16
+      '@types/pad':
+        specifier: ^1.0.2
+        version: 1.0.2
       eslint-config-3dp4me:
         specifier: workspace:*
         version: link:../../packages/eslint-config-3dp4me
