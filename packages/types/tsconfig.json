@@ -14,7 +14,10 @@
         "sourceMap": true,
         "strict": true,
         "target": "es2017",
-        "types": ["node", "jest"],
+        "types": [
+            "node", 
+            "jest"
+        ],
         "module": "commonjs",
         "outDir": "./dist",
         "declaration": true,

@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "dependencies": {
-    "@3dp4me/types": "*",
+    "@3dp4me/types": "workspace:*",
     "@aws-sdk/client-cognito-identity-provider": "^3.496.0",
     "@aws-sdk/client-s3": "^3.496.0",
     "@types/pad": "^1.0.2",
@@ -31,12 +31,13 @@
   },
   "devDependencies": {
     "@smithy/types": "^4.1.0",
+    "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/express-fileupload": "^1.4.4",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.9.4",
-    "eslint-config-3dp4me": "*",
+    "eslint-config-3dp4me": "workspace:*",
     "exceljs": "^4.4.0",
     "jest": "^27.0.6",
     "node-loader": "^2.1.0",

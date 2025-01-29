@@ -3,7 +3,7 @@ import path from "path"
 import { router } from "./src/routes"
 
 import log from "loglevel"
-import express from 'express'
+import express, { NextFunction } from 'express'
 import fileUpload from "express-fileupload"
 import cors from "cors"
 import bodyParser from "body-parser"
@@ -17,6 +17,7 @@ import {
 import { logRequest } from './src/middleware/logging';
 import { ENV_TEST } from './src/utils/constants';
 import { errorHandler } from "./src/utils/errorHandler"
+import { Request, Response } from 'express';
 
 const app = express();
 
@@ -35,10 +36,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // This allows the backend to either serve routes or redirect to frontend
-app.get('/*', (req, res, next) => {
+app.get('/*', (req: Request, res: Response, next: NextFunction) => {
     if (req.url.includes('/api')) next();
     else {
-        res.sendFile(path.join(__dirname, './frontend/index.html'), (err) => {
+        res.sendFile(path.join(__dirname, './frontend/index.html'), (err: any) => {
             if (err) res.status(500).send(err);
         });
     }

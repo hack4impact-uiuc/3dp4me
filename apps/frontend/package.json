@@ -14,7 +14,7 @@
     ]
   },
   "dependencies": {
-    "@3dp4me/types": "*",
+    "@3dp4me/types": "workspace:*",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
@@ -81,7 +81,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.8.1",
     "dotenv-webpack": "^8.0.1",
-    "eslint-config-3dp4me": "*",
+    "eslint-config-3dp4me": "workspace:*",
     "html-webpack-plugin": "^5.5.3",
     "image-webpack-loader": "^8.1.0",
     "react-app-env": "^1.2.3",
@@ -104,11 +104,11 @@
   "homepage": ".",
   "private": true,
   "scripts": {
-    "build": "npm run build:hearing && npm run build:prosthetics",
+    "build": "pnpm run build:hearing && pnpm run build:prosthetics",
     "build:hearing": "cross-env PROJECT_NAME=hearing webpack",
     "build:prosthetics": "cross-env PROJECT_NAME=prosthetics webpack",
     "clean": "rimraf .turbo dist node_modules",
-    "lint": "yarn lint:check --fix",
+    "lint": "pnpm run lint:check --fix",
     "lint:check": "eslint src --ext js,jsx,ts,tsx",
     "start": "doppler run -- node_modules/.bin/react-app-rewired --max-old-space-size=4096 start"
   }
