@@ -1,4 +1,11 @@
-import { useQuery, UseQueryOptions, UseQueryResult, QueryClient, DefaultError, QueryKey } from '@tanstack/react-query'
+import {
+    DefaultError,
+    QueryClient,
+    QueryKey,
+    useQuery,
+    UseQueryOptions,
+    UseQueryResult,
+} from '@tanstack/react-query'
 import { useEffect } from 'react'
 
 import { useSetError } from '../hooks/uesSetError'

@@ -1,4 +1,5 @@
 import { AdminUpdateUserAttributesCommandInput } from '@aws-sdk/client-cognito-identity-provider'
+
 import { RoleModel } from '../models/Role'
 import {
     SECURITY_ROLE_ATTRIBUTE_MAX_LEN,
