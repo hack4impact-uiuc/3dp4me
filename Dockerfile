@@ -14,7 +14,7 @@ RUN apt-get update && apt-get -y install doppler
 RUN apt-get -y install ghostscript graphicsmagick
 
 # Dependency of sharp
-RUN apt-get -y libvips-tools
+RUN apt-get -y install libvips-tools
 
 # Install pnpm
 ENV PNPM_HOME="/pnpm"
