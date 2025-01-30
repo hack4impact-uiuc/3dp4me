@@ -40,13 +40,14 @@ RUN pnpm install
 # Copy code
 COPY . .
 
-ARG PROJECT_NAME hearing
+ARG PROJECT_NAME=hearing
+ARG BUILD_ENV=production
 # For some reason we need to build types first. Turbo should be able to figure this
 # Build everything, then build the frontend for the specific project
 RUN pnpm run build --filter types
 RUN pnpm run build --filter='!frontend'
 WORKDIR /app/apps/frontend
-RUN pnpm run build:${PROJECT_NAME}
+RUN pnpm run build:${PROJECT_NAME} --env $BUILD_ENV
 
 # -----------------------------------------------
 # Runtime Image
