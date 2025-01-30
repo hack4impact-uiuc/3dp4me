@@ -22,6 +22,7 @@ export interface StepFieldProps {
     patientId: string
     displayName: string
     stepKey: string
+    fieldPathPrefix?: string // The prefix to a path if it's in a field group (e.g. "fields.0.")
     isDisabled?: boolean
     handleSimpleUpdate?: (key: string, value: any) => void
     handleFileDownload?: (key: string, name: string) => void
@@ -35,6 +36,7 @@ const StepField = ({
     patientId = '',
     displayName,
     stepKey,
+    fieldPathPrefix = '',
     isDisabled = true,
     handleSimpleUpdate = () => {},
     handleFileDownload = () => {},
@@ -151,6 +153,7 @@ const StepField = ({
                     <FieldGroup
                         metadata={metadata}
                         patientId={patientId}
+                        fieldPathPrefix={fieldPathPrefix}
                         stepKey={stepKey}
                         isDisabled={isDisabled}
                         handleSimpleUpdate={handleSimpleUpdate}
@@ -189,6 +192,7 @@ const StepField = ({
                         handleFileUpload={handleFileUpload}
                         patientId={patientId}
                         stepKey={stepKey}
+                        fieldPathPrefix={fieldPathPrefix}
                         value={value || []}
                         displayName={displayName}
                         fieldId={metadata.key}

@@ -4,7 +4,7 @@ import './PhotoField.scss'
 
 import { File as FileType } from '@3dp4me/types'
 import Modal from '@material-ui/core/Modal'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Camera from 'react-html5-camera-photo'
 import ImageGallery, { ReactImageGalleryItem } from 'react-image-gallery'
 import styled from 'styled-components'
@@ -36,6 +36,7 @@ export interface PhotoFieldProps<T extends string> {
     displayName: string
     patientId: string
     stepKey: string
+    fieldPathPrefix: string
     fieldId: T
     handleFileUpload: (field: T, file: File) => void
     isDisabled?: boolean
@@ -49,6 +50,7 @@ const PhotoField = <T extends string>({
     stepKey,
     fieldId,
     handleFileUpload,
+    fieldPathPrefix,
     allowMultiplePhotos = true,
     isDisabled = false,
 }: PhotoFieldProps<T>) => {
@@ -58,6 +60,10 @@ const PhotoField = <T extends string>({
     const [shouldPromptCameraAccess, setShouldPromptCameraAccess] = useState(false)
     const [dataUri, setUri] = useState('')
     const [translations, selectedLang] = useTranslations()
+    const fullStepPath = useMemo(() => {
+        if (!fieldPathPrefix) return fieldId
+        return `${fieldPathPrefix}.${fieldId}`
+    }, [fieldPathPrefix, fieldId])
 
     useEffect(() => {
         updateMetaDataPhotos(value)
@@ -98,7 +104,7 @@ const PhotoField = <T extends string>({
     }
 
     const updateMetaDataPhotos = async (data: FileType[]) => {
-        const newPhotoData = await convertPhotosToURI(data, stepKey, fieldId, patientId)
+        const newPhotoData = await convertPhotosToURI(data, stepKey, fullStepPath, patientId)
 
         setImages(
             newPhotoData.map((v) => ({
