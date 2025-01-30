@@ -69,8 +69,6 @@ const PhotoField = <T extends string>({
         updateMetaDataPhotos(value)
     }, [value])
 
-    console.log(images.length)
-
     // Must disable these for the permission listener to work
     /* eslint no-param-reassign: "off", react/no-this-in-sfc: "off" */
     const setPermissionListener = (permissionStatus: PermissionStatus) => {
