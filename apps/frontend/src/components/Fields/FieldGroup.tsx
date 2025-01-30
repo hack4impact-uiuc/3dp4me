@@ -18,6 +18,7 @@ export interface FieldGroupProps {
     handleFileUpload: (field: string, value: any) => void
     handleFileDelete: (field: string, value: any) => void
     stepKey?: string
+    fieldPathPrefix?: string
     patientId?: string
     value?: any
     metadata: Field
@@ -30,6 +31,7 @@ const FieldGroup = ({
     handleFileUpload,
     handleFileDelete,
     metadata,
+    fieldPathPrefix = '',
     stepKey = '',
     patientId = '',
     value = {},
@@ -87,25 +89,28 @@ const FieldGroup = ({
     }
 
     const generateSingleGroup = (index: number) =>
-        metadata?.subFields?.map((field) => (
-            <div key={`${getCompleteSubFieldKey(index, field.key)}.${index}`}>
-                <div className="step-field">
-                    <StepField
-                        displayName={field.displayName[selectedLang]}
-                        metadata={field}
-                        value={value ? value[index][field.key] : null}
-                        key={field.key}
-                        isDisabled={isDisabled}
-                        patientId={patientId}
-                        stepKey={stepKey}
-                        handleSimpleUpdate={(k, v) => onSimpleUpdate(k, v, index)}
-                        handleFileDownload={(k, v) => onFileDownload(k, v, index)}
-                        handleFileUpload={(k, v) => onFileUpload(k, v, index)}
-                        handleFileDelete={(k, v) => onFileDelete(k, v, index)}
-                    />
+        metadata?.subFields?.map((field) => {
+            return (
+                <div key={`${getCompleteSubFieldKey(index, field.key)}.${index}`}>
+                    <div className="step-field">
+                        <StepField
+                            displayName={field.displayName[selectedLang]}
+                            metadata={field}
+                            value={value ? value[index][field.key] : null}
+                            key={field.key}
+                            isDisabled={isDisabled}
+                            patientId={patientId}
+                            stepKey={stepKey}
+                            fieldPathPrefix={getKeyBase(index)}
+                            handleSimpleUpdate={(k, v) => onSimpleUpdate(k, v, index)}
+                            handleFileDownload={(k, v) => onFileDownload(k, v, index)}
+                            handleFileUpload={(k, v) => onFileUpload(k, v, index)}
+                            handleFileDelete={(k, v) => onFileDelete(k, v, index)}
+                        />
+                    </div>
                 </div>
-            </div>
-        ))
+            )
+        })
 
     const generateHeader = (groupNumber: number, displayName: string) => {
         const buttonClass = `button-${isDisabled ? 'disabled' : 'active'}`
