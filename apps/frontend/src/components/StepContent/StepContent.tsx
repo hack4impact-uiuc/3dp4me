@@ -17,6 +17,7 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { formatDate } from '../../utils/date'
 import BottomBar from '../BottomBar/BottomBar'
 import StepField from '../StepField/StepField'
+import { resolveMixedObjPath } from '../../utils/object'
 
 // TODO: Break this wayy down
 // TODO: Type step data?
@@ -99,7 +100,8 @@ const StepContent = ({
                 uploadDate: res.result.uploadDate,
             }
 
-            let files = _.cloneDeep(updatedData[fieldKey])
+            const oldFiles = resolveMixedObjPath(updatedData, fieldKey)
+            let files = _.cloneDeep(oldFiles || [])
 
             if (files) files = files.concat(newFile)
             else files = [newFile]
