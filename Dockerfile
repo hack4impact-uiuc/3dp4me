@@ -3,6 +3,9 @@
 # -----------------------------------------------
 FROM node:22 AS doppler
 
+# TODO Maybe install manually
+# pnpm install --prod --force @img/sharp-linux-arm64
+
 # Install doppler
 RUN apt-get update && apt-get install -y apt-transport-https ca-certificates curl gnupg && \
     curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | gpg --dearmor -o /usr/share/keyrings/doppler-archive-keyring.gpg && \
@@ -13,8 +16,45 @@ RUN apt-get update && apt-get -y install doppler
 # Install image manipulation tools
 RUN apt-get -y install ghostscript graphicsmagick
 
-# Dependency of sharp
-RUN apt-get -y install libvips-tools
+# Build libvips (for sharp)
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y \
+        build-essential \
+        wget \
+        git \
+        pkg-config
+
+RUN apt-get install -y python3 python3-pip python3-setuptools \
+                       python3-wheel
+RUN pip3 install meson ninja
+
+RUN apt-get install -y \
+        libexpat1-dev \
+        librsvg2-dev \
+        libpng-dev \
+        libjpeg-dev \
+        libwebp-dev \
+        libexif-dev \
+        liblcms2-dev \
+        libglib2.0-dev \
+        liborc-dev \
+        libgirepository1.0-dev \
+        gettext 
+
+ARG VIPS_VER=8.14.2
+ARG VIPS_DLURL=https://github.com/libvips/libvips/releases/download
+RUN cd /usr/local/src \
+        && wget ${VIPS_DLURL}/v${VIPS_VER}/vips-${VIPS_VER}.tar.xz \
+        && tar xf vips-${VIPS_VER}.tar.xz \
+        && cd vips-${VIPS_VER} \
+        && meson setup build --buildtype=release \
+        && cd build \
+        && meson compile \
+        && meson test \
+        && meson install
+RUN ldconfig
+        
+RUN export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/vips/lib
 
 # Install pnpm
 ENV PNPM_HOME="/pnpm"
