@@ -1,7 +1,7 @@
 # -----------------------------------------------
 # Base Image with Doppler
 # -----------------------------------------------
-FROM node:22 AS doppler
+FROM node:22-alpine AS doppler
 
 # TODO Maybe install manually
 # pnpm install --prod --force @img/sharp-linux-arm64
@@ -12,13 +12,16 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 # Install image manipulation tools
-RUN apt-get update
-RUN apt-get -y install ghostscript graphicsmagick libvips-tools
+RUN apk update
+RUN apk add ghostscript graphicsmagick 
 
 # Install dependencies
 WORKDIR /app
 COPY package.json .
 RUN pnpm install 
+
+# Install libvips
+RUN apk add vips-dev -U -X http://dl-3.alpinelinux.org/alpine/edge/testing/
 
 # App
 COPY . .
