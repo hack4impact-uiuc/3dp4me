@@ -18,7 +18,6 @@
     "mongodb-memory-server": "^7.4.0",
     "mongoose": "^6.0.6",
     "mongoose-encryption": "^2.1.0",
-    "node": "^20.0.0",
     "node-2fa": "^2.0.2",
     "omit-deep-lodash": "^1.1.5",
     "pad": "^3.2.0",

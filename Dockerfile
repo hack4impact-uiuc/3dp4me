@@ -1,20 +1,16 @@
 # -----------------------------------------------
 # Base Image with Doppler
 # -----------------------------------------------
-FROM node:22 AS doppler
+FROM node:22-alpine AS doppler
 
-# Install doppler
-RUN apt-get update && apt-get install -y apt-transport-https ca-certificates curl gnupg && \
-    curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | gpg --dearmor -o /usr/share/keyrings/doppler-archive-keyring.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/doppler-archive-keyring.gpg] https://packages.doppler.com/public/cli/deb/debian any-version main" | tee /etc/apt/sources.list.d/doppler-cli.list
-
-RUN apt-get update && apt-get -y install doppler
+# Install Doppler CLI
+RUN wget -q -t3 'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.key' -O /etc/apk/keys/cli@doppler-8004D9FF50437357.rsa.pub && \
+echo 'https://packages.doppler.com/public/cli/alpine/any-version/main' | tee -a /etc/apk/repositories && \
+apk add doppler
 
 # Install image manipulation tools
-RUN apt-get -y install ghostscript graphicsmagick
-
-# Dependency of sharp
-RUN apt-get -y install libvips-tools
+RUN apk update
+RUN apk add ghostscript graphicsmagick 
 
 # Install pnpm
 ENV PNPM_HOME="/pnpm"
@@ -69,6 +65,9 @@ COPY --from=builder /app/apps/backend/build ./apps/backend
 
 # Copy over the built frontend to be served by the backend
 COPY --from=builder /app/apps/frontend/dist ./apps/backend/frontend/
+
+# Install libvips (needs to be done AFTER pnpm install)
+RUN apk add vips-dev -U -X http://dl-3.alpinelinux.org/alpine/edge/testing/
 
 # Install production deps
 ENTRYPOINT doppler run -p backend -c ${DOPPLER_CONFIG} -- node /build/apps/backend/bundle.js
