@@ -10,6 +10,12 @@ import swal from 'sweetalert'
 import XIcon from '../../assets/x-icon.png'
 import { useTranslations } from '../../hooks/useTranslations'
 import StepField from '../StepField/StepField'
+import SimpleTable from '../SimpleTable/SimpleTable'
+
+export enum DisplayMode {
+    Table = 'table',
+    List = 'list',
+}
 
 export interface FieldGroupProps {
     isDisabled: boolean
@@ -21,6 +27,7 @@ export interface FieldGroupProps {
     fieldPathPrefix?: string
     patientId?: string
     value?: any
+    displayMode?: DisplayMode,
     metadata: Field
 }
 
@@ -31,11 +38,13 @@ const FieldGroup = ({
     handleFileUpload,
     handleFileDelete,
     metadata,
+    displayMode = DisplayMode.Table, // TODO: List
     fieldPathPrefix = '',
     stepKey = '',
     patientId = '',
     value = {},
 }: FieldGroupProps) => {
+    // TODO: Need to use field path prefix
     const [translations, selectedLang] = useTranslations()
 
     const getKeyBase = (index: number) => `${metadata.key}.${index}`
@@ -128,7 +137,7 @@ const FieldGroup = ({
         )
     }
 
-    const generateAllGroups = () => {
+    const generateListGroups = () => {
         const numFieldGroups = getNumFields()
         const groups = []
 
@@ -140,6 +149,28 @@ const FieldGroup = ({
 
         return groups
     }
+
+    const generateTableGroups = () => {
+        return <SimpleTable<any>
+            data={usersToTableFormat(userMetaData)}
+            headers={getUserTableHeaders(selectedLang)}
+            rowData={USER_TABLE_ROW_DATA}
+            renderHeader={userTableHeaderRenderer}
+            renderTableRow={generateSelectableRenderer(onUserSelected)}
+        />
+    }
+
+    const generateAllGroups = () => {
+        switch (displayMode) {
+            case DisplayMode.List:
+                return generateListGroups()
+            case DisplayMode.Table:
+                return generateTableGroups()
+            default:
+                return <p>Unknown display mode {displayMode}</p>
+        }
+    }
+
 
     return (
         <div className="field-container">
