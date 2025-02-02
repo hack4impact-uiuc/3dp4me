@@ -15,6 +15,7 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { useInvalidatePatients, usePatients } from '../../query/usePatients'
 import { useSteps } from '../../query/useSteps'
 import {
+    DISABLE_FEATURE_PATIENT_STATUS,
     DisplayFieldType,
     getStepDashboardHeaders,
     PATIENTS_BY_STEP_TABLE_ROW_DATA,
@@ -147,10 +148,12 @@ const Dashboard = () => {
         const headers = getStepDashboardHeaders(selectedLang)
 
         // Have to push this at runtime because we don't know the stepKey ahead
-        headers.push({
-            title: translations.tableHeaders.status,
-            sortKey: `${stepKey}.status`,
-        })
+        if (!DISABLE_FEATURE_PATIENT_STATUS) {
+            headers.push({
+                title: translations.tableHeaders.status,
+                sortKey: `${stepKey}.status`,
+            })
+        }
 
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)
@@ -172,10 +175,13 @@ const Dashboard = () => {
         if (fields == null) return []
 
         const rowData = _.cloneDeep(PATIENTS_BY_STEP_TABLE_ROW_DATA)
-        rowData.push({
-            id: `${stepKey}.status`,
-            dataType: DisplayFieldType.STEP_STATUS,
-        } as any)
+
+        if (!DISABLE_FEATURE_PATIENT_STATUS) {
+            rowData.push({
+                id: `${stepKey}.status`,
+                dataType: DisplayFieldType.STEP_STATUS,
+            } as any)
+        }
 
         fields.forEach((field) => {
             if (field.isVisibleOnDashboard)

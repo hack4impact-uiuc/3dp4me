@@ -15,7 +15,7 @@ import HalfCircleIcon from '../../assets/half-circle.svg'
 import { useTranslations } from '../../hooks/useTranslations'
 import { useWindowDimensions } from '../../hooks/useWindowDimensions'
 import { useSteps } from '../../query/useSteps'
-import { LANGUAGES, RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH, STEP_STATUS } from '../../utils/constants'
+import { DISABLE_FEATURE_PATIENT_STATUS, LANGUAGES, RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH, STEP_STATUS } from '../../utils/constants'
 import { getStepData } from '../../utils/metadataUtils'
 
 interface ToggleButtonsProps {
@@ -86,7 +86,7 @@ const ToggleButtons = ({
                     className={`toggle-button ${step === element.key ? 'active' : ''}`}
                     value={element.key}
                 >
-                    {patientData ? statusIcons[status] : null}{' '}
+                    {patientData && !DISABLE_FEATURE_PATIENT_STATUS ? statusIcons[status] : null}{' '}
                     <b>{element.displayName[selectedLang]}</b>
                 </ToggleButton>
             )
@@ -105,7 +105,7 @@ const ToggleButtons = ({
 
         return (
             <div className="current-step-label">
-                {stepData?.status ? statusIcons[stepData.status] : null}{' '}
+                {stepData?.status && !DISABLE_FEATURE_PATIENT_STATUS ? statusIcons[stepData.status] : null}{' '}
                 <b>{element.displayName[selectedLang]}</b>
             </div>
         )
@@ -122,7 +122,7 @@ const ToggleButtons = ({
                     key={`${element.key}-mi`}
                     onClick={(e) => handleCloseSelector(e, element.key)}
                 >
-                    {patientData && stepData?.status ? statusIcons[stepData.status] : null}{' '}
+                    {patientData && stepData?.status && !DISABLE_FEATURE_PATIENT_STATUS ? statusIcons[stepData.status] : null}{' '}
                     <b className="selector-text">{element.displayName[selectedLang]}</b>
                 </MenuItem>
             )
