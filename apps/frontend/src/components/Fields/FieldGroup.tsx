@@ -152,13 +152,16 @@ const FieldGroup = ({
     }
 
     const generateTableGroups = () => {
-
         return <SimpleTable<any>
             data={getTableData()}
             headers={getTableHeaders()}
             rowData={getTableColumnMetadata()}
             renderHeader={defaultTableHeaderRenderer}
             renderTableRow={defaultTableRowRenderer}
+            containerStyle={{ 
+                marginTop: '6px', 
+                width: 'calc(95vw - 240px - 50px)', // 95 - sidebar width - left padding
+            }}
         />
     }
 

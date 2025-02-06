@@ -7,7 +7,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import React, { useMemo } from 'react'
+import React, { CSSProperties, useMemo } from 'react'
 
 import useSortableData from '../../hooks/useSortableData'
 import { useTranslations } from '../../hooks/useTranslations'
@@ -21,6 +21,7 @@ import {
     RowRenderer,
 } from '../../utils/table-renderers'
 import { StyledTableRow } from './SimpleTable.style'
+import styled from 'styled-components'
 
 export interface SimpleTableProps<T extends Record<string, any>> {
     data: Nullish<T[]>
@@ -32,6 +33,14 @@ export interface SimpleTableProps<T extends Record<string, any>> {
     numLoaderRows?: number
     isLoading?: boolean
     renderLoadingTableRow?: RowLoadingRenderer
+    containerStyle?: React.CSSProperties
+}
+
+const DEFAULT_CONTAINER_STYLE: CSSProperties = {
+    height: '80vh',
+    width: '90%',
+    margin: 'auto',
+    marginTop: '6px'
 }
 
 /**
@@ -45,6 +54,7 @@ const SimpleTable = <T extends Record<string, any>>({
     renderTableRow,
     numLoaderRows = PEOPLE_PER_PAGE,
     isLoading = false,
+    containerStyle = DEFAULT_CONTAINER_STYLE,
     renderLoadingTableRow = defaultTableRowLoadingRenderer,
 }: SimpleTableProps<T>) => {
     const selectedLang = useTranslations()[1]
@@ -75,8 +85,8 @@ const SimpleTable = <T extends Record<string, any>>({
     }
 
     return (
-        <div className="table-container">
-            <TableContainer className="table-container" component={Paper}>
+        <div>
+            <TableContainer component={Paper} style={containerStyle}>
                 <MaterialUITable stickyHeader className="table">
                     <TableHead>
                         <TableRow>{renderedHeaders}</TableRow>
