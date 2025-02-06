@@ -1,16 +1,19 @@
 /* eslint import/no-cycle: "off" */
 // Unfortunately, there has to be an import cycle, because this is by nature, recursive
-import { Field } from '@3dp4me/types'
+import { Field, Language } from '@3dp4me/types'
 import Button from '@material-ui/core/Button'
 import _ from 'lodash'
 import swal from 'sweetalert'
 
 import XIcon from '../../../assets/x-icon.png'
+import AddIcon from '@material-ui/icons/Add';
 import { useTranslations } from '../../../hooks/useTranslations'
-import StepField from '../../StepField/StepField'
 import SimpleTable from '../../SimpleTable/SimpleTable'
-import { defaultTableHeaderRenderer, defaultTableRowRenderer } from '../../../utils/table-renderers'
+import { ColumnMetadata, defaultTableHeaderRenderer, defaultTableRowRenderer } from '../../../utils/table-renderers'
+import { StyledTableCell } from '../../SimpleTable/SimpleTable.style'
+import { TableCell } from '@material-ui/core'
 
+const RENDER_PLUS_ICON = "RENDER_PLUS_ICON"
 
 export interface FieldGroupProps {
     isDisabled: boolean
@@ -70,26 +73,12 @@ const FieldGroupTable = ({
         handleSimpleUpdate(metadata.key, newData)
     }
 
-    const generateTableGroups = () => {
-        return <SimpleTable<any>
-            data={getTableData()}
-            headers={getTableHeaders()}
-            rowData={getTableColumnMetadata()}
-            renderHeader={defaultTableHeaderRenderer}
-            renderTableRow={defaultTableRowRenderer}
-            containerStyle={{ 
-                marginTop: '6px', 
-                width: 'calc(95vw - 240px - 50px)', // 95 - sidebar width - left padding
-            }}
-        />
-    }
-
     const getTableData = () => {
         if (Array.isArray(value)) {
-            return value
+            return value.concat([RENDER_PLUS_ICON])
         }
 
-        return []
+        return [RENDER_PLUS_ICON]
     }
 
     const getTableColumnMetadata = () => {
@@ -106,6 +95,22 @@ const FieldGroupTable = ({
         })))
     }
 
+    const tableRenderer = <T extends Record<string, any>>(
+        rowData: ColumnMetadata<T>[],
+        itemData: T,
+        selectedLang: Language
+    ) =>  {
+        if (itemData as any === RENDER_PLUS_ICON) {
+        return (
+            <StyledTableCell colSpan={metadata?.subFields?.length || 1}>
+                <AddIcon />
+            </StyledTableCell>
+        )
+        }
+
+        return defaultTableRowRenderer(rowData, itemData, selectedLang)
+    }
+
     // TODO: Change the defaultTableRenderer to add a row for editing a new item
 
     return (
@@ -114,7 +119,7 @@ const FieldGroupTable = ({
             headers={getTableHeaders()}
             rowData={getTableColumnMetadata()}
             renderHeader={defaultTableHeaderRenderer}
-            renderTableRow={defaultTableRowRenderer}
+            renderTableRow={tableRenderer}
             containerStyle={{ 
                 marginTop: '6px', 
                 width: 'calc(95vw - 240px - 50px)', // 95 - sidebar width - left padding
