@@ -12,7 +12,7 @@ import check from '../../assets/check.svg'
 import exclamation from '../../assets/exclamation.svg'
 import halfCircle from '../../assets/half-circle.svg'
 import { useTranslations } from '../../hooks/useTranslations'
-import { LANGUAGES, STEP_STATUS } from '../../utils/constants'
+import { DISABLE_FEATURE_PATIENT_STATUS, LANGUAGES, STEP_STATUS } from '../../utils/constants'
 
 interface BottomBarProps {
     isEditing: boolean
@@ -57,7 +57,7 @@ const BottomBar = ({
      * Renders the dropdown for step status. If status is null, then this isn't rendered at all.
      */
     const renderStatusSelector = () => {
-        if (!status || !shouldShowStatus) return null
+        if (DISABLE_FEATURE_PATIENT_STATUS || !status || !shouldShowStatus) return null
         const className = selectedLang === LANGUAGES.AR ? 'status-selector-ar' : 'status-selector'
 
         return (
@@ -84,7 +84,7 @@ const BottomBar = ({
      * Renders the status icon and text
      */
     const renderStatus = () => {
-        if (!status || !shouldShowStatus) return null
+        if (DISABLE_FEATURE_PATIENT_STATUS || !status || !shouldShowStatus) return null
 
         return (
             <div className={`status ${status}`} style={{ display: 'flex', alignItems: 'center' }}>

@@ -12,10 +12,13 @@ apk add doppler
 RUN apk update
 RUN apk add ghostscript graphicsmagick 
 
+# Install corepack
+RUN npm install -g corepack@latest
+
 # Install pnpm
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN corepack enable pnpm
 
 # -----------------------------------------------
 # Builder Image
