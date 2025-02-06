@@ -31,7 +31,9 @@ const FieldGroup = (props: FieldGroupProps) => {
     let { displayMode } = props
     if (!displayMode)
         displayMode = DisplayMode.Table
+
     // TODO: Add a toggle for display mode
+    // TODO: Put restrictions on table mode
 
     return (
         <div className="field-container">

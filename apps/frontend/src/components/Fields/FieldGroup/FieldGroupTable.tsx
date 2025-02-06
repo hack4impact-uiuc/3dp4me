@@ -40,28 +40,8 @@ const FieldGroupTable = ({
     // TODO: Need to use field path prefix
     const [translations, selectedLang] = useTranslations()
 
-    const getKeyBase = (index: number) => `${metadata.key}.${index}`
-
-    const getCompleteSubFieldKey = (index: number, subfieldKey: string) =>
-        `${getKeyBase(index)}.${subfieldKey}`
-
     const getNumFields = () => value?.length ?? 0
-
-    const onSimpleUpdate = (k: string, v: any, i: number) => {
-        handleSimpleUpdate(getCompleteSubFieldKey(i, k), v)
-    }
-
-    const onFileUpload = (k: string, v: any, i: number) => {
-        handleFileUpload(getCompleteSubFieldKey(i, k), v)
-    }
-
-    const onFileDownload = (k: string, v: any, i: number) => {
-        handleFileDownload(getCompleteSubFieldKey(i, k), v)
-    }
-
-    const onFileDelete = (k: string, v: any, i: number) => {
-        handleFileDelete(getCompleteSubFieldKey(i, k), v)
-    }
+    const getKeyBase = (index: number) => `${metadata.key}.${index}`
 
     const onAddGroup = () => {
         handleSimpleUpdate(getKeyBase(getNumFields()), {})
@@ -105,7 +85,6 @@ const FieldGroupTable = ({
     }
 
     const getTableData = () => {
-        // TODO: DO I need to split?
         if (Array.isArray(value)) {
             return value
         }
@@ -123,18 +102,31 @@ const FieldGroupTable = ({
     const getTableHeaders = () => {
         return metadata?.subFields?.map((field => ({
             title: field.displayName[selectedLang],
-            // TODO: DOes this work for nested?
             sortKey: field.key,
         })))
     }
 
+    // TODO: Change the defaultTableRenderer to add a row for editing a new item
 
-    return [
-            generateTableGroups(),
-            <Button className="field-group-button" onClick={onAddGroup} disabled={isDisabled}>
-                {`${translations.components.fieldGroup.add} ${metadata?.displayName[selectedLang]}`}
-            </Button>
-    ]
+    return (
+        <SimpleTable<any>
+            data={getTableData()}
+            headers={getTableHeaders()}
+            rowData={getTableColumnMetadata()}
+            renderHeader={defaultTableHeaderRenderer}
+            renderTableRow={defaultTableRowRenderer}
+            containerStyle={{ 
+                marginTop: '6px', 
+                width: 'calc(95vw - 240px - 50px)', // 95 - sidebar width - left padding
+            }}
+        />
+    )
+    // return [
+    //         generateTableGroups(),
+    //         <Button className="field-group-button" onClick={onAddGroup} disabled={isDisabled}>
+    //             {`${translations.components.fieldGroup.add} ${metadata?.displayName[selectedLang]}`}
+    //         </Button>
+    // ]
 }
 
 export default FieldGroupTable
