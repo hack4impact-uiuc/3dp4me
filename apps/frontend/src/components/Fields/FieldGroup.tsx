@@ -11,6 +11,7 @@ import XIcon from '../../assets/x-icon.png'
 import { useTranslations } from '../../hooks/useTranslations'
 import StepField from '../StepField/StepField'
 import SimpleTable from '../SimpleTable/SimpleTable'
+import { defaultTableHeaderRenderer, defaultTableRowRenderer } from '../../utils/table-renderers'
 
 export enum DisplayMode {
     Table = 'table',
@@ -151,13 +152,38 @@ const FieldGroup = ({
     }
 
     const generateTableGroups = () => {
+
         return <SimpleTable<any>
-            data={usersToTableFormat(userMetaData)}
-            headers={getUserTableHeaders(selectedLang)}
-            rowData={USER_TABLE_ROW_DATA}
-            renderHeader={userTableHeaderRenderer}
-            renderTableRow={generateSelectableRenderer(onUserSelected)}
+            data={getTableData()}
+            headers={getTableHeaders()}
+            rowData={getTableColumnMetadata()}
+            renderHeader={defaultTableHeaderRenderer}
+            renderTableRow={defaultTableRowRenderer}
         />
+    }
+
+    const getTableData = () => {
+        // TODO: DO I need to split?
+        if (Array.isArray(value)) {
+            return value
+        }
+
+        return []
+    }
+
+    const getTableColumnMetadata = () => {
+        return metadata?.subFields?.map((field => ({
+            id: field.key, // TODO: Need to index further?
+            dataType: field.fieldType,
+        }))) 
+    }
+
+    const getTableHeaders = () => {
+        return metadata?.subFields?.map((field => ({
+            title: field.displayName[selectedLang],
+            // TODO: DOes this work for nested?
+            sortKey: field.key,
+        })))
     }
 
     const generateAllGroups = () => {
