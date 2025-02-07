@@ -4,7 +4,6 @@ import { Field, Language } from '@3dp4me/types'
 import Button from '@material-ui/core/Button'
 import _ from 'lodash'
 import swal from 'sweetalert'
-
 import XIcon from '../../../assets/x-icon.png'
 import AddIcon from '@material-ui/icons/Add';
 import { useTranslations } from '../../../hooks/useTranslations'
@@ -12,8 +11,9 @@ import SimpleTable from '../../SimpleTable/SimpleTable'
 import { ColumnMetadata, defaultTableHeaderRenderer, defaultTableRowRenderer } from '../../../utils/table-renderers'
 import { StyledTableCell } from '../../SimpleTable/SimpleTable.style'
 import { TableCell } from '@material-ui/core'
+import { useMemo } from 'react'
+import { getTableData, RENDER_PLUS_ICON } from './TableHelpers'
 
-const RENDER_PLUS_ICON = "RENDER_PLUS_ICON"
 
 export interface FieldGroupProps {
     isDisabled: boolean
@@ -46,6 +46,10 @@ const FieldGroupTable = ({
     const getNumFields = () => value?.length ?? 0
     const getKeyBase = (index: number) => `${metadata.key}.${index}`
 
+    const tableData = useMemo(() => {
+        return getTableData(value, isDisabled)
+    }, [value, isDisabled])
+
     const onAddGroup = () => {
         handleSimpleUpdate(getKeyBase(getNumFields()), {})
     }
@@ -73,14 +77,6 @@ const FieldGroupTable = ({
         handleSimpleUpdate(metadata.key, newData)
     }
 
-    const getTableData = () => {
-        if (Array.isArray(value)) {
-            return value.concat([RENDER_PLUS_ICON])
-        }
-
-        return [RENDER_PLUS_ICON]
-    }
-
     const getTableColumnMetadata = () => {
         return metadata?.subFields?.map((field => ({
             id: field.key, // TODO: Need to index further?
@@ -92,46 +88,58 @@ const FieldGroupTable = ({
         return metadata?.subFields?.map((field => ({
             title: field.displayName[selectedLang],
             sortKey: field.key,
-        })))
+        }))).concat({
+            // This is an empty heaader for the X button
+            title: "",
+            sortKey: ""
+        })
     }
 
-    const tableRenderer = <T extends Record<string, any>>(
+    const tableRowRenderer = <T extends Record<string, any>>(
         rowData: ColumnMetadata<T>[],
         itemData: T,
         selectedLang: Language
     ) =>  {
+
         if (itemData as any === RENDER_PLUS_ICON) {
-        return (
-            <StyledTableCell colSpan={metadata?.subFields?.length || 1}>
-                <AddIcon />
-            </StyledTableCell>
-        )
+            const numCols = (metadata?.subFields?.length || 1) + 1
+            return (
+                <StyledTableCell colSpan={numCols}>
+                    <AddIcon />
+                </StyledTableCell>
+            )
         }
 
-        return defaultTableRowRenderer(rowData, itemData, selectedLang)
-    }
+        // TODO: If editing, this needs to change
+        const cols = defaultTableRowRenderer(rowData, itemData, selectedLang)
 
-    // TODO: Change the defaultTableRenderer to add a row for editing a new item
+        cols.push(
+            <StyledTableCell>
+                <img
+                    src={XIcon}
+                    alt={translations.components.button.discard.title}
+                    className={`xicon-base xicon-${selectedLang}`}
+                    onClick={() => onRemoveGroup(itemData.groupNum)}
+                />
+            </StyledTableCell>
+        )
+
+        return cols
+    }
 
     return (
         <SimpleTable<any>
-            data={getTableData()}
+            data={tableData}
             headers={getTableHeaders()}
             rowData={getTableColumnMetadata()}
             renderHeader={defaultTableHeaderRenderer}
-            renderTableRow={tableRenderer}
+            renderTableRow={tableRowRenderer}
             containerStyle={{ 
                 marginTop: '6px', 
                 width: 'calc(95vw - 240px - 50px)', // 95 - sidebar width - left padding
             }}
         />
     )
-    // return [
-    //         generateTableGroups(),
-    //         <Button className="field-group-button" onClick={onAddGroup} disabled={isDisabled}>
-    //             {`${translations.components.fieldGroup.add} ${metadata?.displayName[selectedLang]}`}
-    //         </Button>
-    // ]
 }
 
 export default FieldGroupTable
