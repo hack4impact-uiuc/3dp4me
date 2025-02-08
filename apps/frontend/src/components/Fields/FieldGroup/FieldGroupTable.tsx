@@ -19,7 +19,7 @@ import styled from 'styled-components'
 
 // TODO: TEST CHROME
 const CellEditContainer = styled(StyledTableCell)`
-    padding: 0px;
+    padding: 5px;
 
     // Prevent arrows on number input
     input::-webkit-outer-spin-button,
@@ -41,6 +41,8 @@ const CellEditContainer = styled(StyledTableCell)`
 
     .text-area-body {
         min-height: 1em;
+        border: none;
+        background: none;
     }
 
     // Prevent inputs from blocking the table styling
@@ -72,7 +74,7 @@ const CellEditContainer = styled(StyledTableCell)`
     }
 
     // Prevent border boxes for text
-    .MuiInputBase-root {
+    .MuiInputBase-root:not(.Mui-focused) {
         fieldset {
             border: 0;
         }
@@ -82,6 +84,15 @@ const CellEditContainer = styled(StyledTableCell)`
     .react-datepicker__input-container {
         input {
             border: 0;
+        }
+    }
+
+    // Prevent border boxes for phone
+    .phone-input-container {
+        margin-left: 10px;
+        input {
+            border: 0;
+            background: none;
         }
     }
 `
