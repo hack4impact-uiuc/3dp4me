@@ -12,7 +12,8 @@ import { ColumnMetadata, defaultTableHeaderRenderer, defaultTableRowRenderer } f
 import { StyledTableCell } from '../../SimpleTable/SimpleTable.style'
 import { TableCell } from '@material-ui/core'
 import { useMemo } from 'react'
-import { getTableData, RENDER_PLUS_ICON } from './TableHelpers'
+import { getTableData, getTableHeaders, RENDER_PLUS_ICON } from './TableHelpers'
+import LanguageInput from '../../LanguageInput/LanguageInput'
 
 
 export interface FieldGroupProps {
@@ -50,10 +51,22 @@ const FieldGroupTable = ({
         return getTableData(value, isDisabled)
     }, [value, isDisabled])
 
+    const tableHeaders = useMemo(() => {
+        return getTableHeaders(metadata, selectedLang, isDisabled)
+    }, [metadata, selectedLang, isDisabled])
+
+    const tableColumnMetadata = useMemo(() => {
+        return metadata?.subFields?.map((field => ({
+            id: field.key, // TODO: Need to index further?
+            dataType: field.fieldType,
+        }))) 
+    }, [metadata])
+
     const onAddGroup = () => {
         handleSimpleUpdate(getKeyBase(getNumFields()), {})
     }
 
+    // TODO: Pull these up into the common component
     const onRemoveGroup = (groupNumber: number) => {
         if (isDisabled) return
 
@@ -77,30 +90,11 @@ const FieldGroupTable = ({
         handleSimpleUpdate(metadata.key, newData)
     }
 
-    const getTableColumnMetadata = () => {
-        return metadata?.subFields?.map((field => ({
-            id: field.key, // TODO: Need to index further?
-            dataType: field.fieldType,
-        }))) 
-    }
-
-    const getTableHeaders = () => {
-        return metadata?.subFields?.map((field => ({
-            title: field.displayName[selectedLang],
-            sortKey: field.key,
-        }))).concat({
-            // This is an empty heaader for the X button
-            title: "",
-            sortKey: ""
-        })
-    }
-
     const tableRowRenderer = <T extends Record<string, any>>(
         rowData: ColumnMetadata<T>[],
         itemData: T,
         selectedLang: Language
     ) =>  {
-
         if (itemData as any === RENDER_PLUS_ICON) {
             const numCols = (metadata?.subFields?.length || 1) + 1
             return (
@@ -111,7 +105,9 @@ const FieldGroupTable = ({
         }
 
         // TODO: If editing, this needs to change
+        // TODO: Change height
         const cols = defaultTableRowRenderer(rowData, itemData, selectedLang)
+        if (isDisabled) return cols
 
         cols.push(
             <StyledTableCell>
@@ -120,6 +116,7 @@ const FieldGroupTable = ({
                     alt={translations.components.button.discard.title}
                     className={`xicon-base xicon-${selectedLang}`}
                     onClick={() => onRemoveGroup(itemData.groupNum)}
+                    style={{ float: selectedLang === Language.EN ? "right" : "left" }}
                 />
             </StyledTableCell>
         )
@@ -130,10 +127,11 @@ const FieldGroupTable = ({
     return (
         <SimpleTable<any>
             data={tableData}
-            headers={getTableHeaders()}
-            rowData={getTableColumnMetadata()}
+            headers={tableHeaders}
+            rowData={tableColumnMetadata}
             renderHeader={defaultTableHeaderRenderer}
             renderTableRow={tableRowRenderer}
+            rowStyle={{ height: '50px' }}
             containerStyle={{ 
                 marginTop: '6px', 
                 width: 'calc(95vw - 240px - 50px)', // 95 - sidebar width - left padding

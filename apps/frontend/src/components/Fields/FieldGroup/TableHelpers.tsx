@@ -1,5 +1,5 @@
-import { Language } from "@3dp4me/types"
-import { ColumnMetadata } from "../../../utils/table-renderers"
+import { Field, Language } from "@3dp4me/types"
+import { ColumnMetadata, Header } from "../../../utils/table-renderers"
 import { StyledTableCell } from '../../SimpleTable/SimpleTable.style';
 import XIcon from '../../../assets/x-icon.png'
 import AddIcon from '@material-ui/icons/Add';
@@ -28,4 +28,19 @@ function addGroupNumberToTableRowData(data: any, idx: number) {
         ...data,
         groupNum: idx,
     }
+}
+
+export function getTableHeaders(metadata: Field, selectedLang: Language, isDisabled: boolean): Header<any>[] {
+    const fieldHeaders = metadata?.subFields?.map((field => ({
+        title: field.displayName[selectedLang],
+        sortKey: field.key,
+    })))
+
+    if (isDisabled) return fieldHeaders
+
+    // Add empty heaader for the X button
+    return fieldHeaders.concat({
+        title: "",
+        sortKey: ""
+    })
 }

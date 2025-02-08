@@ -34,6 +34,8 @@ export interface SimpleTableProps<T extends Record<string, any>> {
     isLoading?: boolean
     renderLoadingTableRow?: RowLoadingRenderer
     containerStyle?: React.CSSProperties
+
+    rowStyle?: React.CSSProperties
 }
 
 const DEFAULT_CONTAINER_STYLE: CSSProperties = {
@@ -52,6 +54,7 @@ const SimpleTable = <T extends Record<string, any>>({
     rowData,
     renderHeader,
     renderTableRow,
+    rowStyle,
     numLoaderRows = PEOPLE_PER_PAGE,
     isLoading = false,
     containerStyle = DEFAULT_CONTAINER_STYLE,
@@ -70,7 +73,7 @@ const SimpleTable = <T extends Record<string, any>>({
             return new Array(numLoaderRows)
                 .fill(0)
                 .map((_, i) => (
-                    <StyledTableRow key={`row-${i}`}>
+                    <StyledTableRow key={`row-${i}`} style={rowStyle}>
                         {renderLoadingTableRow(renderedHeaders.length, selectedLang)}
                     </StyledTableRow>
                 ))
@@ -78,7 +81,7 @@ const SimpleTable = <T extends Record<string, any>>({
 
         if (!sortedData || !rowData) return null
         return sortedData.map((patient) => (
-            <StyledTableRow key={patient._id}>
+            <StyledTableRow key={patient._id} style={rowStyle}>
                 {renderTableRow(rowData, patient, selectedLang)}
             </StyledTableRow>
         ))
@@ -89,7 +92,7 @@ const SimpleTable = <T extends Record<string, any>>({
             <TableContainer component={Paper} style={containerStyle}>
                 <MaterialUITable stickyHeader className="table">
                     <TableHead>
-                        <TableRow>{renderedHeaders}</TableRow>
+                        <TableRow style={rowStyle}>{renderedHeaders}</TableRow>
                     </TableHead>
                     <TableBody className="table-body">{renderTableBody()}</TableBody>
                 </MaterialUITable>
