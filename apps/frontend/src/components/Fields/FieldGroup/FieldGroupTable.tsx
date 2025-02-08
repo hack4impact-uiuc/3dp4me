@@ -18,7 +18,6 @@ import StepField from '../../StepField/StepField'
 import { FieldGroupListTableProps, getCompleteSubFieldKey, getKeyBase } from './FieldGroupHelpers'
 import { getTableData, getTableHeaders, HasGroupNumber, RENDER_PLUS_ICON } from './TableHelpers'
 
-// TODO: TEST CHROME
 const CellEditContainer = styled(StyledTableCell)`
     padding: 5px;
 
@@ -123,7 +122,7 @@ const FieldGroupTable = ({
     const tableColumnMetadata = useMemo(
         () =>
             metadata?.subFields?.map((field) => ({
-                id: field.key, // TODO: Need to index further?
+                id: field.key, 
                 dataType: field.fieldType,
             })),
         [metadata]
