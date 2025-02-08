@@ -28,11 +28,11 @@ const TextField = <T extends string>({
 
     return (
         <div>
-            <h3>{displayName}</h3>
+            <h3 className='text-title'>{displayName}</h3>
             <Text
                 type={type}
                 disabled={isDisabled}
-                className={`${inputClassName} ${className}`}
+                className={`${inputClassName} ${className} text-value`}
                 variant="outlined"
                 onChange={sendChanges}
                 value={value}

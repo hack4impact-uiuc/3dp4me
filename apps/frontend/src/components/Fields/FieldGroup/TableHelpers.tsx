@@ -6,7 +6,9 @@ import AddIcon from '@material-ui/icons/Add';
 
 export const RENDER_PLUS_ICON = "RENDER_PLUS_ICON"
 
-export function getTableData(value: any, isDisabled: boolean) {
+export type HasGroupNumber<T> = T & { groupNum: number }
+
+export function getTableData(value: any, isDisabled: boolean): HasGroupNumber<any>[] {
     let data = []
     if (Array.isArray(value)) {
         data = value.map(addGroupNumberToTableRowData)
@@ -20,7 +22,7 @@ export function getTableData(value: any, isDisabled: boolean) {
     return data.concat([RENDER_PLUS_ICON])
 }
 
-function addGroupNumberToTableRowData(data: any, idx: number) {
+function addGroupNumberToTableRowData<T>(data: T, idx: number): HasGroupNumber<T> {
     if (typeof data !== "object")
         throw new Error(`Invalid value type ${data} at index ${idx}`)
 

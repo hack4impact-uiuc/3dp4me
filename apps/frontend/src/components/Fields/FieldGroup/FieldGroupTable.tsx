@@ -12,8 +12,55 @@ import { ColumnMetadata, defaultTableHeaderRenderer, defaultTableRowRenderer } f
 import { StyledTableCell } from '../../SimpleTable/SimpleTable.style'
 import { TableCell } from '@material-ui/core'
 import { useMemo } from 'react'
-import { getTableData, getTableHeaders, RENDER_PLUS_ICON } from './TableHelpers'
+import { getTableData, getTableHeaders, HasGroupNumber, RENDER_PLUS_ICON } from './TableHelpers'
 import LanguageInput from '../../LanguageInput/LanguageInput'
+import StepField from '../../StepField/StepField'
+import styled from 'styled-components'
+
+const CellEditContainer = styled(StyledTableCell)`
+    padding: 0px;
+
+    .active-input {
+        background: none;
+    }
+
+    // Remove titles
+    .text-title {
+        display:none;
+    }
+
+    .date-title {
+        display: none;
+    }
+
+    // Take full width for text
+    .MuiTextField-root {
+        width: 100%;
+    }
+
+    // Take full width for date picker
+    .react-datepicker-wrapper {
+        width: 100%;
+    }
+
+    .date-value {
+        width: 100%;
+    }
+
+    // Prevent border boxes for text
+    .MuiInputBase-root {
+        fieldset {
+            border: 0;
+        }
+    }
+
+    // Prevent border boxes for date
+    .react-datepicker__input-container {
+        input {
+            border: 0;
+        }
+    }
+`
 
 
 export interface FieldGroupProps {
@@ -45,7 +92,6 @@ const FieldGroupTable = ({
     const [translations, selectedLang] = useTranslations()
 
     const getNumFields = () => value?.length ?? 0
-    const getKeyBase = (index: number) => `${metadata.key}.${index}`
 
     const tableData = useMemo(() => {
         return getTableData(value, isDisabled)
@@ -90,11 +136,33 @@ const FieldGroupTable = ({
         handleSimpleUpdate(metadata.key, newData)
     }
 
+    const onSimpleUpdate = (k: string, v: any, i: number) => {
+        handleSimpleUpdate(getCompleteSubFieldKey(i, k), v)
+    }
+
+    const onFileUpload = (k: string, v: any, i: number) => {
+        handleFileUpload(getCompleteSubFieldKey(i, k), v)
+    }
+
+    const onFileDownload = (k: string, v: any, i: number) => {
+        handleFileDownload(getCompleteSubFieldKey(i, k), v)
+    }
+
+    const onFileDelete = (k: string, v: any, i: number) => {
+        handleFileDelete(getCompleteSubFieldKey(i, k), v)
+    }
+
+    const getKeyBase = (index: number) => `${metadata.key}.${index}`
+
+    const getCompleteSubFieldKey = (index: number, subfieldKey: string) =>
+        `${getKeyBase(index)}.${subfieldKey}`
+
     const tableRowRenderer = <T extends Record<string, any>>(
         rowData: ColumnMetadata<T>[],
         itemData: T,
         selectedLang: Language
     ) =>  {
+        // Only if this is the last row, render the plus icon
         if (itemData as any === RENDER_PLUS_ICON) {
             const numCols = (metadata?.subFields?.length || 1) + 1
             return (
@@ -104,11 +172,33 @@ const FieldGroupTable = ({
             )
         }
 
-        // TODO: If editing, this needs to change
-        // TODO: Change height
-        const cols = defaultTableRowRenderer(rowData, itemData, selectedLang)
-        if (isDisabled) return cols
+        const cols = metadata?.subFields?.map((field) => {
+            const rowNumber =  (field as HasGroupNumber<any>).groupNum
 
+            return (
+                // <div key={`${getCompleteSubFieldKey(index, field.key)}.${index}`}>
+                // TOODO: give a key
+                <CellEditContainer>
+                    <StepField
+                        displayName={""} // No display name since the header already has one
+                        metadata={field}
+                        value={value ? itemData[field.key] : null}
+                        key={field.key}
+                        isDisabled={isDisabled}
+                        patientId={patientId}
+                        stepKey={stepKey}
+                        fieldPathPrefix={"TODO"}
+                        handleSimpleUpdate={(k, v) => onSimpleUpdate(k, v, rowNumber)}
+                        handleFileDownload={(k, v) => onFileDownload(k, v, rowNumber)}
+                        handleFileUpload={(k, v) => onFileUpload(k, v, rowNumber)}
+                        handleFileDelete={(k, v) => onFileDelete(k, v, rowNumber)}
+                    />
+                </CellEditContainer>
+            )
+        })
+        // defaultTableRowRenderer(rowData, itemData, selectedLang)
+
+        // Adds the delete button
         cols.push(
             <StyledTableCell>
                 <img
@@ -125,18 +215,21 @@ const FieldGroupTable = ({
     }
 
     return (
-        <SimpleTable<any>
-            data={tableData}
-            headers={tableHeaders}
-            rowData={tableColumnMetadata}
-            renderHeader={defaultTableHeaderRenderer}
-            renderTableRow={tableRowRenderer}
-            rowStyle={{ height: '50px' }}
-            containerStyle={{ 
-                marginTop: '6px', 
-                width: 'calc(95vw - 240px - 50px)', // 95 - sidebar width - left padding
-            }}
-        />
+        <>
+            <h3 key={`${metadata.key}-table-title`}>{metadata.displayName[selectedLang]}</h3>
+            <SimpleTable<any>
+                data={tableData}
+                headers={tableHeaders}
+                rowData={tableColumnMetadata}
+                renderHeader={defaultTableHeaderRenderer}
+                renderTableRow={isDisabled ? defaultTableRowRenderer : tableRowRenderer}
+                rowStyle={{ height: '50px' }}
+                containerStyle={{ 
+                    marginTop: '6px', 
+                    width: 'calc(95vw - 240px - 50px)', // 95 - sidebar width - left padding
+                }}
+            />
+        </>
     )
 }
 
