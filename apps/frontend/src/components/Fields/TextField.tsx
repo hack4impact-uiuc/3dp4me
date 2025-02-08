@@ -28,7 +28,7 @@ const TextField = <T extends string>({
 
     return (
         <div>
-            <h3 className='text-title'>{displayName}</h3>
+            <h3 className="text-title">{displayName}</h3>
             <Text
                 type={type}
                 disabled={isDisabled}

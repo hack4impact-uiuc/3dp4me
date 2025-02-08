@@ -1,4 +1,4 @@
-import { Field, FieldType } from "@3dp4me/types";
+import { Field, FieldType } from '@3dp4me/types'
 
 export interface FieldGroupListTableProps {
     isDisabled: boolean
@@ -16,9 +16,7 @@ export interface FieldGroupListTableProps {
 }
 
 export function canFieldGroupBeDisplayedInTable(metadata: Field) {
-    const invalidSubfield = metadata.subFields.find((field) => {
-        return !canFieldBeDisplayedInTable(field)
-    })
+    const invalidSubfield = metadata.subFields.find((field) => !canFieldBeDisplayedInTable(field))
 
     return invalidSubfield === undefined
 }

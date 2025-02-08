@@ -1,23 +1,22 @@
 /* eslint import/no-cycle: "off" */
 // Unfortunately, there has to be an import cycle, because this is by nature, recursive
-import { Field, Language } from '@3dp4me/types'
-import Button from '@material-ui/core/Button'
-import _ from 'lodash'
-import swal from 'sweetalert'
-import XIcon from '../../../assets/x-icon.png'
-import AddIcon from '@material-ui/icons/Add';
-import { useTranslations } from '../../../hooks/useTranslations'
-import SimpleTable from '../../SimpleTable/SimpleTable'
-import { ColumnMetadata, defaultTableHeaderRenderer, defaultTableRowRenderer } from '../../../utils/table-renderers'
-import { StyledTableCell } from '../../SimpleTable/SimpleTable.style'
-import { TableCell } from '@material-ui/core'
+import { Language } from '@3dp4me/types'
+import AddIcon from '@material-ui/icons/Add'
 import { useMemo } from 'react'
-import { getTableData, getTableHeaders, HasGroupNumber, RENDER_PLUS_ICON } from './TableHelpers'
-import LanguageInput from '../../LanguageInput/LanguageInput'
-import StepField from '../../StepField/StepField'
 import styled from 'styled-components'
+
+import XIcon from '../../../assets/x-icon.png'
+import { useTranslations } from '../../../hooks/useTranslations'
+import {
+    ColumnMetadata,
+    defaultTableHeaderRenderer,
+    defaultTableRowRenderer,
+} from '../../../utils/table-renderers'
+import SimpleTable from '../../SimpleTable/SimpleTable'
+import { StyledTableCell } from '../../SimpleTable/SimpleTable.style'
+import StepField from '../../StepField/StepField'
 import { FieldGroupListTableProps, getCompleteSubFieldKey, getKeyBase } from './FieldGroupHelpers'
-import { resolveObjPath } from '../../../utils/object'
+import { getTableData, getTableHeaders, HasGroupNumber, RENDER_PLUS_ICON } from './TableHelpers'
 
 // TODO: TEST CHROME
 const CellEditContainer = styled(StyledTableCell)`
@@ -30,10 +29,9 @@ const CellEditContainer = styled(StyledTableCell)`
         margin: 0;
     }
 
-    input[type=number] {
+    input[type='number'] {
         -moz-appearance: textfield;
     }
-
 
     // Remove constraints from text area
     .text-area-wrapper {
@@ -54,7 +52,7 @@ const CellEditContainer = styled(StyledTableCell)`
 
     // Remove titles
     .text-title {
-        display:none;
+        display: none;
     }
 
     .date-title {
@@ -99,7 +97,6 @@ const CellEditContainer = styled(StyledTableCell)`
     }
 `
 
-
 const FieldGroupTable = ({
     isDisabled,
     onSimpleUpdate,
@@ -116,29 +113,29 @@ const FieldGroupTable = ({
 }: FieldGroupListTableProps) => {
     const [translations, selectedLang] = useTranslations()
 
-    const tableData = useMemo(() => {
-        return getTableData(value, isDisabled)
-    }, [value, isDisabled])
+    const tableData = useMemo(() => getTableData(value, isDisabled), [value, isDisabled])
 
-    const tableHeaders = useMemo(() => {
-        return getTableHeaders(metadata, selectedLang, isDisabled)
-    }, [metadata, selectedLang, isDisabled])
+    const tableHeaders = useMemo(
+        () => getTableHeaders(metadata, selectedLang, isDisabled),
+        [metadata, selectedLang, isDisabled]
+    )
 
-    const tableColumnMetadata = useMemo(() => {
-        return metadata?.subFields?.map((field => ({
-            id: field.key, // TODO: Need to index further?
-            dataType: field.fieldType,
-        }))) 
-    }, [metadata])
-
+    const tableColumnMetadata = useMemo(
+        () =>
+            metadata?.subFields?.map((field) => ({
+                id: field.key, // TODO: Need to index further?
+                dataType: field.fieldType,
+            })),
+        [metadata]
+    )
 
     const tableRowRenderer = <T extends Record<string, any>>(
         rowData: ColumnMetadata<T>[],
         itemData: T,
-        selectedLang: Language
-    ) =>  {
+        lang: Language
+    ) => {
         // Only if this is the last row, render the plus icon
-        if (itemData as any === RENDER_PLUS_ICON) {
+        if ((itemData as any) === RENDER_PLUS_ICON) {
             const numCols = (metadata?.subFields?.length || 1) + 1
             return (
                 <StyledTableCell colSpan={numCols} onClick={onAddGroup}>
@@ -147,14 +144,18 @@ const FieldGroupTable = ({
             )
         }
 
-        const rowNumber =  (itemData as HasGroupNumber<any>).groupNum
+        const rowNumber = (itemData as HasGroupNumber<any>).groupNum
         const cols = rowData.map((field, i) => {
-            const fieldKey = `${fieldPathPrefix}${getCompleteSubFieldKey(metadata, rowNumber, field.id)}`
+            const fieldKey = `${fieldPathPrefix}${getCompleteSubFieldKey(
+                metadata,
+                rowNumber,
+                field.id
+            )}`
 
             return (
                 <CellEditContainer key={fieldKey}>
                     <StepField
-                        displayName={""} // No display name since the header already has one
+                        displayName={''} // No display name since the header already has one
                         metadata={metadata.subFields[i]}
                         value={itemData[field.id]}
                         key={field.id}
@@ -177,9 +178,9 @@ const FieldGroupTable = ({
                 <img
                     src={XIcon}
                     alt={translations.components.button.discard.title}
-                    className={`xicon-base xicon-${selectedLang}`}
+                    className={`xicon-base xicon-${lang}`}
                     onClick={() => onRemoveGroup(itemData.groupNum)}
-                    style={{ float: selectedLang === Language.EN ? "right" : "left" }}
+                    style={{ float: lang === Language.EN ? 'right' : 'left' }}
                 />
             </StyledTableCell>
         )
@@ -197,8 +198,8 @@ const FieldGroupTable = ({
                 renderHeader={defaultTableHeaderRenderer}
                 renderTableRow={isDisabled ? defaultTableRowRenderer : tableRowRenderer}
                 rowStyle={{ height: '50px' }}
-                containerStyle={{ 
-                    marginTop: '6px', 
+                containerStyle={{
+                    marginTop: '6px',
                     width: 'calc(95vw - 240px - 50px)', // 95 - sidebar width - left padding
                 }}
             />

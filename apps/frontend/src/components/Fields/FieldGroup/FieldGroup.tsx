@@ -4,10 +4,17 @@ import '../Fields.scss'
 
 import { Field } from '@3dp4me/types'
 import _ from 'lodash'
-import FieldGroupTable from './FieldGroupTable'
-import FieldGroupList from './FieldGroupList'
-import { canFieldGroupBeDisplayedInTable, getCompleteSubFieldKey, getKeyBase, getNumFields } from './FieldGroupHelpers'
+import swal from 'sweetalert'
+
 import { useTranslations } from '../../../hooks/useTranslations'
+import {
+    canFieldGroupBeDisplayedInTable,
+    getCompleteSubFieldKey,
+    getKeyBase,
+    getNumFields,
+} from './FieldGroupHelpers'
+import FieldGroupList from './FieldGroupList'
+import FieldGroupTable from './FieldGroupTable'
 
 export enum DisplayMode {
     Table = 'table',
@@ -75,10 +82,27 @@ const FieldGroup = (props: FieldGroupProps) => {
 
     return (
         <div className="field-container">
-            { canFieldGroupBeDisplayedInTable(props.metadata) ? 
-                <FieldGroupTable {...props} onAddGroup={onAddGroup} onRemoveGroup={onRemoveGroup} onFileDelete={onFileDelete} onFileDownload={onFileDownload} onFileUpload={onFileUpload} onSimpleUpdate={onSimpleUpdate}/> : 
-                <FieldGroupList {...props} onAddGroup={onAddGroup} onRemoveGroup={onRemoveGroup} onFileDelete={onFileDelete} onFileDownload={onFileDownload} onFileUpload={onFileUpload} onSimpleUpdate={onSimpleUpdate}/> 
-            }
+            {canFieldGroupBeDisplayedInTable(props.metadata) ? (
+                <FieldGroupTable
+                    {...props}
+                    onAddGroup={onAddGroup}
+                    onRemoveGroup={onRemoveGroup}
+                    onFileDelete={onFileDelete}
+                    onFileDownload={onFileDownload}
+                    onFileUpload={onFileUpload}
+                    onSimpleUpdate={onSimpleUpdate}
+                />
+            ) : (
+                <FieldGroupList
+                    {...props}
+                    onAddGroup={onAddGroup}
+                    onRemoveGroup={onRemoveGroup}
+                    onFileDelete={onFileDelete}
+                    onFileDownload={onFileDownload}
+                    onFileUpload={onFileUpload}
+                    onSimpleUpdate={onSimpleUpdate}
+                />
+            )}
         </div>
     )
 }

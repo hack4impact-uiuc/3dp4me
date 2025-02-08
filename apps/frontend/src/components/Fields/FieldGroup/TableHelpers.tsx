@@ -1,10 +1,8 @@
-import { Field, Language } from "@3dp4me/types"
-import { ColumnMetadata, Header } from "../../../utils/table-renderers"
-import { StyledTableCell } from '../../SimpleTable/SimpleTable.style';
-import XIcon from '../../../assets/x-icon.png'
-import AddIcon from '@material-ui/icons/Add';
+import { Field, Language } from '@3dp4me/types'
 
-export const RENDER_PLUS_ICON = "RENDER_PLUS_ICON"
+import { Header } from '../../../utils/table-renderers'
+
+export const RENDER_PLUS_ICON = 'RENDER_PLUS_ICON'
 
 export type HasGroupNumber<T> = T & { groupNum: number }
 
@@ -23,8 +21,7 @@ export function getTableData(value: any, isDisabled: boolean): HasGroupNumber<an
 }
 
 function addGroupNumberToTableRowData<T>(data: T, idx: number): HasGroupNumber<T> {
-    if (typeof data !== "object")
-        throw new Error(`Invalid value type ${data} at index ${idx}`)
+    if (typeof data !== 'object') throw new Error(`Invalid value type ${data} at index ${idx}`)
 
     return {
         ...data,
@@ -32,17 +29,21 @@ function addGroupNumberToTableRowData<T>(data: T, idx: number): HasGroupNumber<T
     }
 }
 
-export function getTableHeaders(metadata: Field, selectedLang: Language, isDisabled: boolean): Header<any>[] {
-    const fieldHeaders = metadata?.subFields?.map((field => ({
+export function getTableHeaders(
+    metadata: Field,
+    selectedLang: Language,
+    isDisabled: boolean
+): Header<any>[] {
+    const fieldHeaders = metadata?.subFields?.map((field) => ({
         title: field.displayName[selectedLang],
         sortKey: field.key,
-    })))
+    }))
 
     if (isDisabled) return fieldHeaders
 
     // Add empty heaader for the X button
     return fieldHeaders.concat({
-        title: "",
-        sortKey: ""
+        title: '',
+        sortKey: '',
     })
 }

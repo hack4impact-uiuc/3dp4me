@@ -21,7 +21,6 @@ import {
     RowRenderer,
 } from '../../utils/table-renderers'
 import { StyledTableRow } from './SimpleTable.style'
-import styled from 'styled-components'
 
 export interface SimpleTableProps<T extends Record<string, any>> {
     data: Nullish<T[]>
@@ -42,7 +41,7 @@ const DEFAULT_CONTAINER_STYLE: CSSProperties = {
     height: '80vh',
     width: '90%',
     margin: 'auto',
-    marginTop: '6px'
+    marginTop: '6px',
 }
 
 /**
@@ -70,13 +69,11 @@ const SimpleTable = <T extends Record<string, any>>({
 
     const renderTableBody = () => {
         if (isLoading) {
-            return new Array(numLoaderRows)
-                .fill(0)
-                .map((_, i) => (
-                    <StyledTableRow key={`row-${i}`} style={rowStyle}>
-                        {renderLoadingTableRow(renderedHeaders.length, selectedLang)}
-                    </StyledTableRow>
-                ))
+            return new Array(numLoaderRows).fill(0).map((_, i) => (
+                <StyledTableRow key={`row-${i}`} style={rowStyle}>
+                    {renderLoadingTableRow(renderedHeaders.length, selectedLang)}
+                </StyledTableRow>
+            ))
         }
 
         if (!sortedData || !rowData) return null
