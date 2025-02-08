@@ -16,6 +16,8 @@ import { getTableData, getTableHeaders, HasGroupNumber, RENDER_PLUS_ICON } from 
 import LanguageInput from '../../LanguageInput/LanguageInput'
 import StepField from '../../StepField/StepField'
 import styled from 'styled-components'
+import { FieldGroupListTableProps, getCompleteSubFieldKey, getKeyBase } from './FieldGroupHelpers'
+import { resolveObjPath } from '../../../utils/object'
 
 // TODO: TEST CHROME
 const CellEditContainer = styled(StyledTableCell)`
@@ -98,35 +100,21 @@ const CellEditContainer = styled(StyledTableCell)`
 `
 
 
-export interface FieldGroupProps {
-    isDisabled: boolean
-    handleSimpleUpdate: (field: string, value: any) => void
-    handleFileDownload: (field: string, value: any) => void
-    handleFileUpload: (field: string, value: any) => void
-    handleFileDelete: (field: string, value: any) => void
-    stepKey?: string
-    fieldPathPrefix?: string
-    patientId?: string
-    value?: any
-    metadata: Field
-}
-
 const FieldGroupTable = ({
     isDisabled,
-    handleSimpleUpdate,
-    handleFileDownload,
-    handleFileUpload,
-    handleFileDelete,
+    onSimpleUpdate,
+    onFileDownload,
+    onFileUpload,
+    onFileDelete,
+    onAddGroup,
+    onRemoveGroup,
     metadata,
     fieldPathPrefix = '',
     stepKey = '',
     patientId = '',
     value = {},
-}: FieldGroupProps) => {
-    // TODO: Need to use field path prefix
+}: FieldGroupListTableProps) => {
     const [translations, selectedLang] = useTranslations()
-
-    const getNumFields = () => value?.length ?? 0
 
     const tableData = useMemo(() => {
         return getTableData(value, isDisabled)
@@ -143,54 +131,6 @@ const FieldGroupTable = ({
         }))) 
     }, [metadata])
 
-    const onAddGroup = () => {
-        handleSimpleUpdate(getKeyBase(getNumFields()), {})
-    }
-
-    // TODO: Pull these up into the common component
-    const onRemoveGroup = (groupNumber: number) => {
-        if (isDisabled) return
-
-        swal({
-            title: translations.components.button.discard.question,
-            text: translations.components.button.discard.warningMessage,
-            icon: 'warning',
-            dangerMode: true,
-            buttons: [
-                translations.components.button.discard.cancelButton,
-                translations.components.button.discard.confirmButton,
-            ],
-        }).then((isDeleteConfirmed) => {
-            if (isDeleteConfirmed) doRemoveGroup(groupNumber)
-        })
-    }
-
-    const doRemoveGroup = (groupNumber: number) => {
-        const newData = _.cloneDeep(value)
-        newData.splice(groupNumber, 1)
-        handleSimpleUpdate(metadata.key, newData)
-    }
-
-    const onSimpleUpdate = (k: string, v: any, i: number) => {
-        handleSimpleUpdate(getCompleteSubFieldKey(i, k), v)
-    }
-
-    const onFileUpload = (k: string, v: any, i: number) => {
-        handleFileUpload(getCompleteSubFieldKey(i, k), v)
-    }
-
-    const onFileDownload = (k: string, v: any, i: number) => {
-        handleFileDownload(getCompleteSubFieldKey(i, k), v)
-    }
-
-    const onFileDelete = (k: string, v: any, i: number) => {
-        handleFileDelete(getCompleteSubFieldKey(i, k), v)
-    }
-
-    const getKeyBase = (index: number) => `${metadata.key}.${index}`
-
-    const getCompleteSubFieldKey = (index: number, subfieldKey: string) =>
-        `${getKeyBase(index)}.${subfieldKey}`
 
     const tableRowRenderer = <T extends Record<string, any>>(
         rowData: ColumnMetadata<T>[],
@@ -201,28 +141,27 @@ const FieldGroupTable = ({
         if (itemData as any === RENDER_PLUS_ICON) {
             const numCols = (metadata?.subFields?.length || 1) + 1
             return (
-                <StyledTableCell colSpan={numCols}>
+                <StyledTableCell colSpan={numCols} onClick={onAddGroup}>
                     <AddIcon />
                 </StyledTableCell>
             )
         }
 
-        const cols = metadata?.subFields?.map((field) => {
-            const rowNumber =  (field as HasGroupNumber<any>).groupNum
+        const rowNumber =  (itemData as HasGroupNumber<any>).groupNum
+        const cols = rowData.map((field, i) => {
+            const fieldKey = `${fieldPathPrefix}${getCompleteSubFieldKey(metadata, rowNumber, field.id)}`
 
             return (
-                // <div key={`${getCompleteSubFieldKey(index, field.key)}.${index}`}>
-                // TOODO: give a key
-                <CellEditContainer>
+                <CellEditContainer key={fieldKey}>
                     <StepField
                         displayName={""} // No display name since the header already has one
-                        metadata={field}
-                        value={value ? itemData[field.key] : null}
-                        key={field.key}
+                        metadata={metadata.subFields[i]}
+                        value={itemData[field.id]}
+                        key={field.id}
                         isDisabled={isDisabled}
                         patientId={patientId}
                         stepKey={stepKey}
-                        fieldPathPrefix={"TODO"}
+                        fieldPathPrefix={getKeyBase(metadata, rowNumber)}
                         handleSimpleUpdate={(k, v) => onSimpleUpdate(k, v, rowNumber)}
                         handleFileDownload={(k, v) => onFileDownload(k, v, rowNumber)}
                         handleFileUpload={(k, v) => onFileUpload(k, v, rowNumber)}
@@ -231,7 +170,6 @@ const FieldGroupTable = ({
                 </CellEditContainer>
             )
         })
-        // defaultTableRowRenderer(rowData, itemData, selectedLang)
 
         // Adds the delete button
         cols.push(
