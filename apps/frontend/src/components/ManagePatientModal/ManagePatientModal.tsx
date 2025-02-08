@@ -123,7 +123,7 @@ const ManagePatientModal = ({
                         fieldId="profilePicture"
                         patientId={patientData._id}
                         handleFileUpload={onProfileUpload}
-                        fieldPathPrefix=''
+                        fieldPathPrefix=""
                         stepKey={ReservedStep.Root}
                         allowMultiplePhotos={false}
                     />

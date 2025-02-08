@@ -25,12 +25,12 @@ const DateField = ({ displayName, isDisabled, fieldId, value, onChange }: DateFi
 
     return (
         <div>
-            <h3>{displayName}</h3>
+            <h3 className="date-title">{displayName}</h3>
             <DatePicker
                 selected={value ? new Date(Date.parse(value)) : null}
                 disabled={isDisabled}
                 locale={selectedLang}
-                className={className}
+                className={`${className} date-value`}
                 onChange={sendChanges}
             />
         </div>

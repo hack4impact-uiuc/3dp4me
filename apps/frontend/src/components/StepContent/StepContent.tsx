@@ -15,9 +15,9 @@ import { deleteFile, downloadFile, uploadFile } from '../../api/api'
 import { useErrorWrap } from '../../hooks/useErrorWrap'
 import { useTranslations } from '../../hooks/useTranslations'
 import { formatDate } from '../../utils/date'
+import { resolveMixedObjPath } from '../../utils/object'
 import BottomBar from '../BottomBar/BottomBar'
 import StepField from '../StepField/StepField'
-import { resolveMixedObjPath } from '../../utils/object'
 
 // TODO: Break this wayy down
 // TODO: Type step data?

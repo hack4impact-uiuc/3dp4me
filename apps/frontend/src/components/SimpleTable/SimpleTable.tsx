@@ -7,7 +7,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import React, { useMemo } from 'react'
+import React, { CSSProperties, useMemo } from 'react'
 
 import useSortableData from '../../hooks/useSortableData'
 import { useTranslations } from '../../hooks/useTranslations'
@@ -32,6 +32,16 @@ export interface SimpleTableProps<T extends Record<string, any>> {
     numLoaderRows?: number
     isLoading?: boolean
     renderLoadingTableRow?: RowLoadingRenderer
+    containerStyle?: React.CSSProperties
+
+    rowStyle?: React.CSSProperties
+}
+
+const DEFAULT_CONTAINER_STYLE: CSSProperties = {
+    height: '80vh',
+    width: '90%',
+    margin: 'auto',
+    marginTop: '6px',
 }
 
 /**
@@ -43,8 +53,10 @@ const SimpleTable = <T extends Record<string, any>>({
     rowData,
     renderHeader,
     renderTableRow,
+    rowStyle,
     numLoaderRows = PEOPLE_PER_PAGE,
     isLoading = false,
+    containerStyle = DEFAULT_CONTAINER_STYLE,
     renderLoadingTableRow = defaultTableRowLoadingRenderer,
 }: SimpleTableProps<T>) => {
     const selectedLang = useTranslations()[1]
@@ -57,29 +69,27 @@ const SimpleTable = <T extends Record<string, any>>({
 
     const renderTableBody = () => {
         if (isLoading) {
-            return new Array(numLoaderRows)
-                .fill(0)
-                .map((_, i) => (
-                    <StyledTableRow key={`row-${i}`}>
-                        {renderLoadingTableRow(renderedHeaders.length, selectedLang)}
-                    </StyledTableRow>
-                ))
+            return new Array(numLoaderRows).fill(0).map((_, i) => (
+                <StyledTableRow key={`row-${i}`} style={rowStyle}>
+                    {renderLoadingTableRow(renderedHeaders.length, selectedLang)}
+                </StyledTableRow>
+            ))
         }
 
         if (!sortedData || !rowData) return null
         return sortedData.map((patient) => (
-            <StyledTableRow key={patient._id}>
+            <StyledTableRow key={patient._id} style={rowStyle}>
                 {renderTableRow(rowData, patient, selectedLang)}
             </StyledTableRow>
         ))
     }
 
     return (
-        <div className="table-container">
-            <TableContainer className="table-container" component={Paper}>
+        <div>
+            <TableContainer component={Paper} style={containerStyle}>
                 <MaterialUITable stickyHeader className="table">
                     <TableHead>
-                        <TableRow>{renderedHeaders}</TableRow>
+                        <TableRow style={rowStyle}>{renderedHeaders}</TableRow>
                     </TableHead>
                     <TableBody className="table-body">{renderTableBody()}</TableBody>
                 </MaterialUITable>
