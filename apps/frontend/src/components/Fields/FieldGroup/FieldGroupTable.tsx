@@ -17,9 +17,33 @@ import LanguageInput from '../../LanguageInput/LanguageInput'
 import StepField from '../../StepField/StepField'
 import styled from 'styled-components'
 
+// TODO: TEST CHROME
 const CellEditContainer = styled(StyledTableCell)`
     padding: 0px;
 
+    // Prevent arrows on number input
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+
+    // Remove constraints from text area
+    .text-area-wrapper {
+        width: unset;
+        margin-bottom: unset;
+    }
+
+    .text-area-body {
+        min-height: 1em;
+    }
+
+    // Prevent inputs from blocking the table styling
     .active-input {
         background: none;
     }
