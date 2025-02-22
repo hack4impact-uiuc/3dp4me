@@ -1,7 +1,7 @@
 import { Field, FieldType, ReservedStep, RootStep, Step, StepStatus } from '@3dp4me/types'
 import _ from 'lodash'
 import log from 'loglevel'
-import mongoose, { SchemaDefinitionProperty } from 'mongoose'
+import mongoose, { SchemaDefinitionProperty, ObjectId } from 'mongoose'
 import encrypt from 'mongoose-encryption'
 
 import { StepModel } from '../models/Metadata'
@@ -12,6 +12,8 @@ import { signatureSchema } from '../schemas/signatureSchema'
  * Initalizes and connects to the DB. Should be called at app startup.
  */
 export const initDB = (callback?: () => void) => {
+    console.log(new mongoose.Types.ObjectId())
+    console.log(new mongoose.Types.ObjectId())
     mongoose.connect(process.env.DB_URI!, {
         // useNewUrlParser: true,
         // useUnifiedTopology: true,
@@ -134,6 +136,8 @@ export const generateFieldSchema = (field: Field): SchemaDefinitionProperty | nu
             return null
         case FieldType.MAP:
             return getMapSchema()
+        case FieldType.TAGS:
+            return getTagsSchema(field)
         default:
             log.error(`Unrecognized field type, ${field.fieldType}`)
             return null
@@ -154,6 +158,18 @@ const getDateSchema = () => ({
     type: Date,
     default: Date.now,
 })
+
+const getTagsSchema = (fieldMetadata: Field) => {
+    if (!fieldMetadata?.options?.length) {
+        throw new Error('tags must have options')
+    }
+
+    return {
+        type: [String],
+        default: [],
+    }
+}
+
 
 const getRadioButtonSchema = (fieldMetadata: Field) => {
     if (!fieldMetadata?.options?.length) {
