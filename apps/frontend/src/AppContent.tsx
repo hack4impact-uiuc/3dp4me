@@ -19,13 +19,23 @@ import PatientDetail from './pages/PatientDetail/PatientDetail'
 import Patients from './pages/Patients/Patients'
 import { ReducerActionType } from './store/Reducer'
 import { Context } from './store/Store'
-import { CognitoAttribute, Routes } from './utils/constants'
+import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
+import { ThemeProvider } from '@material-ui/styles'
+import { createTheme } from '@material-ui/core'
 
 interface AppContentProps {
     username: string
     userEmail: string
 }
+
+const arTheme = createTheme({
+    direction: 'rtl',
+})
+
+const enTheme = createTheme({
+    direction: 'ltr',
+})
 
 const AppContent = ({ username, userEmail }: AppContentProps) => {
     const errorWrap = useErrorWrap()
@@ -78,38 +88,40 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
             <LoadingIndicator />
             <Router>
                 <QueryParamProvider ReactRouterRoute={Route}>
-                    <Navbar username={username} userEmail={userEmail} />
+                    <ThemeProvider theme={selectedLang === LANGUAGES.AR ? arTheme : enTheme}>
+                        <Navbar username={username} userEmail={userEmail} />
 
-                    {/* Global error popup */}
-                    <ErrorModal
-                        message={state.error}
-                        isOpen={!!state.isErrorVisible}
-                        onClose={handleErrorModalClose}
-                    />
+                        {/* Global error popup */}
+                        <ErrorModal
+                            message={state.error}
+                            isOpen={!!state.isErrorVisible}
+                            onClose={handleErrorModalClose}
+                        />
 
-                    {/* Routes */}
-                    <div className={contentClassNames}>
-                        <Switch>
-                            <Route exact path={Routes.DASHBOARD}>
-                                <Dashboard />
-                            </Route>
-                            <Route exact path={Routes.ACCOUNT}>
-                                <AccountManagement />
-                            </Route>
-                            <Route exact path={Routes.PATIENTS}>
-                                <Patients />
-                            </Route>
-                            <Route exact path={Routes.DASHBOARD_MANAGEMENT}>
-                                <DashboardManagement />
-                            </Route>
-                            <Route exact path={`${Routes.PATIENT_2FA}/:patientId`}>
-                                <Patient2FA />
-                            </Route>
-                            <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
-                                <PatientDetail />
-                            </Route>
-                        </Switch>
-                    </div>
+                        {/* Routes */}
+                        <div className={contentClassNames}>
+                            <Switch>
+                                <Route exact path={Routes.DASHBOARD}>
+                                    <Dashboard />
+                                </Route>
+                                <Route exact path={Routes.ACCOUNT}>
+                                    <AccountManagement />
+                                </Route>
+                                <Route exact path={Routes.PATIENTS}>
+                                    <Patients />
+                                </Route>
+                                <Route exact path={Routes.DASHBOARD_MANAGEMENT}>
+                                    <DashboardManagement />
+                                </Route>
+                                <Route exact path={`${Routes.PATIENT_2FA}/:patientId`}>
+                                    <Patient2FA />
+                                </Route>
+                                <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
+                                    <PatientDetail />
+                                </Route>
+                            </Switch>
+                        </div>
+                    </ThemeProvider>
                 </QueryParamProvider>
             </Router>
         </div>

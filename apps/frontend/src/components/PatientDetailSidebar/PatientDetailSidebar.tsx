@@ -19,14 +19,6 @@ import { hasNotesForStep } from '../../utils/metadataUtils'
 import { getPatientName } from '../../utils/utils'
 import { ProfilePicture } from '../ProfilePicture/ProfilePicture'
 
-const arTheme = createTheme({
-    direction: 'rtl',
-})
-
-const enTheme = createTheme({
-    direction: 'ltr',
-})
-
 export interface PatientDetailSidebarProps<T extends Patient = Patient> {
     patientData: T
     onViewPatient: () => void
@@ -83,57 +75,55 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
     }
 
     return (
-        <ThemeProvider theme={selectedLang === LANGUAGES.AR ? arTheme : enTheme}>
-            <Drawer
-                className={selectedLang === LANGUAGES.EN ? 'drawer' : 'drawer-rtl'}
-                variant="permanent"
-                classes={{
-                    paper: 'drawer-paper',
-                }}
-            >
-                <Toolbar />
-                <div className="drawer-container">
-                    <div>
-                        <ProfilePicture patient={patientData} />
-                        <div className="drawer-text-section">
-                            <span className="drawer-text-label">
-                                {translations.components.sidebar.name}
-                            </span>{' '}
-                            <br />
-                            <span className="drawer-text">{getPatientName(patientData)}</span>
-                        </div>
-                        <div className="drawer-text-section">
-                            <span className="drawer-text-label">
-                                {translations.components.sidebar.orderID}
-                            </span>{' '}
-                            <br />
-                            <span className="drawer-text">{patientData?.orderId}</span>
-                        </div>
-                        <div className="drawer-text-section">
-                            <span className="drawer-text-label">
-                                {translations.components.sidebar.status}
-                            </span>{' '}
-                            <br />
-                            <span className="drawer-text">{patientData?.status}</span>
-                        </div>
+        <Drawer
+            className={selectedLang === LANGUAGES.EN ? 'drawer' : 'drawer-rtl'}
+            variant="permanent"
+            classes={{
+                paper: 'drawer-paper',
+            }}
+        >
+            <Toolbar />
+            <div className="drawer-container">
+                <div>
+                    <ProfilePicture patient={patientData} />
+                    <div className="drawer-text-section">
                         <span className="drawer-text-label">
-                            {translations.components.notes.title}
-                        </span>
-                        {generateNoteSidebar()}
+                            {translations.components.sidebar.name}
+                        </span>{' '}
+                        <br />
+                        <span className="drawer-text">{getPatientName(patientData)}</span>
                     </div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Button onClick={onViewPatient} className="manage-patient-button">
-                            {translations.components.button.managePatient}
-                        </Button>
+                    <div className="drawer-text-section">
+                        <span className="drawer-text-label">
+                            {translations.components.sidebar.orderID}
+                        </span>{' '}
+                        <br />
+                        <span className="drawer-text">{patientData?.orderId}</span>
                     </div>
+                    <div className="drawer-text-section">
+                        <span className="drawer-text-label">
+                            {translations.components.sidebar.status}
+                        </span>{' '}
+                        <br />
+                        <span className="drawer-text">{patientData?.status}</span>
+                    </div>
+                    <span className="drawer-text-label">
+                        {translations.components.notes.title}
+                    </span>
+                    {generateNoteSidebar()}
                 </div>
-            </Drawer>
-        </ThemeProvider>
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Button onClick={onViewPatient} className="manage-patient-button">
+                        {translations.components.button.managePatient}
+                    </Button>
+                </div>
+            </div>
+        </Drawer>
     )
 }
 
