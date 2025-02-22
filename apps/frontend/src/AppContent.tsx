@@ -21,21 +21,28 @@ import { ReducerActionType } from './store/Reducer'
 import { Context } from './store/Store'
 import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
-import { ThemeProvider } from '@material-ui/styles'
-import { createTheme } from '@material-ui/core'
+import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/styles';
+import { createTheme, adaptV4Theme } from '@mui/material';
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 interface AppContentProps {
     username: string
     userEmail: string
 }
 
-const arTheme = createTheme({
+const arTheme = createTheme(adaptV4Theme({
     direction: 'rtl',
-})
+}))
 
-const enTheme = createTheme({
+const enTheme = createTheme(adaptV4Theme({
     direction: 'ltr',
-})
+}))
 
 const AppContent = ({ username, userEmail }: AppContentProps) => {
     const errorWrap = useErrorWrap()
@@ -83,49 +90,51 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
     }
 
     return (
-        <div dir={selectedLang === Language.AR ? 'rtl' : 'ltr'}>
+        (<div dir={selectedLang === Language.AR ? 'rtl' : 'ltr'}>
             {/* Shown when making a network request */}
             <LoadingIndicator />
             <Router>
                 <QueryParamProvider ReactRouterRoute={Route}>
-                    <ThemeProvider theme={selectedLang === LANGUAGES.AR ? arTheme : enTheme}>
-                        <Navbar username={username} userEmail={userEmail} />
+                    <StyledEngineProvider injectFirst>
+                        <ThemeProvider theme={selectedLang === LANGUAGES.AR ? arTheme : enTheme}>
+                            <Navbar username={username} userEmail={userEmail} />
 
-                        {/* Global error popup */}
-                        <ErrorModal
-                            message={state.error}
-                            isOpen={!!state.isErrorVisible}
-                            onClose={handleErrorModalClose}
-                        />
+                            {/* Global error popup */}
+                            <ErrorModal
+                                message={state.error}
+                                isOpen={!!state.isErrorVisible}
+                                onClose={handleErrorModalClose}
+                            />
 
-                        {/* Routes */}
-                        <div className={contentClassNames}>
-                            <Switch>
-                                <Route exact path={Routes.DASHBOARD}>
-                                    <Dashboard />
-                                </Route>
-                                <Route exact path={Routes.ACCOUNT}>
-                                    <AccountManagement />
-                                </Route>
-                                <Route exact path={Routes.PATIENTS}>
-                                    <Patients />
-                                </Route>
-                                <Route exact path={Routes.DASHBOARD_MANAGEMENT}>
-                                    <DashboardManagement />
-                                </Route>
-                                <Route exact path={`${Routes.PATIENT_2FA}/:patientId`}>
-                                    <Patient2FA />
-                                </Route>
-                                <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
-                                    <PatientDetail />
-                                </Route>
-                            </Switch>
-                        </div>
-                    </ThemeProvider>
+                            {/* Routes */}
+                            <div className={contentClassNames}>
+                                <Switch>
+                                    <Route exact path={Routes.DASHBOARD}>
+                                        <Dashboard />
+                                    </Route>
+                                    <Route exact path={Routes.ACCOUNT}>
+                                        <AccountManagement />
+                                    </Route>
+                                    <Route exact path={Routes.PATIENTS}>
+                                        <Patients />
+                                    </Route>
+                                    <Route exact path={Routes.DASHBOARD_MANAGEMENT}>
+                                        <DashboardManagement />
+                                    </Route>
+                                    <Route exact path={`${Routes.PATIENT_2FA}/:patientId`}>
+                                        <Patient2FA />
+                                    </Route>
+                                    <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
+                                        <PatientDetail />
+                                    </Route>
+                                </Switch>
+                            </div>
+                        </ThemeProvider>
+                    </StyledEngineProvider>
                 </QueryParamProvider>
             </Router>
-        </div>
-    )
+        </div>)
+    );
 }
 
 export default AppContent

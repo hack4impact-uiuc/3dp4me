@@ -1,12 +1,12 @@
 import './SimpleTable.scss'
 
 import { Nullish } from '@3dp4me/types'
-import Paper from '@material-ui/core/Paper'
-import MaterialUITable from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
+import Paper from '@mui/material/Paper'
+import MaterialUITable from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
 import React, { CSSProperties, useMemo } from 'react'
 
 import useSortableData from '../../hooks/useSortableData'

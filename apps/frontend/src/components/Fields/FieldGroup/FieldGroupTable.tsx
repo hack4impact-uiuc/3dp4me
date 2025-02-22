@@ -1,7 +1,7 @@
 /* eslint import/no-cycle: "off" */
 // Unfortunately, there has to be an import cycle, because this is by nature, recursive
 import { Language } from '@3dp4me/types'
-import AddIcon from '@material-ui/icons/Add'
+import AddIcon from '@mui/icons-material/Add'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 

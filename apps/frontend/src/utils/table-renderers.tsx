@@ -1,7 +1,7 @@
 import { AccessLevel, FieldType, Language, Nullish, Path, Patient } from '@3dp4me/types'
-import IconButton from '@material-ui/core/IconButton'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
+import IconButton from '@mui/material/IconButton'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
 import React, { ReactNode } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { Link } from 'react-router-dom'
@@ -178,7 +178,7 @@ export const patientTableRowRenderer = (
     row.push(
         <StyledTableCell key="view-patient-data" className="cell" align="center">
             <Link className="table-view-link" to={link}>
-                <IconButton>
+                <IconButton size="large">
                     <img alt="status icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
                 {translations[selectedLang].components.table.view}
@@ -226,7 +226,7 @@ export const generateSelectableRenderer =
         // Add the edit button
         row.push(
             <StyledTableCell key="view-user-data" className="cell cell-right" align="center">
-                <IconButton onClick={() => onSelected(user)}>
+                <IconButton onClick={() => onSelected(user)} size="large">
                     <img alt="status icon view-icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
             </StyledTableCell>

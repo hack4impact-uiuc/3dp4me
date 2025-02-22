@@ -1,12 +1,12 @@
 import './ToggleButtons.scss'
 
 import { Nullish, Patient } from '@3dp4me/types'
-import IconButton from '@material-ui/core/IconButton'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import ToggleButton from '@material-ui/lab/ToggleButton'
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
+import IconButton from '@mui/material/IconButton'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import ToggleButton from '@mui/material/ToggleButton'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import React, { MouseEventHandler, useState } from 'react'
 
 import CheckIcon from '../../assets/check.svg'
@@ -137,7 +137,7 @@ const ToggleButtons = ({
     */
     if (metaData && width < RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH * metaData.length) {
         return (
-            <div className="toggle-buttons-wrapper-dropdown">
+            (<div className="toggle-buttons-wrapper-dropdown">
                 <div className="toggle-button-selector-dropdown">
                     {generateSelectedStepLabel()}
                     <IconButton
@@ -145,7 +145,7 @@ const ToggleButtons = ({
                         aria-haspopup="true"
                         onClick={handleClickSelector}
                         className="dropdown-icon"
-                    >
+                        size="large">
                         <ExpandMoreIcon />
                     </IconButton>
                     <Menu
@@ -158,8 +158,8 @@ const ToggleButtons = ({
                         {generateMenuItems()}
                     </Menu>
                 </div>
-            </div>
-        )
+            </div>)
+        );
     }
 
     return (

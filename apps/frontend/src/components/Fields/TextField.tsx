@@ -1,4 +1,4 @@
-import Text from '@material-ui/core/TextField'
+import Text from '@mui/material/TextField'
 import { ChangeEvent, HTMLInputTypeAttribute } from 'react'
 
 export interface TextFieldProps<T extends string> {

@@ -1,9 +1,9 @@
 import './Navbar.scss'
 
 import { Language, Nullish } from '@3dp4me/types'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import React, { MouseEventHandler, useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 

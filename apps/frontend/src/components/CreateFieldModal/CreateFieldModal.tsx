@@ -8,13 +8,13 @@ import {
     TranslatedString,
     Unsaved,
 } from '@3dp4me/types'
-import Button from '@material-ui/core/Button'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControl from '@material-ui/core/FormControl'
-import InputBase from '@material-ui/core/InputBase'
-import Modal from '@material-ui/core/Modal'
-import NativeSelect from '@material-ui/core/NativeSelect'
-import withStyles from '@material-ui/core/styles/withStyles'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControl from '@mui/material/FormControl'
+import InputBase from '@mui/material/InputBase'
+import Modal from '@mui/material/Modal'
+import NativeSelect from '@mui/material/NativeSelect'
+import withStyles from '@mui/styles/withStyles';
 import _ from 'lodash'
 import React, { ChangeEventHandler, ReactNode, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
