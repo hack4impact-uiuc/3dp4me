@@ -21,28 +21,22 @@ import { ReducerActionType } from './store/Reducer'
 import { Context } from './store/Store'
 import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/styles';
-import { createTheme, adaptV4Theme } from '@mui/material';
-
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
-
+import { ThemeProvider } from '@mui/styles';
+import { createTheme } from '@mui/material';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 interface AppContentProps {
     username: string
     userEmail: string
 }
 
-const arTheme = createTheme(adaptV4Theme({
+const arTheme = createTheme({
     direction: 'rtl',
-}))
+})
 
-const enTheme = createTheme(adaptV4Theme({
+const enTheme = createTheme({
     direction: 'ltr',
-}))
+})
 
 const AppContent = ({ username, userEmail }: AppContentProps) => {
     const errorWrap = useErrorWrap()
