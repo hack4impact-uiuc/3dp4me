@@ -27,3 +27,11 @@ export const getProfilePictureAsFileArray = (patient: Patient): File[] => {
 
     return rootStep[RootStepFieldKeys.ProfilePicture]
 }
+
+export const getPatientTags = (patient: Patient): string[] => {
+    const rootStep = getStepData(patient, ReservedStep.Root)
+    console.log(rootStep)
+    if (!rootStep) return []
+
+    return rootStep[RootStepFieldKeys.Tags] || []
+}

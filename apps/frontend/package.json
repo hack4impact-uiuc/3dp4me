@@ -22,6 +22,8 @@
     "@sweetalert/with-react": "^0.1.1",
     "@tanstack/react-query": "^5.17.19",
     "@vis.gl/react-google-maps": "^1.4.2",
+    "Autocomplete": "link:@mui/material/Autocomplete",
+    "Chip": "link:@mui/material/Chip",
     "aws-amplify": "4.2.11",
     "axios": "^1.6.0",
     "date-fns": "^3.3.0",

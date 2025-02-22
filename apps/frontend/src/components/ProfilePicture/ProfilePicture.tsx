@@ -1,7 +1,7 @@
 import { Nullish, Patient } from '@3dp4me/types'
 import { FC, useEffect, useState } from 'react'
 
-import { getProfilePictureUrl } from '../../utils/profilePicture'
+import { getProfilePictureUrl } from '../../utils/rootStep'
 
 interface ProfilePictureProps {
     patient: Patient

@@ -1,4 +1,4 @@
-import { FieldType, QuestionOption, Step, TranslatedString } from '../models'
+import { Field, FieldType, QuestionOption, Step, TranslatedString } from '../models'
 import { Patient } from '../models/patient';
 
 export enum ReservedStep {
@@ -26,6 +26,22 @@ const PatientTagOptions: QuestionOption[] = [
     }
 ]
 
+export const PatientTagsField: Field = {
+    key: RootStepFieldKeys.Tags,
+    displayName: { EN: 'Patient Tags', AR: 'علامات المريض' },
+    fieldType: FieldType.TAGS,
+    subFields: [],
+    readableGroups: [],
+    writableGroups: [],
+    fieldNumber: 1,
+    options: PatientTagOptions,
+    isVisibleOnDashboard: false,
+    isHidden: false,
+    isDeleted: false,
+    additionalData: null,
+}
+
+
 export const RootStep: Step = {
     key: ReservedStep.Root,
     displayName: { EN: 'NONE', AR: 'NONE' },
@@ -45,20 +61,7 @@ export const RootStep: Step = {
             isDeleted: false,
             additionalData: null,
         },
-        {
-            key: RootStepFieldKeys.Tags,
-            displayName: { EN: 'Patient Tags', AR: 'علامات المريض' },
-            fieldType: FieldType.TAGS,
-            subFields: [],
-            readableGroups: [],
-            writableGroups: [],
-            fieldNumber: 1,
-            options: PatientTagOptions,
-            isVisibleOnDashboard: false,
-            isHidden: false,
-            isDeleted: false,
-            additionalData: null,
-        }
+        PatientTagsField,
     ],
     readableGroups: [],
     writableGroups: [],
