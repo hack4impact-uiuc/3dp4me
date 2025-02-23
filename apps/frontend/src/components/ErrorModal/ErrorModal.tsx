@@ -2,8 +2,7 @@ import './ErrorModal.scss'
 
 import { Nullish } from '@3dp4me/types'
 import Modal from '@mui/material/Modal'
-// import RootRef from '@mate-ui/core/RootRef'
-import React, { KeyboardEventHandler } from 'react'
+import { KeyboardEventHandler } from 'react'
 
 import WarningIcon from '../../assets/warning.svg'
 
@@ -27,8 +26,6 @@ const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }: ErrorModal
         <Modal
             open={isOpen}
             onClose={onClose}
-            // TODO: Is this an issue
-            // container={() => RootRef.current}
         >
             <div
                 className="error-modal-wrap"
