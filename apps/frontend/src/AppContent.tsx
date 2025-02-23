@@ -1,6 +1,5 @@
 import { Language } from '@3dp4me/types'
-import { createTheme } from '@mui/material'
-import { StyledEngineProvider } from '@mui/material/styles'
+import { createTheme, StyledEngineProvider } from '@mui/material/styles'
 import { ThemeProvider } from '@mui/styles'
 import React, { useContext, useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'

@@ -441,7 +441,6 @@ const SectionTab = () => {
                         selectedStep={selectedStep}
                     />
                     <ListItem
-                        // button
                         onClick={() => {
                             setCreateStepModalOpen(false)
                         }}
