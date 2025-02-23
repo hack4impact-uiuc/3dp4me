@@ -9,7 +9,7 @@ import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Modal from '@mui/material/Modal'
-import Select from '@mui/material/Select'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import _ from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
@@ -60,12 +60,7 @@ const EditRoleModal = ({
         setUserData({ ...userData, roles })
     }
 
-    const onAccessChange = (
-        event: React.ChangeEvent<{
-            name?: string | undefined
-            value: unknown
-        }>
-    ) => {
+    const onAccessChange = (event: SelectChangeEvent<AccessLevel>) => {
         if (isAccessLevel(event.target.value))
             setUserData({ ...userData, accessLevel: event.target.value })
     }

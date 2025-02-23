@@ -1,15 +1,13 @@
 import './PatientDetailSidebar.scss'
 
 import { Nullish, Patient } from '@3dp4me/types'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
-import { createTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import ThemeProvider from '@mui/styles/ThemeProvider'
 import { useState } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
@@ -107,9 +105,7 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
                         <br />
                         <span className="drawer-text">{patientData?.status}</span>
                     </div>
-                    <span className="drawer-text-label">
-                        {translations.components.notes.title}
-                    </span>
+                    <span className="drawer-text-label">{translations.components.notes.title}</span>
                     {generateNoteSidebar()}
                 </div>
                 <div

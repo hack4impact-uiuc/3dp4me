@@ -1,6 +1,6 @@
-import withStyles from '@mui/styles/withStyles';
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
+import withStyles from '@mui/styles/withStyles'
 
 export const StyledTableCell = withStyles((theme) => ({
     head: {

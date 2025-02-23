@@ -4,8 +4,8 @@ import { Step } from '@3dp4me/types'
 import AppBar from '@mui/material/AppBar'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
-import makeStyles from '@mui/styles/makeStyles';
 import Toolbar from '@mui/material/Toolbar'
+import makeStyles from '@mui/styles/makeStyles'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'

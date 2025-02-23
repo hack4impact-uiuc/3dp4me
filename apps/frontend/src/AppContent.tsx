@@ -1,4 +1,7 @@
 import { Language } from '@3dp4me/types'
+import { createTheme } from '@mui/material'
+import { StyledEngineProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/styles'
 import React, { useContext, useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
@@ -21,9 +24,6 @@ import { ReducerActionType } from './store/Reducer'
 import { Context } from './store/Store'
 import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
-import { ThemeProvider } from '@mui/styles';
-import { createTheme } from '@mui/material';
-import { StyledEngineProvider } from '@mui/material/styles';
 
 interface AppContentProps {
     username: string
@@ -84,7 +84,7 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
     }
 
     return (
-        (<div dir={selectedLang === Language.AR ? 'rtl' : 'ltr'}>
+        <div dir={selectedLang === Language.AR ? 'rtl' : 'ltr'}>
             {/* Shown when making a network request */}
             <LoadingIndicator />
             <Router>
@@ -127,8 +127,8 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
                     </StyledEngineProvider>
                 </QueryParamProvider>
             </Router>
-        </div>)
-    );
+        </div>
+    )
 }
 
 export default AppContent

@@ -1,9 +1,9 @@
 import './ManagePatientModal.scss'
 
 import { Language, Patient, ReservedStep } from '@3dp4me/types'
+import CloseIcon from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
-import CloseIcon from '@mui/icons-material/Close'
 import _ from 'lodash'
 import React, { useState } from 'react'
 import swal from 'sweetalert'

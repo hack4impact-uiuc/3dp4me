@@ -122,7 +122,7 @@ const FieldGroupTable = ({
     const tableColumnMetadata = useMemo(
         () =>
             metadata?.subFields?.map((field) => ({
-                id: field.key, 
+                id: field.key,
                 dataType: field.fieldType,
             })),
         [metadata]

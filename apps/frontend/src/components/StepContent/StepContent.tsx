@@ -5,7 +5,7 @@ import Backdrop from '@mui/material/Backdrop'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import _ from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
@@ -29,6 +29,11 @@ export interface StepContentProps {
     edit: boolean
     setEdit: (edit: boolean) => void
     onDataSaved: (key: string, value: any) => void
+}
+
+enum questionDisplayMode {
+    ALL = 'all',
+    SINGLE = 'single',
 }
 
 const StepContent = ({
@@ -116,13 +121,8 @@ const StepContent = ({
         swal(translations.components.bottombar.savedMessage.patientInfo, '', 'success')
     }
 
-    const handleQuestionFormatSelect = (
-        e: React.ChangeEvent<{
-            name?: string | undefined
-            value: unknown
-        }>
-    ) => {
-        setSingleQuestionFormat(Boolean(e.target.value))
+    const handleQuestionFormatSelect = (e: SelectChangeEvent<questionDisplayMode>) => {
+        setSingleQuestionFormat(e.target.value === questionDisplayMode.SINGLE)
     }
 
     const discardData = () => {
@@ -252,13 +252,13 @@ const StepContent = ({
                         MenuProps={{
                             style: { zIndex: 35001 },
                         }}
-                        defaultValue={'false'}
+                        defaultValue={questionDisplayMode.ALL}
                         onChange={handleQuestionFormatSelect}
                     >
-                        <MenuItem value={'false'}>
+                        <MenuItem value={questionDisplayMode.ALL}>
                             {translations.components.selectQuestionFormat.allQuestions}
                         </MenuItem>
-                        <MenuItem value={'true'}>
+                        <MenuItem value={questionDisplayMode.SINGLE}>
                             {translations.components.selectQuestionFormat.singleQuestion}
                         </MenuItem>
                     </Select>

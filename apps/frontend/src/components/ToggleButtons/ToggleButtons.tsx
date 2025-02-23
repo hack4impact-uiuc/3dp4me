@@ -1,10 +1,10 @@
 import './ToggleButtons.scss'
 
 import { Nullish, Patient } from '@3dp4me/types'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import React, { MouseEventHandler, useState } from 'react'
@@ -15,7 +15,12 @@ import HalfCircleIcon from '../../assets/half-circle.svg'
 import { useTranslations } from '../../hooks/useTranslations'
 import { useWindowDimensions } from '../../hooks/useWindowDimensions'
 import { useSteps } from '../../query/useSteps'
-import { DISABLE_FEATURE_PATIENT_STATUS, LANGUAGES, RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH, STEP_STATUS } from '../../utils/constants'
+import {
+    DISABLE_FEATURE_PATIENT_STATUS,
+    LANGUAGES,
+    RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH,
+    STEP_STATUS,
+} from '../../utils/constants'
 import { getStepData } from '../../utils/metadataUtils'
 
 interface ToggleButtonsProps {
@@ -105,7 +110,9 @@ const ToggleButtons = ({
 
         return (
             <div className="current-step-label">
-                {stepData?.status && !DISABLE_FEATURE_PATIENT_STATUS ? statusIcons[stepData.status] : null}{' '}
+                {stepData?.status && !DISABLE_FEATURE_PATIENT_STATUS
+                    ? statusIcons[stepData.status]
+                    : null}{' '}
                 <b>{element.displayName[selectedLang]}</b>
             </div>
         )
@@ -122,7 +129,9 @@ const ToggleButtons = ({
                     key={`${element.key}-mi`}
                     onClick={(e) => handleCloseSelector(e, element.key)}
                 >
-                    {patientData && stepData?.status && !DISABLE_FEATURE_PATIENT_STATUS ? statusIcons[stepData.status] : null}{' '}
+                    {patientData && stepData?.status && !DISABLE_FEATURE_PATIENT_STATUS
+                        ? statusIcons[stepData.status]
+                        : null}{' '}
                     <b className="selector-text">{element.displayName[selectedLang]}</b>
                 </MenuItem>
             )
@@ -137,7 +146,7 @@ const ToggleButtons = ({
     */
     if (metaData && width < RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH * metaData.length) {
         return (
-            (<div className="toggle-buttons-wrapper-dropdown">
+            <div className="toggle-buttons-wrapper-dropdown">
                 <div className="toggle-button-selector-dropdown">
                     {generateSelectedStepLabel()}
                     <IconButton
@@ -145,7 +154,8 @@ const ToggleButtons = ({
                         aria-haspopup="true"
                         onClick={handleClickSelector}
                         className="dropdown-icon"
-                        size="large">
+                        size="large"
+                    >
                         <ExpandMoreIcon />
                     </IconButton>
                     <Menu
@@ -158,8 +168,8 @@ const ToggleButtons = ({
                         {generateMenuItems()}
                     </Menu>
                 </div>
-            </div>)
-        );
+            </div>
+        )
     }
 
     return (

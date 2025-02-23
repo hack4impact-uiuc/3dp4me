@@ -14,7 +14,7 @@ import FormControl from '@mui/material/FormControl'
 import InputBase from '@mui/material/InputBase'
 import Modal from '@mui/material/Modal'
 import NativeSelect from '@mui/material/NativeSelect'
-import withStyles from '@mui/styles/withStyles';
+import withStyles from '@mui/styles/withStyles'
 import _ from 'lodash'
 import React, { ChangeEventHandler, ReactNode, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'

@@ -1,10 +1,11 @@
 import { Language } from '@3dp4me/types'
+import { PopoverVirtualElement } from '@mui/material'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import React, { ChangeEvent, useContext } from 'react'
+import React, { useContext } from 'react'
 
 import { saveLanguagePreference, signOut } from '../../aws/aws-helper'
 import { useTranslations } from '../../hooks/useTranslations'
@@ -12,13 +13,18 @@ import { ReducerActionType } from '../../store/Reducer'
 import { Context } from '../../store/Store'
 import { isLanguageValid } from '../../utils/language'
 import { useStyles } from './AccountDropdown.styles'
-import { PopoverVirtualElement } from '@mui/material'
 
 export interface AccountDropdownProps {
     handleClose: () => void
     username: string
     userEmail: string
-    anchorEl: Element | (() => Element) | PopoverVirtualElement | (() => PopoverVirtualElement) | null | undefined
+    anchorEl:
+        | Element
+        | (() => Element)
+        | PopoverVirtualElement
+        | (() => PopoverVirtualElement)
+        | null
+        | undefined
 }
 
 const AccountDropdown = ({
@@ -31,7 +37,7 @@ const AccountDropdown = ({
     const dispatch = useContext(Context)[1]
     const [translations, selectedLang] = useTranslations()
 
-    const handleLanguageSelect = (e: SelectChangeEvent<Language>)  => {
+    const handleLanguageSelect = (e: SelectChangeEvent<Language>) => {
         if (typeof e.target.value !== 'string') return
         if (!isLanguageValid(e.target.value)) return
 
