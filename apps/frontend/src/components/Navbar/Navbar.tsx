@@ -12,16 +12,69 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { Context } from '../../store/Store'
 import { Routes } from '../../utils/constants'
 import AccountDropdown from '../AccountDropdown/AccountDropdown'
-import { useStyles } from './Navbar.style'
+import { styled } from '@mui/material'
 
 export interface NavbarProps {
     username: string
     userEmail: string
 }
 
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    boxShadow: '0px 0px 4px 0 rgba(0,0,0,0.25)',
+}))
+
+const StyledToolbar = styled(Toolbar)`
+    min-height: '48px',
+    background-color: white,
+    font-family: 'Roboto', sans-serif;
+
+    .logo-ar {
+        margin-left: 15px;
+    }
+
+    #nav-title {
+        flex-grow: 1;
+        margin: 0 10px 0 10px;
+        font-size: 18px;
+        color: black;
+    }
+
+    .active {
+        font-weight: bolder;
+        color: black;
+    }
+
+    .accountCircle {
+        fill: black;
+        font-size: 30px;
+        margin: 0 8px;
+        opacity: 0.4;
+        transition: all 0.2s;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+`
+
+const NavItem = styled(Link)({
+    textDecoration: 'none',
+    margin: '0 16px 0 16px',
+    color: "#5f5f5f",
+    fontSize: 14,
+})
+
+const NavTitle = styled(Link)(({ theme }) => ({
+    fontWeight: 'bold',
+    textDecoration: "none",
+    margin: "0 16px 0 16px",
+    color: "#5f5f5f",
+    fontSize: 14,
+}))
+
 const Navbar = ({ username, userEmail }: NavbarProps) => {
     const state = useContext(Context)[0]
-    const classes = useStyles()
     const [translations, selectedLang] = useTranslations()
     const [activeRoute, setActiveRoute] = useState(window.location.pathname)
     const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & SVGSVGElement>>(null)
@@ -40,14 +93,14 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
         const activeClass = activeRoute === route ? 'active' : ''
 
         return (
-            <Link
+            <NavItem
                 key={route}
-                className={`nav-item ${activeClass}`}
                 onClick={() => setActiveRoute(route)}
+                className={activeClass}
                 to={`${route}`}
             >
                 {text}
-            </Link>
+            </NavItem>
         )
     }
 
@@ -72,9 +125,9 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
     }
 
     return (
-        <div className="wrap-nav">
-            <AppBar className={classes.appBar}>
-                <Toolbar className={`navbar ${classes.toolBar}`}>
+        // <div className="wrap-nav">
+            <StyledAppBar>
+                <StyledToolbar>
                     <img
                         alt="Logo"
                         className={selectedLang === Language.AR ? 'logo-ar' : ''}
@@ -82,14 +135,13 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                         src={Logo}
                     />
 
-                    <Link
+                    <NavTitle
                         onClick={() => setActiveRoute(Routes.DASHBOARD)}
                         id="nav-title"
-                        className={`${classes.navTitle} nav-item`}
                         to={Routes.DASHBOARD}
                     >
                         {translations.components.navbar.dashboard.navTitle}
-                    </Link>
+                    </NavTitle>
 
                     {renderLinks()}
 
@@ -105,9 +157,9 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                         username={username}
                         userEmail={userEmail}
                     />
-                </Toolbar>
-            </AppBar>
-        </div>
+                </StyledToolbar>
+            </StyledAppBar>
+        // </div>
     )
 }
 

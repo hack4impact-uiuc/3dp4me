@@ -5,15 +5,13 @@ import AppBar from '@mui/material/AppBar'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import Toolbar from '@mui/material/Toolbar'
-import makeStyles from '@mui/styles/makeStyles'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
+import { styled } from '@mui/material'
 
-const useStyles = makeStyles({
-    paper: {
-        background: '#dddef2',
-    },
+const StyledDrawer = styled(Drawer)({
+    background: '#dddef2',
 })
 
 export interface SidebarProps {
@@ -38,7 +36,6 @@ const Sidebar = ({
     selectedStep,
 }: SidebarProps) => {
     const selectedLang = useTranslations()[1]
-    const styles = useStyles()
 
     function onButtonClick(stepKey: string) {
         onClick(stepKey)
@@ -110,10 +107,9 @@ const Sidebar = ({
         })
 
     return (
-        <Drawer
+        <StyledDrawer
             className={`sidebar ${isEditing ? 'sidebar-expanded' : 'sidebar-retracted'}`}
             variant="permanent"
-            classes={{ paper: styles.paper }}
         >
             <div className="sidebar-container">{generateButtons()}</div>
             <AppBar
@@ -130,7 +126,7 @@ const Sidebar = ({
             >
                 <Toolbar className="side-bottom-bar-toolbar">{generateBottomButton()}</Toolbar>
             </AppBar>
-        </Drawer>
+        </StyledDrawer>
     )
 }
 

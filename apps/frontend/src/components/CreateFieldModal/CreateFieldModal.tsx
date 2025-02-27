@@ -14,7 +14,6 @@ import FormControl from '@mui/material/FormControl'
 import InputBase from '@mui/material/InputBase'
 import Modal from '@mui/material/Modal'
 import NativeSelect from '@mui/material/NativeSelect'
-import withStyles from '@mui/styles/withStyles'
 import _ from 'lodash'
 import React, { ChangeEventHandler, ReactNode, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
@@ -29,6 +28,7 @@ import { FormOption } from '../Fields/FormOption'
 import MultiSelectField from '../Fields/MultiSelectField'
 import { FileUploadButton } from '../FileUploadButton/FileUploadButton'
 import LanguageInput from '../LanguageInput/LanguageInput'
+import { styled } from '@mui/material'
 
 export type NewField = Unsaved<Omit<Field, 'fieldNumber' | 'key' | 'isHidden' | 'isDeleted'>>
 
@@ -58,7 +58,7 @@ const CreateFieldModal = ({
 
     const errorWrap = useErrorWrap()
 
-    const BootstrapInput = withStyles((theme) => ({
+    const BootstrapInput = styled(InputBase)(({ theme }) => ({
         root: {
             'label + &': {
                 marginTop: theme.spacing(3),
@@ -71,7 +71,7 @@ const CreateFieldModal = ({
             border: '1px solid #ced4da',
             fontSize: 16,
             padding: '10px 26px 10px 12px',
-            transition: theme.transitions.create(['border-color', 'box-shadow']),
+            // transition: theme?.transitions?.create(['border-color', 'box-shadow']),
             // Use the system font instead of the default Roboto font.
             '&:focus': {
                 borderRadius: 4,
@@ -82,7 +82,7 @@ const CreateFieldModal = ({
                 backgroundColor: '#dedffb',
             },
         },
-    }))(InputBase)
+    }))
 
     const onRolesChange = (id: string, roles: string[]) => {
         setSelectedRoles(roles)

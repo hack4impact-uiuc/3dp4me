@@ -8,7 +8,6 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import InputBase from '@mui/material/InputBase'
 import Modal from '@mui/material/Modal'
 import NativeSelect from '@mui/material/NativeSelect'
-import withStyles from '@mui/styles/withStyles'
 import _ from 'lodash'
 import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react'
 import swal from 'sweetalert'
@@ -21,6 +20,7 @@ import CustomSwitch from '../CustomSwitch/CustomSwitch'
 import { FormOption } from '../Fields/FormOption'
 import MultiSelectField from '../Fields/MultiSelectField'
 import LanguageInput from '../LanguageInput/LanguageInput'
+import { styled } from '@mui/material'
 
 export interface EditFieldModalProps {
     isOpen: boolean
@@ -67,7 +67,7 @@ const EditFieldModal = ({
         setOptions(formattedOptions)
     }, [initialData, isOpen])
 
-    const BootstrapInput = withStyles((theme) => ({
+    const BootstrapInput = styled(InputBase)(({ theme }) => ({
         root: {
             'label + &': {
                 marginTop: theme.spacing(3),
@@ -91,7 +91,7 @@ const EditFieldModal = ({
                 backgroundColor: '#dedffb',
             },
         },
-    }))(InputBase)
+    }))
 
     const onRolesChange = (id: string, roles: string[]) => {
         setSelectedRoles(roles)

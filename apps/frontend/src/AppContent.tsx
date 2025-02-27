@@ -1,6 +1,6 @@
 import { Language } from '@3dp4me/types'
-import { createTheme, StyledEngineProvider } from '@mui/material/styles'
-import { ThemeProvider } from '@mui/styles'
+// import { createTheme, PaletteOptions, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
+// import { ThemeProvider, StyledEngineProvider, createTheme, ThemeOptions, fontSize } from '@mui/material/styles'
 import React, { useContext, useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
@@ -23,17 +23,39 @@ import { ReducerActionType } from './store/Reducer'
 import { Context } from './store/Store'
 import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
+import { createTheme, ThemeProvider, StyledEngineProvider, ThemeOptions } from '@mui/material'
 
 interface AppContentProps {
     username: string
     userEmail: string
 }
 
+/**
+ * TODO: The issue seems to be different versions onf the provider.
+ * One provider is material, the other is styles
+ */
+
+const theme: ThemeOptions = {
+    palette: {
+        primary: {
+            main: "#3f51b5",
+        },
+        secondary: {
+            main: "#dedffb",
+        },
+    },
+    typography: {
+        fontSize: 15
+    }
+}
+
 const arTheme = createTheme({
+    ...theme,
     direction: 'rtl',
 })
 
 const enTheme = createTheme({
+    ...theme,
     direction: 'ltr',
 })
 

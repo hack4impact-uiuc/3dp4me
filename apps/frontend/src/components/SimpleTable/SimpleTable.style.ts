@@ -1,18 +1,18 @@
+import { styled } from '@mui/material'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
-import withStyles from '@mui/styles/withStyles'
 
-export const StyledTableCell = withStyles((theme) => ({
+export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     head: {
         backgroundColor: theme.palette.common.white,
         color: theme.palette.common.black,
     },
-}))(TableCell)
+}))
 
-export const StyledTableRow = withStyles(() => ({
+export const StyledTableRow = styled(TableRow)(() => ({
     root: {
         '&:hover': {
             backgroundColor: '#f0f0f0',
         },
     },
-}))(TableRow)
+}))
