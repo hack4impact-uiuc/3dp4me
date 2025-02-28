@@ -9,6 +9,10 @@
     width: $drawerWidth + 3 * $verticalMovementWidth;
 }
 
+.detail-paper {
+    background-color: $dashboardManagementSidebarBackground;
+}
+
 .sidebar {
     display: flex;
     flex-shrink: 0;
