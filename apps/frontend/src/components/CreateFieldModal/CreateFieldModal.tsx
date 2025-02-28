@@ -8,10 +8,10 @@ import {
     TranslatedString,
     Unsaved,
 } from '@3dp4me/types'
+import { useTheme } from '@mui/material'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControl from '@mui/material/FormControl'
-import InputBase, { InputBaseProps } from '@mui/material/InputBase'
 import Modal from '@mui/material/Modal'
 import NativeSelect from '@mui/material/NativeSelect'
 import _ from 'lodash'
@@ -24,12 +24,11 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { ADMIN_ID, PUBLIC_CLOUDFRONT_URL } from '../../utils/constants'
 import { canFieldBeAddedToStep, getFieldName, isFieldType, validateField } from '../../utils/fields'
 import { randomAlphaNumericString } from '../../utils/math'
+import { DropdownInput } from '../DropdownInput/DropdownInput'
 import { FormOption } from '../Fields/FormOption'
 import MultiSelectField from '../Fields/MultiSelectField'
 import { FileUploadButton } from '../FileUploadButton/FileUploadButton'
 import LanguageInput from '../LanguageInput/LanguageInput'
-import { styled, useTheme } from '@mui/material'
-import { DropdownInput } from '../DropdownInput/DropdownInput'
 
 export type NewField = Unsaved<Omit<Field, 'fieldNumber' | 'key' | 'isHidden' | 'isDeleted'>>
 
@@ -56,7 +55,6 @@ const CreateFieldModal = ({
     const [options, setOptions] = useState<TranslatedString[]>([])
     const [documentURL, setDocumentURL] = useState<string>('')
     const [isUploading, setIsUploading] = useState(false)
-    const theme = useTheme()
     const errorWrap = useErrorWrap()
 
     const onRolesChange = (id: string, roles: string[]) => {

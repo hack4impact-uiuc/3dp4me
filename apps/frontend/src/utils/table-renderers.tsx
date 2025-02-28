@@ -81,7 +81,12 @@ export const defaultTableRowRenderer = <T extends Record<string, any>>(
 
     // Construct a cell for each piece of data
     const row = rowData.map(({ id, dataType }) => (
-        <StyledTableCell className={cellClassName} key={`${itemData._id}-${id}`} align={cellAlign} variant='body'>
+        <StyledTableCell
+            className={cellClassName}
+            key={`${itemData._id}-${id}`}
+            align={cellAlign}
+            variant="body"
+        >
             {getField(itemData, id, dataType, selectedLang)}
         </StyledTableCell>
     ))
@@ -95,7 +100,7 @@ export const defaultTableRowLoadingRenderer = (numCols: number, selectedLang: La
 
     for (let i = 0; i < numCols; i++) {
         row.push(
-            <StyledTableCell variant='body'>
+            <StyledTableCell variant="body">
                 <Skeleton direction={loadDirection} inline={true} />
             </StyledTableCell>
         )
@@ -140,8 +145,8 @@ export const defaultTableHeaderRenderer = <T extends Record<string, any>>(
             onClick={() => onRequestSort(header.sortKey)}
             key={header.title}
             align={cellAlign}
-            variant='head'
-            className='header'
+            variant="head"
+            className="header"
         >
             <div className={cellClassName}>
                 {header.title}
@@ -201,7 +206,9 @@ export const patientTableHeaderRenderer = <T extends Record<string, any>>(
     selectedLang: Language
 ) => {
     const headerCells = defaultTableHeaderRenderer(headers, sortConfig, onRequestSort, selectedLang)
-    headerCells.push(<StyledTableCell key="view-patient" align="center" variant="head" className="header"/>)
+    headerCells.push(
+        <StyledTableCell key="view-patient" align="center" variant="head" className="header" />
+    )
     return headerCells
 }
 
@@ -226,7 +233,12 @@ export const generateSelectableRenderer =
 
         // Add the edit button
         row.push(
-            <StyledTableCell key="view-user-data" className="cell cell-right" align="center" variant="body">
+            <StyledTableCell
+                key="view-user-data"
+                className="cell cell-right"
+                align="center"
+                variant="body"
+            >
                 <IconButton onClick={() => onSelected(user)} size="large">
                     <img alt="status icon view-icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
@@ -246,6 +258,8 @@ export const userTableHeaderRenderer = <T extends Record<string, any>>(
     selectedLang: Language
 ) => {
     const headerCells = defaultTableHeaderRenderer(headers, sortConfig, onRequestSort, selectedLang)
-    headerCells.push(<StyledTableCell key="view-user" align="center" variant="head" className="header"/>)
+    headerCells.push(
+        <StyledTableCell key="view-user" align="center" variant="head" className="header" />
+    )
     return headerCells
 }

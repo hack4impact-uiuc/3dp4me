@@ -1,5 +1,6 @@
 import { Language, Nullish } from '@3dp4me/types'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { styled } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import React, { MouseEventHandler, useContext, useState } from 'react'
@@ -10,8 +11,6 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { Context } from '../../store/Store'
 import { Routes } from '../../utils/constants'
 import AccountDropdown from '../AccountDropdown/AccountDropdown'
-import { styled } from '@mui/material'
-import { orange } from '@mui/material/colors'
 
 export interface NavbarProps {
     username: string
@@ -60,15 +59,15 @@ const NavItem = styled(Link)({
     textDecoration: 'none',
     margin: '0 16px 0 16px',
     fontSize: '1rem',
-    color: "#5f5f5f",
+    color: '#5f5f5f',
 })
 
 const NavTitle = styled(Link)(({ theme }) => ({
     fontWeight: 'bold',
     fontSize: '1rem',
-    textDecoration: "none",
-    margin: "0 16px 0 16px",
-    color: "#5f5f5f",
+    textDecoration: 'none',
+    margin: '0 16px 0 16px',
+    color: '#5f5f5f',
 }))
 
 const Navbar = ({ username, userEmail }: NavbarProps) => {
@@ -123,39 +122,39 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
     }
 
     return (
-            <StyledAppBar variant='elevation' color={'info'} position="sticky">
-                <StyledToolbar variant='dense'>
-                    <img
-                        alt="Logo"
-                        className={selectedLang === Language.AR ? 'logo-ar' : ''}
-                        height={36}
-                        src={Logo}
-                    />
+        <StyledAppBar variant="elevation" color={'info'} position="sticky">
+            <StyledToolbar variant="dense">
+                <img
+                    alt="Logo"
+                    className={selectedLang === Language.AR ? 'logo-ar' : ''}
+                    height={36}
+                    src={Logo}
+                />
 
-                    <NavTitle
-                        onClick={() => setActiveRoute(Routes.DASHBOARD)}
-                        id="nav-title"
-                        to={Routes.DASHBOARD}
-                    >
-                        {translations.components.navbar.dashboard.navTitle}
-                    </NavTitle>
+                <NavTitle
+                    onClick={() => setActiveRoute(Routes.DASHBOARD)}
+                    id="nav-title"
+                    to={Routes.DASHBOARD}
+                >
+                    {translations.components.navbar.dashboard.navTitle}
+                </NavTitle>
 
-                    {renderLinks()}
+                {renderLinks()}
 
-                    <AccountCircleIcon
-                        className="accountCircle"
-                        aria-controls="account-dropdown-menu"
-                        aria-haspopup="true"
-                        onClick={handleAccountClick}
-                    />
-                    <AccountDropdown
-                        anchorEl={anchorEl}
-                        handleClose={handleAccountClose}
-                        username={username}
-                        userEmail={userEmail}
-                    />
-                </StyledToolbar>
-            </StyledAppBar>
+                <AccountCircleIcon
+                    className="accountCircle"
+                    aria-controls="account-dropdown-menu"
+                    aria-haspopup="true"
+                    onClick={handleAccountClick}
+                />
+                <AccountDropdown
+                    anchorEl={anchorEl}
+                    handleClose={handleAccountClose}
+                    username={username}
+                    userEmail={userEmail}
+                />
+            </StyledToolbar>
+        </StyledAppBar>
     )
 }
 

@@ -1,6 +1,7 @@
 import './Sidebar.scss'
 
 import { Step } from '@3dp4me/types'
+import { styled } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
@@ -8,7 +9,6 @@ import Toolbar from '@mui/material/Toolbar'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
-import { styled } from '@mui/material'
 
 const StyledDrawer = styled(Drawer)({
     background: '#dddef2',

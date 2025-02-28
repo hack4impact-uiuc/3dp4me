@@ -23,10 +23,7 @@ const ErrorModal = ({ message = DEFAULT_ERROR_MSG, isOpen, onClose }: ErrorModal
     }
 
     return (
-        <Modal
-            open={isOpen}
-            onClose={onClose}
-        >
+        <Modal open={isOpen} onClose={onClose}>
             <div
                 className="error-modal-wrap"
                 onClick={onClose}

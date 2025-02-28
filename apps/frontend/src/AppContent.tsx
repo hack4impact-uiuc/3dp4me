@@ -1,4 +1,5 @@
 import { Language } from '@3dp4me/types'
+import { createTheme, StyledEngineProvider, ThemeOptions, ThemeProvider } from '@mui/material'
 // import { createTheme, PaletteOptions, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
 // import { ThemeProvider, StyledEngineProvider, createTheme, ThemeOptions, fontSize } from '@mui/material/styles'
 import React, { useContext, useEffect } from 'react'
@@ -23,7 +24,6 @@ import { ReducerActionType } from './store/Reducer'
 import { Context } from './store/Store'
 import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
-import { createTheme, ThemeProvider, StyledEngineProvider, ThemeOptions } from '@mui/material'
 
 interface AppContentProps {
     username: string
@@ -33,15 +33,15 @@ interface AppContentProps {
 const theme: ThemeOptions = {
     palette: {
         primary: {
-            main: "#3f51b5",
+            main: '#3f51b5',
         },
         secondary: {
-            main: "#dedffb",
+            main: '#dedffb',
         },
     },
     typography: {
         fontFamily: '"Roboto", sans-serif',
-    }
+    },
 }
 
 const arTheme = createTheme({

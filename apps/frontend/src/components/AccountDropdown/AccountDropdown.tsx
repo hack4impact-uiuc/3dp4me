@@ -37,18 +37,17 @@ const AccountEmail = styled('p')({
     lineHeight: '0px',
 })
 
-
 const LanguageSelector = styled(Select<Language>)({
-    height: 50
+    height: 50,
 })
 
 const SignoutButton = styled(Button)`
     height: '38px';
-    fontSize: '1em';
-    fontWeight: 'bold';
-    backgroundColor: '#ca0909';
+    fontsize: '1em';
+    fontweight: 'bold';
+    backgroundcolor: '#ca0909';
     color: 'white';
-    marginTop: '10px';
+    margintop: '10px';
     width: '100%';
     '&:hover': {
         background: '#ca0909';
@@ -90,9 +89,7 @@ const AccountDropdown = ({
                     <AccountEmail>{userEmail}</AccountEmail>
                     <p>{translations.components.navbar.dropdown.language}</p>
                     <FormControl fullWidth variant="outlined">
-                        <LanguageSelector
-                            value={selectedLang}
-                            onChange={handleLanguageSelect}>
+                        <LanguageSelector value={selectedLang} onChange={handleLanguageSelect}>
                             <MenuItem value={Language.EN}>
                                 {translations.components.navbar.dropdown.EN}
                             </MenuItem>

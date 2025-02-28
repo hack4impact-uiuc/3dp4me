@@ -9,6 +9,6 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 export const StyledTableRow = styled(TableRow)`
     '&:hover': {
-        backgroundColor: '#f0f0f0';
+        backgroundcolor: '#f0f0f0';
     }
 `
