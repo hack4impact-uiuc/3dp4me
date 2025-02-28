@@ -110,7 +110,7 @@ const Sidebar = ({
         <StyledDrawer
             className={`sidebar ${isEditing ? 'sidebar-expanded' : 'sidebar-retracted'}`}
             variant="permanent"
-            classes={{paper: "detail-paper"}}
+            classes={{ paper: 'detail-paper' }}
         >
             <div className="sidebar-container">{generateButtons()}</div>
             <AppBar
