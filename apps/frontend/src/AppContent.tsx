@@ -30,11 +30,6 @@ interface AppContentProps {
     userEmail: string
 }
 
-/**
- * TODO: The issue seems to be different versions onf the provider.
- * One provider is material, the other is styles
- */
-
 const theme: ThemeOptions = {
     palette: {
         primary: {
@@ -45,8 +40,7 @@ const theme: ThemeOptions = {
         },
     },
     typography: {
-        // fontSize: 25,
-        fontFamily: 'Roboto, sans-serif',
+        fontFamily: '"Roboto", sans-serif',
     }
 }
 
