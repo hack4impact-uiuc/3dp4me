@@ -1,5 +1,3 @@
-import './Navbar.scss'
-
 import { Language, Nullish } from '@3dp4me/types'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import AppBar from '@mui/material/AppBar'
@@ -27,7 +25,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 const StyledToolbar = styled(Toolbar)`
     background-color: white;
     font-family: 'Roboto', sans-serif;
-    font-size: 17px;
+    font-size: 47px;
 
     .logo-ar {
         margin-left: 15px;
@@ -36,7 +34,7 @@ const StyledToolbar = styled(Toolbar)`
     #nav-title {
         flex-grow: 1;
         margin: 0 10px 0 10px;
-        font-size: 18px;
+        font-size: 14px;
         color: black;
     }
 
@@ -61,13 +59,13 @@ const StyledToolbar = styled(Toolbar)`
 const NavItem = styled(Link)({
     textDecoration: 'none',
     margin: '0 16px 0 16px',
-    fontSize: '1.2rem',
+    fontSize: '1rem',
     color: "#5f5f5f",
 })
 
 const NavTitle = styled(Link)(({ theme }) => ({
     fontWeight: 'bold',
-    fontSize: '1.6rem',
+    fontSize: '1rem',
     textDecoration: "none",
     margin: "0 16px 0 16px",
     color: "#5f5f5f",
@@ -126,7 +124,7 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
 
     return (
             <StyledAppBar variant='elevation' color="paper" position="sticky">
-                <StyledToolbar>
+                <StyledToolbar variant='dense'>
                     <img
                         alt="Logo"
                         className={selectedLang === Language.AR ? 'logo-ar' : ''}
