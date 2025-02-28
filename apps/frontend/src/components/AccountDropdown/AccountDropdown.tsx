@@ -26,20 +26,21 @@ export interface AccountDropdownProps {
         | undefined
 }
 
-const MenuWrapper = styled('div')`
-    margin: '10px';
-    width: 'fit-content';
-    display: 'block';
-`
+const MenuWrapper = styled('div')({
+    margin: '10px',
+    width: 'fit-content',
+    display: 'block',
+})
 
-const AccountEmail = styled('p')`
-    color: 'grey';
-    lineHeight: '0px';
-`
+const AccountEmail = styled('p')({
+    color: 'grey',
+    lineHeight: '0px',
+})
 
-const LanguageSelector = styled(Select<Language>)`
-    height: '50px';
-`
+
+const LanguageSelector = styled(Select<Language>)({
+    height: 50
+})
 
 const SignoutButton = styled(Button)`
     height: '38px';

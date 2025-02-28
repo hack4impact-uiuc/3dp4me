@@ -43,9 +43,13 @@ const theme: ThemeOptions = {
         secondary: {
             main: "#dedffb",
         },
+        paper: {
+            main: "#ffffff",
+        }
     },
     typography: {
-        fontSize: 15
+        // fontSize: 25,
+        fontFamily: 'Roboto, sans-serif',
     }
 }
 

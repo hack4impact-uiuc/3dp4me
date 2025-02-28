@@ -13,6 +13,7 @@ import { Context } from '../../store/Store'
 import { Routes } from '../../utils/constants'
 import AccountDropdown from '../AccountDropdown/AccountDropdown'
 import { styled } from '@mui/material'
+import { orange } from '@mui/material/colors'
 
 export interface NavbarProps {
     username: string
@@ -21,13 +22,12 @@ export interface NavbarProps {
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
     zIndex: theme.zIndex.drawer + 1,
-    boxShadow: '0px 0px 4px 0 rgba(0,0,0,0.25)',
 }))
 
 const StyledToolbar = styled(Toolbar)`
-    min-height: '48px',
-    background-color: white,
+    background-color: white;
     font-family: 'Roboto', sans-serif;
+    font-size: 17px;
 
     .logo-ar {
         margin-left: 15px;
@@ -61,16 +61,16 @@ const StyledToolbar = styled(Toolbar)`
 const NavItem = styled(Link)({
     textDecoration: 'none',
     margin: '0 16px 0 16px',
+    fontSize: '1.2rem',
     color: "#5f5f5f",
-    fontSize: 14,
 })
 
 const NavTitle = styled(Link)(({ theme }) => ({
     fontWeight: 'bold',
+    fontSize: '1.6rem',
     textDecoration: "none",
     margin: "0 16px 0 16px",
     color: "#5f5f5f",
-    fontSize: 14,
 }))
 
 const Navbar = ({ username, userEmail }: NavbarProps) => {
@@ -125,13 +125,12 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
     }
 
     return (
-        // <div className="wrap-nav">
-            <StyledAppBar>
+            <StyledAppBar variant='elevation' color="paper" position="sticky">
                 <StyledToolbar>
                     <img
                         alt="Logo"
                         className={selectedLang === Language.AR ? 'logo-ar' : ''}
-                        height={32}
+                        height={36}
                         src={Logo}
                     />
 
@@ -159,7 +158,6 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                     />
                 </StyledToolbar>
             </StyledAppBar>
-        // </div>
     )
 }
 
