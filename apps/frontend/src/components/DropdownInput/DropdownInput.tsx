@@ -25,7 +25,7 @@ export const DropdownInput = (p: InputBaseProps) => {
                         transition: theme.transitions.create(['border-color', 'box-shadow']),
                         // Use the system font instead of the default Roboto font.
                         '&:focus': {
-                            borderRadius: 4,
+                            borderRadius: '4px',
                             borderColor: '#80bdff',
                             boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
                         },
