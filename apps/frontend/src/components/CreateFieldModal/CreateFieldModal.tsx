@@ -11,7 +11,7 @@ import {
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControl from '@mui/material/FormControl'
-import InputBase from '@mui/material/InputBase'
+import InputBase, { InputBaseProps } from '@mui/material/InputBase'
 import Modal from '@mui/material/Modal'
 import NativeSelect from '@mui/material/NativeSelect'
 import _ from 'lodash'
@@ -28,7 +28,8 @@ import { FormOption } from '../Fields/FormOption'
 import MultiSelectField from '../Fields/MultiSelectField'
 import { FileUploadButton } from '../FileUploadButton/FileUploadButton'
 import LanguageInput from '../LanguageInput/LanguageInput'
-import { styled } from '@mui/material'
+import { styled, useTheme } from '@mui/material'
+import { DropdownInput } from '../DropdownInput/DropdownInput'
 
 export type NewField = Unsaved<Omit<Field, 'fieldNumber' | 'key' | 'isHidden' | 'isDeleted'>>
 
@@ -55,34 +56,8 @@ const CreateFieldModal = ({
     const [options, setOptions] = useState<TranslatedString[]>([])
     const [documentURL, setDocumentURL] = useState<string>('')
     const [isUploading, setIsUploading] = useState(false)
-
+    const theme = useTheme()
     const errorWrap = useErrorWrap()
-
-    const BootstrapInput = styled(InputBase)(({ theme }) => ({
-        root: {
-            'label + &': {
-                marginTop: theme.spacing(3),
-            },
-        },
-        input: {
-            borderRadius: 4,
-            position: 'relative',
-            backgroundColor: '#dedffb',
-            border: '1px solid #ced4da',
-            fontSize: 16,
-            padding: '10px 26px 10px 12px',
-            transition: theme.transitions.create(['border-color', 'box-shadow']),
-            // Use the system font instead of the default Roboto font.
-            '&:focus': {
-                borderRadius: 4,
-                borderColor: '#80bdff',
-                boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-            },
-            selected: {
-                backgroundColor: '#dedffb',
-            },
-        },
-    }))
 
     const onRolesChange = (id: string, roles: string[]) => {
         setSelectedRoles(roles)
@@ -355,7 +330,7 @@ const CreateFieldModal = ({
                                 id="create-field-type-dropdown"
                                 onChange={handleFieldTypeSelect}
                                 defaultValue={fieldType}
-                                input={<BootstrapInput />}
+                                input={<DropdownInput />}
                             >
                                 {generateFieldDropdownOptions()}
                             </NativeSelect>

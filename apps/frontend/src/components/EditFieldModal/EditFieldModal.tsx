@@ -21,6 +21,7 @@ import { FormOption } from '../Fields/FormOption'
 import MultiSelectField from '../Fields/MultiSelectField'
 import LanguageInput from '../LanguageInput/LanguageInput'
 import { styled } from '@mui/material'
+import { DropdownInput } from '../DropdownInput/DropdownInput'
 
 export interface EditFieldModalProps {
     isOpen: boolean
@@ -66,32 +67,6 @@ const EditFieldModal = ({
 
         setOptions(formattedOptions)
     }, [initialData, isOpen])
-
-    const BootstrapInput = styled(InputBase)(({ theme }) => ({
-        root: {
-            'label + &': {
-                marginTop: theme.spacing(3),
-            },
-        },
-        input: {
-            borderRadius: 4,
-            position: 'relative',
-            backgroundColor: '#dedffb',
-            border: '1px solid #ced4da',
-            fontSize: 16,
-            padding: '10px 26px 10px 12px',
-            transition: theme.transitions.create(['border-color', 'box-shadow']),
-            // Use the system font instead of the default Roboto font.
-            '&:focus': {
-                borderRadius: 4,
-                borderColor: '#80bdff',
-                boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-            },
-            selected: {
-                backgroundColor: '#dedffb',
-            },
-        },
-    }))
 
     const onRolesChange = (id: string, roles: string[]) => {
         setSelectedRoles(roles)
@@ -362,7 +337,7 @@ const EditFieldModal = ({
                                 //     style: { zIndex: 35001 }, // for keeping this component on the top layer
                                 // }}
                                 defaultValue={fieldType}
-                                input={<BootstrapInput />}
+                                input={<DropdownInput />}
                                 disabled
                             >
                                 {generateFieldDropdownOptions()}
