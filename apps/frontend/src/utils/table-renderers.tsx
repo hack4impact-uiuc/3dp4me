@@ -1,13 +1,13 @@
 import { AccessLevel, FieldType, Language, Nullish, Path, Patient } from '@3dp4me/types'
-import IconButton from '@material-ui/core/IconButton'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
+import { TableCell } from '@mui/material'
+import IconButton from '@mui/material/IconButton'
 import React, { ReactNode } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { Link } from 'react-router-dom'
 
 import Eyecon from '../assets/view.svg'
-import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style'
 import { SortConfig } from '../hooks/useSortableData'
 import translations from '../translations.json'
 import { DisplayFieldType, SortDirection } from './constants'
@@ -81,9 +81,14 @@ export const defaultTableRowRenderer = <T extends Record<string, any>>(
 
     // Construct a cell for each piece of data
     const row = rowData.map(({ id, dataType }) => (
-        <StyledTableCell className={cellClassName} key={`${itemData._id}-${id}`} align={cellAlign}>
+        <TableCell
+            className={cellClassName}
+            key={`${itemData._id}-${id}`}
+            align={cellAlign}
+            variant="body"
+        >
             {getField(itemData, id, dataType, selectedLang)}
-        </StyledTableCell>
+        </TableCell>
     ))
 
     return row
@@ -95,9 +100,9 @@ export const defaultTableRowLoadingRenderer = (numCols: number, selectedLang: La
 
     for (let i = 0; i < numCols; i++) {
         row.push(
-            <StyledTableCell>
+            <TableCell variant="body">
                 <Skeleton direction={loadDirection} inline={true} />
-            </StyledTableCell>
+            </TableCell>
         )
     }
 
@@ -136,17 +141,18 @@ export const defaultTableHeaderRenderer = <T extends Record<string, any>>(
     const cellClassName = selectedLang === Language.AR ? 'cell-align-rtl' : 'cell-align'
 
     const headerCells = headers.map((header) => (
-        <StyledTableCell
+        <TableCell
             onClick={() => onRequestSort(header.sortKey)}
-            className="header"
             key={header.title}
             align={cellAlign}
+            variant="head"
+            className="header"
         >
             <div className={cellClassName}>
                 {header.title}
                 {renderSortArrow(sortConfig, header.sortKey)}
             </div>
-        </StyledTableCell>
+        </TableCell>
     ))
 
     return headerCells
@@ -176,14 +182,14 @@ export const patientTableRowRenderer = (
 
     // Add a link to the patient's page
     row.push(
-        <StyledTableCell key="view-patient-data" className="cell" align="center">
+        <TableCell key="view-patient-data" className="cell" align="center" variant="body">
             <Link className="table-view-link" to={link}>
-                <IconButton>
+                <IconButton size="large">
                     <img alt="status icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
                 {translations[selectedLang].components.table.view}
             </Link>
-        </StyledTableCell>
+        </TableCell>
     )
 
     return row
@@ -200,7 +206,9 @@ export const patientTableHeaderRenderer = <T extends Record<string, any>>(
     selectedLang: Language
 ) => {
     const headerCells = defaultTableHeaderRenderer(headers, sortConfig, onRequestSort, selectedLang)
-    headerCells.push(<StyledTableCell key="view-patient" className="header" align="center" />)
+    headerCells.push(
+        <TableCell key="view-patient" align="center" variant="head" className="header" />
+    )
     return headerCells
 }
 
@@ -225,11 +233,16 @@ export const generateSelectableRenderer =
 
         // Add the edit button
         row.push(
-            <StyledTableCell key="view-user-data" className="cell cell-right" align="center">
-                <IconButton onClick={() => onSelected(user)}>
+            <TableCell
+                key="view-user-data"
+                className="cell cell-right"
+                align="center"
+                variant="body"
+            >
+                <IconButton onClick={() => onSelected(user)} size="large">
                     <img alt="status icon view-icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
-            </StyledTableCell>
+            </TableCell>
         )
 
         return row
@@ -245,6 +258,6 @@ export const userTableHeaderRenderer = <T extends Record<string, any>>(
     selectedLang: Language
 ) => {
     const headerCells = defaultTableHeaderRenderer(headers, sortConfig, onRequestSort, selectedLang)
-    headerCells.push(<StyledTableCell key="view-user" className="header" align="center" />)
+    headerCells.push(<TableCell key="view-user" align="center" variant="head" className="header" />)
     return headerCells
 }

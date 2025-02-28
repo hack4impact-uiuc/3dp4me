@@ -1,4 +1,5 @@
 import { Language } from '@3dp4me/types'
+import { createTheme, StyledEngineProvider, ThemeOptions, ThemeProvider } from '@mui/material'
 import React, { useContext, useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
@@ -19,13 +20,37 @@ import PatientDetail from './pages/PatientDetail/PatientDetail'
 import Patients from './pages/Patients/Patients'
 import { ReducerActionType } from './store/Reducer'
 import { Context } from './store/Store'
-import { CognitoAttribute, Routes } from './utils/constants'
+import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
 
 interface AppContentProps {
     username: string
     userEmail: string
 }
+
+const theme: ThemeOptions = {
+    palette: {
+        primary: {
+            main: '#3f51b5',
+        },
+        secondary: {
+            main: '#dedffb',
+        },
+    },
+    typography: {
+        fontFamily: '"Roboto", sans-serif',
+    },
+}
+
+const arTheme = createTheme({
+    ...theme,
+    direction: 'rtl',
+})
+
+const enTheme = createTheme({
+    ...theme,
+    direction: 'ltr',
+})
 
 const AppContent = ({ username, userEmail }: AppContentProps) => {
     const errorWrap = useErrorWrap()
@@ -78,38 +103,42 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
             <LoadingIndicator />
             <Router>
                 <QueryParamProvider ReactRouterRoute={Route}>
-                    <Navbar username={username} userEmail={userEmail} />
+                    <StyledEngineProvider injectFirst>
+                        <ThemeProvider theme={selectedLang === LANGUAGES.AR ? arTheme : enTheme}>
+                            <Navbar username={username} userEmail={userEmail} />
 
-                    {/* Global error popup */}
-                    <ErrorModal
-                        message={state.error}
-                        isOpen={!!state.isErrorVisible}
-                        onClose={handleErrorModalClose}
-                    />
+                            {/* Global error popup */}
+                            <ErrorModal
+                                message={state.error}
+                                isOpen={!!state.isErrorVisible}
+                                onClose={handleErrorModalClose}
+                            />
 
-                    {/* Routes */}
-                    <div className={contentClassNames}>
-                        <Switch>
-                            <Route exact path={Routes.DASHBOARD}>
-                                <Dashboard />
-                            </Route>
-                            <Route exact path={Routes.ACCOUNT}>
-                                <AccountManagement />
-                            </Route>
-                            <Route exact path={Routes.PATIENTS}>
-                                <Patients />
-                            </Route>
-                            <Route exact path={Routes.DASHBOARD_MANAGEMENT}>
-                                <DashboardManagement />
-                            </Route>
-                            <Route exact path={`${Routes.PATIENT_2FA}/:patientId`}>
-                                <Patient2FA />
-                            </Route>
-                            <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
-                                <PatientDetail />
-                            </Route>
-                        </Switch>
-                    </div>
+                            {/* Routes */}
+                            <div className={contentClassNames}>
+                                <Switch>
+                                    <Route exact path={Routes.DASHBOARD}>
+                                        <Dashboard />
+                                    </Route>
+                                    <Route exact path={Routes.ACCOUNT}>
+                                        <AccountManagement />
+                                    </Route>
+                                    <Route exact path={Routes.PATIENTS}>
+                                        <Patients />
+                                    </Route>
+                                    <Route exact path={Routes.DASHBOARD_MANAGEMENT}>
+                                        <DashboardManagement />
+                                    </Route>
+                                    <Route exact path={`${Routes.PATIENT_2FA}/:patientId`}>
+                                        <Patient2FA />
+                                    </Route>
+                                    <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
+                                        <PatientDetail />
+                                    </Route>
+                                </Switch>
+                            </div>
+                        </ThemeProvider>
+                    </StyledEngineProvider>
                 </QueryParamProvider>
             </Router>
         </div>

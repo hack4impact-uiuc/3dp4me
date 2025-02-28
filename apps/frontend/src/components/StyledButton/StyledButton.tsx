@@ -1,7 +1,7 @@
 import './StyledButton.scss'
 
-import { CircularProgress } from '@material-ui/core'
-import Button from '@material-ui/core/Button'
+import { CircularProgress } from '@mui/material'
+import Button from '@mui/material/Button'
 import React, { ReactNode } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'

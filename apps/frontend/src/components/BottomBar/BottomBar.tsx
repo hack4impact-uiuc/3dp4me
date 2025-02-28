@@ -1,11 +1,11 @@
 import './BottomBar.scss'
 
 import { StepPathToField, StepStatus } from '@3dp4me/types'
-import AppBar from '@material-ui/core/AppBar'
-import Button from '@material-ui/core/Button'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import Toolbar from '@material-ui/core/Toolbar'
+import AppBar from '@mui/material/AppBar'
+import Button from '@mui/material/Button'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import Toolbar from '@mui/material/Toolbar'
 import React, { MouseEventHandler } from 'react'
 
 import check from '../../assets/check.svg'

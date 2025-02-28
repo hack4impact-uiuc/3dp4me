@@ -243,7 +243,6 @@ export const ACCOUNT_MANAGEMENT_TABS = {
 
 export const RESIZE_TOGGLE_BUTTON_ESTIMATED_WIDTH = 170
 
-
 /**
  * Feature flags
  */

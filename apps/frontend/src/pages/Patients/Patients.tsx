@@ -53,7 +53,7 @@ const Patients = () => {
     }
 
     return (
-        <div className="dashboard">
+        <div>
             <div className="patient-list">
                 <PatientTable
                     onAddPatient={onAddPatient}

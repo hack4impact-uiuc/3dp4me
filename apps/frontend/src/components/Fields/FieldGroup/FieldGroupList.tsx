@@ -1,6 +1,6 @@
 /* eslint import/no-cycle: "off" */
 // Unfortunately, there has to be an import cycle, because this is by nature, recursive
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
 
 import XIcon from '../../../assets/x-icon.png'
 import { useTranslations } from '../../../hooks/useTranslations'
