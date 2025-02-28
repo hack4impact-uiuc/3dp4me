@@ -1,8 +1,7 @@
 @import '../../styles/colors.scss';
 
-.table {
+.table3dp4me {
     font-family: 'Ubuntu';
-    // min-width: 700;
 
     .header {
         border-top: solid $navbar 1px;
@@ -10,17 +9,12 @@
         background-color: $sidebar;
         color: white;
         font-weight: bold;
-        font-size: 12px;
+        // font-size: 12px;
         text-transform: uppercase;
 
         &:hover {
             cursor: pointer;
         }
-    }
-
-    .MuiTableCell-head {
-        padding-top: 6px;
-        padding-bottom: 6px;
     }
 
     .cell-right {
@@ -35,7 +29,7 @@
         margin-right: 20%;
         align-items: center;
         color: $button;
-        font-size: 13px;
+        font-size: 1rem;
         font-weight: bolder;
         .view-icon {
             color: $button;
@@ -48,7 +42,7 @@
     }
 
     .cell {
-        font-size: 13px;
+        font-size: 1rem;
         padding-top: 3.85px;
         padding-bottom: 3.85px;
         padding-left: 20px;
@@ -59,7 +53,7 @@
     }
 
     .cell-rtl {
-        font-size: 13px;
+        font-size: 1rem;
         padding-top: 3.85px;
         padding-bottom: 3.85px;
         padding-right: 30px;

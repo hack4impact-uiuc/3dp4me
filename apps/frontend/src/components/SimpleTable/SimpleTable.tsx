@@ -87,7 +87,7 @@ const SimpleTable = <T extends Record<string, any>>({
     return (
         <div>
             <TableContainer component={Paper} style={containerStyle}>
-                <MaterialUITable stickyHeader className="table">
+                <MaterialUITable stickyHeader className="table3dp4me">
                     <TableHead>
                         <TableRow style={rowStyle}>{renderedHeaders}</TableRow>
                     </TableHead>

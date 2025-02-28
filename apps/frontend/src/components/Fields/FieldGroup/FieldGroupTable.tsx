@@ -137,7 +137,7 @@ const FieldGroupTable = ({
         if ((itemData as any) === RENDER_PLUS_ICON) {
             const numCols = (metadata?.subFields?.length || 1) + 1
             return (
-                <StyledTableCell colSpan={numCols} onClick={onAddGroup}>
+                <StyledTableCell colSpan={numCols} onClick={onAddGroup} variant='body'>
                     <AddIcon />
                 </StyledTableCell>
             )
