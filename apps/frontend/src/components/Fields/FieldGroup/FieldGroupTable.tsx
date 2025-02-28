@@ -2,6 +2,7 @@
 // Unfortunately, there has to be an import cycle, because this is by nature, recursive
 import { Language } from '@3dp4me/types'
 import AddIcon from '@mui/icons-material/Add'
+import { TableCell } from '@mui/material'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -16,7 +17,6 @@ import SimpleTable from '../../SimpleTable/SimpleTable'
 import StepField from '../../StepField/StepField'
 import { FieldGroupListTableProps, getCompleteSubFieldKey, getKeyBase } from './FieldGroupHelpers'
 import { getTableData, getTableHeaders, HasGroupNumber, RENDER_PLUS_ICON } from './TableHelpers'
-import { TableCell } from '@mui/material'
 
 const CellEditContainer = styled(TableCell)`
     padding: 5px;

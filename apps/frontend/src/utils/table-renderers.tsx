@@ -1,6 +1,7 @@
 import { AccessLevel, FieldType, Language, Nullish, Path, Patient } from '@3dp4me/types'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp'
+import { TableCell } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import React, { ReactNode } from 'react'
 import Skeleton from 'react-loading-skeleton'
@@ -12,7 +13,6 @@ import translations from '../translations.json'
 import { DisplayFieldType, SortDirection } from './constants'
 import { fieldToJSX } from './fields'
 import { resolveObjPath } from './object'
-import { TableCell } from '@mui/material'
 
 /**
  * Given item data, a field key, and a field type, this function finds
@@ -258,8 +258,6 @@ export const userTableHeaderRenderer = <T extends Record<string, any>>(
     selectedLang: Language
 ) => {
     const headerCells = defaultTableHeaderRenderer(headers, sortConfig, onRequestSort, selectedLang)
-    headerCells.push(
-        <TableCell key="view-user" align="center" variant="head" className="header" />
-    )
+    headerCells.push(<TableCell key="view-user" align="center" variant="head" className="header" />)
     return headerCells
 }

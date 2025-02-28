@@ -8,7 +8,6 @@ import {
     TranslatedString,
     Unsaved,
 } from '@3dp4me/types'
-import { useTheme } from '@mui/material'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControl from '@mui/material/FormControl'

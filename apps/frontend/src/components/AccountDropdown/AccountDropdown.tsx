@@ -50,7 +50,7 @@ const SignoutButton = styled(Button)({
     marginTop: '10px',
     width: '100%',
     '&:hover': {
-        background: '#ca0909'
+        background: '#ca0909',
     },
 })
 
