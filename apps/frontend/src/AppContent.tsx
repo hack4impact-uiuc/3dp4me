@@ -43,9 +43,6 @@ const theme: ThemeOptions = {
         secondary: {
             main: "#dedffb",
         },
-        paper: {
-            main: "#ffffff",
-        }
     },
     typography: {
         // fontSize: 25,

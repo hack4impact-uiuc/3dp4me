@@ -123,7 +123,7 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
     }
 
     return (
-            <StyledAppBar variant='elevation' color="paper" position="sticky">
+            <StyledAppBar variant='elevation' color={'info'} position="sticky">
                 <StyledToolbar variant='dense'>
                     <img
                         alt="Logo"
