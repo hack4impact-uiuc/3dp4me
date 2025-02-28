@@ -20,7 +20,6 @@ import {
     RowLoadingRenderer,
     RowRenderer,
 } from '../../utils/table-renderers'
-import { StyledTableRow } from './SimpleTable.style'
 
 export interface SimpleTableProps<T extends Record<string, any>> {
     data: Nullish<T[]>
@@ -70,17 +69,17 @@ const SimpleTable = <T extends Record<string, any>>({
     const renderTableBody = () => {
         if (isLoading) {
             return new Array(numLoaderRows).fill(0).map((_, i) => (
-                <StyledTableRow key={`row-${i}`} style={rowStyle}>
+                <TableRow key={`row-${i}`} style={rowStyle} hover>
                     {renderLoadingTableRow(renderedHeaders.length, selectedLang)}
-                </StyledTableRow>
+                </TableRow>
             ))
         }
 
         if (!sortedData || !rowData) return null
         return sortedData.map((patient) => (
-            <StyledTableRow key={patient._id} style={rowStyle}>
+            <TableRow key={patient._id} style={rowStyle} hover>
                 {renderTableRow(rowData, patient, selectedLang)}
-            </StyledTableRow>
+            </TableRow>
         ))
     }
 

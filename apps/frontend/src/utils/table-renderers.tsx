@@ -7,12 +7,12 @@ import Skeleton from 'react-loading-skeleton'
 import { Link } from 'react-router-dom'
 
 import Eyecon from '../assets/view.svg'
-import { StyledTableCell } from '../components/SimpleTable/SimpleTable.style'
 import { SortConfig } from '../hooks/useSortableData'
 import translations from '../translations.json'
 import { DisplayFieldType, SortDirection } from './constants'
 import { fieldToJSX } from './fields'
 import { resolveObjPath } from './object'
+import { TableCell } from '@mui/material'
 
 /**
  * Given item data, a field key, and a field type, this function finds
@@ -81,14 +81,14 @@ export const defaultTableRowRenderer = <T extends Record<string, any>>(
 
     // Construct a cell for each piece of data
     const row = rowData.map(({ id, dataType }) => (
-        <StyledTableCell
+        <TableCell
             className={cellClassName}
             key={`${itemData._id}-${id}`}
             align={cellAlign}
             variant="body"
         >
             {getField(itemData, id, dataType, selectedLang)}
-        </StyledTableCell>
+        </TableCell>
     ))
 
     return row
@@ -100,9 +100,9 @@ export const defaultTableRowLoadingRenderer = (numCols: number, selectedLang: La
 
     for (let i = 0; i < numCols; i++) {
         row.push(
-            <StyledTableCell variant="body">
+            <TableCell variant="body">
                 <Skeleton direction={loadDirection} inline={true} />
-            </StyledTableCell>
+            </TableCell>
         )
     }
 
@@ -141,7 +141,7 @@ export const defaultTableHeaderRenderer = <T extends Record<string, any>>(
     const cellClassName = selectedLang === Language.AR ? 'cell-align-rtl' : 'cell-align'
 
     const headerCells = headers.map((header) => (
-        <StyledTableCell
+        <TableCell
             onClick={() => onRequestSort(header.sortKey)}
             key={header.title}
             align={cellAlign}
@@ -152,7 +152,7 @@ export const defaultTableHeaderRenderer = <T extends Record<string, any>>(
                 {header.title}
                 {renderSortArrow(sortConfig, header.sortKey)}
             </div>
-        </StyledTableCell>
+        </TableCell>
     ))
 
     return headerCells
@@ -182,14 +182,14 @@ export const patientTableRowRenderer = (
 
     // Add a link to the patient's page
     row.push(
-        <StyledTableCell key="view-patient-data" className="cell" align="center" variant="body">
+        <TableCell key="view-patient-data" className="cell" align="center" variant="body">
             <Link className="table-view-link" to={link}>
                 <IconButton size="large">
                     <img alt="status icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
                 {translations[selectedLang].components.table.view}
             </Link>
-        </StyledTableCell>
+        </TableCell>
     )
 
     return row
@@ -207,7 +207,7 @@ export const patientTableHeaderRenderer = <T extends Record<string, any>>(
 ) => {
     const headerCells = defaultTableHeaderRenderer(headers, sortConfig, onRequestSort, selectedLang)
     headerCells.push(
-        <StyledTableCell key="view-patient" align="center" variant="head" className="header" />
+        <TableCell key="view-patient" align="center" variant="head" className="header" />
     )
     return headerCells
 }
@@ -233,7 +233,7 @@ export const generateSelectableRenderer =
 
         // Add the edit button
         row.push(
-            <StyledTableCell
+            <TableCell
                 key="view-user-data"
                 className="cell cell-right"
                 align="center"
@@ -242,7 +242,7 @@ export const generateSelectableRenderer =
                 <IconButton onClick={() => onSelected(user)} size="large">
                     <img alt="status icon view-icon" width="18px" src={Eyecon} />
                 </IconButton>{' '}
-            </StyledTableCell>
+            </TableCell>
         )
 
         return row
@@ -259,7 +259,7 @@ export const userTableHeaderRenderer = <T extends Record<string, any>>(
 ) => {
     const headerCells = defaultTableHeaderRenderer(headers, sortConfig, onRequestSort, selectedLang)
     headerCells.push(
-        <StyledTableCell key="view-user" align="center" variant="head" className="header" />
+        <TableCell key="view-user" align="center" variant="head" className="header" />
     )
     return headerCells
 }

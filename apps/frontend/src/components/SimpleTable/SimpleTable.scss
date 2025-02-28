@@ -2,11 +2,18 @@
 
 .table3dp4me {
     font-family: 'Ubuntu';
+    min-width: 700;
+
+    .MuiTableCell-head {
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
 
     .header {
         border-top: solid $navbar 1px;
         border-bottom: solid $navbar 1px;
         background-color: $sidebar;
+        font-size: 12px;
         color: white;
         font-weight: bold;
         text-transform: uppercase;
@@ -28,7 +35,7 @@
         margin-right: 20%;
         align-items: center;
         color: $button;
-        font-size: 1rem;
+        font-size: "13px";
         font-weight: bolder;
         .view-icon {
             color: $button;
@@ -41,7 +48,7 @@
     }
 
     .cell {
-        font-size: 1rem;
+        font-size: 13px;
         padding-top: 3.85px;
         padding-bottom: 3.85px;
         padding-left: 20px;
@@ -52,7 +59,7 @@
     }
 
     .cell-rtl {
-        font-size: 1rem;
+        font-size: 13px;
         padding-top: 3.85px;
         padding-bottom: 3.85px;
         padding-right: 30px;

@@ -41,18 +41,18 @@ const LanguageSelector = styled(Select<Language>)({
     height: 50,
 })
 
-const SignoutButton = styled(Button)`
-    height: '38px';
-    fontsize: '1em';
-    fontweight: 'bold';
-    backgroundcolor: '#ca0909';
-    color: 'white';
-    margintop: '10px';
-    width: '100%';
+const SignoutButton = styled(Button)({
+    height: '38px',
+    fontSize: '1em',
+    fontWeight: 'bold',
+    backgroundColor: '#ca0909',
+    color: 'white',
+    marginTop: '10px',
+    width: '100%',
     '&:hover': {
-        background: '#ca0909';
-    }
-`
+        background: '#ca0909'
+    },
+})
 
 const AccountDropdown = ({
     handleClose,
