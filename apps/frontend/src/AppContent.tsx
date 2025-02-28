@@ -1,7 +1,5 @@
 import { Language } from '@3dp4me/types'
 import { createTheme, StyledEngineProvider, ThemeOptions, ThemeProvider } from '@mui/material'
-// import { createTheme, PaletteOptions, StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
-// import { ThemeProvider, StyledEngineProvider, createTheme, ThemeOptions, fontSize } from '@mui/material/styles'
 import React, { useContext, useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
