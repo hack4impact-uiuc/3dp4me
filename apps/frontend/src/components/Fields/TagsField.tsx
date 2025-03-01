@@ -5,6 +5,7 @@ import Autocomplete, { AutocompleteValue } from '@mui/material/Autocomplete';
 import { TextField } from '@mui/material';
 import { TagOption } from './FormOption';
 import { useTranslations } from '../../hooks/useTranslations';
+import ManagePatientModal from '../ManagePatientModal/ManagePatientModal';
 
 export interface TagsFieldProps<T extends string> {
 	displayName: string
@@ -23,7 +24,7 @@ const TagsField = <T extends string>({
 	fieldId,
 	onChange = () => { },
 }: TagsFieldProps<T>) => {
-	const selectedLang = useTranslations()[1]
+	const [translations, selectedLang] = useTranslations()
 
 	return (
 		<div>
@@ -43,7 +44,6 @@ const TagsField = <T extends string>({
 						return (
 							<Chip
 								key={key}
-								// TODO: VALUE?
 								label={option.TagTitle[selectedLang]}
 								{...tagProps}
 								disabled={isDisabled}
@@ -51,10 +51,9 @@ const TagsField = <T extends string>({
 						);
 					})
 				}
-				// TODO: Width?
-				style={{ width: 500 }}
+				style={{ width: "300px" }}
 				renderInput={(params) => (
-					<TextField {...params} label="Fixed tag" placeholder="Favorites" />
+					<TextField {...params}  placeholder={translations.components.swal.managePatient.patientTags} />
 				)}
 			/>
 		</div>

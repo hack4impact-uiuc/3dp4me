@@ -12,8 +12,6 @@ import { signatureSchema } from '../schemas/signatureSchema'
  * Initalizes and connects to the DB. Should be called at app startup.
  */
 export const initDB = (callback?: () => void) => {
-    console.log(new mongoose.Types.ObjectId())
-    console.log(new mongoose.Types.ObjectId())
     mongoose.connect(process.env.DB_URI!, {
         // useNewUrlParser: true,
         // useUnifiedTopology: true,
@@ -38,10 +36,7 @@ const clearModels = async () => {
 }
 
 const initReservedSteps = async () => {
-    const exists = await StepModel.findOne({ key: ReservedStep.Root }).count()
-    if (exists > 0) return
-
-    await StepModel.create(RootStep)
+    await StepModel.updateOne({ key: ReservedStep.Root }, RootStep, { upsert: true })
 }
 
 export const reinitModels = async () => {
@@ -69,6 +64,7 @@ export const generateSchemaFromMetadata = (stepMetadata: Step) => {
         signingKey: process.env.SIGNING_KEY,
         excludeFromEncryption: ['patientId'],
     })
+
     mongoose.model(stepMetadata.key, schema, stepMetadata.key)
 }
 

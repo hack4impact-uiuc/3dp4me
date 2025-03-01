@@ -11,18 +11,16 @@ export enum RootStepFieldKeys {
     Tags = 'tags',
 }
 
-export const PatientTagOptions: QuestionOption[] = [
+export const PatientTagOptions: Omit<QuestionOption, "_id">[] = [
     {
         Index: 0,
         Question: { EN: "Jordan", AR: "الأردن" },
         IsHidden: false,
-        _id: "67b9fad9066c920746fcba5b",
     },
     {
         Index: 1,
         Question: {EN: "Gaza", AR: "غزة"},
         IsHidden: false,
-        _id: "67b9fad9066c920746fcba5c",
     }
 ]
 
@@ -34,7 +32,7 @@ export const PatientTagsField: Field = {
     readableGroups: [],
     writableGroups: [],
     fieldNumber: 1,
-    options: PatientTagOptions,
+    options: PatientTagOptions as QuestionOption[],
     isVisibleOnDashboard: false,
     isHidden: false,
     isDeleted: false,

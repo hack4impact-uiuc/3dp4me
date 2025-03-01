@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { File, Patient, ReservedStep, RootStepFieldKeys, PatientTagOptions } from '@3dp4me/types'
+import { File, Patient, ReservedStep, RootStepFieldKeys, PatientTagOptions, Step, Nullish, RootStep } from '@3dp4me/types';
 
 import { getStepData } from './metadataUtils'
 import { photoToURI } from './photoManipulation'
@@ -29,16 +29,22 @@ export const getProfilePictureAsFileArray = (patient: Patient): File[] => {
     return rootStep[RootStepFieldKeys.ProfilePicture]
 }
 
-export const getPatientTagValues = (patient: Patient): TagOption[] => {
+export const getPatientTagValues = (patient: Patient, meta: Step[]): TagOption[] => {
     const rootStep = getStepData(patient, ReservedStep.Root)
     if (!rootStep) return []
 
     const selectedIds = rootStep[RootStepFieldKeys.Tags] || []
-    return getPatientTagOptions().filter((o) => selectedIds.includes(o._id))
+    return getPatientTagOptions(meta).filter((o) => selectedIds.includes(o._id))
 }
 
-export const getPatientTagOptions = (): TagOption[] => {
-    return PatientTagOptions.map((o) => {
+export const getPatientTagOptions = (meta: Step[]): TagOption[] => {
+    const rootStep = meta.find((s) => s.key === ReservedStep.Root) as Nullish<typeof RootStep>
+    if (!rootStep) return []
+
+    const tagsMeta = rootStep.fields.find((f) => f.key === RootStepFieldKeys.Tags)
+    if (!tagsMeta) return []
+
+    return tagsMeta.options.map((o) => {
         return {
             _id: o._id,
             TagTitle: o.Question,

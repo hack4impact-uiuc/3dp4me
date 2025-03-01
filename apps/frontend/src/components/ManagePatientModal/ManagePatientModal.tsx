@@ -1,6 +1,6 @@
 import './ManagePatientModal.scss'
 
-import { Language, Patient, PatientTagsField, ReservedStep, RootStep } from '@3dp4me/types'
+import { Language, Nullish, Patient, PatientTagsField, ReservedStep, RootStep, Step } from '@3dp4me/types'
 import CloseIcon from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
@@ -19,24 +19,30 @@ import TextField from '../Fields/TextField'
 import TagsField from '../Fields/TagsField'
 
 export interface ManagePatientModalProps {
+    stepMetadata: Step[]
     patientData: Patient
     isOpen: boolean
     onClose: () => void
     onDataSave: (patient: Patient) => void
+    onStepSave: (stepKey: string, stepData: Step) => void
     onDeleted: () => void
     onUploadProfilePicture: (file: File) => void
 }
 
 const ManagePatientModal = ({
+    stepMetadata,
     patientData,
     isOpen,
     onClose,
     onDataSave,
+    onStepSave,
     onDeleted,
     onUploadProfilePicture,
 }: ManagePatientModalProps) => {
     const [translations, selectedLang] = useTranslations()
     const [updatedPatientData, setUpdatedPatientData] = useState(_.cloneDeep(patientData))
+
+    console.log("PATIENT DATA", patientData)
 
     const onFieldUpdate = (key: string, value: string) => {
         setUpdatedPatientData((data) => ({
@@ -50,13 +56,16 @@ const ManagePatientModal = ({
             const rootData = (data as any)?.[ReservedStep.Root] || {}
             const allData = data || {}
 
-            return {
+            const d= {
                 ...allData,
                 [ReservedStep.Root]: {
                     ...rootData,
                     [key]: value,
                 }
             }
+
+            console.log("THE NEW DATA WILL BE ", d)
+            return d
         })
     }
 
@@ -193,8 +202,8 @@ const ManagePatientModal = ({
                     <TagsField
                         displayName={PatientTagsField.displayName[selectedLang]}
                         fieldId={PatientTagsField.key}
-                        options={getPatientTagOptions()}
-                        value={getPatientTagValues(updatedPatientData)}
+                        options={getPatientTagOptions(stepMetadata)}
+                        value={getPatientTagValues(updatedPatientData, stepMetadata)}
                         onChange={onTagUpdate} />
                 </div>
 
@@ -203,6 +212,10 @@ const ManagePatientModal = ({
                         className="manage-patient-save-button"
                         onClick={() => {
                             onDataSave(updatedPatientData)
+                            const root = (updatedPatientData as any)?.[ReservedStep.Root] as Nullish<Step>
+                            if (!!root) {
+                                onStepSave(ReservedStep.Root, _.cloneDeep(root))
+                            }
                         }}
                     >
                         {translations.components.swal.managePatient.buttons.save}
