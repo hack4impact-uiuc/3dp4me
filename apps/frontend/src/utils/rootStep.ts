@@ -1,8 +1,9 @@
 /* eslint-disable no-restricted-syntax */
-import { File, Patient, ReservedStep, RootStepFieldKeys } from '@3dp4me/types'
+import { File, Patient, ReservedStep, RootStepFieldKeys, PatientTagOptions } from '@3dp4me/types'
 
 import { getStepData } from './metadataUtils'
 import { photoToURI } from './photoManipulation'
+import { TagOption } from '../components/Fields/FormOption'
 
 export const getProfilePictureUrl = (patient: Patient) => {
     const rootStep = getStepData(patient, ReservedStep.Root)
@@ -28,10 +29,20 @@ export const getProfilePictureAsFileArray = (patient: Patient): File[] => {
     return rootStep[RootStepFieldKeys.ProfilePicture]
 }
 
-export const getPatientTags = (patient: Patient): string[] => {
+export const getPatientTagValues = (patient: Patient): TagOption[] => {
     const rootStep = getStepData(patient, ReservedStep.Root)
-    console.log(rootStep)
     if (!rootStep) return []
 
-    return rootStep[RootStepFieldKeys.Tags] || []
+    const selectedIds = rootStep[RootStepFieldKeys.Tags] || []
+    return getPatientTagOptions().filter((o) => selectedIds.includes(o._id))
+}
+
+export const getPatientTagOptions = (): TagOption[] => {
+    return PatientTagOptions.map((o) => {
+        return {
+            _id: o._id,
+            TagTitle: o.Question,
+            IsHidden: o.IsHidden,
+        }
+    })
 }

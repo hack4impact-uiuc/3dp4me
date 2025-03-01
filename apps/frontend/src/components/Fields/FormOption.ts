@@ -5,3 +5,9 @@ export interface FormOption {
     IsHidden: boolean
     Question: TranslatedString
 }
+
+export interface TagOption {
+    _id: string
+    IsHidden: boolean
+    TagTitle: TranslatedString
+}

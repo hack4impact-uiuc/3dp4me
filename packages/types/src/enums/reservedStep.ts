@@ -11,7 +11,7 @@ export enum RootStepFieldKeys {
     Tags = 'tags',
 }
 
-const PatientTagOptions: QuestionOption[] = [
+export const PatientTagOptions: QuestionOption[] = [
     {
         Index: 0,
         Question: { EN: "Jordan", AR: "الأردن" },
