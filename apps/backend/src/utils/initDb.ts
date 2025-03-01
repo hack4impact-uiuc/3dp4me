@@ -1,4 +1,4 @@
-import { Field, FieldType, ReservedStep, RootStep, Step, StepStatus } from '@3dp4me/types'
+import { Field, FieldType, PatientTagsField, ReservedStep, RootStep, RootStepFieldKeys, Step, StepStatus } from '@3dp4me/types'
 import _ from 'lodash'
 import log from 'loglevel'
 import mongoose, { SchemaDefinitionProperty, ObjectId } from 'mongoose'
@@ -36,7 +36,20 @@ const clearModels = async () => {
 }
 
 const initReservedSteps = async () => {
-    await StepModel.updateOne({ key: ReservedStep.Root }, RootStep, { upsert: true })
+    const rootStep = await StepModel.findOne({ key: ReservedStep.Root }).lean()
+    if (!rootStep) {
+        return StepModel.create(RootStep)
+    }
+
+
+    // Migrations
+    const tagField = rootStep.fields.find(f => f.key === RootStepFieldKeys.Tags) 
+    if (!!tagField) {
+        // Already up to date
+        return
+    }
+
+    await StepModel.findOneAndUpdate({ key: ReservedStep.Root }, { $push: { fields: PatientTagsField } })
 }
 
 export const reinitModels = async () => {
