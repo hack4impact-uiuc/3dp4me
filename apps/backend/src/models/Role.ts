@@ -19,6 +19,7 @@ const roleSchema = new mongoose.Schema<Role>({
     },
     isHidden: { type: Boolean, required: false, default: false },
     isMutable: { type: Boolean, required: false, default: true },
+    patientTags: { type: [String], required: false, default: [] },
 })
 
 export const RoleModel = mongoose.model('Role', roleSchema, 'Role')
