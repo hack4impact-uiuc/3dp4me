@@ -1,12 +1,12 @@
 import './SimpleTable.scss'
 
 import { Nullish } from '@3dp4me/types'
-import Paper from '@material-ui/core/Paper'
-import MaterialUITable from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
+import Paper from '@mui/material/Paper'
+import MaterialUITable from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
 import React, { CSSProperties, useMemo } from 'react'
 
 import useSortableData from '../../hooks/useSortableData'
@@ -20,7 +20,6 @@ import {
     RowLoadingRenderer,
     RowRenderer,
 } from '../../utils/table-renderers'
-import { StyledTableRow } from './SimpleTable.style'
 
 export interface SimpleTableProps<T extends Record<string, any>> {
     data: Nullish<T[]>
@@ -70,24 +69,24 @@ const SimpleTable = <T extends Record<string, any>>({
     const renderTableBody = () => {
         if (isLoading) {
             return new Array(numLoaderRows).fill(0).map((_, i) => (
-                <StyledTableRow key={`row-${i}`} style={rowStyle}>
+                <TableRow key={`row-${i}`} style={rowStyle} hover>
                     {renderLoadingTableRow(renderedHeaders.length, selectedLang)}
-                </StyledTableRow>
+                </TableRow>
             ))
         }
 
         if (!sortedData || !rowData) return null
         return sortedData.map((patient) => (
-            <StyledTableRow key={patient._id} style={rowStyle}>
+            <TableRow key={patient._id} style={rowStyle} hover>
                 {renderTableRow(rowData, patient, selectedLang)}
-            </StyledTableRow>
+            </TableRow>
         ))
     }
 
     return (
         <div>
             <TableContainer component={Paper} style={containerStyle}>
-                <MaterialUITable stickyHeader className="table">
+                <MaterialUITable stickyHeader className="table3dp4me">
                     <TableHead>
                         <TableRow style={rowStyle}>{renderedHeaders}</TableRow>
                     </TableHead>

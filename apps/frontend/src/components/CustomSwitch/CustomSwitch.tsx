@@ -1,7 +1,7 @@
 import './CustomSwitch.scss'
 
-import Visibility from '@material-ui/icons/Visibility'
-import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import Switch from 'react-switch'
 
 export interface CustomSwitchProps {

@@ -1,7 +1,7 @@
 import './DashboardManagement.scss'
 
 import { BaseStep, Field, Nullish, Step, StepPathToField, Unsaved } from '@3dp4me/types'
-import ListItem from '@material-ui/core/ListItem'
+import ListItem from '@mui/material/ListItem'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
@@ -441,7 +441,6 @@ const SectionTab = () => {
                         selectedStep={selectedStep}
                     />
                     <ListItem
-                        button
                         onClick={() => {
                             setCreateStepModalOpen(false)
                         }}

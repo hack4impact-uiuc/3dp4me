@@ -1,9 +1,8 @@
-import './Navbar.scss'
-
 import { Language, Nullish } from '@3dp4me/types'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { styled } from '@mui/material'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
 import React, { MouseEventHandler, useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -12,16 +11,67 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { Context } from '../../store/Store'
 import { Routes } from '../../utils/constants'
 import AccountDropdown from '../AccountDropdown/AccountDropdown'
-import { useStyles } from './Navbar.style'
 
 export interface NavbarProps {
     username: string
     userEmail: string
 }
 
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+    zIndex: theme.zIndex.drawer + 1,
+}))
+
+const StyledToolbar = styled(Toolbar)`
+    background-color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 47px;
+
+    .logo-ar {
+        margin-left: 15px;
+    }
+
+    #nav-title {
+        flex-grow: 1;
+        margin: 0 10px 0 10px;
+        font-size: 14px;
+        color: black;
+    }
+
+    .active {
+        font-weight: bolder;
+        color: black;
+    }
+
+    .accountCircle {
+        fill: black;
+        font-size: 30px;
+        margin: 0 8px;
+        opacity: 0.4;
+        transition: all 0.2s;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+`
+
+const NavItem = styled(Link)({
+    textDecoration: 'none',
+    margin: '0 16px 0 16px',
+    fontSize: '1rem',
+    color: '#5f5f5f',
+})
+
+const NavTitle = styled(Link)(({ theme }) => ({
+    fontWeight: 'bold',
+    fontSize: '1rem',
+    textDecoration: 'none',
+    margin: '0 16px 0 16px',
+    color: '#5f5f5f',
+}))
+
 const Navbar = ({ username, userEmail }: NavbarProps) => {
     const state = useContext(Context)[0]
-    const classes = useStyles()
     const [translations, selectedLang] = useTranslations()
     const [activeRoute, setActiveRoute] = useState(window.location.pathname)
     const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & SVGSVGElement>>(null)
@@ -40,14 +90,14 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
         const activeClass = activeRoute === route ? 'active' : ''
 
         return (
-            <Link
+            <NavItem
                 key={route}
-                className={`nav-item ${activeClass}`}
                 onClick={() => setActiveRoute(route)}
+                className={activeClass}
                 to={`${route}`}
             >
                 {text}
-            </Link>
+            </NavItem>
         )
     }
 
@@ -72,42 +122,39 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
     }
 
     return (
-        <div className="wrap-nav">
-            <AppBar className={classes.appBar}>
-                <Toolbar className={`navbar ${classes.toolBar}`}>
-                    <img
-                        alt="Logo"
-                        className={selectedLang === Language.AR ? 'logo-ar' : ''}
-                        height={32}
-                        src={Logo}
-                    />
+        <StyledAppBar variant="elevation" color={'info'} position="sticky">
+            <StyledToolbar variant="dense">
+                <img
+                    alt="Logo"
+                    className={selectedLang === Language.AR ? 'logo-ar' : ''}
+                    height={36}
+                    src={Logo}
+                />
 
-                    <Link
-                        onClick={() => setActiveRoute(Routes.DASHBOARD)}
-                        id="nav-title"
-                        className={`${classes.navTitle} nav-item`}
-                        to={Routes.DASHBOARD}
-                    >
-                        {translations.components.navbar.dashboard.navTitle}
-                    </Link>
+                <NavTitle
+                    onClick={() => setActiveRoute(Routes.DASHBOARD)}
+                    id="nav-title"
+                    to={Routes.DASHBOARD}
+                >
+                    {translations.components.navbar.dashboard.navTitle}
+                </NavTitle>
 
-                    {renderLinks()}
+                {renderLinks()}
 
-                    <AccountCircleIcon
-                        className="accountCircle"
-                        aria-controls="account-dropdown-menu"
-                        aria-haspopup="true"
-                        onClick={handleAccountClick}
-                    />
-                    <AccountDropdown
-                        anchorEl={anchorEl}
-                        handleClose={handleAccountClose}
-                        username={username}
-                        userEmail={userEmail}
-                    />
-                </Toolbar>
-            </AppBar>
-        </div>
+                <AccountCircleIcon
+                    className="accountCircle"
+                    aria-controls="account-dropdown-menu"
+                    aria-haspopup="true"
+                    onClick={handleAccountClick}
+                />
+                <AccountDropdown
+                    anchorEl={anchorEl}
+                    handleClose={handleAccountClose}
+                    username={username}
+                    userEmail={userEmail}
+                />
+            </StyledToolbar>
+        </StyledAppBar>
     )
 }
 

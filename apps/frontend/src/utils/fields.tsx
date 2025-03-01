@@ -7,8 +7,8 @@ import {
     Signature,
     StepStatus,
 } from '@3dp4me/types'
-import CheckIcon from '@material-ui/icons/Check'
-import CloseIcon from '@material-ui/icons/Close'
+import CheckIcon from '@mui/icons-material/Check'
+import CloseIcon from '@mui/icons-material/Close'
 import React from 'react'
 
 import finishedIcon from '../assets/check.svg'

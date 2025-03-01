@@ -1,7 +1,8 @@
 /* eslint import/no-cycle: "off" */
 // Unfortunately, there has to be an import cycle, because this is by nature, recursive
 import { Language } from '@3dp4me/types'
-import AddIcon from '@material-ui/icons/Add'
+import AddIcon from '@mui/icons-material/Add'
+import { TableCell } from '@mui/material'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -13,12 +14,11 @@ import {
     defaultTableRowRenderer,
 } from '../../../utils/table-renderers'
 import SimpleTable from '../../SimpleTable/SimpleTable'
-import { StyledTableCell } from '../../SimpleTable/SimpleTable.style'
 import StepField from '../../StepField/StepField'
 import { FieldGroupListTableProps, getCompleteSubFieldKey, getKeyBase } from './FieldGroupHelpers'
 import { getTableData, getTableHeaders, HasGroupNumber, RENDER_PLUS_ICON } from './TableHelpers'
 
-const CellEditContainer = styled(StyledTableCell)`
+const CellEditContainer = styled(TableCell)`
     padding: 5px;
 
     // Prevent arrows on number input
@@ -122,7 +122,7 @@ const FieldGroupTable = ({
     const tableColumnMetadata = useMemo(
         () =>
             metadata?.subFields?.map((field) => ({
-                id: field.key, 
+                id: field.key,
                 dataType: field.fieldType,
             })),
         [metadata]
@@ -137,9 +137,9 @@ const FieldGroupTable = ({
         if ((itemData as any) === RENDER_PLUS_ICON) {
             const numCols = (metadata?.subFields?.length || 1) + 1
             return (
-                <StyledTableCell colSpan={numCols} onClick={onAddGroup}>
+                <TableCell colSpan={numCols} onClick={onAddGroup} variant="body">
                     <AddIcon />
-                </StyledTableCell>
+                </TableCell>
             )
         }
 
@@ -173,7 +173,7 @@ const FieldGroupTable = ({
 
         // Adds the delete button
         cols.push(
-            <StyledTableCell>
+            <TableCell>
                 <img
                     src={XIcon}
                     alt={translations.components.button.discard.title}
@@ -181,7 +181,7 @@ const FieldGroupTable = ({
                     onClick={() => onRemoveGroup(itemData.groupNum)}
                     style={{ float: lang === Language.EN ? 'right' : 'left' }}
                 />
-            </StyledTableCell>
+            </TableCell>
         )
 
         return cols

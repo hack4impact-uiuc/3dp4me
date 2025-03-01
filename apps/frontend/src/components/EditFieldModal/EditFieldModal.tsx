@@ -1,14 +1,12 @@
 import './EditFieldModal.scss'
 
 import { Field, FieldType, Language, TranslatedString, Unsaved } from '@3dp4me/types'
-import Button from '@material-ui/core/Button'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import InputBase from '@material-ui/core/InputBase'
-import Modal from '@material-ui/core/Modal'
-import NativeSelect from '@material-ui/core/NativeSelect'
-import withStyles from '@material-ui/core/styles/withStyles'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Modal from '@mui/material/Modal'
+import NativeSelect from '@mui/material/NativeSelect'
 import _ from 'lodash'
 import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react'
 import swal from 'sweetalert'
@@ -18,6 +16,7 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { ADMIN_ID } from '../../utils/constants'
 import { validateField } from '../../utils/fields'
 import CustomSwitch from '../CustomSwitch/CustomSwitch'
+import { DropdownInput } from '../DropdownInput/DropdownInput'
 import { FormOption } from '../Fields/FormOption'
 import MultiSelectField from '../Fields/MultiSelectField'
 import LanguageInput from '../LanguageInput/LanguageInput'
@@ -66,32 +65,6 @@ const EditFieldModal = ({
 
         setOptions(formattedOptions)
     }, [initialData, isOpen])
-
-    const BootstrapInput = withStyles((theme) => ({
-        root: {
-            'label + &': {
-                marginTop: theme.spacing(3),
-            },
-        },
-        input: {
-            borderRadius: 4,
-            position: 'relative',
-            backgroundColor: '#dedffb',
-            border: '1px solid #ced4da',
-            fontSize: 16,
-            padding: '10px 26px 10px 12px',
-            transition: theme.transitions.create(['border-color', 'box-shadow']),
-            // Use the system font instead of the default Roboto font.
-            '&:focus': {
-                borderRadius: 4,
-                borderColor: '#80bdff',
-                boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-            },
-            selected: {
-                backgroundColor: '#dedffb',
-            },
-        },
-    }))(InputBase)
 
     const onRolesChange = (id: string, roles: string[]) => {
         setSelectedRoles(roles)
@@ -362,7 +335,7 @@ const EditFieldModal = ({
                                 //     style: { zIndex: 35001 }, // for keeping this component on the top layer
                                 // }}
                                 defaultValue={fieldType}
-                                input={<BootstrapInput />}
+                                input={<DropdownInput />}
                                 disabled
                             >
                                 {generateFieldDropdownOptions()}

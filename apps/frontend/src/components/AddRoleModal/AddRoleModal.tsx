@@ -1,8 +1,8 @@
 import './AddRoleModal.scss'
 
 import { Language, Role } from '@3dp4me/types'
-import Button from '@material-ui/core/Button'
-import Modal from '@material-ui/core/Modal'
+import Button from '@mui/material/Button'
+import Modal from '@mui/material/Modal'
 import { useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
