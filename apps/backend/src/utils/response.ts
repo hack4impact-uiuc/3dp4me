@@ -87,6 +87,8 @@ export const getDataFromModelWithPaginationAndSearch = async <T>(
     model: Model<T>,
     findParameters = {}
 ): Promise<{ data: HydratedDocument<T>[]; count: number }> => {
+    // TODO: CHECK ROLES HERE
+
     // The default values below will get the first user in the database
     const {
         pageNumber = 1,

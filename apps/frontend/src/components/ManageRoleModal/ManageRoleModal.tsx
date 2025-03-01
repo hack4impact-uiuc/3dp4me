@@ -1,6 +1,6 @@
 import './ManageRoleModal.scss'
 
-import { Nullish, Role } from '@3dp4me/types'
+import { Nullish, PatientTagsField, Role } from '@3dp4me/types'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import _ from 'lodash'
@@ -14,6 +14,9 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { ERR_ROLE_INPUT_VALIDATION_FAILED, ERR_ROLE_IS_IMMUTABLE } from '../../utils/constants'
 import TextArea from '../Fields/TextArea'
 import TextField from '../Fields/TextField'
+import { useSteps } from '../../query/useSteps'
+import { getPatientTagOptions } from '../../utils/rootStep'
+import TagsField from '../Fields/TagsField'
 
 export interface ManageRoleModalProps {
     isOpen: boolean
@@ -31,8 +34,16 @@ const ManageRoleModal = ({
     roleInfo,
 }: ManageRoleModalProps) => {
     const [translations, selectedLang] = useTranslations()
-    const [role, setRole] = useState<Nullish<Role>>(null)
+    const [role, setRole] = useState<Nullish<Partial<Role>>>(null)
     const errorWrap = useErrorWrap()
+    const {
+        data: stepMetaData,
+        isLoading: areStepsLoading,
+        isError: isStepsError,
+    } = useSteps({
+        includeHiddenFields: false,
+        includeReservedSteps: true,
+    })
 
     useEffect(() => {
         setRole(_.cloneDeep(roleInfo))
@@ -65,8 +76,8 @@ const ManageRoleModal = ({
 
     const validateRole = () => {
         if (
-            role?.roleName[selectedLang].trim() === '' ||
-            role?.roleDescription[selectedLang].trim() === ''
+            role?.roleName?.[selectedLang]?.trim() === '' ||
+            role?.roleDescription?.[selectedLang]?.trim() === ''
         ) {
             throw new Error(ERR_ROLE_INPUT_VALIDATION_FAILED)
         }
@@ -79,12 +90,37 @@ const ManageRoleModal = ({
             validateRole()
             if (roleInfo?.isMutable) {
                 await errorWrap(async () => trackPromise(editRole(roleInfo?._id, role)))
-                onRoleEdited(roleInfo?._id, role)
+                onRoleEdited(roleInfo?._id, role as Role)
                 onClose()
             } else {
                 throw new Error(ERR_ROLE_IS_IMMUTABLE)
             }
         })
+    }
+
+    const getSelectedPatientTags = () => {
+        const selectedTags = role?.patientTags
+        if (!selectedTags) return []
+
+        const tagOptions = getPatientTagOptions(stepMetaData)
+        return selectedTags.map((tag) => {
+            const correspondingOption = tagOptions.find((option) => option._id === tag)
+            if (!correspondingOption) return null
+
+            return {
+                _id: tag,
+                TagTitle: correspondingOption.TagTitle,
+                IsHidden: correspondingOption.IsHidden,
+            }
+
+        }).filter((tag) => tag !== null)
+    }
+
+    const handleRoleSimpleUpdate = (key: string, tags: string[]) => {
+        setRole((prevState) => ({
+            ...prevState,
+            [key]: tags
+        }))
     }
 
     const onRoleChange = async (fieldId: 'roleName' | 'roleDescription', value: string) => {
@@ -120,6 +156,15 @@ const ManageRoleModal = ({
                     value={role?.roleDescription?.[selectedLang]}
                     onChange={onRoleChange}
                 />
+                <TagsField
+                    isDisabled={areStepsLoading || isStepsError}
+                    displayName={PatientTagsField.displayName[selectedLang]}
+                    isLoading={areStepsLoading}
+                    fieldId="patientTags"
+                    options={getPatientTagOptions(stepMetaData)}
+                    value={getSelectedPatientTags()}
+                    onChange={(key, value) => handleRoleSimpleUpdate(key, value)} />
+
                 <p>{translations.roleManagement.warning}</p>
 
                 <div className="button-div">

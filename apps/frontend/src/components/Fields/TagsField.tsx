@@ -12,6 +12,7 @@ export interface TagsFieldProps<T extends string> {
 	isDisabled?: boolean
 	fieldId: T
 	options: TagOption[]
+	isLoading?: boolean
 	value?: TagOption[]
 	onChange?: (key: T, value: string[]) => void
 }
@@ -19,9 +20,10 @@ export interface TagsFieldProps<T extends string> {
 const TagsField = <T extends string>({
 	displayName,
 	isDisabled,
-	value = [],
 	options,
 	fieldId,
+	isLoading = false,
+	value = [],
 	onChange = () => { },
 }: TagsFieldProps<T>) => {
 	const [translations, selectedLang] = useTranslations()
@@ -30,9 +32,11 @@ const TagsField = <T extends string>({
 		<div>
 			<h3 className="text-title">{displayName}</h3>
 			<Autocomplete
+				loading={isLoading}
 				multiple
 				id="fixed-tags-demo"
 				value={value}
+				loadingText={translations.components.table.loading}
 				onChange={(e, newValue) => {
 					onChange(fieldId, newValue.map((v) => v._id))
 				}}
@@ -51,7 +55,7 @@ const TagsField = <T extends string>({
 						);
 					})
 				}
-				style={{ width: "300px" }}
+				style={{ width: "300px", marginBottom: "20px" }}
 				renderInput={(params) => (
 					<TextField {...params}  placeholder={translations.components.swal.managePatient.patientTags} />
 				)}

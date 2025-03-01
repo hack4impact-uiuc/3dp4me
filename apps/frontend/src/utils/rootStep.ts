@@ -37,7 +37,9 @@ export const getPatientTagValues = (patient: Patient, meta: Step[]): TagOption[]
     return getPatientTagOptions(meta).filter((o) => selectedIds.includes(o._id))
 }
 
-export const getPatientTagOptions = (meta: Step[]): TagOption[] => {
+export const getPatientTagOptions = (meta: Nullish<Step[]>): TagOption[] => {
+    if (!meta) return []
+
     const rootStep = meta.find((s) => s.key === ReservedStep.Root) as Nullish<typeof RootStep>
     if (!rootStep) return []
 

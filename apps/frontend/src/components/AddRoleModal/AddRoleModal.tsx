@@ -1,6 +1,6 @@
 import './AddRoleModal.scss'
 
-import { Language, Role } from '@3dp4me/types'
+import { Language, PatientTagsField, Role, RootStepFieldKeys } from '@3dp4me/types'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import { useState } from 'react'
@@ -12,6 +12,10 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { ERR_ROLE_INPUT_VALIDATION_FAILED } from '../../utils/constants'
 import TextArea from '../Fields/TextArea'
 import TextField from '../Fields/TextField'
+import TagsField from '../Fields/TagsField'
+import { getPatientTagOptions, getPatientTagValues } from '../../utils/rootStep'
+import { useSteps } from '../../query/useSteps'
+import { TagOption } from '../Fields/FormOption'
 
 export interface AddRoleModalProps {
     isOpen: boolean
@@ -21,8 +25,16 @@ export interface AddRoleModalProps {
 
 const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
     const [role, setRole] = useState<Partial<Role>>({})
-    const translations = useTranslations()[0]
+    const [translations, selectedLang] = useTranslations()
     const errorWrap = useErrorWrap()
+    const {
+        data: stepMetaData,
+        isLoading: areStepsLoading,
+        isError: isStepsError,
+    } = useSteps({
+        includeHiddenFields: false,
+        includeReservedSteps: true,
+    })
 
     const onSave = async () => {
         errorWrap(async () => {
@@ -57,6 +69,31 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
         }
     }
 
+    const handleRoleSimpleUpdate = (key: string, tags: string[]) => {
+        setRole((prevState) => ({
+            ...prevState,
+            [key]: tags
+        }))
+    }
+
+    const getSelectedPatientTags = () => {
+        const selectedTags = role?.patientTags
+        if (!selectedTags) return []
+
+        const tagOptions = getPatientTagOptions(stepMetaData)
+        return selectedTags.map((tag) => {
+            const correspondingOption = tagOptions.find((option) => option._id === tag)
+            if (!correspondingOption) return null
+
+            return {
+                _id: tag,
+                TagTitle: correspondingOption.TagTitle,
+                IsHidden: correspondingOption.IsHidden,
+            }
+
+        }).filter((tag) => tag !== null)
+    }
+
     return (
         <Modal open={isOpen} onClose={onClose} className="add-role-modal">
             <div className="add-role-modal-wrapper">
@@ -75,6 +112,16 @@ const AddRoleModal = ({ isOpen, onClose, onRoleAdded }: AddRoleModalProps) => {
                     onChange={(key, value) => handleRoleUpdate(key, value, Language.AR)}
                     fieldId="roleName"
                 />
+
+                <TagsField
+                    isDisabled={areStepsLoading || isStepsError}
+                    displayName={PatientTagsField.displayName[selectedLang]}
+                    isLoading={areStepsLoading}
+                    fieldId="patientTags"
+                    options={getPatientTagOptions(stepMetaData)}
+                    value={getSelectedPatientTags()}
+                    onChange={(key, value) => handleRoleSimpleUpdate(key, value)} />
+
                 <TextArea
                     value={role?.roleDescription?.[Language.EN]}
                     title={`${translations.roleManagement.roleDescription} (EN)`}

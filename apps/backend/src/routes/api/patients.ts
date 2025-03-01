@@ -170,7 +170,7 @@ router.get(
     errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id, stepKey, fieldKey, fileName } = req.params;
 
-        const isReadable = await isFieldReadable(req.user, stepKey, fieldKey);
+        const isReadable = await isFieldReadable(req.user, id, stepKey, fieldKey);
         if (!isReadable) {
             sendResponse(res, 403, 'Insufficient permissions');
             return;
@@ -220,7 +220,7 @@ router.delete(
         }
 
         // Make sure user has permission to delete file
-        const isWritable = await isFieldReadable(req.user, stepKey, fieldKey);
+        const isWritable = await isFieldReadable(req.user, id, stepKey, fieldKey);
         if (!isWritable)
             return sendResponse(res, 403, 'Insufficient permission');
 
@@ -281,7 +281,7 @@ router.post(
         }
 
         // Make sure file is writable
-        const isWritable = await isFieldWritable(req.user, stepKey, fieldKey);
+        const isWritable = await isFieldWritable(req.user, id, stepKey, fieldKey);
         if (!isWritable)
             return sendResponse(res, 403, 'Insufficient permission');
 
