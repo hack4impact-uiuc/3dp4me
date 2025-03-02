@@ -31,11 +31,8 @@ import { PatientModel } from '../../models/Patient';
 import { Patient, Field, File, RootStep, ReservedStep } from '@3dp4me/types';
 import { StepModel } from '../../models/Metadata';
 import { HydratedDocument } from 'mongoose';
-import { canUserAccessAllPatients, canUserAccessPatient } from 'utils/roleUtils';
-import { AuthenticatedUser } from 'utils/aws/types';
-import { isAdmin } from 'utils/aws/awsUsers';
-import { RoleModel } from 'models/Role';
-import { getPatientsCount } from 'utils/tagUtils';
+import { canUserAccessPatient } from '../../utils/roleUtils';
+import { getPatientsCount } from '../../utils/tagUtils';
 
 export const router = express.Router();
 /**
@@ -359,8 +356,8 @@ router.post(
         if (!canAccess) return sendResponse(res, 403, 'Insufficient permissions');
 
         // Make sure patient exists
-        const patient = await PatientModel.findById(id);
-        if (!patient)
+        const numPatients = await PatientModel.count({ _id: id });
+        if (numPatients < 1)
             return sendResponse(res, 404, `Patient "${id}" not found`);
 
         // Filter out request fields that the user cannot write
@@ -384,10 +381,7 @@ router.post(
         patientStepData = await patientStepData.save();
 
         // Update patient last edited
-        patient.lastEdited = new Date()
-        patient.lastEditedBy = req.user.name;
-        await patient.save();
-
+        await PatientModel.updateOne({ _id: id }, { lastEdited: new Date(), lastEditedBy: req.user.name });
         return sendResponse(res, 200, 'Step updated', patientStepData);
     }),
 );

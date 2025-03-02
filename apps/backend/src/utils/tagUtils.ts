@@ -1,6 +1,6 @@
 import { ReservedStep } from '@3dp4me/types'
-import { PatientModel } from 'models/Patient'
-import { RoleModel } from 'models/Role'
+import { PatientModel } from '../models/Patient'
+import { RoleModel } from '../models/Role'
 import mongoose from 'mongoose'
 
 import { AuthenticatedUser } from './aws/types'
@@ -18,12 +18,14 @@ export const getPatientIdsUserCanAccess = async (user: AuthenticatedUser) => {
         return allPatients.map((p) => p._id as string)
     }
 
-    const allTags = getTagsUserCanAccess(user)
+    const allTags = await getTagsUserCanAccess(user)
     const patients = await mongoose
         .model(ReservedStep.Root)
         .find({ tags: { $in: allTags } })
+        .find()
         .select('patientId')
         .lean()
+
     return patients.map((p) => p.patientId as string)
 }
 

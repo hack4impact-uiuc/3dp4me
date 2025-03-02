@@ -87,7 +87,7 @@ export const generateSchemaFromMetadata = (stepMetadata: Step) => {
     schema.plugin(encrypt, {
         encryptionKey: process.env.ENCRYPTION_KEY,
         signingKey: process.env.SIGNING_KEY,
-        excludeFromEncryption: ['patientId'],
+        excludeFromEncryption: ['patientId', 'tags'],
     })
 
     mongoose.model(stepMetadata.key, schema, stepMetadata.key)

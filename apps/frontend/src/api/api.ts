@@ -74,6 +74,7 @@ export const updateStage = async (
     updatedStage: Record<string, any>
 ): Promise<ApiResponse<Step>> => {
     const requestString = `/patients/${patientId}/${stage}`
+    console.log("POSTING ", stage, " ", updatedStage)
     const res = await instance.post(requestString, updatedStage)
 
     if (!res?.data?.success) throw new Error(res?.data?.message)

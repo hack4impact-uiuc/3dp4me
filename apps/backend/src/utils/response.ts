@@ -1,7 +1,7 @@
 import { Nullish, Patient } from '@3dp4me/types'
 import { Response } from 'express'
 import { AuthenticatedRequest } from 'middleware/types'
-import { PatientModel } from 'models/Patient'
+import { PatientModel } from '../models/Patient'
 import { HydratedDocument } from 'mongoose'
 
 import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants'
@@ -107,13 +107,16 @@ export const getPatients = async (
     if (!canAccessAll) {
         const patientIds = await getPatientIdsUserCanAccess(req.user)
         patientParams = {
-            ...findParameters,
-            $in: {
-                _id: { $in: patientIds },
-            },
+            $and: [
+                findParameters,
+                {
+                    _id: { $in: patientIds },
+                }
+            ]
         }
     }
 
+        console.log("SARCH PARAMS ARE ", patientParams)
     // Perform pagination while doing .find() if there isn't a search query
     if (lowerCaseSearchQuery === '') {
         const patientCount = await getPatientsCount(req.user)

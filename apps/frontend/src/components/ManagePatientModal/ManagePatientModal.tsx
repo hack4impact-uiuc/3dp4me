@@ -42,8 +42,6 @@ const ManagePatientModal = ({
     const [translations, selectedLang] = useTranslations()
     const [updatedPatientData, setUpdatedPatientData] = useState(_.cloneDeep(patientData))
 
-    console.log("PATIENT DATA", patientData)
-
     const onFieldUpdate = (key: string, value: string) => {
         setUpdatedPatientData((data) => ({
             ...data,
@@ -64,7 +62,6 @@ const ManagePatientModal = ({
                 }
             }
 
-            console.log("THE NEW DATA WILL BE ", d)
             return d
         })
     }
