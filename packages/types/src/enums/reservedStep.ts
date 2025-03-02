@@ -1,5 +1,4 @@
-import { Field, FieldType, QuestionOption, Step, TranslatedString } from '../models'
-import { Patient } from '../models/patient';
+import { Field, FieldType, QuestionOption, Step } from '../models'
 
 export enum ReservedStep {
     // This is where inherent data for the patient can be stored, like the profile picture
@@ -11,17 +10,17 @@ export enum RootStepFieldKeys {
     Tags = 'tags',
 }
 
-export const PatientTagOptions: Omit<QuestionOption, "_id">[] = [
+export const PatientTagOptions: Omit<QuestionOption, '_id'>[] = [
     {
         Index: 0,
-        Question: { EN: "Jordan", AR: "الأردن" },
+        Question: { EN: 'Jordan', AR: 'الأردن' },
         IsHidden: false,
     },
     {
         Index: 1,
-        Question: {EN: "Gaza", AR: "غزة"},
+        Question: { EN: 'Gaza', AR: 'غزة' },
         IsHidden: false,
-    }
+    },
 ]
 
 export const PatientTagsField: Field = {
@@ -38,7 +37,6 @@ export const PatientTagsField: Field = {
     isDeleted: false,
     additionalData: null,
 }
-
 
 export const RootStep: Step = {
     key: ReservedStep.Root,

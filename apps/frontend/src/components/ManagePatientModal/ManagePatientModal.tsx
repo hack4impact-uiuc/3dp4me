@@ -1,6 +1,6 @@
 import './ManagePatientModal.scss'
 
-import { Language, Nullish, Patient, PatientTagsField, ReservedStep, RootStep, Step } from '@3dp4me/types'
+import { Language, Nullish, Patient, PatientTagsField, ReservedStep, Step } from '@3dp4me/types'
 import CloseIcon from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
@@ -11,12 +11,16 @@ import swal from 'sweetalert'
 import { useTranslations } from '../../hooks/useTranslations'
 import language from '../../translations.json'
 import { LANGUAGES, PATIENT_STATUS } from '../../utils/constants'
-import { getPatientTagOptions, getPatientTagValues, getProfilePictureAsFileArray } from '../../utils/rootStep'
+import {
+    getPatientTagOptions,
+    getPatientTagValues,
+    getProfilePictureAsFileArray,
+} from '../../utils/rootStep'
 import { FormOption } from '../Fields/FormOption'
 import PhotoField from '../Fields/PhotoField'
 import RadioButtonField from '../Fields/RadioButtonField'
-import TextField from '../Fields/TextField'
 import TagsField from '../Fields/TagsField'
+import TextField from '../Fields/TextField'
 
 export interface ManagePatientModalProps {
     stepMetadata: Step[]
@@ -54,12 +58,12 @@ const ManagePatientModal = ({
             const rootData = (data as any)?.[ReservedStep.Root] || {}
             const allData = data || {}
 
-            const d= {
+            const d = {
                 ...allData,
                 [ReservedStep.Root]: {
                     ...rootData,
                     [key]: value,
-                }
+                },
             }
 
             return d
@@ -201,7 +205,8 @@ const ManagePatientModal = ({
                         fieldId={PatientTagsField.key}
                         options={getPatientTagOptions(stepMetadata)}
                         value={getPatientTagValues(updatedPatientData, stepMetadata)}
-                        onChange={onTagUpdate} />
+                        onChange={onTagUpdate}
+                    />
                 </div>
 
                 <div className="manage-patient-footer">
@@ -209,8 +214,10 @@ const ManagePatientModal = ({
                         className="manage-patient-save-button"
                         onClick={() => {
                             onDataSave(updatedPatientData)
-                            const root = (updatedPatientData as any)?.[ReservedStep.Root] as Nullish<Step>
-                            if (!!root) {
+                            const root = (updatedPatientData as any)?.[
+                                ReservedStep.Root
+                            ] as Nullish<Step>
+                            if (root) {
                                 onStepSave(ReservedStep.Root, _.cloneDeep(root))
                             }
                         }}

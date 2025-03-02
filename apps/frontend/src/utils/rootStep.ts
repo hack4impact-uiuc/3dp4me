@@ -1,9 +1,17 @@
 /* eslint-disable no-restricted-syntax */
-import { File, Patient, ReservedStep, RootStepFieldKeys, PatientTagOptions, Step, Nullish, RootStep } from '@3dp4me/types';
+import {
+    File,
+    Nullish,
+    Patient,
+    ReservedStep,
+    RootStep,
+    RootStepFieldKeys,
+    Step,
+} from '@3dp4me/types'
 
+import { TagOption } from '../components/Fields/FormOption'
 import { getStepData } from './metadataUtils'
 import { photoToURI } from './photoManipulation'
-import { TagOption } from '../components/Fields/FormOption'
 
 export const getProfilePictureUrl = (patient: Patient) => {
     const rootStep = getStepData(patient, ReservedStep.Root)
@@ -46,11 +54,9 @@ export const getPatientTagOptions = (meta: Nullish<Step[]>): TagOption[] => {
     const tagsMeta = rootStep.fields.find((f) => f.key === RootStepFieldKeys.Tags)
     if (!tagsMeta) return []
 
-    return tagsMeta.options.map((o) => {
-        return {
-            _id: o._id,
-            TagTitle: o.Question,
-            IsHidden: o.IsHidden,
-        }
-    })
+    return tagsMeta.options.map((o) => ({
+        _id: o._id,
+        TagTitle: o.Question,
+        IsHidden: o.IsHidden,
+    }))
 }

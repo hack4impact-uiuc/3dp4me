@@ -11,12 +11,12 @@ import swal from 'sweetalert'
 import { deleteRole, editRole } from '../../api/api'
 import { useErrorWrap } from '../../hooks/useErrorWrap'
 import { useTranslations } from '../../hooks/useTranslations'
-import { ERR_ROLE_INPUT_VALIDATION_FAILED, ERR_ROLE_IS_IMMUTABLE } from '../../utils/constants'
-import TextArea from '../Fields/TextArea'
-import TextField from '../Fields/TextField'
 import { useSteps } from '../../query/useSteps'
+import { ERR_ROLE_INPUT_VALIDATION_FAILED, ERR_ROLE_IS_IMMUTABLE } from '../../utils/constants'
 import { getPatientTagOptions } from '../../utils/rootStep'
 import TagsField from '../Fields/TagsField'
+import TextArea from '../Fields/TextArea'
+import TextField from '../Fields/TextField'
 
 export interface ManageRoleModalProps {
     isOpen: boolean
@@ -103,23 +103,24 @@ const ManageRoleModal = ({
         if (!selectedTags) return []
 
         const tagOptions = getPatientTagOptions(stepMetaData)
-        return selectedTags.map((tag) => {
-            const correspondingOption = tagOptions.find((option) => option._id === tag)
-            if (!correspondingOption) return null
+        return selectedTags
+            .map((tag) => {
+                const correspondingOption = tagOptions.find((option) => option._id === tag)
+                if (!correspondingOption) return null
 
-            return {
-                _id: tag,
-                TagTitle: correspondingOption.TagTitle,
-                IsHidden: correspondingOption.IsHidden,
-            }
-
-        }).filter((tag) => tag !== null)
+                return {
+                    _id: tag,
+                    TagTitle: correspondingOption.TagTitle,
+                    IsHidden: correspondingOption.IsHidden,
+                }
+            })
+            .filter((tag) => tag !== null)
     }
 
     const handleRoleSimpleUpdate = (key: string, tags: string[]) => {
         setRole((prevState) => ({
             ...prevState,
-            [key]: tags
+            [key]: tags,
         }))
     }
 
@@ -163,7 +164,8 @@ const ManageRoleModal = ({
                     fieldId="patientTags"
                     options={getPatientTagOptions(stepMetaData)}
                     value={getSelectedPatientTags()}
-                    onChange={(key, value) => handleRoleSimpleUpdate(key, value)} />
+                    onChange={(key, value) => handleRoleSimpleUpdate(key, value)}
+                />
 
                 <p>{translations.roleManagement.warning}</p>
 

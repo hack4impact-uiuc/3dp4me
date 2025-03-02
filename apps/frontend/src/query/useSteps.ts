@@ -10,7 +10,10 @@ export interface UseStepsOptions {
     includeReservedSteps?: boolean
 }
 
-const getStepsQueryKey = (includeHiddenFields: boolean, includeReservedSteps: boolean) => [QueryKeys.Steps, includeHiddenFields + ":" + includeReservedSteps]
+const getStepsQueryKey = (includeHiddenFields: boolean, includeReservedSteps: boolean) => [
+    QueryKeys.Steps,
+    `${includeHiddenFields}:${includeReservedSteps}`,
+]
 
 const getStepsQuery = ({ includeHiddenFields, includeReservedSteps = false }: UseStepsOptions) => ({
     queryKey: getStepsQueryKey(includeHiddenFields, includeReservedSteps),

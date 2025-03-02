@@ -74,7 +74,7 @@ export const updateStage = async (
     updatedStage: Record<string, any>
 ): Promise<ApiResponse<Step>> => {
     const requestString = `/patients/${patientId}/${stage}`
-    console.log("POSTING ", stage, " ", updatedStage)
+    console.log('POSTING ', stage, ' ', updatedStage)
     const res = await instance.post(requestString, updatedStage)
 
     if (!res?.data?.success) throw new Error(res?.data?.message)
@@ -86,7 +86,7 @@ export const updatePatient = async (
     patientId: string,
     updatedData: Partial<Patient>
 ): Promise<ApiResponse<Patient>> => {
-    console.log("PUT ", updatedData)
+    console.log('PUT ', updatedData)
     const requestString = `/patients/${patientId}`
     const res = await instance.put(requestString, updatedData)
 
