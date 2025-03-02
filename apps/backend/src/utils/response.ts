@@ -116,7 +116,6 @@ export const getPatients = async (
         }
     }
 
-    console.log('SARCH PARAMS ARE ', patientParams)
     // Perform pagination while doing .find() if there isn't a search query
     if (lowerCaseSearchQuery === '') {
         const patientCount = await getPatientsCount(req.user)

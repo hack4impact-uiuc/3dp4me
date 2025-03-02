@@ -22,7 +22,6 @@ export const getPatientIdsUserCanAccess = async (user: AuthenticatedUser) => {
     const patients = await mongoose
         .model(ReservedStep.Root)
         .find({ tags: { $in: allTags } })
-        .find()
         .select('patientId')
         .lean()
 
@@ -30,7 +29,6 @@ export const getPatientIdsUserCanAccess = async (user: AuthenticatedUser) => {
 }
 
 export const getTagsUserCanAccess = async (user: AuthenticatedUser) => {
-    // Only return patients that the user has access to
     const allRoles = await RoleModel.find({ _id: { $in: user.roles } }).lean()
     return allRoles.map((r) => r.patientTags).reduceRight((acc, val) => acc.concat(val), [])
 }
