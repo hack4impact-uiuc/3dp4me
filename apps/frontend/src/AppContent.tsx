@@ -18,7 +18,9 @@ import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
 
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'))
-const DashboardManagement = React.lazy(() => import('./pages/DashboardManagement/DashboardManagement'))
+const DashboardManagement = React.lazy(
+    () => import('./pages/DashboardManagement/DashboardManagement')
+)
 const Patient2FA = React.lazy(() => import('./pages/Patient2FALogin/Patient2FALogin'))
 const AccountManagement = React.lazy(() => import('./pages/AccountManagement/AccountManagment'))
 const PatientDetail = React.lazy(() => import('./pages/PatientDetail/PatientDetail'))
