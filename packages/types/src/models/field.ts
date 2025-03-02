@@ -21,6 +21,7 @@ export enum FieldType {
     PHOTO = 'Photo',
     FIELD_GROUP = 'FieldGroup',
     MAP = 'Map',
+    TAGS = 'Tags',
 }
 
 export interface FieldTypeData {
@@ -38,6 +39,7 @@ export interface FieldTypeData {
     [FieldType.PHOTO]: File[]
     [FieldType.FIELD_GROUP]: [Record<string, FieldTypeData>]
     [FieldType.MAP]: MapPoint
+    [FieldType.TAGS]: string[]
 }
 
 export interface QuestionOption {

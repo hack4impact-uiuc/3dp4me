@@ -194,7 +194,8 @@
             "save": "Save",
             "delete": "Delete"
           },
-          "orderId": "Order Id"
+          "orderId": "Order Id",
+          "patientTags": "Patient Tags"
         },
         "field": {
           "createFieldTitle": "New Field",
@@ -458,7 +459,8 @@
             "save": "حفظ",
             "delete": "حذف"
           },
-          "orderId": "معرف الطلب"
+          "orderId": "معرف الطلب",
+          "patientTags": "علامات المريض"
         },
         "field": {
           "createFieldTitle": "حقل جديد",

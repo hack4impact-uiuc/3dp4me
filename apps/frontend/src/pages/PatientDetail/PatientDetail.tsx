@@ -43,6 +43,7 @@ const PatientDetail = () => {
         isError: isStepsError,
     } = useSteps({
         includeHiddenFields: false,
+        includeReservedSteps: true,
     })
     const invalidatePatient = useInvalidatePatient(patientId)
     const isError = isPatientError || isStepsError
@@ -168,6 +169,7 @@ const PatientDetail = () => {
             <div className={className}>
                 {stepMetaData.map((step) => {
                     if (step.key !== selectedStep) return null
+                    if (Object.values(ReservedStep).includes(step.key as ReservedStep)) return null
 
                     return (
                         <StepContent
@@ -195,7 +197,9 @@ const PatientDetail = () => {
             <div className="root">
                 <ManagePatientModal
                     onDataSave={onPatientDataSaved}
+                    onStepSave={onStepSaved}
                     patientData={patientData!}
+                    stepMetadata={stepMetaData!}
                     isOpen={isManagePatientModalOpen}
                     onClose={() => setManagePatientModalOpen(false)}
                     onDeleted={onPatientDeleted}

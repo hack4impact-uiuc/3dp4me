@@ -168,6 +168,9 @@ importers:
       '@vis.gl/react-google-maps':
         specifier: ^1.4.2
         version: 1.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      Chip:
+        specifier: link:@mui/material/Chip
+        version: link:@mui/material/Chip
       aws-amplify:
         specifier: 4.2.11
         version: 4.2.11(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@18.3.18)(react@18.3.1))

@@ -20,6 +20,7 @@ import { abortAndError } from './transactionUtils'
 export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[]> => {
     const shouldShowHiddenFields = queryParamToBool(req.query.showHiddenFields ?? 'false')
     const shouldShowHiddenSteps = queryParamToBool(req.query.showHiddenSteps ?? 'false')
+    const shouldShowReservedSteps = queryParamToBool(req.query.showReservedSteps ?? 'false')
 
     const userRole = req.user.roles.toString()
 
@@ -35,9 +36,6 @@ export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[
     const aggregation: PipelineStage[] = [
         // Don't return any deleted steps
         { $match: { isDeleted: { $ne: true } } },
-
-        // Don't return reserved steps
-        { $match: { key: { $nin: Object.values(ReservedStep) } } },
     ]
 
     // If not admin, then return limit what steps/fields can be returned using readableGroups
@@ -54,6 +52,11 @@ export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[
         fieldSearchParams.push({
             $or: [{ $ne: ['$$field.isHidden', true] }],
         }) // limit returning fields that are hidden
+    }
+
+    // Don't return reserved steps
+    if (!shouldShowReservedSteps) {
+        aggregation.push({ $match: { key: { $nin: Object.values(ReservedStep) } } })
     }
 
     // Limit returning steps that are hidden
