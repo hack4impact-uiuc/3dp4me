@@ -103,9 +103,10 @@ export const deletePatientById = async (patientId: string): Promise<ApiResponse<
 }
 
 export const getAllStepsMetadata = async (
-    showHiddenFieldsAndSteps = false
+    showHiddenFieldsAndSteps = false,
+    showReservedSteps = false
 ): Promise<ApiResponse<Step[]>> => {
-    const requestString = `/metadata/steps?showHiddenFields=${showHiddenFieldsAndSteps}&showHiddenSteps=${showHiddenFieldsAndSteps}`
+    const requestString = `/metadata/steps?showHiddenFields=${showHiddenFieldsAndSteps}&showHiddenSteps=${showHiddenFieldsAndSteps}&showReservedSteps=${showReservedSteps}`
 
     /**
      * In order to test this method and its steps, hardcode an entire object (subFields, displayName, etc.) from the database

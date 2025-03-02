@@ -5,5 +5,6 @@ export interface Role {
     roleDescription: TranslatedString
     isHidden: boolean
     isMutable: boolean
+    patientTags: string[]
     _id: string
 }

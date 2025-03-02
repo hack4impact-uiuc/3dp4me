@@ -7,14 +7,18 @@ import { useErrorWrappedQuery } from './useErrorWrappedQuery'
 
 export interface UseStepsOptions {
     includeHiddenFields: boolean
+    includeReservedSteps?: boolean
 }
 
-const getStepsQueryKey = (includeHiddenFields: boolean) => [QueryKeys.Steps, includeHiddenFields]
+const getStepsQueryKey = (includeHiddenFields: boolean, includeReservedSteps: boolean) => [
+    QueryKeys.Steps,
+    `${includeHiddenFields}:${includeReservedSteps}`,
+]
 
-const getStepsQuery = ({ includeHiddenFields }: UseStepsOptions) => ({
-    queryKey: getStepsQueryKey(includeHiddenFields),
+const getStepsQuery = ({ includeHiddenFields, includeReservedSteps = false }: UseStepsOptions) => ({
+    queryKey: getStepsQueryKey(includeHiddenFields, includeReservedSteps),
     queryFn: async () => {
-        const res = await getAllStepsMetadata(includeHiddenFields)
+        const res = await getAllStepsMetadata(includeHiddenFields, includeReservedSteps)
         return sortMetadata(res.result)
     },
 })

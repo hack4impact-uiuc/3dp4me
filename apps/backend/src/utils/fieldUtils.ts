@@ -1,10 +1,11 @@
-import { Field, ReservedStep } from '@3dp4me/types'
+import { Field, ReservedStep, RootStepFieldKeys } from '@3dp4me/types'
 import mongoose, { ClientSession, SchemaDefinitionProperty } from 'mongoose'
 
 import { StepModel } from '../models/Metadata'
 import { isAdmin } from './aws/awsUsers'
 import { AuthenticatedUser } from './aws/types'
 import { generateFieldSchema } from './initDb'
+import { canUserAccessPatient } from './roleUtils'
 import { abortAndError } from './transactionUtils'
 
 /**
@@ -45,16 +46,23 @@ const getWritableFieldsInStep = async (user: AuthenticatedUser, stepKey: string)
  */
 export const isFieldReadable = async (
     user: AuthenticatedUser,
+    patientId: string,
     stepKey: string,
     fieldKey: string
 ) => {
+    // Admins can do anything
     if (isAdmin(user)) return true
+
+    // Check patient tags
+    const canAccessPatient = await canUserAccessPatient(user, patientId)
+    if (!canAccessPatient) return false
+
+    // Root step is globally readable
     if (stepKey === ReservedStep.Root) return true
 
+    // Check that the user includes at least one readableGroup
     const fieldData = await getFieldMetadata(stepKey, fieldKey)
     if (!fieldData) return false
-
-    // Check that the user includes at least one readableGroup
     return fieldData?.readableGroups?.some((g) => user.roles.includes(g))
 }
 
@@ -68,16 +76,23 @@ export const isFieldReadable = async (
  */
 export const isFieldWritable = async (
     user: AuthenticatedUser,
+    patientId: string,
     stepKey: string,
     fieldKey: string
 ) => {
+    // Admins can do anything
     if (isAdmin(user)) return true
-    if (stepKey === ReservedStep.Root) return true
 
+    // Check patient tags
+    const canAccessPatient = await canUserAccessPatient(user, patientId)
+    if (!canAccessPatient) return false
+
+    // Only the profile picture on the root step is writable by everyone
+    if (stepKey === ReservedStep.Root && fieldKey === RootStepFieldKeys.ProfilePicture) return true
+
+    // Check that the user includes at least one writableGroup
     const fieldData = await getFieldMetadata(stepKey, fieldKey)
     if (!fieldData) return false
-
-    // Check that the user includes at least one readableGroup
     return fieldData?.writableGroups?.some((g) => user.roles.includes(g))
 }
 

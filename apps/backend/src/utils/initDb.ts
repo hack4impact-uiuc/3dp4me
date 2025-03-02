@@ -1,4 +1,13 @@
-import { Field, FieldType, ReservedStep, RootStep, Step, StepStatus } from '@3dp4me/types'
+import {
+    Field,
+    FieldType,
+    PatientTagsField,
+    ReservedStep,
+    RootStep,
+    RootStepFieldKeys,
+    Step,
+    StepStatus,
+} from '@3dp4me/types'
 import _ from 'lodash'
 import log from 'loglevel'
 import mongoose, { SchemaDefinitionProperty } from 'mongoose'
@@ -36,10 +45,23 @@ const clearModels = async () => {
 }
 
 const initReservedSteps = async () => {
-    const exists = await StepModel.findOne({ key: ReservedStep.Root }).count()
-    if (exists > 0) return
+    const rootStep = await StepModel.findOne({ key: ReservedStep.Root }).lean()
+    if (!rootStep) {
+        StepModel.create(RootStep)
+        return
+    }
 
-    await StepModel.create(RootStep)
+    // Migrations
+    const tagField = rootStep.fields.find((f) => f.key === RootStepFieldKeys.Tags)
+    if (tagField) {
+        // Already up to date
+        return
+    }
+
+    await StepModel.findOneAndUpdate(
+        { key: ReservedStep.Root },
+        { $push: { fields: PatientTagsField } }
+    )
 }
 
 export const reinitModels = async () => {
@@ -65,8 +87,9 @@ export const generateSchemaFromMetadata = (stepMetadata: Step) => {
     schema.plugin(encrypt, {
         encryptionKey: process.env.ENCRYPTION_KEY,
         signingKey: process.env.SIGNING_KEY,
-        excludeFromEncryption: ['patientId'],
+        excludeFromEncryption: ['patientId', 'tags'],
     })
+
     mongoose.model(stepMetadata.key, schema, stepMetadata.key)
 }
 
@@ -134,6 +157,8 @@ export const generateFieldSchema = (field: Field): SchemaDefinitionProperty | nu
             return null
         case FieldType.MAP:
             return getMapSchema()
+        case FieldType.TAGS:
+            return getTagsSchema(field)
         default:
             log.error(`Unrecognized field type, ${field.fieldType}`)
             return null
@@ -154,6 +179,17 @@ const getDateSchema = () => ({
     type: Date,
     default: Date.now,
 })
+
+const getTagsSchema = (fieldMetadata: Field) => {
+    if (!fieldMetadata?.options?.length) {
+        throw new Error('tags must have options')
+    }
+
+    return {
+        type: [String],
+        default: [],
+    }
+}
 
 const getRadioButtonSchema = (fieldMetadata: Field) => {
     if (!fieldMetadata?.options?.length) {
