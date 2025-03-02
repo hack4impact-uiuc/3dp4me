@@ -1,8 +1,8 @@
 import { ReservedStep } from '@3dp4me/types'
-import { PatientModel } from '../models/Patient'
-import { RoleModel } from '../models/Role'
 import mongoose from 'mongoose'
 
+import { PatientModel } from '../models/Patient'
+import { RoleModel } from '../models/Role'
 import { AuthenticatedUser } from './aws/types'
 import { canUserAccessAllPatients } from './roleUtils'
 

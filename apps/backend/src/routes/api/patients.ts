@@ -32,7 +32,7 @@ import { Patient, Field, File, RootStep, ReservedStep } from '@3dp4me/types';
 import { StepModel } from '../../models/Metadata';
 import { HydratedDocument } from 'mongoose';
 import { canUserAccessPatient } from '../../utils/roleUtils';
-import { getPatientsCount } from '../../utils/tagUtils';
+import { getPatientsCount, getTagsUserCanAccess } from '../../utils/tagUtils';
 
 export const router = express.Router();
 /**
@@ -125,13 +125,15 @@ router.post(
 
         try {
             req.body.lastEditedBy = req.user.name;
-            // TODO: Set roles????
-
             await mongoose.connection.transaction(async (session) => {
                 patient.orderYear = new Date().getFullYear();
                 patient.orderId = await generateOrderId(session);
                 newPatient = new PatientModel(patient);
                 await newPatient.save({ session });
+
+                const userTags = await getTagsUserCanAccess(req.user);
+                const rootModel = mongoose.model(ReservedStep.Root);
+                await updatePatientStepData(newPatient._id, rootModel, { tags: userTags });
             });
         } catch (error) {
             return sendResponse(res, 400, `Bad request: ${error}`);
@@ -444,7 +446,7 @@ router.delete(
     }),
 );
 
-const updatePatientStepData = async (patientId: string, StepModel: typeof mongoose.Model, data: Record<string, number|string>) => {
+const updatePatientStepData = async (patientId: string, StepModel: typeof mongoose.Model, data: Record<string, number|string|string[]>) => {
     let patientStepData = await StepModel.findOne({ patientId });
 
     // If patient doesn't have step data, create it with constructor. Else update it.
