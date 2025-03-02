@@ -14,8 +14,8 @@ import {
     PATIENT_IMMUTABLE_ATTRIBUTES,
 } from '../../utils/constants';
 import {
+    getPatients,
     sendResponse,
-    getDataFromModelWithPaginationAndSearch,
 } from '../../utils/response';
 import { getReadableSteps } from '../../utils/stepUtils';
 import { getStepBaseSchemaKeys } from '../../utils/initDb';
@@ -44,10 +44,7 @@ export const router = express.Router();
 router.get(
     '/',
     errorWrap(async (req: AuthenticatedRequest, res: Response) => {
-        const patientData = await getDataFromModelWithPaginationAndSearch(
-            req,
-            PatientModel,
-        );
+        const patientData = await getPatients(req);
         await sendResponse(res, 200, '', patientData);
     }),
 );

@@ -6,7 +6,7 @@ import express, { Response } from 'express';
 import mongoose from 'mongoose';
 import {
     sendResponse,
-    getDataFromModelWithPaginationAndSearch,
+    getPatients,
 } from '../../utils/response';
 import errorWrap from "../../utils/errorWrap";
 import { StepModel } from "../../models/Metadata";
@@ -38,10 +38,7 @@ router.get(
             return sendResponse(res, 404, `Step "${stepKey}" not found`);
         }
 
-        const getPatientDataResponse =
-            await getDataFromModelWithPaginationAndSearch(req, PatientModel, {
-                status: PatientStatus.ACTIVE,
-            });
+        const getPatientDataResponse = await getPatients(req, { status: PatientStatus.ACTIVE });
 
         const patients = getPatientDataResponse.data;
         const countTotalPatients = getPatientDataResponse.count;

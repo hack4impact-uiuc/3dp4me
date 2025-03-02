@@ -5,8 +5,8 @@ import { StepModel } from '../models/Metadata'
 import { isAdmin } from './aws/awsUsers'
 import { AuthenticatedUser } from './aws/types'
 import { generateFieldSchema } from './initDb'
-import { abortAndError } from './transactionUtils'
 import { canUserAccessPatient } from './roleUtils'
+import { abortAndError } from './transactionUtils'
 
 /**
  * Returns the keys of all fields writable by a user in a step.

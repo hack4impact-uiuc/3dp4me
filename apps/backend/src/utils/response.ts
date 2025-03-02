@@ -1,11 +1,12 @@
-import { Nullish } from '@3dp4me/types'
-import { Request, Response } from 'express'
-import { HydratedDocument, Model } from 'mongoose'
+import { Nullish, Patient } from '@3dp4me/types'
+import { Response } from 'express'
+import { AuthenticatedRequest } from 'middleware/types'
+import { PatientModel } from 'models/Patient'
+import { HydratedDocument } from 'mongoose'
 
 import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants'
 import { queryParamToNum, queryParamToString } from './request'
 import { canUserAccessAllPatients } from './roleUtils'
-import { AuthenticatedRequest } from 'middleware/types'
 import { getPatientIdsUserCanAccess, getPatientsCount } from './tagUtils'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,22 +81,21 @@ const filterPatientsBySearchQuery = <T extends Record<string, any>>(
 /**
  * Convienience function getting data from a model with pagination
  * @param {Obect} req The request object
- * @param {MongoDB Collection} model The mongoDB model
  * @param {JSON} findParameters Parameters for db.collection.find().
  * @returns {Object} data Documents recieved from db.collection.find()
  */
 // eslint-disable-next-line max-len
-export const getDataFromModelWithPaginationAndSearch = async <T>(
+export const getPatients = async (
     req: AuthenticatedRequest,
-    model: Model<T>,
     findParameters = {}
-): Promise<{ data: HydratedDocument<T>[]; count: number }> => {
+): Promise<{ data: HydratedDocument<Patient>[]; count: number }> => {
     // The default values below will get the first user in the database
     const {
         pageNumber = 1,
         nPerPage = DEFAULT_PATIENTS_ON_GET_REQUEST,
         searchQuery = '',
     } = req.query
+    let patientParams = findParameters
     const intPageNumber = queryParamToNum(pageNumber)
     const intPatientsPerPage = queryParamToNum(nPerPage)
     const lowerCaseSearchQuery = queryParamToString(searchQuery).toLowerCase()
@@ -103,29 +103,21 @@ export const getDataFromModelWithPaginationAndSearch = async <T>(
     // Calculates the number of patients to skip based on the request paramaters
     const documentsToSkip = intPageNumber > 0 ? (intPageNumber - 1) * intPatientsPerPage : 0
 
-
     const canAccessAll = await canUserAccessAllPatients(req.user)
     if (!canAccessAll) {
         const patientIds = await getPatientIdsUserCanAccess(req.user)
-        findParameters  = {
+        patientParams = {
             ...findParameters,
             $in: {
-                patientId: { $in: patientIds }
-            }
+                _id: { $in: patientIds },
+            },
         }
     }
-
-    // Only return patients that the user has access to
-    // const allRoles = await Role.find({ _id: { $in: user.roles } }).lean()
-    // const allTags = await getTags
-    // allRoles.map(r => r.patientTags).reduceRight((acc, val) => acc.concat(val), [])
-    // // return PatientModel.find({ tags: { $in: allTags } }).count();
 
     // Perform pagination while doing .find() if there isn't a search query
     if (lowerCaseSearchQuery === '') {
         const patientCount = await getPatientsCount(req.user)
-        const data = await model
-            .find(findParameters)
+        const data = await PatientModel.find(patientParams)
             .sort({ lastEdited: -1 })
             .skip(documentsToSkip)
             .limit(intPatientsPerPage)
@@ -136,7 +128,7 @@ export const getDataFromModelWithPaginationAndSearch = async <T>(
         }
     }
 
-    const data = await model.find(findParameters).sort({ lastEdited: -1 })
+    const data = await PatientModel.find(patientParams).sort({ lastEdited: -1 })
 
     // Filter by search
     const filteredData = filterPatientsBySearchQuery(data, lowerCaseSearchQuery)

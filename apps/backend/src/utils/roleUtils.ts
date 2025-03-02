@@ -1,4 +1,6 @@
+import { ReservedStep, RootStepFieldKeys } from '@3dp4me/types'
 import { AdminUpdateUserAttributesCommandInput } from '@aws-sdk/client-cognito-identity-provider'
+import mongoose from 'mongoose'
 
 import { RoleModel } from '../models/Role'
 import {
@@ -6,12 +8,8 @@ import {
     SECURITY_ROLE_ATTRIBUTE_NAME,
     USER_POOL_ID,
 } from './aws/awsExports'
-import { Patient, ReservedStep, Role, RootStepFieldKeys } from '@3dp4me/types'
-import { AuthenticatedUser } from './aws/types'
-import { PatientModel } from 'models/Patient'
-import { StepModel } from 'models/Metadata'
-import mongoose from 'mongoose'
 import { isAdmin } from './aws/awsUsers'
+import { AuthenticatedUser } from './aws/types'
 
 export const isRoleValid = async (role: string) => {
     const roles = await RoleModel.find({})
@@ -73,45 +71,32 @@ export const createRoleUpdateParams = (
     return params
 }
 
-export const canUserAccessAllPatients = async (
-    user: AuthenticatedUser
-) => {
+export const canUserAccessAllPatients = async (user: AuthenticatedUser) => {
     if (isAdmin(user)) return true
 
     const roles = await RoleModel.find({ _id: { $in: user.roles } })
     if (!roles) return false
 
-    return roles.some((role) => {
-        return role.patientTags.length === 0
-    })
+    return roles.some((role) => role.patientTags.length === 0)
 }
 
-export const canUserAccessPatient = async (
-    user: AuthenticatedUser,
-    patientId: string,
-) => {
+export const canUserAccessPatient = async (user: AuthenticatedUser, patientId: string) => {
     if (isAdmin(user)) return true
 
     // Get all patient data for this step
-    const rootPatientData = await mongoose
-        .model(ReservedStep.Root)
-        .findOne({ patientId: patientId })
-        .lean();
+    const rootPatientData = await mongoose.model(ReservedStep.Root).findOne({ patientId }).lean()
 
     if (!rootPatientData) {
         return false
     }
 
     const patientTags = rootPatientData[RootStepFieldKeys.Tags] || []
-    const rolePromises = user.roles.map(r => canRoleAccessPatientTags(r, patientTags))
+    const rolePromises = user.roles.map((r) => canRoleAccessPatientTags(r, patientTags))
     const roleResults = await Promise.all(rolePromises)
-    return roleResults.some(r => r)
+    return roleResults.some((r) => r)
 }
 
-export const canRoleAccessPatientTags = async (
-    roleId: string,
-    patientTags: string[],
-) => {
+export const canRoleAccessPatientTags = async (roleId: string, patientTags: string[]) => {
     const role = await RoleModel.findById(roleId)
     if (!role) {
         return false
@@ -122,7 +107,7 @@ export const canRoleAccessPatientTags = async (
         return true
     }
 
-    return role.patientTags.some(tag => patientTags.includes(tag))
+    return role.patientTags.some((tag) => patientTags.includes(tag))
 }
 
 function arrayUnique<T>(array: T[]) {

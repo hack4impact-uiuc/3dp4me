@@ -54,7 +54,7 @@ export const getReadableSteps = async (req: AuthenticatedRequest): Promise<Step[
         }) // limit returning fields that are hidden
     }
 
-        // Don't return reserved steps
+    // Don't return reserved steps
     if (!shouldShowReservedSteps) {
         aggregation.push({ $match: { key: { $nin: Object.values(ReservedStep) } } })
     }

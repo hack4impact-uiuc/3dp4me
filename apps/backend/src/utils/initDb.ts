@@ -1,7 +1,16 @@
-import { Field, FieldType, PatientTagsField, ReservedStep, RootStep, RootStepFieldKeys, Step, StepStatus } from '@3dp4me/types'
+import {
+    Field,
+    FieldType,
+    PatientTagsField,
+    ReservedStep,
+    RootStep,
+    RootStepFieldKeys,
+    Step,
+    StepStatus,
+} from '@3dp4me/types'
 import _ from 'lodash'
 import log from 'loglevel'
-import mongoose, { SchemaDefinitionProperty, ObjectId } from 'mongoose'
+import mongoose, { SchemaDefinitionProperty } from 'mongoose'
 import encrypt from 'mongoose-encryption'
 
 import { StepModel } from '../models/Metadata'
@@ -38,18 +47,21 @@ const clearModels = async () => {
 const initReservedSteps = async () => {
     const rootStep = await StepModel.findOne({ key: ReservedStep.Root }).lean()
     if (!rootStep) {
-        return StepModel.create(RootStep)
+        StepModel.create(RootStep)
+        return
     }
 
-
     // Migrations
-    const tagField = rootStep.fields.find(f => f.key === RootStepFieldKeys.Tags) 
-    if (!!tagField) {
+    const tagField = rootStep.fields.find((f) => f.key === RootStepFieldKeys.Tags)
+    if (tagField) {
         // Already up to date
         return
     }
 
-    await StepModel.findOneAndUpdate({ key: ReservedStep.Root }, { $push: { fields: PatientTagsField } })
+    await StepModel.findOneAndUpdate(
+        { key: ReservedStep.Root },
+        { $push: { fields: PatientTagsField } }
+    )
 }
 
 export const reinitModels = async () => {
@@ -178,7 +190,6 @@ const getTagsSchema = (fieldMetadata: Field) => {
         default: [],
     }
 }
-
 
 const getRadioButtonSchema = (fieldMetadata: Field) => {
     if (!fieldMetadata?.options?.length) {
