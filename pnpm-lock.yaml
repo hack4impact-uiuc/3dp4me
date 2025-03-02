@@ -168,9 +168,6 @@ importers:
       '@vis.gl/react-google-maps':
         specifier: ^1.4.2
         version: 1.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      Autocomplete:
-        specifier: link:@mui/material/Autocomplete
-        version: link:@mui/material/Autocomplete
       Chip:
         specifier: link:@mui/material/Chip
         version: link:@mui/material/Chip
