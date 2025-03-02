@@ -11,6 +11,7 @@ import { AuthenticatedUser } from './aws/types'
 import { PatientModel } from 'models/Patient'
 import { StepModel } from 'models/Metadata'
 import mongoose from 'mongoose'
+import { isAdmin } from './aws/awsUsers'
 
 export const isRoleValid = async (role: string) => {
     const roles = await RoleModel.find({})
@@ -72,10 +73,25 @@ export const createRoleUpdateParams = (
     return params
 }
 
+export const canUserAccessAllPatients = async (
+    user: AuthenticatedUser
+) => {
+    if (isAdmin(user)) return true
+
+    const roles = await RoleModel.find({ _id: { $in: user.roles } })
+    if (!roles) return false
+
+    return roles.some((role) => {
+        return role.patientTags.length === 0
+    })
+}
+
 export const canUserAccessPatient = async (
     user: AuthenticatedUser,
     patientId: string,
 ) => {
+    if (isAdmin(user)) return true
+
     // Get all patient data for this step
     const rootPatientData = await mongoose
         .model(ReservedStep.Root)
@@ -87,8 +103,6 @@ export const canUserAccessPatient = async (
     }
 
     const patientTags = rootPatientData[RootStepFieldKeys.Tags] || []
-    console.log("PATIENT TAGS ARE: ", patientTags)
-
     const rolePromises = user.roles.map(r => canRoleAccessPatientTags(r, patientTags))
     const roleResults = await Promise.all(rolePromises)
     return roleResults.some(r => r)

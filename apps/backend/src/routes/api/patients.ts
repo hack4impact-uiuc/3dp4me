@@ -28,9 +28,14 @@ import { generateOrderId } from '../../utils/generateOrderId';
 import errorWrap from '../../utils/errorWrap';
 import { AuthenticatedRequest } from '../../middleware/types';
 import { PatientModel } from '../../models/Patient';
-import { Patient, Field, File, RootStep } from '@3dp4me/types';
+import { Patient, Field, File, RootStep, ReservedStep } from '@3dp4me/types';
 import { StepModel } from '../../models/Metadata';
 import { HydratedDocument } from 'mongoose';
+import { canUserAccessAllPatients, canUserAccessPatient } from 'utils/roleUtils';
+import { AuthenticatedUser } from 'utils/aws/types';
+import { isAdmin } from 'utils/aws/awsUsers';
+import { RoleModel } from 'models/Role';
+import { getPatientsCount } from 'utils/tagUtils';
 
 export const router = express.Router();
 /**
@@ -54,10 +59,11 @@ router.get(
 router.get(
     '/count',
     errorWrap(async (req: AuthenticatedRequest, res: Response) => {
-        const patientCount = await PatientModel.count();
+        const patientCount = getPatientsCount(req.user)
         return sendResponse(res, 200, 'success', patientCount);
     }),
 );
+
 
 /**
  * Returns all of our data on a specific patient. Gets both the basic info
@@ -67,6 +73,10 @@ router.get(
     '/:id',
     errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id } = req.params;
+
+        // Ensure user has perms to see this patient
+        const canAccess = await canUserAccessPatient(req.user, id);
+        if (!canAccess) return sendResponse(res, 403, 'Insufficient permissions');
 
         // Check if patient exists
         const patientData = await PatientModel.findById(id);
@@ -121,6 +131,7 @@ router.post(
 
         try {
             req.body.lastEditedBy = req.user.name;
+            // TODO: Set roles????
 
             await mongoose.connection.transaction(async (session) => {
                 patient.orderYear = new Date().getFullYear();
@@ -145,6 +156,11 @@ router.put(
     removeRequestAttributes(PATIENT_IMMUTABLE_ATTRIBUTES),
     errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id } = req.params;
+
+        // Can't update what you can't see
+        const canAccess = await canUserAccessPatient(req.user, id);
+        if (!canAccess) return sendResponse(res, 403, 'Insufficient permissions');
+
         const patient = await PatientModel.findById(id);
         if (!patient)
             return sendResponse(res, 404, `Patient "${id}" not found`);
@@ -220,7 +236,7 @@ router.delete(
         }
 
         // Make sure user has permission to delete file
-        const isWritable = await isFieldReadable(req.user, id, stepKey, fieldKey);
+        const isWritable = await isFieldWritable(req.user, id, stepKey, fieldKey);
         if (!isWritable)
             return sendResponse(res, 403, 'Insufficient permission');
 
@@ -341,6 +357,10 @@ router.post(
     errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id, stepKey } = req.params;
 
+        // Can't create what you can't see
+        const canAccess = await canUserAccessPatient(req.user, id);
+        if (!canAccess) return sendResponse(res, 403, 'Insufficient permissions');
+
         // Make sure patient exists
         const patient = await PatientModel.findById(id);
         if (!patient)
@@ -382,6 +402,10 @@ router.delete(
     '/:id',
     errorWrap(async (req: AuthenticatedRequest, res: Response) => {
         const { id } = req.params;
+
+        // Can't delete what you can't see
+        const canAccess = await canUserAccessPatient(req.user, id);
+        if (!canAccess) return sendResponse(res, 403, 'Insufficient permissions');
 
         // Makes sure patient exists
         let patient;

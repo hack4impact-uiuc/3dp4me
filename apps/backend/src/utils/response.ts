@@ -4,6 +4,9 @@ import { HydratedDocument, Model } from 'mongoose'
 
 import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants'
 import { queryParamToNum, queryParamToString } from './request'
+import { canUserAccessAllPatients } from './roleUtils'
+import { AuthenticatedRequest } from 'middleware/types'
+import { getPatientIdsUserCanAccess, getPatientsCount } from './tagUtils'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RespData = Record<string, any>
@@ -83,12 +86,10 @@ const filterPatientsBySearchQuery = <T extends Record<string, any>>(
  */
 // eslint-disable-next-line max-len
 export const getDataFromModelWithPaginationAndSearch = async <T>(
-    req: Request,
+    req: AuthenticatedRequest,
     model: Model<T>,
     findParameters = {}
 ): Promise<{ data: HydratedDocument<T>[]; count: number }> => {
-    // TODO: CHECK ROLES HERE
-
     // The default values below will get the first user in the database
     const {
         pageNumber = 1,
@@ -102,9 +103,27 @@ export const getDataFromModelWithPaginationAndSearch = async <T>(
     // Calculates the number of patients to skip based on the request paramaters
     const documentsToSkip = intPageNumber > 0 ? (intPageNumber - 1) * intPatientsPerPage : 0
 
+
+    const canAccessAll = await canUserAccessAllPatients(req.user)
+    if (!canAccessAll) {
+        const patientIds = await getPatientIdsUserCanAccess(req.user)
+        findParameters  = {
+            ...findParameters,
+            $in: {
+                patientId: { $in: patientIds }
+            }
+        }
+    }
+
+    // Only return patients that the user has access to
+    // const allRoles = await Role.find({ _id: { $in: user.roles } }).lean()
+    // const allTags = await getTags
+    // allRoles.map(r => r.patientTags).reduceRight((acc, val) => acc.concat(val), [])
+    // // return PatientModel.find({ tags: { $in: allTags } }).count();
+
     // Perform pagination while doing .find() if there isn't a search query
     if (lowerCaseSearchQuery === '') {
-        const patientCount = await model.count(findParameters)
+        const patientCount = await getPatientsCount(req.user)
         const data = await model
             .find(findParameters)
             .sort({ lastEdited: -1 })
