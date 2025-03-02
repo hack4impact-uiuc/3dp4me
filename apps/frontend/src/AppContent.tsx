@@ -1,6 +1,6 @@
 import { Language } from '@3dp4me/types'
 import { createTheme, StyledEngineProvider, ThemeOptions, ThemeProvider } from '@mui/material'
-import React, { useContext, useEffect } from 'react'
+import React, { Suspense, useContext, useEffect } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { QueryParamProvider } from 'use-query-params'
@@ -12,16 +12,17 @@ import LoadingIndicator from './components/LoadingIndicator/LoadingIndicator'
 import Navbar from './components/Navbar/Navbar'
 import { useErrorWrap } from './hooks/useErrorWrap'
 import { useTranslations } from './hooks/useTranslations'
-import AccountManagement from './pages/AccountManagement/AccountManagment'
-import Dashboard from './pages/Dashboard/Dashboard'
-import DashboardManagement from './pages/DashboardManagement/DashboardManagement'
-import Patient2FA from './pages/Patient2FALogin/Patient2FALogin'
-import PatientDetail from './pages/PatientDetail/PatientDetail'
-import Patients from './pages/Patients/Patients'
 import { ReducerActionType } from './store/Reducer'
 import { Context } from './store/Store'
 import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
+
+const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'))
+const DashboardManagement = React.lazy(() => import('./pages/DashboardManagement/DashboardManagement'))
+const Patient2FA = React.lazy(() => import('./pages/Patient2FALogin/Patient2FALogin'))
+const AccountManagement = React.lazy(() => import('./pages/AccountManagement/AccountManagment'))
+const PatientDetail = React.lazy(() => import('./pages/PatientDetail/PatientDetail'))
+const Patients = React.lazy(() => import('./pages/Patients/Patients'))
 
 interface AppContentProps {
     username: string
@@ -117,24 +118,26 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
                             {/* Routes */}
                             <div className={contentClassNames}>
                                 <Switch>
-                                    <Route exact path={Routes.DASHBOARD}>
-                                        <Dashboard />
-                                    </Route>
-                                    <Route exact path={Routes.ACCOUNT}>
-                                        <AccountManagement />
-                                    </Route>
-                                    <Route exact path={Routes.PATIENTS}>
-                                        <Patients />
-                                    </Route>
-                                    <Route exact path={Routes.DASHBOARD_MANAGEMENT}>
-                                        <DashboardManagement />
-                                    </Route>
-                                    <Route exact path={`${Routes.PATIENT_2FA}/:patientId`}>
-                                        <Patient2FA />
-                                    </Route>
-                                    <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
-                                        <PatientDetail />
-                                    </Route>
+                                    <Suspense fallback={<LoadingIndicator />}>
+                                        <Route exact path={Routes.DASHBOARD}>
+                                            <Dashboard />
+                                        </Route>
+                                        <Route exact path={Routes.ACCOUNT}>
+                                            <AccountManagement />
+                                        </Route>
+                                        <Route exact path={Routes.PATIENTS}>
+                                            <Patients />
+                                        </Route>
+                                        <Route exact path={Routes.DASHBOARD_MANAGEMENT}>
+                                            <DashboardManagement />
+                                        </Route>
+                                        <Route exact path={`${Routes.PATIENT_2FA}/:patientId`}>
+                                            <Patient2FA />
+                                        </Route>
+                                        <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
+                                            <PatientDetail />
+                                        </Route>
+                                    </Suspense>
                                 </Switch>
                             </div>
                         </ThemeProvider>
