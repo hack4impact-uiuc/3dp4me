@@ -135,7 +135,7 @@ export const updateStepsInTransaction = async (updatedSteps: Step[], session: Cl
        Let's assume that none of the saved steps in the database don't have keys that collide.
        Then, we would only need to check new steps being created for key collision. */
 
-    const currentStepsInDB = await StepModel.find({}).session(session)
+    const currentStepsInDB = await StepModel.aggregate([{ $match: {} }]).session(session)
     let stepsToNotChange: Step[] = []
     const requestStepKeys = updatedSteps.map((step) => step.key)
 
