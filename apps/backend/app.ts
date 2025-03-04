@@ -21,6 +21,7 @@ import { Request, Response } from 'express';
 
 const app = express();
 
+log.setLevel(log.levels.DEBUG)
 app.use(configureHelment());
 app.use(setResponseHeaders);
 app.use(express.static(path.join(__dirname, './frontend')));
