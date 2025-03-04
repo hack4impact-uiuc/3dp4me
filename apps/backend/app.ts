@@ -32,8 +32,8 @@ app.use(
 );
 
 if (process.env.NODE_ENV !== ENV_TEST) initDB();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
+app.use(bodyParser.json({ limit: '50mb' }));
 
 // This allows the backend to either serve routes or redirect to frontend
 app.get('/*', (req: Request, res: Response, next: NextFunction) => {

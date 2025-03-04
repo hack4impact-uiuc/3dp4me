@@ -153,6 +153,7 @@ export const generateFieldSchema = (field: Field): SchemaDefinitionProperty | nu
             return getFieldGroupSchema(field)
         case FieldType.SIGNATURE:
             return getSignatureSchema(field)
+        case FieldType.HEADER:
         case FieldType.DIVIDER:
             return null
         case FieldType.MAP:
