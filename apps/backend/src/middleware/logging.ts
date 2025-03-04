@@ -9,14 +9,20 @@ import { AuthenticatedRequest } from './types'
  * but before serving the route.
  */
 export const logRequest = (req: AuthenticatedRequest, _: Response, next: NextFunction) => {
-    log.debug({
-        time: Date.now(),
-        method: req.method,
-        url: req.url,
-        user: req.user,
-        headers: req.headers,
-        body: req.body,
-    })
+    log.debug(
+        JSON.stringify(
+            {
+                time: Date.now(),
+                method: req.method,
+                url: req.url,
+                user: req.user,
+                headers: req.headers,
+                body: req.body,
+            },
+            null,
+            2
+        )
+    )
 
     next()
 }

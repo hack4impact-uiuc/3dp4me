@@ -1,5 +1,6 @@
 import { Nullish, Patient } from '@3dp4me/types'
 import { Response } from 'express'
+import logger from 'loglevel'
 import { AuthenticatedRequest } from 'middleware/types'
 import { HydratedDocument } from 'mongoose'
 
@@ -24,12 +25,16 @@ export const sendResponse = (
     code: number,
     message: string,
     data?: Nullish<RespData | number>
-) =>
-    res.status(code).json({
+) => {
+    const resp = {
         success: isCodeSuccessful(code),
         message,
         result: data,
-    })
+    }
+
+    logger.debug('Sending response', JSON.stringify(resp, null, 2))
+    return res.status(code).json(resp)
+}
 
 /**
  * Removes patients whose name, phone nunber, or unique _id contains the searchQuery
