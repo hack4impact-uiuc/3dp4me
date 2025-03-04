@@ -9,14 +9,14 @@ import { AuthenticatedRequest } from './types'
  * but before serving the route.
  */
 export const logRequest = (req: AuthenticatedRequest, _: Response, next: NextFunction) => {
-    log.trace('-------------------------- REQUEST --------------------------')
-    log.trace(`${Date.now()}: ${req.method} ${req.url}`)
-    log.trace('------------ USER ------------')
-    log.trace(req.user)
-    log.trace('----------- HEADER -----------')
-    log.trace(req.headers)
-    log.trace('------------ BODY ------------')
-    log.trace(req.body)
+    log.debug({
+        time: Date.now(),
+        method: req.method,
+        url: req.url,
+        user: req.user,
+        headers: req.headers,
+        body: req.body,
+    })
 
     next()
 }
