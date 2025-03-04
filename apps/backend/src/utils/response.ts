@@ -1,5 +1,6 @@
 import { Nullish, Patient } from '@3dp4me/types'
 import { Response } from 'express'
+import logger from 'loglevel'
 import { AuthenticatedRequest } from 'middleware/types'
 import { HydratedDocument } from 'mongoose'
 
@@ -8,7 +9,6 @@ import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants'
 import { queryParamToNum, queryParamToString } from './request'
 import { canUserAccessAllPatients } from './roleUtils'
 import { getPatientIdsUserCanAccess, getPatientsCount } from './tagUtils'
-import logger from "loglevel"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RespData = Record<string, any>
@@ -32,7 +32,7 @@ export const sendResponse = (
         result: data,
     }
 
-    logger.debug("Sending response", JSON.stringify(resp, null, 2))
+    logger.debug('Sending response', JSON.stringify(resp, null, 2))
     return res.status(code).json(resp)
 }
 
