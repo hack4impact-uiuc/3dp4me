@@ -1,5 +1,4 @@
 import './StepManagementContent.scss'
-import 'semantic-ui-css/semantic.min.css'
 
 import {
     Field,

@@ -16,6 +16,8 @@ import { ReducerActionType } from './store/Reducer'
 import { Context } from './store/Store'
 import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
+// import './global.css'
+import './css/semantic-prune.css'
 
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'))
 const DashboardManagement = React.lazy(
