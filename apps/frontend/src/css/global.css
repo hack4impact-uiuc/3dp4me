@@ -843,6 +843,6 @@ i.icon.remove:before {
   content: "\f00d";
 }
 
-i.icon.pencil.alternate:before {
+/* i.icon.pencil.alternate:before {
   content: "\f303";
-}
+} */

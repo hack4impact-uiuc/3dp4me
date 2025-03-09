@@ -8,9 +8,9 @@ import {
     PathToField,
     StepPathToField,
 } from '@3dp4me/types'
-import React from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
+import CreateIcon from '@mui/icons-material/Create';
 import { getJSONReferenceByStringPath } from '../../utils/utils'
 import { FormOption } from '../Fields/FormOption'
 import RadioButtonField from '../Fields/RadioButtonField'
@@ -98,7 +98,8 @@ const StepManagementContent = ({
                         className="edit-field-button"
                         onClick={() => onEditField(fieldRoot, fieldNumber)}
                     >
-                        <i className="pencil alternate icon" />
+                        {/* <i className="pencil alternate icon" /> */}
+                        <CreateIcon />
                     </div>
                 </div>
             )
@@ -110,7 +111,8 @@ const StepManagementContent = ({
                     className="edit-field-button"
                     onClick={() => onEditField(fieldRoot, fieldNumber)}
                 >
-                    <i className="pencil alternate icon" />
+                    {/* <i className="pencil alternate icon" /> */}
+                    <CreateIcon />
                 </div>
 
                 <div className="reorder-field-buttons">

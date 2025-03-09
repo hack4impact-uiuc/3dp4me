@@ -9,6 +9,7 @@ import Toolbar from '@mui/material/Toolbar'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
+import { PencilIcon } from '../Icons/Icons'
 
 const StyledDrawer = styled(Drawer)({
     background: '#dddef2',
@@ -56,7 +57,7 @@ const Sidebar = ({
 
         return [
             <div className={`button order-button ${className}`} onClick={() => onEditStep(stepKey)}>
-                <i className="pencil alternate icon" />
+                <PencilIcon />
             </div>,
             <div
                 className={`button order-button ${className}`}
@@ -96,7 +97,7 @@ const Sidebar = ({
             return (
                 <div className="sidebar-button-container">
                     <div
-                        className={`button ${buttonClassName}`}
+                        className={`button ${buttonClassName} pad-start-title`}
                         onClick={() => onButtonClick(element.key)}
                     >
                         {element.displayName[selectedLang]}
