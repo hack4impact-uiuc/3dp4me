@@ -2,9 +2,9 @@
 
 import { Field, FieldType, File as FileModel } from '@3dp4me/types'
 import Divider from '@mui/material/Divider'
+import React from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
-import React from 'react'
 
 const AudioRecorder = React.lazy(() => import('../AudioRecorder/AudioRecorder'))
 const DateField = React.lazy(() => import('../Fields/DateField'))
@@ -17,7 +17,6 @@ const TextArea = React.lazy(() => import('../Fields/TextArea'))
 const TextField = React.lazy(() => import('../Fields/TextField'))
 const Files = React.lazy(() => import('../Files/Files'))
 const PhoneField = React.lazy(() => import('../Fields/PhoneField'))
-
 
 export interface StepFieldProps {
     metadata: Field

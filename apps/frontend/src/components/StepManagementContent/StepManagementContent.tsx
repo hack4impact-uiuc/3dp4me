@@ -8,13 +8,13 @@ import {
     PathToField,
     StepPathToField,
 } from '@3dp4me/types'
+import CreateIcon from '@mui/icons-material/Create'
 
 import { useTranslations } from '../../hooks/useTranslations'
-import CreateIcon from '@mui/icons-material/Create';
 import { getJSONReferenceByStringPath } from '../../utils/utils'
 import { FormOption } from '../Fields/FormOption'
 import RadioButtonField from '../Fields/RadioButtonField'
-import { ChevronUpIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '../Icons/Icons';
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '../Icons/Icons'
 
 export interface StepManagementContentProps {
     onDownPressed: (key: string, root: StepPathToField, index: number) => void

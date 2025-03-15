@@ -1,3 +1,5 @@
+import './css/global.css'
+
 import { Language } from '@3dp4me/types'
 import { createTheme, StyledEngineProvider, ThemeOptions, ThemeProvider } from '@mui/material'
 import React, { Suspense, useContext, useEffect } from 'react'
@@ -15,7 +17,6 @@ import { ReducerActionType } from './store/Reducer'
 import { Context } from './store/Store'
 import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
-import './css/global.css'
 
 const Navbar = React.lazy(() => import('./components/Navbar/Navbar'))
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'))
@@ -122,24 +123,24 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
                                 {/* Routes */}
                                 <div className={contentClassNames}>
                                     <Switch>
-                                            <Route exact path={Routes.DASHBOARD}>
-                                                <Dashboard />
-                                            </Route>
-                                            <Route exact path={Routes.ACCOUNT}>
-                                                <AccountManagement />
-                                            </Route>
-                                            <Route exact path={Routes.PATIENTS}>
-                                                <Patients />
-                                            </Route>
-                                            <Route exact path={Routes.DASHBOARD_MANAGEMENT}>
-                                                <DashboardManagement />
-                                            </Route>
-                                            <Route exact path={`${Routes.PATIENT_2FA}/:patientId`}>
-                                                <Patient2FA />
-                                            </Route>
-                                            <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
-                                                <PatientDetail />
-                                            </Route>
+                                        <Route exact path={Routes.DASHBOARD}>
+                                            <Dashboard />
+                                        </Route>
+                                        <Route exact path={Routes.ACCOUNT}>
+                                            <AccountManagement />
+                                        </Route>
+                                        <Route exact path={Routes.PATIENTS}>
+                                            <Patients />
+                                        </Route>
+                                        <Route exact path={Routes.DASHBOARD_MANAGEMENT}>
+                                            <DashboardManagement />
+                                        </Route>
+                                        <Route exact path={`${Routes.PATIENT_2FA}/:patientId`}>
+                                            <Patient2FA />
+                                        </Route>
+                                        <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
+                                            <PatientDetail />
+                                        </Route>
                                     </Switch>
                                 </div>
                             </Suspense>
