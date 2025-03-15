@@ -4,17 +4,20 @@ import { Field, FieldType, File as FileModel } from '@3dp4me/types'
 import Divider from '@mui/material/Divider'
 
 import { useTranslations } from '../../hooks/useTranslations'
-import AudioRecorder from '../AudioRecorder/AudioRecorder'
-import DateField from '../Fields/DateField'
-import FieldGroup from '../Fields/FieldGroup/FieldGroup'
-import MapField from '../Fields/MapField/MapField'
-import PhoneField from '../Fields/PhoneField'
-import PhotoField from '../Fields/PhotoField'
-import RadioButtonField from '../Fields/RadioButtonField'
-import SignatureField from '../Fields/SignatureField'
-import TextArea from '../Fields/TextArea'
-import TextField from '../Fields/TextField'
-import Files from '../Files/Files'
+import React from 'react'
+
+const AudioRecorder = React.lazy(() => import('../AudioRecorder/AudioRecorder'))
+const DateField = React.lazy(() => import('../Fields/DateField'))
+const FieldGroup = React.lazy(() => import('../Fields/FieldGroup/FieldGroup'))
+const MapField = React.lazy(() => import('../Fields/MapField/MapField'))
+const PhotoField = React.lazy(() => import('../Fields/PhotoField'))
+const RadioButtonField = React.lazy(() => import('../Fields/RadioButtonField'))
+const SignatureField = React.lazy(() => import('../Fields/SignatureField'))
+const TextArea = React.lazy(() => import('../Fields/TextArea'))
+const TextField = React.lazy(() => import('../Fields/TextField'))
+const Files = React.lazy(() => import('../Files/Files'))
+const PhoneField = React.lazy(() => import('../Fields/PhoneField'))
+
 
 export interface StepFieldProps {
     metadata: Field
