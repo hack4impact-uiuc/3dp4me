@@ -2,9 +2,11 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './Fields.scss'
 
 import { Nullish } from '@3dp4me/types'
-import DatePicker from 'react-datepicker'
+import DatePicker, { registerLocale } from 'react-datepicker'
+import { arSA, enUS } from 'date-fns/locale'
 
 import { useTranslations } from '../../hooks/useTranslations'
+import { LANGUAGES } from '../../utils/constants'
 
 export interface DateFieldProps {
     displayName: string
@@ -13,6 +15,11 @@ export interface DateFieldProps {
     value: Nullish<string>
     onChange: (field: string, value: string) => void
 }
+
+
+// Configure international date library
+registerLocale(LANGUAGES.EN, enUS)
+registerLocale(LANGUAGES.AR, arSA)
 
 const DateField = ({ displayName, isDisabled, fieldId, value, onChange }: DateFieldProps) => {
     const selectedLang = useTranslations()[1]
