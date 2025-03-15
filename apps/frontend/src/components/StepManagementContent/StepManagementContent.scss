@@ -154,7 +154,9 @@
                 }
             }
 
-            .buttons {
+
+            .buttons,
+            .field-buttons {
                 align-self: flex-start;
                 display: flex;
                 flex-direction: row;
@@ -172,6 +174,20 @@
                     display: flex;
                     flex-direction: column;
                     font-size: 1em;
+                }
+
+                .reorder-field-buttons,
+                .reorder-subfield-buttons {
+                    display: flex;
+                    font-size: 1em;
+                }
+
+                .reorder-field-buttons {
+                    flex-direction: column;
+                }
+
+                .reorder-subfield-buttons {
+                    flex-direction: row;
                 }
 
                 .up-button {

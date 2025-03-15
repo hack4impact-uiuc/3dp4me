@@ -3,9 +3,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { APIProvider } from '@vis.gl/react-google-maps'
 import { Amplify, Auth } from 'aws-amplify'
-import { arSA, enUS } from 'date-fns/locale'
-import React, { useEffect, useState } from 'react'
-import { registerLocale } from 'react-datepicker'
+import { useEffect, useState } from 'react'
 
 import AppContent from './AppContent'
 import { AUTHENTICATED, setAuthListener, UNAUTHENTICATED, UNDEFINED_AUTH } from './aws/aws-auth'
@@ -14,14 +12,9 @@ import { getCurrentUserInfo } from './aws/aws-helper'
 import Login from './pages/Login/Login'
 import { queryClient } from './query/query'
 import Store from './store/Store'
-import { LANGUAGES } from './utils/constants'
 
 // Configure amplify
 Amplify.configure(awsconfig)
-
-// Configure international date library
-registerLocale(LANGUAGES.EN, enUS)
-registerLocale(LANGUAGES.AR, arSA)
 
 function App() {
     const [authLevel, setAuthLevel] = useState(UNDEFINED_AUTH)

@@ -1,3 +1,5 @@
+import './css/global.css'
+
 import { Language } from '@3dp4me/types'
 import { createTheme, StyledEngineProvider, ThemeOptions, ThemeProvider } from '@mui/material'
 import React, { Suspense, useContext, useEffect } from 'react'
@@ -9,7 +11,6 @@ import { getSelf } from './api/api'
 import { getCurrentUserInfo } from './aws/aws-helper'
 import ErrorModal from './components/ErrorModal/ErrorModal'
 import LoadingIndicator from './components/LoadingIndicator/LoadingIndicator'
-import Navbar from './components/Navbar/Navbar'
 import { useErrorWrap } from './hooks/useErrorWrap'
 import { useTranslations } from './hooks/useTranslations'
 import { ReducerActionType } from './store/Reducer'
@@ -17,6 +18,7 @@ import { Context } from './store/Store'
 import { CognitoAttribute, LANGUAGES, Routes } from './utils/constants'
 import { isLanguageValid } from './utils/language'
 
+const Navbar = React.lazy(() => import('./components/Navbar/Navbar'))
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'))
 const DashboardManagement = React.lazy(
     () => import('./pages/DashboardManagement/DashboardManagement')
@@ -108,19 +110,19 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
                 <QueryParamProvider ReactRouterRoute={Route}>
                     <StyledEngineProvider injectFirst>
                         <ThemeProvider theme={selectedLang === LANGUAGES.AR ? arTheme : enTheme}>
-                            <Navbar username={username} userEmail={userEmail} />
+                            <Suspense fallback={<LoadingIndicator />}>
+                                <Navbar username={username} userEmail={userEmail} />
 
-                            {/* Global error popup */}
-                            <ErrorModal
-                                message={state.error}
-                                isOpen={!!state.isErrorVisible}
-                                onClose={handleErrorModalClose}
-                            />
+                                {/* Global error popup */}
+                                <ErrorModal
+                                    message={state.error}
+                                    isOpen={!!state.isErrorVisible}
+                                    onClose={handleErrorModalClose}
+                                />
 
-                            {/* Routes */}
-                            <div className={contentClassNames}>
-                                <Switch>
-                                    <Suspense fallback={<LoadingIndicator />}>
+                                {/* Routes */}
+                                <div className={contentClassNames}>
+                                    <Switch>
                                         <Route exact path={Routes.DASHBOARD}>
                                             <Dashboard />
                                         </Route>
@@ -139,9 +141,9 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
                                         <Route exact path={`${Routes.PATIENT_DETAIL}/:patientId`}>
                                             <PatientDetail />
                                         </Route>
-                                    </Suspense>
-                                </Switch>
-                            </div>
+                                    </Switch>
+                                </div>
+                            </Suspense>
                         </ThemeProvider>
                     </StyledEngineProvider>
                 </QueryParamProvider>

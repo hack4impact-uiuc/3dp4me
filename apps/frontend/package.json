@@ -45,7 +45,6 @@
     "react-scripts": "^5.0.1",
     "react-signature-canvas": "^1.0.6",
     "react-switch": "^6.0.0",
-    "semantic-ui-css": "^2.5.0",
     "signature_pad": "^2.3.2",
     "styled-components": "^6.1.8",
     "sweetalert": "^2.1.2",
@@ -95,6 +94,7 @@
     "rollup-plugin-visualizer": "^5.9.2",
     "sass": "^1.69.5",
     "sass-loader": "^13.3.2",
+    "source-map-explorer": "^2.5.3",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.1",
@@ -105,6 +105,7 @@
   "homepage": ".",
   "private": true,
   "scripts": {
+    "analyze": "source-map-explorer 'dist/*.js'",
     "build": "pnpm run build:hearing && pnpm run build:prosthetics",
     "build:hearing": "cross-env PROJECT_NAME=hearing webpack",
     "build:prosthetics": "cross-env PROJECT_NAME=prosthetics webpack",

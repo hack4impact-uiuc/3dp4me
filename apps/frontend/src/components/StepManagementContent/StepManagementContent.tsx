@@ -1,5 +1,4 @@
 import './StepManagementContent.scss'
-import 'semantic-ui-css/semantic.min.css'
 
 import {
     Field,
@@ -9,12 +8,18 @@ import {
     PathToField,
     StepPathToField,
 } from '@3dp4me/types'
-import React from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { getJSONReferenceByStringPath } from '../../utils/utils'
 import { FormOption } from '../Fields/FormOption'
 import RadioButtonField from '../Fields/RadioButtonField'
+import {
+    ChevronDownIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    ChevronUpIcon,
+    PencilIcon,
+} from '../Icons/Icons'
 
 export interface StepManagementContentProps {
     onDownPressed: (key: string, root: StepPathToField, index: number) => void
@@ -86,20 +91,20 @@ const StepManagementContent = ({
                             onClick={() => onUpPressed(stepMetadata.key, fieldRoot, fieldNumber)}
                             className="up-button"
                         >
-                            <i className="chevron left icon" />
+                            <ChevronLeftIcon />
                         </div>
                         <div
                             onClick={() => onDownPressed(stepMetadata.key, fieldRoot, fieldNumber)}
                             className="down-button"
                         >
-                            <i className="chevron right icon" />
+                            <ChevronRightIcon />
                         </div>
                     </div>
                     <div
                         className="edit-field-button"
                         onClick={() => onEditField(fieldRoot, fieldNumber)}
                     >
-                        <i className="pencil alternate icon" />
+                        <PencilIcon />
                     </div>
                 </div>
             )
@@ -111,7 +116,7 @@ const StepManagementContent = ({
                     className="edit-field-button"
                     onClick={() => onEditField(fieldRoot, fieldNumber)}
                 >
-                    <i className="pencil alternate icon" />
+                    <PencilIcon />
                 </div>
 
                 <div className="reorder-field-buttons">
@@ -119,13 +124,13 @@ const StepManagementContent = ({
                         onClick={() => onUpPressed(stepMetadata.key, fieldRoot, fieldNumber)}
                         className="up-button"
                     >
-                        <i className="chevron up icon" />
+                        <ChevronUpIcon />
                     </div>
                     <div
                         onClick={() => onDownPressed(stepMetadata.key, fieldRoot, fieldNumber)}
                         className="down-button"
                     >
-                        <i className="chevron down icon" />
+                        <ChevronDownIcon />
                     </div>
                 </div>
             </div>

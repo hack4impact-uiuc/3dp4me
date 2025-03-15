@@ -9,6 +9,7 @@ import nodeExternals from "webpack-node-externals"
 const config = {
   mode: "production",
   entry: "./src/index.tsx",
+  devtool: 'source-map',
   module: {
     rules: [
       {

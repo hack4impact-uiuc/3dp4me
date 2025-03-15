@@ -4,6 +4,8 @@ import { Language, TranslatedString } from '@3dp4me/types'
 import TextField from '@mui/material/TextField'
 import React from 'react'
 
+import { ChevronDownIcon, ChevronUpIcon, ClearIcon } from '../Icons/Icons'
+
 export interface LanguageInputProps {
     onUpPressed?: (fieldKey: string) => void
     onDownPressed?: (fieldKey: string) => void
@@ -27,10 +29,10 @@ const LanguageInput = ({
         return (
             <div className="language-col vertical-center">
                 <div onClick={() => onUpPressed?.(fieldKey)} className="field-up-button">
-                    <i className={`${shouldShowArrows ? 'chevron up icon' : 'icon'}`} />
+                    {shouldShowArrows && <ChevronUpIcon />}
                 </div>
                 <div onClick={() => onDownPressed?.(fieldKey)} className="field-down-button">
-                    <i className={`${shouldShowArrows ? 'chevron down icon' : 'icon'}`} />
+                    {shouldShowArrows && <ChevronDownIcon />}
                 </div>
             </div>
         )
@@ -41,7 +43,7 @@ const LanguageInput = ({
 
         return (
             <div className="language-col remove-field-button" onClick={() => onDelete?.(fieldKey)}>
-                <i className={`${shouldShowDelete ? 'remove icon' : 'icon'}`} />
+                {shouldShowDelete && <ClearIcon />}
             </div>
         )
     }
