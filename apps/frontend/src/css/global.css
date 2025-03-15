@@ -710,7 +710,7 @@ body ::-webkit-scrollbar-thumb:hover {
   background: rgba(128, 135, 139, 0.8);
 }
 
-/*!
+/* /*!
  * # Semantic UI 2.5.0 - Icon
  * http://github.com/semantic-org/semantic-ui/
  *
@@ -825,24 +825,4 @@ i.icons .bottom.right.corner.icon {
 
 i.icons .inverted.corner.icon {
   text-shadow: -1px -1px 0 #1B1C1D, 1px -1px 0 #1B1C1D, -1px 1px 0 #1B1C1D, 1px 1px 0 #1B1C1D;
-}
-
-/*
- * ICONS THAT WE USE
- */
-
-i.icon.chevron.up:before {
-  content: "\f077";
-}
-
-i.icon.chevron.down:before {
-  content: "\f078";
-}
-
-i.icon.remove:before {
-  content: "\f00d";
-}
-
-/* i.icon.pencil.alternate:before {
-  content: "\f303";
 } */

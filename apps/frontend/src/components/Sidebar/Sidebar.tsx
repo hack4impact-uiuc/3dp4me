@@ -9,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES } from '../../utils/constants'
-import { PencilIcon } from '../Icons/Icons'
+import { ChevronDownIcon, ChevronUpIcon, PencilIcon } from '../Icons/Icons'
 
 const StyledDrawer = styled(Drawer)({
     background: '#dddef2',
@@ -63,13 +63,13 @@ const Sidebar = ({
                 className={`button order-button ${className}`}
                 onClick={() => onDownPressed(stepKey)}
             >
-                <i className="chevron down icon" />
+                <ChevronDownIcon />
             </div>,
             <div
                 className={`button order-button ${className}`}
                 onClick={() => onUpPressed(stepKey)}
             >
-                <i className="chevron up icon" />
+                <ChevronUpIcon />
             </div>,
         ]
     }

@@ -14,6 +14,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import { getJSONReferenceByStringPath } from '../../utils/utils'
 import { FormOption } from '../Fields/FormOption'
 import RadioButtonField from '../Fields/RadioButtonField'
+import { ChevronUpIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '../Icons/Icons';
 
 export interface StepManagementContentProps {
     onDownPressed: (key: string, root: StepPathToField, index: number) => void
@@ -85,20 +86,19 @@ const StepManagementContent = ({
                             onClick={() => onUpPressed(stepMetadata.key, fieldRoot, fieldNumber)}
                             className="up-button"
                         >
-                            <i className="chevron left icon" />
+                            <ChevronLeftIcon />
                         </div>
                         <div
                             onClick={() => onDownPressed(stepMetadata.key, fieldRoot, fieldNumber)}
                             className="down-button"
                         >
-                            <i className="chevron right icon" />
+                            <ChevronRightIcon />
                         </div>
                     </div>
                     <div
                         className="edit-field-button"
                         onClick={() => onEditField(fieldRoot, fieldNumber)}
                     >
-                        {/* <i className="pencil alternate icon" /> */}
                         <CreateIcon />
                     </div>
                 </div>
@@ -111,7 +111,6 @@ const StepManagementContent = ({
                     className="edit-field-button"
                     onClick={() => onEditField(fieldRoot, fieldNumber)}
                 >
-                    {/* <i className="pencil alternate icon" /> */}
                     <CreateIcon />
                 </div>
 
@@ -120,13 +119,13 @@ const StepManagementContent = ({
                         onClick={() => onUpPressed(stepMetadata.key, fieldRoot, fieldNumber)}
                         className="up-button"
                     >
-                        <i className="chevron up icon" />
+                        <ChevronUpIcon />
                     </div>
                     <div
                         onClick={() => onDownPressed(stepMetadata.key, fieldRoot, fieldNumber)}
                         className="down-button"
                     >
-                        <i className="chevron down icon" />
+                        <ChevronDownIcon />
                     </div>
                 </div>
             </div>
