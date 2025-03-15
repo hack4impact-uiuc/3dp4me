@@ -8,13 +8,18 @@ import {
     PathToField,
     StepPathToField,
 } from '@3dp4me/types'
-import CreateIcon from '@mui/icons-material/Create'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { getJSONReferenceByStringPath } from '../../utils/utils'
 import { FormOption } from '../Fields/FormOption'
 import RadioButtonField from '../Fields/RadioButtonField'
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '../Icons/Icons'
+import {
+    ChevronDownIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    ChevronUpIcon,
+    PencilIcon,
+} from '../Icons/Icons'
 
 export interface StepManagementContentProps {
     onDownPressed: (key: string, root: StepPathToField, index: number) => void
@@ -99,7 +104,7 @@ const StepManagementContent = ({
                         className="edit-field-button"
                         onClick={() => onEditField(fieldRoot, fieldNumber)}
                     >
-                        <CreateIcon />
+                        <PencilIcon />
                     </div>
                 </div>
             )
@@ -111,7 +116,7 @@ const StepManagementContent = ({
                     className="edit-field-button"
                     onClick={() => onEditField(fieldRoot, fieldNumber)}
                 >
-                    <CreateIcon />
+                    <PencilIcon />
                 </div>
 
                 <div className="reorder-field-buttons">
