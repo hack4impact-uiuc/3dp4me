@@ -15,7 +15,7 @@ export const formatDate = (date: Nullish<Date | string>, language: Language) => 
 }
 
 const dateToString = (date: Date, language: Language) => {
-    let locale = 'ar-SA'
+    let locale = 'ar-JO'
     if (language === LANGUAGES.EN) locale = 'en-US'
 
     return date.toLocaleDateString(locale, {
