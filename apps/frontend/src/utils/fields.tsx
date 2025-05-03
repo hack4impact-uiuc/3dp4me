@@ -341,6 +341,7 @@ export const fieldToJSX = (fieldData: any, fieldType: AnyFieldType, selectedLang
 
     switch (fieldType) {
         case FieldType.MULTILINE_STRING:
+            return <p style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{stringifiedField}</p>
         case FieldType.STRING:
         case FieldType.NUMBER:
         case FieldType.PHONE:
