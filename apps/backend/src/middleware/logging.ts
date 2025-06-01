@@ -9,7 +9,7 @@ import { AuthenticatedRequest } from './types'
  * but before serving the route.
  */
 export const logRequest = (req: AuthenticatedRequest, _: Response, next: NextFunction) => {
-    log.debug(
+    log.trace(
         JSON.stringify(
             {
                 time: Date.now(),

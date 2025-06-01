@@ -21,7 +21,13 @@ import { Request, Response } from 'express';
 
 const app = express();
 
-log.setLevel(log.levels.DEBUG)
+
+if (process.env.NODE_ENV === 'development') {
+    log.setLevel(log.levels.DEBUG)
+} else {
+    log.setLevel(log.levels.TRACE)
+}
+
 app.use(configureHelment());
 app.use(setResponseHeaders);
 app.use(express.static(path.join(__dirname, './frontend')));
