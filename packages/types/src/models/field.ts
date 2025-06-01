@@ -1,4 +1,4 @@
-import { Nullish, Unsaved } from 'src/utils'
+import { Nullish, Unsaved } from '../utils'
 
 import { File } from './file'
 import { MapPoint } from './map'

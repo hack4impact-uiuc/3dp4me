@@ -16,6 +16,7 @@ import encrypt from 'mongoose-encryption'
 import { StepModel } from '../models/Metadata'
 import { fileSchema } from '../schemas/fileSchema'
 import { signatureSchema } from '../schemas/signatureSchema'
+import { PatientTagSyria } from '@3dp4me/types';
 
 /**
  * Initalizes and connects to the DB. Should be called at app startup.
@@ -44,24 +45,40 @@ const clearModels = async () => {
     })
 }
 
+// Migrations for root step
 const initReservedSteps = async () => {
+    log.info("Initializing the reserved step")
     const rootStep = await StepModel.findOne({ key: ReservedStep.Root }).lean()
     if (!rootStep) {
-        StepModel.create(RootStep)
-        return
+        log.info("Creating the reserved step")
+        return StepModel.create(RootStep)
     }
 
-    // Migrations
+    // Older version missing the tag field
     const tagField = rootStep.fields.find((f) => f.key === RootStepFieldKeys.Tags)
-    if (tagField) {
-        // Already up to date
-        return
+    if (!tagField) {
+        log.info("Tags is missing from reserved step, adding it")
+        return StepModel.updateOne(
+            { key: ReservedStep.Root },
+            { $push: { fields: PatientTagsField } }
+        )
     }
 
-    await StepModel.findOneAndUpdate(
-        { key: ReservedStep.Root },
-        { $push: { fields: PatientTagsField } }
-    )
+    // Older version missing the syria option
+    const syriaOption = tagField.options.find((o) => o.Question.EN === PatientTagSyria.Question.EN)
+    if (!syriaOption) {
+        log.info("Syria is missing from tag options, adding it")
+        return StepModel.updateOne(
+            { 
+                key: ReservedStep.Root,
+                "fields.key": RootStepFieldKeys.Tags
+            },
+            { $push: { "fields.$.options": PatientTagSyria } }
+        )
+    }
+
+    log.info("Reserved step is up to date")
+    return null
 }
 
 export const reinitModels = async () => {

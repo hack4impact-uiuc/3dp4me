@@ -14,7 +14,7 @@ import { NewSiganatureModal, SignatureData } from '../NewSignatureModal/NewSigna
 export interface SignatureFieldProps<T extends string> {
     displayName: string
     isDisabled: boolean
-    documentURL: TranslatedString
+    documentURL: Nullish<TranslatedString>
     fieldId: T
     value?: Nullish<Signature>
     onChange?: (key: `${T}.${Path<Signature>}`, value: PathValue<Signature>) => void
@@ -41,8 +41,12 @@ const SignatureField = <T extends string>({
         onChange(`${fieldId}.signatureData`, data.points)
         onChange(`${fieldId}.signatureCanvasWidth`, data.width)
         onChange(`${fieldId}.signatureCanvasHeight`, data.height)
-        onChange(`${fieldId}.documentURL.EN`, documentURL.EN)
-        onChange(`${fieldId}.documentURL.AR`, documentURL.AR)
+
+        if (!!documentURL) {
+            onChange(`${fieldId}.documentURL.EN`, documentURL.EN)
+            onChange(`${fieldId}.documentURL.AR`, documentURL.AR)
+        }
+
         setIsModalOpen(false)
     }
 
