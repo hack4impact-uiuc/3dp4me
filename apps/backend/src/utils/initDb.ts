@@ -16,7 +16,7 @@ import encrypt from 'mongoose-encryption'
 import { StepModel } from '../models/Metadata'
 import { fileSchema } from '../schemas/fileSchema'
 import { signatureSchema } from '../schemas/signatureSchema'
-import { PatientTagSyria } from '../../../../packages/types/src/enums/reservedStep';
+import { PatientTagSyria } from '@3dp4me/types';
 
 /**
  * Initalizes and connects to the DB. Should be called at app startup.
