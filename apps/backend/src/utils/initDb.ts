@@ -45,7 +45,7 @@ const clearModels = async () => {
     })
 }
 
-// Migratinos for root step
+// Migrations for root step
 const initReservedSteps = async () => {
     log.info("Initializing the reserved step")
     const rootStep = await StepModel.findOne({ key: ReservedStep.Root }).lean()
