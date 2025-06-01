@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import _ from 'lodash'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert'
 
 import { useTranslations } from '../../hooks/useTranslations'
@@ -45,6 +45,10 @@ const ManagePatientModal = ({
 }: ManagePatientModalProps) => {
     const [translations, selectedLang] = useTranslations()
     const [updatedPatientData, setUpdatedPatientData] = useState(_.cloneDeep(patientData))
+
+    useEffect(() => {
+        setUpdatedPatientData(_.cloneDeep(patientData))
+    }, [patientData])
 
     const onFieldUpdate = (key: string, value: string) => {
         setUpdatedPatientData((data) => ({

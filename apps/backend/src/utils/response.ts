@@ -32,7 +32,7 @@ export const sendResponse = (
         result: data,
     }
 
-    logger.debug('Sending response', JSON.stringify(resp, null, 2))
+    logger.trace('Sending response', JSON.stringify(resp, null, 2))
     return res.status(code).json(resp)
 }
 
