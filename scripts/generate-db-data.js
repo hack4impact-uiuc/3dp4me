@@ -36,7 +36,7 @@ const generatePatients = (numPatients) => {
 const generatePatient = () => {
     const patient = {};
     patient.firstName = faker.name.firstName();
-    patient._id = mongoose.Types.ObjectId();
+    patient._id = new mongoose.Types.ObjectId();
 
     if (getRandomInt(2)) patient.fathersName = faker.name.firstName();
 

@@ -20,7 +20,7 @@ module.exports.POST_PATIENT_MINIMAL_REQUEST = {
 };
 
 module.exports.POST_IMMUTABLE_PATIENT_DATA = {
-    _id: mongoose.Types.ObjectId(),
+    _id: new mongoose.Types.ObjectId(),
     lastEdited: new Date('2000-12-02T01:17:55.181Z'),
     lastEditedBy: 'Tickle Me Elmo',
     __v: 1,
@@ -76,8 +76,8 @@ module.exports.DEFAULT_STEP_DATA = {
 };
 
 module.exports.POST_IMMUTABLE_STEP_DATA = {
-    _id: mongoose.Types.ObjectId(),
-    patientId: mongoose.Types.ObjectId(),
+    _id: new mongoose.Types.ObjectId(),
+    patientId: new mongoose.Types.ObjectId(),
     lastEdited: new Date('2000-12-02T01:17:55.181Z'),
     lastEditedBy: 'Tickle Me Elmo',
     __v: 1,
