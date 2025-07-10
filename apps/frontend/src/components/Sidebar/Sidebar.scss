@@ -4,6 +4,12 @@
 .sidebar-retracted {
     width: $drawerWidth;
 }
+.sidebar-rtl {
+    right: 0;
+    left: auto;
+    direction: rtl;
+}
+    
 
 .sidebar-expanded {
     width: $drawerWidth + 3 * $verticalMovementWidth;

@@ -166,24 +166,26 @@ const PatientDetail = () => {
         const className = selectedLang === LANGUAGES.AR ? 'steps steps-ar' : 'steps'
 
         return (
-            <div className={className}>
-                {stepMetaData.map((step) => {
-                    if (step.key !== selectedStep) return null
-                    if (Object.values(ReservedStep).includes(step.key as ReservedStep)) return null
+            <div className="root">
+                <div className={className}>
+                    {stepMetaData.map((step) => {
+                        if (step.key !== selectedStep) return null
+                        if (Object.values(ReservedStep).includes(step.key as ReservedStep)) return null
 
-                    return (
-                        <StepContent
-                            key={step.key}
-                            patientId={patientId}
-                            onDataSaved={onStepSaved}
-                            metaData={stepMetaData.find((s) => s.key === step.key)!}
-                            stepData={getStepData(patientData, step.key) ?? {}}
-                            loading={isLoading}
-                            edit={edit}
-                            setEdit={setEdit}
-                        />
-                    )
-                })}
+                        return (
+                            <StepContent
+                                key={step.key}
+                                patientId={patientId}
+                                onDataSaved={onStepSaved}
+                                metaData={stepMetaData.find((s) => s.key === step.key)!}
+                                stepData={getStepData(patientData, step.key) ?? {}}
+                                loading={isLoading}
+                                edit={edit}
+                                setEdit={setEdit}
+                            />
+                        )
+                    })}
+                </div>
             </div>
         )
     }
@@ -206,23 +208,31 @@ const PatientDetail = () => {
                     onUploadProfilePicture={onUploadProfilePicture}
                 />
 
-                <PatientDetailSidebar
-                    patientData={patientData!}
-                    onViewPatient={() => setManagePatientModalOpen(true)}
-                />
-
                 <div
-                    className={`controller-content ${
-                        selectedLang === LANGUAGES.AR ? 'controller-content-ar' : ''
-                    }`}
+                    style={{
+                        display: 'flex',
+                        flexDirection: selectedLang === LANGUAGES.AR ? 'row-reverse' : 'row',
+                        height: '100%',
+                    }}
                 >
-                    <ToggleButtons
-                        step={selectedStep}
+                    {/* fixed sidebar (300 px wide) */}
+                    <PatientDetailSidebar
                         patientData={patientData!}
-                        handleStep={onStepChange}
-                        toggleButtonClasses={`drawer-shift-${selectedLang}`}
+                        onViewPatient={() => setManagePatientModalOpen(true)}
                     />
-                    {generateStepContent()}
+
+                    {/* main column fills the rest */}
+                    <div
+                        className={selectedLang === LANGUAGES.AR ? 'content-guard-ar' : 'content-guard-en'}
+                        style={{ flex: 1, padding: '0 32px', minWidth: 0 }}
+                    >
+                        <ToggleButtons
+                            step={selectedStep}
+                            patientData={patientData!}
+                            handleStep={onStepChange}
+                        />
+                        {generateStepContent()}
+                    </div>
                 </div>
             </div>
         </LoadWrapper>
@@ -230,3 +240,5 @@ const PatientDetail = () => {
 }
 
 export default PatientDetail
+
+// Added inline style for Arabic language to shift content left to accommodate right sidebar
