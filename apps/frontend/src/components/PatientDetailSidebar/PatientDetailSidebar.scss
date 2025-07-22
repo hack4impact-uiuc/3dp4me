@@ -14,18 +14,8 @@
         flex-shrink: 0;
     }
 
-    /*i cahnged this from .drawer-rtl {flex-shrink: 0 ;}*/
     .drawer-rtl {
-        width: 300px;
         flex-shrink: 0;
-        position: fixed;
-        right: 0;
-        left: auto;
-        top: 0;
-        height: 100vh;
-        z-index: 1200; /* ensure it is above other content */
-        background-color: $sidebar;
-        color: white;
     }
 
     .drawer-paper {

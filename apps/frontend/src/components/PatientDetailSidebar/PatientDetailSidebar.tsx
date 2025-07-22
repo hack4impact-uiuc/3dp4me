@@ -27,27 +27,27 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
     const [expandedStepKey, setExpandedStepKey] = useState<Nullish<string>>(null)
     const [translations, selectedLang] = useTranslations()
     const isArabic = selectedLang === LANGUAGES.AR
-    const sidebarStyle: React.CSSProperties = isArabic ? {
-        backgroundColor: 'transparent',
-        position: 'fixed',
-        top: 0,
-        bottom: 0,
-        width: '300px',
-        left: 'auto',
-        right: 0,
-        zIndex: 1200,
-        overflowY: 'auto'
-    } : {
-        backgroundColor: 'transparent',
-        position: 'fixed',
-        top: 0,
-        bottom: 0,
-        width: '300px',
-        left: 0,
-        right: 'auto',
-        zIndex: 1200,
-        overflowY: 'auto'
-    }
+    //const sidebarStyle: React.CSSProperties = isArabic ? {
+    //backgroundColor: 'transparent',
+    //position: 'fixed',
+    //top: 0,
+    //bottom: 0,
+    //width: '300px',
+    //left: 'auto',
+    //right: 0,
+    //zIndex: 1200,
+    //overflowY: 'auto'
+    //} : {
+    //backgroundColor: 'transparent',
+    //position: 'fixed',
+    //top: 0,
+    //bottom: 0,
+    //width: '300px',
+    //left: 0,
+    //right: 'auto',
+    //zIndex: 1200,
+    //overflowY: 'auto'
+    //}
 
 
     /**
@@ -67,7 +67,8 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
         if (patientData == null) return null
 
         return (
-            <div className="drawer-notes-wrapper" style={sidebarStyle}>
+            // style={sidebarStyle} after the quotes before changed
+            <div className="drawer-notes-wrapper">
                 {stepMetaData.map((metaData) => {
                     // First, check that we have a field in this step with key, 'notes'
                     const notesField = metaData.fields.find((f) => f.key === 'notes')
@@ -104,10 +105,10 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
                     width: 300,
                     boxShadow: 'none',
                     border: 'none',
-                    backgroundColor: '#c4220d',       
+                    backgroundColor: '#c4220d',
                 },
             }}
-         >
+        >
             <Toolbar />
             <div className="drawer-container">
                 <div>

@@ -166,27 +166,26 @@ const PatientDetail = () => {
         const className = selectedLang === LANGUAGES.AR ? 'steps steps-ar' : 'steps'
 
         return (
-            <div className="root">
-                <div className={className}>
-                    {stepMetaData.map((step) => {
-                        if (step.key !== selectedStep) return null
-                        if (Object.values(ReservedStep).includes(step.key as ReservedStep)) return null
+            <div className={className}>
+                {stepMetaData.map((step) => {
+                    if (step.key !== selectedStep) return null
+                    if (Object.values(ReservedStep).includes(step.key as ReservedStep)) return null
 
-                        return (
-                            <StepContent
-                                key={step.key}
-                                patientId={patientId}
-                                onDataSaved={onStepSaved}
-                                metaData={stepMetaData.find((s) => s.key === step.key)!}
-                                stepData={getStepData(patientData, step.key) ?? {}}
-                                loading={isLoading}
-                                edit={edit}
-                                setEdit={setEdit}
-                            />
-                        )
-                    })}
-                </div>
+                    return (
+                        <StepContent
+                            key={step.key}
+                            patientId={patientId}
+                            onDataSaved={onStepSaved}
+                            metaData={stepMetaData.find((s) => s.key === step.key)!}
+                            stepData={getStepData(patientData, step.key) ?? {}}
+                            loading={isLoading}
+                            edit={edit}
+                            setEdit={setEdit}
+                        />
+                    )
+                })}
             </div>
+            //</div>
         )
     }
 
@@ -194,6 +193,7 @@ const PatientDetail = () => {
         return null
     }
 
+    //changed
     return (
         <LoadWrapper loading={isLoading}>
             <div className="root">
@@ -208,24 +208,15 @@ const PatientDetail = () => {
                     onUploadProfilePicture={onUploadProfilePicture}
                 />
 
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: selectedLang === LANGUAGES.AR ? 'row-reverse' : 'row',
-                        height: '100%',
-                    }}
-                >
-                    {/* fixed sidebar (300 px wide) */}
-                    <PatientDetailSidebar
-                        patientData={patientData!}
-                        onViewPatient={() => setManagePatientModalOpen(true)}
-                    />
+                <div className="root">
+                    <div className="sidebar">
+                        <PatientDetailSidebar
+                            patientData={patientData!}
+                            onViewPatient={() => setManagePatientModalOpen(true)}
+                        />
+                    </div>
 
-                    {/* main column fills the rest */}
-                    <div
-                        className={selectedLang === LANGUAGES.AR ? 'content-guard-ar' : 'content-guard-en'}
-                        style={{ flex: 1, padding: '0 32px', minWidth: 0 }}
-                    >
+                    <div className="main-content">
                         <ToggleButtons
                             step={selectedStep}
                             patientData={patientData!}
@@ -238,6 +229,7 @@ const PatientDetail = () => {
         </LoadWrapper>
     )
 }
+
 
 export default PatientDetail
 
