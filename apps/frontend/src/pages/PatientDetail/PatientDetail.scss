@@ -2,33 +2,19 @@
 @import '../../styles/colors.scss';
 
 .root {
-    min-height: 100vh;
-    /* full height */
-    background: #fff;
-    /* no transparent stripes */
-    box-sizing: border-box;
     display: flex;
+    //min-height: 100vh;
 }
 
-/*.controller-content {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-
-    &.controller-content-ar {
-        flex-direction: row-reverse;
-    }*/
-
-    /*.controller-content {
+.controller-content {
     width: 100%;
     height: 100%;
 
     &.controller-content-ar {
         margin-right: $drawerWidth;
-    }*/
+    }
 
-.steps {
+    .steps {
         padding-left: 50px;
         padding-bottom: 100px;
 
@@ -36,36 +22,18 @@
             margin-right: 50px;
         }
     }
-    //}
-/*.steps {
-    flex: 1;
-    margin-left: 300px; // for LTR
+
+    .controller-manage-patient-swal {
+        width: 580px;
+    }
 }
 
-.steps-ar {
-    margin-left: 0;
-    margin-right: 300px; // for RTL
-}
-}*/
 
-.controller-manage-patient-swal {
-    width: 580px;
-}
-
-.layout {
-  display: flex;
-  flex-direction: row;
-  //height: 100vh;  //change
-}
-
-.layout.rtl {
-  flex-direction: row-reverse;
-}
-
+// these two are the reason main isnt under sidebar, wasnt here og
 .sidebar {
   width: 300px;
   flex-shrink: 0;
-  background-color: #c4220d; //changed
+  //background-color: #323366; //changed
   //color: white;  //changed
 }
 
@@ -75,13 +43,7 @@
   //min-width: 0; //change 
 }
 
+//.root.rtl {
+  //flex-direction: row-reverse;
+//}
 
-
-/* width of your sidebar = 300 px; colour = white */
-/*.content-guard-en {
-    border-left: 300px solid #fff;
-}
-
-.content-guard-ar {
-    border-right: 300px solid #fff;
-}*/

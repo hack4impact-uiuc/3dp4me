@@ -109,7 +109,6 @@ const Sidebar = ({
 
     return (
         <StyledDrawer
-        // before '} there was ${selectedLang === LANGUAGES.AR ? 'sidebar-rtl' : ''}
             className={`sidebar ${isEditing ? 'sidebar-expanded' : 'sidebar-retracted'} `}
             variant="permanent"
             classes={{ paper: 'detail-paper' }}

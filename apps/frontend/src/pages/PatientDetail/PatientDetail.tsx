@@ -185,7 +185,6 @@ const PatientDetail = () => {
                     )
                 })}
             </div>
-            //</div>
         )
     }
 
@@ -193,7 +192,8 @@ const PatientDetail = () => {
         return null
     }
 
-    //changed
+    // the last two divs in this return probably work with the css to make the main not go under sidebar, was diff from og
+    // new after this first block
     return (
         <LoadWrapper loading={isLoading}>
             <div className="root">
@@ -207,6 +207,7 @@ const PatientDetail = () => {
                     onDeleted={onPatientDeleted}
                     onUploadProfilePicture={onUploadProfilePicture}
                 />
+
 
                 <div className="root">
                     <div className="sidebar">
@@ -230,7 +231,5 @@ const PatientDetail = () => {
     )
 }
 
-
 export default PatientDetail
 
-// Added inline style for Arabic language to shift content left to accommodate right sidebar
