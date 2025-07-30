@@ -46,7 +46,6 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
         if (patientData == null) return null
 
         return (
-            // style={sidebarStyle} after the quotes before changed
             <div className="drawer-notes-wrapper">
                 {stepMetaData.map((metaData) => {
                     // First, check that we have a field in this step with key, 'notes'
@@ -74,19 +73,12 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
             </div>
         )
     }
-// new 
     return (
         <Drawer
+            className={selectedLang === LANGUAGES.EN ? 'drawer' : 'drawer-rtl'}
+            classes={{paper: 'drawer-paper'}}
             variant="permanent"
             anchor={isArabic ? 'right' : 'left'}       // ← flips automatically
-            PaperProps={{
-                style: {
-                    width: 300,
-                    boxShadow: 'none',
-                    border: 'none',
-                    backgroundColor: '#323366',
-                },
-            }}
         >
             <Toolbar />
             <div className="drawer-container">

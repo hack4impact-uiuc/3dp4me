@@ -192,8 +192,6 @@ const PatientDetail = () => {
         return null
     }
 
-    // the last two divs in this return probably work with the css to make the main not go under sidebar, was diff from og
-    // new after this first block
     return (
         <LoadWrapper loading={isLoading}>
             <div className="root">
@@ -208,28 +206,22 @@ const PatientDetail = () => {
                     onUploadProfilePicture={onUploadProfilePicture}
                 />
 
-
-                <div className="root">
-                    <div className="sidebar">
                         <PatientDetailSidebar
                             patientData={patientData!}
                             onViewPatient={() => setManagePatientModalOpen(true)}
                         />
-                    </div>
 
-                    <div className="main-content">
+                    <div className={`controller-content ${selectedLang === LANGUAGES.AR ? 'controller-content-ar' : ''}`}>
                         <ToggleButtons
                             step={selectedStep}
                             patientData={patientData!}
                             handleStep={onStepChange}
                         />
                         {generateStepContent()}
-                    </div>
-                </div>
+                </div> 
             </div>
         </LoadWrapper>
     )
 }
 
 export default PatientDetail
-
