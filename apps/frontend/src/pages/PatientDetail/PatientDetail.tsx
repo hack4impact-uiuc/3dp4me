@@ -206,24 +206,19 @@ const PatientDetail = () => {
                     onUploadProfilePicture={onUploadProfilePicture}
                 />
 
-                <PatientDetailSidebar
-                    patientData={patientData!}
-                    onViewPatient={() => setManagePatientModalOpen(true)}
-                />
+                        <PatientDetailSidebar
+                            patientData={patientData!}
+                            onViewPatient={() => setManagePatientModalOpen(true)}
+                        />
 
-                <div
-                    className={`controller-content ${
-                        selectedLang === LANGUAGES.AR ? 'controller-content-ar' : ''
-                    }`}
-                >
-                    <ToggleButtons
-                        step={selectedStep}
-                        patientData={patientData!}
-                        handleStep={onStepChange}
-                        toggleButtonClasses={`drawer-shift-${selectedLang}`}
-                    />
-                    {generateStepContent()}
-                </div>
+                    <div className={`controller-content ${selectedLang === LANGUAGES.AR ? 'controller-content-ar' : ''}`}>
+                        <ToggleButtons
+                            step={selectedStep}
+                            patientData={patientData!}
+                            handleStep={onStepChange}
+                        />
+                        {generateStepContent()}
+                </div> 
             </div>
         </LoadWrapper>
     )

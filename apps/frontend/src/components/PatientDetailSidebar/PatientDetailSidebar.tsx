@@ -26,6 +26,8 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
     const { data: stepMetaData } = useSteps({ includeHiddenFields: false })
     const [expandedStepKey, setExpandedStepKey] = useState<Nullish<string>>(null)
     const [translations, selectedLang] = useTranslations()
+    const isArabic = selectedLang === LANGUAGES.AR
+
 
     /**
      * Expands the notes panel for the given step, or closes all panels
@@ -71,14 +73,12 @@ const PatientDetailSidebar = ({ patientData, onViewPatient }: PatientDetailSideb
             </div>
         )
     }
-
     return (
         <Drawer
             className={selectedLang === LANGUAGES.EN ? 'drawer' : 'drawer-rtl'}
+            classes={{paper: 'drawer-paper'}}
             variant="permanent"
-            classes={{
-                paper: 'drawer-paper',
-            }}
+            anchor={isArabic ? 'right' : 'left'}       // ← flips automatically
         >
             <Toolbar />
             <div className="drawer-container">

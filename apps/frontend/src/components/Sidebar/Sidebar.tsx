@@ -109,7 +109,7 @@ const Sidebar = ({
 
     return (
         <StyledDrawer
-            className={`sidebar ${isEditing ? 'sidebar-expanded' : 'sidebar-retracted'}`}
+            className={`sidebar ${isEditing ? 'sidebar-expanded' : 'sidebar-retracted'} `}
             variant="permanent"
             classes={{ paper: 'detail-paper' }}
         >
