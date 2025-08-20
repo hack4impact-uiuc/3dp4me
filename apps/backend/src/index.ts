@@ -1,3 +1,8 @@
+import { initDB } from './utils/initDb';
+import { main } from './test';
+
+initDB(main)
+
 
 /**
  * Module dependencies.
