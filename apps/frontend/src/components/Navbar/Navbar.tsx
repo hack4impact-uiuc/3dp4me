@@ -11,6 +11,7 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { Context } from '../../store/Store'
 import { Routes } from '../../utils/constants'
 import AccountDropdown from '../AccountDropdown/AccountDropdown'
+import ExportButton from '../ExportButton/ExportButton'
 
 export interface NavbarProps {
     username: string
@@ -140,6 +141,12 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                 </NavTitle>
 
                 {renderLinks()}
+
+                <ExportButton
+                    buttonText="Export Patient Data"
+                    onExportComplete={() => alert('Export successful!')}
+                    onExportError={(err) => alert(`Export failed: ${err.message}`)}
+                />
 
                 <AccountCircleIcon
                     className="accountCircle"
