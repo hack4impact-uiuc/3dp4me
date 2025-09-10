@@ -4,15 +4,16 @@
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.496.0",
     "@aws-sdk/client-s3": "^3.496.0",
+    "archiver": "^7.0.0",
     "aws-sdk-mock": "^5.1.0",
     "axios": "^1.6.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "csv-writer": "^1.6.0",
-    "dotenv": "^17.2.1",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "express-fileupload": "^1.2.0",
+    "file-type": "^21.0.0",
     "helmet": "^7.1.0",
     "join-images": "^1.1.5",
     "lodash": "^4.17.21",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@3dp4me/types": "workspace:*",
     "@smithy/types": "^4.1.0",
+    "@types/archiver": "^6.0.0",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
@@ -43,7 +45,6 @@
     "node-loader": "^2.1.0",
     "rimraf": "^5.0.5",
     "ts-loader": "^9.5.1",
-    "tsx": "^4.20.4",
     "typescript": "^5.3.3",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
@@ -64,7 +65,6 @@
     "lint": "eslint --fix src/**/*.ts",
     "lint:check": "eslint src/**/*.ts",
     "start": "rm -rf ./dist && tsc && doppler run -- node ./dist/src/index.js",
-    "dev": "rm -rf ./dist && tsc && doppler run -- node ./dist/src/test.js",
     "test": "cross-env S3_BUCKET_NAME=test jest --runInBand --forceExit"
   }
 }

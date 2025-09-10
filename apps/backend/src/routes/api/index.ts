@@ -9,6 +9,7 @@ router.use('/metadata', require('./metadata'));
 router.use('/users', require('./users'));
 router.use('/roles', require('./roles'));
 router.use('/public', require('./public'));
+router.use('/export', require('./export')); // for export button
 
 // Disable the Twilio stuff for now
 // router.use('/messages', require('./messages'));

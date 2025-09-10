@@ -3,7 +3,7 @@
  * STEP 1: Generate CSV of all basic patient info
  * STEP 2: Generate CSV of all steps with string-convertible data: String, MultilineString, 
  * Number, Date, Phone, RadioButton, MultiSelect, Tags
- * STEP 3: Export media files (File, Audio, Photo, Signature) from S3 to local filesystem
+ * STEP 3: Export media files (File, Audio, Photo, Signature) from S3 to local filesystem (functions related to S3 are in awsS3Helpers.ts)
  * STEP 4: Package everything into a ZIP file
  * 
  * String CSV excludes: Header, Divider, File, Audio, Photo, Signature, Map
@@ -17,8 +17,9 @@ import { initDB } from '../src/utils/initDb';
 import { PatientModel } from '../src/models/Patient';
 import { StepModel } from '../src/models/Metadata';
 import { FieldType } from '@3dp4me/types';
-import { downloadFile } from '../src/utils/aws/awsS3Helpers';
+import { downloadFile, fileExistsInS3, downloadAndSaveFileWithTypeDetection, sanitizeFilename } from '../src/utils/aws/awsS3Helpers';
 import archiver from 'archiver';
+import { fileTypeFromBuffer } from 'file-type'; 
 
 mongoose.set('strictQuery', false);
 
@@ -51,7 +52,7 @@ const MEDIA_FIELD_TYPES = [
   FieldType.FILE,
   FieldType.AUDIO,
   FieldType.PHOTO,
-  FieldType.SIGNATURE,
+  // FieldType.SIGNATURE, (not media, stored as an array of points on a canvas in mongo. generate an image of this signature and save it)
 ];
 
 // What to export?
@@ -61,83 +62,41 @@ interface ExportOptions {
   zipFilename?: string;
 }
 
-// Function to check if a file exists in Step3 (not a string, unable to export to CSV)
-async function fileExistsInS3(s3Key: string): Promise<boolean> {
-  try {
-    await downloadFile(s3Key);
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-
-// Function to download and save a file from Step3 with type detection (uses package to detect type, defaults to .png if no type is detected)
-async function downloadAndSaveFileWithTypeDetection(
-  s3Key: string,
-  localPath: string,
-  originalFilename: string
+// Helper function to download a single file from S3
+async function downloadSingleFile(
+  patient: any,
+  stepKey: string,
+  fieldKey: string,
+  fileData: any,
+  patientDir: string,
+  stepDir: string
 ): Promise<boolean> {
-  try {
-    const s3Stream = await downloadFile(s3Key);
-
-    const chunks: Buffer[] = [];
-
-    return new Promise((resolve, reject) => {
-      s3Stream
-        .on('data', (chunk) => {
-          chunks.push(chunk);
-        })
-        .on('end', async () => {
-          try {
-            const buffer = Buffer.concat(chunks);
-            const detectedType = await detectFileTypeFromBuffer(buffer);
-
-            const properFilename = addProperExtension(originalFilename, detectedType);
-            const properLocalPath = path.join(path.dirname(localPath), sanitizeFilename(properFilename));
-
-            fs.writeFileSync(properLocalPath, buffer);
-
-            if (detectedType) {
-              console.log(`Downloaded with detected type '${detectedType}': ${properLocalPath}`);
-            } else {
-              console.log(`No type detected, defaulted to PNG: ${properLocalPath}`);
-            }
-
-            // Delete original file (only if it's a different file and exists)
-            if (
-              path.resolve(properLocalPath) !== path.resolve(localPath) &&
-              fs.existsSync(localPath)
-            ) {
-              fs.unlinkSync(localPath);
-              console.log(`Deleted duplicate: ${localPath}`);
-            }
-
-            resolve(true);
-          } catch (error) {
-            console.error(`Error processing file ${s3Key}:`, error);
-            resolve(false);
-          }
-        })
-        .on('error', (error) => {
-          console.error(`Error downloading ${s3Key}:`, error);
-          resolve(false);
-        });
-    });
-  } catch (error) {
-    console.error(`Error downloading ${s3Key}:`, error);
+  if (!fileData || !fileData.filename) {
     return false;
   }
+
+  const s3Key = `${patient._id}/${stepKey}/${fieldKey}/${fileData.filename}`;
+  const fileExists = await fileExistsInS3(s3Key);
+  
+  if (!fileExists) {
+    return false;
+  }
+
+  // Always create directories - recursive: true makes this safe
+  fs.mkdirSync(patientDir, { recursive: true });
+  fs.mkdirSync(stepDir, { recursive: true });
+  
+  const sanitizedFilename = sanitizeFilename(fileData.filename);
+  const localPath = path.join(stepDir, sanitizedFilename);
+  const success = await downloadAndSaveFileWithTypeDetection(s3Key, localPath, fileData.filename);
+  
+  if (success) {
+    console.log(`Downloaded: ${localPath}`);
+  }
+  
+  return success;
 }
 
-
-function sanitizeFilename(filename: string): string {
-  const ext = path.extname(filename);
-  const name = path.basename(filename, ext);
-  const sanitizedName = name.replace(/[^a-z0-9.-]/gi, '_').toLowerCase();
-  return sanitizedName + ext;
-}
-
-// Function to create ZIP archive
 async function createZipArchive(zipFilename: string): Promise<string> {
   console.log('\n=== STEP 4: Creating ZIP Archive ===');
   
@@ -157,6 +116,18 @@ async function createZipArchive(zipFilename: string): Promise<string> {
       console.log(`ZIP archive created: ${zipPath}`);
       console.log(`Archive size: ${sizeInMB} MB`);
       resolve(zipPath);
+    });
+    
+    // Good practice to catch warnings (ie stat failures and other non-blocking errors)
+    archive.on('warning', (err) => {
+      if (err.code === 'ENOENT') {
+        // Log warning for missing files but don't fail
+        console.warn('Archive warning - file not found:', err.message);
+      } else {
+        // Reject promise for other types of warnings as they indicate real issues
+        console.error('Archive warning (treating as error):', err);
+        reject(err);
+      }
     });
     
     archive.on('error', (err) => {
@@ -199,8 +170,8 @@ async function generatePatientCSV() {
 
     return {
       ...obj,
-      dateCreated: obj.dateCreated?.toISOString().slice(0, 10),
-      lastEdited: obj.lastEdited?.toISOString().slice(0, 10),
+      dateCreated: obj.dateCreated?.toISOString(),
+      lastEdited: obj.lastEdited?.toISOString(),
     };
   });
   
@@ -234,20 +205,27 @@ async function generateStepCSVs(options: ExportOptions = {}) {
   
   if (!fs.existsSync(EXPORT_DIR)) fs.mkdirSync(EXPORT_DIR);
 
-  // Build query for step definitions based on options
-  const stepQuery: any = {};
-  if (!includeDeleted) {
-    stepQuery.isDeleted = { $ne: true };
-  }
-  if (!includeHidden) {
-    stepQuery.isHidden = { $ne: true };
+  // Helper function to get filtered step definitions
+  async function getSteps(options: ExportOptions): Promise<any[]> {
+    const { includeDeleted = false, includeHidden = false } = options;
+    
+    // Build query filter based on options
+    const stepFilter: any = {};
+    if (!includeDeleted) {
+      stepFilter.isDeleted = { $ne: true };
+    }
+    if (!includeHidden) {
+      stepFilter.isHidden = { $ne: true };
+    }
+  
+    // Get step definitions based on filter
+    const stepDefinitions = await StepModel.find(stepFilter).lean();
+    console.log(`Found ${stepDefinitions.length} step definitions`);
+    
+    return stepDefinitions;
   }
 
-  // Get all step definitions from the database
-  const stepDefinitions = await StepModel.find(stepQuery);
-  console.log(`Found ${stepDefinitions.length} step definitions`);
-
-  const patients = await PatientModel.find();
+  const patients = await PatientModel.find().lean();
   console.log(`Found ${patients.length} patients`);
 
   for (const stepDef of stepDefinitions) {
@@ -259,7 +237,7 @@ async function generateStepCSVs(options: ExportOptions = {}) {
     try {
       StepDataModel = mongoose.model(stepKey);
     } catch (error) {
-      console.log(`⚠️  No model found for step ${stepKey}, skipping`);
+      console.log(`No model found for step ${stepKey}, skipping`);
       continue;
     }
 
@@ -275,16 +253,18 @@ async function generateStepCSVs(options: ExportOptions = {}) {
 
       // Process each field in the step definition
       for (const field of stepDef.fields) {
-        // Skip hidden fields if not including them
+        // Skip hidden or deleted fields if not including them
         if (!includeHidden && field.isHidden) continue;
+        if (!includeDeleted && field.isDeleted) continue;
         
         if (IGNORED_FIELD_TYPES.includes(field.fieldType)) continue;
 
         if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
           // Handle field groups (nested fields)
           for (const subField of field.subFields) {
-            // Skip hidden subfields if not including them
+            // Skip hidden or deleted subfields if not including them
             if (!includeHidden && subField.isHidden) continue;
+            if (!includeDeleted && subField.isDeleted) continue;
             
             if (INCLUDED_TYPES.includes(subField.fieldType)) {
               row[subField.key] = formatField(stepDoc[subField.key], subField.fieldType);
@@ -300,10 +280,38 @@ async function generateStepCSVs(options: ExportOptions = {}) {
     }
 
     if (records.length > 0) {
-      const csvWriter = createObjectCsvWriter({
-        path: path.join(EXPORT_DIR, `${stepKey}.csv`),
-        header: Object.keys(records[0]).map(key => ({ id: key, title: key })),
-      });
+      // Create a mapping of field keys to their display names
+      const fieldDisplayNames = new Map<string, string>();
+      // Add patient ID display name
+      fieldDisplayNames.set('patientId', 'Patient ID');
+      
+      // Map field keys to display names from step definition
+      for (const field of stepDef.fields) {
+        if (!includeHidden && field.isHidden) continue;
+        if (!includeDeleted && field.isDeleted) continue;
+        if (IGNORED_FIELD_TYPES.includes(field.fieldType)) continue;
+    
+        if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
+          for (const subField of field.subFields) {
+            if (!includeHidden && subField.isHidden) continue;
+            if (!includeDeleted && subField.isDeleted) continue;
+            if (INCLUDED_TYPES.includes(subField.fieldType)) {
+              fieldDisplayNames.set(subField.key, subField.displayName?.EN || subField.key);
+            }
+          }
+        } else if (INCLUDED_TYPES.includes(field.fieldType)) {
+          fieldDisplayNames.set(field.key, field.displayName?.EN || field.key);
+        }
+      }
+    }
+
+    const csvWriter = createObjectCsvWriter({
+      path: path.join(EXPORT_DIR, `${stepKey}.csv`),
+      header: Object.keys(records[0]).map(key => ({ 
+        id: key, 
+        title: fieldDisplayNames.get(key) || key 
+      })),
+    });
 
       await csvWriter.writeRecords(records);
       console.log(`Wrote ${records.length} records to ${stepKey}.csv`);
@@ -322,18 +330,7 @@ async function exportStepMedia(options: ExportOptions = {}) {
 
   if (!fs.existsSync(MEDIA_EXPORT_DIR)) fs.mkdirSync(MEDIA_EXPORT_DIR);
 
-  // Build query filter based on options
-  const stepFilter: any = {};
-  if (!includeDeleted) {
-    stepFilter.isDeleted = { $ne: true };
-  }
-  if (!includeHidden) {
-    stepFilter.isHidden = { $ne: true };
-  }
-
-  // Get step definitions based on filter
-  const stepDefinitions = await StepModel.find(stepFilter);
-  console.log(`Found ${stepDefinitions.length} step definitions`);
+  const stepDefinitions = await getSteps(options);
 
   const patients = await PatientModel.find();
   console.log(`Found ${patients.length} patients`);
@@ -398,86 +395,17 @@ async function exportStepMedia(options: ExportOptions = {}) {
             }
           } else if (fileData && fileData.filename) {
             // Handle single file
-            const s3Key = `${patient._id}/${stepKey}/${field.key}/${fileData.filename}`;
-            const fileExists = await fileExistsInS3(s3Key);
+            const success = await downloadSingleFile(
+              patient,
+              stepKey,
+              field.key,
+              fileData,
+              patientDir,
+              stepDir
+            );
             
-            if (fileExists) {
-              // Create directory only when we have actual files
-              if (!hasDownloadedFiles) {
-                if (!fs.existsSync(patientDir)) fs.mkdirSync(patientDir, { recursive: true });
-                if (!fs.existsSync(stepDir)) fs.mkdirSync(stepDir, { recursive: true });
-                hasDownloadedFiles = true;
-              }
-              
-              const sanitizedFilename = sanitizeFilename(fileData.filename);
-              const localPath = path.join(stepDir, sanitizedFilename);
-              const success = await downloadAndSaveFileWithTypeDetection(s3Key, localPath, fileData.filename);
-              
-              if (success) {
-                console.log(`Downloaded: ${localPath}`);
-                totalFilesDownloaded++;
-              }
-            }
-          }
-        }
-        
-        // Handle field groups
-        if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
-          for (const subField of field.subFields) {
-            // Check if subfield should be included based on options
-            if (!includeHidden && subField.isHidden) continue;
-            
-            if (MEDIA_FIELD_TYPES.includes(subField.fieldType)) {
-              const fileData = stepDoc[subField.key];
-              if (Array.isArray(fileData)) {
-                // Handle array of files in subfield
-                for (const file of fileData) {
-                  if (file && file.filename) {
-                    const s3Key = `${patient._id}/${stepKey}/${subField.key}/${file.filename}`;
-                    const fileExists = await fileExistsInS3(s3Key);
-                    
-                    if (fileExists) {
-                      // Create directory only when we have actual files
-                      if (!hasDownloadedFiles) {
-                        if (!fs.existsSync(patientDir)) fs.mkdirSync(patientDir, { recursive: true });
-                        if (!fs.existsSync(stepDir)) fs.mkdirSync(stepDir, { recursive: true });
-                        hasDownloadedFiles = true;
-                      }
-                      
-                      const sanitizedFilename = sanitizeFilename(file.filename);
-                      const localPath = path.join(stepDir, sanitizedFilename);
-                      const success = await downloadAndSaveFileWithTypeDetection(s3Key, localPath, file.filename);
-                      
-                      if (success) {
-                        console.log(`Downloaded: ${localPath}`);
-                        totalFilesDownloaded++;
-                      }
-                    }
-                  }
-                }
-              } else if (fileData && fileData.filename) {
-                // Handle single file in subfield
-                const s3Key = `${patient._id}/${stepKey}/${subField.key}/${fileData.filename}`;
-                const fileExists = await fileExistsInS3(s3Key);
-                
-                if (fileExists) {
-                  // Create directory only when we have actual files
-                  if (!hasDownloadedFiles) {
-                    if (!fs.existsSync(patientDir)) fs.mkdirSync(patientDir, { recursive: true });
-                    if (!fs.existsSync(stepDir)) fs.mkdirSync(stepDir, { recursive: true });
-                    hasDownloadedFiles = true;
-                  }
-                  
-                  const sanitizedFilename = sanitizeFilename(fileData.filename);
-                  const localPath = path.join(stepDir, sanitizedFilename);
-                  const success = await downloadAndSaveFileWithTypeDetection(s3Key, localPath, fileData.filename);
-                  
-                  if (success) {
-                    console.log(`Downloaded: ${localPath}`);
-                    totalFilesDownloaded++;
-                  }
-                }
-              }
+            if (success) {
+              totalFilesDownloaded++;
             }
           }
         }
@@ -491,19 +419,69 @@ async function exportStepMedia(options: ExportOptions = {}) {
 // Function to format field values based on type
 function formatField(value: any, type: FieldType): any {
   if (!value) return '';
-  if (type === FieldType.DATE) return new Date(value).toISOString().slice(0, 10);
+  if (type === FieldType.DATE) return new Date(value).toISOString();
   if (type === FieldType.MULTI_SELECT || type === FieldType.TAGS) {
     return Array.isArray(value) ? value.join(', ') : value;
+  }
+  if (type === FieldType.MAP) {
+    // Format MAP data as "lat,lng"
+    if (value && typeof value === 'object') {
+      const lat = value.lat || value.latitude;
+      const lng = value.lng || value.longitude;
+      if (lat !== undefined && lng !== undefined) {
+        return `${lat},${lng}`;
+      }
+    }
+    return value; 
   }
   return value;
 }
 
+// Add this helper function near the top of the file
+async function downloadSingleFile(
+  patient: any,
+  stepKey: string,
+  fieldKey: string,
+  fileData: any,
+  patientDir: string,
+  stepDir: string,
+  hasDownloadedFiles: boolean
+): Promise<{ success: boolean; hasDownloadedFiles: boolean }> {
+  if (!fileData || !fileData.filename) {
+    return { success: false, hasDownloadedFiles };
+  }
+
+  const s3Key = `${patient._id}/${stepKey}/${fieldKey}/${fileData.filename}`;
+  const fileExists = await fileExistsInS3(s3Key);
+  
+  if (!fileExists) {
+    return { success: false, hasDownloadedFiles };
+  }
+
+  // Create directory only when we have actual files
+  if (!hasDownloadedFiles) {
+    if (!fs.existsSync(patientDir)) fs.mkdirSync(patientDir, { recursive: true });
+    if (!fs.existsSync(stepDir)) fs.mkdirSync(stepDir, { recursive: true });
+    hasDownloadedFiles = true;
+  }
+  
+  const sanitizedFilename = sanitizeFilename(fileData.filename);
+  const localPath = path.join(stepDir, sanitizedFilename);
+  const downloadSuccess = await downloadAndSaveFileWithTypeDetection(s3Key, localPath, fileData.filename);
+  
+  if (downloadSuccess) {
+    console.log(`Downloaded: ${localPath}`);
+  }
+  
+  return { success: downloadSuccess, hasDownloadedFiles };
+}
+
 // Combined export function
-async function runCombinedExport(options: ExportOptions = {}) {
+export async function runCombinedExport(options: ExportOptions = {}) {
   const {
     includeDeleted = false,
     includeHidden = false,
-    zipFilename = `3dp4me_export_${new Date().toISOString().slice(0, 19).replace(/[:-]/g, '')}.zip` // zipFilename = `3dp4me_export_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}.zip` <== this will name the zip without the min/sec
+    zipFilename = `3dp4me_export_${new Date().toISOString().slice(0, 19).replace(/[:-]/g, '')}.zip`
   } = options;
 
   await initDB();
@@ -545,10 +523,11 @@ async function main() {
   });
 }
 
-// File type detection using file-type package
+
+
+// Replace the detectFileTypeFromBuffer function
 async function detectFileTypeFromBuffer(buffer: Buffer): Promise<string | null> {
   try {
-    const { fileTypeFromBuffer } = await import('file-type');
     const result = await fileTypeFromBuffer(buffer);
     return result?.ext || null;
   } catch (error) {
