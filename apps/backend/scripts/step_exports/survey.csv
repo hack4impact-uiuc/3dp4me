@@ -1,8 +1,0 @@
-patientId,howDidYouHearAboutUs,childBirthOrderInFamily,isInSchool,causeOfHearingLoss,causeOfHearingLoss1,issuesParentsSeeFromHearingLoss,doesThePatientHaveAnotherDisability,ifYesPleaseListAndDescribeOtherDisabilities,numDisabledPeople,numberRetiredPeople,numMilitaryPolice,numWorkingPeople,numberCars,numberOfLoansIfAny,typeOfInsurance,doYouReceiveAnySocialSecurityBenefits,incomeRange,notes,next
-B00009,,,,,,,,,,,,,,,,,,,
-B00012,,,,,,,,,,,,,,,,,,,
-B00013,asdfasdfsdf,,,,,,,,,,,,,,,,,,
-B00015,test,1 2 3 4,63e8af56c51ce88a3ae9da5c,63e9fc13c51ce88a3aea9894,NOPE,aa,64801df486facc3b08cc3db8,no,28,,,,,,63496edd277ba37d56f4e500,,,,
-B00017,,,,,,,,,,,,,,,,,,notes here,
-B00018,sdsdsdfasdf,sf,63e8af56c51ce88a3ae9da5c,,,,,,,,4,,,,,,,,
-C00001,qefa,,,,,,,,,,,,,,,,,,
