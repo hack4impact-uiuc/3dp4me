@@ -62,41 +62,6 @@ interface ExportOptions {
   zipFilename?: string;
 }
 
-// Helper function to download a single file from S3
-async function downloadSingleFile(
-  patient: any,
-  stepKey: string,
-  fieldKey: string,
-  fileData: any,
-  patientDir: string,
-  stepDir: string
-): Promise<boolean> {
-  if (!fileData || !fileData.filename) {
-    return false;
-  }
-
-  const s3Key = `${patient._id}/${stepKey}/${fieldKey}/${fileData.filename}`;
-  const fileExists = await fileExistsInS3(s3Key);
-  
-  if (!fileExists) {
-    return false;
-  }
-
-  // Always create directories - recursive: true makes this safe
-  fs.mkdirSync(patientDir, { recursive: true });
-  fs.mkdirSync(stepDir, { recursive: true });
-  
-  const sanitizedFilename = sanitizeFilename(fileData.filename);
-  const localPath = path.join(stepDir, sanitizedFilename);
-  const success = await downloadAndSaveFileWithTypeDetection(s3Key, localPath, fileData.filename);
-  
-  if (success) {
-    console.log(`Downloaded: ${localPath}`);
-  }
-  
-  return success;
-}
-
 async function createZipArchive(zipFilename: string): Promise<string> {
   console.log('\n=== STEP 4: Creating ZIP Archive ===');
   
@@ -197,6 +162,26 @@ async function generatePatientCSV() {
 }
 
 // STEP 2: Generate step CSVs (makes step_csvs/*.csv)
+// Helper function to get filtered step definitions (moved to global scope)
+async function getSteps(options: ExportOptions): Promise<any[]> {
+  const { includeDeleted = false, includeHidden = false } = options;
+  
+  // Build query filter based on options
+  const stepFilter: any = {};
+  if (!includeDeleted) {
+    stepFilter.isDeleted = { $ne: true };
+  }
+  if (!includeHidden) {
+    stepFilter.isHidden = { $ne: true };
+  }
+
+  // Get step definitions based on filter
+  const stepDefinitions = await StepModel.find(stepFilter).lean();
+  console.log(`Found ${stepDefinitions.length} step definitions`);
+  
+  return stepDefinitions;
+}
+
 async function generateStepCSVs(options: ExportOptions = {}) {
   const { includeDeleted = false, includeHidden = false } = options;  // default not include hidden or deleted, can be changed
   
@@ -205,25 +190,8 @@ async function generateStepCSVs(options: ExportOptions = {}) {
   
   if (!fs.existsSync(EXPORT_DIR)) fs.mkdirSync(EXPORT_DIR);
 
-  // Helper function to get filtered step definitions
-  async function getSteps(options: ExportOptions): Promise<any[]> {
-    const { includeDeleted = false, includeHidden = false } = options;
-    
-    // Build query filter based on options
-    const stepFilter: any = {};
-    if (!includeDeleted) {
-      stepFilter.isDeleted = { $ne: true };
-    }
-    if (!includeHidden) {
-      stepFilter.isHidden = { $ne: true };
-    }
-  
-    // Get step definitions based on filter
-    const stepDefinitions = await StepModel.find(stepFilter).lean();
-    console.log(`Found ${stepDefinitions.length} step definitions`);
-    
-    return stepDefinitions;
-  }
+  // Get step definitions using the global getSteps function
+  const stepDefinitions = await getSteps(options);
 
   const patients = await PatientModel.find().lean();
   console.log(`Found ${patients.length} patients`);
@@ -303,20 +271,19 @@ async function generateStepCSVs(options: ExportOptions = {}) {
           fieldDisplayNames.set(field.key, field.displayName?.EN || field.key);
         }
       }
-    }
 
-    const csvWriter = createObjectCsvWriter({
-      path: path.join(EXPORT_DIR, `${stepKey}.csv`),
-      header: Object.keys(records[0]).map(key => ({ 
-        id: key, 
-        title: fieldDisplayNames.get(key) || key 
-      })),
-    });
+      const csvWriter = createObjectCsvWriter({
+        path: path.join(EXPORT_DIR, `${stepKey}.csv`),
+        header: Object.keys(records[0]).map(key => ({ 
+          id: key, 
+          title: fieldDisplayNames.get(key) || key 
+        })),
+      });
 
       await csvWriter.writeRecords(records);
       console.log(`Wrote ${records.length} records to ${stepKey}.csv`);
     } else {
-      console.log(`No records found for step ${stepKey}`);
+      console.log(`No records found for step ${stepKey}, skip`);
     }
   }
 }
@@ -395,20 +362,23 @@ async function exportStepMedia(options: ExportOptions = {}) {
             }
           } else if (fileData && fileData.filename) {
             // Handle single file
-            const success = await downloadSingleFile(
+            const result = await downloadSingleFile(
               patient,
               stepKey,
               field.key,
               fileData,
               patientDir,
-              stepDir
+              stepDir,
+              hasDownloadedFiles
             );
             
-            if (success) {
+            if (result.success) {
               totalFilesDownloaded++;
             }
+            hasDownloadedFiles = result.hasDownloadedFiles;
           }
         }
+        
       }
     }
   }
@@ -477,7 +447,7 @@ async function downloadSingleFile(
 }
 
 // Combined export function
-export async function runCombinedExport(options: ExportOptions = {}) {
+export async function runCombinedExport(options: ExportOptions = {}, shouldDisconnect = false) {
   const {
     includeDeleted = false,
     includeHidden = false,
@@ -503,8 +473,10 @@ export async function runCombinedExport(options: ExportOptions = {}) {
     console.error('Error during export process:', error);
     throw error;
   } finally {
-    await mongoose.disconnect();
-    console.log('Disconnected from DB');
+    if (shouldDisconnect) {
+      await mongoose.disconnect();
+      console.log('Disconnected from DB');
+    }
   }
 }
 
@@ -520,7 +492,7 @@ async function main() {
     includeDeleted,
     includeHidden,
     zipFilename: customZipFilename
-  });
+  }, true);
 }
 
 

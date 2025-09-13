@@ -157,7 +157,7 @@ export const downloadFileToLocal = async (
 // Step 2: Determine file type from saved file on disk
 const detectFileTypeFromFile = async (filePath: string): Promise<string | null> => {
   try {
-    const buffer = fs.readFileSync(filePath, { highWaterMark: 4100 }); // Only read first 4KB for type detection
+    const buffer = fs.readFileSync(filePath, { encoding: null }); // Read first 4KB for type detection
     const fileTypeResult = await fileTypeFromBuffer(buffer);
     return fileTypeResult?.ext || null;
   } catch (error) {
