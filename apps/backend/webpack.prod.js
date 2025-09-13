@@ -8,8 +8,7 @@ const __dirname = path.dirname(__filename);
 
 export default {
     entry: "./src/index.ts",
-    // TODO: UPDATE
-    mode: 'development',
+    mode: 'production',
     target: 'node',
     module: {
         rules: [
@@ -38,4 +37,7 @@ export default {
     experiments: {
         outputModule: true,
     },
+    externals: {
+        sharp: 'module sharp'
+    }
 };
