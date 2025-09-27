@@ -143,6 +143,7 @@ const stepSchema = new mongoose.Schema<Step>({
         },
     },
     isHidden: { type: Boolean, required: false, default: false },
+
     isDeleted: { type: Boolean, required: false, default: false },
 })
 

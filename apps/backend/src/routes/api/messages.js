@@ -1,5 +1,5 @@
-const express = require('express');
-const { MessagingResponse } = require('twilio').twiml;
+import express from 'express';
+import { MessagingResponse } from 'twilio';
 
 const router = express.Router();
 const accountSid = process.env.ACCOUNT_SID;

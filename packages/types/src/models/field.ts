@@ -1,5 +1,4 @@
 import { Nullish, Unsaved } from '../utils'
-
 import { File } from './file'
 import { MapPoint } from './map'
 import { Signature } from './signature'

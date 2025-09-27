@@ -1,6 +1,6 @@
 import "express-async-errors"
 import path from "path"
-import { router } from "./src/routes"
+import { router } from "./routes"
 
 import log from "loglevel"
 import express, { NextFunction } from 'express'
@@ -8,15 +8,15 @@ import fileUpload from "express-fileupload"
 import cors from "cors"
 import bodyParser from "body-parser"
 
-import { requireAuthentication } from './src/middleware/authentication';
-import { initDB } from './src/utils/initDb';
+import { requireAuthentication } from './middleware/authentication';
+import { initDB } from './utils/initDb';
 import {
     setResponseHeaders,
     configureHelment,
-} from './src/middleware/responses'
-import { logRequest } from './src/middleware/logging';
-import { ENV_TEST } from './src/utils/constants';
-import { errorHandler } from "./src/utils/errorHandler"
+} from './middleware/responses'
+import { logRequest } from './middleware/logging';
+import { ENV_TEST } from './utils/constants';
+import { errorHandler } from "./utils/errorHandler"
 import { Request, Response } from 'express';
 
 const app = express();
