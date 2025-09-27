@@ -1,6 +1,3 @@
-import { initDB } from './utils/initDb';
-
-
 /**
  * Module dependencies.
  */

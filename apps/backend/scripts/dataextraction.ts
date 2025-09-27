@@ -16,12 +16,13 @@ import { createObjectCsvWriter } from 'csv-writer';
 import { initDB } from '../src/utils/initDb';
 import { PatientModel } from '../src/models/Patient';
 import { StepModel } from '../src/models/Metadata';
-import { FieldType } from '@3dp4me/types';
+// import { FieldType } from '@3dp4me/types';
 import { downloadFile, fileExistsInS3, downloadAndSaveFileWithTypeDetection, sanitizeFilename } from '../src/utils/aws/awsS3Helpers';
 import archiver from 'archiver';
 import { fileTypeFromBuffer } from 'file-type'; 
-
-mongoose.set('strictQuery', false);
+// Update the import to include Field
+import { Field, FieldType } from '@3dp4me/types';
+// mongoose.set('strictQuery', false); (for deprecation)
 
 const EXPORT_DIR = path.join(__dirname, 'step_exports');
 const MEDIA_EXPORT_DIR = path.join(__dirname, 'patients');
@@ -36,6 +37,7 @@ const INCLUDED_TYPES = [
   FieldType.RADIO_BUTTON,
   FieldType.MULTI_SELECT,
   FieldType.TAGS,
+  FieldType.MAP,
 ];
 
 const IGNORED_FIELD_TYPES = [
@@ -43,7 +45,6 @@ const IGNORED_FIELD_TYPES = [
   FieldType.AUDIO,
   FieldType.PHOTO,
   FieldType.SIGNATURE,
-  FieldType.MAP,
   FieldType.DIVIDER,
   FieldType.HEADER,
 ];
@@ -209,81 +210,175 @@ async function generateStepCSVs(options: ExportOptions = {}) {
       continue;
     }
 
-    const records = [];
+    // Check if this step has field groups
+    const hasFieldGroups = stepDef.fields.some((field: any) => 
+      field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)
+    );
 
-    for (const patient of patients) {
-      const stepDoc = await StepDataModel.findOne({ patientId: patient._id });
-      if (!stepDoc) continue;
-
-      const row: Record<string, any> = {
-        patientId: patient.orderId,
-      };
-
-      // Process each field in the step definition
-      for (const field of stepDef.fields) {
-        // Skip hidden or deleted fields if not including them
-        if (!includeHidden && field.isHidden) continue;
-        if (!includeDeleted && field.isDeleted) continue;
-        
-        if (IGNORED_FIELD_TYPES.includes(field.fieldType)) continue;
-
-        if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
-          // Handle field groups (nested fields)
-          for (const subField of field.subFields) {
-            // Skip hidden or deleted subfields if not including them
-            if (!includeHidden && subField.isHidden) continue;
-            if (!includeDeleted && subField.isDeleted) continue;
-            
-            if (INCLUDED_TYPES.includes(subField.fieldType)) {
-              row[subField.key] = formatField(stepDoc[subField.key], subField.fieldType);
-            }
-          }
-        } else if (INCLUDED_TYPES.includes(field.fieldType)) {
-          // Handle regular fields
-          row[field.key] = formatField(stepDoc[field.key], field.fieldType);
-        }
-      }
-
-      records.push(row);
-    }
-
-    if (records.length > 0) {
-      // Create a mapping of field keys to their display names
-      const fieldDisplayNames = new Map<string, string>();
-      // Add patient ID display name
-      fieldDisplayNames.set('patientId', 'Patient ID');
+    if (hasFieldGroups) {
+      // Process steps with field groups - create individual CSVs per patient
+      console.log(`Step ${stepKey} has field groups, creating individual CSVs per patient`);
       
-      // Map field keys to display names from step definition
-      for (const field of stepDef.fields) {
-        if (!includeHidden && field.isHidden) continue;
-        if (!includeDeleted && field.isDeleted) continue;
-        if (IGNORED_FIELD_TYPES.includes(field.fieldType)) continue;
-    
-        if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
-          for (const subField of field.subFields) {
-            if (!includeHidden && subField.isHidden) continue;
-            if (!includeDeleted && subField.isDeleted) continue;
-            if (INCLUDED_TYPES.includes(subField.fieldType)) {
-              fieldDisplayNames.set(subField.key, subField.displayName?.EN || subField.key);
+      for (const patient of patients) {
+        const stepDoc = await StepDataModel.findOne({ patientId: patient._id });
+        if (!stepDoc) continue;
+
+        const patientDir = path.join(EXPORT_DIR, patient.orderId);
+        if (!fs.existsSync(patientDir)) fs.mkdirSync(patientDir, { recursive: true });
+
+        const records = [];
+
+        // Get field group data (stored as arrays in the document)
+        const fieldGroupData = new Map<string, any[]>();
+        
+        // Collect all field group arrays
+        for (const field of stepDef.fields) {
+          if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
+            const groupData = stepDoc[field.key];
+            if (Array.isArray(groupData)) {
+              fieldGroupData.set(field.key, groupData);
             }
           }
-        } else if (INCLUDED_TYPES.includes(field.fieldType)) {
-          fieldDisplayNames.set(field.key, field.displayName?.EN || field.key);
+        }
+
+        // Find the maximum number of entries across all field groups for this patient
+        const maxEntries = Math.max(...Array.from(fieldGroupData.values()).map(arr => arr.length), 0);
+
+        // Create a record for each entry in the field groups
+        for (let i = 0; i < maxEntries; i++) {
+          const row: Record<string, any> = {
+            entryNumber: i + 1,
+          };
+
+          // Process each field in the step definition
+          for (const field of stepDef.fields) {
+            // Skip hidden or deleted fields if not including them
+            if (!includeHidden && field.isHidden) continue;
+            if (!includeDeleted && field.isDeleted) continue;
+            
+            if (IGNORED_FIELD_TYPES.includes(field.fieldType)) continue;
+
+            if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
+              // Handle field groups (nested fields)
+              const groupData = fieldGroupData.get(field.key);
+              if (groupData && groupData[i]) {
+                for (const subField of field.subFields) {
+                  // Skip hidden or deleted subfields if not including them
+                  if (!includeHidden && subField.isHidden) continue;
+                  if (!includeDeleted && subField.isDeleted) continue;
+                  
+                  if (INCLUDED_TYPES.includes(subField.fieldType)) {
+                    row[subField.key] = formatField(groupData[i][subField.key], subField, 'EN');
+                  }
+                }
+              }
+            } else if (INCLUDED_TYPES.includes(field.fieldType)) {
+              // Handle regular fields (non-field-group fields)
+              row[field.key] = formatField(stepDoc[field.key], field, 'EN');
+            }
+          }
+
+          records.push(row);
+        }
+
+        if (records.length > 0) {
+          // Create a mapping of field keys to their display names
+          const fieldDisplayNames = new Map<string, string>();
+          // Add entry number display name
+          fieldDisplayNames.set('entryNumber', 'Entry Number');
+          
+          // Map field keys to display names from step definition
+          for (const field of stepDef.fields) {
+            if (!includeHidden && field.isHidden) continue;
+            if (!includeDeleted && field.isDeleted) continue;
+            if (IGNORED_FIELD_TYPES.includes(field.fieldType)) continue;
+        
+            if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
+              for (const subField of field.subFields) {
+                if (!includeHidden && subField.isHidden) continue;
+                if (!includeDeleted && subField.isDeleted) continue;
+                if (INCLUDED_TYPES.includes(subField.fieldType)) {
+                  fieldDisplayNames.set(subField.key, subField.displayName?.EN || subField.key);
+                }
+              }
+            } else if (INCLUDED_TYPES.includes(field.fieldType)) {
+              fieldDisplayNames.set(field.key, field.displayName?.EN || field.key);
+            }
+          }
+
+          const csvWriter = createObjectCsvWriter({
+            path: path.join(patientDir, `${stepKey}.csv`),
+            header: Object.keys(records[0]).map(key => ({ 
+              id: key, 
+              title: fieldDisplayNames.get(key) || key 
+            })),
+          });
+
+          await csvWriter.writeRecords(records);
+          console.log(`Wrote ${records.length} records to ${patientDir}/${stepKey}.csv`);
         }
       }
-
-      const csvWriter = createObjectCsvWriter({
-        path: path.join(EXPORT_DIR, `${stepKey}.csv`),
-        header: Object.keys(records[0]).map(key => ({ 
-          id: key, 
-          title: fieldDisplayNames.get(key) || key 
-        })),
-      });
-
-      await csvWriter.writeRecords(records);
-      console.log(`Wrote ${records.length} records to ${stepKey}.csv`);
     } else {
-      console.log(`No records found for step ${stepKey}, skip`);
+      // Process steps without field groups - maintain original behavior (one CSV per step)
+      console.log(`Step ${stepKey} has no field groups, creating single CSV for all patients`);
+      
+      const records = [];
+
+      for (const patient of patients) {
+        const stepDoc = await StepDataModel.findOne({ patientId: patient._id });
+        if (!stepDoc) continue;
+
+        const row: Record<string, any> = {
+          patientId: patient.orderId,
+        };
+
+        // Process each field in the step definition
+        for (const field of stepDef.fields) {
+          // Skip hidden or deleted fields if not including them
+          if (!includeHidden && field.isHidden) continue;
+          if (!includeDeleted && field.isDeleted) continue;
+          
+          if (IGNORED_FIELD_TYPES.includes(field.fieldType)) continue;
+
+          if (INCLUDED_TYPES.includes(field.fieldType)) {
+            // Handle regular fields (no field groups in this step)
+            row[field.key] = formatField(stepDoc[field.key], field, 'EN');
+          }
+        }
+
+        records.push(row);
+      }
+
+      if (records.length > 0) {
+        // Create a mapping of field keys to their display names
+        const fieldDisplayNames = new Map<string, string>();
+        // Add patient ID display name
+        fieldDisplayNames.set('patientId', 'Patient ID');
+        
+        // Map field keys to display names from step definition
+        for (const field of stepDef.fields) {
+          if (!includeHidden && field.isHidden) continue;
+          if (!includeDeleted && field.isDeleted) continue;
+          if (IGNORED_FIELD_TYPES.includes(field.fieldType)) continue;
+      
+          if (INCLUDED_TYPES.includes(field.fieldType)) {
+            fieldDisplayNames.set(field.key, field.displayName?.EN || field.key);
+          }
+        }
+
+        const csvWriter = createObjectCsvWriter({
+          path: path.join(EXPORT_DIR, `${stepKey}.csv`),
+          header: Object.keys(records[0]).map(key => ({ 
+            id: key, 
+            title: fieldDisplayNames.get(key) || key 
+          })),
+        });
+
+        await csvWriter.writeRecords(records);
+        console.log(`Wrote ${records.length} records to ${stepKey}.csv`);
+      } else {
+        console.log(`No records found for step ${stepKey}, skip`);
+      }
     }
   }
 }
@@ -331,6 +426,7 @@ async function exportStepMedia(options: ExportOptions = {}) {
       for (const field of stepDef.fields) {
         // Check if field should be included based on options
         if (!includeHidden && field.isHidden) continue;
+        if (!includeDeleted && field.isDeleted) continue;
         
         if (MEDIA_FIELD_TYPES.includes(field.fieldType)) {
           const fileData = stepDoc[field.key];
@@ -344,8 +440,8 @@ async function exportStepMedia(options: ExportOptions = {}) {
                 if (fileExists) {
                   // Create directory only when we have actual files
                   if (!hasDownloadedFiles) {
-                    if (!fs.existsSync(patientDir)) fs.mkdirSync(patientDir, { recursive: true });
-                    if (!fs.existsSync(stepDir)) fs.mkdirSync(stepDir, { recursive: true });
+                    fs.mkdirSync(patientDir, { recursive: true });
+                    fs.mkdirSync(stepDir, { recursive: true });
                     hasDownloadedFiles = true;
                   }
                   
@@ -387,13 +483,24 @@ async function exportStepMedia(options: ExportOptions = {}) {
 }
 
 // Function to format field values based on type
-function formatField(value: any, type: FieldType): any {
+function formatField(value: any, field: Field, lang: 'EN' | 'AR' = 'EN'): any {
   if (!value) return '';
-  if (type === FieldType.DATE) return new Date(value).toISOString();
-  if (type === FieldType.MULTI_SELECT || type === FieldType.TAGS) {
-    return Array.isArray(value) ? value.join(', ') : value;
+  
+  const fieldType = field.fieldType;
+  
+  if (fieldType === FieldType.DATE) return new Date(value).toISOString();
+  
+  if (fieldType === FieldType.MULTI_SELECT || fieldType === FieldType.TAGS || fieldType === FieldType.RADIO_BUTTON) {
+    // Handle array values (MULTI_SELECT, TAGS)
+    if (Array.isArray(value)) {
+      const resolvedValues = value.map(val => resolveFieldOption(field, val, lang)).filter(Boolean);
+      return resolvedValues.join(', ');
+    }
+    // RADIO_BUTTON: single ID
+    return resolveFieldOption(field, value, lang) || value;
   }
-  if (type === FieldType.MAP) {
+  
+  if (fieldType === FieldType.MAP) {
     // Format MAP data as "lat,lng"
     if (value && typeof value === 'object') {
       const lat = value.lat || value.latitude;
@@ -404,10 +511,27 @@ function formatField(value: any, type: FieldType): any {
     }
     return value; 
   }
+  
   return value;
 }
 
-// Add this helper function near the top of the file
+// Helper function to resolve field option IDs to human-readable text
+function resolveFieldOption(field: Field, value: any, lang: 'EN' | 'AR' = 'EN'): string | null {
+  if (!field.options || !Array.isArray(field.options) || !value) {
+    return null;
+  }
+  
+  // Find the option that matches the value (ID)
+  const valStr = value.toString();
+  const matchingOption = field.options.find(opt => opt._id?.toString() === valStr);
+
+  if (matchingOption?.Question?.[lang]) {
+    return matchingOption.Question[lang];
+  }
+  
+  return null;
+}
+
 async function downloadSingleFile(
   patient: any,
   stepKey: string,
@@ -430,8 +554,8 @@ async function downloadSingleFile(
 
   // Create directory only when we have actual files
   if (!hasDownloadedFiles) {
-    if (!fs.existsSync(patientDir)) fs.mkdirSync(patientDir, { recursive: true });
-    if (!fs.existsSync(stepDir)) fs.mkdirSync(stepDir, { recursive: true });
+    fs.mkdirSync(patientDir, { recursive: true });
+    fs.mkdirSync(stepDir, { recursive: true });
     hasDownloadedFiles = true;
   }
   
@@ -446,7 +570,7 @@ async function downloadSingleFile(
   return { success: downloadSuccess, hasDownloadedFiles };
 }
 
-// Combined export function
+// Combined export function - now returns a ReadableStream
 export async function runCombinedExport(options: ExportOptions = {}, shouldDisconnect = false) {
   const {
     includeDeleted = false,
@@ -459,16 +583,17 @@ export async function runCombinedExport(options: ExportOptions = {}, shouldDisco
   console.log('Export Configuration:', { includeDeleted, includeHidden, zipFilename });
 
   try {
+    // Generate CSV data in memory
     await generatePatientCSV();
     await generateStepCSVs({ includeDeleted, includeHidden });
     await exportStepMedia({ includeDeleted, includeHidden });
 
-    const zipPath = await createZipArchive(zipFilename);
+    // Create zip stream instead of file
+    const zipStream = await createZipStream();
 
-    console.log('\nAll exports completed successfully');
-    console.log(`ZIP archive: ${zipPath}`);
+    console.log('\nExport stream created successfully');
     
-    return { zipPath, success: true };
+    return zipStream;
   } catch (error) {
     console.error('Error during export process:', error);
     throw error;
@@ -478,6 +603,54 @@ export async function runCombinedExport(options: ExportOptions = {}, shouldDisco
       console.log('Disconnected from DB');
     }
   }
+}
+
+// New function to create a zip stream instead of a file
+async function createZipStream(): Promise<NodeJS.ReadableStream> {
+  console.log('\n=== STEP 4: Creating ZIP Stream ===');
+  
+  const archive = archiver('zip', {
+    zlib: { level: 9 } // Maximum compression
+  });
+  
+  // Handle archiver events
+  archive.on('warning', (err) => {
+    if (err.code === 'ENOENT') {
+      console.warn('Archive warning - file not found:', err.message);
+    } else {
+      console.error('Archive warning (treating as error):', err);
+      throw err;
+    }
+  });
+  
+  archive.on('error', (err) => {
+    console.error('Error creating ZIP archive:', err);
+    throw err;
+  });
+  
+  // Add patients.csv if it exists
+  const patientsCsvPath = path.join(__dirname, 'patients.csv');
+  if (fs.existsSync(patientsCsvPath)) {
+    archive.file(patientsCsvPath, { name: 'patients.csv' });
+    console.log('Added patients.csv to archive');
+  }
+  
+  // Add step CSV files if directory exists
+  if (fs.existsSync(EXPORT_DIR)) {
+    archive.directory(EXPORT_DIR, 'step_csvs');
+    console.log('Added step CSV files to archive');
+  }
+  
+  // Add media files if directory exists
+  if (fs.existsSync(MEDIA_EXPORT_DIR)) {
+    archive.directory(MEDIA_EXPORT_DIR, 'patients');
+    console.log('Added media files to archive');
+  }
+  
+  // Finalize the archive
+  archive.finalize();
+  
+  return archive;
 }
 
 // Main function for command line usage

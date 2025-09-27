@@ -322,7 +322,7 @@ export const getSelf = async (): Promise<ApiResponse<{ isAdmin: boolean }>> => {
     return res.data
 }
 
-export const triggerExportDownload = async (includeDeleted: boolean, includeHidden: boolean) => {
+export const downloadAllPatientData = async (includeDeleted: boolean, includeHidden: boolean) => {
     const res = await instance.get('/export/download', {
         params: { includeDeleted, includeHidden },
         responseType: 'blob',

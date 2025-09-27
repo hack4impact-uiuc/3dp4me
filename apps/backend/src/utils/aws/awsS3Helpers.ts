@@ -12,6 +12,7 @@ import { BucketConfig } from './awsExports';
 import fs from 'fs';
 import path from 'path';
 import { fileTypeFromBuffer } from 'file-type';
+import { fileTypeFromFile } from 'file-type';
 
 // S3 Credential Object created with access id and secret key
 const S3_CREDENTIALS = {
@@ -59,8 +60,29 @@ export const downloadFile = async (objectKey: string): Promise<Readable> => {
     if (!stream)
         throw new Error(`No read stream for ${objectKey}`);
 
-    const webstream = stream.transformToWebStream()
-    return  Readable.fromWeb(webstream as any)
+    // Handle AWS SDK v3 stream properly
+    if (stream instanceof Readable) {
+        return stream;
+    }
+    
+    // Convert AWS SDK stream to Node.js Readable stream using the working method
+    const webStream = stream.transformToWebStream();
+    const reader = webStream.getReader();
+    
+    return new Readable({
+        async read() {
+            try {
+                const { done, value } = await reader.read();
+                if (done) {
+                    this.push(null); // End the stream
+                } else {
+                    this.push(Buffer.from(value));
+                }
+            } catch (error) {
+                this.emit('error', error);
+            }
+        }
+    });
 };
 
 export const deleteFile = async (filePath: string) => {
@@ -157,8 +179,7 @@ export const downloadFileToLocal = async (
 // Step 2: Determine file type from saved file on disk
 const detectFileTypeFromFile = async (filePath: string): Promise<string | null> => {
   try {
-    const buffer = fs.readFileSync(filePath, { encoding: null }); // Read first 4KB for type detection
-    const fileTypeResult = await fileTypeFromBuffer(buffer);
+    const fileTypeResult = await fileTypeFromFile(filePath);
     return fileTypeResult?.ext || null;
   } catch (error) {
     console.error('Error detecting file type:', error);

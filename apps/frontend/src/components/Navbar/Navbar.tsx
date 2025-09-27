@@ -143,7 +143,6 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                 {renderLinks()}
 
                 <ExportButton
-                    buttonText="Export Patient Data"
                     onExportComplete={() => alert('Export successful!')}
                     onExportError={(err) => alert(`Export failed: ${err.message}`)}
                 />
