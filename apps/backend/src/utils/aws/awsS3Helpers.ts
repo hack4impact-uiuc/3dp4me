@@ -212,11 +212,7 @@ export const downloadAndSaveFileWithTypeDetection = async (
   originalFilename: string
 ): Promise<boolean> => {
   try {
-    // Create directory if it doesn't exist
-    const dir = path.dirname(localPath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
+    // TODO: REWRITE THIS...
 
     // Step 1: Download to temporary location
     const tempPath = `${localPath}.tmp`;

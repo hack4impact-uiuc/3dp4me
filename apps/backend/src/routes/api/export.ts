@@ -1,9 +1,11 @@
 import express, { Response } from 'express';
 import { AuthenticatedRequest } from '../../middleware/types';
-import { runCombinedExport } from '../../../scripts/dataextraction';
+import { exportAllPatientsToZip } from '../../../scripts/dataextraction';
 import errorWrap from '../../utils/errorWrap';
 import { requireAdmin } from '../../middleware/authentication';
 import { queryParamToBool } from '../../utils/request';
+import { Language } from '@3dp4me/types';
+import { createReadStream, rmdirSync, rmSync } from 'fs';
 
 export const router = express.Router();
 
@@ -14,11 +16,14 @@ router.get(
         // Extract query parameters
         const includeDeleted = queryParamToBool(req.query.includeDeleted ?? 'false');
         const includeHidden = queryParamToBool(req.query.includeHidden ?? 'false');
+        const language = (req.query.language as Language) || Language.EN
         
         // Get the zip stream directly
-        const zipStream = await runCombinedExport({
+        const zipPath = await exportAllPatientsToZip({
+            language,
             includeDeleted,
             includeHidden,
+            logger: console,
         });
 
         // Set appropriate headers
@@ -26,8 +31,9 @@ router.get(
         res.setHeader('Content-Type', 'application/zip');
         res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
 
-        // Pipe the stream directly to the response
-        zipStream.pipe(res);
+        createReadStream(zipPath).pipe(res).on("close", () => {
+            rmSync(zipPath);
+        });
     }),
 );
 
