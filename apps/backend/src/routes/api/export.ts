@@ -1,6 +1,6 @@
 import express, { Response } from 'express';
 import { AuthenticatedRequest } from '../../middleware/types';
-import { exportAllPatientsToZip } from '../../../scripts/dataextraction';
+import { exportAllPatientsToZip } from '../../utils/dataextraction';
 import errorWrap from '../../utils/errorWrap';
 import { requireAdmin } from '../../middleware/authentication';
 import { queryParamToBool } from '../../utils/request';

@@ -9,9 +9,10 @@ import {
 import { Readable } from 'stream';
 import type { StreamingBlobPayloadInputTypes } from '@smithy/types';
 import { BucketConfig } from './awsExports';
-import fs from 'fs';
+import fs, { renameSync } from 'fs';
 import path from 'path';
-import { fileTypeFromFile } from 'file-type';
+import { fileTypeFromBuffer } from 'file-type';
+import { tmpdir } from 'os';
 
 // S3 Credential Object created with access id and secret key
 const S3_CREDENTIALS = {
@@ -63,11 +64,11 @@ export const downloadFile = async (objectKey: string): Promise<Readable> => {
     if (stream instanceof Readable) {
         return stream;
     }
-    
+
     // Convert AWS SDK stream to Node.js Readable stream using the working method
     const webStream = stream.transformToWebStream();
     const reader = webStream.getReader();
-    
+
     return new Readable({
         async read() {
             try {
@@ -113,7 +114,7 @@ export const deleteFolder = async (folderName: string) => {
 
     const deleteParams = {
         Bucket: PATIENT_BUCKET.bucketName,
-        Delete: { Objects: [] as {Key: string}[] },
+        Delete: { Objects: [] as { Key: string }[] },
     };
 
     // Builds a list of the files to delete
@@ -144,118 +145,80 @@ function getS3(credentials: typeof S3_CREDENTIALS, region: string) {
 }
 
 export const fileExistsInS3 = async (s3Key: string): Promise<boolean> => {
-  try {
-    await downloadFile(s3Key);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
-
-
-// Function to download and save a file from Step3 with type detection (uses package to detect type, defaults to .png if no type is detected)
-
-// Step 1: Download file from S3 to local temporary path using streaming
-export const downloadFileToLocal = async (
-  s3Key: string,
-  localPath: string
-): Promise<void> => {
-  const s3Stream = await downloadFile(s3Key);
-  const writeStream = fs.createWriteStream(localPath);
-
-  return new Promise((resolve, reject) => {
-    s3Stream.pipe(writeStream)
-      .on('finish', () => {
-        console.log(`Downloaded to temporary location: ${localPath}`);
-        resolve();
-      })
-      .on('error', (error) => {
-        reject(error);
-      });
-  });
-};
-
-// Step 2: Determine file type from saved file on disk
-const detectFileTypeFromFile = async (filePath: string): Promise<string | null> => {
-  try {
-    const fileTypeResult = await fileTypeFromFile(filePath);
-    return fileTypeResult?.ext || null;
-  } catch (error) {
-    console.error('Error detecting file type:', error);
-    return null;
-  }
-};
-
-// Step 3: Rename file with proper extension if needed
-const renameFileWithProperExtension = async (
-  currentPath: string,
-  originalFilename: string,
-  detectedType: string | null
-): Promise<string> => {
-  const properFilename = addProperExtension(originalFilename, detectedType);
-  const properLocalPath = path.join(path.dirname(currentPath), sanitizeFilename(properFilename));
-
-  // Only rename if the path is different
-  if (path.resolve(properLocalPath) !== path.resolve(currentPath)) {
-    fs.renameSync(currentPath, properLocalPath);
-    console.log(`Renamed file to: ${properLocalPath}`);
-  }
-
-  return properLocalPath;
-};
-
-// Main function that orchestrates the three steps
-export const downloadAndSaveFileWithTypeDetection = async (
-  s3Key: string,
-  localPath: string,
-  originalFilename: string
-): Promise<boolean> => {
-  try {
-    // TODO: REWRITE THIS...
-
-    // Step 1: Download to temporary location
-    const tempPath = `${localPath}.tmp`;
-    await downloadFileToLocal(s3Key, tempPath);
-
-    // Step 2: Detect file type from saved file
-    const detectedType = await detectFileTypeFromFile(tempPath);
-
-    // Step 3: Rename with proper extension
-    const finalPath = await renameFileWithProperExtension(tempPath, originalFilename, detectedType);
-
-    if (detectedType) {
-      console.log(`Downloaded with detected type '${detectedType}': ${finalPath}`);
-    } else {
-      console.log(`No type detected, kept original name: ${finalPath}`);
+    try {
+        await downloadFile(s3Key);
+        return true;
+    } catch (error) {
+        return false;
     }
+};
 
-    return true;
-  } catch (error) {
-    console.error('Error in downloadAndSaveFileWithTypeDetection:', error);
-    return false;
-  }
+
+export const downloadFileToPath = async (
+    s3Key: string,
+    localPath: string
+): Promise<void> => {
+    const s3Stream = await downloadFile(s3Key);
+    const writeStream = fs.createWriteStream(localPath);
+
+    return new Promise((resolve, reject) => {
+        s3Stream.pipe(writeStream)
+            .on('finish', () => {
+                resolve();
+            })
+            .on('error', (error) => {
+                reject(error);
+            });
+    });
+};
+
+/**
+ * Downloads a file from s3 and adds a file extension if it's missing one
+ */
+export const downloadFileWithTypeDetection = async (
+    s3Key: string,
+    destinationPath: string,
+) => {
+    const tempPath = path.join(tmpdir(), '3dp4me-downloads');
+
+    try {
+        await downloadFileToPath(s3Key, tempPath);
+
+        // If it has an extension, assume it's correct
+        if (hasExtension(destinationPath)) {
+            renameSync(tempPath, destinationPath)
+            return
+        }
+
+        // Try to detect an extension. If we can't find one, omit it
+        const detectedExtension = await detectFileExtension(tempPath);
+        if (detectedExtension === null) {
+            renameSync(tempPath, destinationPath)
+            return
+        }
+
+        const pathWithExtension = `${destinationPath}.${detectedExtension}`
+        renameSync(tempPath, pathWithExtension)
+    } catch (error) {
+        return false;
+    } finally {
+        fs.rmSync(tempPath, { recursive: true });
+    }
 };
 
 export const sanitizeFilename = (filename: string): string => {
-  const ext = path.extname(filename);
-  const name = path.basename(filename, ext);
-  const sanitizedName = name.replace(/[^a-z0-9.-]/gi, '_').toLowerCase();
-  return sanitizedName + ext;
+    const ext = path.extname(filename);
+    const name = path.basename(filename, ext);
+    const sanitizedName = name.replace(/[^a-z0-9.-]/gi, '_').toLowerCase();
+    return sanitizedName + ext;
 };
 
-// Function to add the proper extension to a filename, default to .png if no type is detected
-const addProperExtension = (originalFilename: string, detectedType: string | null): string => {
-  // If file already has an extension, keep it
-  const hasExtension = path.extname(originalFilename).length > 0;
-  if (hasExtension) {
-    return originalFilename;
-  }
+const hasExtension = (filename: string): boolean => {
+    return path.extname(filename).length > 0;
+};
 
-  // If we detected a type, add the extension
-  if (detectedType) {
-    return `${originalFilename}.${detectedType}`;
-  }
-
-  // Default fallback - most files are images
-  return `${originalFilename}.png`;
+const detectFileExtension = async (filePath: string): Promise<string | null> => {
+    const fileBuffer = fs.readFileSync(filePath);
+    const fileTypeResult = await fileTypeFromBuffer(fileBuffer);
+    return fileTypeResult?.ext || null;
 };

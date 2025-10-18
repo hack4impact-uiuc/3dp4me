@@ -12,9 +12,9 @@
 import fs, { createWriteStream, mkdtempSync, rm, rmdir, rmdirSync, rmSync } from 'fs';
 import path, { join } from 'path';
 import mongoose from 'mongoose';
-import { PatientModel } from '../src/models/Patient';
-import { StepModel } from '../src/models/Metadata';
-import { fileExistsInS3, downloadAndSaveFileWithTypeDetection, sanitizeFilename } from '../src/utils/aws/awsS3Helpers';
+import { PatientModel } from '../models/Patient';
+import { StepModel } from '../models/Metadata';
+import { fileExistsInS3, sanitizeFilename, downloadFileWithTypeDetection } from './aws/awsS3Helpers';
 import archiver from 'archiver';
 import { Field, FieldType, FieldTypeData, File, Language, MapPoint, Patient, Step } from '@3dp4me/types';
 import { format } from '@fast-csv/format';
@@ -429,14 +429,14 @@ async function writeMediaFilesForPatient(directoryLocation: string, StepDataMode
                 fs.mkdirSync(stepDir, { recursive: true });
                 const sanitizedFilename = sanitizeFilename(file.filename);
                 const filePath = path.join(stepDir, sanitizedFilename);
-                const success = await downloadAndSaveFileWithTypeDetection(s3Key, filePath, file.filename);
-                if (!success) {
-                    options.logger.error(`Failed to download file ${s3Key}`);
-                } else {
-                    options.logger.debug(`Downloaded file ${s3Key}`);
-                }
 
-                numFilesDownloaded++;
+                try {
+                    await downloadFileWithTypeDetection(s3Key, filePath);
+                    options.logger.debug(`Downloaded file ${s3Key}`);
+                    numFilesDownloaded++;
+                } catch (error) {
+                    options.logger.error(`Failed to download file ${s3Key}`);
+                }
             }
         }
     })
