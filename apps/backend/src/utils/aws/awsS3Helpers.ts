@@ -11,7 +11,6 @@ import type { StreamingBlobPayloadInputTypes } from '@smithy/types';
 import { BucketConfig } from './awsExports';
 import fs from 'fs';
 import path from 'path';
-import { fileTypeFromBuffer } from 'file-type';
 import { fileTypeFromFile } from 'file-type';
 
 // S3 Credential Object created with access id and secret key
@@ -242,16 +241,6 @@ export const sanitizeFilename = (filename: string): string => {
   const name = path.basename(filename, ext);
   const sanitizedName = name.replace(/[^a-z0-9.-]/gi, '_').toLowerCase();
   return sanitizedName + ext;
-};
-
-const detectFileTypeFromBuffer = async (buffer: Buffer): Promise<string | null> => {
-  try {
-    const result = await fileTypeFromBuffer(buffer);
-    return result?.ext || null;
-  } catch (error) {
-    console.error('Error detecting file type:', error);  // defaults to .png
-    return null;
-  }
 };
 
 // Function to add the proper extension to a filename, default to .png if no type is detected

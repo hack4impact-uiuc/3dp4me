@@ -403,7 +403,7 @@ async function writeMediaFilesForStep(directoryLocation: string, step: Step, pat
 }
 
 async function writeMediaFilesForPatient(directoryLocation: string, StepDataModel: mongoose.Model<any>, step: Step, patient: Patient, options: ExportOptions) {
-    const stepDoc = await StepDataModel.findOne({ patientId: patient._id }).lean();
+    const stepDoc = await StepDataModel.findOne({ patientId: patient._id });
     if (!stepDoc) return;
 
     const patientDir = path.join(directoryLocation, patient.orderId);
@@ -416,13 +416,9 @@ async function writeMediaFilesForPatient(directoryLocation: string, StepDataMode
         if (!options.includeDeleted && field.isDeleted) return;
         if (!MEDIA_FIELD_TYPES.includes(field.fieldType)) return;
 
-
         const fileData = stepDoc?.[field.key] as File[] | null;
         if (!fileData) return;
 
-        console.log("FILE DATA IS", fileData);
-
-        // TODO: IS THIS ALWAYS AN ARRAY?
         // Handle array of files
         for (const file of fileData) {
             if (file && file.filename) {
