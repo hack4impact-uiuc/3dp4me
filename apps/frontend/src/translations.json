@@ -1,5 +1,12 @@
 {
   "EN": {
+    "exportPatientData": "Export Patient Data",
+    "exportOptionsTitle": "Export Options",
+    "exportIncludeDeleted": "Include Deleted Steps",
+    "exportIncludeHidden": "Include Hidden Fields",
+    "exportAsZip": "Export as ZIP",
+    "cancel": "Cancel",
+    "exporting": "Exporting...",
     "patient2FA": {
       "patientLogin": "Patient Login",
       "patientID": "Patient ID:",
@@ -265,6 +272,13 @@
     }
   },
   "AR": {
+    "exportPatientData": "تصدير بيانات المرضى",
+    "exportOptionsTitle": "خيارات التصدير",
+    "exportIncludeDeleted": "تضمين الخطوات المحذوفة",
+    "exportIncludeHidden": "تضمين الحقول المخفية",
+    "exportAsZip": "تصدير كملف ZIP",
+    "cancel": "يلغي",
+    "exporting": "جارٍ التصدير...",
     "patient2FA": {
       "patientLogin": "تسجيل دخول المريض",
       "patientID": "هوية المريض:",

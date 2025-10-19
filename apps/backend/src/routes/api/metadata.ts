@@ -1,8 +1,7 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
 
-import mongoose = require('mongoose');
-import log = require('loglevel');
-
+import mongoose from 'mongoose';
+import log from 'loglevel';
 import { requireAdmin } from '../../middleware/authentication';
 import { sendResponse } from '../../utils/response';
 import {
@@ -112,4 +111,4 @@ router.delete(
     }),
 );
 
-module.exports = router;
+export default router;
