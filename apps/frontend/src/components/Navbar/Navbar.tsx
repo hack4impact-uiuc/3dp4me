@@ -132,7 +132,7 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                 onClick={() => setIsExportModalOpen(true)}
                 to={"#"}
             >
-                {"EXPORT "}
+                {translations.exportPatientData}
             </NavItem>
         )
     }
