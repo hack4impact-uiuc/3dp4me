@@ -143,7 +143,6 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                 {renderLinks()}
 
                 <ExportButton
-                    onExportComplete={() => alert('Export successful!')}
                     onExportError={(err) => alert(`Export failed: ${err.message}`)}
                 />
 

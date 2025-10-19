@@ -9,7 +9,7 @@
  * String CSV excludes: Header, Divider, File, Audio, Photo, Signature, Map
  */
 
-import fs, { createWriteStream, mkdtempSync, rm, rmdir, rmdirSync, rmSync } from 'fs';
+import fs, { createWriteStream, mkdirSync, mkdtempSync, rm, rmdir, rmdirSync, rmSync } from 'fs';
 import path, { join } from 'path';
 import mongoose from 'mongoose';
 import { PatientModel } from '../models/Patient';
@@ -20,18 +20,6 @@ import { Field, FieldType, FieldTypeData, File, Language, MapPoint, Patient, Ste
 import { format } from '@fast-csv/format';
 import { tmpdir } from 'os';
 import { randomBytes } from 'crypto';
-
-const INCLUDED_TYPES = [
-    FieldType.STRING,
-    FieldType.MULTILINE_STRING,
-    FieldType.NUMBER,
-    FieldType.DATE,
-    FieldType.PHONE,
-    FieldType.RADIO_BUTTON,
-    FieldType.MULTI_SELECT,
-    FieldType.TAGS,
-    FieldType.MAP,
-];
 
 const IGNORED_FIELD_TYPES = [
     FieldType.FILE,
@@ -59,7 +47,6 @@ interface Logger {
 
 type LevelLogger = (message: string, ...args: any[]) => void;
 
-// What to export?
 interface ExportOptions {
     includeDeleted: boolean;
     includeHidden: boolean;
@@ -82,13 +69,13 @@ const PATIENT_ID_TO_HEADER: Partial<Record<keyof Partial<Patient>, string>> = {
 }
 
 function createCsvWriteStream(filepath: string) {
+    mkdirSync(path.dirname(filepath), { recursive: true })
     const destination = createWriteStream(filepath, { flags: 'w+', flush: true })
-    const stream = format({ headers: true })
+    const stream = format({ headers: true, quote: '"', quoteColumns: true, quoteHeaders: true })
     stream.pipe(destination)
     return stream;
 }
 
-// STEP 1: Generate patient CSV (makes patients.csv)
 async function writePatientCsv(logger: Logger, filepath: string) {
     const stream = createCsvWriteStream(filepath);
     const patients = await PatientModel.find();
@@ -117,14 +104,13 @@ function patientToCsvRow(logger: Logger, patient: Patient): Record<string, any> 
     return csvRow;
 }
 
-// STEP 2: Generate step CSVs (makes step_csvs/*.csv)
-// Helper function to get filtered step definitions (moved to global scope)
 async function getSteps(options: ExportOptions): Promise<Step[]> {
     // Build query filter based on options
     const stepFilter: any = {};
     if (!options.includeDeleted) {
         stepFilter.isDeleted = { $ne: true };
     }
+
     if (!options.includeHidden) {
         stepFilter.isHidden = { $ne: true };
     }
@@ -189,8 +175,11 @@ async function writeStepToCSV(directoryLocation: string, step: Step, patients: P
         return field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)
     })
 
+    options.logger.info(`Writing ${regularFields.length} regular fields to ${step.key}.csv`);
     await writeRegularFieldsToCSV(directoryLocation, step, patients, regularFields, options)
-    // await writeFieldGroupsToCSV(directoryLocation, step, patients, fieldGroups)
+
+    options.logger.info(`Writing ${fieldGroups.length} field groups to ${step.key}.csv`);
+    await writeFieldGroupsToCSV(directoryLocation, step, patients, fieldGroups, options)
 }
 
 /**
@@ -198,7 +187,6 @@ async function writeStepToCSV(directoryLocation: string, step: Step, patients: P
  */
 async function writeRegularFieldsToCSV(directoryLocation: string, stepMeta: Step, patients: Patient[], fields: Field[], options: ExportOptions) {
     const StepDataModel = getStepModel(stepMeta.key)!;
-    const stream = createCsvWriteStream(path.join(directoryLocation, `${stepMeta.key}.csv`));
     const patientPromises = patients.map(async (patient) => {
         const row: Record<string, any> = {
             'Order ID': patient.orderId,
@@ -206,16 +194,73 @@ async function writeRegularFieldsToCSV(directoryLocation: string, stepMeta: Step
 
         // Process each field in the step definition
         const stepDoc = await StepDataModel.findOne({ patientId: patient._id });
-        if (!stepDoc) return;
-        for (const field of fields) {
-            row[field.key] = fieldToString(stepDoc[field.key], field, options);
+        if (!stepDoc) {
+            return null
         }
 
-        stream.write(row);
+        for (const field of fields) {
+            const fieldName = getFieldName(field, options);
+            row[fieldName] = fieldToString(stepDoc?.[field.key], field, options);
+        }
+
+        return row
+    })
+
+    let rows = await Promise.all(patientPromises);
+    rows = rows.filter(r => r !== null);
+    if (rows.length === 0) {
+        options.logger.debug(`No records found for step ${stepMeta.key}, skipping`);
+        return;
+    }
+
+    const stream = createCsvWriteStream(path.join(directoryLocation, `${stepMeta.key}.csv`));
+    rows.forEach(r => stream.write(r))
+    stream.end()
+    options.logger.debug(`Wrote ${patientPromises.length} records to ${stepMeta.key}.csv`);
+}
+
+function fieldGroupToRows(fieldGroup: Field, stepDoc: Record<string, any> | null, options: ExportOptions): Record<string, any>[] {
+    const values = stepDoc?.[fieldGroup.key]
+    if (!Array.isArray(values)) return []
+
+    const rows: Record<string, any>[] = [];
+    for (const [index, fieldGroupEntry] of values.entries()) {
+        const fieldGroupName = getFieldName(fieldGroup, options);
+        const row: Record<string, any> = {
+            [fieldGroupName]: `Entry ${index + 1}`
+        };
+        for (const field of fieldGroup.subFields) {
+            if (shouldIgnoreField(field, options)) continue;
+            const fieldName = getFieldName(field, options);
+            row[fieldName] = fieldToString(fieldGroupEntry?.[field?.key], field, options);
+        }
+
+        rows.push(row);
+    }
+
+    return rows;
+}
+
+async function writeFieldGroupsToCSV(directoryLocation: string, stepMeta: Step, patients: Patient[], fieldGroups: Field[], options: ExportOptions) {
+    const StepDataModel = getStepModel(stepMeta.key)!;
+    const patientPromises = patients.map(async (patient) => {
+        for (const fieldGroup of fieldGroups) {
+            const stepDoc = await StepDataModel.findOne({ patientId: patient._id });
+            const rows = fieldGroupToRows(fieldGroup, stepDoc, options);
+            if (rows.length === 0) continue;
+            const csvFileName = `${path.join(directoryLocation, patient.orderId, stepMeta.key, fieldGroup.key)}.csv`
+            const stream = createCsvWriteStream(csvFileName);
+            rows.forEach(r => stream.write(r))
+            stream.end()
+        }
     })
 
     await Promise.all(patientPromises);
-    options.logger.debug(`Wrote ${patientPromises.length} records to ${stepMeta.key}.csv`);
+    options.logger.debug(`Wrote ${patientPromises.length} records for field groups`);
+}
+
+function getFieldName(field: Field, options: ExportOptions): string {
+    return field.displayName[options.language] || field.key;
 }
 
 function fieldToString(value: any, field: Field, options: ExportOptions): string {
@@ -261,113 +306,6 @@ function isMapPoint(value: any): value is MapPoint {
     return typeof value === "object" && "latitude" in value && "longitude" in value;
 }
 
-// async function writeFieldGroupsToCSV(directoryLocation: string, step: Step, patients: Patient[], options: ExportOptions) {
-//     // Process steps with field groups - create individual CSVs per patient
-//     console.log(`Step ${stepKey} has field groups, creating individual CSVs per patient`);
-
-//     for (const patient of patients) {
-//         const stepDoc = await StepDataModel.findOne({ patientId: patient._id });
-//         if (!stepDoc) continue;
-
-//         const patientDir = path.join(EXPORT_DIR, patient.orderId);
-//         if (!fs.existsSync(patientDir)) fs.mkdirSync(patientDir, { recursive: true });
-
-//         const records = [];
-
-//         // Get field group data (stored as arrays in the document)
-//         const fieldGroupData = new Map<string, any[]>();
-
-//         // Collect all field group arrays
-//         for (const field of stepDef.fields) {
-//             if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
-//                 const groupData = stepDoc[field.key];
-//                 if (Array.isArray(groupData)) {
-//                     fieldGroupData.set(field.key, groupData);
-//                 }
-//             }
-//         }
-
-//         // Find the maximum number of entries across all field groups for this patient
-//         const maxEntries = Math.max(...Array.from(fieldGroupData.values()).map(arr => arr.length), 0);
-
-//         // Create a record for each entry in the field groups
-//         for (let i = 0; i < maxEntries; i++) {
-//             const row: Record<string, any> = {
-//                 entryNumber: i + 1,
-//             };
-
-//             // Process each field in the step definition
-//             for (const field of stepDef.fields) {
-//                 // Skip hidden or deleted fields if not including them
-//                 if (!includeHidden && field.isHidden) continue;
-//                 if (!includeDeleted && field.isDeleted) continue;
-
-//                 if (IGNORED_FIELD_TYPES.includes(field.fieldType)) continue;
-
-//                 if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
-//                     // Handle field groups (nested fields)
-//                     const groupData = fieldGroupData.get(field.key);
-//                     if (groupData && groupData[i]) {
-//                         for (const subField of field.subFields) {
-//                             // Skip hidden or deleted subfields if not including them
-//                             if (!includeHidden && subField.isHidden) continue;
-//                             if (!includeDeleted && subField.isDeleted) continue;
-
-//                             if (INCLUDED_TYPES.includes(subField.fieldType)) {
-//                                 row[subField.key] = fieldToString(groupData[i][subField.key], subField, 'EN');
-//                             }
-//                         }
-//                     }
-//                 } else if (INCLUDED_TYPES.includes(field.fieldType)) {
-//                     // Handle regular fields (non-field-group fields)
-//                     row[field.key] = fieldToString(stepDoc[field.key], field, 'EN');
-//                 }
-//             }
-
-//             records.push(row);
-//         }
-
-//         if (records.length > 0) {
-//             // Create a mapping of field keys to their display names
-//             const fieldDisplayNames = new Map<string, string>();
-//             // Add entry number display name
-//             fieldDisplayNames.set('entryNumber', 'Entry Number');
-
-//             // Map field keys to display names from step definition
-//             for (const field of stepDef.fields) {
-//                 if (!includeHidden && field.isHidden) continue;
-//                 if (!includeDeleted && field.isDeleted) continue;
-//                 if (IGNORED_FIELD_TYPES.includes(field.fieldType)) continue;
-
-//                 if (field.fieldType === FieldType.FIELD_GROUP && Array.isArray(field.subFields)) {
-//                     for (const subField of field.subFields) {
-//                         if (!includeHidden && subField.isHidden) continue;
-//                         if (!includeDeleted && subField.isDeleted) continue;
-//                         if (INCLUDED_TYPES.includes(subField.fieldType)) {
-//                             fieldDisplayNames.set(subField.key, subField.displayName?.EN || subField.key);
-//                         }
-//                     }
-//                 } else if (INCLUDED_TYPES.includes(field.fieldType)) {
-//                     fieldDisplayNames.set(field.key, field.displayName?.EN || field.key);
-//                 }
-//             }
-
-//             const csvWriter = createObjectCsvWriter({
-//                 path: path.join(patientDir, `${stepKey}.csv`),
-//                 header: Object.keys(records[0]).map(key => ({
-//                     id: key,
-//                     title: fieldDisplayNames.get(key) || key
-//                 })),
-//             });
-
-//             await csvWriter.writeRecords(records);
-//             console.log(`Wrote ${records.length} records to ${patientDir}/${stepKey}.csv`);
-//         }
-//     }
-
-// }
-
-// STEP 3: Export media files (makes patients/*/*.jpg)
 async function writeMediaFiles(directoryLocation: string, options: ExportOptions) {
     const { includeDeleted, includeHidden, logger } = options;
     logger.info('\n=== STEP 3: Exporting Media Files ===');
@@ -435,7 +373,7 @@ async function writeMediaFilesForPatient(directoryLocation: string, StepDataMode
                     options.logger.debug(`Downloaded file ${s3Key}`);
                     numFilesDownloaded++;
                 } catch (error) {
-                    options.logger.error(`Failed to download file ${s3Key}`);
+                    options.logger.error(`Failed to download file ${s3Key}: ${error}`);
                 }
             }
         }
@@ -462,8 +400,7 @@ function getFieldOptionText(field: Field, value: any, lang: Language): string {
     return "";
 }
 
-// Combined export function - now returns a ReadableStream
-export async function exportAllPatientsToZip(options: ExportOptions) {
+export async function exportAllPatientsToZip(options: ExportOptions): Promise<string> {
     const {
         includeDeleted = false,
         includeHidden = false,
@@ -475,20 +412,19 @@ export async function exportAllPatientsToZip(options: ExportOptions) {
     logger.debug(`Exporting to ${destination}`);
 
     try {
-        // Generate CSV data in memory
+        logger.info('Generating CSV Files');
         await writePatientCsv(logger, join(destination, 'patients.csv'));
         await writeStepCsvs(destination, options);
+
+        logger.info('Downloading Media Files');
         await writeMediaFiles(destination, options);
 
-        // Create zip file
+        logger.info('Creating ZIP File');
         const zipPath = await zipDirectory(destination, logger);
-        logger.info('Zip file created');
 
-        // Clean up temporary directory
-        logger.info('Cleaning up files');
+        logger.info('Doing Cleanup');
         rmSync(destination, { recursive: true })
 
-        // Return the file path to the zip
         logger.info('Export complete');
         return zipPath;
     } catch (error) {

@@ -9,7 +9,7 @@ import {
 import { Readable } from 'stream';
 import type { StreamingBlobPayloadInputTypes } from '@smithy/types';
 import { BucketConfig } from './awsExports';
-import fs, { renameSync } from 'fs';
+import fs, { mkdirSync, mkdtempSync, renameSync } from 'fs';
 import path from 'path';
 import { fileTypeFromBuffer } from 'file-type';
 import { tmpdir } from 'os';
@@ -179,31 +179,21 @@ export const downloadFileWithTypeDetection = async (
     s3Key: string,
     destinationPath: string,
 ) => {
-    const tempPath = path.join(tmpdir(), '3dp4me-downloads');
+    await downloadFileToPath(s3Key, destinationPath);
 
-    try {
-        await downloadFileToPath(s3Key, tempPath);
-
-        // If it has an extension, assume it's correct
-        if (hasExtension(destinationPath)) {
-            renameSync(tempPath, destinationPath)
-            return
-        }
-
-        // Try to detect an extension. If we can't find one, omit it
-        const detectedExtension = await detectFileExtension(tempPath);
-        if (detectedExtension === null) {
-            renameSync(tempPath, destinationPath)
-            return
-        }
-
-        const pathWithExtension = `${destinationPath}.${detectedExtension}`
-        renameSync(tempPath, pathWithExtension)
-    } catch (error) {
-        return false;
-    } finally {
-        fs.rmSync(tempPath, { recursive: true });
+    // If it has an extension, assume it's correct
+    if (hasExtension(destinationPath)) {
+        return
     }
+
+    // Try to detect an extension. If we can't find one, omit it
+    const detectedExtension = await detectFileExtension(destinationPath);
+    if (detectedExtension === null) {
+        return
+    }
+
+    const pathWithExtension = `${destinationPath}.${detectedExtension}`
+    renameSync(destinationPath, pathWithExtension)
 };
 
 export const sanitizeFilename = (filename: string): string => {
