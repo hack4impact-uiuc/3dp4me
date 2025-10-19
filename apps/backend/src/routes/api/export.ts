@@ -13,12 +13,9 @@ router.get(
     '/download',
     requireAdmin as any,
     errorWrap(async (req: AuthenticatedRequest, res: Response) => {
-        // Extract query parameters
         const includeDeleted = queryParamToBool(req.query.includeDeleted ?? 'false');
         const includeHidden = queryParamToBool(req.query.includeHidden ?? 'false');
         const language = (req.query.language as Language) || Language.EN
-        
-        // Get the zip stream directly
         const zipPath = await exportAllPatientsToZip({
             language,
             includeDeleted,
