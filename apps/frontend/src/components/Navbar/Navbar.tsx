@@ -11,8 +11,7 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { Context } from '../../store/Store'
 import { Routes } from '../../utils/constants'
 import AccountDropdown from '../AccountDropdown/AccountDropdown'
-import ExportButton from '../ExportButton/ExportButton'
-import ExportModal from '../ExportButton/ExportModal'
+import ExportModal from '../ExportModal/ExportModal'
 
 export interface NavbarProps {
     username: string
@@ -118,24 +117,18 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                     navTranslations.dashboardManagement.navTitle,
                     Routes.DASHBOARD_MANAGEMENT
                 ),
-                renderExport()
+                renderExport(),
             ])
         }
 
         return links
     }
 
-    const renderExport = () => {
-        return (
-            <NavItem
-                key={"export"}
-                onClick={() => setIsExportModalOpen(true)}
-                to={"#"}
-            >
-                {translations.exportPatientData}
-            </NavItem>
-        )
-    }
+    const renderExport = () => (
+        <NavItem key={'export'} onClick={() => setIsExportModalOpen(true)} to={'#'}>
+            {translations.exportPatientData}
+        </NavItem>
+    )
 
     return (
         <StyledAppBar variant="elevation" color={'info'} position="sticky">

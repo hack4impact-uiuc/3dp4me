@@ -20,7 +20,12 @@ interface ExportButtonProps {
     onExportError?: (error: Error) => void
 }
 
-const ExportModal: React.FC<ExportButtonProps> = ({ onExportComplete, onExportError, isOpen, onClose }) => {
+const ExportModal: React.FC<ExportButtonProps> = ({
+    onExportComplete,
+    onExportError,
+    isOpen,
+    onClose,
+}) => {
     const translations = useTranslations()[0]
     const [includeDeleted, setIncludeDeleted] = useState(false)
     const [includeHidden, setIncludeHidden] = useState(false)
@@ -42,11 +47,7 @@ const ExportModal: React.FC<ExportButtonProps> = ({ onExportComplete, onExportEr
 
     return (
         <>
-            <Dialog
-                open={isOpen}
-                onClose={onClose}
-                aria-labelledby="export-dialog-title"
-            >
+            <Dialog open={isOpen} onClose={onClose} aria-labelledby="export-dialog-title">
                 <DialogTitle id="export-dialog-title">
                     {translations.exportOptionsTitle}
                 </DialogTitle>

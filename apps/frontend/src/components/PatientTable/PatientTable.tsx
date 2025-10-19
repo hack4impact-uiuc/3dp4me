@@ -15,7 +15,6 @@ import {
 } from '../../utils/table-renderers'
 import CreatePatientModal from '../CreatePatientModal/CreatePatientModal'
 import Table from '../Table/Table'
-import ExportButton from '../ExportButton/ExportButton'
 
 export interface PatientTableProps {
     onAddPatient: (patient: Patient) => void
