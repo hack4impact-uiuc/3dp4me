@@ -14,13 +14,14 @@ import { downloadAllPatientData } from '../../api/api'
 import { useTranslations } from '../../hooks/useTranslations'
 
 interface ExportButtonProps {
+    isOpen: boolean
+    onClose: () => void
     onExportComplete?: () => void
     onExportError?: (error: Error) => void
 }
 
-const ExportButton: React.FC<ExportButtonProps> = ({ onExportComplete, onExportError }) => {
+const ExportModal: React.FC<ExportButtonProps> = ({ onExportComplete, onExportError, isOpen, onClose }) => {
     const translations = useTranslations()[0]
-    const [open, setOpen] = useState(false)
     const [includeDeleted, setIncludeDeleted] = useState(false)
     const [includeHidden, setIncludeHidden] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -29,30 +30,21 @@ const ExportButton: React.FC<ExportButtonProps> = ({ onExportComplete, onExportE
         setLoading(true)
         try {
             await downloadAllPatientData(includeDeleted, includeHidden)
-            setOpen(false)
             onExportComplete?.()
         } catch (error) {
             console.error('Export failed:', error)
             onExportError?.(error as Error)
         } finally {
             setLoading(false)
+            onClose()
         }
     }
 
     return (
         <>
-            <Button
-                onClick={() => setOpen(true)}
-                variant="contained"
-                color="primary"
-                aria-label="Open export options"
-            >
-                {translations.exportPatientData}
-            </Button>
-
             <Dialog
-                open={open}
-                onClose={() => setOpen(false)}
+                open={isOpen}
+                onClose={onClose}
                 aria-labelledby="export-dialog-title"
             >
                 <DialogTitle id="export-dialog-title">
@@ -90,7 +82,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({ onExportComplete, onExportE
                     >
                         {translations.exportAsZip}
                     </Button>
-                    <Button onClick={() => setOpen(false)} disabled={loading}>
+                    <Button onClick={onClose} disabled={loading}>
                         {translations.cancel}
                     </Button>
                 </DialogActions>
@@ -99,4 +91,4 @@ const ExportButton: React.FC<ExportButtonProps> = ({ onExportComplete, onExportE
     )
 }
 
-export default ExportButton
+export default ExportModal
