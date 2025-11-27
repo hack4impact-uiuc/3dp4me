@@ -109,6 +109,7 @@
     "build": "pnpm run build:hearing && pnpm run build:prosthetics",
     "build:hearing": "cross-env PROJECT_NAME=hearing webpack",
     "build:prosthetics": "cross-env PROJECT_NAME=prosthetics webpack",
+    "build:pt": "cross-env PROJECT_NAME=pt webpack",
     "clean": "rimraf .turbo dist node_modules",
     "lint": "pnpm run lint:check --fix",
     "lint:check": "eslint src --ext js,jsx,ts,tsx",
