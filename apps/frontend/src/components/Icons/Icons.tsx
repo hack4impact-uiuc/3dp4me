@@ -1,5 +1,6 @@
 import Clear from '@mui/icons-material/Clear'
 import CreateIcon from '@mui/icons-material/Create'
+import AddIcon from '@mui/icons-material/Add'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
@@ -33,5 +34,9 @@ export const ChevronRightIcon = styled(KeyboardArrowRightIcon)({
 })
 
 export const ClearIcon = styled(Clear)({
+    height: '100%',
+})
+
+export const PlusIcon = styled(AddIcon)({
     height: '100%',
 })

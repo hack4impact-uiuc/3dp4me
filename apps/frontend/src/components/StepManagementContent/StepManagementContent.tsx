@@ -19,6 +19,7 @@ import {
     ChevronRightIcon,
     ChevronUpIcon,
     PencilIcon,
+    PlusIcon,
 } from '../Icons/Icons'
 
 export interface StepManagementContentProps {
@@ -141,7 +142,7 @@ const StepManagementContent = ({
         if (!isEditing) return null
         return (
             <div onClick={() => onAddSubfield(stepKey, root)} className="add-subfield-button">
-                <i className="chevron add icon" />
+                <PlusIcon />
             </div>
         )
     }
