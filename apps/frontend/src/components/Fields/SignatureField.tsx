@@ -42,7 +42,7 @@ const SignatureField = <T extends string>({
         onChange(`${fieldId}.signatureCanvasWidth`, data.width)
         onChange(`${fieldId}.signatureCanvasHeight`, data.height)
 
-        if (!!documentURL) {
+        if (documentURL) {
             onChange(`${fieldId}.documentURL.EN`, documentURL.EN)
             onChange(`${fieldId}.documentURL.AR`, documentURL.AR)
         }
