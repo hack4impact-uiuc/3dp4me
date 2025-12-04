@@ -462,4 +462,4 @@ const updatePatientStepData = async (patientId: string, StepModel: typeof mongoo
     return patientStepData.save();
 };
 
-module.exports = router;
+export default router;
