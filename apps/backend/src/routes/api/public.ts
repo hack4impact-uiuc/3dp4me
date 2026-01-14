@@ -55,4 +55,4 @@ const fileFromRequest = (req: AuthenticatedRequest): Nullish<fileUpload.Uploaded
 }
 
 
-module.exports = router;
+export default router;

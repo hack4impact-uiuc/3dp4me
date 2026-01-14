@@ -9,6 +9,10 @@ import {
 import { Readable } from 'stream';
 import type { StreamingBlobPayloadInputTypes } from '@smithy/types';
 import { BucketConfig } from './awsExports';
+import fs, { mkdirSync, mkdtempSync, renameSync } from 'fs';
+import path from 'path';
+import { fileTypeFromBuffer } from 'file-type';
+import { tmpdir } from 'os';
 
 // S3 Credential Object created with access id and secret key
 const S3_CREDENTIALS = {
@@ -56,8 +60,29 @@ export const downloadFile = async (objectKey: string): Promise<Readable> => {
     if (!stream)
         throw new Error(`No read stream for ${objectKey}`);
 
-    const webstream = stream.transformToWebStream()
-    return  Readable.fromWeb(webstream as any)
+    // Handle AWS SDK v3 stream properly
+    if (stream instanceof Readable) {
+        return stream;
+    }
+
+    // Convert AWS SDK stream to Node.js Readable stream using the working method
+    const webStream = stream.transformToWebStream();
+    const reader = webStream.getReader();
+
+    return new Readable({
+        async read() {
+            try {
+                const { done, value } = await reader.read();
+                if (done) {
+                    this.push(null); // End the stream
+                } else {
+                    this.push(Buffer.from(value));
+                }
+            } catch (error) {
+                this.emit('error', error);
+            }
+        }
+    });
 };
 
 export const deleteFile = async (filePath: string) => {
@@ -89,7 +114,7 @@ export const deleteFolder = async (folderName: string) => {
 
     const deleteParams = {
         Bucket: PATIENT_BUCKET.bucketName,
-        Delete: { Objects: [] as {Key: string}[] },
+        Delete: { Objects: [] as { Key: string }[] },
     };
 
     // Builds a list of the files to delete
@@ -118,3 +143,72 @@ function getS3(credentials: typeof S3_CREDENTIALS, region: string) {
 
     return s3;
 }
+
+export const fileExistsInS3 = async (s3Key: string): Promise<boolean> => {
+    try {
+        await downloadFile(s3Key);
+        return true;
+    } catch (error) {
+        return false;
+    }
+};
+
+
+export const downloadFileToPath = async (
+    s3Key: string,
+    localPath: string
+): Promise<void> => {
+    const s3Stream = await downloadFile(s3Key);
+    const writeStream = fs.createWriteStream(localPath);
+
+    return new Promise((resolve, reject) => {
+        s3Stream.pipe(writeStream)
+            .on('finish', () => {
+                resolve();
+            })
+            .on('error', (error) => {
+                reject(error);
+            });
+    });
+};
+
+/**
+ * Downloads a file from s3 and adds a file extension if it's missing one
+ */
+export const downloadFileWithTypeDetection = async (
+    s3Key: string,
+    destinationPath: string,
+) => {
+    await downloadFileToPath(s3Key, destinationPath);
+
+    // If it has an extension, assume it's correct
+    if (hasExtension(destinationPath)) {
+        return
+    }
+
+    // Try to detect an extension. If we can't find one, omit it
+    const detectedExtension = await detectFileExtension(destinationPath);
+    if (detectedExtension === null) {
+        return
+    }
+
+    const pathWithExtension = `${destinationPath}.${detectedExtension}`
+    renameSync(destinationPath, pathWithExtension)
+};
+
+export const sanitizeFilename = (filename: string): string => {
+    const ext = path.extname(filename);
+    const name = path.basename(filename, ext);
+    const sanitizedName = name.replace(/[^a-z0-9.-]/gi, '_').toLowerCase();
+    return sanitizedName + ext;
+};
+
+const hasExtension = (filename: string): boolean => {
+    return path.extname(filename).length > 0;
+};
+
+const detectFileExtension = async (filePath: string): Promise<string | null> => {
+    const fileBuffer = fs.readFileSync(filePath);
+    const fileTypeResult = await fileTypeFromBuffer(fileBuffer);
+    return fileTypeResult?.ext || null;
+};
