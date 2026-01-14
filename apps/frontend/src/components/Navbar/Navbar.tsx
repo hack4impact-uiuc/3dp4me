@@ -11,7 +11,7 @@ import { useTranslations } from '../../hooks/useTranslations'
 import { Context } from '../../store/Store'
 import { Routes } from '../../utils/constants'
 import AccountDropdown from '../AccountDropdown/AccountDropdown'
-import ExportButton from '../ExportButton/ExportButton'
+import ExportModal from '../ExportModal/ExportModal'
 
 export interface NavbarProps {
     username: string
@@ -76,6 +76,7 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
     const [translations, selectedLang] = useTranslations()
     const [activeRoute, setActiveRoute] = useState(window.location.pathname)
     const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & SVGSVGElement>>(null)
+    const [isExportModalOpen, setIsExportModalOpen] = useState(false)
     const navTranslations = translations.components.navbar
 
     const handleAccountClick: MouseEventHandler<SVGSVGElement> = (e) => {
@@ -116,11 +117,18 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                     navTranslations.dashboardManagement.navTitle,
                     Routes.DASHBOARD_MANAGEMENT
                 ),
+                renderExport(),
             ])
         }
 
         return links
     }
+
+    const renderExport = () => (
+        <NavItem key={'export'} onClick={() => setIsExportModalOpen(true)} to={'#'}>
+            {translations.exportPatientData}
+        </NavItem>
+    )
 
     return (
         <StyledAppBar variant="elevation" color={'info'} position="sticky">
@@ -142,9 +150,10 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
 
                 {renderLinks()}
 
-                <ExportButton
-                    onExportComplete={() => alert('Export successful!')}
-                    onExportError={(err) => alert(`Export failed: ${err.message}`)}
+                <ExportModal
+                    isOpen={isExportModalOpen}
+                    onClose={() => setIsExportModalOpen(false)}
+                    onExportError={(error) => alert(`Export failed: ${error.message}`)}
                 />
 
                 <AccountCircleIcon

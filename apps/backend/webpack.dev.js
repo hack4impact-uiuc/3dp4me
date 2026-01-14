@@ -38,6 +38,6 @@ export default {
         outputModule: true,
     },
     externals: {
-        sharp: 'module sharp'
+        sharp: 'module sharp',
     }
 };
