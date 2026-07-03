@@ -24,7 +24,7 @@ const DateField = ({ displayName, isDisabled, fieldId, value, onChange }: DateFi
     const selectedLang = useTranslations()[1]
 
     const sendChanges = (date: Date | null) => {
-        onChange(fieldId, date?.toString() || "")
+        onChange(fieldId, date?.toString() || '')
     }
 
     const className = isDisabled ? 'input-field datepicker' : 'active-input datepicker'
