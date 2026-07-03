@@ -5,7 +5,7 @@ import './SignatureField.scss'
 import { Nullish, Path, PathValue, Signature, TranslatedString } from '@3dp4me/types'
 import Button from '@mui/material/Button'
 import hash from 'object-hash'
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 import { useTranslations } from '../../hooks/useTranslations'
 import { ControlledSignatureCanvas } from '../ControlledSignatureCanvas/ControlledSignatureCanvas'
@@ -31,6 +31,21 @@ const SignatureField = <T extends string>({
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isDocumentVisible, setIsDocumentVisible] = useState(false)
     const translations = useTranslations()[0]
+    const sigContainerRef = useRef<HTMLDivElement | null>(null)
+    const [canvasWidth, setCanvasWidth] = useState(0)
+
+    // Watch the container's size so the canvas gets a real width even if the
+    // container had no layout (width 0) when this component first mounted
+    useLayoutEffect(() => {
+        const container = sigContainerRef.current
+        if (!container) return undefined
+
+        const observer = new ResizeObserver(() => setTimeout(() => setCanvasWidth(container.offsetWidth), 0))
+        observer.observe(container)
+        return () => {
+            observer.disconnect()
+        }
+    }, [])
 
     /**
      * Saves signature data points along with the canvas width and height so that
@@ -89,9 +104,17 @@ const SignatureField = <T extends string>({
                 onSave={onNewSignature}
                 isOpen={isModalOpen}
             />
-            <div className="sig-container">
-                {/* We need to keep changing the key to force a rerender */}
-                <ControlledSignatureCanvas key={hashSignature(value)} value={value} />
+            <div className="sig-container" ref={sigContainerRef}>
+                {/* Keyed by width: resizing the canvas element wipes its bitmap,
+                    so remount to repaint the signature at the new size */}
+                {canvasWidth > 0 && (
+                    <ControlledSignatureCanvas
+                        key={hashSignature(value)}
+                        value={value}
+                        width={canvasWidth}
+                        height={canvasWidth / 2}
+                    />
+                )}
                 <div className="sig-ctl-container">
                     <Button
                         className="sig-ctl-button doc-btn"
