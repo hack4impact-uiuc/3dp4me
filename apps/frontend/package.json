@@ -24,7 +24,7 @@
     "@vis.gl/react-google-maps": "^1.4.2",
     "Chip": "link:@mui/material/Chip",
     "aws-amplify": "4.2.11",
-    "axios": "^1.6.0",
+    "axios": "^1.18.1",
     "date-fns": "^3.3.0",
     "js-file-download": "^0.4.12",
     "lodash": "^4.17.21",
