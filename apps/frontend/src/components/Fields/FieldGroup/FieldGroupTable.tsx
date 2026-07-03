@@ -63,6 +63,10 @@ const CellEditContainer = styled(TableCell)`
         width: 100%;
     }
 
+    .react-datepicker-popper {
+        z-index: 10;
+    }
+
     // Take full width for date picker
     .react-datepicker-wrapper {
         width: 100%;

@@ -41,8 +41,7 @@ export const requireRole =
         // If there isn't a user, authenticate
         if (!req.user) {
             return requireAuthentication(req, res, () => {
-                requireRole(role)
-                next()
+                requireRole(role)(req, res, next)
             })
         }
         if (!req.user.roles.includes(role)) return sendResponse(res, 403, ERR_NOT_APPROVED)

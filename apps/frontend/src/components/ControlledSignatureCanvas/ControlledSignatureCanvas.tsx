@@ -1,10 +1,13 @@
 import { Nullish, Signature, SignaturePoint } from '@3dp4me/types'
-import omit from 'lodash.omit'
+import omit from 'lodash/omit'
 import { FC, useEffect, useRef, useState } from 'react'
 import ReactSignatureCanvas from 'react-signature-canvas'
+import SignaturePad from 'signature_pad'
 
 interface ControlledSignatureCanvasProps {
     value: Nullish<Signature>
+    width: number
+    height: number
 }
 
 /**
@@ -12,7 +15,11 @@ interface ControlledSignatureCanvasProps {
  * we can make it mount and unmout on every value update
  * @returns
  */
-export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ value }) => {
+export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({
+    value,
+    width,
+    height,
+}) => {
     const sigCanvas = useRef<ReactSignatureCanvas | null>(null)
     const [doesCanvasHaveData, setDoesCanvasHaveData] = useState(false)
 
@@ -31,7 +38,7 @@ export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ 
         )
 
         setDoesCanvasHaveData(true)
-        setImmediate(() => sigCanvas.current?.fromData(data as any))
+        setTimeout(() => sigCanvas.current?.fromData(data as SignaturePad.Point[][]), 0)
     }, [value, sigCanvas.current, doesCanvasHaveData])
 
     /**
@@ -67,5 +74,13 @@ export const ControlledSignatureCanvas: FC<ControlledSignatureCanvasProps> = ({ 
         return formattedData
     }
 
-    return <ReactSignatureCanvas ref={sigCanvas} clearOnResize={false} />
+    // Giving the canvas explicit dimensions makes the library skip its own
+    // offsetWidth-based resize on mount, which reads 0 if layout hasn't settled
+    return (
+        <ReactSignatureCanvas
+            ref={sigCanvas}
+            clearOnResize={false}
+            canvasProps={{ width, height }}
+        />
+    )
 }
