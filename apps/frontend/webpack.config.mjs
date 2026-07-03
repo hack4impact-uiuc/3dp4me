@@ -1,10 +1,6 @@
 import Dotenv from "dotenv-webpack";
-// const path = require("path")
-import path from "path";
-// import { Configuration } from "webpack";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import nodeExternals from "webpack-node-externals"
 
 const config = {
   mode: "production",
@@ -34,15 +30,7 @@ const config = {
 
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
-        use: [
-          'file-loader',
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              disable: true,
-            },
-          },
-        ],
+        type: 'asset/resource',
       },
 
       { test: /\.([cm]?ts|tsx)$/, loader: "ts-loader", exclude: /node_modules/ },
