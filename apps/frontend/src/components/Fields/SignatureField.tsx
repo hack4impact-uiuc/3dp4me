@@ -105,11 +105,9 @@ const SignatureField = <T extends string>({
                 isOpen={isModalOpen}
             />
             <div className="sig-container" ref={sigContainerRef}>
-                {/* Keyed by width: resizing the canvas element wipes its bitmap,
-                    so remount to repaint the signature at the new size */}
                 {canvasWidth > 0 && (
                     <ControlledSignatureCanvas
-                        key={hashSignature(value)}
+                        key={hashSignature(value, canvasWidth)}
                         value={value}
                         width={canvasWidth}
                         height={canvasWidth / 2}
@@ -138,10 +136,10 @@ const SignatureField = <T extends string>({
     )
 }
 
-const hashSignature = (sig: Nullish<Signature>): string => {
+const hashSignature = (sig: Nullish<Signature>, width: number): string => {
     if (!sig) return hash(Math.random())
 
-    return hash(JSON.stringify(sig))
+    return hash(JSON.stringify(sig) + width.toString())
 }
 
 export default SignatureField
