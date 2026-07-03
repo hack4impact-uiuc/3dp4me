@@ -4,6 +4,7 @@ packages:
 allowBuilds:
   '@parcel/watcher': true
   aws-sdk: true
+  canvas: false
   core-js: true
   core-js-pure: true
   cwebp-bin: true
