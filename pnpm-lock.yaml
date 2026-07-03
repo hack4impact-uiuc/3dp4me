@@ -66,8 +66,8 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5(sharp@0.32.6)
       lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
+        specifier: ^4.18.1
+        version: 4.18.1
       loglevel:
         specifier: ^1.7.1
         version: 1.9.2
@@ -15741,7 +15741,7 @@ snapshots:
 
   async@2.6.4:
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.18.1
 
   async@3.2.6: {}
 
@@ -23049,7 +23049,7 @@ snapshots:
 
   whatwg-url@8.7.0:
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.18.1
       tr46: 2.1.0
       webidl-conversions: 6.1.0
 
