@@ -44,9 +44,6 @@ importers:
       body-parser:
         specifier: ^1.19.0
         version: 1.20.3
-      canvas:
-        specifier: ^3.2.3
-        version: 3.2.3
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -123,6 +120,9 @@ importers:
       '@types/pad':
         specifier: ^1.0.2
         version: 1.0.2
+      canvas:
+        specifier: ^3.2.3
+        version: 3.2.3
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -13749,7 +13749,7 @@ snapshots:
       jest-regex-util: 27.5.1
       jest-resolve: 27.5.1
       jest-resolve-dependencies: 27.5.1
-      jest-runner: 27.5.1
+      jest-runner: 27.5.1(canvas@3.2.3)
       jest-runtime: 27.5.1
       jest-snapshot: 27.5.1
       jest-util: 27.5.1
@@ -15459,12 +15459,12 @@ snapshots:
   '@webpack-cli/configtest@2.1.1(webpack-cli@5.1.4)(webpack@5.97.1)':
     dependencies:
       webpack: 5.97.1(webpack-cli@5.1.4)
-      webpack-cli: 5.1.4(webpack-dev-server@4.15.2)(webpack@5.97.1)
+      webpack-cli: 5.1.4(webpack@5.97.1)
 
   '@webpack-cli/info@2.0.2(webpack-cli@5.1.4)(webpack@5.97.1)':
     dependencies:
       webpack: 5.97.1(webpack-cli@5.1.4)
-      webpack-cli: 5.1.4(webpack-dev-server@4.15.2)(webpack@5.97.1)
+      webpack-cli: 5.1.4(webpack@5.97.1)
 
   '@webpack-cli/serve@2.0.5(webpack-cli@5.1.4)(webpack-dev-server@4.15.2)(webpack@5.97.1)':
     dependencies:
@@ -18723,13 +18723,13 @@ snapshots:
       glob: 7.2.3
       graceful-fs: 4.2.11
       jest-circus: 27.5.1
-      jest-environment-jsdom: 27.5.1
+      jest-environment-jsdom: 27.5.1(canvas@3.2.3)
       jest-environment-node: 27.5.1
       jest-get-type: 27.5.1
       jest-jasmine2: 27.5.1
       jest-regex-util: 27.5.1
       jest-resolve: 27.5.1
-      jest-runner: 27.5.1
+      jest-runner: 27.5.1(canvas@3.2.3)
       jest-util: 27.5.1
       jest-validate: 27.5.1
       micromatch: 4.0.8
@@ -18805,21 +18805,6 @@ snapshots:
       jest-get-type: 27.5.1
       jest-util: 27.5.1
       pretty-format: 27.5.1
-
-  jest-environment-jsdom@27.5.1:
-    dependencies:
-      '@jest/environment': 27.5.1
-      '@jest/fake-timers': 27.5.1
-      '@jest/types': 27.5.1
-      '@types/node': 20.17.16
-      jest-mock: 27.5.1
-      jest-util: 27.5.1
-      jsdom: 16.7.0
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
 
   jest-environment-jsdom@27.5.1(canvas@3.2.3):
     dependencies:
@@ -19009,35 +18994,6 @@ snapshots:
       resolve: 1.22.10
       resolve.exports: 1.1.1
       slash: 3.0.0
-
-  jest-runner@27.5.1:
-    dependencies:
-      '@jest/console': 27.5.1
-      '@jest/environment': 27.5.1
-      '@jest/test-result': 27.5.1
-      '@jest/transform': 27.5.1
-      '@jest/types': 27.5.1
-      '@types/node': 20.17.16
-      chalk: 4.1.2
-      emittery: 0.8.1
-      graceful-fs: 4.2.11
-      jest-docblock: 27.5.1
-      jest-environment-jsdom: 27.5.1
-      jest-environment-node: 27.5.1
-      jest-haste-map: 27.5.1
-      jest-leak-detector: 27.5.1
-      jest-message-util: 27.5.1
-      jest-resolve: 27.5.1
-      jest-runtime: 27.5.1
-      jest-util: 27.5.1
-      jest-worker: 27.5.1
-      source-map-support: 0.5.21
-      throat: 6.0.2
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
 
   jest-runner@27.5.1(canvas@3.2.3):
     dependencies:
@@ -19326,40 +19282,6 @@ snapshots:
       '@babel/preset-env': 7.26.7(@babel/core@7.26.7)
     transitivePeerDependencies:
       - supports-color
-
-  jsdom@16.7.0:
-    dependencies:
-      abab: 2.0.6
-      acorn: 8.14.0
-      acorn-globals: 6.0.0
-      cssom: 0.4.4
-      cssstyle: 2.3.0
-      data-urls: 2.0.0
-      decimal.js: 10.5.0
-      domexception: 2.0.1
-      escodegen: 2.1.0
-      form-data: 3.0.5
-      html-encoding-sniffer: 2.0.1
-      http-proxy-agent: 4.0.1
-      https-proxy-agent: 5.0.1
-      is-potential-custom-element-name: 1.0.1
-      nwsapi: 2.2.16
-      parse5: 6.0.1
-      saxes: 5.0.1
-      symbol-tree: 3.2.4
-      tough-cookie: 4.1.4
-      w3c-hr-time: 1.0.2
-      w3c-xmlserializer: 2.0.0
-      webidl-conversions: 6.1.0
-      whatwg-encoding: 1.0.5
-      whatwg-mimetype: 2.3.0
-      whatwg-url: 8.7.0
-      ws: 7.5.10
-      xml-name-validator: 3.0.0
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
 
   jsdom@16.7.0(canvas@3.2.3):
     dependencies:
@@ -23096,7 +23018,7 @@ snapshots:
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     optionalDependencies:
-      webpack-cli: 5.1.4(webpack-dev-server@4.15.2)(webpack@5.97.1)
+      webpack-cli: 5.1.4(webpack@5.97.1)
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
