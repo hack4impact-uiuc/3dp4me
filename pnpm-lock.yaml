@@ -193,8 +193,8 @@ importers:
         specifier: ^0.4.12
         version: 0.4.12
       lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
+        specifier: ^4.18.1
+        version: 4.18.1
       lodash.omit:
         specifier: ^4.5.0
         version: 4.5.0
@@ -7575,6 +7575,9 @@ packages:
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
+  lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
+
   log-symbols@6.0.0:
     resolution: {integrity: sha512-i24m8rpwhmPIS4zscNzK6MSEhk0DUWa/8iYQWxhffV8jkI4Phvs3F+quL5xvS0gdQR0FyTCMMH33Y78dDTzzIw==}
     engines: {node: '>=18'}
@@ -11167,7 +11170,7 @@ snapshots:
       '@aws-sdk/client-personalize-events': 3.6.1(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@18.3.18)(react@18.3.1))
       '@aws-sdk/client-pinpoint': 3.6.1(react-native@0.77.0(@babel/core@7.26.7)(@babel/preset-env@7.26.7(@babel/core@7.26.7))(@types/react@18.3.18)(react@18.3.1))
       '@aws-sdk/util-utf8-browser': 3.6.1
-      lodash: 4.17.21
+      lodash: 4.18.1
       uuid: 3.4.0
     transitivePeerDependencies:
       - react-native
@@ -15565,7 +15568,7 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 1.8.6
       array-from: 2.1.1
-      lodash: 4.17.21
+      lodash: 4.18.1
 
   '@sinonjs/samsam@8.0.2':
     dependencies:
@@ -16589,12 +16592,12 @@ snapshots:
   '@webpack-cli/configtest@2.1.1(webpack-cli@5.1.4)(webpack@5.97.1)':
     dependencies:
       webpack: 5.97.1(webpack-cli@5.1.4)
-      webpack-cli: 5.1.4(webpack@5.97.1)
+      webpack-cli: 5.1.4(webpack-dev-server@4.15.2)(webpack@5.97.1)
 
   '@webpack-cli/info@2.0.2(webpack-cli@5.1.4)(webpack@5.97.1)':
     dependencies:
       webpack: 5.97.1(webpack-cli@5.1.4)
-      webpack-cli: 5.1.4(webpack@5.97.1)
+      webpack-cli: 5.1.4(webpack-dev-server@4.15.2)(webpack@5.97.1)
 
   '@webpack-cli/serve@2.0.5(webpack-cli@5.1.4)(webpack-dev-server@4.15.2)(webpack@5.97.1)':
     dependencies:
@@ -18607,7 +18610,7 @@ snapshots:
       '@babel/plugin-syntax-flow': 7.29.7(@babel/core@7.26.7)
       '@babel/plugin-transform-react-jsx': 7.25.9(@babel/core@7.26.7)
       eslint: 8.57.1
-      lodash: 4.17.21
+      lodash: 4.18.1
       string-natural-compare: 3.0.1
 
   eslint-plugin-import@2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.7.3))(eslint@8.57.1):
@@ -18698,7 +18701,7 @@ snapshots:
       eslint: 8.57.1
       json-fixer: 1.6.15
       line-column: 1.0.2
-      lodash: 4.17.21
+      lodash: 4.18.1
       minimatch: 3.1.2
       sort-package-json: 1.57.0
     transitivePeerDependencies:
@@ -19737,7 +19740,7 @@ snapshots:
     dependencies:
       '@types/html-minifier-terser': 6.1.0
       html-minifier-terser: 6.1.0
-      lodash: 4.17.21
+      lodash: 4.18.1
       pretty-error: 4.0.0
       tapable: 2.2.1
     optionalDependencies:
@@ -21245,6 +21248,8 @@ snapshots:
 
   lodash@4.17.21: {}
 
+  lodash@4.18.1: {}
+
   log-symbols@6.0.0:
     dependencies:
       chalk: 5.3.0
@@ -22742,7 +22747,7 @@ snapshots:
 
   pretty-error@4.0.0:
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.18.1
       renderkid: 3.0.0
 
   pretty-format@27.5.1:
@@ -23353,7 +23358,7 @@ snapshots:
       css-select: 4.3.0
       dom-converter: 0.2.0
       htmlparser2: 6.1.0
-      lodash: 4.17.21
+      lodash: 4.18.1
       strip-ansi: 6.0.1
 
   replace-ext@1.0.1: {}
@@ -23933,7 +23938,7 @@ snapshots:
       escape-html: 1.0.3
       glob: 7.2.3
       gzip-size: 6.0.0
-      lodash: 4.17.21
+      lodash: 4.18.1
       open: 7.4.2
       source-map: 0.7.4
       temp: 0.9.4
@@ -25128,7 +25133,7 @@ snapshots:
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     optionalDependencies:
-      webpack-cli: 5.1.4(webpack@5.97.1)
+      webpack-cli: 5.1.4(webpack-dev-server@4.15.2)(webpack@5.97.1)
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
@@ -25254,7 +25259,7 @@ snapshots:
       fast-json-stable-stringify: 2.1.0
       fs-extra: 9.1.0
       glob: 7.2.3
-      lodash: 4.17.21
+      lodash: 4.18.1
       pretty-bytes: 5.6.0
       rollup: 2.79.2
       rollup-plugin-terser: 7.0.2(rollup@2.79.2)

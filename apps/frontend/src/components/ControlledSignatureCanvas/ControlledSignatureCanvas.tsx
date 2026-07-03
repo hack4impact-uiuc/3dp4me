@@ -1,5 +1,5 @@
 import { Nullish, Signature, SignaturePoint } from '@3dp4me/types'
-import omit from 'lodash.omit'
+import omit from 'lodash/omit'
 import { FC, useEffect, useRef, useState } from 'react'
 import ReactSignatureCanvas from 'react-signature-canvas'
 
