@@ -40,7 +40,9 @@ const SignatureField = <T extends string>({
         const container = sigContainerRef.current
         if (!container) return undefined
 
-        const observer = new ResizeObserver(() => setTimeout(() => setCanvasWidth(container.offsetWidth), 0))
+        const observer = new ResizeObserver(() =>
+            setTimeout(() => setCanvasWidth(container.offsetWidth), 0)
+        )
         observer.observe(container)
         return () => {
             observer.disconnect()
