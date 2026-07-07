@@ -15,9 +15,7 @@
     "join-images": "^1.1.5",
     "lodash": "^4.17.21",
     "loglevel": "^1.7.1",
-    "mongodb-memory-server": "^7.4.0",
     "mongoose": "^6.0.6",
-    "mongoose-encryption": "^2.1.0",
     "node-2fa": "^2.0.2",
     "omit-deep-lodash": "^1.1.5",
     "pad": "^3.2.0",
@@ -60,7 +58,7 @@
     "clean": "rimraf .turbo build dist node_modules",
     "lint": "eslint --fix src/**/*.ts",
     "lint:check": "eslint src/**/*.ts",
-    "start": "rm -rf ./dist && tsc && doppler run -- node ./dist/src/index.js",
+    "start": "tsc && doppler run -- node ./dist/src/index.js",
     "test": "cross-env S3_BUCKET_NAME=test jest --runInBand --forceExit"
   }
 }

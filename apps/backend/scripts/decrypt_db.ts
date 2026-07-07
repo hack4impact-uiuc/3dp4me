@@ -1,6 +1,13 @@
 /**
  * One-time migration: decrypt all mongoose-encryption data and re-write it plaintext.
  *
+ * IMPORTANT: This script decrypts by reading documents through the app's Mongoose
+ * models, which only decrypt while the mongoose-encryption plugin is attached. That
+ * plugin was removed from the codebase in the same PR that introduced this note, so
+ * this script will NOT decrypt anything when run from current master — it is kept for
+ * reference only. To actually decrypt a still-encrypted database (e.g. production),
+ * check out the commit BEFORE the plugin was removed and run it from there.
+ *
  * HOW IT WORKS
  *   1. Connect to MongoDB and register all dynamic step models (with the encryption plugin
  *      still in place, so mongoose can decrypt on read).

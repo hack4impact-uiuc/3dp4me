@@ -1,16 +1,5 @@
 import { Patient, PatientStatus } from '@3dp4me/types'
 import mongoose from 'mongoose'
-import encrypt from 'mongoose-encryption'
-
-const UNECRYPTED_FIELDS = [
-    'dateCreated',
-    'orderId',
-    'lastEdited',
-    'lastEditedBy',
-    'status',
-    'phoneNumber',
-    'orderYear',
-]
 
 /**
  * Schema for basic patient information. This is the bare minnimum of info needed
@@ -34,13 +23,6 @@ const patientSchema = new mongoose.Schema<Patient>({
     },
     phoneNumber: { type: String, required: false },
     secret: { type: String, required: false },
-})
-
-// Encrypt everything personal
-patientSchema.plugin(encrypt, {
-    encryptionKey: process.env.ENCRYPTION_KEY,
-    signingKey: process.env.SIGNING_KEY,
-    excludeFromEncryption: UNECRYPTED_FIELDS,
 })
 
 export const PatientModel = mongoose.model<Patient>('Patient', patientSchema, 'Patient')
