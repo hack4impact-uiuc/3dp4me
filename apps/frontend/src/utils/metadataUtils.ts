@@ -1,6 +1,6 @@
 import { Field, Patient, Step } from '@3dp4me/types'
 import { Nullish } from '@3dp4me/types/dist/src/utils/nullish'
-import { camelCase } from 'lodash'
+import camelCase from 'lodash/camelCase'
 
 function hasKey<T extends object, K extends PropertyKey>(
     obj: Nullish<T>,

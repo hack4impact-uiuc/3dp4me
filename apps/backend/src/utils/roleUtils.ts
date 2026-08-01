@@ -86,7 +86,7 @@ export const canUserAccessPatient = async (user: AuthenticatedUser, patientId: s
     // Get all patient data for this step
     const rootPatientData = await mongoose.model(ReservedStep.Root).findOne({ patientId }).lean()
     if (!rootPatientData) {
-        return false
+        return true
     }
 
     const patientTags = rootPatientData[RootStepFieldKeys.Tags] || []
