@@ -103,7 +103,7 @@ describe('PUT /patients/:id', () => {
 
     const getPatientFromDB = async () => {
         const result = await models.Patient.findOne({
-            _id: mongoose.Types.ObjectId(PATIENT_ID),
+            _id: new mongoose.Types.ObjectId(PATIENT_ID),
         });
         return result.toObject();
     };
