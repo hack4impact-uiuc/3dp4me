@@ -10,7 +10,7 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Modal from '@mui/material/Modal'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import swal from 'sweetalert'
@@ -49,11 +49,11 @@ const EditRoleModal = ({
     allRoles,
 }: EditRoleModalProps) => {
     const [translations, selectedLang] = useTranslations()
-    const [userData, setUserData] = useState(_.cloneDeep(userInfo))
+    const [userData, setUserData] = useState(cloneDeep(userInfo))
     const errorWrap = useErrorWrap()
 
     useEffect(() => {
-        setUserData(_.cloneDeep(userInfo))
+        setUserData(cloneDeep(userInfo))
     }, [userInfo])
 
     const onRolesChange = (id: string, roles: string[]) => {

@@ -9,10 +9,9 @@ import {
     Step,
     StepStatus,
 } from '@3dp4me/types'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import log from 'loglevel'
 import mongoose, { SchemaDefinitionProperty } from 'mongoose'
-import encrypt from 'mongoose-encryption'
 
 import { StepModel } from '../models/Metadata'
 import { fileSchema } from '../schemas/fileSchema'
@@ -100,12 +99,6 @@ export const initModels = async () => {
 export const generateSchemaFromMetadata = (stepMetadata: Step) => {
     const stepSchema = generateFieldsFromMetadata(stepMetadata.fields, getStepBaseSchema())
     const schema = new mongoose.Schema(stepSchema)
-
-    schema.plugin(encrypt, {
-        encryptionKey: process.env.ENCRYPTION_KEY,
-        signingKey: process.env.SIGNING_KEY,
-        excludeFromEncryption: ['patientId', 'tags'],
-    })
 
     mongoose.model(stepMetadata.key, schema, stepMetadata.key)
 }
@@ -265,5 +258,5 @@ const generateFieldsFromMetadata = (fieldsMetadata: Field[], baseSchema = {}) =>
         }
     })
 
-    return Object.assign(_.cloneDeep(baseSchema), ...generatedSchema)
+    return Object.assign(cloneDeep(baseSchema), ...generatedSchema)
 }

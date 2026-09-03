@@ -6,7 +6,8 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import set from 'lodash/set'
 import React, { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import swal from 'sweetalert'
@@ -45,14 +46,14 @@ const StepContent = ({
     edit,
     setEdit,
 }: StepContentProps) => {
-    const [updatedData, setUpdatedData] = useState(_.cloneDeep(stepData))
+    const [updatedData, setUpdatedData] = useState(cloneDeep(stepData))
     const [currentQuestion, setCurrentQuestion] = useState(0)
     const [singleQuestionFormat, setSingleQuestionFormat] = useState(false)
     const [translations, selectedLang] = useTranslations()
     const errorWrap = useErrorWrap()
 
     useEffect(() => {
-        setUpdatedData(_.cloneDeep(stepData))
+        setUpdatedData(cloneDeep(stepData))
     }, [stepData])
 
     useEffect(() => {
@@ -69,8 +70,8 @@ const StepContent = ({
 
     const handleSimpleUpdate = (fieldKey: string, value: any) => {
         setUpdatedData((data) => {
-            const dataCopy = _.cloneDeep(data)
-            _.set(dataCopy, fieldKey, value)
+            const dataCopy = cloneDeep(data)
+            set(dataCopy, fieldKey, value)
             return dataCopy
         })
     }
@@ -80,7 +81,7 @@ const StepContent = ({
             await trackPromise(deleteFile(patientId, metaData.key, fieldKey, file.filename))
             if (!updatedData[fieldKey]) return
 
-            let updatedFiles = _.cloneDeep(updatedData[fieldKey]) as FileModel[]
+            let updatedFiles = cloneDeep(updatedData[fieldKey]) as FileModel[]
             updatedFiles = updatedFiles.filter((f) => f.filename !== file.filename)
 
             handleSimpleUpdate(fieldKey, updatedFiles)
@@ -106,7 +107,7 @@ const StepContent = ({
             }
 
             const oldFiles = resolveMixedObjPath(updatedData, fieldKey)
-            let files = _.cloneDeep(oldFiles || [])
+            let files = cloneDeep(oldFiles || [])
 
             if (files) files = files.concat(newFile)
             else files = [newFile]
@@ -116,7 +117,7 @@ const StepContent = ({
     }
 
     const saveData = () => {
-        onDataSaved(metaData.key, _.cloneDeep(updatedData))
+        onDataSaved(metaData.key, cloneDeep(updatedData))
         setEdit(false)
         swal(translations.components.bottombar.savedMessage.patientInfo, '', 'success')
     }
@@ -143,7 +144,7 @@ const StepContent = ({
                     buttons: [translations.components.button.discard.confirmButton],
                 })
                 // TODO: Nonexistent values don't get reset.
-                setUpdatedData(_.cloneDeep(stepData))
+                setUpdatedData(cloneDeep(stepData))
                 setEdit(false)
             }
         })
@@ -164,7 +165,7 @@ const StepContent = ({
                     <StepField
                         displayName={field.displayName[selectedLang]}
                         metadata={field}
-                        value={updatedData ? _.cloneDeep(updatedData[field.key]) : null}
+                        value={updatedData ? cloneDeep(updatedData[field.key]) : null}
                         key={field.key}
                         isDisabled={!edit}
                         patientId={patientId}

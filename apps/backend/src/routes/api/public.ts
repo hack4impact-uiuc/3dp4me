@@ -1,5 +1,5 @@
 import express, { Response } from 'express';
-import _ from 'lodash';
+
 import {
     sendResponse,
 } from '../../utils/response';

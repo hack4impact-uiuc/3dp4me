@@ -3,7 +3,7 @@ import './ManageRoleModal.scss'
 import { Nullish, PatientTagsField, Role } from '@3dp4me/types'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 import swal from 'sweetalert'
@@ -46,7 +46,7 @@ const ManageRoleModal = ({
     })
 
     useEffect(() => {
-        setRole(_.cloneDeep(roleInfo))
+        setRole(cloneDeep(roleInfo))
     }, [roleInfo])
 
     const onDelete = async () => {

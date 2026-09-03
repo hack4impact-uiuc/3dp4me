@@ -2,7 +2,7 @@ import './AccountManagement.scss'
 
 import { AccessLevel, Nullish, Role } from '@3dp4me/types'
 import type { CognitoIdentityServiceProvider } from 'aws-sdk'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import React, { useEffect, useMemo, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
@@ -193,7 +193,7 @@ const AccountManagement = () => {
             }
 
             // Clone the structure and find user
-            const updatedUsers = _.cloneDeep(metaData)
+            const updatedUsers = cloneDeep(metaData)
             const userToUpdate = updatedUsers.find((user) => user.Username === username)
 
             if (!userToUpdate) {
@@ -213,7 +213,7 @@ const AccountManagement = () => {
 
     const onUserDeleted = (username: string) => {
         setUserMetaData((metaData) => {
-            const users = _.cloneDeep(metaData)
+            const users = cloneDeep(metaData)
             const updatedUsers = users.filter((user) => user.Username !== username)
             return updatedUsers
         })
@@ -234,7 +234,7 @@ const AccountManagement = () => {
      */
     const onRoleEdited = (roleId: string, roleData: Role) => {
         setRoles((rolesData) => {
-            const updatedRoles = _.cloneDeep(rolesData)
+            const updatedRoles = cloneDeep(rolesData)
             const updatedRole = updatedRoles.find((role) => role._id === roleId)
             if (!updatedRole) {
                 return updatedRoles

@@ -4,7 +4,7 @@ import { Language, Nullish, Patient, PatientTagsField, ReservedStep, Step } from
 import CloseIcon from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert'
 
@@ -44,10 +44,10 @@ const ManagePatientModal = ({
     onUploadProfilePicture,
 }: ManagePatientModalProps) => {
     const [translations, selectedLang] = useTranslations()
-    const [updatedPatientData, setUpdatedPatientData] = useState(_.cloneDeep(patientData))
+    const [updatedPatientData, setUpdatedPatientData] = useState(cloneDeep(patientData))
 
     useEffect(() => {
-        setUpdatedPatientData(_.cloneDeep(patientData))
+        setUpdatedPatientData(cloneDeep(patientData))
     }, [patientData])
 
     const onFieldUpdate = (key: string, value: string) => {
@@ -222,7 +222,7 @@ const ManagePatientModal = ({
                                 ReservedStep.Root
                             ] as Nullish<Step>
                             if (root) {
-                                onStepSave(ReservedStep.Root, _.cloneDeep(root))
+                                onStepSave(ReservedStep.Root, cloneDeep(root))
                             }
                         }}
                     >

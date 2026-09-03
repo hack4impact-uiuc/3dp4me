@@ -4,7 +4,7 @@ import { Language, Step, TranslatedString } from '@3dp4me/types'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Modal from '@mui/material/Modal'
-import _ from 'lodash'
+import clone from 'lodash/clone'
 import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert'
 
@@ -56,7 +56,7 @@ const EditStepModal = ({
         setSelectedRoles(roles)
     }
     const updateDisplayName = (value: string, language: Language) => {
-        const updatedDisplayName = _.clone(displayName)
+        const updatedDisplayName = clone(displayName)
         updatedDisplayName[language] = value
 
         setDisplayName(updatedDisplayName)

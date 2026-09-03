@@ -1,5 +1,5 @@
 import { ReservedStep } from '@3dp4me/types'
-import _ from 'lodash'
+import camelCase from 'lodash/camelCase'
 
 /* Returns a string of specified length composed of random alphanumeric characters */
 const randomAlphanumeric = (length: number) => {
@@ -18,7 +18,7 @@ const generateKeyWithCamelCase = (input: string) => {
         return randomAlphanumeric(10)
     }
 
-    return _.camelCase(input)
+    return camelCase(input)
 }
 
 const checkKeyCollision = (newKey: string, otherKeys: string[]) =>

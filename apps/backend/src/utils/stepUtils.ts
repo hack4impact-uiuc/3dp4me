@@ -1,5 +1,6 @@
 import { Field, ReservedStep, Step } from '@3dp4me/types'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import assign from 'lodash/assign'
 import { ClientSession, HydratedDocument, PipelineStage } from 'mongoose'
 
 import { removeAttributesFrom } from '../middleware/requests'
@@ -191,7 +192,7 @@ const updateElementNumbers = <T extends Step | Field, K extends keyof T>(
     // number for the field that it is pointing at. The elements in deletedElements get priority,
     // meaning they always keep the same field number.
 
-    const updatedElements = _.cloneDeep(goodElements)
+    const updatedElements = cloneDeep(goodElements)
 
     let currElementNumber = 0
     let deletedElementPointer = 0
@@ -218,7 +219,7 @@ const updateElementNumbers = <T extends Step | Field, K extends keyof T>(
 }
 
 const updateFieldKeys = (fields: Field[]) => {
-    const clonedFields = _.cloneDeep(fields)
+    const clonedFields = cloneDeep(fields)
     const currentFieldKeys = clonedFields.map((field) => field.key ?? '')
 
     for (let i = 0; i < clonedFields.length; i++) {
@@ -253,8 +254,8 @@ const updateFieldInTransaction = async (
     session: ClientSession,
     level: number
 ) => {
-    const savedFields = _.cloneDeep(fieldsInDB)
-    let updatedFields = _.cloneDeep(fieldsFromRequest)
+    const savedFields = cloneDeep(fieldsInDB)
+    let updatedFields = cloneDeep(fieldsFromRequest)
 
     const addedFields = await getAddedFields(session, savedFields, updatedFields)
 
@@ -425,7 +426,7 @@ const updateStepInTransaction = async (
         return abortAndError(session, 'Step not found on final update')
     }
 
-    _.assign(step, strippedBody)
+    assign(step, strippedBody)
     await step.save({ session, validateBeforeSave: false })
 
     // Return the model so that we can do validation later

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import _ from 'lodash'
+import omit from 'lodash/omit'
 
 /**
  * Removes attributes from a request's body. So if "_id" is passed in, "_id" will be removed
@@ -21,4 +21,4 @@ export const removeRequestAttributes =
 export const removeAttributesFrom = <T extends object, K extends keyof T>(
     obj: T,
     attributes: K[]
-): Omit<T, K> => _.omit(obj, attributes)
+): Omit<T, K> => omit(obj, attributes)

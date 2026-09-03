@@ -2,7 +2,7 @@ import './DashboardManagement.scss'
 
 import { BaseStep, Field, Nullish, Step, StepPathToField, Unsaved } from '@3dp4me/types'
 import ListItem from '@mui/material/ListItem'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { useEffect, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
@@ -131,7 +131,7 @@ const SectionTab = () => {
      * @param {Number} direction 1 indicates increasing stepNumber, -1 indicates decreasing fieldNumber
      */
     function moveStep(stepKey: string, direction: Direction) {
-        const updatedMetadata = _.cloneDeep(stepMetadata)
+        const updatedMetadata = cloneDeep(stepMetadata)
 
         const currStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey)
 
@@ -170,7 +170,7 @@ const SectionTab = () => {
         fieldRoot: StepPathToField,
         direction: Direction
     ) {
-        const updatedMetadata = _.cloneDeep(stepMetadata)
+        const updatedMetadata = cloneDeep(stepMetadata)
 
         const foundStepIndex = getStepIndexGivenKey(updatedMetadata, stepKey)
 
@@ -304,7 +304,7 @@ const SectionTab = () => {
     const generateEditStepPopup = () => {
         if (!selectedStepForEdit) return null
 
-        const updatedMetadata = _.cloneDeep(stepMetadata)
+        const updatedMetadata = cloneDeep(stepMetadata)
         const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStepForEdit)
         const stepData = updatedMetadata[stepIndex]
         if (!stepData) return null
@@ -333,7 +333,7 @@ const SectionTab = () => {
         will only be saved locally. 
     */
     const addNewField = async (newFieldData: NewField) => {
-        const updatedMetadata = _.cloneDeep(stepMetadata)
+        const updatedMetadata = cloneDeep(stepMetadata)
 
         const stepIndex = updatedMetadata.findIndex((element) => element.key === selectedStep)
 
@@ -366,15 +366,15 @@ const SectionTab = () => {
     }
 
     const editStep = (updatedStepData: Step) => {
-        const updatedMetadata = _.cloneDeep(stepMetadata)
+        const updatedMetadata = cloneDeep(stepMetadata)
         const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep)
         updatedMetadata[stepIndex] = updatedStepData
         setStepMetadata(updatedMetadata)
     }
 
     const editField = (updatedFieldData: Unsaved<Field>) => {
-        const updatedField = _.cloneDeep(updatedFieldData)
-        const updatedMetadata = _.cloneDeep(stepMetadata)
+        const updatedField = cloneDeep(updatedFieldData)
+        const updatedMetadata = cloneDeep(stepMetadata)
 
         const stepIndex = getStepIndexGivenKey(updatedMetadata, selectedStep)
 
@@ -398,7 +398,7 @@ const SectionTab = () => {
     }
 
     const addNewStep = (newStepData: BaseStep) => {
-        const updatedMetadata = _.cloneDeep(stepMetadata)
+        const updatedMetadata = cloneDeep(stepMetadata)
 
         // Set the step number to one more than the step number of the
         // last step in updatedMetadata.

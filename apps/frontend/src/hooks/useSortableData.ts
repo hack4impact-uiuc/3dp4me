@@ -1,5 +1,5 @@
 import { Nullish, Path } from '@3dp4me/types'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { useMemo, useState } from 'react'
 
 import { SortDirection } from '../utils/constants'
@@ -18,7 +18,7 @@ export interface SortConfig<T> {
  */
 const useSortableData = <T extends Record<string, any>>(data: Nullish<T[]>) => {
     const [sortConfig, setSortConfig] = useState<Nullish<SortConfig<T>>>(null)
-    const sortableData = useMemo(() => _.cloneDeep(data), [data])
+    const sortableData = useMemo(() => cloneDeep(data), [data])
     const sortedData = useMemo(() => {
         if (!sortableData) return sortableData
 

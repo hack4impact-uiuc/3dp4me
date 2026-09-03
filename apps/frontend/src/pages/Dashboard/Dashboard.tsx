@@ -4,7 +4,7 @@ import { Field, Patient } from '@3dp4me/types'
 import MuiAlert from '@mui/material/Alert'
 import type { SnackbarCloseReason } from '@mui/material/Snackbar'
 import Snackbar from '@mui/material/Snackbar'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { useEffect, useState } from 'react'
 
 import PaginateBar from '../../components/PaginateBar/PaginateBar'
@@ -174,7 +174,7 @@ const Dashboard = () => {
     function generateRowData(stepKey: string, fields: Field[]): ColumnMetadata<Patient>[] {
         if (fields == null) return []
 
-        const rowData = _.cloneDeep(PATIENTS_BY_STEP_TABLE_ROW_DATA)
+        const rowData = cloneDeep(PATIENTS_BY_STEP_TABLE_ROW_DATA)
 
         if (!DISABLE_FEATURE_PATIENT_STATUS) {
             rowData.push({

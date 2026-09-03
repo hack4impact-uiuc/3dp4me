@@ -3,7 +3,7 @@ import './CreateStepModal.scss'
 import { BaseStep, Field, Language } from '@3dp4me/types'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
-import _ from 'lodash'
+import clone from 'lodash/clone'
 import { useState } from 'react'
 
 import { useErrorWrap } from '../../hooks/useErrorWrap'
@@ -36,7 +36,7 @@ const CreateStepModal = ({
         setSelectedRoles(roleIds)
     }
     const updateDisplayName = (value: string, language: Language) => {
-        const updatedDisplayName = _.clone(displayName)
+        const updatedDisplayName = clone(displayName)
         updatedDisplayName[language] = value
 
         setDisplayName(updatedDisplayName)

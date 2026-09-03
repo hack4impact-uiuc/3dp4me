@@ -1,7 +1,8 @@
 import express, { Response } from 'express';
 import mongoose from 'mongoose';
 
-import _ from 'lodash';
+import pick from 'lodash/pick'
+import assign from 'lodash/assign'
 import {
     uploadFile,
     downloadFile,
@@ -100,7 +101,7 @@ router.get(
             stepData = stepData.toObject();
 
             // Filter out fields that the user cannot view
-            stepData = _.pick(stepData, readableFields);
+            stepData = pick(stepData, readableFields);
 
             // Update the patient data
             patientData.set(step.key, stepData, { strict: false });
@@ -162,7 +163,7 @@ router.put(
             return sendResponse(res, 404, `Patient "${id}" not found`);
 
         // Copy over the attributes from the request
-        _.assign(patient, req.body);
+        assign(patient, req.body);
         patient.lastEdited = new Date();
         patient.lastEditedBy = req.user.name;
 
@@ -364,7 +365,7 @@ router.post(
 
         // Filter out request fields that the user cannot write
         const writableFields = await getWritableFields(req.user, stepKey);
-        req.body = _.pick(req.body, writableFields);
+        req.body = pick(req.body, writableFields);
 
         // Find the patient's step data
         let Model;
@@ -458,7 +459,7 @@ const updatePatientStepData = async (patientId: string, StepModel: typeof mongoo
         return newStepDataModel.save();
     }
 
-    patientStepData = _.assign(patientStepData, data);
+    patientStepData = assign(patientStepData, data);
     return patientStepData.save();
 };
 

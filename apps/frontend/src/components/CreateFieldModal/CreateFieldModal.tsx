@@ -13,7 +13,8 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControl from '@mui/material/FormControl'
 import Modal from '@mui/material/Modal'
 import NativeSelect from '@mui/material/NativeSelect'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import clone from 'lodash/clone'
 import React, { ChangeEventHandler, ReactNode, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
 
@@ -65,20 +66,20 @@ const CreateFieldModal = ({
     }
 
     const addOption = () => {
-        const updatedOptions = _.cloneDeep(options)
+        const updatedOptions = cloneDeep(options)
         updatedOptions.push({ EN: '', AR: '' })
         setOptions(updatedOptions)
     }
 
     const updateOptionField = (index: number, val: string, language: Language) => {
-        const updatedOptions = _.cloneDeep(options)
+        const updatedOptions = cloneDeep(options)
         updatedOptions[index][language] = val
         setOptions(updatedOptions)
     }
 
     const moveOption = (currIndex: number, newIndex: number) => {
         if (newIndex >= 0 && newIndex < options.length) {
-            const updatedOptions = _.cloneDeep(options)
+            const updatedOptions = cloneDeep(options)
             const removedChoice = updatedOptions.splice(currIndex, 1)[0]
             updatedOptions.splice(newIndex, 0, removedChoice)
             setOptions(updatedOptions)
@@ -86,7 +87,7 @@ const CreateFieldModal = ({
     }
 
     const deleteOption = (index: number) => {
-        const updatedOptions = _.cloneDeep(options)
+        const updatedOptions = cloneDeep(options)
         updatedOptions.splice(index, 1)
         setOptions(updatedOptions)
     }
@@ -120,7 +121,7 @@ const CreateFieldModal = ({
     }
 
     const updateDisplayName = (value: string, language: Language) => {
-        const updatedDisplayName = _.clone(displayName)
+        const updatedDisplayName = clone(displayName)
         updatedDisplayName[language] = value
 
         setDisplayName(updatedDisplayName)

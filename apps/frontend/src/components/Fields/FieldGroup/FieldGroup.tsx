@@ -3,7 +3,7 @@
 import '../Fields.scss'
 
 import { Field } from '@3dp4me/types'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import swal from 'sweetalert'
 
 import { useTranslations } from '../../../hooks/useTranslations'
@@ -75,7 +75,7 @@ const FieldGroup = (props: FieldGroupProps) => {
     }
 
     const doRemoveGroup = (groupNumber: number) => {
-        const newData = _.cloneDeep(props.value)
+        const newData = cloneDeep(props.value)
         newData.splice(groupNumber, 1)
         props.handleSimpleUpdate(props.metadata.key, newData)
     }
