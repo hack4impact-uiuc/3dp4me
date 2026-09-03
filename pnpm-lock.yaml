@@ -271,6 +271,9 @@ importers:
       '@babel/preset-react':
         specifier: ^7.23.3
         version: 7.29.7(@babel/core@7.29.7)
+      '@types/google.maps':
+        specifier: ^3.66.0
+        version: 3.66.0
       '@types/jest':
         specifier: ^29.5.8
         version: 29.5.14
@@ -2731,6 +2734,9 @@ packages:
 
   '@types/google.maps@3.65.5':
     resolution: {integrity: sha512-oR9Hq/WaKGzIguZEwoCuyQ0ofDhCbefmS9RrjLUZ5scMziwTE6xA90drJYt2ZsyUCYmCqnxQcDpfGqeRE/Zgog==}
+
+  '@types/google.maps@3.66.0':
+    resolution: {integrity: sha512-HOvl5nXOBazgI9rgG79mWm4sNuA08ig+AMvdCQ/rEAzXJQFfKj/LqjaP+fHLM5JFa68+VKiN15NWFBos8/Kr9w==}
 
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
@@ -12625,6 +12631,8 @@ snapshots:
 
   '@types/google.maps@3.65.5': {}
 
+  '@types/google.maps@3.66.0': {}
+
   '@types/graceful-fs@4.1.9':
     dependencies:
       '@types/node': 20.19.43
@@ -13071,13 +13079,13 @@ snapshots:
 
   '@webpack-cli/configtest@2.1.1(webpack-cli@5.1.4)(webpack@5.109.2)':
     dependencies:
-      webpack: 5.109.2(webpack-cli@5.1.4)
-      webpack-cli: 5.1.4(webpack@5.109.2)
+      webpack: 5.109.2(postcss@8.5.26)(webpack-cli@5.1.4)
+      webpack-cli: 5.1.4(webpack-dev-server@4.15.2)(webpack@5.109.2)
 
   '@webpack-cli/info@2.0.2(webpack-cli@5.1.4)(webpack@5.109.2)':
     dependencies:
-      webpack: 5.109.2(webpack-cli@5.1.4)
-      webpack-cli: 5.1.4(webpack@5.109.2)
+      webpack: 5.109.2(postcss@8.5.26)(webpack-cli@5.1.4)
+      webpack-cli: 5.1.4(webpack-dev-server@4.15.2)(webpack@5.109.2)
 
   '@webpack-cli/serve@2.0.5(webpack-cli@5.1.4)(webpack-dev-server@4.15.2)(webpack@5.109.2)':
     dependencies:
@@ -19419,7 +19427,7 @@ snapshots:
       picomatch: 4.0.5
       source-map: 0.7.6
       typescript: 5.9.3
-      webpack: 5.109.2(webpack-cli@5.1.4)
+      webpack: 5.109.2(postcss@8.5.26)(webpack-cli@5.1.4)
     optionalDependencies:
       loader-utils: 3.3.1
 

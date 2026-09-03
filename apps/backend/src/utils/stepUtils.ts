@@ -1,6 +1,6 @@
 import { Field, ReservedStep, Step } from '@3dp4me/types'
-import cloneDeep from 'lodash/cloneDeep'
 import assign from 'lodash/assign'
+import cloneDeep from 'lodash/cloneDeep'
 import { ClientSession, HydratedDocument, PipelineStage } from 'mongoose'
 
 import { removeAttributesFrom } from '../middleware/requests'
