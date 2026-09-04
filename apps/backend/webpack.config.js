@@ -3,7 +3,10 @@ const nodeExternals = require('webpack-node-externals')
 module.exports = {
     entry: "./src/index.ts",
     target: 'node',
-    externals: [nodeExternals()],
+    // Externalize real npm deps (so native modules like sharp still resolve their
+    // prebuilt binaries at runtime), but keep bundling @3dp4me/* workspace packages —
+    // they're monorepo-internal and the runtime image never ships their build output.
+    externals: [nodeExternals({ allowlist: [/^@3dp4me\//] })],
     module: {
         rules: [
           {
