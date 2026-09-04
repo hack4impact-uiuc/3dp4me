@@ -1,6 +1,9 @@
+const nodeExternals = require('webpack-node-externals')
+
 module.exports = {
     entry: "./src/index.ts",
     target: 'node',
+    externals: [nodeExternals({ allowlist: [/^@3dp4me\//] })],
     module: {
         rules: [
           {
