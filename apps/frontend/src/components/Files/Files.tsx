@@ -16,8 +16,8 @@ export interface FilesProps<T extends string> {
     files: FileModel[]
     fieldKey: T
     handleDownload: (key: T, filename: string) => void
-    handleDelete: (key: T, file: FileModel) => void
-    handleUpload: (key: T, file: File) => void
+    handleDelete: (key: T, file: FileModel) => Promise<void>
+    handleUpload: (key: T, file: File) => Promise<void>
     isDisabled?: boolean
 }
 
