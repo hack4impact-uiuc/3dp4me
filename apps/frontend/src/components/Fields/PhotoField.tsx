@@ -1,12 +1,12 @@
 import 'react-html5-camera-photo/build/css/index.css'
-import 'react-image-gallery/styles/css/image-gallery.css'
+import 'react-image-gallery/styles/image-gallery.css'
 import './PhotoField.scss'
 
 import { File as FileType } from '@3dp4me/types'
 import Modal from '@mui/material/Modal'
 import React, { useEffect, useMemo, useState } from 'react'
 import Camera from 'react-html5-camera-photo'
-import ImageGallery, { ReactImageGalleryItem } from 'react-image-gallery'
+import ImageGallery, { GalleryItem } from 'react-image-gallery'
 import styled from 'styled-components'
 
 import promptInstructionsAR from '../../assets/camera-prompt-instructions-ar.gif'
@@ -54,7 +54,7 @@ const PhotoField = <T extends string>({
     allowMultiplePhotos = true,
     isDisabled = false,
 }: PhotoFieldProps<T>) => {
-    const [images, setImages] = useState<ReactImageGalleryItem[]>([])
+    const [images, setImages] = useState<GalleryItem[]>([])
     const [isOpen, setIsOpen] = useState(false)
     const [showImage, setShowImage] = useState(false)
     const [shouldPromptCameraAccess, setShouldPromptCameraAccess] = useState(false)
@@ -110,8 +110,8 @@ const PhotoField = <T extends string>({
             newPhotoData.map((v) => ({
                 original: v.uri,
                 thumbnail: v.uri,
-                originalWidth: 700,
-                originalHeight: 300,
+                originalWidth: '700',
+                originalHeight: '300',
             }))
         )
     }

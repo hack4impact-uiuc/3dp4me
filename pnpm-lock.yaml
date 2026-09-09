@@ -226,8 +226,8 @@ importers:
         specifier: ^1.5.5
         version: 1.5.11(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-image-gallery:
-        specifier: ^1.2.7
-        version: 1.4.0(react@18.3.1)
+        specifier: ^2.1.2
+        version: 2.1.2(react@18.3.1)
       react-loader-spinner:
         specifier: ^6.1.6
         version: 6.1.6(react-dom@18.3.1(react@18.3.1))(react-native@0.87.0(@babel/core@7.29.7)(@types/react@18.3.31)(react@18.3.1))(react@18.3.1)
@@ -307,9 +307,6 @@ importers:
       '@types/react-html5-camera-photo':
         specifier: ^1.5.3
         version: 1.5.5
-      '@types/react-image-gallery':
-        specifier: ^1.2.4
-        version: 1.2.4
       '@types/react-paginate':
         specifier: ^7.1.4
         version: 7.1.4
@@ -2843,9 +2840,6 @@ packages:
 
   '@types/react-html5-camera-photo@1.5.5':
     resolution: {integrity: sha512-z60xNYy/Xfkb/SIjNw8oT3Z4Ec/kYApSrbgk3K7HDjR2ILWA1onOHvbAw6brLkeYsb5RRKMdfqU1fC4kqy+zuA==}
-
-  '@types/react-image-gallery@1.2.4':
-    resolution: {integrity: sha512-H0xpmT5rlSH0qiTvcUDCPDLRBi3J3Xa4COqaDqGb7ffLFpQoPAxpZdNuKCuThhFI0xJmNnMubZiD6B3kCBHtcw==}
 
   '@types/react-paginate@7.1.4':
     resolution: {integrity: sha512-6fqZvDzRJHubOGl6c7cGFC9ysgQSWYy0Gpus9HjORpydlcXgPnT8x+aKgqwCdtpZrRTwcBz2Q7JWAOYaRrsXGg==}
@@ -7438,8 +7432,8 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  react-image-gallery@1.4.0:
-    resolution: {integrity: sha512-m7xLq7+g6/xh+BhVMAxvRU0132sNcEFglYsVsgthrnItl9VtLE7MuVvVWD9pvzcI+WBP5+p9HvnRwIiyhPkBDg==}
+  react-image-gallery@2.1.2:
+    resolution: {integrity: sha512-H+/elQ75DwdRbGJcAd4LnGDac115YxWp6u4d2O1jThkRVJMkJuQFLPvcnhGu5YFNwqk+tywg0c4D4SuQZ0KvGA==}
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -12739,10 +12733,6 @@ snapshots:
       '@types/react': 18.3.31
 
   '@types/react-html5-camera-photo@1.5.5':
-    dependencies:
-      '@types/react': 18.3.31
-
-  '@types/react-image-gallery@1.2.4':
     dependencies:
       '@types/react': 18.3.31
 
@@ -18158,7 +18148,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  react-image-gallery@1.4.0(react@18.3.1):
+  react-image-gallery@2.1.2(react@18.3.1):
     dependencies:
       react: 18.3.1
 
