@@ -31,8 +31,8 @@ export interface StepFieldProps {
     isDisabled?: boolean
     handleSimpleUpdate?: (key: string, value: any) => void
     handleFileDownload?: (key: string, name: string) => void
-    handleFileUpload?: (key: string, file: File) => void
-    handleFileDelete?: (key: string, file: FileModel) => void
+    handleFileUpload?: (key: string, file: File) => Promise<void>
+    handleFileDelete?: (key: string, file: FileModel) => Promise<void>
 }
 
 const StepField = ({
@@ -46,8 +46,8 @@ const StepField = ({
     isDisabled = true,
     handleSimpleUpdate = () => {},
     handleFileDownload = () => {},
-    handleFileUpload = () => {},
-    handleFileDelete = () => {},
+    handleFileUpload = async () => {},
+    handleFileDelete = async () => {},
 }: StepFieldProps) => {
     const selectedLang = useTranslations()[1]
     const type = fieldType || metadata.fieldType
