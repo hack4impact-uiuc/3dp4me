@@ -1,27 +1,23 @@
 import { AccessLevel, Language, Nullish, TranslatedString } from '@3dp4me/types'
-import type { CognitoIdentityServiceProvider } from 'aws-sdk'
+import type { UserType } from '@aws-sdk/client-cognito-identity-provider'
 
 import { CognitoAttribute } from '../utils/constants'
 
-const getAttr = (user: Nullish<CognitoIdentityServiceProvider.UserType>, atr: string) =>
+const getAttr = (user: Nullish<UserType>, atr: string) =>
     user?.Attributes?.find((attribute) => attribute.Name === atr)?.Value
 
-export const getAccessLevel = (
-    user: Nullish<CognitoIdentityServiceProvider.UserType>
-): AccessLevel => (getAttr(user, CognitoAttribute.Access) as AccessLevel) || AccessLevel.PENDING
+export const getAccessLevel = (user: Nullish<UserType>): AccessLevel =>
+    (getAttr(user, CognitoAttribute.Access) as AccessLevel) || AccessLevel.PENDING
 
-export const getName = (user: Nullish<CognitoIdentityServiceProvider.UserType>) =>
-    getAttr(user, 'name') || getUsername(user)
+export const getName = (user: Nullish<UserType>) => getAttr(user, 'name') || getUsername(user)
 
-export const getEmail = (user: Nullish<CognitoIdentityServiceProvider.UserType>) =>
-    getAttr(user, 'email') || getUsername(user)
+export const getEmail = (user: Nullish<UserType>) => getAttr(user, 'email') || getUsername(user)
 
-export const getUsername = (user: Nullish<CognitoIdentityServiceProvider.UserType>) =>
-    user?.Username || 'Anonymous User'
+export const getUsername = (user: Nullish<UserType>) => user?.Username || 'Anonymous User'
 
-export const getId = (user: Nullish<CognitoIdentityServiceProvider.UserType>) => user?.Username
+export const getId = (user: Nullish<UserType>) => user?.Username
 
-export const getRolesValue = (user: Nullish<CognitoIdentityServiceProvider.UserType>): string[] => {
+export const getRolesValue = (user: Nullish<UserType>): string[] => {
     const info = getAttr(user, CognitoAttribute.Roles)
     return info ? JSON.parse(info) : []
 }
@@ -33,7 +29,7 @@ interface RoleAsOption {
 }
 
 export const getRoles = (
-    user: Nullish<CognitoIdentityServiceProvider.UserType>,
+    user: Nullish<UserType>,
     allRolesData: RoleAsOption[],
     selectedLang: Language
 ) => {

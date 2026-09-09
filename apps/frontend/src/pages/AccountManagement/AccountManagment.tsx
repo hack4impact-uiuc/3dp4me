@@ -1,7 +1,7 @@
 import './AccountManagement.scss'
 
 import { AccessLevel, Nullish, Role } from '@3dp4me/types'
-import type { CognitoIdentityServiceProvider } from 'aws-sdk'
+import type { UserType } from '@aws-sdk/client-cognito-identity-provider'
 import cloneDeep from 'lodash/cloneDeep'
 import React, { useEffect, useMemo, useState } from 'react'
 import { trackPromise } from 'react-promise-tracker'
@@ -56,7 +56,7 @@ export interface UserForTable {
  */
 const AccountManagement = () => {
     const [translations, selectedLang] = useTranslations()
-    const [userMetaData, setUserMetaData] = useState<CognitoIdentityServiceProvider.UserType[]>([])
+    const [userMetaData, setUserMetaData] = useState<UserType[]>([])
     const [roles, setRoles] = useState<Role[]>([])
 
     const [selectedUser, setSelectedUser] =
@@ -127,9 +127,7 @@ const AccountManagement = () => {
     /**
      * Formats a user to a format useable by the EditRoleModal
      */
-    const userToRoleModalFormat = (
-        user: Nullish<CognitoIdentityServiceProvider.UserType>
-    ): RoleModalUser => ({
+    const userToRoleModalFormat = (user: Nullish<UserType>): RoleModalUser => ({
         accessLevel: getAccessLevel(user),
         userId: getId(user),
         userName: getName(user),
@@ -140,7 +138,7 @@ const AccountManagement = () => {
     /**
      * Formats the users response to be useable by the table
      */
-    const usersToTableFormat = (users: CognitoIdentityServiceProvider.UserType[]): UserForTable[] =>
+    const usersToTableFormat = (users: UserType[]): UserForTable[] =>
         users.map((user) => ({
             Username: getUsername(user),
             Name: getName(user),

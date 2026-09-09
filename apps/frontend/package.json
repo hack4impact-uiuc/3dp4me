@@ -53,6 +53,7 @@
     "use-query-params": "^1.2.3"
   },
   "devDependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.496.0",
     "@babel/core": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
     "@babel/preset-react": "^7.23.3",
@@ -69,7 +70,6 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/react-signature-canvas": "^1.0.5",
     "@types/signature_pad": "^2.3.6",
-    "aws-sdk": "^2.1692.0",
     "babel-loader": "^9.1.3",
     "copy-webpack-plugin": "^11.0.0",
     "cross-env": "^7.0.3",
