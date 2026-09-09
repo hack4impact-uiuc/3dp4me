@@ -4,10 +4,11 @@ import './PhotoField.scss'
 
 import { File as FileType } from '@3dp4me/types'
 import Modal from '@mui/material/Modal'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Camera from 'react-html5-camera-photo'
-import ImageGallery, { GalleryItem } from 'react-image-gallery'
+import ImageGallery, { GalleryItem, ImageGalleryRef } from 'react-image-gallery'
 import styled from 'styled-components'
+import swal from 'sweetalert'
 
 import promptInstructionsAR from '../../assets/camera-prompt-instructions-ar.gif'
 import promptInstructions from '../../assets/camera-prompt-instructions-en.gif'
@@ -39,6 +40,7 @@ export interface PhotoFieldProps<T extends string> {
     fieldPathPrefix: string
     fieldId: T
     handleFileUpload: (field: T, file: File) => void
+    handleFileDelete?: (field: T, file: FileType) => Promise<void>
     isDisabled?: boolean
     allowMultiplePhotos?: boolean
 }
@@ -50,11 +52,13 @@ const PhotoField = <T extends string>({
     stepKey,
     fieldId,
     handleFileUpload,
+    handleFileDelete,
     fieldPathPrefix,
     allowMultiplePhotos = true,
     isDisabled = false,
 }: PhotoFieldProps<T>) => {
     const [images, setImages] = useState<GalleryItem[]>([])
+    const imageGalleryRef = useRef<ImageGalleryRef>(null)
     const [isOpen, setIsOpen] = useState(false)
     const [showImage, setShowImage] = useState(false)
     const [shouldPromptCameraAccess, setShouldPromptCameraAccess] = useState(false)
@@ -154,6 +158,34 @@ const PhotoField = <T extends string>({
         setUri('')
     }
 
+    const getCurrentlyDisplayedFile = (): FileType | undefined => {
+        if (value.length === 0) return undefined
+        if (!allowMultiplePhotos) return value[value.length - 1]
+
+        const currentIndex = imageGalleryRef.current?.getCurrentIndex() ?? 0
+        return value[currentIndex]
+    }
+
+    const handleDeletePhoto = () => {
+        const fileToDelete = getCurrentlyDisplayedFile()
+        if (!fileToDelete || !handleFileDelete) return
+
+        swal({
+            title: translations.components.photo.deleteTitle,
+            text: translations.components.photo.deleteWarning,
+            icon: 'warning',
+            buttons: [
+                translations.components.button.discard.cancelButton,
+                translations.components.button.discard.confirmButton,
+            ],
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                handleFileDelete(fieldId, fileToDelete)
+            }
+        })
+    }
+
     const renderPhotoModal = () => {
         if (showImage) {
             return <img src={dataUri} alt="User Upload" />
@@ -202,6 +234,7 @@ const PhotoField = <T extends string>({
         if (allowMultiplePhotos) {
             return (
                 <ImageGallery
+                    ref={imageGalleryRef}
                     items={images}
                     showBullets={images.length <= NUMBER_OF_PHOTOS_FOR_BULLET_VIEW}
                 />
@@ -252,6 +285,18 @@ const PhotoField = <T extends string>({
                 >
                     {translations.components.button.upload}
                 </FileUploadButton>
+                {handleFileDelete && (
+                    <>
+                        <Space />
+                        <StyledButton
+                            onClick={handleDeletePhoto}
+                            danger
+                            isDisabled={isDisabled || images.length === 0}
+                        >
+                            {translations.components.button.deletePhoto}
+                        </StyledButton>
+                    </>
+                )}
             </ButtonWrapper>
             <br />
             <Modal open={isOpen} onClose={handleOnClose} className="take-photo-modal">
