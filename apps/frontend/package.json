@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@3dp4me/types": "workspace:*",
-    "@aws-sdk/util-utf8-browser": "^3.259.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^6.4.5",
