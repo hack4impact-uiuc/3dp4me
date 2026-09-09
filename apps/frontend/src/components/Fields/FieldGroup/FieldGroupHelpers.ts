@@ -4,8 +4,8 @@ export interface FieldGroupListTableProps {
     isDisabled: boolean
     onSimpleUpdate: (field: string, value: any, idx: number) => void
     onFileDownload: (field: string, value: any, idx: number) => void
-    onFileUpload: (field: string, value: any, idx: number) => void
-    onFileDelete: (field: string, value: any, idx: number) => void
+    onFileUpload: (field: string, value: any, idx: number) => Promise<void>
+    onFileDelete: (field: string, value: any, idx: number) => Promise<void>
     onRemoveGroup: (idx: number) => void
     onAddGroup: () => void
     stepKey?: string
