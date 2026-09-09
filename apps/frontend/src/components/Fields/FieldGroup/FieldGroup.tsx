@@ -25,8 +25,8 @@ export interface FieldGroupProps {
     isDisabled: boolean
     handleSimpleUpdate: (field: string, value: any) => void
     handleFileDownload: (field: string, value: any) => void
-    handleFileUpload: (field: string, value: any) => void
-    handleFileDelete: (field: string, value: any) => void
+    handleFileUpload: (field: string, value: any) => Promise<void>
+    handleFileDelete: (field: string, value: any) => Promise<void>
     stepKey?: string
     fieldPathPrefix?: string
     patientId?: string
@@ -46,7 +46,7 @@ const FieldGroup = (props: FieldGroupProps) => {
     }
 
     const onFileUpload = (k: string, v: any, i: number) => {
-        props.handleFileUpload(getCompleteSubFieldKey(props.metadata, i, k), v)
+        return props.handleFileUpload(getCompleteSubFieldKey(props.metadata, i, k), v)
     }
 
     const onFileDownload = (k: string, v: any, i: number) => {
@@ -54,7 +54,7 @@ const FieldGroup = (props: FieldGroupProps) => {
     }
 
     const onFileDelete = (k: string, v: any, i: number) => {
-        props.handleFileDelete(getCompleteSubFieldKey(props.metadata, i, k), v)
+        return props.handleFileDelete(getCompleteSubFieldKey(props.metadata, i, k), v)
     }
 
     const onRemoveGroup = (groupNumber: number) => {
