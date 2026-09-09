@@ -72,7 +72,7 @@ const AppContent = ({ username, userEmail }: AppContentProps) => {
             const userInfo = await getCurrentUserInfo()
             if (!userInfo?.attributes) return
 
-            const language = userInfo.attributes[CognitoAttribute.Language]
+            const language = userInfo.attributes[CognitoAttribute.Language] ?? ''
             if (isLanguageValid(language)) {
                 dispatch({
                     type: ReducerActionType.SET_LANGUAGE,

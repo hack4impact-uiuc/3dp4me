@@ -2,7 +2,8 @@ import 'react-loading-skeleton/dist/skeleton.css'
 
 import { QueryClientProvider } from '@tanstack/react-query'
 import { APIProvider } from '@vis.gl/react-google-maps'
-import { Amplify, Auth } from 'aws-amplify'
+import { Amplify } from 'aws-amplify'
+import { getCurrentUser } from 'aws-amplify/auth'
 import { useEffect, useState } from 'react'
 
 import AppContent from './AppContent'
@@ -27,8 +28,8 @@ function App() {
     useEffect(() => {
         const getUserInfo = async () => {
             const userInfo = await getCurrentUserInfo()
-            setUsername(userInfo?.attributes?.name)
-            setUserEmail(userInfo?.attributes?.email)
+            setUsername(userInfo?.attributes?.name ?? '')
+            setUserEmail(userInfo?.attributes?.email ?? '')
         }
 
         updateAuthLevel()
@@ -41,7 +42,7 @@ function App() {
      */
     const updateAuthLevel = async () => {
         try {
-            await Auth.currentAuthenticatedUser()
+            await getCurrentUser()
             setAuthLevel(AUTHENTICATED)
         } catch (error) {
             setAuthLevel(UNAUTHENTICATED)

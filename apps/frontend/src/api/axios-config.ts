@@ -17,7 +17,7 @@ const instance = axios.create({
  */
 const updateCachedJWTToken = async () => {
     const session = await getCurrentSession()
-    cachedJWTToken = session.getAccessToken().getJwtToken()
+    cachedJWTToken = session.tokens?.accessToken?.toString()
 }
 
 /**

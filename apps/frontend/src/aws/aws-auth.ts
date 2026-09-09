@@ -1,11 +1,11 @@
-import { Hub } from 'aws-amplify'
+import { Hub } from 'aws-amplify/utils'
 
 export const AUTHENTICATED = 'AUTH'
 export const UNAUTHENTICATED = 'UNAUTH'
 export const UNDEFINED_AUTH = 'UNDEFINED'
 
-const EVENT_SIGN_IN = 'signIn'
-const EVENT_SIGN_OUT = 'signOut'
+const EVENT_SIGN_IN = 'signedIn'
+const EVENT_SIGN_OUT = 'signedOut'
 
 type AuthListener = (
     state: typeof AUTHENTICATED | typeof UNAUTHENTICATED | typeof UNDEFINED_AUTH

@@ -1,6 +1,6 @@
 import './Login.scss'
 
-import { Auth } from 'aws-amplify'
+import { signInWithRedirect } from 'aws-amplify/auth'
 import React from 'react'
 
 import Logo from '../../assets/3dp4me_logo.png'
@@ -21,8 +21,8 @@ const Login = () => (
                     className="google-button"
                     type="submit"
                     onClick={() =>
-                        Auth.federatedSignIn({
-                            provider: 'Google' as any,
+                        signInWithRedirect({
+                            provider: 'Google',
                         })
                     }
                 >

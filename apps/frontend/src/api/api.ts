@@ -1,5 +1,5 @@
 import { BasePatient, Nullish, OmitDeep, Patient, Role, Step } from '@3dp4me/types'
-import { CognitoIdentityServiceProvider } from 'aws-sdk'
+import type { ListUsersCommandOutput } from '@aws-sdk/client-cognito-identity-provider'
 import fileDownload from 'js-file-download'
 
 import instance from './axios-config'
@@ -280,7 +280,7 @@ export const removeUserRole = async (username: string, roleName: string) => {
 
 export const getUsersByPageNumber = async (
     nPerPage: number
-): Promise<ApiResponse<CognitoIdentityServiceProvider.ListUsersResponse>> => {
+): Promise<ApiResponse<ListUsersCommandOutput>> => {
     const requestString = `/users?nPerPage=${nPerPage}`
 
     const res = await instance.get(requestString)
@@ -293,7 +293,7 @@ export const getUsersByPageNumber = async (
 export const getUsersByPageNumberAndToken = async (
     token: string,
     nPerPage: number
-): Promise<ApiResponse<CognitoIdentityServiceProvider.ListUsersResponse>> => {
+): Promise<ApiResponse<ListUsersCommandOutput>> => {
     const encodedToken = encodeURIComponent(token)
     const requestString = `/users?token=${encodedToken}&nPerPage=${nPerPage}`
 

@@ -1,25 +1,31 @@
 import { Language } from '@3dp4me/types'
-import { Auth } from 'aws-amplify'
+import {
+    fetchAuthSession,
+    fetchUserAttributes,
+    signOut as amplifySignOut,
+    updateUserAttributes,
+} from 'aws-amplify/auth'
 
 import { CognitoAttribute } from '../utils/constants'
 
 // Used as a placeholder while fetching real data
-const DEFAULT_USER = {
-    attributes: {
-        email: 'noemail',
-        sub: '0',
-        username: 'Guest',
-    },
+const DEFAULT_USER_ATTRIBUTES: Record<string, string | undefined> = {
+    email: 'noemail',
+    sub: '0',
 }
 
 /**
  * Returns some info about the current signed in user
  */
-export async function getCurrentUserInfo() {
-    let userInfo = await Auth.currentUserInfo()
-    if (userInfo == null) userInfo = DEFAULT_USER
-
-    return userInfo
+export async function getCurrentUserInfo(): Promise<{
+    attributes: Record<string, string | undefined>
+}> {
+    try {
+        const attributes = await fetchUserAttributes()
+        return { attributes }
+    } catch (error) {
+        return { attributes: DEFAULT_USER_ATTRIBUTES }
+    }
 }
 
 /**
@@ -27,18 +33,19 @@ export async function getCurrentUserInfo() {
  * @param {String} langKey The user's preferred language. Either "EN" or "AR".
  */
 export async function saveLanguagePreference(langKey: Language) {
-    const user = await Auth.currentAuthenticatedUser()
-    Auth.updateUserAttributes(user, {
-        [CognitoAttribute.Language]: langKey,
+    await updateUserAttributes({
+        userAttributes: {
+            [CognitoAttribute.Language]: langKey,
+        },
     })
 }
 
 export async function signOut() {
-    Auth.signOut()
+    amplifySignOut()
         // .then()
         .catch((error) => console.error(error))
 }
 
 export async function getCurrentSession() {
-    return Auth.currentSession()
+    return fetchAuthSession()
 }
