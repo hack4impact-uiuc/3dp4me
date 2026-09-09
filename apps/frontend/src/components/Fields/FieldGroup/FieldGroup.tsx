@@ -45,17 +45,15 @@ const FieldGroup = (props: FieldGroupProps) => {
         props.handleSimpleUpdate(getCompleteSubFieldKey(props.metadata, i, k), v)
     }
 
-    const onFileUpload = (k: string, v: any, i: number) => {
-        return props.handleFileUpload(getCompleteSubFieldKey(props.metadata, i, k), v)
-    }
+    const onFileUpload = (k: string, v: any, i: number) =>
+        props.handleFileUpload(getCompleteSubFieldKey(props.metadata, i, k), v)
 
     const onFileDownload = (k: string, v: any, i: number) => {
         props.handleFileDownload(getCompleteSubFieldKey(props.metadata, i, k), v)
     }
 
-    const onFileDelete = (k: string, v: any, i: number) => {
-        return props.handleFileDelete(getCompleteSubFieldKey(props.metadata, i, k), v)
-    }
+    const onFileDelete = (k: string, v: any, i: number) =>
+        props.handleFileDelete(getCompleteSubFieldKey(props.metadata, i, k), v)
 
     const onRemoveGroup = (groupNumber: number) => {
         if (props.isDisabled) return

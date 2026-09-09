@@ -208,6 +208,7 @@ const StepField = ({
                 return (
                     <PhotoField
                         handleFileUpload={handleFileUpload}
+                        handleFileDelete={handleFileDelete}
                         patientId={patientId}
                         stepKey={stepKey}
                         fieldPathPrefix={fieldPathPrefix}
