@@ -99,8 +99,17 @@ const Files = <T extends string>({
                     id={`upload-file-input-${title}`}
                     className="upload-file-input"
                     type="file"
-                    onChange={(e) => {
-                        if (e.target.files) handleUpload(fieldKey, e.target.files[0])
+                    multiple
+                    onChange={async (e) => {
+                        const { files: selectedFiles } = e.target
+                        if (!selectedFiles || selectedFiles.length === 0) return
+
+                        // Need to upload sequentially to avoid duplicate key violations
+                        await Array.from(selectedFiles).reduce(
+                            (previousUpload, file) =>
+                                previousUpload.then(() => handleUpload(fieldKey, file)),
+                            Promise.resolve()
+                        )
                     }}
                 />
                 <Button className="file-button" component="span">

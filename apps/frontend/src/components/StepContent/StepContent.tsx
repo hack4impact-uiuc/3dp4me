@@ -95,7 +95,7 @@ const StepContent = ({
     }
 
     const handleFileUpload = async (fieldKey: string, file: File) => {
-        errorWrap(async () => {
+        await errorWrap(async () => {
             const res = await trackPromise(
                 uploadFile(patientId, metaData.key, fieldKey, file.name, file)
             )
@@ -106,13 +106,13 @@ const StepContent = ({
                 uploadDate: res.result.uploadDate,
             }
 
-            const oldFiles = resolveMixedObjPath(updatedData, fieldKey)
-            let files = cloneDeep(oldFiles || [])
-
-            if (files) files = files.concat(newFile)
-            else files = [newFile]
-
-            handleSimpleUpdate(fieldKey, files)
+            setUpdatedData((data) => {
+                const dataCopy = cloneDeep(data)
+                const oldFiles = resolveMixedObjPath(dataCopy, fieldKey)
+                const files = (oldFiles ? cloneDeep(oldFiles) : []).concat(newFile)
+                set(dataCopy, fieldKey, files)
+                return dataCopy
+            })
         })
     }
 
