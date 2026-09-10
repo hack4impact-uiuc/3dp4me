@@ -16,7 +16,7 @@ import { useTranslations } from '../../hooks/useTranslations'
 import {
     LANGUAGES,
     NUMBER_OF_PHOTOS_FOR_BULLET_VIEW,
-    PERMISSION_CONSTRAINTS,
+    VIDEO_PERMISSION_CONSTRAINTS,
     PERMISSION_STATUS_DENIED,
 } from '../../utils/constants'
 import { convertPhotosToURI, dataURItoBlob } from '../../utils/photoManipulation'
@@ -87,7 +87,7 @@ const PhotoField = <T extends string>({
 
     useEffect(() => {
         const updatePermissionStatus = async () => {
-            await getMedia(PERMISSION_CONSTRAINTS)
+            await getMedia(VIDEO_PERMISSION_CONSTRAINTS)
             if (navigator.permissions && navigator.permissions.query) {
                 const permissionStatus = await navigator.permissions.query({
                     name: 'camera' as any,
@@ -100,8 +100,9 @@ const PhotoField = <T extends string>({
 
     const getMedia = async (constraints: MediaStreamConstraints) => {
         try {
+            const stream = await navigator.mediaDevices.getUserMedia(constraints)
+            stream.getTracks().forEach((track) => track.stop())
             setShouldPromptCameraAccess(false)
-            await navigator.mediaDevices.getUserMedia(constraints)
         } catch (err) {
             setShouldPromptCameraAccess(true)
         }

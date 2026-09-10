@@ -18,7 +18,7 @@ import { LANGUAGES } from '../../utils/constants';
 import promptInstructionsAR from '../../assets/audio-prompt-instructions-ar.gif';
 import promptInstructionsEN from '../../assets/audio-prompt-instructions-en.gif';
 import {
-    PERMISSION_CONSTRAINTS,
+    AUDIO_PERMISSION_CONSTRAINTS,
     PERMISSION_STATUS_DENIED,
 } from '../../utils/constants';
 import swal from 'sweetalert';
@@ -73,7 +73,7 @@ class AudioRecorder extends React.Component<AudioRecorderProps, AudioRecorderSta
 
     componentWillMount() {
         const updatePermissionStatus = async () => {
-            this.getMedia({ PERMISSION_CONSTRAINTS });
+            this.getMedia(AUDIO_PERMISSION_CONSTRAINTS);
             if (navigator.permissions && navigator.permissions.query) {
                 const permissionStatus = await navigator.permissions.query({
                     name: 'microphone',
@@ -86,8 +86,9 @@ class AudioRecorder extends React.Component<AudioRecorderProps, AudioRecorderSta
 
     getMedia = async (constraints: MediaStreamConstraints) => {
         try {
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            stream.getTracks().forEach((track) => track.stop());
             this.setState({ isBlocked: false });
-            await navigator.mediaDevices.getUserMedia(constraints);
         } catch (err) {
             this.setState({ isBlocked: true });
         }
@@ -228,8 +229,9 @@ class AudioRecorder extends React.Component<AudioRecorderProps, AudioRecorderSta
         }
 
         navigator.mediaDevices
-            .getUserMedia(PERMISSION_CONSTRAINTS)
+            .getUserMedia(AUDIO_PERMISSION_CONSTRAINTS)
             .then((stream) => {
+                stream.getTracks().forEach((track) => track.stop());
                 this.setState({ isBlocked: false });
             })
             .catch((err) => {
