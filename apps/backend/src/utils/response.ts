@@ -89,6 +89,10 @@ const filterPatientsBySearchQuery = <T extends Record<string, any>>(
  * @param {JSON} findParameters Parameters for db.collection.find().
  * @returns {Object} data Documents recieved from db.collection.find()
  */
+// Fields that can safely be sorted on. These are all top-level fields
+// that live directly on the Patient collection.
+const ALLOWED_PATIENT_SORT_FIELDS = ['firstName', 'familyName', 'orderId', 'lastEdited', 'status']
+
 // eslint-disable-next-line max-len
 export const getPatients = async (
     req: AuthenticatedRequest,
@@ -99,11 +103,21 @@ export const getPatients = async (
         pageNumber = 1,
         nPerPage = DEFAULT_PATIENTS_ON_GET_REQUEST,
         searchQuery = '',
+        sortBy = 'lastEdited',
+        sortOrder = 'desc',
     } = req.query
     let patientParams = findParameters
     const intPageNumber = queryParamToNum(pageNumber)
     const intPatientsPerPage = queryParamToNum(nPerPage)
     const lowerCaseSearchQuery = queryParamToString(searchQuery).toLowerCase()
+
+    // Fall back to the default sort if an unrecognized field is requested,
+    // so a bad/unexpected query param can't be used to sort by arbitrary fields.
+    const sortByField = ALLOWED_PATIENT_SORT_FIELDS.includes(queryParamToString(sortBy))
+        ? queryParamToString(sortBy)
+        : 'lastEdited'
+    const sortDirection: 1 | -1 = queryParamToString(sortOrder) === 'asc' ? 1 : -1
+    const sortParams = { [sortByField]: sortDirection }
 
     // Calculates the number of patients to skip based on the request paramaters
     const documentsToSkip = intPageNumber > 0 ? (intPageNumber - 1) * intPatientsPerPage : 0
@@ -125,7 +139,7 @@ export const getPatients = async (
     if (lowerCaseSearchQuery === '') {
         const patientCount = await getPatientsCount(req.user)
         const data = await PatientModel.find(patientParams)
-            .sort({ lastEdited: -1 })
+            .sort(sortParams)
             .skip(documentsToSkip)
             .limit(intPatientsPerPage)
 
@@ -135,7 +149,7 @@ export const getPatients = async (
         }
     }
 
-    const data = await PatientModel.find(patientParams).sort({ lastEdited: -1 })
+    const data = await PatientModel.find(patientParams).sort(sortParams)
 
     // Filter by search
     const filteredData = filterPatientsBySearchQuery(data, lowerCaseSearchQuery)
