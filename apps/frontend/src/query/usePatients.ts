@@ -13,18 +13,26 @@ export interface UsePatientsOptions {
     page: number
     limit: number
     query: string
+    sortBy?: string
+    sortOrder?: 'asc' | 'desc'
 }
 
-const getPatientsQueryKey = ({ stepKey, page, limit, query }: UsePatientsOptions) => [
+const getPatientsQueryKey = ({ stepKey, page, limit, query, sortBy, sortOrder }: UsePatientsOptions) => [
     QueryKeys.Patients,
-    `${page}-${limit}-${query}$${stepKey}`,
+    `${page}-${limit}-${query}-${sortBy}-${sortOrder}$${stepKey}`,
 ]
 
 const getPatientsQuery = (opts: UsePatientsOptions) => ({
     queryKey: getPatientsQueryKey(opts),
     queryFn: async () => {
         if (opts.stepKey === undefined) {
-            const res = await getPatientsByPageNumberAndSearch(opts.page, opts.limit, opts.query)
+            const res = await getPatientsByPageNumberAndSearch(
+                opts.page,
+                opts.limit,
+                opts.query,
+                opts.sortBy,
+                opts.sortOrder
+            )
             return res.result
         }
 
@@ -34,7 +42,9 @@ const getPatientsQuery = (opts: UsePatientsOptions) => ({
             opts.stepKey,
             opts.page,
             opts.limit,
-            opts.query
+            opts.query,
+            opts.sortBy,
+            opts.sortOrder
         )
         return res.result
     },
