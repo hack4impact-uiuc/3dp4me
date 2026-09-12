@@ -26,9 +26,13 @@ export const getPatientsCount = async (): Promise<ApiResponse<number>> => {
 export const getPatientsByPageNumberAndSearch = async (
     pageNumber: number,
     nPerPage: number,
-    searchQuery = ''
+    searchQuery = '',
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc'
 ): Promise<ApiResponse<Paginated<Patient[]>>> => {
-    const requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`
+    let requestString = `/patients?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`
+    if (sortBy) requestString += `&sortBy=${sortBy}&sortOrder=${sortOrder ?? 'asc'}`
+
     const res = await instance.get(requestString)
     if (!res?.data?.success) throw new Error(res?.data?.message)
 
@@ -39,9 +43,13 @@ export const getPatientsByStageAndPageNumberAndSearch = async (
     stage: string,
     pageNumber: number,
     nPerPage: number,
-    searchQuery = ''
+    searchQuery = '',
+    sortBy?: string,
+    sortOrder?: 'asc' | 'desc'
 ): Promise<ApiResponse<Paginated<Patient[]>>> => {
-    const requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`
+    let requestString = `/stages/${stage}?pageNumber=${pageNumber}&nPerPage=${nPerPage}&searchQuery=${searchQuery}`
+    if (sortBy) requestString += `&sortBy=${sortBy}&sortOrder=${sortOrder ?? 'asc'}`
+
     const res = await instance.get(requestString)
     if (!res?.data?.success) throw new Error(res?.data?.message)
 
