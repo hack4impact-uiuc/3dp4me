@@ -35,8 +35,11 @@ services:
 
   nginx:
     build: ./nginx
+    volumes:
+      - ./certs:/etc/nginx/certs:ro
     ports:
-      - 8080:80
+      - 80:80
+      - 443:443
     restart: always
     depends_on:
       - prosthetics_web_app
