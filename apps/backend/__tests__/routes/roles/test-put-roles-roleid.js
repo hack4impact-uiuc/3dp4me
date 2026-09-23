@@ -88,7 +88,7 @@ describe('PUT /roles/:roleid', () => {
 
     const getRoleFromDB = async (roleId) => {
         const result = await models.Role.findOne({
-            _id: mongoose.Types.ObjectId(roleId),
+            _id: new mongoose.Types.ObjectId(roleId),
         });
         return result.toObject();
     };

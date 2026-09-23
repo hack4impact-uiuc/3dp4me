@@ -120,7 +120,7 @@ describe('Test authentication ', () => {
 
         let updatedData = await mongoose
             .model(STEP_KEY)
-            .findOne({ _id: mongoose.Types.ObjectId(patientID) });
+            .findOne({ _id: new mongoose.Types.ObjectId(patientID) });
         updatedData = updatedData.toObject();
         updatedData._id = updatedData._id.toString();
 
