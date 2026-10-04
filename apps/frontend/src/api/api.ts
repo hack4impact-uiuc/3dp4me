@@ -26,6 +26,7 @@ export const getPatientsCount = async (): Promise<ApiResponse<number>> => {
 export const getPatientsByPageNumberAndSearch = async (
     pageNumber: number,
     nPerPage: number,
+    // eslint-disable-next-line default-param-last
     searchQuery = '',
     sortBy?: string,
     sortOrder?: 'asc' | 'desc'
@@ -43,6 +44,7 @@ export const getPatientsByStageAndPageNumberAndSearch = async (
     stage: string,
     pageNumber: number,
     nPerPage: number,
+    // eslint-disable-next-line default-param-last
     searchQuery = '',
     sortBy?: string,
     sortOrder?: 'asc' | 'desc'

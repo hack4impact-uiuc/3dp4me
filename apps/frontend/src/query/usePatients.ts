@@ -17,7 +17,14 @@ export interface UsePatientsOptions {
     sortOrder?: 'asc' | 'desc'
 }
 
-const getPatientsQueryKey = ({ stepKey, page, limit, query, sortBy, sortOrder }: UsePatientsOptions) => [
+const getPatientsQueryKey = ({
+    stepKey,
+    page,
+    limit,
+    query,
+    sortBy,
+    sortOrder,
+}: UsePatientsOptions) => [
     QueryKeys.Patients,
     `${page}-${limit}-${query}-${sortBy}-${sortOrder}$${stepKey}`,
 ]
