@@ -3217,6 +3217,9 @@ packages:
   binary@0.3.0:
     resolution: {integrity: sha512-D4H1y5KYwpJgK8wk1Cue5LLPgmwHKYSChkbspQg5JtVuR5ulGckxfR62H3AE9UDkdMC8yyXlqYihuz3Aqg2XZg==}
 
+  bl@2.2.1:
+    resolution: {integrity: sha512-6Pesp1w0DEX1N550i/uGV/TqucVL4AM/pgThFSN/Qq9si1/DF9aIHs1BxD8V/QU0HoeHO6cQRTAuYnLPKq1e4g==}
+
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
 
@@ -11947,6 +11950,16 @@ snapshots:
 
   async-function@1.0.0: {}
 
+  async-limiter@1.0.1: {}
+
+  async-mutex@0.3.2:
+    dependencies:
+      tslib: 2.8.1
+
+  async@2.6.4:
+    dependencies:
+      lodash: 4.18.1
+
   async@3.2.6: {}
 
   asynckit@0.4.0: {}
@@ -12180,6 +12193,11 @@ snapshots:
     dependencies:
       buffers: 0.1.1
       chainsaw: 0.1.0
+
+  bl@2.2.1:
+    dependencies:
+      readable-stream: 2.3.8
+      safe-buffer: 5.2.1
 
   bl@4.1.0:
     dependencies:
@@ -12914,6 +12932,8 @@ snapshots:
   dotenv@17.4.2: {}
 
   dotenv@8.6.0: {}
+
+  dotty@0.1.2: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -16666,6 +16686,8 @@ snapshots:
       htmlparser2: 6.1.0
       lodash: 4.18.1
       strip-ansi: 6.0.1
+
+  replace-ext@1.0.1: {}
 
   require-directory@2.1.1: {}
 

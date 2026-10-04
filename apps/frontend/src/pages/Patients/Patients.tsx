@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import PaginateBar from '../../components/PaginateBar/PaginateBar'
 import PatientTable from '../../components/PatientTable/PatientTable'
+import { usePatientSort } from '../../hooks/usePatientSort'
 import { useTranslations } from '../../hooks/useTranslations'
 import { useInvalidatePatients, usePatients } from '../../query/usePatients'
 import {
@@ -23,11 +24,15 @@ const Patients = () => {
     // Words to filter out patients by
     const [searchQuery, setSearchQuery] = useState('')
 
+    const { sort, sortBy, sortOrder } = usePatientSort(() => setSelectedPageNumber(1))
+
     const invalidatePatients = useInvalidatePatients()
     const { data: patients, isLoading } = usePatients({
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
         query: searchQuery,
+        sortBy,
+        sortOrder,
     })
 
     const allPatients = patients?.data || []
@@ -65,6 +70,7 @@ const Patients = () => {
                     initialSearchQuery={searchQuery}
                     isLoading={isLoading}
                     stepKey={''}
+                    sort={sort}
                 />
 
                 <PaginateBar

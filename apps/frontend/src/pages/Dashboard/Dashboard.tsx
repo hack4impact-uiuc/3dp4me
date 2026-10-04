@@ -11,6 +11,7 @@ import PaginateBar from '../../components/PaginateBar/PaginateBar'
 import PatientTable from '../../components/PatientTable/PatientTable'
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons'
 import { useSetError } from '../../hooks/uesSetError'
+import { usePatientSort } from '../../hooks/usePatientSort'
 import { useTranslations } from '../../hooks/useTranslations'
 import { useInvalidatePatients, usePatients } from '../../query/usePatients'
 import { useSteps } from '../../query/useSteps'
@@ -52,6 +53,9 @@ const Dashboard = () => {
 
     // Words to filter out patients by
     const [searchQuery, setSearchQuery] = useState('')
+
+    const { sort, sortBy, sortOrder, resetSort } = usePatientSort(() => setSelectedPageNumber(1))
+
     const invalidatePatients = useInvalidatePatients()
     const {
         data: patientsData,
@@ -62,6 +66,8 @@ const Dashboard = () => {
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
         query: searchQuery,
+        sortBy,
+        sortOrder,
     })
 
     const patients = patientsData?.data || []
@@ -106,6 +112,8 @@ const Dashboard = () => {
     const onStepSelected = async (stepKey: string) => {
         if (!stepKey) return
         setSelectedStep(stepKey)
+        resetSort()
+        setSelectedPageNumber(1)
     }
 
     const onPageNumberChanged = async (newPageNumber: number) => {
@@ -215,6 +223,7 @@ const Dashboard = () => {
                     handleSearchQuery={onSearchQueryChanged}
                     initialSearchQuery={searchQuery}
                     stepKey={selectedStep}
+                    sort={sort}
                 />
             )
         })

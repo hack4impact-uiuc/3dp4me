@@ -1,14 +1,17 @@
-import { Nullish, Patient } from '@3dp4me/types'
+import { isServerSortablePatientField, Nullish, Patient } from '@3dp4me/types'
 import { Response } from 'express'
 import logger from 'loglevel'
 import { AuthenticatedRequest } from 'middleware/types'
-import { HydratedDocument } from 'mongoose'
+import { HydratedDocument, SortOrder } from 'mongoose'
 
 import { PatientModel } from '../models/Patient'
 import { DEFAULT_PATIENTS_ON_GET_REQUEST } from './constants'
 import { queryParamToNum, queryParamToString } from './request'
 import { canUserAccessAllPatients } from './roleUtils'
 import { getPatientIdsUserCanAccess, getPatientsCount } from './tagUtils'
+
+// Case-insensitive, locale-aware string ordering (handles mixed Arabic/Latin names)
+const SORT_COLLATION = { locale: 'en', strength: 2 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RespData = Record<string, any>
@@ -99,11 +102,22 @@ export const getPatients = async (
         pageNumber = 1,
         nPerPage = DEFAULT_PATIENTS_ON_GET_REQUEST,
         searchQuery = '',
+        sortBy = 'lastEdited',
+        sortOrder = 'desc',
     } = req.query
     let patientParams = findParameters
     const intPageNumber = queryParamToNum(pageNumber)
     const intPatientsPerPage = queryParamToNum(nPerPage)
     const lowerCaseSearchQuery = queryParamToString(searchQuery).toLowerCase()
+
+    // Validate sortBy
+    let sortByField = queryParamToString(sortBy)
+    if (!isServerSortablePatientField(sortByField)) {
+        sortByField = 'lastEdited'
+    }
+
+    const sortDirection: 1 | -1 = queryParamToString(sortOrder) === 'asc' ? 1 : -1
+    const sortParams = { [sortByField]: sortDirection, _id: 1 as SortOrder }
 
     // Calculates the number of patients to skip based on the request paramaters
     const documentsToSkip = intPageNumber > 0 ? (intPageNumber - 1) * intPatientsPerPage : 0
@@ -125,7 +139,8 @@ export const getPatients = async (
     if (lowerCaseSearchQuery === '') {
         const patientCount = await getPatientsCount(req.user)
         const data = await PatientModel.find(patientParams)
-            .sort({ lastEdited: -1 })
+            .collation(SORT_COLLATION)
+            .sort(sortParams)
             .skip(documentsToSkip)
             .limit(intPatientsPerPage)
 
@@ -135,7 +150,7 @@ export const getPatients = async (
         }
     }
 
-    const data = await PatientModel.find(patientParams).sort({ lastEdited: -1 })
+    const data = await PatientModel.find(patientParams).collation(SORT_COLLATION).sort(sortParams)
 
     // Filter by search
     const filteredData = filterPatientsBySearchQuery(data, lowerCaseSearchQuery)

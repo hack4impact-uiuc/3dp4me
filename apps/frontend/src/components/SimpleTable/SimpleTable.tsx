@@ -9,7 +9,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import React, { CSSProperties, useMemo } from 'react'
 
-import useSortableData from '../../hooks/useSortableData'
+import useSortableData, { ControlledSort, sortData } from '../../hooks/useSortableData'
 import { useTranslations } from '../../hooks/useTranslations'
 import { PEOPLE_PER_PAGE } from '../../utils/constants'
 import {
@@ -34,6 +34,9 @@ export interface SimpleTableProps<T extends Record<string, any>> {
     containerStyle?: React.CSSProperties
 
     rowStyle?: React.CSSProperties
+
+    // When provided, the parent owns the sort state instead of this table
+    sort?: ControlledSort<T>
 }
 
 const DEFAULT_CONTAINER_STYLE: CSSProperties = {
@@ -57,9 +60,21 @@ const SimpleTable = <T extends Record<string, any>>({
     isLoading = false,
     containerStyle = DEFAULT_CONTAINER_STYLE,
     renderLoadingTableRow = defaultTableRowLoadingRenderer,
+    sort,
 }: SimpleTableProps<T>) => {
     const selectedLang = useTranslations()[1]
-    const { sortedData, requestSort, sortConfig } = useSortableData(data)
+    const localSort = useSortableData(data)
+
+    const controlledConfig = sort?.config
+    const isSortedExternally = sort?.isSortedExternally
+    const controlledSortedData = useMemo(() => {
+        if (!controlledConfig || isSortedExternally?.(controlledConfig.key)) return data
+        return sortData(data, controlledConfig)
+    }, [data, controlledConfig, isSortedExternally])
+
+    const sortedData = sort ? controlledSortedData : localSort.sortedData
+    const sortConfig = sort ? sort.config : localSort.sortConfig
+    const requestSort = sort ? sort.requestSort : localSort.requestSort
 
     const renderedHeaders = useMemo(
         () => renderHeader(headers, sortConfig, requestSort, selectedLang),
