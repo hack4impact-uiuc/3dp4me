@@ -1,19 +1,16 @@
 import './Patients.scss'
 
-import { Patient } from '@3dp4me/types'
 import { useState } from 'react'
 
 import PaginateBar from '../../components/PaginateBar/PaginateBar'
 import PatientTable from '../../components/PatientTable/PatientTable'
-import { SortConfig } from '../../hooks/useSortableData'
+import { usePatientSort } from '../../hooks/usePatientSort'
 import { useTranslations } from '../../hooks/useTranslations'
 import { useInvalidatePatients, usePatients } from '../../query/usePatients'
 import {
     ALL_PATIENT_DASHBOARD_ROW_DATA,
     getPatientDashboardHeaders,
     PEOPLE_PER_PAGE,
-    SERVER_SORTABLE_PATIENT_FIELDS,
-    SortDirection,
 } from '../../utils/constants'
 
 /**
@@ -27,37 +24,16 @@ const Patients = () => {
     // Words to filter out patients by
     const [searchQuery, setSearchQuery] = useState('')
 
-    // Which column (if any) the full patient list is sorted by
-    const [sortConfig, setSortConfig] = useState<SortConfig<Patient> | null>(null)
+    const { sort, sortBy, sortOrder } = usePatientSort(() => setSelectedPageNumber(1))
 
     const invalidatePatients = useInvalidatePatients()
     const { data: patients, isLoading } = usePatients({
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
         query: searchQuery,
-        sortBy: sortConfig?.key as string | undefined,
-        sortOrder: sortConfig?.direction === SortDirection.Ascending ? 'asc' : 'desc',
+        sortBy,
+        sortOrder,
     })
-
-    /**
-     * Cycles the sort direction for a column: ascending -> descending -> default.
-     * Only columns backed directly by the Patient collection can be sorted server-side.
-     */
-    const onRequestSort = (key: string) => {
-        if (!SERVER_SORTABLE_PATIENT_FIELDS.includes(key)) return
-
-        let direction = SortDirection.Ascending
-        if (sortConfig?.key === key && sortConfig.direction === SortDirection.Ascending)
-            direction = SortDirection.Descending
-        else if (sortConfig?.key === key && sortConfig.direction === SortDirection.Descending) {
-            setSortConfig(null)
-            setSelectedPageNumber(1)
-            return
-        }
-
-        setSortConfig({ key, direction } as SortConfig<Patient>)
-        setSelectedPageNumber(1)
-    }
 
     const allPatients = patients?.data || []
     const patientsCount = patients?.count || 0
@@ -94,8 +70,7 @@ const Patients = () => {
                     initialSearchQuery={searchQuery}
                     isLoading={isLoading}
                     stepKey={''}
-                    sortConfig={sortConfig}
-                    onRequestSort={onRequestSort}
+                    sort={sort}
                 />
 
                 <PaginateBar

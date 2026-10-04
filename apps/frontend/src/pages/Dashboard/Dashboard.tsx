@@ -11,7 +11,7 @@ import PaginateBar from '../../components/PaginateBar/PaginateBar'
 import PatientTable from '../../components/PatientTable/PatientTable'
 import ToggleButtons from '../../components/ToggleButtons/ToggleButtons'
 import { useSetError } from '../../hooks/uesSetError'
-import { SortConfig } from '../../hooks/useSortableData'
+import { usePatientSort } from '../../hooks/usePatientSort'
 import { useTranslations } from '../../hooks/useTranslations'
 import { useInvalidatePatients, usePatients } from '../../query/usePatients'
 import { useSteps } from '../../query/useSteps'
@@ -21,8 +21,6 @@ import {
     getStepDashboardHeaders,
     PATIENTS_BY_STEP_TABLE_ROW_DATA,
     PEOPLE_PER_PAGE,
-    SERVER_SORTABLE_PATIENT_FIELDS,
-    SortDirection,
 } from '../../utils/constants'
 import { ColumnMetadata, Header } from '../../utils/table-renderers'
 
@@ -56,8 +54,7 @@ const Dashboard = () => {
     // Words to filter out patients by
     const [searchQuery, setSearchQuery] = useState('')
 
-    // Which column (if any) the patient list is sorted by
-    const [sortConfig, setSortConfig] = useState<SortConfig<Patient> | null>(null)
+    const { sort, sortBy, sortOrder, resetSort } = usePatientSort(() => setSelectedPageNumber(1))
 
     const invalidatePatients = useInvalidatePatients()
     const {
@@ -69,8 +66,8 @@ const Dashboard = () => {
         page: selectedPageNumber,
         limit: PEOPLE_PER_PAGE,
         query: searchQuery,
-        sortBy: sortConfig?.key as string | undefined,
-        sortOrder: sortConfig?.direction === SortDirection.Ascending ? 'asc' : 'desc',
+        sortBy,
+        sortOrder,
     })
 
     const patients = patientsData?.data || []
@@ -115,7 +112,7 @@ const Dashboard = () => {
     const onStepSelected = async (stepKey: string) => {
         if (!stepKey) return
         setSelectedStep(stepKey)
-        setSortConfig(null)
+        resetSort()
         setSelectedPageNumber(1)
     }
 
@@ -130,27 +127,6 @@ const Dashboard = () => {
 
         // The page number needs to be updated because the search query might filter the patient data
         // such that there aren't as many pages as the one the user is currently on.
-        setSelectedPageNumber(1)
-    }
-
-    /**
-     * Cycles the sort direction for a column: ascending -> descending -> default.
-     * Only columns backed directly by the Patient collection can be sorted server-side;
-     * step-specific columns are ignored here.
-     */
-    const onRequestSort = (key: string) => {
-        if (!SERVER_SORTABLE_PATIENT_FIELDS.includes(key)) return
-
-        let direction = SortDirection.Ascending
-        if (sortConfig?.key === key && sortConfig.direction === SortDirection.Ascending)
-            direction = SortDirection.Descending
-        else if (sortConfig?.key === key && sortConfig.direction === SortDirection.Descending) {
-            setSortConfig(null)
-            setSelectedPageNumber(1)
-            return
-        }
-
-        setSortConfig({ key, direction } as SortConfig<Patient>)
         setSelectedPageNumber(1)
     }
 
@@ -247,8 +223,7 @@ const Dashboard = () => {
                     handleSearchQuery={onSearchQueryChanged}
                     initialSearchQuery={searchQuery}
                     stepKey={selectedStep}
-                    sortConfig={sortConfig}
-                    onRequestSort={onRequestSort}
+                    sort={sort}
                 />
             )
         })

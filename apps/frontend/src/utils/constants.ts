@@ -54,21 +54,6 @@ export type AnyFieldType = FieldType | DisplayFieldType
  * List of headers that every per step table has. These are
  * the leftmost columns on the dashboard screen.
  */
-
-/**
- * Columns that can be sorted across the entire patient list on the backend.
- * These are the only fields that live directly on the Patient collection -
- * step-specific columns can't be sorted server-side. Must match
- * ALLOWED_PATIENT_SORT_FIELDS in the backend's response.ts.
- */
-export const SERVER_SORTABLE_PATIENT_FIELDS = [
-    'firstName',
-    'familyName',
-    'orderId',
-    'lastEdited',
-    'status',
-]
-
 export const getStepDashboardHeaders = (langKey: Lang) => {
     const t = translations[langKey].tableHeaders
 

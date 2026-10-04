@@ -23,3 +23,17 @@ export interface Patient extends BasePatient {
     phoneNumber?: string
     secret?: string
 }
+
+// Top-level Patient fields the backend can sort on across the whole collection
+export const SERVER_SORTABLE_PATIENT_FIELDS = [
+    'firstName',
+    'familyName',
+    'orderId',
+    'lastEdited',
+    'status',
+] as const
+
+export type ServerSortablePatientField = (typeof SERVER_SORTABLE_PATIENT_FIELDS)[number]
+
+export const isServerSortablePatientField = (key: unknown): key is ServerSortablePatientField =>
+    (SERVER_SORTABLE_PATIENT_FIELDS as readonly unknown[]).includes(key)

@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 
 import search from '../../assets/search.svg'
-import { SortConfig } from '../../hooks/useSortableData'
+import { ControlledSort } from '../../hooks/useSortableData'
 import { useTranslations } from '../../hooks/useTranslations'
 import { LANGUAGES, PATIENT_TABLE_SEARCH_DELAY } from '../../utils/constants'
 import { ColumnMetadata, Header, HeaderRenderer, RowRenderer } from '../../utils/table-renderers'
@@ -23,9 +23,8 @@ export interface TableProps<T extends Record<string, any>> {
     handleSearchQuery: (query: string) => void
     isLoading?: boolean
 
-    // When provided, sorting is server-driven instead of sorting only the current page locally
-    sortConfig?: SortConfig<T> | null
-    onRequestSort?: (key: any) => void
+    // When provided, the parent owns the sort state (e.g. for server-side sorting)
+    sort?: ControlledSort<T>
 }
 
 /**
@@ -43,8 +42,7 @@ const Table = <T extends Record<string, any>>({
     initialSearchQuery,
     handleSearchQuery,
     isLoading = false,
-    sortConfig,
-    onRequestSort,
+    sort,
 }: TableProps<T>) => {
     const [translations, selectedLang] = useTranslations()
 
@@ -114,8 +112,7 @@ const Table = <T extends Record<string, any>>({
                 rowData={rowData}
                 renderHeader={renderHeader}
                 renderTableRow={renderTableRow}
-                sortConfig={sortConfig}
-                onRequestSort={onRequestSort}
+                sort={sort}
             />
         </div>
     )

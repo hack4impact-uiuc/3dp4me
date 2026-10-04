@@ -5,7 +5,7 @@ import swal from 'sweetalert'
 
 import { postNewPatient } from '../../api/api'
 import { useErrorWrap } from '../../hooks/useErrorWrap'
-import { SortConfig } from '../../hooks/useSortableData'
+import { ControlledSort } from '../../hooks/useSortableData'
 import { useTranslations } from '../../hooks/useTranslations'
 import { Routes } from '../../utils/constants'
 import {
@@ -28,9 +28,8 @@ export interface PatientTableProps {
     stepKey: string
     isLoading?: boolean
 
-    // When provided, sorting is server-driven instead of sorting only the current page locally
-    sortConfig?: SortConfig<Patient> | null
-    onRequestSort?: (key: any) => void
+    // When provided, the parent owns the sort state (e.g. for server-side sorting)
+    sort?: ControlledSort<Patient>
 }
 
 /**
@@ -47,8 +46,7 @@ const PatientTable = ({
     handleSearchQuery,
     stepKey,
     isLoading = false,
-    sortConfig,
-    onRequestSort,
+    sort,
 }: PatientTableProps) => {
     const errorWrap = useErrorWrap()
     const translations = useTranslations()[0]
@@ -124,8 +122,7 @@ const PatientTable = ({
                 headers={headers}
                 rowData={rowData}
                 data={patients}
-                sortConfig={sortConfig}
-                onRequestSort={onRequestSort}
+                sort={sort}
             />
         </div>
     )
