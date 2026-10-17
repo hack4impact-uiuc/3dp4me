@@ -1,6 +1,6 @@
 import { Language, Nullish } from '@3dp4me/types'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import { styled } from '@mui/material'
+import { CircularProgress, styled } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import React, { MouseEventHandler, useContext, useState } from 'react'
@@ -68,6 +68,8 @@ const NavItem = styled(Link)(navItemStyle)
 
 const NavButton = styled('button')({
     ...navItemStyle,
+    display: 'inline-flex',
+    alignItems: 'center',
     background: 'none',
     border: 'none',
     padding: 0,
@@ -169,6 +171,9 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                 {state.isAdmin && (
                     <NavButton type="button" onClick={handleExport} disabled={isExporting}>
                         {navTranslations.export.navTitle}
+                        {isExporting && (
+                            <CircularProgress size="0.9rem" sx={{ ml: 1, color: 'inherit' }} />
+                        )}
                     </NavButton>
                 )}
 
