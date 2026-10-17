@@ -14,14 +14,14 @@ import ExcelJS from 'exceljs'
 export type StepData = Record<string, any>
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
-export type CellValue = string | number | Date | null
+type CellValue = string | number | Date | null
 
 export interface ExportRow {
     patient: Patient
     stepData: StepData | null
 }
 
-export interface ExportColumn<T> {
+interface ExportColumn<T> {
     header: string
     getValue: (row: T) => CellValue
 }
@@ -45,8 +45,8 @@ const HEADERS: Record<string, TranslatedString> = {
     familyName: { EN: 'Family Name', AR: 'اسم العائلة' },
     phoneNumber: { EN: 'Phone Number', AR: 'رقم الهاتف' },
     status: { EN: 'Status', AR: 'الحالة' },
-    dateCreated: { EN: 'Date Created', AR: 'تاريخ الإنشاء' },
-    lastEdited: { EN: 'Last Edited', AR: 'التعديل الأخير' },
+    dateCreated: { EN: 'Date Created (UTC)', AR: 'تاريخ الإنشاء (UTC)' },
+    lastEdited: { EN: 'Last Edited (UTC)', AR: 'التعديل الأخير (UTC)' },
     lastEditedBy: { EN: 'Last Edited By', AR: 'آخر تعديل بواسطة' },
     patientInfoSheet: { EN: 'Patient Info', AR: 'معلومات المريض' },
 }
@@ -58,7 +58,7 @@ const PATIENT_STATUS_TRANSLATIONS: Record<PatientStatus, TranslatedString> = {
     [PatientStatus.WAITLIST]: { EN: 'Waitlist', AR: 'قائمة الانتظار' },
 }
 
-export const isExportableField = (field: Field) =>
+const isExportableField = (field: Field) =>
     !field.isDeleted && !field.isHidden && !NON_EXPORTABLE_FIELD_TYPES.includes(field.fieldType)
 
 const getOptionLabel = (options: QuestionOption[], id: unknown, lang: Language) =>
@@ -99,7 +99,7 @@ const decodeValue = (field: Field, value: unknown, lang: Language): CellValue =>
  * Builds the columns for a list of fields. Field groups are expanded into one set of columns
  * per entry, sized to the patient with the most entries.
  */
-export const buildFieldColumns = (
+const buildFieldColumns = (
     fields: Field[],
     allStepData: StepData[],
     lang: Language
@@ -145,21 +145,36 @@ export const buildStepColumns = (
         getValue: (row) => c.getValue(row.stepData),
     }))
 
+const orderIdColumn = (lang: Language): ExportColumn<ExportRow> => ({
+    header: HEADERS.orderId[lang],
+    getValue: ({ patient: p }) => p.orderId,
+})
+
+const firstNameColumn = (lang: Language): ExportColumn<ExportRow> => ({
+    header: HEADERS.firstName[lang],
+    getValue: ({ patient: p }) => p.firstName ?? null,
+})
+
+const familyNameColumn = (lang: Language): ExportColumn<ExportRow> => ({
+    header: HEADERS.familyName[lang],
+    getValue: ({ patient: p }) => p.familyName ?? null,
+})
+
 export const getPatientIdentifierColumns = (lang: Language): ExportColumn<ExportRow>[] => [
-    { header: HEADERS.orderId[lang], getValue: ({ patient: p }) => p.orderId },
-    { header: HEADERS.firstName[lang], getValue: ({ patient: p }) => p.firstName ?? null },
-    { header: HEADERS.familyName[lang], getValue: ({ patient: p }) => p.familyName ?? null },
+    orderIdColumn(lang),
+    firstNameColumn(lang),
+    familyNameColumn(lang),
 ]
 
 export const getPatientInfoColumns = (lang: Language): ExportColumn<ExportRow>[] => [
-    { header: HEADERS.orderId[lang], getValue: ({ patient: p }) => p.orderId },
-    { header: HEADERS.firstName[lang], getValue: ({ patient: p }) => p.firstName ?? null },
+    orderIdColumn(lang),
+    firstNameColumn(lang),
     { header: HEADERS.fathersName[lang], getValue: ({ patient: p }) => p.fathersName ?? null },
     {
         header: HEADERS.grandfathersName[lang],
         getValue: ({ patient: p }) => p.grandfathersName ?? null,
     },
-    { header: HEADERS.familyName[lang], getValue: ({ patient: p }) => p.familyName ?? null },
+    familyNameColumn(lang),
     { header: HEADERS.phoneNumber[lang], getValue: ({ patient: p }) => p.phoneNumber ?? null },
     {
         header: HEADERS.status[lang],

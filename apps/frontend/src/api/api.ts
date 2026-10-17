@@ -184,7 +184,10 @@ export const exportPatientsToExcel = async (lang: Language) => {
 
     // Errors come back as a JSON blob since we requested a blob
     if (res.status !== 200) {
-        const error = JSON.parse(await (res.data as Blob).text())
+        const error = await (res.data as Blob)
+            .text()
+            .then(JSON.parse)
+            .catch(() => null)
         throw new Error(error?.message || 'Could not export patients')
     }
 

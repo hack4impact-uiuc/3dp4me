@@ -68,7 +68,9 @@
         "dashboardManagement": {
           "navTitle": "Dashboard Management"
         },
-        "export": "Export"
+        "export": {
+          "navTitle": "Export"
+        }
       },
       "step": {
         "lastEditedBy": "Last edited by",
@@ -340,7 +342,9 @@
         "dashboardManagement": {
           "navTitle": "إدارة لوحة المعلومات"
         },
-        "export": "تصدير"
+        "export": {
+          "navTitle": "تصدير"
+        }
       },
       "step": {
         "lastEditedBy": "التعديل الأخير تم بواسطة",

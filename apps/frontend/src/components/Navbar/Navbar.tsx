@@ -168,7 +168,7 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
 
                 {state.isAdmin && (
                     <NavButton type="button" onClick={handleExport} disabled={isExporting}>
-                        {navTranslations.export}
+                        {navTranslations.export.navTitle}
                     </NavButton>
                 )}
 

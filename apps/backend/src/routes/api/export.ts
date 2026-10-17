@@ -1,7 +1,7 @@
 import express, { Response } from 'express';
 import mongoose from 'mongoose';
 import ExcelJS from 'exceljs';
-import { Language, Patient, ReservedStep, RootStepFieldKeys } from '@3dp4me/types';
+import { Language, Patient, ReservedStep } from '@3dp4me/types';
 
 import { requireAdmin } from '../../middleware/authentication';
 import { AuthenticatedRequest } from '../../middleware/types';
@@ -23,10 +23,8 @@ import {
 export const router = express.Router();
 
 const getStepDataByPatientId = async (stepKey: string) => {
-    const docs = await mongoose.model(stepKey).find({});
-    return new Map<string, StepData>(
-        docs.map((d) => [d.patientId.toString(), d.toObject()]),
-    );
+    const docs: StepData[] = await mongoose.model(stepKey).find({}).lean();
+    return new Map<string, StepData>(docs.map((d) => [d.patientId.toString(), d]));
 };
 
 /**
@@ -41,7 +39,7 @@ router.get(
         if (!Object.values(Language).includes(lang))
             return sendResponse(res, 400, `Invalid language "${lang}"`);
 
-        const patients: Patient[] = (await PatientModel.find({})).map((p) => p.toObject());
+        const patients: Patient[] = await PatientModel.find({}).lean();
         patients.sort((a, b) => a.orderId.localeCompare(b.orderId, undefined, { numeric: true }));
 
         const steps = await StepModel.find({
@@ -64,15 +62,14 @@ router.get(
         );
         const rootIndex = steps.findIndex((s) => s.key === ReservedStep.Root);
         const rootData = stepData[rootIndex] ?? new Map();
-        const tagFields =
-            steps[rootIndex]?.fields.filter((f) => f.key === RootStepFieldKeys.Tags) ?? [];
+        const rootFields = steps[rootIndex]?.fields ?? [];
 
         addSheet(
             workbook,
             toUniqueSheetName(getPatientInfoSheetName(lang), usedSheetNames),
             [
                 ...getPatientInfoColumns(lang),
-                ...buildStepColumns(tagFields, [...rootData.values()], lang),
+                ...buildStepColumns(rootFields, [...rootData.values()], lang),
             ],
             toRows(rootData),
             isRightToLeft,
@@ -93,14 +90,9 @@ router.get(
             );
         });
 
-        const date = new Date().toISOString().slice(0, 10);
         res.setHeader(
             'Content-Type',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        );
-        res.setHeader(
-            'Content-Disposition',
-            `attachment; filename="3dp4me-export-${date}.xlsx"`,
         );
         await workbook.xlsx.write(res);
         return res.end();
