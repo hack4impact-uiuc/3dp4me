@@ -1,12 +1,15 @@
 import { Language, Nullish } from '@3dp4me/types'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import { styled } from '@mui/material'
+import FileDownloadIcon from '@mui/icons-material/FileDownload'
+import { Button, CircularProgress, styled } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import React, { MouseEventHandler, useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { exportPatientsToExcel } from '../../api/api'
 import Logo from '../../assets/3dp4me_logo.png'
+import { useErrorWrap } from '../../hooks/useErrorWrap'
 import { useTranslations } from '../../hooks/useTranslations'
 import { Context } from '../../store/Store'
 import { Routes } from '../../utils/constants'
@@ -75,7 +78,15 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
     const [translations, selectedLang] = useTranslations()
     const [activeRoute, setActiveRoute] = useState(window.location.pathname)
     const [anchorEl, setAnchorEl] = useState<Nullish<EventTarget & SVGSVGElement>>(null)
+    const [isExporting, setIsExporting] = useState(false)
+    const errorWrap = useErrorWrap()
     const navTranslations = translations.components.navbar
+
+    const handleExport = async () => {
+        setIsExporting(true)
+        await errorWrap(() => exportPatientsToExcel(selectedLang))
+        setIsExporting(false)
+    }
 
     const handleAccountClick: MouseEventHandler<SVGSVGElement> = (e) => {
         setAnchorEl(e.currentTarget)
@@ -140,6 +151,20 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                 </NavTitle>
 
                 {renderLinks()}
+
+                {state.isAdmin && (
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={handleExport}
+                        disabled={isExporting}
+                        startIcon={
+                            isExporting ? <CircularProgress size="1rem" /> : <FileDownloadIcon />
+                        }
+                    >
+                        {navTranslations.export}
+                    </Button>
+                )}
 
                 <AccountCircleIcon
                     className="accountCircle"
