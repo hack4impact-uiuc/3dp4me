@@ -67,6 +67,9 @@
         },
         "dashboardManagement": {
           "navTitle": "Dashboard Management"
+        },
+        "export": {
+          "navTitle": "Export"
         }
       },
       "step": {
@@ -338,6 +341,9 @@
         },
         "dashboardManagement": {
           "navTitle": "إدارة لوحة المعلومات"
+        },
+        "export": {
+          "navTitle": "تصدير"
         }
       },
       "step": {

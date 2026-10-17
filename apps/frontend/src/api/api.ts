@@ -1,4 +1,4 @@
-import { BasePatient, Nullish, OmitDeep, Patient, Role, Step } from '@3dp4me/types'
+import { BasePatient, Language, Nullish, OmitDeep, Patient, Role, Step } from '@3dp4me/types'
 import type { ListUsersCommandOutput } from '@aws-sdk/client-cognito-identity-provider'
 import fileDownload from 'js-file-download'
 
@@ -174,6 +174,25 @@ export const downloadFile = async (
     } catch (error) {
         throw new Error('Could not download file')
     }
+}
+
+export const exportPatientsToExcel = async (lang: Language) => {
+    const res = await instance.get('/export/patients', {
+        params: { lang },
+        responseType: 'blob',
+    })
+
+    // Errors come back as a JSON blob since we requested a blob
+    if (res.status !== 200) {
+        const error = await (res.data as Blob)
+            .text()
+            .then(JSON.parse)
+            .catch(() => null)
+        throw new Error(error?.message || 'Could not export patients')
+    }
+
+    const date = new Date().toISOString().slice(0, 10)
+    fileDownload(res.data, `3dp4me-export-${date}.xlsx`)
 }
 
 export const uploadFile = async (
