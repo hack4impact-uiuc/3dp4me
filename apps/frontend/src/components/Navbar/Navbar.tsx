@@ -1,7 +1,6 @@
 import { Language, Nullish } from '@3dp4me/types'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import FileDownloadIcon from '@mui/icons-material/FileDownload'
-import { Button, CircularProgress, styled } from '@mui/material'
+import { styled } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import React, { MouseEventHandler, useContext, useState } from 'react'
@@ -58,11 +57,26 @@ const StyledToolbar = styled(Toolbar)`
     }
 `
 
-const NavItem = styled(Link)({
+const navItemStyle = {
     textDecoration: 'none',
     margin: '0 16px 0 16px',
     fontSize: '1rem',
     color: '#5f5f5f',
+}
+
+const NavItem = styled(Link)(navItemStyle)
+
+const NavButton = styled('button')({
+    ...navItemStyle,
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    fontFamily: 'inherit',
+    cursor: 'pointer',
+    '&:disabled': {
+        cursor: 'default',
+        opacity: 0.5,
+    },
 })
 
 const NavTitle = styled(Link)(({ theme }) => ({
@@ -153,17 +167,9 @@ const Navbar = ({ username, userEmail }: NavbarProps) => {
                 {renderLinks()}
 
                 {state.isAdmin && (
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={handleExport}
-                        disabled={isExporting}
-                        startIcon={
-                            isExporting ? <CircularProgress size="1rem" /> : <FileDownloadIcon />
-                        }
-                    >
+                    <NavButton type="button" onClick={handleExport} disabled={isExporting}>
                         {navTranslations.export}
-                    </Button>
+                    </NavButton>
                 )}
 
                 <AccountCircleIcon
